@@ -97,11 +97,37 @@ jobs:
 
       - name: Unit tests
         id: tests
-        timeout-minutes: 10
+        timeout-minutes: 5
         if: ${{ always() && (steps.install.outcome == 'success' || steps.repair_install.outcome == 'success') }}
         continue-on-error: true
         working-directory: target
-        run: npm run test:run
+        run: |
+          set -o pipefail
+          npm run test:run -- --reporter=verbose 2>&1 | tee ../doctor/tests.log
+
+      - name: Isolate failing or hanging test
+        if: ${{ always() && steps.tests.outcome != 'success' && (steps.install.outcome == 'success' || steps.repair_install.outcome == 'success') }}
+        timeout-minutes: 5
+        continue-on-error: true
+        working-directory: target
+        run: |
+          : > ../doctor/test-isolation.log
+          while IFS= read -r file; do
+            echo "=== $file ===" | tee -a ../doctor/test-isolation.log
+            set +e
+            timeout --signal=TERM 45s npx vitest run "$file" --reporter=verbose >> ../doctor/test-isolation.log 2>&1
+            code=$?
+            set -e
+            if [ "$code" -eq 124 ]; then
+              echo "HUNG: $file" | tee -a ../doctor/test-isolation.log
+              exit 0
+            fi
+            if [ "$code" -ne 0 ]; then
+              echo "FAILED: $file (exit $code)" | tee -a ../doctor/test-isolation.log
+              exit 0
+            fi
+          done < <(find src -type f \( -name '*.test.ts' -o -name '*.test.tsx' \) | sort)
+          echo "No single file reproduced the failure; suite-level teardown or concurrency is suspect." | tee -a ../doctor/test-isolation.log
 
       - name: Lint
         id: lint
@@ -124,7 +150,7 @@ jobs:
           DOCTOR_NODE: ${{ steps.environment.outputs.node }}
           DOCTOR_NPM: ${{ steps.environment.outputs.npm }}
           DOCTOR_WORKFLOW_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-        run: node scripts/persist-dependency-state.mjs field ../doctor/npm-ci.log
+        run: node scripts/persist-dependency-state.mjs field ../doctor/npm-ci.log ../doctor/test-isolation.log
 
       - name: Commit dashboard state
         if: always()

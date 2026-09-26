@@ -13,6 +13,7 @@ concurrency:
 jobs:
   repair:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     env:
       FIELD_TOKEN: ${{ secrets.RUNNER_GITHUB_TOKEN }}
 
@@ -64,21 +65,25 @@ jobs:
 
       - name: Verify clean install
         if: steps.repair.outputs.changed == 'true'
+        timeout-minutes: 10
         working-directory: target
         run: npm ci
 
       - name: Verify build
         if: steps.repair.outputs.changed == 'true'
+        timeout-minutes: 10
         working-directory: target
         run: npm run build:all
 
       - name: Verify unit tests
         if: steps.repair.outputs.changed == 'true'
+        timeout-minutes: 5
         working-directory: target
-        run: npm run test:run
+        run: npm run test:run -- --reporter=verbose
 
       - name: Verify lint
         if: steps.repair.outputs.changed == 'true'
+        timeout-minutes: 10
         working-directory: target
         run: npm run lint
 

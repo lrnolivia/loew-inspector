@@ -2,15 +2,18 @@ import fs from "node:fs/promises";
 import path from "node:path";
 import { diagnoseInstallLog } from "./classify-install.mjs";
 
-const [id, logPath] = process.argv.slice(2);
+const [id, logPath, testDiagnosticPath] = process.argv.slice(2);
 if (!id || !logPath) {
-  throw new Error("Usage: node scripts/persist-dependency-state.mjs <worker-id> <npm-ci-log>");
+  throw new Error("Usage: node scripts/persist-dependency-state.mjs <worker-id> <npm-ci-log> [test-diagnostic-log]");
 }
 
 const statePath = path.join("state", `${id}.json`);
 const state = JSON.parse(await fs.readFile(statePath, "utf8"));
 const log = await fs.readFile(logPath, "utf8").catch(() => "");
 const diagnosis = diagnoseInstallLog(log);
+const testDiagnostic = testDiagnosticPath
+  ? await fs.readFile(testDiagnosticPath, "utf8").catch(() => "")
+  : "";
 
 const install = process.env.INSTALL_OUTCOME ?? "unknown";
 const repairGenerate = process.env.REPAIR_GENERATE_OUTCOME ?? "skipped";
@@ -45,16 +48,21 @@ state.dependency = {
     repaired_clean_install: repairInstall,
     build,
     tests,
-    lint
+    lint,
+    test_diagnostic: testDiagnostic ? testDiagnostic.slice(-2000) : null
   }
 };
 
 state.last_summary =
-  dependencyHealth === "healthy"
-    ? "Dependency Doctor passed a clean npm ci."
-    : dependencyHealth === "repairable"
-      ? `Dependency Doctor found a ${diagnosis.classification} issue and verified that a regenerated lockfile restores a clean install.`
-      : `Dependency Doctor failed: ${diagnosis.reason}`;
+  dependencyHealth === "healthy" && projectHealth === "healthy"
+    ? "Dependency Doctor passed clean install, build, tests, and lint."
+    : dependencyHealth === "repairable" && projectHealth === "healthy"
+      ? `Dependency Doctor found a ${diagnosis.classification} issue and verified the lockfile repair through clean install, build, tests, and lint.`
+      : dependencyHealth === "repairable"
+        ? `The lockfile repair restores a clean install, but project verification is not healthy. ${testDiagnostic ? "Test isolation diagnostics were captured." : "Inspect build, tests, and lint."}`
+        : dependencyHealth === "healthy"
+          ? "Dependencies install cleanly, but project verification is not healthy."
+          : `Dependency Doctor failed: ${diagnosis.reason}`;
 
 if (dependencyHealth === "repairable") {
   state.next_focus = "Open and verify a package-lock-only repair PR.";

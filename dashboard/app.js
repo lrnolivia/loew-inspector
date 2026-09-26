@@ -56,7 +56,7 @@ async function load() {
         ? "health-bad"
         : "health-unknown";
     const dependency = state.dependency ?? {};
-    const repairable = state.dependency_health === "repairable";
+    const repairable = state.dependency_health === "repairable" && state.project_health === "healthy";
     const workflowLink = dependency.workflow_url
       ? `<a href="${escapeHtml(dependency.workflow_url)}" target="_blank" rel="noreferrer">view doctor run ↗</a>`
       : "";
