@@ -6,7 +6,7 @@
   "run_count": 0,
   "last_run_at": null,
   "next_run_at": null,
-  "last_summary": "Dependency Doctor reproduced a clean-room install failure; automated persistence is being enabled.",
+  "last_summary": "Dependency Doctor reproduced a clean-room install failure; automated verification is being enabled.",
   "next_focus": "Verify a package-lock-only repair candidate before enabling the field agent.",
   "last_error": null,
   "last_usage": null,
