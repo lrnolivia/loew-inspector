@@ -1,0 +1,25 @@
+{
+  "id": "field",
+  "name": "field",
+  "description": "Read-only product and architecture continuity pilot for field.",
+  "enabled": false,
+  "cadence_minutes": 60,
+  "model": {
+    "id": "gpt-6-sol",
+    "reasoning_effort": "medium",
+    "web_search": true
+  },
+  "target": {
+    "repository": "lrnolivia/field",
+    "branch": "main",
+    "write_mode": "read_only"
+  },
+  "context": {
+    "files": [
+      "README.md",
+      "package.json"
+    ],
+    "include_open_issues": true
+  },
+  "goal": "Inspect field's current repository state and continue bounded product/architecture research that improves professional design-tool quality, design-to-runtime parity, maintainability, or implementation clarity. Treat the target repository as read-only. Do not invent implementation state. Distinguish observed repository facts from proposals. Avoid repeating settled findings. End each cycle with concise Findings, Risks, Next focus, and whether the work should continue, block, or complete."
+}

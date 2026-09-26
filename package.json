@@ -1,0 +1,18 @@
+{
+  "name": "loew-runner",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A small control surface and autonomous runner for long-lived loew.fi project work.",
+  "scripts": {
+    "dashboard": "node src/server.mjs",
+    "dev": "node --watch src/server.mjs",
+    "tick": "node src/cli.mjs tick",
+    "run": "node src/cli.mjs run",
+    "check": "node --check src/*.mjs && node --check scripts/*.mjs && node --check dashboard/app.js",
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

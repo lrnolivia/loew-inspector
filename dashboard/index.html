@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>loew runner</title>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div>
+        <div class="eyebrow">loew.fi</div>
+        <h1>runner</h1>
+      </div>
+      <div class="top-actions">
+        <span class="quiet">background work, without the noise</span>
+        <button id="refresh" class="icon-button" aria-label="Refresh">↻</button>
+      </div>
+    </header>
+
+    <section class="summary" id="summary"></section>
+    <section class="workers" id="workers" aria-live="polite"></section>
+
+    <footer>
+      <span>v0.1</span>
+      <span>target writes are locked read-only</span>
+    </footer>
+  </main>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>

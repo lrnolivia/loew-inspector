@@ -1,0 +1,40 @@
+name: runner tick
+
+on:
+  schedule:
+    - cron: "7 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: loew-runner
+  cancel-in-progress: false
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: "22"
+
+      - name: Run due workers
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          RUNNER_GITHUB_TOKEN: ${{ secrets.RUNNER_GITHUB_TOKEN }}
+        run: npm run tick
+
+      - name: Persist runner state
+        run: |
+          if git diff --quiet -- state reports; then
+            echo "No state changes."
+            exit 0
+          fi
+          git config user.name "loew-runner"
+          git config user.email "actions@users.noreply.github.com"
+          git add state reports
+          git commit -m "runner: persist worker state"
+          git push

@@ -1,0 +1,15 @@
+{
+  "id": "field",
+  "status": "idle",
+  "session_id": null,
+  "last_output_id": null,
+  "run_count": 0,
+  "last_run_at": null,
+  "next_run_at": null,
+  "last_summary": "Pilot created. Disabled until OPENAI_API_KEY is configured and the job is explicitly enabled.",
+  "next_focus": "Validate dependency health, then perform one controlled Agents API cycle.",
+  "last_error": null,
+  "last_usage": null,
+  "dependency_health": "unknown",
+  "updated_at": "2026-09-26T15:45:00.000Z"
+}
