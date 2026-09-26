@@ -72,3 +72,29 @@ export async function openIssues(repository) {
     return [{ error: error.message }];
   }
 }
+
+
+export async function dispatchWorkflow(repository, workflow, ref = "main", inputs = {}) {
+  if (!process.env.RUNNER_GITHUB_TOKEN) {
+    throw new Error("RUNNER_GITHUB_TOKEN is required for workflow dispatch.");
+  }
+
+  const response = await fetch(
+    `${API}/repos/${repository}/actions/workflows/${encodeURIComponent(workflow)}/dispatches`,
+    {
+      method: "POST",
+      headers: {
+        ...headers(),
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ ref, inputs })
+    }
+  );
+
+  if (!response.ok) {
+    const body = await response.text();
+    throw new Error(`GitHub workflow dispatch ${response.status}: ${body.slice(0, 500)}`);
+  }
+
+  return { ok: true };
+}

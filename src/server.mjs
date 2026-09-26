@@ -5,6 +5,7 @@ import { fileURLToPath } from "node:url";
 import { loadAllWorkers, loadWorker, saveWorker } from "./config.mjs";
 import { runWorker } from "./runner.mjs";
 import { loadState } from "./state.mjs";
+import { dispatchWorkflow } from "./github.mjs";
 
 const HERE = path.dirname(fileURLToPath(import.meta.url));
 const DASHBOARD = path.join(HERE, "..", "dashboard");
@@ -58,6 +59,37 @@ const server = http.createServer(async (req, res) => {
       const config = await loadWorker(run[1]);
       if (!config.enabled) return json(res, 409, { error: "Enable this worker before running it." });
       return json(res, 200, await runWorker(config, { force: true }));
+    }
+
+
+    const doctor = url.pathname.match(/^\/api\/workers\/([^/]+)\/doctor$/);
+    if (req.method === "POST" && doctor) {
+      if (doctor[1] !== "field") {
+        return json(res, 404, { error: "No dependency doctor is configured for this worker yet." });
+      }
+      return json(
+        res,
+        202,
+        await dispatchWorkflow("lrnolivia/loew-runner", "field-dependency-doctor.yml")
+      );
+    }
+
+    const repair = url.pathname.match(/^\/api\/workers\/([^/]+)\/repair$/);
+    if (req.method === "POST" && repair) {
+      if (repair[1] !== "field") {
+        return json(res, 404, { error: "No dependency repair workflow is configured for this worker yet." });
+      }
+      const state = await loadState(repair[1]);
+      if (state.dependency_health !== "repairable") {
+        return json(res, 409, {
+          error: "Repair unlocks only after Dependency Doctor verifies a repairable dependency state."
+        });
+      }
+      return json(
+        res,
+        202,
+        await dispatchWorkflow("lrnolivia/loew-runner", "field-dependency-repair.yml")
+      );
     }
 
     const relative = url.pathname === "/" ? "index.html" : url.pathname.slice(1);
