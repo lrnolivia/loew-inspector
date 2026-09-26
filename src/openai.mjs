@@ -58,7 +58,7 @@ export async function getSession(sessionId) {
   return request(`/agents/sessions/${encodeURIComponent(sessionId)}`, { method: "GET" });
 }
 
-export async function sendMessage(sessionId, text) {
+export async function sendMessage(sessionId, text, idempotencyKey = null) {
   return request(`/agents/sessions/${encodeURIComponent(sessionId)}/events`, {
     method: "POST",
     body: JSON.stringify({
@@ -72,9 +72,22 @@ export async function sendMessage(sessionId, text) {
             }
           ]
         }
-      ]
+      ],
+      ...(idempotencyKey ? { idempotency_key: idempotencyKey } : {})
     })
   });
+}
+
+export async function listTurns(sessionId) {
+  return request(
+    `/agents/sessions/${encodeURIComponent(sessionId)}/turns?order=desc&limit=20`,
+    { method: "GET" }
+  );
+}
+
+export function latestRootTurn(page) {
+  const turns = page.data ?? page.items ?? [];
+  return turns.find((turn) => turn.subagent_id == null) ?? null;
 }
 
 export async function listItems(sessionId) {

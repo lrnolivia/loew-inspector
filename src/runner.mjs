@@ -1,5 +1,5 @@
 import { buildContext, renderContext } from "./context.mjs";
-import { createSession, getSession, latestAssistantText, listItems, sendMessage } from "./openai.mjs";
+import { createSession, getSession, latestAssistantText, latestRootTurn, listItems, listTurns, sendMessage } from "./openai.mjs";
 import { appendReport, isDue, loadState, nextRunFrom, saveState } from "./state.mjs";
 
 function reportBlock(output) {
@@ -33,10 +33,49 @@ async function harvest(config, state) {
   }
 
   if (session.status === "idle") {
+    const turn = latestRootTurn(await listTurns(state.session_id));
+
+    if (!turn) {
+      state.status = "idle";
+      await saveState(state);
+      return state;
+    }
+
+    state.last_turn_id = turn.id;
+    state.last_usage = turn.usage ?? session.usage ?? state.last_usage;
+
+    if (turn.status === "failed") {
+      state.status = "blocked";
+      state.last_error = turn.error?.message ?? turn.error ?? "Agents API turn failed";
+      await saveState(state);
+      return state;
+    }
+
+    if (turn.status === "cancelled") {
+      state.status = "blocked";
+      state.last_error = "Agents API turn was cancelled.";
+      await saveState(state);
+      return state;
+    }
+
+    if (["queued", "in_progress", "waiting"].includes(turn.status)) {
+      state.status = "running";
+      await saveState(state);
+      return state;
+    }
+
+    if (turn.status !== "completed") {
+      state.status = "blocked";
+      state.last_error = `Unknown Agents API turn status: ${turn.status}`;
+      await saveState(state);
+      return state;
+    }
+
     const output = latestAssistantText(await listItems(state.session_id));
     if (output && output.id !== state.last_output_id) {
       state.last_output_id = output.id;
       state.last_summary = output.text.slice(0, 1200);
+      state.last_error = null;
       await appendReport(config.id, reportBlock(output));
       if (/\bCOMPLETE\b/i.test(output.text)) state.status = "complete";
       else if (/\bBLOCKED\b/i.test(output.text)) state.status = "blocked";
@@ -82,7 +121,13 @@ export async function runWorker(config, { force = false } = {}) {
       state.session_id = session.id;
       state.last_usage = session.usage ?? null;
     } else {
-      await sendMessage(state.session_id, prompt);
+      const idempotencyKey = [
+        "loew-runner",
+        config.id,
+        state.run_count + 1,
+        state.last_run_at ?? "initial"
+      ].join(":");
+      await sendMessage(state.session_id, prompt, idempotencyKey);
     }
 
     state.status = "running";
