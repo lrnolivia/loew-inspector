@@ -55,7 +55,8 @@ jobs:
           npm ci 2>&1 | tee ../doctor/npm-ci.log
 
       - name: Classify initial install failure
-        if: steps.install.outcome != 'success'
+        if: ${{ always() && steps.install.outcome != 'success' }}
+        continue-on-error: true
         run: |
           node runner/scripts/classify-install.mjs doctor/npm-ci.log > doctor/report.md
           node runner/scripts/classify-install.mjs doctor/npm-ci.log --json > doctor/result.json
@@ -63,7 +64,7 @@ jobs:
 
       - name: Generate lockfile repair candidate
         id: repair_generate
-        if: steps.install.outcome != 'success'
+        if: ${{ always() && steps.install.outcome != 'success' }}
         continue-on-error: true
         working-directory: target
         run: |
@@ -75,7 +76,7 @@ jobs:
 
       - name: Verify repaired clean install
         id: repair_install
-        if: steps.install.outcome != 'success' && steps.repair_generate.outcome == 'success'
+        if: ${{ always() && steps.install.outcome != 'success' && steps.repair_generate.outcome == 'success' }}
         continue-on-error: true
         working-directory: target
         run: |
@@ -84,21 +85,21 @@ jobs:
 
       - name: Build all field surfaces
         id: build
-        if: steps.install.outcome == 'success' || steps.repair_install.outcome == 'success'
+        if: ${{ always() && (steps.install.outcome == 'success' || steps.repair_install.outcome == 'success') }}
         continue-on-error: true
         working-directory: target
         run: npm run build:all
 
       - name: Unit tests
         id: tests
-        if: steps.install.outcome == 'success' || steps.repair_install.outcome == 'success'
+        if: ${{ always() && (steps.install.outcome == 'success' || steps.repair_install.outcome == 'success') }}
         continue-on-error: true
         working-directory: target
         run: npm run test:run
 
       - name: Lint
         id: lint
-        if: steps.install.outcome == 'success' || steps.repair_install.outcome == 'success'
+        if: ${{ always() && (steps.install.outcome == 'success' || steps.repair_install.outcome == 'success') }}
         continue-on-error: true
         working-directory: target
         run: npm run lint
