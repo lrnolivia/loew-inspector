@@ -9,7 +9,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: field-dependency-doctor
+  group: field-dependency-doctor-v2
   cancel-in-progress: false
 
 jobs:
