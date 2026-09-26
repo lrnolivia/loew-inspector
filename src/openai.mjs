@@ -97,6 +97,11 @@ export async function listItems(sessionId) {
   );
 }
 
+export function parseRunnerStatus(text) {
+  const matches = [...String(text).matchAll(/^Status:\s*(CONTINUE|BLOCKED|COMPLETE)\s*$/gim)];
+  return matches.length ? matches[matches.length - 1][1].toUpperCase() : null;
+}
+
 export function latestAssistantText(page) {
   const items = page.data ?? page.items ?? [];
   for (const item of items) {

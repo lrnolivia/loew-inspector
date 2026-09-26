@@ -1,5 +1,5 @@
 import { buildContext, renderContext } from "./context.mjs";
-import { createSession, getSession, latestAssistantText, latestRootTurn, listItems, listTurns, sendMessage } from "./openai.mjs";
+import { createSession, getSession, latestAssistantText, latestRootTurn, listItems, listTurns, parseRunnerStatus, sendMessage } from "./openai.mjs";
 import { appendReport, isDue, loadState, nextRunFrom, saveState } from "./state.mjs";
 
 function reportBlock(output) {
@@ -77,9 +77,14 @@ async function harvest(config, state) {
       state.last_summary = output.text.slice(0, 1200);
       state.last_error = null;
       await appendReport(config.id, reportBlock(output));
-      if (/\bCOMPLETE\b/i.test(output.text)) state.status = "complete";
-      else if (/\bBLOCKED\b/i.test(output.text)) state.status = "blocked";
-      else state.status = "idle";
+      const declaredStatus = parseRunnerStatus(output.text);
+      if (declaredStatus === "COMPLETE") state.status = "complete";
+      else if (declaredStatus === "BLOCKED") state.status = "blocked";
+      else if (declaredStatus === "CONTINUE") state.status = "idle";
+      else {
+        state.status = "blocked";
+        state.last_error = "Agent output omitted the required final Status line.";
+      }
     } else {
       state.status = "idle";
     }
