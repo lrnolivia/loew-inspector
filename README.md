@@ -223,3 +223,90 @@ The doctor does not auto-rewrite dependencies in v0.1. Automatic repair should h
 6. add guarded repair-PR mode for dependency failures
 7. add event-driven wakeups in addition to schedules
 8. add budgets and per-worker run limits
+
+## Field pilot: dependency recovery
+
+The field pilot now treats dependency health as a first-class gate before any AI worker is enabled.
+
+**Doctor** is safe and automatic:
+
+1. checks out `lrnolivia/field` on a fresh GitHub-hosted Ubuntu runner
+2. pins Node 22
+3. runs `npm ci`
+4. classifies an install failure
+5. if the lockfile is stale, generates a temporary `package-lock.json` candidate with `npm install --package-lock-only --ignore-scripts`
+6. reruns `npm ci`
+7. runs `build:all`, unit tests, and lint
+8. writes the result back to `state/field.json`
+
+Doctor never pushes to field.
+
+The first field diagnosis was a real lockfile mismatch:
+
+```text
+Missing: @swc/helpers@0.5.23 from lock file
+```
+
+The repaired candidate has already proven that a regenerated lockfile restores a clean install and allows `build:all` to pass. Full test/lint verification remains the gate before Repair is considered safe.
+
+**Repair** is deliberately guarded:
+
+- it is manual/dashboard-dispatched only
+- it requires `RUNNER_GITHUB_TOKEN`
+- it may change only `package-lock.json`
+- it must pass clean install, build, unit tests, and lint
+- it creates a new branch and pull request
+- it never pushes directly to `field/main`
+
+## Dashboard controls
+
+For the field pilot, the dashboard exposes:
+
+- **Doctor** — run clean-room dependency diagnosis
+- **Repair** — unlocked only after the Doctor records `dependency_health: repairable`
+- **Enable / Pause** — control the background AI job
+- **Run now** — start one bounded agent cycle when enabled
+
+The browser never receives OpenAI or GitHub credentials. Workflow dispatch happens through the local runner backend.
+
+## Credentials
+
+### OPENAI_API_KEY
+
+Required only when an AI job is enabled.
+
+Store it as a GitHub Actions secret in `loew-runner` for scheduled execution. Do not place it in worker JSON or browser code.
+
+### RUNNER_GITHUB_TOKEN
+
+Not required for the public, read-only field research job itself.
+
+It is required for:
+
+- dashboard-triggered GitHub Actions
+- private target repositories
+- guarded repair PR creation
+
+Use a **fine-grained** GitHub token with the narrowest repository access possible.
+
+For the current field repair pilot:
+
+- `lrnolivia/field`: Contents — read/write
+- `lrnolivia/field`: Pull requests — read/write
+- `lrnolivia/loew-runner`: Actions — read/write if dashboard workflow dispatch is used
+
+The repair workflow fails closed when the token is absent.
+
+## Safety model
+
+The execution model is intentionally asymmetric:
+
+```text
+research/diagnosis     → automatic, read-only
+state persistence      → runner repo only
+target repair          → explicit + verified + PR
+target main branch     → never written directly
+```
+
+That keeps routine background work cheap and low-friction without giving an unattended agent broad repository mutation authority.
+
