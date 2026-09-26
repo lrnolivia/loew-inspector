@@ -45,9 +45,21 @@ async function load() {
     const state = worker.runtime;
     const healthClass = state.dependency_health === "healthy"
       ? "health-good"
-      : state.dependency_health === "failed"
+      : state.dependency_health === "repairable"
+        ? "health-warn"
+        : state.dependency_health === "failed"
+          ? "health-bad"
+          : "health-unknown";
+    const projectClass = state.project_health === "healthy"
+      ? "health-good"
+      : state.project_health === "failed" || state.project_health === "blocked"
         ? "health-bad"
         : "health-unknown";
+    const dependency = state.dependency ?? {};
+    const repairable = state.dependency_health === "repairable";
+    const workflowLink = dependency.workflow_url
+      ? `<a href="${escapeHtml(dependency.workflow_url)}" target="_blank" rel="noreferrer">view doctor run ↗</a>`
+      : "";
 
     return `
       <article class="card" data-id="${escapeHtml(worker.id)}">
@@ -60,6 +72,8 @@ async function load() {
             <div class="repo">${escapeHtml(worker.target.repository)} · every ${worker.cadence_minutes}m · ${escapeHtml(worker.model.id)}</div>
           </div>
           <div class="actions">
+            <button class="button doctor">Doctor</button>
+            <button class="button repair" ${repairable ? "" : "disabled"}>Repair</button>
             <button class="button toggle">${worker.enabled ? "Pause" : "Enable"}</button>
             <button class="button primary run" ${worker.enabled ? "" : "disabled"}>Run now</button>
           </div>
@@ -69,7 +83,9 @@ async function load() {
             <div class="label">status</div>
             <div class="value">${escapeHtml(state.status)}</div>
             <div class="label" style="margin-top:10px">dependencies</div>
-            <div class="value ${healthClass}">${escapeHtml(state.dependency_health)}</div>
+            <div class="value ${healthClass}">${escapeHtml(state.dependency_health ?? "unknown")}</div>
+            <div class="label" style="margin-top:10px">verification</div>
+            <div class="value ${projectClass}">${escapeHtml(state.project_health ?? "unknown")}</div>
           </div>
           <div class="cell">
             <div class="label">last run</div>
@@ -78,7 +94,10 @@ async function load() {
             <div class="value">${worker.enabled ? escapeHtml(relative(state.next_run_at)) : "paused"}</div>
           </div>
           <div class="cell">
-            <div class="label">latest</div>
+            <div class="label">dependency diagnosis</div>
+            <div class="value summary-text">${escapeHtml(dependency.reason ?? "Not checked yet.")}</div>
+            <div class="meta-link">${workflowLink}</div>
+            <div class="label" style="margin-top:10px">latest</div>
             <div class="value summary-text">${escapeHtml(state.last_summary ?? "No run yet.")}</div>
           </div>
         </div>
@@ -104,6 +123,30 @@ async function load() {
       button.textContent = "Starting…";
       try {
         await api(`/api/workers/${id}/run`, { method: "POST", body: "{}" });
+      } catch (error) {
+        alert(error.message);
+      }
+      await load();
+    });
+
+    card.querySelector(".doctor").addEventListener("click", async () => {
+      const button = card.querySelector(".doctor");
+      button.disabled = true;
+      button.textContent = "Queued…";
+      try {
+        await api(`/api/workers/${id}/doctor`, { method: "POST", body: "{}" });
+      } catch (error) {
+        alert(error.message);
+      }
+      await load();
+    });
+
+    card.querySelector(".repair").addEventListener("click", async () => {
+      const button = card.querySelector(".repair");
+      button.disabled = true;
+      button.textContent = "Queued…";
+      try {
+        await api(`/api/workers/${id}/repair`, { method: "POST", body: "{}" });
       } catch (error) {
         alert(error.message);
       }
