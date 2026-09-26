@@ -6,10 +6,30 @@
   "run_count": 0,
   "last_run_at": null,
   "next_run_at": null,
-  "last_summary": "Pilot created. Disabled until OPENAI_API_KEY is configured and the job is explicitly enabled.",
-  "next_focus": "Validate dependency health, then perform one controlled Agents API cycle.",
+  "last_summary": "Dependency Doctor reproduced a clean-room install failure; automated persistence is being enabled.",
+  "next_focus": "Verify a package-lock-only repair candidate before enabling the field agent.",
   "last_error": null,
   "last_usage": null,
-  "dependency_health": "unknown",
-  "updated_at": "2026-09-26T15:45:00.000Z"
+  "dependency_health": "failed",
+  "project_health": "blocked",
+  "dependency": {
+    "checked_at": "2026-09-26T15:56:57.000Z",
+    "classification": "lockfile",
+    "reason": "Missing: @swc/helpers@0.5.23 from lock file",
+    "missing": [
+      "@swc/helpers@0.5.23 from lock file"
+    ],
+    "node": "v22.23.2",
+    "npm": "10.9.8",
+    "workflow_url": "https://github.com/lrnolivia/loew-runner/actions/runs/36253694328",
+    "checks": {
+      "initial_install": "failure",
+      "repair_lockfile_generation": "not-run",
+      "repaired_clean_install": "not-run",
+      "build": "skipped",
+      "tests": "skipped",
+      "lint": "skipped"
+    }
+  },
+  "updated_at": "2026-09-26T16:15:00.000Z"
 }

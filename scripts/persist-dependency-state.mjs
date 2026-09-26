@@ -3,9 +3,11 @@ import path from "node:path";
 import { diagnoseInstallLog } from "./classify-install.mjs";
 
 const [id, logPath] = process.argv.slice(2);
-if (!id || !logPath) throw new Error("Usage: node scripts/persist-dependency-state.mjs <worker-id> <npm-ci-log>");
+if (!id || !logPath) {
+  throw new Error("Usage: node scripts/persist-dependency-state.mjs <worker-id> <npm-ci-log>");
+}
 
-const statePath = path.join("state", id + ".json");
+const statePath = path.join("state", `${id}.json`);
 const state = JSON.parse(await fs.readFile(statePath, "utf8"));
 const log = await fs.readFile(logPath, "utf8").catch(() => "");
 const diagnosis = diagnoseInstallLog(log);
@@ -51,13 +53,11 @@ state.last_summary =
   dependencyHealth === "healthy"
     ? "Dependency Doctor passed a clean npm ci."
     : dependencyHealth === "repairable"
-      ? "Dependency Doctor found a " + diagnosis.classification + " issue and verified that a regenerated lockfile restores a clean install."
-      : "Dependency Doctor failed: " + diagnosis.reason;
+      ? `Dependency Doctor found a ${diagnosis.classification} issue and verified that a regenerated lockfile restores a clean install.`
+      : `Dependency Doctor failed: ${diagnosis.reason}`;
 
 if (dependencyHealth === "repairable") {
-  state.next_focus = projectHealth === "healthy"
-    ? "Open a package-lock-only repair PR."
-    : "Inspect verification failures, then decide whether a package-lock-only repair PR is safe.";
+  state.next_focus = "Open and verify a package-lock-only repair PR.";
 } else if (dependencyHealth === "healthy" && projectHealth === "healthy") {
   state.next_focus = "Dependency baseline is healthy; continue with the controlled field agent pilot.";
 } else if (effectiveInstallSucceeded && projectHealth === "failed") {
@@ -67,5 +67,9 @@ if (dependencyHealth === "repairable") {
 }
 
 state.updated_at = new Date().toISOString();
-await fs.writeFile(statePath, JSON.stringify(state, null, 2) + "\n", "utf8");
-console.log(JSON.stringify({dependency_health: state.dependency_health, project_health: state.project_health, dependency: state.dependency}, null, 2));
+await fs.writeFile(statePath, `${JSON.stringify(state, null, 2)}\n`, "utf8");
+console.log(JSON.stringify({
+  dependency_health: state.dependency_health,
+  project_health: state.project_health,
+  dependency: state.dependency
+}, null, 2));
