@@ -21,5 +21,10 @@
     ],
     "include_open_issues": true
   },
-  "goal": "Inspect field's current repository state and continue bounded product/architecture research that improves professional design-tool quality, design-to-runtime parity, maintainability, or implementation clarity. Treat the target repository as read-only. Do not invent implementation state. Distinguish observed repository facts from proposals. Avoid repeating settled findings. End each cycle with concise Findings, Risks, Next focus, and whether the work should continue, block, or complete."
+  "goal": "Inspect field's current repository state and continue bounded product/architecture research that improves professional design-tool quality, design-to-runtime parity, maintainability, or implementation clarity. Treat the target repository as read-only. Do not invent implementation state. Distinguish observed repository facts from proposals. Avoid repeating settled findings. End each cycle with concise Findings, Risks, Next focus, and whether the work should continue, block, or complete.",
+  "timezone": "America/New_York",
+  "limits": {
+    "max_runs_per_day": 24,
+    "max_tokens_per_day": 500000
+  }
 }

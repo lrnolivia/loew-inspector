@@ -38,6 +38,12 @@ export function validateWorker(config, expectedId = config?.id) {
     throw new Error(`${expectedId}: cadence_minutes must be at least 60 in v0.1`);
   }
   if (!config.model?.id) throw new Error(`${expectedId}: model.id is required`);
+  if (config.limits?.max_runs_per_day != null && (!Number.isInteger(config.limits.max_runs_per_day) || config.limits.max_runs_per_day < 1)) {
+    throw new Error(`${expectedId}: limits.max_runs_per_day must be a positive integer`);
+  }
+  if (config.limits?.max_tokens_per_day != null && (!Number.isFinite(config.limits.max_tokens_per_day) || config.limits.max_tokens_per_day < 1)) {
+    throw new Error(`${expectedId}: limits.max_tokens_per_day must be positive`);
+  }
   if (!["none", "low", "medium", "high", "xhigh", "max"].includes(config.model.reasoning_effort)) {
     throw new Error(`${expectedId}: unsupported reasoning effort`);
   }

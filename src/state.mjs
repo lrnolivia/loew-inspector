@@ -18,6 +18,12 @@ export function defaultState(id) {
     next_focus: null,
     last_error: null,
     last_usage: null,
+    budget: {
+      day: null,
+      runs: 0,
+      tokens: 0,
+      last_accounted_turn_id: null
+    },
     dependency_health: "unknown",
     updated_at: new Date().toISOString()
   };
