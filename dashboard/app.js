@@ -69,7 +69,7 @@ async function load() {
               <span class="dot ${escapeHtml(state.status)}"></span>
               <span class="name">${escapeHtml(worker.name)}</span>
             </div>
-            <div class="repo">${escapeHtml(worker.target.repository)} · every ${worker.cadence_minutes}m · ${escapeHtml(worker.model.id)}</div>
+            <div class="repo">${escapeHtml(worker.target.repository)} · every ${worker.cadence_minutes}m · ${escapeHtml(worker.model.id)} · cap ${escapeHtml(worker.limits?.max_runs_per_day ?? "—")}/day</div>
           </div>
           <div class="actions">
             <button class="button doctor">Doctor</button>
@@ -88,7 +88,9 @@ async function load() {
             <div class="value ${projectClass}">${escapeHtml(state.project_health ?? "unknown")}</div>
           </div>
           <div class="cell">
-            <div class="label">last run</div>
+            <div class="label">daily budget</div>
+            <div class="value">${escapeHtml(state.budget?.runs ?? 0)} runs · ${Number(state.budget?.tokens ?? 0).toLocaleString()} tokens</div>
+            <div class="label" style="margin-top:10px">last run</div>
             <div class="value">${escapeHtml(relative(state.last_run_at))}</div>
             <div class="label" style="margin-top:10px">next run</div>
             <div class="value">${worker.enabled ? escapeHtml(relative(state.next_run_at)) : "paused"}</div>

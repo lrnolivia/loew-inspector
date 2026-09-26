@@ -6,6 +6,49 @@ function reportBlock(output) {
   return `## ${new Date().toISOString()}\n\n${output.text}`;
 }
 
+function localDay(config, now = new Date()) {
+  const timezone = config.timezone ?? "UTC";
+  const parts = new Intl.DateTimeFormat("en-CA", {
+    timeZone: timezone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit"
+  }).formatToParts(now);
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+  return `${values.year}-${values.month}-${values.day}`;
+}
+
+function budgetState(config, state, now = new Date()) {
+  const day = localDay(config, now);
+  const budget = state.budget ?? {
+    day,
+    runs: 0,
+    tokens: 0,
+    last_accounted_turn_id: null
+  };
+  if (budget.day !== day) {
+    budget.day = day;
+    budget.runs = 0;
+    budget.tokens = 0;
+    budget.last_accounted_turn_id = null;
+  }
+  state.budget = budget;
+  return budget;
+}
+
+function budgetBlockReason(config, state) {
+  const budget = budgetState(config, state);
+  const maxRuns = config.limits?.max_runs_per_day;
+  const maxTokens = config.limits?.max_tokens_per_day;
+  if (maxRuns != null && budget.runs >= maxRuns) {
+    return `Daily run budget reached (${budget.runs}/${maxRuns}).`;
+  }
+  if (maxTokens != null && budget.tokens >= maxTokens) {
+    return `Daily token budget reached (${budget.tokens}/${maxTokens}).`;
+  }
+  return null;
+}
+
 async function harvest(config, state) {
   if (!state.session_id) return state;
 
@@ -43,6 +86,12 @@ async function harvest(config, state) {
 
     state.last_turn_id = turn.id;
     state.last_usage = turn.usage ?? session.usage ?? state.last_usage;
+
+    const budget = budgetState(config, state);
+    if (turn.status === "completed" && budget.last_accounted_turn_id !== turn.id) {
+      budget.tokens += Number(turn.usage?.total_tokens ?? 0);
+      budget.last_accounted_turn_id = turn.id;
+    }
 
     if (turn.status === "failed") {
       state.status = "blocked";
@@ -101,6 +150,14 @@ export async function runWorker(config, { force = false } = {}) {
   if (!force && !isDue(config, state)) return state;
   if (["running", "blocked", "complete"].includes(state.status)) return state;
 
+  const budgetReason = budgetBlockReason(config, state);
+  if (budgetReason) {
+    state.status = "blocked";
+    state.last_error = budgetReason;
+    await saveState(state);
+    return state;
+  }
+
   const packet = await buildContext(config);
   const context = renderContext(packet);
   const now = Date.now();
@@ -137,6 +194,7 @@ export async function runWorker(config, { force = false } = {}) {
 
     state.status = "running";
     state.run_count += 1;
+    budgetState(config, state).runs += 1;
     state.last_run_at = new Date(now).toISOString();
     state.next_run_at = nextRunFrom(now, config.cadence_minutes);
     state.last_error = null;
