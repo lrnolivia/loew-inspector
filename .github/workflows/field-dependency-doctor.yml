@@ -15,6 +15,7 @@ concurrency:
 jobs:
   doctor:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - name: Checkout runner
         uses: actions/checkout@v6
@@ -48,6 +49,7 @@ jobs:
 
       - name: Clean dependency install
         id: install
+        timeout-minutes: 10
         continue-on-error: true
         working-directory: target
         run: |
@@ -64,6 +66,7 @@ jobs:
 
       - name: Generate lockfile repair candidate
         id: repair_generate
+        timeout-minutes: 10
         if: ${{ always() && steps.install.outcome != 'success' }}
         continue-on-error: true
         working-directory: target
@@ -76,6 +79,7 @@ jobs:
 
       - name: Verify repaired clean install
         id: repair_install
+        timeout-minutes: 10
         if: ${{ always() && steps.install.outcome != 'success' && steps.repair_generate.outcome == 'success' }}
         continue-on-error: true
         working-directory: target
@@ -85,6 +89,7 @@ jobs:
 
       - name: Build all field surfaces
         id: build
+        timeout-minutes: 10
         if: ${{ always() && (steps.install.outcome == 'success' || steps.repair_install.outcome == 'success') }}
         continue-on-error: true
         working-directory: target
@@ -92,6 +97,7 @@ jobs:
 
       - name: Unit tests
         id: tests
+        timeout-minutes: 10
         if: ${{ always() && (steps.install.outcome == 'success' || steps.repair_install.outcome == 'success') }}
         continue-on-error: true
         working-directory: target
@@ -99,6 +105,7 @@ jobs:
 
       - name: Lint
         id: lint
+        timeout-minutes: 10
         if: ${{ always() && (steps.install.outcome == 'success' || steps.repair_install.outcome == 'success') }}
         continue-on-error: true
         working-directory: target
@@ -131,6 +138,7 @@ jobs:
           git config user.email "actions@users.noreply.github.com"
           git add state/field.json
           git commit -m "doctor: update field dependency state"
+          git pull --rebase origin main
           git push
 
       - name: Summary
