@@ -1,0 +1,53 @@
+{
+  "id": "field",
+  "name": "field",
+  "repository": "lrnolivia/field",
+  "managed": true,
+  "default_branch": "main",
+  "implementation": {
+    "branch_prefixes": ["field/"],
+    "excluded_branches": [
+      "main",
+      "field/control",
+      "relay-write-proof"
+    ],
+    "draft_pr_required": true,
+    "merge_method": "squash"
+  },
+  "runtime": {
+    "kind": "node",
+    "node_version": "22",
+    "package_manager": "npm",
+    "lockfile": "package-lock.json",
+    "install": "npm ci"
+  },
+  "validation": {
+    "build": "npm run build:all",
+    "test": "npm run test:run",
+    "lint": "npm run lint",
+    "required": ["install", "build", "test", "lint"]
+  },
+  "qa": {
+    "runtime_required_for_web_visible_changes": true,
+    "preview_endpoints": [
+      "https://field.loew.fi",
+      "https://canvas.field.loew.fi",
+      "https://preview.field.loew.fi"
+    ]
+  },
+  "promotion": {
+    "automatic": true,
+    "repair_artificial_blockers": true,
+    "exact_sha_gate": true,
+    "max_transient_retries": 2,
+    "auto_update_branch": true,
+    "auto_create_pr": true,
+    "auto_merge": true
+  },
+  "safety": {
+    "force_push": false,
+    "bypass_required_checks": false,
+    "semantic_conflict_resolution": "block",
+    "dependency_intent_changes": "block"
+  }
+}
