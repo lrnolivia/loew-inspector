@@ -6,14 +6,14 @@
   "run_count": 0,
   "last_run_at": null,
   "next_run_at": null,
-  "last_summary": "Dependency Doctor reproduced a clean-room install failure; automated verification is being enabled.",
-  "next_focus": "Verify a package-lock-only repair candidate before enabling the field agent.",
+  "last_summary": "The lockfile repair restores a clean install, but project verification is not healthy. Test isolation diagnostics were captured.",
+  "next_focus": "Open and verify a package-lock-only repair PR.",
   "last_error": null,
   "last_usage": null,
-  "dependency_health": "failed",
-  "project_health": "blocked",
+  "dependency_health": "repairable",
+  "project_health": "failed",
   "dependency": {
-    "checked_at": "2026-09-26T15:56:57.000Z",
+    "checked_at": "2026-09-26T16:51:15.347Z",
     "classification": "lockfile",
     "reason": "Missing: @swc/helpers@0.5.23 from lock file",
     "missing": [
@@ -21,15 +21,16 @@
     ],
     "node": "v22.23.2",
     "npm": "10.9.8",
-    "workflow_url": "https://github.com/lrnolivia/loew-runner/actions/runs/36253694328",
+    "workflow_url": "https://github.com/lrnolivia/loew-runner/actions/runs/36256210454",
     "checks": {
       "initial_install": "failure",
-      "repair_lockfile_generation": "not-run",
-      "repaired_clean_install": "not-run",
-      "build": "skipped",
-      "tests": "skipped",
-      "lint": "skipped"
+      "repair_lockfile_generation": "success",
+      "repaired_clean_install": "success",
+      "build": "success",
+      "tests": "failure",
+      "lint": "failure",
+      "test_diagnostic": "ool\u001b[2m > \u001b[22maborted chain compensates without starting new work\u001b[32m 1\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m src/ai/agent/tools/chain.test.ts\u001b[2m > \u001b[22mchain tool\u001b[2m > \u001b[22mis registered with a label and never nested in batch\u001b[32m 6\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m1 passed\u001b[39m\u001b[22m\u001b[90m (1)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m5 passed\u001b[39m\u001b[22m\u001b[90m (5)\u001b[39m\n\u001b[2m   Start at \u001b[22m 16:49:32\n\u001b[2m   Duration \u001b[22m 12.09s\u001b[2m (transform 7.47s, setup 0ms, import 10.42s, tests 25ms, environment 1.36s)\u001b[22m\n\n=== src/ai/agent/tools/cms.test.ts ===\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.6 \u001b[39m\u001b[90m/home/runner/work/loew-runner/loew-runner/target\u001b[39m\n\n\n\u001b[31m⎯⎯⎯⎯⎯⎯\u001b[39m\u001b[1m\u001b[41m Failed Suites 1 \u001b[49m\u001b[22m\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m src/ai/agent/tools/cms.test.ts\u001b[2m [ src/ai/agent/tools/cms.test.ts ]\u001b[22m\n\u001b[31m\u001b[1mTypeError\u001b[22m: projectFS.subscribeWrites is not a function\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m installProjectFsAutosaveHook src/backend/autosave.ts:\u001b[2m394:44\u001b[22m\u001b[39m\n    \u001b[90m392|\u001b[39m   \u001b[34mprojectFsAutosaveUnsubscribe\u001b[39m\u001b[33m?.\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m393|\u001b[39m\n    \u001b[90m394|\u001b[39m   projectFsAutosaveUnsubscribe \u001b[33m=\u001b[39m projectFS\u001b[33m.\u001b[39m\u001b[34msubscribeWrites\u001b[39m((event) \u001b[33m=>\u001b[39m {\n    \u001b[90m   |\u001b[39m                                            \u001b[31m^\u001b[39m\n    \u001b[90m395|\u001b[39m     // Never echo collaboration-originated writes back through persist…\n    \u001b[90m396|\u001b[39m     \u001b[35mif\u001b[39m (event\u001b[33m.\u001b[39morigin \u001b[33m!==\u001b[39m \u001b[32m'local'\u001b[39m) \u001b[35mreturn\u001b[39m\u001b[33m;\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m src/backend/autosave.ts:\u001b[2m415:1\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m src/code/project/cms-ops.ts:\u001b[2m20:1\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\u001b[22m\u001b[39m\n\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[31m1 failed\u001b[39m\u001b[22m\u001b[90m (1)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[2mno tests\u001b[22m\n\u001b[2m   Start at \u001b[22m 16:49:46\n\u001b[2m   Duration \u001b[22m 2.36s\u001b[2m (transform 467ms, setup 0ms, import 0ms, tests 0ms, environment 1.42s)\u001b[22m\n\nFAILED: src/ai/agent/tools/cms.test.ts (exit 1)\n"
     }
   },
-  "updated_at": "2026-09-26T16:15:00.000Z"
+  "updated_at": "2026-09-26T16:51:15.347Z"
 }
