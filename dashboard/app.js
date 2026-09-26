@@ -56,7 +56,8 @@ async function load() {
         ? "health-bad"
         : "health-unknown";
     const dependency = state.dependency ?? {};
-    const repairable = state.dependency_health === "repairable" && state.project_health === "healthy";
+    const repairable = state.dependency_health === "repairable" && dependency.repair_verified === true;
+    const repairLabel = repairable && state.project_health !== "healthy" ? "Repair draft" : "Repair";
     const workflowLink = dependency.workflow_url
       ? `<a href="${escapeHtml(dependency.workflow_url)}" target="_blank" rel="noreferrer">view doctor run ↗</a>`
       : "";
@@ -73,7 +74,7 @@ async function load() {
           </div>
           <div class="actions">
             <button class="button doctor">Doctor</button>
-            <button class="button repair" ${repairable ? "" : "disabled"}>Repair</button>
+            <button class="button repair" ${repairable ? "" : "disabled"}>${repairLabel}</button>
             <button class="button toggle">${worker.enabled ? "Pause" : "Enable"}</button>
             <button class="button primary run" ${worker.enabled ? "" : "disabled"}>Run now</button>
           </div>

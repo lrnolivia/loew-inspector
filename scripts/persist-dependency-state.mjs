@@ -42,6 +42,7 @@ state.dependency = {
   node: process.env.DOCTOR_NODE ?? null,
   npm: process.env.DOCTOR_NPM ?? null,
   workflow_url: process.env.DOCTOR_WORKFLOW_URL ?? null,
+  repair_verified: repairInstall === "success" && build === "success",
   checks: {
     initial_install: install,
     repair_lockfile_generation: repairGenerate,
@@ -64,8 +65,12 @@ state.last_summary =
           ? "Dependencies install cleanly, but project verification is not healthy."
           : `Dependency Doctor failed: ${diagnosis.reason}`;
 
-if (dependencyHealth === "repairable") {
-  state.next_focus = "Open and verify a package-lock-only repair PR.";
+if (dependencyHealth === "repairable" && state.dependency.repair_verified && projectHealth === "healthy") {
+  state.next_focus = "Open a verified package-lock-only repair PR.";
+} else if (dependencyHealth === "repairable" && state.dependency.repair_verified) {
+  state.next_focus = "Dependency repair is verified through install and build; project tests/lint have separate failures. Repair may open a draft PR with those warnings.";
+} else if (dependencyHealth === "repairable") {
+  state.next_focus = "The dependency issue is repairable, but the repair has not cleared install/build verification.";
 } else if (dependencyHealth === "healthy" && projectHealth === "healthy") {
   state.next_focus = "Dependency baseline is healthy; continue with the controlled field agent pilot.";
 } else if (effectiveInstallSucceeded && projectHealth === "failed") {

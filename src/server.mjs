@@ -80,9 +80,9 @@ const server = http.createServer(async (req, res) => {
         return json(res, 404, { error: "No dependency repair workflow is configured for this worker yet." });
       }
       const state = await loadState(repair[1]);
-      if (state.dependency_health !== "repairable" || state.project_health !== "healthy") {
+      if (state.dependency_health !== "repairable" || state.dependency?.repair_verified !== true) {
         return json(res, 409, {
-          error: "Repair unlocks only after Dependency Doctor verifies the lockfile repair and build, tests, and lint are all healthy."
+          error: "Repair unlocks only after Dependency Doctor verifies a package-lock repair through clean install and build."
         });
       }
       return json(
