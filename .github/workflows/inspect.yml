@@ -63,17 +63,6 @@ jobs:
           : "${CF_ACCESS_CLIENT_ID:?missing CF_ACCESS_CLIENT_ID repository variable}"
           : "${CF_ACCESS_CLIENT_SECRET:?missing CF repository secret}"
 
-          node <<'NODE'
-          const s = process.env.CF_ACCESS_CLIENT_SECRET ?? "";
-          console.log("SECRET_SHAPE=" + JSON.stringify({
-            length: s.length,
-            starts_with_cfast: s.startsWith("cfast_"),
-            has_whitespace: /\s/.test(s),
-            has_colon: s.includes(":"),
-            has_quote: s.includes('"') || s.includes("'")
-          }));
-          NODE
-
           body="$(node <<'NODE'
           const payload = {
             jsonrpc: "2.0",
