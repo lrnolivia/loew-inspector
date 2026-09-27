@@ -89,7 +89,7 @@ jobs:
           )"
 
           response="$(
-            curl --fail-with-body --silent --show-error               -X POST "https://inspector.loew.fi/mcp"               -H "Authorization: $auth_header"               -H "Content-Type: application/json"               --data "$body"
+            curl --fail-with-body --silent --show-error               -X POST "https://inspector.loew.fi/mcp"               -H "Authorization: $auth_header"               -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID"               -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET"               -H "Content-Type: application/json"               --data "$body"
           )"
 
           node <<'NODE' "$response"
@@ -99,12 +99,10 @@ jobs:
             console.error("inspector returned invalid JSON");
             process.exit(1);
           }
-
           if (parsed.error) {
             console.error(JSON.stringify({ ok:false, rpc_error:parsed.error }));
             process.exit(1);
           }
-
           if (parsed?.result?.isError) {
             console.error(JSON.stringify({
               ok:false,
@@ -112,13 +110,11 @@ jobs:
             }));
             process.exit(1);
           }
-
           const out = parsed?.result?.structuredContent;
           if (!out) {
             console.error("inspector returned no structuredContent");
             process.exit(1);
           }
-
           console.log("LOEW_INSPECTOR_RESULT=" + JSON.stringify({
             ok:true,
             request_id:process.env.REQUEST_ID,
