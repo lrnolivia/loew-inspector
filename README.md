@@ -41,6 +41,10 @@ This is a Preview preflight: it verifies editor reachability, Canvas routing and
 
 Verified on field PR #19 at head `c871cc9afaf7dfae517665c5c8f2eea8f37ebe77`: [QA run 36297329899](https://github.com/lrnolivia/loew-inspector/actions/runs/36297329899) was dispatched and read through the connected Composio GitHub action. Both jobs passed: protected runner returned HTTP 200 through inspector, and Chromium loaded the immutable editor/Canvas deployment `8a2a8555` with Canvas iframe first paint and all four isolation headers. The browser screenshots are attached to the run. This proves the connected GitHub action can invoke the new workflow; the earlier run 36296334657 separately proved that connection from a normal ChatGPT conversation.
 
+`schedule-preview-qa.yml` checks all open `lrnolivia/field` PRs hourly. For each PR head, it reads the matching successful Cloudflare deployment row, takes the paired immutable editor/Canvas URLs, and dispatches `qa-preview.yml` once for that head. It uses this repository's scoped `GITHUB_TOKEN`; no new Access credential is shared with runner. Missing deployments are recorded in `LOEW_PREVIEW_SCHEDULER_RESULT=` and are never guessed. A new commit gets a new QA run. The scheduler looks back through recent QA workflow runs to avoid repeat dispatches; very old unchanged heads may eventually be rechecked after the run history window rolls over.
+
+This scheduled check is the QA evidence producer. Runner's separate development agent is still a disabled, read-only pilot, so a green Preview run does not mean autonomous development or merge promotion is active. Normal ChatGPT can read the workflow evidence through Composio and use it when steering work.
+
 Cloudflare Free-plan Bot Fight Mode challenged both GitHub's request and the inspector's downstream request before Access evaluated either one. Cloudflare does not support a path-specific skip for that feature, so Bot Fight Mode is off for the loew.fi zone. Browser Integrity Check, Security Level Medium, managed rules, and Access remain enabled. Revisit this if the zone moves to Super Bot Fight Mode, which supports a scoped skip.
 
 ## QA stance
