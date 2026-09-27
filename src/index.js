@@ -1,11 +1,15 @@
-const VERSION = "0.3.1";
+const VERSION = "0.3.2";
 const ACCESS_ISSUER = "https://loewfi.cloudflareaccess.com";
 const ACCESS_AUD = "6d19d2ef9eea644a9f55a049699a31110150fefebb1bca8c89632b9dd149ccd6";
 const BRIDGE_ACCESS_AUD = "042e98668017c064913a05705dd5e26de48153116ecb9bd574ec1128a559fd23";
 const MAX_BODY_BYTES = 262144;
 const MAX_REDIRECTS = 5;
 const TARGET_TIMEOUT_MS = 10000;
-const SAFE_HEADERS = ["content-type","content-length","cache-control","cf-ray","server"];
+const SAFE_HEADERS = [
+  "content-type", "content-length", "cache-control", "cf-ray", "server",
+  "cross-origin-resource-policy", "cross-origin-opener-policy",
+  "cross-origin-embedder-policy", "origin-agent-cluster"
+];
 const TEXT_TYPES = /^(text\/|application\/(?:json|xml|javascript|xhtml\+xml|[^;]+\+(?:json|xml)))/i;
 
 let jwksCache = { expires: 0, keys: [] };

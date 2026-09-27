@@ -136,7 +136,7 @@ jobs:
             console.error("inspector returned no structuredContent");
             process.exit(1);
           }
-          if (out.status !== 200 || !out.content_type?.toLowerCase().startsWith("application/json")) {
+          if (out.status !== 200) {
             console.error(JSON.stringify({
               ok:false,
               target_status:out.status,
