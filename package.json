@@ -3,5 +3,9 @@
   "type": "module",
   "devDependencies": {
     "playwright": "1.60.0"
+  },
+  "scripts": {
+    "test": "node --test test/*.test.mjs",
+    "check": "node --check scripts/*.mjs && node --check lib/*.mjs"
   }
 }
