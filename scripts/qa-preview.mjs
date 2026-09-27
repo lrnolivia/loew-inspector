@@ -57,13 +57,23 @@ try {
 
   browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
+  const browserErrors = [];
+  page.on('pageerror', error => browserErrors.push(error.message.slice(0, 300)));
+  page.on('requestfailed', request => browserErrors.push(`${request.url()} ${request.failure()?.errorText}`.slice(0, 300)));
   const response = await page.goto(new URL('/builder/noauth', editor).href, {
     waitUntil: 'domcontentloaded', timeout: 20000,
   });
+  await page.waitForTimeout(5000);
+  try {
+    await page.getByText('Starting canvas', { exact: true }).waitFor({ state: 'hidden', timeout: 15000 });
+  } catch { /* Record the unresolved loading state below. */ }
   await page.screenshot({ path: 'qa-evidence/editor.png', fullPage: true });
   result.checks.editor_browser = {
     status: response?.status() ?? 0,
+    final_url: page.url(),
     title: await page.title(),
+    starting_canvas_visible: await page.getByText('Starting canvas', { exact: true }).isVisible(),
+    errors: browserErrors.slice(0, 10),
   };
   const canvasPage = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   const canvasResponse = await canvasPage.goto(canvas.href, {
@@ -80,9 +90,8 @@ try {
 }
 
 const canvasHeaders = result.checks.canvas_http.headers;
-const passed = result.checks.editor_http.status === 200 &&
-  result.checks.editor_http.content_type.includes('text/html') &&
-  result.checks.editor_browser.status === 200 &&
+const passed = result.checks.editor_browser.status === 200 &&
+  !result.checks.editor_browser.starting_canvas_visible &&
   result.checks.canvas_http.status === 200 &&
   result.checks.canvas_http.content_type.includes('text/html') &&
   result.checks.canvas_browser.status === 200 &&
