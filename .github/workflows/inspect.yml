@@ -80,8 +80,16 @@ jobs:
           NODE
           )"
 
+          auth_header="$(node <<'NODE'
+          process.stdout.write(JSON.stringify({
+            "cf-access-client-id": process.env.CF_ACCESS_CLIENT_ID,
+            "cf-access-client-secret": process.env.CF_ACCESS_CLIENT_SECRET
+          }));
+          NODE
+          )"
+
           response="$(
-            curl --fail-with-body --silent --show-error               -X POST "https://inspector.loew.fi/mcp"               -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID"               -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET"               -H "Content-Type: application/json"               --data "$body"
+            curl --fail-with-body --silent --show-error               -X POST "https://inspector.loew.fi/mcp"               -H "Authorization: $auth_header"               -H "Content-Type: application/json"               --data "$body"
           )"
 
           node <<'NODE' "$response"
