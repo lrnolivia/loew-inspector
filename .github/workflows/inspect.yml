@@ -56,12 +56,12 @@ jobs:
           TARGET_URL: ${{ inputs.url }}
           TARGET_METHOD: ${{ inputs.method }}
           REQUEST_ID: ${{ inputs.request_id }}
-          CF_ACCESS_CLIENT_ID: ${{ secrets.CF_ACCESS_CLIENT_ID }}
+          CF_ACCESS_CLIENT_ID: ${{ vars.CF_ACCESS_CLIENT_ID }}
           CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF_ACCESS_CLIENT_SECRET }}
         run: |
           set -euo pipefail
-          : "${CF_ACCESS_CLIENT_ID:?missing CF_ACCESS_CLIENT_ID secret}"
-          : "${CF_ACCESS_CLIENT_SECRET:?missing CF_ACCESS_CLIENT_SECRET secret}"
+          : "${CF_ACCESS_CLIENT_ID:?missing CF_ACCESS_CLIENT_ID repository variable}"
+          : "${CF_ACCESS_CLIENT_SECRET:?missing CF_ACCESS_CLIENT_SECRET repository secret}"
 
           body="$(node <<'NODE'
           const payload = {
