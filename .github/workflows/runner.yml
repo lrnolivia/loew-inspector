@@ -28,7 +28,7 @@ jobs:
 
       - name: Run due workers or requested worker
         env:
-          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          OPENAI_API_KEY: ${{ secrets.OPENAIKEY }}
           RUNNER_GITHUB_TOKEN: ${{ secrets.RUNNER_GITHUB_TOKEN }}
           REQUESTED_WORKER: ${{ inputs.worker_id }}
         run: |
