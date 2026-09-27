@@ -1,0 +1,35 @@
+{
+  "schema": 1,
+  "version": "2026-09-27.1",
+  "authority": "lrnolivia/loew-runner@main",
+  "contract": "LOEW_CHAT_BIBLE.md",
+  "applies_to": "all lrnolivia/loew project execution chats unless explicitly overridden by the user",
+  "required_bootstrap": [
+    "contracts/manifest.json",
+    "LOEW_CHAT_BIBLE.md",
+    "<target-repo>/AGENTS.md",
+    "applicable role contract",
+    "current assignment/control/QA state",
+    "fresh Git/runtime truth"
+  ],
+  "watchdog": {
+    "identical_failure_attempts": 2,
+    "stale_blocked_state_must_be_revalidated": true,
+    "repeated_next_action_without_evidence_change_is_stall": true
+  },
+  "transport": {
+    "composio_remote_available": true,
+    "authorized_local_clone_allowed": true,
+    "local_clone_does_not_disable_composio": true
+  },
+  "emergency_invariants": [
+    "fresh-state-before-action",
+    "no-invented-evidence",
+    "bounded-identical-retries",
+    "no-third-identical-retry",
+    "repair-own-machinery-when-safe",
+    "park-local-blocker-continue-safe-work",
+    "post-write-verification",
+    "persist-next-action"
+  ]
+}

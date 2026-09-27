@@ -1,5 +1,7 @@
 # runner architecture
 
+Universal chat/execution law lives in `LOEW_CHAT_BIBLE.md` and its versioned `contracts/manifest.json`. Managed project repositories should point to that authority rather than carrying forked copies of generic execution rules.
+
 `runner` is the universal GitHub control plane for loew.fi project automation.
 
 Repository: `lrnolivia/loew-runner`  
@@ -226,3 +228,12 @@ The scheduler, durable state, GitHub transport, Preview/QA orchestration, and Op
 OpenAI API billing is a separate budget boundary from ChatGPT subscriptions and ChatGPT usage credits. Missing API credentials fail closed without retry spam.
 
 Routine ticks should be deterministic and cheap. AI inference should occur only when new evidence or a decision actually requires it.
+
+
+## Instruction architecture
+
+`loew-runner` is the GitHub-wide authority for generic chat execution behavior.
+
+Each target repository should keep a thin root `AGENTS.md` bootstrap that points back to the current Runner Bible and contains only a minimal emergency invariant set plus repository-specific product/process overlays.
+
+Platform is not an organizational split. Composio is available universally for remote control-plane operations. Authorized local clones may be used for implementation/testing where available, including Linux/Codex workflows, and may be combined with Composio remote operations.

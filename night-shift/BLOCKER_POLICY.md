@@ -1,5 +1,7 @@
 # Night Shift blocker policy
 
+> Universal authority: read `../LOEW_CHAT_BIBLE.md` first. This policy specializes blocker handling.
+
 ## Rule
 
 A blocker caused by our own machinery is usually work.
@@ -70,3 +72,14 @@ Report:
 > field/dashboard-interaction-polish cannot promote because test `X` fails reproducibly on head `abc123` against main `def456`. Clean dependency install and build pass. The failure changes expected navigation behavior, so runner will not rewrite it automatically.
 
 Real blockers should arrive already diagnosed.
+
+
+## Failure fingerprint and loop escape
+
+For every retryable failure, track the operation, target, relevant SHA/state, error class, and normalized error as the failure fingerprint.
+
+The default identical retry budget is two attempts.
+
+If the same fingerprint occurs twice without new evidence, do not perform a third identical retry. Refresh live truth and either use a materially different approved path, repair the bounded machinery and retry once, park the affected path and continue other safe work, or escalate the smallest real blocker.
+
+A prior `BLOCKED` state is never self-authenticating. Revalidate it on each new invocation before inheriting it.

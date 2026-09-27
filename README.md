@@ -1,5 +1,8 @@
 # loew-runner
 
+> Universal chat operating contract: `LOEW_CHAT_BIBLE.md`  
+> Machine-readable contract manifest: `contracts/manifest.json`
+
 A small, durable headless execution layer for background research and project continuity.
 
 `loew-runner` exists because ordinary ChatGPT scheduled tasks are intentionally limited. It does **not** try to replace the normal ChatGPT Project chats that remain the user-facing place to plan, steer, and review work.

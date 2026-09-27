@@ -1,5 +1,7 @@
 # Night Shift universal contract
 
+> Universal authority: read `../LOEW_CHAT_BIBLE.md` first. This contract specializes Night Shift behavior and may not weaken or fork the Bible.
+
 Night Shift is runner's reusable Contract Worker execution system.
 
 It applies to repositories explicitly managed by `loew-runner`.
@@ -131,3 +133,12 @@ Never:
 Chat history is not durable project state.
 
 Assignments, QA, blockers, session state, and promotion evidence must be reconstructable from Git-backed runner state.
+
+
+## 12. Overnight progress watchdog
+
+Night Shift inherits the Bible's recovery, failure-fingerprint, bounded-retry, sanity-gate, and loop-watchdog rules.
+
+A blocked assignment is a scheduling event. Revalidate the blocker from fresh evidence, park only the affected path, and continue another safe ready assignment when one exists.
+
+The Night Shift Manager must not end the night merely because one QA harness, branch, workflow, or assignment path is stuck.
