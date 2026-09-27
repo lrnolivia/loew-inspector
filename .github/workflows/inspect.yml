@@ -92,7 +92,7 @@ jobs:
           trap 'rm -f "$headers_file" "$body_file"' EXIT
 
           status="$(
-            curl --silent --show-error               --output "$body_file"               --dump-header "$headers_file"               --write-out '%{http_code}'               -X POST "https://inspector.loew.fi/mcp"               -H "Authorization: $auth_header"               -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID"               -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET"               -H "Content-Type: application/json"               --data "$body"
+            curl --silent --show-error               --output "$body_file"               --dump-header "$headers_file"               --write-out '%{http_code}'               -X POST "https://loew-inspector-gateway.lrnoliv.workers.dev/mcp"               -H "Authorization: $auth_header"               -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID"               -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET"               -H "Content-Type: application/json"               --data "$body"
           )"
 
           echo "INSPECTOR_HTTP_STATUS=$status"
