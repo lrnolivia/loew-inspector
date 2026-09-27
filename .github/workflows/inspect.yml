@@ -87,26 +87,28 @@ jobs:
           NODE
           )"
 
-          headers_file="$(mktemp)"
           body_file="$(mktemp)"
-          trap 'rm -f "$headers_file" "$body_file"' EXIT
+          trap 'rm -f "$body_file"' EXIT
 
           status="$(
-            curl --silent --show-error               --output "$body_file"               --dump-header "$headers_file"               --write-out '%{http_code}'               -X POST "https://loew-inspector-gateway.lrnoliv.workers.dev/mcp"               -H "Authorization: $auth_header"               -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID"               -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET"               -H "Content-Type: application/json"               --data "$body"
+            curl --silent --show-error \
+              --output "$body_file" \
+              --write-out '%{http_code}' \
+              -X POST "https://loew-inspector-gateway.lrnoliv.workers.dev/mcp" \
+              -H "Authorization: $auth_header" \
+              -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID" \
+              -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET" \
+              -H "Content-Type: application/json" \
+              --data "$body"
           )"
 
           echo "INSPECTOR_HTTP_STATUS=$status"
-          echo "SAFE_RESPONSE_HEADERS_BEGIN"
-          awk 'BEGIN{IGNORECASE=1}
-            /^cf-ray:/ || /^content-type:/ || /^server:/ || /^location:/ || /^cf-access-/ {print}
-          ' "$headers_file"
-          echo "SAFE_RESPONSE_HEADERS_END"
 
           if [ "$status" != "200" ]; then
-            echo "SAFE_RESPONSE_BODY_BEGIN"
-            head -c 800 "$body_file" | tr '\n' ' '
+            echo "INSPECTOR_ERROR_PREFIX_BEGIN"
+            head -c 160 "$body_file" | tr '\n' ' '
             echo
-            echo "SAFE_RESPONSE_BODY_END"
+            echo "INSPECTOR_ERROR_PREFIX_END"
             exit 22
           fi
 
