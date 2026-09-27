@@ -9,5 +9,8 @@
   },
   "vars": {
     "REQUIRE_ACCESS": "true"
+  },
+  "secrets": {
+    "required": ["RUNNER_GITHUB_TOKEN"]
   }
 }
