@@ -1,10 +1,20 @@
 const workersEl = document.querySelector("#workers");
+const workerNavEl = document.querySelector("#worker-nav");
 const summaryEl = document.querySelector("#summary");
 const refreshButton = document.querySelector("#refresh");
+const connectionEl = document.querySelector("#connection");
+const tabs = [...document.querySelectorAll(".app-tab")];
+
+let selectedWorkerId = null;
+let currentWorkers = [];
+
+document.body.dataset.view = "overview";
 
 function relative(value) {
   if (!value) return "—";
-  const delta = Date.parse(value) - Date.now();
+  const parsed = Date.parse(value);
+  if (!Number.isFinite(parsed)) return "—";
+  const delta = parsed - Date.now();
   const abs = Math.abs(delta);
   const unit = abs < 3_600_000 ? "minute" : abs < 86_400_000 ? "hour" : "day";
   const divisor = unit === "minute" ? 60_000 : unit === "hour" ? 3_600_000 : 86_400_000;
@@ -19,146 +29,208 @@ function escapeHtml(value = "") {
 
 async function api(url, options) {
   const response = await fetch(url, {
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", Accept: "application/json" },
     ...options
   });
-  const body = await response.json();
-  if (!response.ok) throw new Error(body.error ?? "Request failed");
+  const text = await response.text();
+  let body;
+  try { body = text ? JSON.parse(text) : {}; }
+  catch { body = { error: text || `Unexpected ${response.status} response.` }; }
+  if (!response.ok) throw Object.assign(new Error(body.error ?? "Request failed"), { status: response.status });
   return body;
 }
 
-async function load() {
-  const workers = await api("/api/workers");
-  const active = workers.filter((w) => w.enabled).length;
-  const running = workers.filter((w) => w.runtime.status === "running").length;
-  const blocked = workers.filter((w) => w.runtime.status === "blocked").length;
-  const healthy = workers.filter((w) => w.runtime.dependency_health === "healthy").length;
+function statusTone(value) {
+  if (["healthy", "idle", "complete", "saved"].includes(value)) return "good";
+  if (["repairable", "warning", "running"].includes(value)) return "warn";
+  if (["failed", "blocked", "error"].includes(value)) return "bad";
+  return "neutral";
+}
 
+function statusPill(label, value) {
+  const normalized = String(value ?? "unknown").toLowerCase();
+  return `<span class="status-pill status-${statusTone(normalized)}"><span class="status-dot"></span><span>${escapeHtml(label)} · ${escapeHtml(normalized)}</span></span>`;
+}
+
+function setConnection(kind, label) {
+  connectionEl.className = `status-pill status-${kind}`;
+  connectionEl.innerHTML = `<span class="status-dot"></span><span>${escapeHtml(label)}</span>`;
+}
+
+function renderNav(workers) {
+  if (!workers.length) {
+    workerNavEl.innerHTML = '<div class="sidebar-note">No workers registered.</div>';
+    return;
+  }
+  if (!selectedWorkerId || !workers.some((worker) => worker.id === selectedWorkerId)) {
+    selectedWorkerId = workers[0].id;
+  }
+  workerNavEl.innerHTML = workers.map((worker) => {
+    const active = worker.id === selectedWorkerId;
+    return `<button class="sidebar-item ${active ? "active" : ""}" type="button" data-worker-id="${escapeHtml(worker.id)}"><span class="nav-dot"></span><span>${escapeHtml(worker.name)}</span></button>`;
+  }).join("");
+
+  workerNavEl.querySelectorAll(".sidebar-item").forEach((button) => {
+    button.addEventListener("click", () => {
+      selectedWorkerId = button.dataset.workerId;
+      renderNav(currentWorkers);
+      renderWorkers(currentWorkers);
+    });
+  });
+}
+
+function renderSummary(workers) {
+  const active = workers.filter((worker) => worker.enabled).length;
+  const running = workers.filter((worker) => worker.runtime.status === "running").length;
+  const repairable = workers.filter((worker) => worker.runtime.dependency_health === "repairable").length;
+  const blocked = workers.filter((worker) => ["blocked", "failed"].includes(worker.runtime.status)).length;
   summaryEl.innerHTML = [
     ["workers", workers.length],
     ["enabled", active],
     ["running", running],
-    ["deps healthy", healthy]
+    [repairable ? "repairable" : "blocked", repairable || blocked]
   ].map(([label, value]) => `<div class="stat"><b>${value}</b><span>${label}</span></div>`).join("");
+}
 
-  workersEl.innerHTML = workers.map((worker) => {
-    const state = worker.runtime;
-    const healthClass = state.dependency_health === "healthy"
-      ? "health-good"
-      : state.dependency_health === "repairable"
-        ? "health-warn"
-        : state.dependency_health === "failed"
-          ? "health-bad"
-          : "health-unknown";
-    const projectClass = state.project_health === "healthy"
-      ? "health-good"
-      : state.project_health === "failed" || state.project_health === "blocked"
-        ? "health-bad"
-        : "health-unknown";
+function renderWorkers(workers) {
+  const visible = workers.filter((worker) => worker.id === selectedWorkerId);
+  if (!visible.length) {
+    workersEl.innerHTML = '<div class="empty-state"><div class="state-title">No worker selected</div><div class="state-copy">Choose a worker from the navigation rail.</div></div>';
+    return;
+  }
+
+  workersEl.innerHTML = visible.map((worker) => {
+    const state = worker.runtime ?? {};
     const dependency = state.dependency ?? {};
     const repairable = state.dependency_health === "repairable" && dependency.repair_verified === true;
     const repairLabel = repairable && state.project_health !== "healthy" ? "Repair draft" : "Repair";
     const workflowLink = dependency.workflow_url
-      ? `<a href="${escapeHtml(dependency.workflow_url)}" target="_blank" rel="noreferrer">view doctor run ↗</a>`
-      : "";
+      ? `<a href="${escapeHtml(dependency.workflow_url)}" target="_blank" rel="noreferrer">View doctor run ↗</a>`
+      : "No doctor run recorded.";
 
     return `
-      <article class="card" data-id="${escapeHtml(worker.id)}">
-        <div class="card-head">
-          <div class="identity">
-            <div class="name-line">
-              <span class="dot ${escapeHtml(state.status)}"></span>
-              <span class="name">${escapeHtml(worker.name)}</span>
-            </div>
-            <div class="repo">${escapeHtml(worker.target.repository)} · every ${worker.cadence_minutes}m · ${escapeHtml(worker.model.id)} · cap ${escapeHtml(worker.limits?.max_runs_per_day ?? "—")}/day</div>
+      <article class="worker-panel" data-id="${escapeHtml(worker.id)}">
+        <div class="worker-toolbar">
+          <div class="worker-title">
+            <div class="worker-name">${escapeHtml(worker.name)}</div>
+            <div class="worker-meta">${escapeHtml(worker.target.repository)} · every ${escapeHtml(worker.cadence_minutes)}m · ${escapeHtml(worker.model.id)} · cap ${escapeHtml(worker.limits?.max_runs_per_day ?? "—")}/day</div>
           </div>
           <div class="actions">
-            <button class="button doctor">Doctor</button>
-            <button class="button repair" ${repairable ? "" : "disabled"}>${repairLabel}</button>
-            <button class="button toggle">${worker.enabled ? "Pause" : "Enable"}</button>
-            <button class="button primary run" ${worker.enabled ? "" : "disabled"}>Run now</button>
+            <button class="tp-button secondary doctor" type="button">Doctor</button>
+            <button class="tp-button secondary repair" type="button" ${repairable ? "" : "disabled"}>${repairLabel}</button>
+            <button class="tp-button secondary toggle" type="button">${worker.enabled ? "Pause" : "Enable"}</button>
+            <button class="tp-button primary run" type="button" ${worker.enabled ? "" : "disabled"}>Run now</button>
           </div>
         </div>
-        <div class="details">
-          <div class="cell">
-            <div class="label">status</div>
-            <div class="value">${escapeHtml(state.status)}</div>
-            <div class="label" style="margin-top:10px">dependencies</div>
-            <div class="value ${healthClass}">${escapeHtml(state.dependency_health ?? "unknown")}</div>
-            <div class="label" style="margin-top:10px">verification</div>
-            <div class="value ${projectClass}">${escapeHtml(state.project_health ?? "unknown")}</div>
+
+        <div class="status-strip">
+          ${statusPill("worker", state.status)}
+          ${statusPill("dependencies", state.dependency_health)}
+          ${statusPill("project", state.project_health)}
+        </div>
+
+        <div class="data-header overview-only">
+          <div>Target</div><div>Budget</div><div>Last run</div><div>Next run</div>
+        </div>
+        <div class="data-row overview-only">
+          <div><strong>${escapeHtml(worker.target.repository)}</strong><div class="muted">${escapeHtml(worker.target.write_mode)}</div></div>
+          <div>${escapeHtml(state.budget?.runs ?? 0)} runs<div class="muted">${Number(state.budget?.tokens ?? 0).toLocaleString()} tokens</div></div>
+          <div>${escapeHtml(relative(state.last_run_at))}<div class="muted">${escapeHtml(state.run_count ?? 0)} total</div></div>
+          <div>${worker.enabled ? escapeHtml(relative(state.next_run_at)) : "paused"}<div class="muted">${worker.enabled ? "scheduled" : "disabled"}</div></div>
+        </div>
+
+        <div class="diagnosis diagnostics-only">
+          <div class="diagnosis-block">
+            <div class="diagnosis-title">Dependency diagnosis</div>
+            <div class="diagnosis-value">${escapeHtml(dependency.reason ?? "Not checked yet.")}</div>
+            <div class="diagnosis-value">${workflowLink}</div>
           </div>
-          <div class="cell">
-            <div class="label">daily budget</div>
-            <div class="value">${escapeHtml(state.budget?.runs ?? 0)} runs · ${Number(state.budget?.tokens ?? 0).toLocaleString()} tokens</div>
-            <div class="label" style="margin-top:10px">last run</div>
-            <div class="value">${escapeHtml(relative(state.last_run_at))}</div>
-            <div class="label" style="margin-top:10px">next run</div>
-            <div class="value">${worker.enabled ? escapeHtml(relative(state.next_run_at)) : "paused"}</div>
+          <div class="diagnosis-block">
+            <div class="diagnosis-title">Latest runner state</div>
+            <div class="diagnosis-value">${escapeHtml(state.last_summary ?? "No agent run yet.")}</div>
           </div>
-          <div class="cell">
-            <div class="label">dependency diagnosis</div>
-            <div class="value summary-text">${escapeHtml(dependency.reason ?? "Not checked yet.")}</div>
-            <div class="meta-link">${workflowLink}</div>
-            <div class="label" style="margin-top:10px">latest</div>
-            <div class="value summary-text">${escapeHtml(state.last_summary ?? "No run yet.")}</div>
+          <div class="diagnosis-block">
+            <div class="diagnosis-title">Next focus</div>
+            <div class="diagnosis-value">${escapeHtml(state.next_focus ?? "No next focus recorded.")}</div>
+          </div>
+          <div class="diagnosis-block">
+            <div class="diagnosis-title">Verification</div>
+            <div class="diagnosis-value">install ${escapeHtml(dependency.checks?.repaired_clean_install ?? dependency.checks?.initial_install ?? "—")} · build ${escapeHtml(dependency.checks?.build ?? "—")} · tests ${escapeHtml(dependency.checks?.tests ?? "—")} · lint ${escapeHtml(dependency.checks?.lint ?? "—")}</div>
           </div>
         </div>
       </article>
     `;
   }).join("");
 
-  document.querySelectorAll(".card").forEach((card) => {
-    const id = card.dataset.id;
+  document.querySelectorAll(".worker-panel").forEach((panel) => {
+    const id = panel.dataset.id;
     const worker = workers.find((item) => item.id === id);
 
-    card.querySelector(".toggle").addEventListener("click", async () => {
-      await api(`/api/workers/${id}/toggle`, {
-        method: "POST",
-        body: JSON.stringify({ enabled: !worker.enabled })
+    panel.querySelector(".toggle").addEventListener("click", async () => {
+      await runAction(panel.querySelector(".toggle"), worker.enabled ? "Pausing…" : "Enabling…", async () => {
+        await api(`/api/workers/${id}/toggle`, {
+          method: "POST",
+          body: JSON.stringify({ enabled: !worker.enabled })
+        });
       });
-      await load();
     });
 
-    card.querySelector(".run").addEventListener("click", async () => {
-      const button = card.querySelector(".run");
-      button.disabled = true;
-      button.textContent = "Starting…";
-      try {
-        await api(`/api/workers/${id}/run`, { method: "POST", body: "{}" });
-      } catch (error) {
-        alert(error.message);
-      }
-      await load();
+    panel.querySelector(".run").addEventListener("click", async () => {
+      await runAction(panel.querySelector(".run"), "Starting…", () => api(`/api/workers/${id}/run`, { method: "POST", body: "{}" }));
     });
 
-    card.querySelector(".doctor").addEventListener("click", async () => {
-      const button = card.querySelector(".doctor");
-      button.disabled = true;
-      button.textContent = "Queued…";
-      try {
-        await api(`/api/workers/${id}/doctor`, { method: "POST", body: "{}" });
-      } catch (error) {
-        alert(error.message);
-      }
-      await load();
+    panel.querySelector(".doctor").addEventListener("click", async () => {
+      await runAction(panel.querySelector(".doctor"), "Queued…", () => api(`/api/workers/${id}/doctor`, { method: "POST", body: "{}" }));
     });
 
-    card.querySelector(".repair").addEventListener("click", async () => {
-      const button = card.querySelector(".repair");
-      button.disabled = true;
-      button.textContent = "Queued…";
-      try {
-        await api(`/api/workers/${id}/repair`, { method: "POST", body: "{}" });
-      } catch (error) {
-        alert(error.message);
-      }
-      await load();
+    panel.querySelector(".repair").addEventListener("click", async () => {
+      await runAction(panel.querySelector(".repair"), "Queued…", () => api(`/api/workers/${id}/repair`, { method: "POST", body: "{}" }));
     });
   });
 }
 
+async function runAction(button, pendingLabel, action) {
+  const original = button.textContent;
+  button.disabled = true;
+  button.textContent = pendingLabel;
+  try {
+    await action();
+    setConnection("good", "QUEUED");
+  } catch (error) {
+    setConnection("bad", "ACTION ERROR");
+    alert(error.message);
+  } finally {
+    button.textContent = original;
+    await load();
+  }
+}
+
+async function load() {
+  refreshButton.disabled = true;
+  try {
+    const workers = await api("/api/workers");
+    currentWorkers = workers;
+    renderNav(workers);
+    renderSummary(workers);
+    renderWorkers(workers);
+    setConnection("good", "CONNECTED");
+  } catch (error) {
+    currentWorkers = [];
+    summaryEl.innerHTML = "";
+    workerNavEl.innerHTML = "";
+    workersEl.innerHTML = `<div class="error-state"><div class="state-title">Runner API unavailable</div><div class="state-copy">${escapeHtml(error.message)}</div><div class="state-copy">The static dashboard is deployed correctly; the control API is fail-closed until its Access and GitHub runtime credentials are valid.</div></div>`;
+    setConnection("bad", error.status === 403 ? "ACCESS REQUIRED" : "API LOCKED");
+  } finally {
+    refreshButton.disabled = false;
+  }
+}
+
 refreshButton.addEventListener("click", load);
-load().catch((error) => {
-  workersEl.textContent = error.message;
+tabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    tabs.forEach((item) => item.classList.toggle("active", item === tab));
+    document.body.dataset.view = tab.dataset.view;
+  });
 });
+
+load();

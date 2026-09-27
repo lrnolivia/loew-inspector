@@ -4,6 +4,11 @@ on:
   schedule:
     - cron: "7 * * * *"
   workflow_dispatch:
+    inputs:
+      worker_id:
+        description: "Optional worker id to run immediately instead of the normal due-work tick"
+        required: false
+        type: string
 
 permissions:
   contents: write
@@ -21,11 +26,17 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Run due workers
+      - name: Run due workers or requested worker
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           RUNNER_GITHUB_TOKEN: ${{ secrets.RUNNER_GITHUB_TOKEN }}
-        run: npm run tick
+          REQUESTED_WORKER: ${{ inputs.worker_id }}
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "$REQUESTED_WORKER" ]; then
+            npm run run -- "$REQUESTED_WORKER"
+          else
+            npm run tick
+          fi
 
       - name: Persist runner state
         run: |
