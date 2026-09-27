@@ -173,7 +173,7 @@ It shows:
 - next focus
 - dependency health
 
-The local backend allows enabling and pausing workers. A hosted control backend is the next deployment step; secrets are never placed in browser JavaScript.
+The protected hosted control API allows enabling/pausing workers and editing a small whitelist of operational settings. Secrets are never placed in browser JavaScript.
 
 ## Dependency Doctor
 
@@ -268,6 +268,7 @@ For the field pilot, the dashboard exposes:
 - **Repair** — unlocked only after the Doctor records `dependency_health: repairable`
 - **Enable / Pause** — control the background AI job
 - **Run now** — start one bounded agent cycle when enabled
+- **Runtime settings** — collapsed maintenance editor for cadence, model/reasoning, web search, and daily API budgets
 
 The browser never receives OpenAI or GitHub credentials. Workflow dispatch happens through the local runner backend.
 

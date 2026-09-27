@@ -139,6 +139,27 @@ function renderWorkers(workers) {
           <div>${worker.enabled ? escapeHtml(relative(state.next_run_at)) : "paused"}<div class="muted">${worker.enabled ? "scheduled" : "disabled"}</div></div>
         </div>
 
+        <details class="settings-card overview-only">
+          <summary>
+            <span><strong>Runtime settings</strong><small>Maintenance only · secrets are never exposed here</small></span>
+            <span class="settings-disclosure">Edit</span>
+          </summary>
+          <form data-settings-form>
+            <div class="settings-grid">
+              <label class="settings-field"><span>Cadence</span><input name="cadence_minutes" type="number" min="60" max="1440" step="1" value="${escapeHtml(worker.cadence_minutes)}"><small>minutes · scheduler still wakes hourly</small></label>
+              <label class="settings-field"><span>Model</span><input name="model_id" type="text" value="${escapeHtml(worker.model.id)}" autocomplete="off"></label>
+              <label class="settings-field"><span>Reasoning</span><select name="reasoning_effort">${["low","medium","high"].map((value) => `<option value="${value}" ${worker.model.reasoning_effort === value ? "selected" : ""}>${value}</option>`).join("")}</select></label>
+              <label class="settings-field"><span>Runs / day</span><input name="max_runs_per_day" type="number" min="1" max="24" step="1" value="${escapeHtml(worker.limits?.max_runs_per_day ?? 12)}"></label>
+              <label class="settings-field"><span>Token ceiling / day</span><input name="max_tokens_per_day" type="number" min="10000" max="2000000" step="10000" value="${escapeHtml(worker.limits?.max_tokens_per_day ?? 250000)}"></label>
+              <label class="settings-check"><input name="web_search" type="checkbox" ${worker.model.web_search ? "checked" : ""}><span>Allow OpenAI web search for this runner</span></label>
+            </div>
+            <div class="settings-actions">
+              <span class="muted">Credentials, repository targets, and write authority are intentionally not editable here.</span>
+              <button class="tp-button secondary save-settings" type="submit">Save settings</button>
+            </div>
+          </form>
+        </details>
+
         <div class="diagnosis diagnostics-only">
           <div class="diagnosis-block">
             <div class="diagnosis-title">Dependency diagnosis</div>
@@ -185,6 +206,36 @@ function renderWorkers(workers) {
 
     panel.querySelector(".repair").addEventListener("click", async () => {
       await runAction(panel.querySelector(".repair"), "Queued…", () => api(`/api/workers/${id}/repair`, { method: "POST", body: "{}" }));
+    });
+
+    panel.querySelector("[data-settings-form]").addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const form = event.currentTarget;
+      const button = form.querySelector(".save-settings");
+      const original = button.textContent;
+      const values = new FormData(form);
+      button.disabled = true;
+      button.textContent = "Saving…";
+      try {
+        await api(`/api/workers/${id}/settings`, {
+          method: "POST",
+          body: JSON.stringify({
+            cadence_minutes: Number(values.get("cadence_minutes")),
+            model_id: String(values.get("model_id") ?? "").trim(),
+            reasoning_effort: String(values.get("reasoning_effort") ?? "medium"),
+            max_runs_per_day: Number(values.get("max_runs_per_day")),
+            max_tokens_per_day: Number(values.get("max_tokens_per_day")),
+            web_search: form.elements.web_search.checked
+          })
+        });
+        setConnection("good", "SAVED");
+      } catch (error) {
+        setConnection("bad", "SETTINGS ERROR");
+        alert(error.message);
+      } finally {
+        button.textContent = original;
+        await load();
+      }
     });
   });
 }

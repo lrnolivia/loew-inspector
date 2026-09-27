@@ -1,3 +1,4 @@
+import { applyWorkerSettings, publicWorkerSettings } from "./settings.mjs";
 const GITHUB_API = "https://api.github.com";
 const OWNER = "lrnolivia";
 const REPOSITORY = "loew-runner";
@@ -176,7 +177,7 @@ async function handleApi(request, env) {
     return json(await workersView(env));
   }
 
-  const match = url.pathname.match(/^\/api\/workers\/([^/]+)\/(toggle|run|doctor|repair)$/);
+  const match = url.pathname.match(/^\/api\/workers\/([^/]+)\/(toggle|settings|run|doctor|repair)$/);
   if (!match || request.method !== "POST") return json({ error: "Not found" }, 404);
 
   const [, id, action] = match;
@@ -195,6 +196,15 @@ async function handleApi(request, env) {
       `dashboard: ${config.enabled ? "enable" : "pause"} ${id}`
     );
     return json({ ok: true, enabled: config.enabled });
+  }
+
+  if (action === "settings") {
+    const path = `workers/${id}.json`;
+    const { value: config, sha } = await readJsonFile(env, path);
+    const body = await readBody(request);
+    const next = applyWorkerSettings(config, body);
+    await writeJsonFile(env, path, next, sha, `dashboard: update ${id} runner settings`);
+    return json({ ok: true, settings: publicWorkerSettings(next) });
   }
 
   if (action === "run") {

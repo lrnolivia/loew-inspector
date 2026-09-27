@@ -10,6 +10,11 @@
   "vars": {
     "REQUIRE_ACCESS": "true"
   },
+  "previews": {
+    "vars": {
+      "REQUIRE_ACCESS": "false"
+    }
+  },
   "secrets": {
     "required": ["RUNNER_GITHUB_TOKEN"]
   }
