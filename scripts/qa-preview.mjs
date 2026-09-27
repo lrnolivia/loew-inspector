@@ -67,12 +67,25 @@ try {
   try {
     await page.getByText('Starting canvas', { exact: true }).waitFor({ state: 'hidden', timeout: 15000 });
   } catch { /* Record the unresolved loading state below. */ }
+  const iframe = page.locator('iframe[data-canvas-iframe]').first();
+  const iframeSrc = await iframe.getAttribute('src').catch(() => null);
+  let firstPaint = false;
+  if (iframeSrc?.startsWith(canvas.origin + '/')) {
+    try {
+      const sandbox = page.frameLocator('iframe[data-canvas-iframe]');
+      await sandbox.locator('[data-content-root]').first().waitFor({ state: 'attached', timeout: 20000 });
+      await sandbox.locator('[data-viewport]').first().waitFor({ state: 'attached', timeout: 20000 });
+      firstPaint = true;
+    } catch { /* Record the missing Canvas paint below. */ }
+  }
   await page.screenshot({ path: 'qa-evidence/editor.png', fullPage: true });
   result.checks.editor_browser = {
     status: response?.status() ?? 0,
     final_url: page.url(),
     title: await page.title(),
     starting_canvas_visible: await page.getByText('Starting canvas', { exact: true }).isVisible(),
+    canvas_iframe_src: iframeSrc,
+    canvas_first_paint: firstPaint,
     errors: browserErrors.slice(0, 10),
   };
   const canvasPage = await browser.newPage({ viewport: { width: 1440, height: 900 } });
@@ -92,6 +105,7 @@ try {
 const canvasHeaders = result.checks.canvas_http.headers;
 const passed = result.checks.editor_browser.status === 200 &&
   !result.checks.editor_browser.starting_canvas_visible &&
+  result.checks.editor_browser.canvas_first_paint &&
   result.checks.canvas_http.status === 200 &&
   result.checks.canvas_http.content_type.includes('text/html') &&
   result.checks.canvas_browser.status === 200 &&
