@@ -1,11 +1,11 @@
 {
   "id": "field",
   "name": "field",
-  "description": "Read-only product and architecture continuity pilot for field.",
-  "enabled": false,
+  "description": "Headless read-only continuity runner for field. Checks hourly and invokes AI only when repository context materially changes.",
+  "enabled": true,
   "cadence_minutes": 60,
   "model": {
-    "id": "gpt-6-sol",
+    "id": "gpt-5.6-sol",
     "reasoning_effort": "medium",
     "web_search": true
   },
@@ -17,14 +17,15 @@
   "context": {
     "files": [
       "README.md",
+      "FIELD_PRODUCT_ARCHITECTURE.md",
       "package.json"
     ],
     "include_open_issues": true
   },
-  "goal": "Inspect field's current repository state and continue bounded product/architecture research that improves professional design-tool quality, design-to-runtime parity, maintainability, or implementation clarity. Treat the target repository as read-only. Do not invent implementation state. Distinguish observed repository facts from proposals. Avoid repeating settled findings. End each cycle with concise Findings, Risks, Next focus, and whether the work should continue, block, or complete.",
+  "goal": "Keep field development coherent without depending on a ChatGPT or Codex chat being open. On material repository changes, inspect current source/project context, identify new risks or contradictions, and recommend the safest concrete next action. Treat the target repository as read-only. Prefer deterministic facts over speculation. Do not repeat unchanged status. Do not create or impersonate first-class Workers, PJMs, Masters, or chats. Escalate only genuine human decisions, credentials, security boundaries, or unresolved product-direction conflicts.",
   "timezone": "America/New_York",
   "limits": {
-    "max_runs_per_day": 24,
-    "max_tokens_per_day": 500000
+    "max_runs_per_day": 12,
+    "max_tokens_per_day": 250000
   }
 }

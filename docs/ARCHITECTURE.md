@@ -195,7 +195,7 @@ The first implementation is npm/Node because field is the pilot.
 
 ## Dashboard
 
-The dashboard is the preferred user control surface.
+Routine Runner operation is headless. The dashboard is a maintenance/admin surface for configuration, recovery, and explicit intervention.
 
 It should eventually support:
 
@@ -215,3 +215,14 @@ It should eventually support:
 - event history
 
 Routine operation should not require editing YAML, JSON, Actions files, or cron expressions by hand.
+
+
+## Runtime independence
+
+Runner must remain operational when no ChatGPT chat is open and must not depend on ChatGPT Plus allowances, Codex availability, plugin availability, or a specific conversation surface.
+
+The scheduler, durable state, GitHub transport, Preview/QA orchestration, and OpenAI API execution live outside ChatGPT. ChatGPT/Codex/Work may inspect or steer Runner, but are not part of its liveness path.
+
+OpenAI API billing is a separate budget boundary from ChatGPT subscriptions and ChatGPT usage credits. Missing API credentials fail closed without retry spam.
+
+Routine ticks should be deterministic and cheap. AI inference should occur only when new evidence or a decision actually requires it.

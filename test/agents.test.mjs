@@ -1,9 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { latestRootTurn, parseRunnerStatus } from "../src/openai.mjs";
+import { parseRunnerStatus, responseText } from "../src/openai.mjs";
 
-test("parseRunnerStatus uses an explicit Status line", () => {
-  assert.equal(parseRunnerStatus("Findings\nWork is not complete.\n\nStatus: CONTINUE"), "CONTINUE");
+test("parseRunnerStatus uses the final explicit Status line", () => {
   assert.equal(parseRunnerStatus("Status: CONTINUE\nMore work\nStatus: COMPLETE"), "COMPLETE");
 });
 
@@ -12,12 +11,6 @@ test("parseRunnerStatus rejects loose status words", () => {
   assert.equal(parseRunnerStatus("BLOCKED by nothing, actually."), null);
 });
 
-test("latestRootTurn ignores subagent turns", () => {
-  const page = {
-    data: [
-      { id: "sub", subagent_id: "subagent_1" },
-      { id: "root", subagent_id: null }
-    ]
-  };
-  assert.equal(latestRootTurn(page).id, "root");
+test("responseText returns null when no assistant text exists", () => {
+  assert.equal(responseText({ output: [{ type: "reasoning", summary: [] }] }), null);
 });

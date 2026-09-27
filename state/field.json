@@ -1,6 +1,6 @@
 {
   "id": "field",
-  "status": "idle",
+  "status": "waiting_credentials",
   "session_id": null,
   "last_output_id": null,
   "run_count": 0,
@@ -8,7 +8,7 @@
   "next_run_at": null,
   "last_summary": "The lockfile repair restores a clean install, but project verification is not healthy. Test isolation diagnostics were captured.",
   "next_focus": "Dependency repair is verified through install and build; project tests/lint have separate failures. Repair may open a draft PR with those warnings.",
-  "last_error": null,
+  "last_error": "OPENAI_API_KEY is not configured in loew-runner GitHub Actions secrets.",
   "last_usage": null,
   "dependency_health": "repairable",
   "project_health": "failed",
@@ -33,5 +33,5 @@
       "test_diagnostic": "ool\u001b[2m > \u001b[22maborted chain compensates without starting new work\u001b[32m 1\u001b[2mms\u001b[22m\u001b[39m\n \u001b[32m✓\u001b[39m src/ai/agent/tools/chain.test.ts\u001b[2m > \u001b[22mchain tool\u001b[2m > \u001b[22mis registered with a label and never nested in batch\u001b[32m 8\u001b[2mms\u001b[22m\u001b[39m\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[32m1 passed\u001b[39m\u001b[22m\u001b[90m (1)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[1m\u001b[32m5 passed\u001b[39m\u001b[22m\u001b[90m (5)\u001b[39m\n\u001b[2m   Start at \u001b[22m 17:06:06\n\u001b[2m   Duration \u001b[22m 12.00s\u001b[2m (transform 7.33s, setup 0ms, import 10.20s, tests 42ms, environment 1.40s)\u001b[22m\n\n=== src/ai/agent/tools/cms.test.ts ===\n\n\u001b[1m\u001b[30m\u001b[46m RUN \u001b[49m\u001b[39m\u001b[22m \u001b[36mv4.1.6 \u001b[39m\u001b[90m/home/runner/work/loew-runner/loew-runner/target\u001b[39m\n\n\n\u001b[31m⎯⎯⎯⎯⎯⎯\u001b[39m\u001b[1m\u001b[41m Failed Suites 1 \u001b[49m\u001b[22m\u001b[31m⎯⎯⎯⎯⎯⎯⎯\u001b[39m\n\n\u001b[41m\u001b[1m FAIL \u001b[22m\u001b[49m src/ai/agent/tools/cms.test.ts\u001b[2m [ src/ai/agent/tools/cms.test.ts ]\u001b[22m\n\u001b[31m\u001b[1mTypeError\u001b[22m: projectFS.subscribeWrites is not a function\u001b[39m\n\u001b[36m \u001b[2m❯\u001b[22m installProjectFsAutosaveHook src/backend/autosave.ts:\u001b[2m394:44\u001b[22m\u001b[39m\n    \u001b[90m392|\u001b[39m   \u001b[34mprojectFsAutosaveUnsubscribe\u001b[39m\u001b[33m?.\u001b[39m()\u001b[33m;\u001b[39m\n    \u001b[90m393|\u001b[39m\n    \u001b[90m394|\u001b[39m   projectFsAutosaveUnsubscribe \u001b[33m=\u001b[39m projectFS\u001b[33m.\u001b[39m\u001b[34msubscribeWrites\u001b[39m((event) \u001b[33m=>\u001b[39m {\n    \u001b[90m   |\u001b[39m                                            \u001b[31m^\u001b[39m\n    \u001b[90m395|\u001b[39m     // Never echo collaboration-originated writes back through persist…\n    \u001b[90m396|\u001b[39m     \u001b[35mif\u001b[39m (event\u001b[33m.\u001b[39morigin \u001b[33m!==\u001b[39m \u001b[32m'local'\u001b[39m) \u001b[35mreturn\u001b[39m\u001b[33m;\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m src/backend/autosave.ts:\u001b[2m415:1\u001b[22m\u001b[39m\n\u001b[90m \u001b[2m❯\u001b[22m src/code/project/cms-ops.ts:\u001b[2m20:1\u001b[22m\u001b[39m\n\n\u001b[31m\u001b[2m⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯\u001b[22m\u001b[39m\n\n\n\u001b[2m Test Files \u001b[22m \u001b[1m\u001b[31m1 failed\u001b[39m\u001b[22m\u001b[90m (1)\u001b[39m\n\u001b[2m      Tests \u001b[22m \u001b[2mno tests\u001b[22m\n\u001b[2m   Start at \u001b[22m 17:06:20\n\u001b[2m   Duration \u001b[22m 2.48s\u001b[2m (transform 404ms, setup 0ms, import 0ms, tests 0ms, environment 1.49s)\u001b[22m\n\nFAILED: src/ai/agent/tools/cms.test.ts (exit 1)\n"
     }
   },
-  "updated_at": "2026-09-26T17:07:49.829Z"
+  "updated_at": "2026-09-27T06:01:39.034Z"
 }

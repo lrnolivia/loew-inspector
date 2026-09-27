@@ -1,6 +1,6 @@
 # loew-runner
 
-A small, durable control surface for background research and project work.
+A small, durable headless execution layer for background research and project continuity.
 
 `loew-runner` exists because ordinary ChatGPT scheduled tasks are intentionally limited. It does **not** try to replace the normal ChatGPT Project chats that remain the user-facing place to plan, steer, and review work.
 
@@ -17,7 +17,7 @@ normal ChatGPT / Project chats
       loew-runner scheduler
             │
             ▼
-      OpenAI Agents API
+      OpenAI Responses API
 ```
 
 The first pilot is **field**.
@@ -25,7 +25,7 @@ The first pilot is **field**.
 ## Design goals
 
 - one scheduler can manage many jobs
-- durable OpenAI agent session per job
+- durable Responses API continuity chain per job
 - GitHub is durable project state
 - jobs are disabled by default
 - no surprise API spending
@@ -46,7 +46,7 @@ Included:
 - zero-dependency Node 22 runner core
 - JSON worker registry
 - persisted session state
-- OpenAI Agents API session creation / continuation
+- OpenAI Responses API session creation / continuation
 - GitHub context ingestion
 - hosted web search support
 - hourly GitHub Actions scheduler
@@ -56,7 +56,9 @@ Included:
 - dependency failure classifier
 - CI for loew-runner itself
 
-The field agent is committed **disabled by default**. Add the OpenAI API secret and explicitly enable it before it can spend API credits.
+The field runner job is committed **enabled**, but it fails closed into `waiting_credentials` until `OPENAI_API_KEY` exists. Missing credentials do not create an hourly failure loop or API spend. Once the secret is present, the next scheduled tick can begin automatically.
+
+Runner is intentionally independent of ChatGPT Plus/Codex runtime availability. ChatGPT plugins, Work/Codex limits, and user-visible chats are control surfaces only; they are never scheduler dependencies. OpenAI API billing is separate from ChatGPT subscription/usage credits.
 
 ## Quick start
 
@@ -101,7 +103,7 @@ For live agent work, add this GitHub Actions repository secret:
 OPENAI_API_KEY
 ```
 
-The key needs the permissions required by the OpenAI Agents API, including agent session read/write and model inference.
+The key needs the permissions required by the OpenAI Responses API, including agent session read/write and model inference.
 
 The field pilot reads a public GitHub repository, so it does not require a cross-repository GitHub token.
 
@@ -127,10 +129,10 @@ Example:
 {
   "id": "field",
   "name": "field",
-  "enabled": false,
+  "enabled": true,
   "cadence_minutes": 60,
   "model": {
-    "id": "gpt-6-sol",
+    "id": "gpt-5.6-sol",
     "reasoning_effort": "medium",
     "web_search": true
   },
@@ -156,7 +158,7 @@ When state or reports change, the workflow commits them back to this repository 
 
 ## Dashboard
 
-The dashboard is intentionally small.
+The dashboard is an intervention and maintenance console, not the runtime.
 
 It shows:
 
@@ -273,7 +275,7 @@ The browser never receives OpenAI or GitHub credentials. Workflow dispatch happe
 
 ### OPENAI_API_KEY
 
-Required only when an AI job is enabled.
+Required for AI inference. ChatGPT Plus/Codex credits do not fund API calls; API billing is separate.
 
 Store it as a GitHub Actions secret in `loew-runner` for scheduled execution. Do not place it in worker JSON or browser code.
 

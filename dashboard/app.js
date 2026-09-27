@@ -42,7 +42,7 @@ async function api(url, options) {
 
 function statusTone(value) {
   if (["healthy", "idle", "complete", "saved"].includes(value)) return "good";
-  if (["repairable", "warning", "running"].includes(value)) return "warn";
+  if (["repairable", "warning", "running", "waiting_credentials"].includes(value)) return "warn";
   if (["failed", "blocked", "error"].includes(value)) return "bad";
   return "neutral";
 }
@@ -83,7 +83,7 @@ function renderSummary(workers) {
   const active = workers.filter((worker) => worker.enabled).length;
   const running = workers.filter((worker) => worker.runtime.status === "running").length;
   const repairable = workers.filter((worker) => worker.runtime.dependency_health === "repairable").length;
-  const blocked = workers.filter((worker) => ["blocked", "failed"].includes(worker.runtime.status)).length;
+  const blocked = workers.filter((worker) => ["blocked", "failed", "waiting_credentials"].includes(worker.runtime.status)).length;
   summaryEl.innerHTML = [
     ["workers", workers.length],
     ["enabled", active],

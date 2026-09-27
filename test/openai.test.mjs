@@ -1,22 +1,17 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { latestRootTurn } from "../src/openai.mjs";
+import { parseRunnerStatus, responseText } from "../src/openai.mjs";
 
-test("latestRootTurn ignores subagent turns", () => {
-  const turn = latestRootTurn({
-    data: [
-      { id: "sub", subagent_id: "subagent_1", status: "completed" },
-      { id: "root", subagent_id: null, status: "failed" }
+test("responseText extracts assistant output from a Responses API payload", () => {
+  const text = responseText({
+    output: [
+      { type: "reasoning", summary: [] },
+      { type: "message", role: "assistant", content: [{ type: "output_text", text: "Findings\nChanged.\n\nStatus: CONTINUE" }] }
     ]
   });
-
-  assert.equal(turn.id, "root");
-  assert.equal(turn.status, "failed");
+  assert.equal(text, "Findings\nChanged.\n\nStatus: CONTINUE");
 });
 
-test("latestRootTurn returns null when no root turn exists", () => {
-  assert.equal(
-    latestRootTurn({ data: [{ id: "sub", subagent_id: "subagent_1", status: "completed" }] }),
-    null
-  );
+test("responseText prefers output_text when present", () => {
+  assert.equal(responseText({ output_text: "hello", output: [] }), "hello");
 });

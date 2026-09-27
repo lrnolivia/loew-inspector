@@ -10,6 +10,8 @@ export function defaultState(id) {
     id,
     status: "idle",
     session_id: null,
+    previous_response_id: null,
+    last_context_fingerprint: null,
     last_output_id: null,
     run_count: 0,
     last_run_at: null,
@@ -22,7 +24,7 @@ export function defaultState(id) {
       day: null,
       runs: 0,
       tokens: 0,
-      last_accounted_turn_id: null
+      last_accounted_response_id: null
     },
     dependency_health: "unknown",
     updated_at: new Date().toISOString()

@@ -164,7 +164,7 @@ async function handleApi(request, env) {
   const url = new URL(request.url);
 
   if (request.method === "GET" && url.pathname === "/api/health") {
-    return json({ ok: true, service: "loew-runner", version: "0.2" });
+    return json({ ok: true, service: "loew-runner", version: "0.3" });
   }
 
   const accessError = accessGuard(request, env);
