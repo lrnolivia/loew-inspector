@@ -64,7 +64,7 @@ jobs:
           : "${CF_ACCESS_CLIENT_SECRET:?missing CF repository secret}"
 
           body="$(node <<'NODE'
-          const payload = {
+          process.stdout.write(JSON.stringify({
             jsonrpc: "2.0",
             id: process.env.REQUEST_ID,
             method: "tools/call",
@@ -75,8 +75,7 @@ jobs:
                 method: process.env.TARGET_METHOD
               }
             }
-          };
-          process.stdout.write(JSON.stringify(payload));
+          }));
           NODE
           )"
 
@@ -88,10 +87,30 @@ jobs:
           NODE
           )"
 
-          response="$(
-            curl --fail-with-body --silent --show-error               -X POST "https://inspector.loew.fi/mcp"               -H "Authorization: $auth_header"               -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID"               -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET"               -H "Content-Type: application/json"               --data "$body"
+          headers_file="$(mktemp)"
+          body_file="$(mktemp)"
+          trap 'rm -f "$headers_file" "$body_file"' EXIT
+
+          status="$(
+            curl --silent --show-error               --output "$body_file"               --dump-header "$headers_file"               --write-out '%{http_code}'               -X POST "https://inspector.loew.fi/mcp"               -H "Authorization: $auth_header"               -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID"               -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET"               -H "Content-Type: application/json"               --data "$body"
           )"
 
+          echo "INSPECTOR_HTTP_STATUS=$status"
+          echo "SAFE_RESPONSE_HEADERS_BEGIN"
+          awk 'BEGIN{IGNORECASE=1}
+            /^cf-ray:/ || /^content-type:/ || /^server:/ || /^location:/ || /^cf-access-/ {print}
+          ' "$headers_file"
+          echo "SAFE_RESPONSE_HEADERS_END"
+
+          if [ "$status" != "200" ]; then
+            echo "SAFE_RESPONSE_BODY_BEGIN"
+            head -c 800 "$body_file" | tr '\n' ' '
+            echo
+            echo "SAFE_RESPONSE_BODY_END"
+            exit 22
+          fi
+
+          response="$(cat "$body_file")"
           node <<'NODE' "$response"
           const raw = process.argv[1];
           let parsed;
