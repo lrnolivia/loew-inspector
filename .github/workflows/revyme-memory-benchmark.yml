@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - research/revyme-memory-baseline
+    paths:
+      - .github/workflows/revyme-memory-benchmark.yml
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   benchmark:
@@ -56,6 +58,7 @@ jobs:
           cat >/tmp/membench/bench.mjs <<'EOF'
           import { chromium } from 'playwright';
           import { execFileSync } from 'node:child_process';
+          import fs from 'node:fs';
 
           function processTreeRss(rootPid) {
             const out = execFileSync('ps', ['-e', '-o', 'pid=,ppid=,rss=,comm='], { encoding: 'utf8' });
@@ -182,7 +185,18 @@ jobs:
           summary.fieldIncrementalRssVsBlankMb = summary.field.browserTreeRssMbMedian - summary.blank.browserTreeRssMbMedian;
           summary.fieldMinusStockRssMb = summary.field.browserTreeRssMbMedian - summary.stock_revyme.browserTreeRssMbMedian;
           summary.fieldMinusStockJsHeapMb = summary.field.usedJSHeapMbMedian - summary.stock_revyme.usedJSHeapMbMedian;
-          console.log('MEM_BENCHMARK_RESULT=' + JSON.stringify({ summary, samples }));
+          const result = { summary, samples };
+          fs.writeFileSync('/tmp/membench/result.json', JSON.stringify(result, null, 2));
+          console.log('MEM_BENCHMARK_RESULT=' + JSON.stringify(result));
           EOF
           cd /tmp/membench
           node bench.mjs
+
+      - name: Persist benchmark result
+        run: |
+          cp /tmp/membench/result.json revyme-memory-result.json
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add revyme-memory-result.json
+          git commit -m "Persist Revyme memory benchmark result" || exit 0
+          git push origin HEAD:research/revyme-memory-baseline
