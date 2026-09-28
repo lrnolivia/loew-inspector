@@ -1,0 +1,183 @@
+name: Revyme memory benchmark
+
+on:
+  push:
+    branches:
+      - research/revyme-memory-baseline
+
+permissions:
+  contents: read
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install benchmark browser
+        run: |
+          mkdir -p /tmp/membench
+          cd /tmp/membench
+          npm init -y >/dev/null 2>&1
+          npm install playwright@1.55.0
+          npx playwright install --with-deps chromium
+
+      - name: Clone and start stock Revyme
+        run: |
+          git clone --depth 1 https://github.com/revyme-web/builder.git /tmp/revyme
+          cd /tmp/revyme
+          npm ci
+          nohup npm run dev >/tmp/revyme-dev.log 2>&1 &
+          echo $! >/tmp/revyme-dev.pid
+          for i in $(seq 1 90); do
+            if curl -fsS http://127.0.0.1:3333 >/dev/null; then
+              echo "Revyme editor is ready"
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/revyme-dev.log
+          exit 1
+
+      - name: Measure blank, stock Revyme, and field
+        run: |
+          cat >/tmp/membench/bench.mjs <<'EOF'
+          import { chromium } from 'playwright';
+          import { execFileSync } from 'node:child_process';
+
+          function processTreeRss(rootPid) {
+            const out = execFileSync('ps', ['-e', '-o', 'pid=,ppid=,rss=,comm='], { encoding: 'utf8' });
+            const rows = out.trim().split('\n').map(line => {
+              const m = line.trim().match(/^(\d+)\s+(\d+)\s+(\d+)\s+(.*)$/);
+              return m ? { pid: Number(m[1]), ppid: Number(m[2]), rssKb: Number(m[3]), comm: m[4] } : null;
+            }).filter(Boolean);
+            const wanted = new Set([rootPid]);
+            let changed = true;
+            while (changed) {
+              changed = false;
+              for (const row of rows) {
+                if (wanted.has(row.ppid) && !wanted.has(row.pid)) {
+                  wanted.add(row.pid);
+                  changed = true;
+                }
+              }
+            }
+            const procs = rows.filter(r => wanted.has(r.pid));
+            return {
+              rssKb: procs.reduce((sum, r) => sum + r.rssKb, 0),
+              processCount: procs.length,
+              processes: procs.map(r => ({ pid: r.pid, ppid: r.ppid, rssKb: r.rssKb, comm: r.comm }))
+            };
+          }
+
+          async function oneSample(name, url) {
+            const server = await chromium.launchServer({
+              headless: true,
+              args: ['--enable-precise-memory-info', '--disable-dev-shm-usage']
+            });
+            const rootPid = server.process().pid;
+            const browser = await chromium.connect(server.wsEndpoint());
+            const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
+            const page = await context.newPage();
+            let responseStatus = null;
+            let finalUrl = url;
+            try {
+              if (url !== 'about:blank') {
+                const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
+                responseStatus = response?.status() ?? null;
+                await page.waitForTimeout(8000);
+              } else {
+                await page.goto(url);
+                await page.waitForTimeout(3000);
+              }
+              finalUrl = page.url();
+              const pageMetrics = await page.evaluate(async () => {
+                let uasMemory = null;
+                if (typeof performance.measureUserAgentSpecificMemory === 'function') {
+                  try {
+                    const m = await performance.measureUserAgentSpecificMemory();
+                    uasMemory = { bytes: m.bytes, breakdownCount: m.breakdown?.length ?? null };
+                  } catch (error) {
+                    uasMemory = { error: String(error) };
+                  }
+                }
+                const pm = performance.memory;
+                return {
+                  title: document.title,
+                  crossOriginIsolated: self.crossOriginIsolated,
+                  usedJSHeapSize: pm?.usedJSHeapSize ?? null,
+                  totalJSHeapSize: pm?.totalJSHeapSize ?? null,
+                  jsHeapSizeLimit: pm?.jsHeapSizeLimit ?? null,
+                  iframeCount: document.querySelectorAll('iframe').length,
+                  domElementCount: document.querySelectorAll('*').length,
+                  resourceCount: performance.getEntriesByType('resource').length,
+                  uasMemory
+                };
+              });
+              const cdp = await context.newCDPSession(page);
+              await cdp.send('Performance.enable');
+              const perf = await cdp.send('Performance.getMetrics');
+              const dom = await cdp.send('Memory.getDOMCounters').catch(() => null);
+              const selected = {};
+              for (const m of perf.metrics) {
+                if (['JSHeapUsedSize','JSHeapTotalSize','Nodes','Documents','Frames','LayoutCount','RecalcStyleCount'].includes(m.name)) {
+                  selected[m.name] = m.value;
+                }
+              }
+              const rss = processTreeRss(rootPid);
+              return { name, responseStatus, finalUrl, pageMetrics, cdpMetrics: selected, domCounters: dom, browserTree: rss };
+            } finally {
+              await context.close().catch(() => {});
+              await browser.close().catch(() => {});
+              await server.close().catch(() => {});
+            }
+          }
+
+          function median(nums) {
+            const a = [...nums].sort((x,y) => x-y);
+            const m = Math.floor(a.length / 2);
+            return a.length % 2 ? a[m] : (a[m-1] + a[m]) / 2;
+          }
+
+          const targets = [
+            ['blank', 'about:blank'],
+            ['stock_revyme', 'http://127.0.0.1:3333'],
+            ['field', 'https://field.loew.fi/work/noauth']
+          ];
+          const samples = {};
+          for (const [name, url] of targets) {
+            samples[name] = [];
+            for (let i = 0; i < 3; i++) {
+              samples[name].push(await oneSample(name, url));
+            }
+          }
+
+          const summary = {};
+          for (const [name, arr] of Object.entries(samples)) {
+            summary[name] = {
+              browserTreeRssMbMedian: median(arr.map(x => x.browserTree.rssKb / 1024)),
+              usedJSHeapMbMedian: median(arr.map(x => (x.pageMetrics.usedJSHeapSize ?? 0) / 1048576)),
+              totalJSHeapMbMedian: median(arr.map(x => (x.pageMetrics.totalJSHeapSize ?? 0) / 1048576)),
+              iframeCountMedian: median(arr.map(x => x.pageMetrics.iframeCount)),
+              domElementCountMedian: median(arr.map(x => x.pageMetrics.domElementCount)),
+              resourceCountMedian: median(arr.map(x => x.pageMetrics.resourceCount)),
+              finalUrls: arr.map(x => x.finalUrl),
+              responseStatuses: arr.map(x => x.responseStatus)
+            };
+          }
+          summary.stockIncrementalRssVsBlankMb = summary.stock_revyme.browserTreeRssMbMedian - summary.blank.browserTreeRssMbMedian;
+          summary.fieldIncrementalRssVsBlankMb = summary.field.browserTreeRssMbMedian - summary.blank.browserTreeRssMbMedian;
+          summary.fieldMinusStockRssMb = summary.field.browserTreeRssMbMedian - summary.stock_revyme.browserTreeRssMbMedian;
+          summary.fieldMinusStockJsHeapMb = summary.field.usedJSHeapMbMedian - summary.stock_revyme.usedJSHeapMbMedian;
+
+          console.log('MEM_BENCHMARK_RESULT=' + JSON.stringify({ summary, samples }));
+          EOF
+          cd /tmp/membench
+          node bench.mjs
+
+      - name: Show Revyme server log on failure
+        if: failure()
+        run: cat /tmp/revyme-dev.log || true
