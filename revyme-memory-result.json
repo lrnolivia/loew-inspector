@@ -1,0 +1,736 @@
+{
+  "summary": {
+    "blank": {
+      "browserTreeRssMbMedian": 390.0234375,
+      "usedJSHeapMbMedian": 0.8612031936645508,
+      "totalJSHeapMbMedian": 1.5000085830688477,
+      "iframeCountMedian": 0,
+      "domElementCountMedian": 3,
+      "resourceCountMedian": 0,
+      "finalUrls": [
+        "about:blank",
+        "about:blank",
+        "about:blank"
+      ],
+      "responseStatuses": [
+        null,
+        null,
+        null
+      ]
+    },
+    "stock_revyme": {
+      "browserTreeRssMbMedian": 1017.69921875,
+      "usedJSHeapMbMedian": 172.53503036499023,
+      "totalJSHeapMbMedian": 190.66986465454102,
+      "iframeCountMedian": 1,
+      "domElementCountMedian": 265,
+      "resourceCountMedian": 250,
+      "finalUrls": [
+        "http://localhost:3333/",
+        "http://localhost:3333/",
+        "http://localhost:3333/"
+      ],
+      "responseStatuses": [
+        200,
+        200,
+        200
+      ]
+    },
+    "field": {
+      "browserTreeRssMbMedian": 474.05078125,
+      "usedJSHeapMbMedian": 5.578427314758301,
+      "totalJSHeapMbMedian": 9.315791130065918,
+      "iframeCountMedian": 1,
+      "domElementCountMedian": 192,
+      "resourceCountMedian": 3,
+      "finalUrls": [
+        "https://accounts.google.com/v3/signin/identifier?opparams=%253F&dsh=S1560415711%3A1790572971593933&client_id=1081471194276-48m4lfi2p53udj4q4lco3g92qd793s5h.apps.googleusercontent.com&o2v=1&redirect_uri=https%3A%2F%2Floewfi.cloudflareaccess.com%2Fcdn-cgi%2Faccess%2Fcallback&response_type=code&scope=email+profile+openid&service=lso&state=79c31cf2943fa37d9be25b9fa84bd528497d73c54b84908e33b46866322afaa8.JTdCJTIyaWF0JTIyJTNBMTc5MDU3Mjk3MSUyQyUyMmF1dGhEb21haW4lMjIlM0ElMjJsb2V3ZmkuY2xvdWRmbGFyZWFjY2Vzcy5jb20lMjIlMkMlMjJob3N0bmFtZSUyMiUzQSUyMmZpZWxkLmxvZXcuZmklMjIlMkMlMjJyZWRpcmVjdFVSTCUyMiUzQSUyMiUyRndvcmslMkZub2F1dGglMjIlMkMlMjJhdWQlMjIlM0ElMjJmZWIwZDJkNjdjODY4ODkxYWQ0NjRkOTY2ZjFhNWM0MTY3MGE2ZTgwYTM1NWRjMDJlNjFjOTc5YTBlNWI2YjM5JTIyJTJDJTIyaXNTYW1lU2l0ZU5vbmVDb21wYXRpYmxlJTIyJTNBdHJ1ZSUyQyUyMmlzSURQVGVzdCUyMiUzQWZhbHNlJTJDJTIyaXNSZWZyZXNoJTIyJTNBZmFsc2UlMkMlMjJub25jZSUyMiUzQSUyMm5MUFVsbFpOcXo2QzRQeE1EJTIyJTJDJTIyaWRwSWQlMjIlM0ElMjI4ODI1Yjc4YS03YjlhLTRiODUtYmI2YS1hZmE2MGRlZTAwNzclMjIlMkMlMjJzZXJ2aWNlX3Rva2VuX3N0YXR1cyUyMiUzQWZhbHNlJTJDJTIyYXV0aF9zdGF0dXMlMjIlM0ElMjJOT05FJTIyJTJDJTIyaXNfd2FycCUyMiUzQWZhbHNlJTJDJTIyaXNfZ2F0ZXdheSUyMiUzQWZhbHNlJTJDJTIybXRsc19hdXRoJTIyJTNBJTdCJTIyY2VydF9pc3N1ZXJfZG4lMjIlM0ElMjIlMjIlMkMlMjJjZXJ0X3NlcmlhbCUyMiUzQSUyMiUyMiUyQyUyMmNlcnRfaXNzdWVyX3NraSUyMiUzQSUyMiUyMiUyQyUyMmNlcnRfcHJlc2VudGVkJTIyJTNBZmFsc2UlMkMlMjJjb21tb25fbmFtZSUyMiUzQSUyMiUyMiUyQyUyMmF1dGhfc3RhdHVzJTIyJTNBJTIyTk9ORSUyMiU3RCUyQyUyMmFwcFNlc3Npb25IYXNoJTIyJTNBJTIyMTM2YjEyYWE3NTI5ZmY0NTQxNjQ0MzNjMDcyYzZmNjYzZDM4NDMxMTFjNTc4MDk5NWJiZmNiYzk3ZGJjNTk3YyUyMiUyQyUyMmF0dGVtcHRJZCUyMiUzQSUyMjVlMDdhN2Q0LTBhOGYtNDA5NS1iZTVkLTg1Y2QzYWE1ZDk3YSUyMiUyQyUyMmF0dGVtcHRSZXByb21wdCUyMiUzQWZhbHNlJTdE&flowName=GeneralOAuthLite&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Flegacy%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hAO_Bri8Q-7p8BcnH2HDCUvVUuml0-tZdj_rJUoZs01Cd6jWXdOEZckhtoQ6lysV3h6hrvRUFEbDVidzqncSoU8VgO-Mh9EKQGCtGCIAXERzPlqfUQvtZ202Ykl3L0fl_zOfaSwikzdP4bxFDoAmvG_1pUUzJC-HD0MoZwaYYrD1VW9hRwodElnmD5-xPk-fJC2t3t7UM-OE-nMUEHByM3_iywRvKRP6rHnK4WXSOnZckjrUPLXv5u9a8K3LhPbpzOkBNZfjiBhwv7OeTfGF5UwZahcZ26gp4hp0DmniuWCUfsgUhioUFe4z_izu67QPo9vq7PHMCE5b6IJNgxoGWwCZtkPgT7yza9lxCkml46sok632Dmps3c8Na7h-z3lefd0J8Zqx0xyIWkPbJvVnsx21we2mC50woJevaVhXJg9KiONvdC4wlnVqZHnpPSew-ezGxvTfiK9xsj3XQ0bN_O1PZRNu6xiEETZnXWwvFk2O8AW87Pk%26flowName%3DGeneralOAuthFlow%26as%3DS1560415711%253A1790572971593933%26client_id%3D1081471194276-48m4lfi2p53udj4q4lco3g92qd793s5h.apps.googleusercontent.com%23&app_domain=https%3A%2F%2Floewfi.cloudflareaccess.com&rart=ANgoxcebdiLW2PovPtHhT8bEikOsyx4xu5Axv9LoChDqkyMMY_BdvMRHrktxg9PDpjGCNCiBc9CNGVxFVJ9-8gaVjqjRLw1KUiaFDqp8IE4MiYYiypEjvp4",
+        "https://accounts.google.com/v3/signin/identifier?opparams=%253F&dsh=S-365822538%3A1790572980330312&client_id=1081471194276-48m4lfi2p53udj4q4lco3g92qd793s5h.apps.googleusercontent.com&o2v=1&redirect_uri=https%3A%2F%2Floewfi.cloudflareaccess.com%2Fcdn-cgi%2Faccess%2Fcallback&response_type=code&scope=email+profile+openid&service=lso&state=267609aa1d8033b046b2949b0503b23c7fd76fc5e2a70ced1c68bb529b483aef.JTdCJTIyaWF0JTIyJTNBMTc5MDU3Mjk4MCUyQyUyMmF1dGhEb21haW4lMjIlM0ElMjJsb2V3ZmkuY2xvdWRmbGFyZWFjY2Vzcy5jb20lMjIlMkMlMjJob3N0bmFtZSUyMiUzQSUyMmZpZWxkLmxvZXcuZmklMjIlMkMlMjJyZWRpcmVjdFVSTCUyMiUzQSUyMiUyRndvcmslMkZub2F1dGglMjIlMkMlMjJhdWQlMjIlM0ElMjJmZWIwZDJkNjdjODY4ODkxYWQ0NjRkOTY2ZjFhNWM0MTY3MGE2ZTgwYTM1NWRjMDJlNjFjOTc5YTBlNWI2YjM5JTIyJTJDJTIyaXNTYW1lU2l0ZU5vbmVDb21wYXRpYmxlJTIyJTNBdHJ1ZSUyQyUyMmlzSURQVGVzdCUyMiUzQWZhbHNlJTJDJTIyaXNSZWZyZXNoJTIyJTNBZmFsc2UlMkMlMjJub25jZSUyMiUzQSUyMm5iazZLaXJSOXhBeWl0YlFkJTIyJTJDJTIyaWRwSWQlMjIlM0ElMjI4ODI1Yjc4YS03YjlhLTRiODUtYmI2YS1hZmE2MGRlZTAwNzclMjIlMkMlMjJzZXJ2aWNlX3Rva2VuX3N0YXR1cyUyMiUzQWZhbHNlJTJDJTIyYXV0aF9zdGF0dXMlMjIlM0ElMjJOT05FJTIyJTJDJTIyaXNfd2FycCUyMiUzQWZhbHNlJTJDJTIyaXNfZ2F0ZXdheSUyMiUzQWZhbHNlJTJDJTIybXRsc19hdXRoJTIyJTNBJTdCJTIyY2VydF9pc3N1ZXJfZG4lMjIlM0ElMjIlMjIlMkMlMjJjZXJ0X3NlcmlhbCUyMiUzQSUyMiUyMiUyQyUyMmNlcnRfaXNzdWVyX3NraSUyMiUzQSUyMiUyMiUyQyUyMmNlcnRfcHJlc2VudGVkJTIyJTNBZmFsc2UlMkMlMjJjb21tb25fbmFtZSUyMiUzQSUyMiUyMiUyQyUyMmF1dGhfc3RhdHVzJTIyJTNBJTIyTk9ORSUyMiU3RCUyQyUyMmFwcFNlc3Npb25IYXNoJTIyJTNBJTIyODE4N2EyOTYxYTg1ZjhkMDliMGIyZWJiYmU2NmU4MzQzNWVjZWY3ODYzOWE5OGY1NjUzZmExNWExNjYzOTE0NyUyMiUyQyUyMmF0dGVtcHRJZCUyMiUzQSUyMjdkMDY3MTE5LTgyYTItNDUwNC1iODU2LTcyMDM5MzE0NmI3NyUyMiUyQyUyMmF0dGVtcHRSZXByb21wdCUyMiUzQWZhbHNlJTdE&flowName=GeneralOAuthLite&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Flegacy%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hAM3_VW7c1acZcTVA-I0aqmUDTwH0fxvyIdfLxaLahWomntyBz57-SzUcJoktCbMNQSaPSscXNPHRFOkFceonnLCA7gY1Jx1ywS_oX-RtcJrO2zHL9LBORclhejnT5nWFR9FmEOfLgCP8l9eiqzZJzUKbzFpenV0V37gh9pTyBSo7dL6teo6mtvHzMAeIKcpHRjp9-nXs560KFzaEA4s_E-e1n6t5BdeYqGl_YGjoZk-XNIuHtN5XnRe1pVx3oNlY2ZIJR7k4VrLxv8WotqZHDxsFogEHRpvnfGVnXeTcEpKwzaOH_HNEEm-jPzZ2wHHwmpYRLZJyY7Q2F2T0oFQt0VDvaaDpoIPLlhzsjxLhRv141QwvLauEUcGN2GER4K_QhD61Yc8sdm3TBX5HLks-xuPzwbz-0hc02HKgX7OrMlN0bZngX7AliK1WrTIVPD5KK-ParhMKPxMQgZZ2kYu4NlTYjLEIx6Zq6cSXLc7ie1XTowCg6I%26flowName%3DGeneralOAuthFlow%26as%3DS-365822538%253A1790572980330312%26client_id%3D1081471194276-48m4lfi2p53udj4q4lco3g92qd793s5h.apps.googleusercontent.com%23&app_domain=https%3A%2F%2Floewfi.cloudflareaccess.com&rart=ANgoxcd781TiG5kFPKF4WLBai44eFMzBhMuDN8IG7dsZJOw_PYQYJ99y3CmmVpra95gJy5gzycIYPKeYkPy6krnR7nBkxOhAO58SZqE9R2NLIM9-1hIlHOI",
+        "https://accounts.google.com/v3/signin/identifier?opparams=%253F&dsh=S540070317%3A1790572989029963&client_id=1081471194276-48m4lfi2p53udj4q4lco3g92qd793s5h.apps.googleusercontent.com&o2v=1&redirect_uri=https%3A%2F%2Floewfi.cloudflareaccess.com%2Fcdn-cgi%2Faccess%2Fcallback&response_type=code&scope=email+profile+openid&service=lso&state=a392aad6c86ab80740322b860c03c7ede08c5136b6677e04390c10881f7a58b5.JTdCJTIyaWF0JTIyJTNBMTc5MDU3Mjk4OSUyQyUyMmF1dGhEb21haW4lMjIlM0ElMjJsb2V3ZmkuY2xvdWRmbGFyZWFjY2Vzcy5jb20lMjIlMkMlMjJob3N0bmFtZSUyMiUzQSUyMmZpZWxkLmxvZXcuZmklMjIlMkMlMjJyZWRpcmVjdFVSTCUyMiUzQSUyMiUyRndvcmslMkZub2F1dGglMjIlMkMlMjJhdWQlMjIlM0ElMjJmZWIwZDJkNjdjODY4ODkxYWQ0NjRkOTY2ZjFhNWM0MTY3MGE2ZTgwYTM1NWRjMDJlNjFjOTc5YTBlNWI2YjM5JTIyJTJDJTIyaXNTYW1lU2l0ZU5vbmVDb21wYXRpYmxlJTIyJTNBdHJ1ZSUyQyUyMmlzSURQVGVzdCUyMiUzQWZhbHNlJTJDJTIyaXNSZWZyZXNoJTIyJTNBZmFsc2UlMkMlMjJub25jZSUyMiUzQSUyMm5NMDRpMm1OUjYxeDFlWkhlJTIyJTJDJTIyaWRwSWQlMjIlM0ElMjI4ODI1Yjc4YS03YjlhLTRiODUtYmI2YS1hZmE2MGRlZTAwNzclMjIlMkMlMjJzZXJ2aWNlX3Rva2VuX3N0YXR1cyUyMiUzQWZhbHNlJTJDJTIyYXV0aF9zdGF0dXMlMjIlM0ElMjJOT05FJTIyJTJDJTIyaXNfd2FycCUyMiUzQWZhbHNlJTJDJTIyaXNfZ2F0ZXdheSUyMiUzQWZhbHNlJTJDJTIybXRsc19hdXRoJTIyJTNBJTdCJTIyY2VydF9pc3N1ZXJfZG4lMjIlM0ElMjIlMjIlMkMlMjJjZXJ0X3NlcmlhbCUyMiUzQSUyMiUyMiUyQyUyMmNlcnRfaXNzdWVyX3NraSUyMiUzQSUyMiUyMiUyQyUyMmNlcnRfcHJlc2VudGVkJTIyJTNBZmFsc2UlMkMlMjJjb21tb25fbmFtZSUyMiUzQSUyMiUyMiUyQyUyMmF1dGhfc3RhdHVzJTIyJTNBJTIyTk9ORSUyMiU3RCUyQyUyMmFwcFNlc3Npb25IYXNoJTIyJTNBJTIyZGQ3NzRiNmE5M2RhOGU5N2QxOTJiODg1MDg1NjcxMzhkOGFmMWE1NWYzMDMzNTkyM2M2ODNiNDc4YmY2OGQ2YyUyMiUyQyUyMmF0dGVtcHRJZCUyMiUzQSUyMmVmNGIwODBjLTJkNmEtNDJhNS1hMDY5LThkYWI2YzM0YzE1YiUyMiUyQyUyMmF0dGVtcHRSZXByb21wdCUyMiUzQWZhbHNlJTdE&flowName=GeneralOAuthLite&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Flegacy%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hAPCVltQ17FBuhNL8SRtF6dwXPZquT770BdKLGcPRM4KavU0RtiCNojNWBXuDsJmZaH744aOgTW_om3DXICwsY6fNK9_YDbe9zC0_Vj-uDnFAVxiBsV_wO67VL039tnoznE9aS2-kPpi7QccsJcN-GWDHC2TIXf0qBsARRAa3aN3F9Ae4g1rhsuJOieBxMnkcAM9xWnhp5RhbtR4lQrLhvmmLEMfEsXRcEpaVkOiLnLPQmlZ_qTYYS26HEUaeS6LyGiwN-NuX1GS4s1QKvXtv-xd4wPsWJLV35HbEiiyEh9xOiMUEbBjYntIpNwaHkXm4oGQGl7SruVbwo_RxF1YaThU40OSd0CVOfQjI5xx46v3x8fbL8u_ZcyFsJ3TfPKZllPE-yZr7dkGcgQO-2caYdV5Ckb_p-J669v-PRnYYe4MykpyPNnDhISsn1ZqDAwePRTj77Wkt_v6ANrj4SMejV7-oGTDkyeu3ialzHyQURZmI3LAvUQ%26flowName%3DGeneralOAuthFlow%26as%3DS540070317%253A1790572989029963%26client_id%3D1081471194276-48m4lfi2p53udj4q4lco3g92qd793s5h.apps.googleusercontent.com%23&app_domain=https%3A%2F%2Floewfi.cloudflareaccess.com&rart=ANgoxccgaBbpLJoH02yfLwCz7A5xqxiHk-0NCl9rfCj2Gee2qKX6yS7QNuLyV-OM2Ezy6x2BUnIxUgSNiJng4ogVk4TNNV7nA-39Uqm_mp01Xhb5oWhMZvs"
+      ],
+      "responseStatuses": [
+        200,
+        200,
+        200
+      ]
+    },
+    "stockIncrementalRssVsBlankMb": 627.67578125,
+    "fieldIncrementalRssVsBlankMb": 84.02734375,
+    "fieldMinusStockRssMb": -543.6484375,
+    "fieldMinusStockJsHeapMb": -166.95660305023193
+  },
+  "samples": {
+    "blank": [
+      {
+        "name": "blank",
+        "responseStatus": null,
+        "finalUrl": "about:blank",
+        "pageMetrics": {
+          "title": "",
+          "crossOriginIsolated": false,
+          "usedJSHeapSize": 903037,
+          "totalJSHeapSize": 1572873,
+          "jsHeapSizeLimit": 2248146944,
+          "iframeCount": 0,
+          "domElementCount": 3,
+          "resourceCount": 0,
+          "uasMemory": null
+        },
+        "cdpMetrics": {
+          "Documents": 3,
+          "Frames": 1,
+          "Nodes": 12,
+          "LayoutCount": 0,
+          "RecalcStyleCount": 0,
+          "JSHeapUsedSize": 926536,
+          "JSHeapTotalSize": 1572864
+        },
+        "domCounters": {
+          "documents": 3,
+          "nodes": 12,
+          "jsEventListeners": 0
+        },
+        "browserTree": {
+          "rssKb": 402112,
+          "processCount": 6,
+          "processes": [
+            {
+              "pid": 3116,
+              "ppid": 3104,
+              "rssKb": 96860,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3118,
+              "ppid": 3116,
+              "rssKb": 46188,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3119,
+              "ppid": 3116,
+              "rssKb": 46036,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3136,
+              "ppid": 3118,
+              "rssKb": 59380,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3148,
+              "ppid": 3116,
+              "rssKb": 67160,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3163,
+              "ppid": 3119,
+              "rssKb": 86488,
+              "comm": "headless_shell"
+            }
+          ]
+        }
+      },
+      {
+        "name": "blank",
+        "responseStatus": null,
+        "finalUrl": "about:blank",
+        "pageMetrics": {
+          "title": "",
+          "crossOriginIsolated": false,
+          "usedJSHeapSize": 903037,
+          "totalJSHeapSize": 1572873,
+          "jsHeapSizeLimit": 2248146944,
+          "iframeCount": 0,
+          "domElementCount": 3,
+          "resourceCount": 0,
+          "uasMemory": null
+        },
+        "cdpMetrics": {
+          "Documents": 3,
+          "Frames": 1,
+          "Nodes": 12,
+          "LayoutCount": 0,
+          "RecalcStyleCount": 0,
+          "JSHeapUsedSize": 926536,
+          "JSHeapTotalSize": 1572864
+        },
+        "domCounters": {
+          "documents": 3,
+          "nodes": 12,
+          "jsEventListeners": 0
+        },
+        "browserTree": {
+          "rssKb": 397136,
+          "processCount": 6,
+          "processes": [
+            {
+              "pid": 3172,
+              "ppid": 3104,
+              "rssKb": 96312,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3174,
+              "ppid": 3172,
+              "rssKb": 45872,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3175,
+              "ppid": 3172,
+              "rssKb": 46260,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3192,
+              "ppid": 3174,
+              "rssKb": 59308,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3194,
+              "ppid": 3172,
+              "rssKb": 65432,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3220,
+              "ppid": 3175,
+              "rssKb": 83952,
+              "comm": "headless_shell"
+            }
+          ]
+        }
+      },
+      {
+        "name": "blank",
+        "responseStatus": null,
+        "finalUrl": "about:blank",
+        "pageMetrics": {
+          "title": "",
+          "crossOriginIsolated": false,
+          "usedJSHeapSize": 903037,
+          "totalJSHeapSize": 1572873,
+          "jsHeapSizeLimit": 2248146944,
+          "iframeCount": 0,
+          "domElementCount": 3,
+          "resourceCount": 0,
+          "uasMemory": null
+        },
+        "cdpMetrics": {
+          "Documents": 3,
+          "Frames": 1,
+          "Nodes": 12,
+          "LayoutCount": 0,
+          "RecalcStyleCount": 0,
+          "JSHeapUsedSize": 926536,
+          "JSHeapTotalSize": 1572864
+        },
+        "domCounters": {
+          "documents": 3,
+          "nodes": 12,
+          "jsEventListeners": 0
+        },
+        "browserTree": {
+          "rssKb": 399384,
+          "processCount": 6,
+          "processes": [
+            {
+              "pid": 3229,
+              "ppid": 3104,
+              "rssKb": 97404,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3231,
+              "ppid": 3229,
+              "rssKb": 46332,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3232,
+              "ppid": 3229,
+              "rssKb": 46640,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3249,
+              "ppid": 3231,
+              "rssKb": 59916,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3256,
+              "ppid": 3229,
+              "rssKb": 65440,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3274,
+              "ppid": 3232,
+              "rssKb": 83652,
+              "comm": "headless_shell"
+            }
+          ]
+        }
+      }
+    ],
+    "stock_revyme": [
+      {
+        "name": "stock_revyme",
+        "responseStatus": 200,
+        "finalUrl": "http://localhost:3333/",
+        "pageMetrics": {
+          "title": "Revyme",
+          "crossOriginIsolated": false,
+          "usedJSHeapSize": 180652210,
+          "totalJSHeapSize": 196261826,
+          "jsHeapSizeLimit": 2248146944,
+          "iframeCount": 1,
+          "domElementCount": 265,
+          "resourceCount": 250,
+          "uasMemory": null
+        },
+        "cdpMetrics": {
+          "Documents": 2,
+          "Frames": 3,
+          "Nodes": 456,
+          "LayoutCount": 0,
+          "RecalcStyleCount": 0,
+          "JSHeapUsedSize": 62784452,
+          "JSHeapTotalSize": 78364672
+        },
+        "domCounters": {
+          "documents": 2,
+          "nodes": 456,
+          "jsEventListeners": 458
+        },
+        "browserTree": {
+          "rssKb": 1042124,
+          "processCount": 7,
+          "processes": [
+            {
+              "pid": 3283,
+              "ppid": 3104,
+              "rssKb": 107908,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3285,
+              "ppid": 3283,
+              "rssKb": 46328,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3286,
+              "ppid": 3283,
+              "rssKb": 46324,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3303,
+              "ppid": 3285,
+              "rssKb": 99844,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3305,
+              "ppid": 3283,
+              "rssKb": 148528,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3330,
+              "ppid": 3286,
+              "rssKb": 392900,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3349,
+              "ppid": 3286,
+              "rssKb": 200292,
+              "comm": "headless_shell"
+            }
+          ]
+        }
+      },
+      {
+        "name": "stock_revyme",
+        "responseStatus": 200,
+        "finalUrl": "http://localhost:3333/",
+        "pageMetrics": {
+          "title": "Revyme",
+          "crossOriginIsolated": false,
+          "usedJSHeapSize": 180916092,
+          "totalJSHeapSize": 199931844,
+          "jsHeapSizeLimit": 2248146944,
+          "iframeCount": 1,
+          "domElementCount": 265,
+          "resourceCount": 250,
+          "uasMemory": null
+        },
+        "cdpMetrics": {
+          "Documents": 1,
+          "Frames": 2,
+          "Nodes": 452,
+          "LayoutCount": 0,
+          "RecalcStyleCount": 1,
+          "JSHeapUsedSize": 63055152,
+          "JSHeapTotalSize": 82034688
+        },
+        "domCounters": {
+          "documents": 1,
+          "nodes": 452,
+          "jsEventListeners": 458
+        },
+        "browserTree": {
+          "rssKb": 1059496,
+          "processCount": 7,
+          "processes": [
+            {
+              "pid": 3368,
+              "ppid": 3104,
+              "rssKb": 107396,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3370,
+              "ppid": 3368,
+              "rssKb": 46172,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3371,
+              "ppid": 3368,
+              "rssKb": 46428,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3389,
+              "ppid": 3370,
+              "rssKb": 102896,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3391,
+              "ppid": 3368,
+              "rssKb": 148596,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3413,
+              "ppid": 3371,
+              "rssKb": 407740,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3428,
+              "ppid": 3371,
+              "rssKb": 200268,
+              "comm": "headless_shell"
+            }
+          ]
+        }
+      },
+      {
+        "name": "stock_revyme",
+        "responseStatus": 200,
+        "finalUrl": "http://localhost:3333/",
+        "pageMetrics": {
+          "title": "Revyme",
+          "crossOriginIsolated": false,
+          "usedJSHeapSize": 187169726,
+          "totalJSHeapSize": 200136810,
+          "jsHeapSizeLimit": 2248146944,
+          "iframeCount": 1,
+          "domElementCount": 265,
+          "resourceCount": 250,
+          "uasMemory": null
+        },
+        "cdpMetrics": {
+          "Documents": 2,
+          "Frames": 3,
+          "Nodes": 507,
+          "LayoutCount": 0,
+          "RecalcStyleCount": 0,
+          "JSHeapUsedSize": 69306848,
+          "JSHeapTotalSize": 82239488
+        },
+        "domCounters": {
+          "documents": 2,
+          "nodes": 507,
+          "jsEventListeners": 465
+        },
+        "browserTree": {
+          "rssKb": 1038572,
+          "processCount": 7,
+          "processes": [
+            {
+              "pid": 3446,
+              "ppid": 3104,
+              "rssKb": 109224,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3448,
+              "ppid": 3446,
+              "rssKb": 46264,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3449,
+              "ppid": 3446,
+              "rssKb": 46452,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3469,
+              "ppid": 3448,
+              "rssKb": 96116,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3471,
+              "ppid": 3446,
+              "rssKb": 148608,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3488,
+              "ppid": 3449,
+              "rssKb": 388636,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3509,
+              "ppid": 3449,
+              "rssKb": 203272,
+              "comm": "headless_shell"
+            }
+          ]
+        }
+      }
+    ],
+    "field": [
+      {
+        "name": "field",
+        "responseStatus": 200,
+        "finalUrl": "https://accounts.google.com/v3/signin/identifier?opparams=%253F&dsh=S1560415711%3A1790572971593933&client_id=1081471194276-48m4lfi2p53udj4q4lco3g92qd793s5h.apps.googleusercontent.com&o2v=1&redirect_uri=https%3A%2F%2Floewfi.cloudflareaccess.com%2Fcdn-cgi%2Faccess%2Fcallback&response_type=code&scope=email+profile+openid&service=lso&state=79c31cf2943fa37d9be25b9fa84bd528497d73c54b84908e33b46866322afaa8.JTdCJTIyaWF0JTIyJTNBMTc5MDU3Mjk3MSUyQyUyMmF1dGhEb21haW4lMjIlM0ElMjJsb2V3ZmkuY2xvdWRmbGFyZWFjY2Vzcy5jb20lMjIlMkMlMjJob3N0bmFtZSUyMiUzQSUyMmZpZWxkLmxvZXcuZmklMjIlMkMlMjJyZWRpcmVjdFVSTCUyMiUzQSUyMiUyRndvcmslMkZub2F1dGglMjIlMkMlMjJhdWQlMjIlM0ElMjJmZWIwZDJkNjdjODY4ODkxYWQ0NjRkOTY2ZjFhNWM0MTY3MGE2ZTgwYTM1NWRjMDJlNjFjOTc5YTBlNWI2YjM5JTIyJTJDJTIyaXNTYW1lU2l0ZU5vbmVDb21wYXRpYmxlJTIyJTNBdHJ1ZSUyQyUyMmlzSURQVGVzdCUyMiUzQWZhbHNlJTJDJTIyaXNSZWZyZXNoJTIyJTNBZmFsc2UlMkMlMjJub25jZSUyMiUzQSUyMm5MUFVsbFpOcXo2QzRQeE1EJTIyJTJDJTIyaWRwSWQlMjIlM0ElMjI4ODI1Yjc4YS03YjlhLTRiODUtYmI2YS1hZmE2MGRlZTAwNzclMjIlMkMlMjJzZXJ2aWNlX3Rva2VuX3N0YXR1cyUyMiUzQWZhbHNlJTJDJTIyYXV0aF9zdGF0dXMlMjIlM0ElMjJOT05FJTIyJTJDJTIyaXNfd2FycCUyMiUzQWZhbHNlJTJDJTIyaXNfZ2F0ZXdheSUyMiUzQWZhbHNlJTJDJTIybXRsc19hdXRoJTIyJTNBJTdCJTIyY2VydF9pc3N1ZXJfZG4lMjIlM0ElMjIlMjIlMkMlMjJjZXJ0X3NlcmlhbCUyMiUzQSUyMiUyMiUyQyUyMmNlcnRfaXNzdWVyX3NraSUyMiUzQSUyMiUyMiUyQyUyMmNlcnRfcHJlc2VudGVkJTIyJTNBZmFsc2UlMkMlMjJjb21tb25fbmFtZSUyMiUzQSUyMiUyMiUyQyUyMmF1dGhfc3RhdHVzJTIyJTNBJTIyTk9ORSUyMiU3RCUyQyUyMmFwcFNlc3Npb25IYXNoJTIyJTNBJTIyMTM2YjEyYWE3NTI5ZmY0NTQxNjQ0MzNjMDcyYzZmNjYzZDM4NDMxMTFjNTc4MDk5NWJiZmNiYzk3ZGJjNTk3YyUyMiUyQyUyMmF0dGVtcHRJZCUyMiUzQSUyMjVlMDdhN2Q0LTBhOGYtNDA5NS1iZTVkLTg1Y2QzYWE1ZDk3YSUyMiUyQyUyMmF0dGVtcHRSZXByb21wdCUyMiUzQWZhbHNlJTdE&flowName=GeneralOAuthLite&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Flegacy%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hAO_Bri8Q-7p8BcnH2HDCUvVUuml0-tZdj_rJUoZs01Cd6jWXdOEZckhtoQ6lysV3h6hrvRUFEbDVidzqncSoU8VgO-Mh9EKQGCtGCIAXERzPlqfUQvtZ202Ykl3L0fl_zOfaSwikzdP4bxFDoAmvG_1pUUzJC-HD0MoZwaYYrD1VW9hRwodElnmD5-xPk-fJC2t3t7UM-OE-nMUEHByM3_iywRvKRP6rHnK4WXSOnZckjrUPLXv5u9a8K3LhPbpzOkBNZfjiBhwv7OeTfGF5UwZahcZ26gp4hp0DmniuWCUfsgUhioUFe4z_izu67QPo9vq7PHMCE5b6IJNgxoGWwCZtkPgT7yza9lxCkml46sok632Dmps3c8Na7h-z3lefd0J8Zqx0xyIWkPbJvVnsx21we2mC50woJevaVhXJg9KiONvdC4wlnVqZHnpPSew-ezGxvTfiK9xsj3XQ0bN_O1PZRNu6xiEETZnXWwvFk2O8AW87Pk%26flowName%3DGeneralOAuthFlow%26as%3DS1560415711%253A1790572971593933%26client_id%3D1081471194276-48m4lfi2p53udj4q4lco3g92qd793s5h.apps.googleusercontent.com%23&app_domain=https%3A%2F%2Floewfi.cloudflareaccess.com&rart=ANgoxcebdiLW2PovPtHhT8bEikOsyx4xu5Axv9LoChDqkyMMY_BdvMRHrktxg9PDpjGCNCiBc9CNGVxFVJ9-8gaVjqjRLw1KUiaFDqp8IE4MiYYiypEjvp4",
+        "pageMetrics": {
+          "title": "Sign in - Google Accounts",
+          "crossOriginIsolated": false,
+          "usedJSHeapSize": 6370963,
+          "totalJSHeapSize": 9768315,
+          "jsHeapSizeLimit": 2248146944,
+          "iframeCount": 1,
+          "domElementCount": 192,
+          "resourceCount": 3,
+          "uasMemory": null
+        },
+        "cdpMetrics": {
+          "Documents": 11,
+          "Frames": 7,
+          "Nodes": 731,
+          "LayoutCount": 0,
+          "RecalcStyleCount": 0,
+          "JSHeapUsedSize": 6128896,
+          "JSHeapTotalSize": 9498624
+        },
+        "domCounters": {
+          "documents": 11,
+          "nodes": 731,
+          "jsEventListeners": 56
+        },
+        "browserTree": {
+          "rssKb": 485428,
+          "processCount": 6,
+          "processes": [
+            {
+              "pid": 3533,
+              "ppid": 3104,
+              "rssKb": 106184,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3535,
+              "ppid": 3533,
+              "rssKb": 46716,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3536,
+              "ppid": 3533,
+              "rssKb": 46412,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3553,
+              "ppid": 3535,
+              "rssKb": 63848,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3557,
+              "ppid": 3533,
+              "rssKb": 82204,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3578,
+              "ppid": 3536,
+              "rssKb": 140064,
+              "comm": "headless_shell"
+            }
+          ]
+        }
+      },
+      {
+        "name": "field",
+        "responseStatus": 200,
+        "finalUrl": "https://accounts.google.com/v3/signin/identifier?opparams=%253F&dsh=S-365822538%3A1790572980330312&client_id=1081471194276-48m4lfi2p53udj4q4lco3g92qd793s5h.apps.googleusercontent.com&o2v=1&redirect_uri=https%3A%2F%2Floewfi.cloudflareaccess.com%2Fcdn-cgi%2Faccess%2Fcallback&response_type=code&scope=email+profile+openid&service=lso&state=267609aa1d8033b046b2949b0503b23c7fd76fc5e2a70ced1c68bb529b483aef.JTdCJTIyaWF0JTIyJTNBMTc5MDU3Mjk4MCUyQyUyMmF1dGhEb21haW4lMjIlM0ElMjJsb2V3ZmkuY2xvdWRmbGFyZWFjY2Vzcy5jb20lMjIlMkMlMjJob3N0bmFtZSUyMiUzQSUyMmZpZWxkLmxvZXcuZmklMjIlMkMlMjJyZWRpcmVjdFVSTCUyMiUzQSUyMiUyRndvcmslMkZub2F1dGglMjIlMkMlMjJhdWQlMjIlM0ElMjJmZWIwZDJkNjdjODY4ODkxYWQ0NjRkOTY2ZjFhNWM0MTY3MGE2ZTgwYTM1NWRjMDJlNjFjOTc5YTBlNWI2YjM5JTIyJTJDJTIyaXNTYW1lU2l0ZU5vbmVDb21wYXRpYmxlJTIyJTNBdHJ1ZSUyQyUyMmlzSURQVGVzdCUyMiUzQWZhbHNlJTJDJTIyaXNSZWZyZXNoJTIyJTNBZmFsc2UlMkMlMjJub25jZSUyMiUzQSUyMm5iazZLaXJSOXhBeWl0YlFkJTIyJTJDJTIyaWRwSWQlMjIlM0ElMjI4ODI1Yjc4YS03YjlhLTRiODUtYmI2YS1hZmE2MGRlZTAwNzclMjIlMkMlMjJzZXJ2aWNlX3Rva2VuX3N0YXR1cyUyMiUzQWZhbHNlJTJDJTIyYXV0aF9zdGF0dXMlMjIlM0ElMjJOT05FJTIyJTJDJTIyaXNfd2FycCUyMiUzQWZhbHNlJTJDJTIyaXNfZ2F0ZXdheSUyMiUzQWZhbHNlJTJDJTIybXRsc19hdXRoJTIyJTNBJTdCJTIyY2VydF9pc3N1ZXJfZG4lMjIlM0ElMjIlMjIlMkMlMjJjZXJ0X3NlcmlhbCUyMiUzQSUyMiUyMiUyQyUyMmNlcnRfaXNzdWVyX3NraSUyMiUzQSUyMiUyMiUyQyUyMmNlcnRfcHJlc2VudGVkJTIyJTNBZmFsc2UlMkMlMjJjb21tb25fbmFtZSUyMiUzQSUyMiUyMiUyQyUyMmF1dGhfc3RhdHVzJTIyJTNBJTIyTk9ORSUyMiU3RCUyQyUyMmFwcFNlc3Npb25IYXNoJTIyJTNBJTIyODE4N2EyOTYxYTg1ZjhkMDliMGIyZWJiYmU2NmU4MzQzNWVjZWY3ODYzOWE5OGY1NjUzZmExNWExNjYzOTE0NyUyMiUyQyUyMmF0dGVtcHRJZCUyMiUzQSUyMjdkMDY3MTE5LTgyYTItNDUwNC1iODU2LTcyMDM5MzE0NmI3NyUyMiUyQyUyMmF0dGVtcHRSZXByb21wdCUyMiUzQWZhbHNlJTdE&flowName=GeneralOAuthLite&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Flegacy%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hAM3_VW7c1acZcTVA-I0aqmUDTwH0fxvyIdfLxaLahWomntyBz57-SzUcJoktCbMNQSaPSscXNPHRFOkFceonnLCA7gY1Jx1ywS_oX-RtcJrO2zHL9LBORclhejnT5nWFR9FmEOfLgCP8l9eiqzZJzUKbzFpenV0V37gh9pTyBSo7dL6teo6mtvHzMAeIKcpHRjp9-nXs560KFzaEA4s_E-e1n6t5BdeYqGl_YGjoZk-XNIuHtN5XnRe1pVx3oNlY2ZIJR7k4VrLxv8WotqZHDxsFogEHRpvnfGVnXeTcEpKwzaOH_HNEEm-jPzZ2wHHwmpYRLZJyY7Q2F2T0oFQt0VDvaaDpoIPLlhzsjxLhRv141QwvLauEUcGN2GER4K_QhD61Yc8sdm3TBX5HLks-xuPzwbz-0hc02HKgX7OrMlN0bZngX7AliK1WrTIVPD5KK-ParhMKPxMQgZZ2kYu4NlTYjLEIx6Zq6cSXLc7ie1XTowCg6I%26flowName%3DGeneralOAuthFlow%26as%3DS-365822538%253A1790572980330312%26client_id%3D1081471194276-48m4lfi2p53udj4q4lco3g92qd793s5h.apps.googleusercontent.com%23&app_domain=https%3A%2F%2Floewfi.cloudflareaccess.com&rart=ANgoxcd781TiG5kFPKF4WLBai44eFMzBhMuDN8IG7dsZJOw_PYQYJ99y3CmmVpra95gJy5gzycIYPKeYkPy6krnR7nBkxOhAO58SZqE9R2NLIM9-1hIlHOI",
+        "pageMetrics": {
+          "title": "Sign in - Google Accounts",
+          "crossOriginIsolated": false,
+          "usedJSHeapSize": 5784068,
+          "totalJSHeapSize": 9510460,
+          "jsHeapSizeLimit": 2248146944,
+          "iframeCount": 1,
+          "domElementCount": 192,
+          "resourceCount": 3,
+          "uasMemory": null
+        },
+        "cdpMetrics": {
+          "Documents": 11,
+          "Frames": 7,
+          "Nodes": 732,
+          "LayoutCount": 0,
+          "RecalcStyleCount": 0,
+          "JSHeapUsedSize": 5537712,
+          "JSHeapTotalSize": 9236480
+        },
+        "domCounters": {
+          "documents": 11,
+          "nodes": 732,
+          "jsEventListeners": 56
+        },
+        "browserTree": {
+          "rssKb": 485904,
+          "processCount": 6,
+          "processes": [
+            {
+              "pid": 3590,
+              "ppid": 3104,
+              "rssKb": 107716,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3592,
+              "ppid": 3590,
+              "rssKb": 46304,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3593,
+              "ppid": 3590,
+              "rssKb": 46060,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3614,
+              "ppid": 3592,
+              "rssKb": 64156,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3615,
+              "ppid": 3590,
+              "rssKb": 81792,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3626,
+              "ppid": 3593,
+              "rssKb": 139876,
+              "comm": "headless_shell"
+            }
+          ]
+        }
+      },
+      {
+        "name": "field",
+        "responseStatus": 200,
+        "finalUrl": "https://accounts.google.com/v3/signin/identifier?opparams=%253F&dsh=S540070317%3A1790572989029963&client_id=1081471194276-48m4lfi2p53udj4q4lco3g92qd793s5h.apps.googleusercontent.com&o2v=1&redirect_uri=https%3A%2F%2Floewfi.cloudflareaccess.com%2Fcdn-cgi%2Faccess%2Fcallback&response_type=code&scope=email+profile+openid&service=lso&state=a392aad6c86ab80740322b860c03c7ede08c5136b6677e04390c10881f7a58b5.JTdCJTIyaWF0JTIyJTNBMTc5MDU3Mjk4OSUyQyUyMmF1dGhEb21haW4lMjIlM0ElMjJsb2V3ZmkuY2xvdWRmbGFyZWFjY2Vzcy5jb20lMjIlMkMlMjJob3N0bmFtZSUyMiUzQSUyMmZpZWxkLmxvZXcuZmklMjIlMkMlMjJyZWRpcmVjdFVSTCUyMiUzQSUyMiUyRndvcmslMkZub2F1dGglMjIlMkMlMjJhdWQlMjIlM0ElMjJmZWIwZDJkNjdjODY4ODkxYWQ0NjRkOTY2ZjFhNWM0MTY3MGE2ZTgwYTM1NWRjMDJlNjFjOTc5YTBlNWI2YjM5JTIyJTJDJTIyaXNTYW1lU2l0ZU5vbmVDb21wYXRpYmxlJTIyJTNBdHJ1ZSUyQyUyMmlzSURQVGVzdCUyMiUzQWZhbHNlJTJDJTIyaXNSZWZyZXNoJTIyJTNBZmFsc2UlMkMlMjJub25jZSUyMiUzQSUyMm5NMDRpMm1OUjYxeDFlWkhlJTIyJTJDJTIyaWRwSWQlMjIlM0ElMjI4ODI1Yjc4YS03YjlhLTRiODUtYmI2YS1hZmE2MGRlZTAwNzclMjIlMkMlMjJzZXJ2aWNlX3Rva2VuX3N0YXR1cyUyMiUzQWZhbHNlJTJDJTIyYXV0aF9zdGF0dXMlMjIlM0ElMjJOT05FJTIyJTJDJTIyaXNfd2FycCUyMiUzQWZhbHNlJTJDJTIyaXNfZ2F0ZXdheSUyMiUzQWZhbHNlJTJDJTIybXRsc19hdXRoJTIyJTNBJTdCJTIyY2VydF9pc3N1ZXJfZG4lMjIlM0ElMjIlMjIlMkMlMjJjZXJ0X3NlcmlhbCUyMiUzQSUyMiUyMiUyQyUyMmNlcnRfaXNzdWVyX3NraSUyMiUzQSUyMiUyMiUyQyUyMmNlcnRfcHJlc2VudGVkJTIyJTNBZmFsc2UlMkMlMjJjb21tb25fbmFtZSUyMiUzQSUyMiUyMiUyQyUyMmF1dGhfc3RhdHVzJTIyJTNBJTIyTk9ORSUyMiU3RCUyQyUyMmFwcFNlc3Npb25IYXNoJTIyJTNBJTIyZGQ3NzRiNmE5M2RhOGU5N2QxOTJiODg1MDg1NjcxMzhkOGFmMWE1NWYzMDMzNTkyM2M2ODNiNDc4YmY2OGQ2YyUyMiUyQyUyMmF0dGVtcHRJZCUyMiUzQSUyMmVmNGIwODBjLTJkNmEtNDJhNS1hMDY5LThkYWI2YzM0YzE1YiUyMiUyQyUyMmF0dGVtcHRSZXByb21wdCUyMiUzQWZhbHNlJTdE&flowName=GeneralOAuthLite&continue=https%3A%2F%2Faccounts.google.com%2Fsignin%2Foauth%2Flegacy%2Fconsent%3Fauthuser%3Dunknown%26part%3DAJi8hAPCVltQ17FBuhNL8SRtF6dwXPZquT770BdKLGcPRM4KavU0RtiCNojNWBXuDsJmZaH744aOgTW_om3DXICwsY6fNK9_YDbe9zC0_Vj-uDnFAVxiBsV_wO67VL039tnoznE9aS2-kPpi7QccsJcN-GWDHC2TIXf0qBsARRAa3aN3F9Ae4g1rhsuJOieBxMnkcAM9xWnhp5RhbtR4lQrLhvmmLEMfEsXRcEpaVkOiLnLPQmlZ_qTYYS26HEUaeS6LyGiwN-NuX1GS4s1QKvXtv-xd4wPsWJLV35HbEiiyEh9xOiMUEbBjYntIpNwaHkXm4oGQGl7SruVbwo_RxF1YaThU40OSd0CVOfQjI5xx46v3x8fbL8u_ZcyFsJ3TfPKZllPE-yZr7dkGcgQO-2caYdV5Ckb_p-J669v-PRnYYe4MykpyPNnDhISsn1ZqDAwePRTj77Wkt_v6ANrj4SMejV7-oGTDkyeu3ialzHyQURZmI3LAvUQ%26flowName%3DGeneralOAuthFlow%26as%3DS540070317%253A1790572989029963%26client_id%3D1081471194276-48m4lfi2p53udj4q4lco3g92qd793s5h.apps.googleusercontent.com%23&app_domain=https%3A%2F%2Floewfi.cloudflareaccess.com&rart=ANgoxccgaBbpLJoH02yfLwCz7A5xqxiHk-0NCl9rfCj2Gee2qKX6yS7QNuLyV-OM2Ezy6x2BUnIxUgSNiJng4ogVk4TNNV7nA-39Uqm_mp01Xhb5oWhMZvs",
+        "pageMetrics": {
+          "title": "Sign in - Google Accounts",
+          "crossOriginIsolated": false,
+          "usedJSHeapSize": 5849405,
+          "totalJSHeapSize": 9881709,
+          "jsHeapSizeLimit": 2248146944,
+          "iframeCount": 1,
+          "domElementCount": 192,
+          "resourceCount": 3,
+          "uasMemory": null
+        },
+        "cdpMetrics": {
+          "Documents": 11,
+          "Frames": 7,
+          "Nodes": 742,
+          "LayoutCount": 0,
+          "RecalcStyleCount": 0,
+          "JSHeapUsedSize": 5599336,
+          "JSHeapTotalSize": 9760768
+        },
+        "domCounters": {
+          "documents": 11,
+          "nodes": 742,
+          "jsEventListeners": 56
+        },
+        "browserTree": {
+          "rssKb": 485096,
+          "processCount": 6,
+          "processes": [
+            {
+              "pid": 3647,
+              "ppid": 3104,
+              "rssKb": 106444,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3649,
+              "ppid": 3647,
+              "rssKb": 46216,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3650,
+              "ppid": 3647,
+              "rssKb": 46144,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3667,
+              "ppid": 3649,
+              "rssKb": 64180,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3671,
+              "ppid": 3647,
+              "rssKb": 81756,
+              "comm": "headless_shell"
+            },
+            {
+              "pid": 3684,
+              "ppid": 3650,
+              "rssKb": 140356,
+              "comm": "headless_shell"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}
