@@ -39,9 +39,9 @@ jobs:
               tail -120 /tmp/revyme-dev.log
               exit 1
             fi
-            if curl -fsS http://127.0.0.1:3333/ >/dev/null &&
-               curl -fsS http://127.0.0.1:5174/ >/dev/null &&
-               curl -fsS http://127.0.0.1:5175/ >/dev/null; then
+            if curl -fsS http://localhost:3333/ >/dev/null &&
+               curl -fsS http://localhost:5174/ >/dev/null &&
+               curl -fsS http://localhost:5175/ >/dev/null; then
               echo "REVYME_READY"
               exit 0
             fi
@@ -156,7 +156,7 @@ jobs:
 
           const targets = [
             ['blank', 'about:blank'],
-            ['stock_revyme', 'http://127.0.0.1:3333/'],
+            ['stock_revyme', 'http://localhost:3333/'],
             ['field', 'https://field.loew.fi/work/noauth']
           ];
           const samples = {};
