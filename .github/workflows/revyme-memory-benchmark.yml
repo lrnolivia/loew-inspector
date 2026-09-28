@@ -22,24 +22,33 @@ jobs:
           mkdir -p /tmp/membench
           cd /tmp/membench
           npm init -y >/dev/null 2>&1
-          npm install playwright@1.55.0
-          npx playwright install --with-deps chromium
+          npm install --silent playwright@1.55.0 >/tmp/playwright-npm.log 2>&1 || { tail -80 /tmp/playwright-npm.log; exit 1; }
+          npx playwright install --with-deps chromium >/tmp/playwright-install.log 2>&1 || { tail -100 /tmp/playwright-install.log; exit 1; }
 
       - name: Clone and start stock Revyme
         run: |
-          git clone --depth 1 https://github.com/revyme-web/builder.git /tmp/revyme
+          git clone --depth 1 --quiet https://github.com/revyme-web/builder.git /tmp/revyme
           cd /tmp/revyme
-          npm install --no-audit --no-fund
+          npm install --no-audit --no-fund --silent >/tmp/revyme-install.log 2>&1 || { echo "REVYME_INSTALL_FAILED"; tail -100 /tmp/revyme-install.log; exit 1; }
           nohup npm run dev >/tmp/revyme-dev.log 2>&1 &
-          echo $! >/tmp/revyme-dev.pid
+          DEV_PID=$!
+          echo "$DEV_PID" >/tmp/revyme-dev.pid
           for i in $(seq 1 90); do
-            if curl -fsS http://127.0.0.1:3333 >/dev/null; then
-              echo "Revyme editor is ready"
+            if ! kill -0 "$DEV_PID" 2>/dev/null; then
+              echo "REVYME_DEV_EXITED"
+              tail -120 /tmp/revyme-dev.log
+              exit 1
+            fi
+            if curl -fsS http://127.0.0.1:3333/ >/dev/null &&
+               curl -fsS http://127.0.0.1:5174/ >/dev/null &&
+               curl -fsS http://127.0.0.1:5175/ >/dev/null; then
+              echo "REVYME_READY"
               exit 0
             fi
             sleep 2
           done
-          cat /tmp/revyme-dev.log
+          echo "REVYME_START_TIMEOUT"
+          tail -120 /tmp/revyme-dev.log
           exit 1
 
       - name: Measure blank, stock Revyme, and field
@@ -83,7 +92,6 @@ jobs:
             const context = await browser.newContext({ viewport: { width: 1440, height: 900 } });
             const page = await context.newPage();
             let responseStatus = null;
-            let finalUrl = url;
             try {
               if (url !== 'about:blank') {
                 const response = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 60000 });
@@ -93,7 +101,6 @@ jobs:
                 await page.goto(url);
                 await page.waitForTimeout(3000);
               }
-              finalUrl = page.url();
               const pageMetrics = await page.evaluate(async () => {
                 let uasMemory = null;
                 if (typeof performance.measureUserAgentSpecificMemory === 'function') {
@@ -123,12 +130,17 @@ jobs:
               const dom = await cdp.send('Memory.getDOMCounters').catch(() => null);
               const selected = {};
               for (const m of perf.metrics) {
-                if (['JSHeapUsedSize','JSHeapTotalSize','Nodes','Documents','Frames','LayoutCount','RecalcStyleCount'].includes(m.name)) {
-                  selected[m.name] = m.value;
-                }
+                if (['JSHeapUsedSize','JSHeapTotalSize','Nodes','Documents','Frames','LayoutCount','RecalcStyleCount'].includes(m.name)) selected[m.name] = m.value;
               }
-              const rss = processTreeRss(rootPid);
-              return { name, responseStatus, finalUrl, pageMetrics, cdpMetrics: selected, domCounters: dom, browserTree: rss };
+              return {
+                name,
+                responseStatus,
+                finalUrl: page.url(),
+                pageMetrics,
+                cdpMetrics: selected,
+                domCounters: dom,
+                browserTree: processTreeRss(rootPid)
+              };
             } finally {
               await context.close().catch(() => {});
               await browser.close().catch(() => {});
@@ -144,15 +156,13 @@ jobs:
 
           const targets = [
             ['blank', 'about:blank'],
-            ['stock_revyme', 'http://127.0.0.1:3333'],
+            ['stock_revyme', 'http://127.0.0.1:3333/'],
             ['field', 'https://field.loew.fi/work/noauth']
           ];
           const samples = {};
           for (const [name, url] of targets) {
             samples[name] = [];
-            for (let i = 0; i < 3; i++) {
-              samples[name].push(await oneSample(name, url));
-            }
+            for (let i = 0; i < 3; i++) samples[name].push(await oneSample(name, url));
           }
 
           const summary = {};
@@ -172,12 +182,7 @@ jobs:
           summary.fieldIncrementalRssVsBlankMb = summary.field.browserTreeRssMbMedian - summary.blank.browserTreeRssMbMedian;
           summary.fieldMinusStockRssMb = summary.field.browserTreeRssMbMedian - summary.stock_revyme.browserTreeRssMbMedian;
           summary.fieldMinusStockJsHeapMb = summary.field.usedJSHeapMbMedian - summary.stock_revyme.usedJSHeapMbMedian;
-
           console.log('MEM_BENCHMARK_RESULT=' + JSON.stringify({ summary, samples }));
           EOF
           cd /tmp/membench
           node bench.mjs
-
-      - name: Show Revyme server log on failure
-        if: failure()
-        run: cat /tmp/revyme-dev.log || true
