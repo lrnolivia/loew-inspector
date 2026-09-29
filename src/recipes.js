@@ -1,4 +1,5 @@
 import { openBrowserSession, interactBrowserSession, captureBrowserSession, closeBrowserSession } from "./session.js";
+import { normalizeBrowserCapacityError } from "./controller.js";
 
 const RECIPES = Object.freeze({
   "field.canvas-first-paint": { description: "Capture a real project after first stable paint.", steps: [{ action: "wait", waitMs: 1200 }] },
@@ -36,6 +37,10 @@ export async function runBrowserRecipe(binding, bucket, { recipe: recipeId, url,
       context: { ...(context || {}), project: context?.project || "field", route_kind: "qa-work", surface: context?.surface || "editor" }
     });
     return { ...evidence, recipe: recipeId };
+  } catch (error) {
+    const capacity = normalizeBrowserCapacityError(error);
+    if (capacity) return { ...capacity, recipe: recipeId };
+    throw error;
   } finally {
     if (opened?.session_id) { try { await closeBrowserSession(binding, bucket, opened.session_id); } catch {} }
   }
