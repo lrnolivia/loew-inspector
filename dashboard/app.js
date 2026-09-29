@@ -8,6 +8,7 @@ const primaryNav = [...document.querySelectorAll(".primary-nav-item")];
 const workersSection = document.querySelector("#workers-section");
 const visualSection = document.querySelector("#visual-section");
 const visualContent = document.querySelector("#visual-content");
+const visualRunsEl = document.querySelector("#visual-runs");
 const visualCount = document.querySelector("#visual-count");
 const toolbarContext = document.querySelector("#toolbar-context");
 const visualProjectFilter = document.querySelector("#visual-project-filter");
@@ -19,6 +20,8 @@ let selectedWorkerId = null;
 let currentWorkers = [];
 let currentSection = "workers";
 let visualEvidence = [];
+let visualRuns = [];
+let selectedRunId = null;
 let selectedEvidenceId = null;
 let baselineEvidenceId = null;
 let comparisonState = null;
@@ -71,10 +74,46 @@ function absoluteTime(value) {
 }
 
 function evidenceTitle(item) {
+  if (item.step_label) return item.step_label;
   const host = hostname(item.target_url);
   if (host === "runner.loew.fi") return "runner";
   if (host.endsWith(".loew.fi")) return host.slice(0, -".loew.fi".length);
   return host;
+}
+
+
+function renderVisualRuns() {
+  if (!visualRuns.length) {
+    visualRunsEl.innerHTML = "";
+    visualRunsEl.hidden = true;
+    return;
+  }
+  visualRunsEl.hidden = false;
+  visualRunsEl.innerHTML = visualRuns.slice(0, 10).map(run => {
+    const total = Number(run.step_total || 0);
+    const completed = Number(run.step_completed || 0);
+    const progress = total ? completed + " / " + total : "—";
+    return `
+      <button class="visual-run ${run.run_id === selectedRunId ? "active" : ""}" data-run-id="${escapeHtml(run.run_id)}" type="button">
+        <span class="visual-run-main">
+          <strong>${escapeHtml(run.label || run.suite || "evidence run")}</strong>
+          <small>${escapeHtml(run.project || "unknown")} · ${escapeHtml(run.environment || "unknown")} · ${escapeHtml(run.engine || "unknown")}</small>
+        </span>
+        <span class="visual-run-progress">${escapeHtml(progress)}</span>
+        <span class="visual-run-status run-status-${escapeHtml(run.status || "unknown")}">${escapeHtml(run.status || "unknown")}</span>
+        <span class="visual-run-time">${escapeHtml(relative(run.updated_at || run.created_at))}</span>
+      </button>
+    `;
+  }).join("");
+  visualRunsEl.querySelectorAll("[data-run-id]").forEach(button => {
+    button.addEventListener("click", () => {
+      selectedRunId = selectedRunId === button.dataset.runId ? null : button.dataset.runId;
+      selectedEvidenceId = null;
+      baselineEvidenceId = null;
+      comparisonState = null;
+      loadVisual();
+    });
+  });
 }
 
 async function computePixelDiff(baseUrl, currentUrl) {
@@ -161,6 +200,9 @@ function renderVisualSelected() {
     ["evidence", selected.evidence_id],
     ["kind", selected.kind || "screenshot"],
     ["request", selected.request_id || "—"],
+    ["engine", selected.engine || "browser-run"],
+    ["run", selected.run_id || "—"],
+    ["step", selected.step_label || selected.step_id || "—"],
     ["project", context.project || "—"],
     ["environment", context.environment || "unknown"],
     ["commit", context.commit_sha ? String(context.commit_sha).slice(0, 12) : "—"],
@@ -248,7 +290,7 @@ function renderVisualSelected() {
             <img class="evidence-thumb" src="${escapeHtml(item.screenshot_url)}" alt="">
             <span class="evidence-list-copy">
               <span class="evidence-list-title">${escapeHtml(evidenceTitle(item))}</span>
-              <span class="evidence-list-meta">${escapeHtml(item.kind || "screenshot")} · ${escapeHtml(item.viewport?.width || "—")}×${escapeHtml(item.viewport?.height || "—")}</span>
+              <span class="evidence-list-meta">${escapeHtml(item.engine || "browser-run")} · ${escapeHtml(item.viewport?.width || "—")}×${escapeHtml(item.viewport?.height || "—")}</span>
             </span>
             <span class="evidence-list-time">${escapeHtml(relative(item.captured_at))}</span>
           </button>
@@ -280,12 +322,21 @@ async function loadVisual() {
     if (visualProjectFilter?.value.trim()) params.set("project", visualProjectFilter.value.trim());
     if (visualEnvironmentFilter?.value) params.set("environment", visualEnvironmentFilter.value);
     if (visualPrFilter?.value) params.set("pr", visualPrFilter.value);
-    const payload = await api("/api/visual" + (params.size ? "?" + params.toString() : ""));
+    const runParams = new URLSearchParams(params);
+    if (selectedRunId) params.set("run", selectedRunId);
+    const [payload, runsPayload] = await Promise.all([
+      api("/api/visual" + (params.size ? "?" + params.toString() : "")),
+      api("/api/visual/runs" + (runParams.size ? "?" + runParams.toString() : ""))
+    ]);
     visualEvidence = Array.isArray(payload.evidence) ? payload.evidence : [];
+    visualRuns = Array.isArray(runsPayload.runs) ? runsPayload.runs : [];
+    renderVisualRuns();
     renderVisualSelected();
     setConnection("good", "CONNECTED");
   } catch (error) {
     visualEvidence = [];
+    visualRuns = [];
+    renderVisualRuns();
     visualCount.textContent = "";
     visualContent.innerHTML = '<div class="visual-empty"><span class="visual-empty-mark">×</span><strong>Evidence unavailable</strong><span>' + escapeHtml(error.message) + '</span></div>';
     setConnection("bad", error.status === 403 ? "ACCESS REQUIRED" : "VISUAL ERROR");
@@ -544,6 +595,7 @@ async function load() {
 refreshButton.addEventListener("click", () => currentSection === "visual" ? loadVisual() : load());
 [visualProjectFilter, visualEnvironmentFilter, visualPrFilter].forEach(control => {
   control?.addEventListener("change", () => {
+    selectedRunId = null;
     selectedEvidenceId = null;
     loadVisual();
   });
@@ -558,6 +610,7 @@ visualClearFilters?.addEventListener("click", () => {
   visualProjectFilter.value = "";
   visualEnvironmentFilter.value = "";
   visualPrFilter.value = "";
+  selectedRunId = null;
   selectedEvidenceId = null;
   loadVisual();
 });

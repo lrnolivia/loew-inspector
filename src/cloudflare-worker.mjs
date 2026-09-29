@@ -1,5 +1,5 @@
 import { applyWorkerSettings, publicWorkerSettings } from "./settings.mjs";
-import { listVisualEvidence, getVisualEvidence, getVisualImage, compareVisualEvidence } from "./visual-evidence.mjs";
+import { listVisualEvidence, getVisualEvidence, getVisualImage, compareVisualEvidence, listVisualRuns } from "./visual-evidence.mjs";
 const GITHUB_API = "https://api.github.com";
 const OWNER = "lrnolivia";
 const REPOSITORY = "loew-runner";
@@ -171,6 +171,15 @@ async function handleApi(request, env) {
 
   const accessError = accessGuard(request, env);
   if (accessError) return accessError;
+
+  if (request.method === "GET" && url.pathname === "/api/visual/runs") {
+    return json(await listVisualRuns(env.EVIDENCE, 30, {
+      project: url.searchParams.get("project"),
+      environment: url.searchParams.get("environment"),
+      pr: url.searchParams.get("pr"),
+      run: url.searchParams.get("run")
+    }));
+  }
 
   if (request.method === "GET" && url.pathname === "/api/visual") {
     return json(await listVisualEvidence(env.EVIDENCE, 60, {

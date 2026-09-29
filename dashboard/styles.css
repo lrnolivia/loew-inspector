@@ -944,3 +944,78 @@ body[data-view="overview"] .diagnostics-only { display: none; }
 @media (max-width: 820px) {
   .compare-grid { grid-template-columns: 1fr; }
 }
+
+
+/* Terra Prime — evidence runs */
+.visual-runs {
+  display: grid;
+  margin-top: 14px;
+  border-top: 1px solid var(--color-border);
+}
+.visual-runs[hidden] { display: none; }
+
+.visual-run {
+  min-height: 50px;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 72px 88px 72px;
+  gap: 14px;
+  align-items: center;
+  width: 100%;
+  padding: 8px 4px;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.visual-run:hover,
+.visual-run.active {
+  background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+}
+.visual-run.active {
+  box-shadow: inset 2px 0 0 var(--color-design);
+  padding-left: 10px;
+}
+.visual-run-main {
+  min-width: 0;
+  display: grid;
+  gap: 3px;
+}
+.visual-run-main strong {
+  font-size: 11px;
+  font-weight: 600;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.visual-run-main small,
+.visual-run-progress,
+.visual-run-time {
+  color: var(--color-neutral);
+  font-size: 9px;
+}
+.visual-run-status {
+  justify-self: start;
+  font-size: 9px;
+  font-weight: 600;
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+.run-status-complete,
+.run-status-captured { color: var(--color-success); }
+.run-status-running,
+.run-status-comparing,
+.run-status-queued,
+.run-status-requested { color: var(--color-warning); }
+.run-status-failed,
+.run-status-cancelled { color: var(--color-error); }
+.run-status-deferred { color: var(--color-neutral); }
+
+@media (max-width: 700px) {
+  .visual-run {
+    grid-template-columns: minmax(0,1fr) auto;
+  }
+  .visual-run-progress { display: none; }
+  .visual-run-time { display: none; }
+}
