@@ -1,6 +1,7 @@
 import { browserRequestOptions, runQuickAction } from "./browser.js";
 import { storeEvidence, decodeBase64Bytes, summarizeSnapshot, normalizeEvidenceContext } from "./evidence.js";
 import { openBrowserSession, interactBrowserSession, captureBrowserSession, closeBrowserSession } from "./session.js";
+import { runBrowserRecipe, listBrowserRecipes } from "./recipes.js";
 
 const VERSION = "0.6.0";
 const EVIDENCE_CONTEXT_SCHEMA = {
@@ -388,6 +389,30 @@ async function mcp(request, access, env) {
           annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
         },
         {
+          name: "browser_recipe",
+          title: "Run a field visual QA recipe",
+          description: "Run a bounded named visual-QA recipe against the canonical real-project /qa/work/{projectId} route, persist evidence, then close the browser session.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              recipe: { type: "string", enum: ["field.canvas-first-paint","field.full","field.focus","field.float","field.light","field.dark","field.inspector-stroke"] },
+              url: { type: "string" },
+              request_id: { type: "string" },
+              context: EVIDENCE_CONTEXT_SCHEMA
+            },
+            required: ["recipe","url"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false }
+        },
+        {
+          name: "browser_recipes",
+          title: "List field visual QA recipes",
+          description: "List the built-in bounded real-project field visual-QA recipes.",
+          inputSchema: { type: "object", properties: {}, additionalProperties: false },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
+        },
+        {
           name: "browser_close",
           title: "Close a loew.fi browser session",
           description: "Close a Browser Run session and mark its persisted session record closed.",
@@ -529,6 +554,23 @@ async function mcp(request, access, env) {
           fullPage: args.full_page,
           context: args.context
         });
+        return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
+      }
+
+      if (name === "browser_recipe") {
+        const target = validateTarget(args.url);
+        const result = await runBrowserRecipe(env.BROWSER, env.EVIDENCE, {
+          recipe: args.recipe,
+          url: target,
+          accessJwt: access.token,
+          requestId: args.request_id,
+          context: args.context
+        });
+        return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
+      }
+
+      if (name === "browser_recipes") {
+        const result = { ok: true, recipes: listBrowserRecipes() };
         return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
       }
 
