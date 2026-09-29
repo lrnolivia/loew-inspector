@@ -6,6 +6,17 @@ The reusable Night Shift framework currently developed inside field is being pro
 
 `field` remains the pilot project.
 
+## Current authority
+
+The extraction is now an authority boundary, not merely a future migration direction:
+
+- `loew-runner@main/LOEW_CHAT_BIBLE.md` owns universal execution and QA law
+- `loew-runner@main/projects/field.json` resolves the current project repository as `lrnolivia/field`
+- `lrnolivia/field@main/AGENTS.md` owns the field-specific bootstrap/product overlay
+- field-local handoff/QA documents are overlays and must re-read Runner before use
+- historical Revyme repository names and checkout paths must not be used as current field targets
+
+
 ## Move to runner
 
 The following concepts are universal and belong in runner:

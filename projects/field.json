@@ -5,7 +5,9 @@
   "managed": true,
   "default_branch": "main",
   "implementation": {
-    "branch_prefixes": ["field/"],
+    "branch_prefixes": [
+      "field/"
+    ],
     "excluded_branches": [
       "main",
       "field/control",
@@ -25,10 +27,22 @@
     "build": "npm run build:all",
     "test": "npm run test:run",
     "lint": "npm run lint",
-    "required": ["install", "build", "test", "lint"]
+    "required": [
+      "install",
+      "build",
+      "test",
+      "lint"
+    ]
   },
   "qa": {
+    "authority": "lrnolivia/loew-runner@main/LOEW_CHAT_BIBLE.md#11-qa-law",
+    "runner_first": true,
     "runtime_required_for_web_visible_changes": true,
+    "routine_engine": "deterministic-inspector-github-chromium",
+    "browser_run": "exploratory-or-session-only",
+    "real_project_entrypoint": "/qa/work/<projectId>",
+    "smoke_only_entrypoint": "/builder/noauth",
+    "project_overlay": ".field/handoff-kit/qa/BROWSER_PREVIEW_QA_PROTOCOL.md",
     "preview_endpoints": [
       "https://field.loew.fi",
       "https://canvas.field.loew.fi",
@@ -49,5 +63,10 @@
     "bypass_required_checks": false,
     "semantic_conflict_resolution": "block",
     "dependency_intent_changes": "block"
+  },
+  "guidance": {
+    "universal_authority": "lrnolivia/loew-runner@main/LOEW_CHAT_BIBLE.md",
+    "local_bootstrap": "AGENTS.md",
+    "historical_repository_targets_are_non_authoritative": true
   }
 }
