@@ -1,9 +1,39 @@
 const SAFE_REQUEST_ID = /^[a-zA-Z0-9._-]{1,80}$/;
+const SAFE_CONTEXT_TEXT = /^[a-zA-Z0-9._:/-]{1,128}$/;
+const RETENTION_DAYS = 30;
 
 function safeRequestId(value) {
   if (value == null || value === "") return null;
   if (typeof value !== "string" || !SAFE_REQUEST_ID.test(value)) throw new Error("Invalid request_id");
   return value;
+}
+
+function safeContextText(value, max = 128) {
+  if (value == null || value === "") return null;
+  const text = String(value);
+  if (text.length > max || !SAFE_CONTEXT_TEXT.test(text)) throw new Error("Invalid evidence context");
+  return text;
+}
+
+export function normalizeEvidenceContext(value = null) {
+  if (value == null) return null;
+  if (!value || typeof value !== "object" || Array.isArray(value)) throw new Error("Invalid evidence context");
+  const environment = value.environment ?? "unknown";
+  if (!["production","preview","qa","smoke","unknown"].includes(environment)) throw new Error("Invalid evidence environment");
+  const routeKind = value.route_kind ?? "other";
+  if (!["qa-work","builder-smoke","runner","other"].includes(routeKind)) throw new Error("Invalid evidence route kind");
+  const prNumber = value.pr_number == null ? null : Number(value.pr_number);
+  if (prNumber != null && (!Number.isInteger(prNumber) || prNumber < 1 || prNumber > 1000000)) throw new Error("Invalid PR number");
+  return {
+    project: safeContextText(value.project, 80),
+    project_id: safeContextText(value.project_id, 128),
+    environment,
+    surface: safeContextText(value.surface, 80),
+    route_kind: routeKind,
+    commit_sha: safeContextText(value.commit_sha, 64),
+    pr_number: prNumber,
+    deployment_id: safeContextText(value.deployment_id, 128)
+  };
 }
 
 function datePrefix(now = new Date()) {
@@ -53,11 +83,14 @@ export async function storeEvidence(bucket, {
   selector = null,
   fullPage = false,
   durationMs,
+  context = null,
   extra = {}
 }) {
   if (!bucket || typeof bucket.put !== "function") throw new Error("Evidence R2 binding unavailable");
   if (!(screenshotBytes instanceof Uint8Array) || screenshotBytes.byteLength === 0) throw new Error("Screenshot evidence is empty");
   const capturedAt = new Date().toISOString();
+  const expiresAt = new Date(Date.parse(capturedAt) + RETENTION_DAYS * 86400000).toISOString();
+  const normalizedContext = normalizeEvidenceContext(context);
   const id = `vis_${crypto.randomUUID()}`;
   const prefix = `visual/${datePrefix(new Date(capturedAt))}/${id}`;
   const screenshotKey = `${prefix}.png`;
@@ -69,6 +102,9 @@ export async function storeEvidence(bucket, {
     kind,
     target_url: targetUrl,
     captured_at: capturedAt,
+    expires_at: expiresAt,
+    retention_days: RETENTION_DAYS,
+    context: normalizedContext,
     viewport,
     selector,
     full_page: Boolean(fullPage),

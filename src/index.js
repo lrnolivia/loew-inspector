@@ -1,7 +1,23 @@
 import { browserRequestOptions, runQuickAction } from "./browser.js";
-import { storeEvidence, decodeBase64Bytes, summarizeSnapshot } from "./evidence.js";
+import { storeEvidence, decodeBase64Bytes, summarizeSnapshot, normalizeEvidenceContext } from "./evidence.js";
+import { openBrowserSession, interactBrowserSession, captureBrowserSession, closeBrowserSession } from "./session.js";
+import { runBrowserRecipe, listBrowserRecipes } from "./recipes.js";
 
-const VERSION = "0.4.0";
+const VERSION = "0.6.0";
+const EVIDENCE_CONTEXT_SCHEMA = {
+  type: "object",
+  properties: {
+    project: { type: "string", maxLength: 80 },
+    project_id: { type: "string", maxLength: 128 },
+    environment: { type: "string", enum: ["production","preview","qa","smoke","unknown"] },
+    surface: { type: "string", maxLength: 80 },
+    route_kind: { type: "string", enum: ["qa-work","builder-smoke","runner","other"] },
+    commit_sha: { type: "string", maxLength: 64 },
+    pr_number: { type: "integer", minimum: 1, maximum: 1000000 },
+    deployment_id: { type: "string", maxLength: 128 }
+  },
+  additionalProperties: false
+};
 const ACCESS_ISSUER = "https://loewfi.cloudflareaccess.com";
 const ACCESS_AUD = "6d19d2ef9eea644a9f55a049699a31110150fefebb1bca8c89632b9dd149ccd6";
 const BRIDGE_ACCESS_AUD = "042e98668017c064913a05705dd5e26de48153116ecb9bd574ec1128a559fd23";
@@ -254,6 +270,7 @@ async function mcp(request, access, env) {
             properties: {
               url: { type: "string", description: "HTTPS loew.fi URL" },
               request_id: { type: "string", description: "Optional safe correlation id" },
+              context: EVIDENCE_CONTEXT_SCHEMA,
               full_page: { type: "boolean", default: false },
               selector: { type: "string", description: "Optional CSS selector to capture" },
               viewport: {
@@ -280,6 +297,7 @@ async function mcp(request, access, env) {
             properties: {
               url: { type: "string", description: "HTTPS loew.fi URL" },
               request_id: { type: "string", description: "Optional safe correlation id" },
+              context: EVIDENCE_CONTEXT_SCHEMA,
               full_page: { type: "boolean", default: false },
               viewport: {
                 type: "object",
@@ -295,6 +313,116 @@ async function mcp(request, access, env) {
             additionalProperties: false
           },
           annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
+        },
+        {
+          name: "browser_open",
+          title: "Open a loew.fi browser session",
+          description: "Open a persistent Browser Run session on an HTTPS loew.fi target and return opaque session and target ids for controlled follow-up interactions.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              url: { type: "string", description: "HTTPS loew.fi URL" },
+              context: EVIDENCE_CONTEXT_SCHEMA,
+              keep_alive_ms: { type: "number", minimum: 10000, maximum: 1200000, default: 600000 },
+              viewport: {
+                type: "object",
+                properties: {
+                  width: { type: "number", minimum: 320, maximum: 3840 },
+                  height: { type: "number", minimum: 240, maximum: 2160 },
+                  deviceScaleFactor: { type: "number", minimum: 1, maximum: 2 }
+                },
+                additionalProperties: false
+              }
+            },
+            required: ["url"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false }
+        },
+        {
+          name: "browser_interact",
+          title: "Interact with a loew.fi browser session",
+          description: "Perform one bounded semantic action in an existing loew.fi Browser Run session. No arbitrary JavaScript is accepted.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              session_id: { type: "string" },
+              target_id: { type: "string" },
+              action: { type: "string", enum: ["click","double_click","hover","type","press","select","scroll","wait"] },
+              locator: {
+                type: "object",
+                properties: {
+                  type: { type: "string", enum: ["role","text","test_id","css"] },
+                  value: { type: "string" },
+                  name: { type: "string" }
+                },
+                required: ["type","value"],
+                additionalProperties: false
+              },
+              value: { type: "string" },
+              key: { type: "string" },
+              delta_x: { type: "number", minimum: -5000, maximum: 5000 },
+              delta_y: { type: "number", minimum: -5000, maximum: 5000 },
+              wait_ms: { type: "number", minimum: 0, maximum: 10000 }
+            },
+            required: ["session_id","action"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false }
+        },
+        {
+          name: "browser_capture",
+          title: "Capture an interactive browser session",
+          description: "Capture the current page in an existing Browser Run session and persist PNG evidence with the session interaction trace.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              session_id: { type: "string" },
+              target_id: { type: "string" },
+              request_id: { type: "string" },
+              context: EVIDENCE_CONTEXT_SCHEMA,
+              full_page: { type: "boolean", default: false }
+            },
+            required: ["session_id"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
+        },
+        {
+          name: "browser_recipe",
+          title: "Run a field visual QA recipe",
+          description: "Run a bounded named visual-QA recipe against the canonical real-project /qa/work/{projectId} route, persist evidence, then close the browser session.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              recipe: { type: "string", enum: ["field.canvas-first-paint","field.full","field.focus","field.float","field.light","field.dark","field.inspector-stroke"] },
+              url: { type: "string" },
+              request_id: { type: "string" },
+              context: EVIDENCE_CONTEXT_SCHEMA
+            },
+            required: ["recipe","url"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false }
+        },
+        {
+          name: "browser_recipes",
+          title: "List field visual QA recipes",
+          description: "List the built-in bounded real-project field visual-QA recipes.",
+          inputSchema: { type: "object", properties: {}, additionalProperties: false },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
+        },
+        {
+          name: "browser_close",
+          title: "Close a loew.fi browser session",
+          description: "Close a Browser Run session and mark its persisted session record closed.",
+          inputSchema: {
+            type: "object",
+            properties: { session_id: { type: "string" } },
+            required: ["session_id"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false }
         }
       ]
     });
@@ -337,7 +465,8 @@ async function mcp(request, access, env) {
           viewport: options.viewport,
           selector: options.selector ?? null,
           fullPage: Boolean(args.full_page),
-          durationMs: Date.now() - started
+          durationMs: Date.now() - started,
+          context: args.context
         });
         return rpc(id, {
           content: [{ type: "text", text: JSON.stringify(metadata) }],
@@ -371,6 +500,7 @@ async function mcp(request, access, env) {
           viewport: options.viewport,
           fullPage: Boolean(args.full_page),
           durationMs: Date.now() - started,
+          context: args.context,
           extra: {
             http_status: probe.status,
             final_url: probe.final_url,
@@ -385,6 +515,68 @@ async function mcp(request, access, env) {
           content: [{ type: "text", text: JSON.stringify(metadata) }],
           structuredContent: metadata
         });
+      }
+
+      if (name === "browser_open") {
+        const target = validateTarget(args.url);
+        const result = await openBrowserSession(env.BROWSER, env.EVIDENCE, {
+          url: target,
+          accessJwt: access.token,
+          viewport: args.viewport,
+          keepAliveMs: args.keep_alive_ms,
+          context: args.context
+        });
+        return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
+      }
+
+      if (name === "browser_interact") {
+        const result = await interactBrowserSession(env.BROWSER, env.EVIDENCE, {
+          sessionId: args.session_id,
+          targetId: args.target_id,
+          accessJwt: access.token,
+          action: args.action,
+          locator: args.locator,
+          value: args.value,
+          key: args.key,
+          deltaX: args.delta_x,
+          deltaY: args.delta_y,
+          waitMs: args.wait_ms
+        });
+        return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
+      }
+
+      if (name === "browser_capture") {
+        const result = await captureBrowserSession(env.BROWSER, env.EVIDENCE, {
+          sessionId: args.session_id,
+          targetId: args.target_id,
+          accessJwt: access.token,
+          requestId: args.request_id,
+          fullPage: args.full_page,
+          context: args.context
+        });
+        return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
+      }
+
+      if (name === "browser_recipe") {
+        const target = validateTarget(args.url);
+        const result = await runBrowserRecipe(env.BROWSER, env.EVIDENCE, {
+          recipe: args.recipe,
+          url: target,
+          accessJwt: access.token,
+          requestId: args.request_id,
+          context: args.context
+        });
+        return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
+      }
+
+      if (name === "browser_recipes") {
+        const result = { ok: true, recipes: listBrowserRecipes() };
+        return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
+      }
+
+      if (name === "browser_close") {
+        const result = await closeBrowserSession(env.BROWSER, env.EVIDENCE, args.session_id);
+        return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
       }
 
       return rpcError(id, -32602, "Unknown tool");
