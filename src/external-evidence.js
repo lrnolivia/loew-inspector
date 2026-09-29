@@ -55,6 +55,7 @@ export function normalizeExternalEvidenceMetadata(value) {
     run_id: runId,
     run_label: safeText(value.run_label, 120),
     suite: safeText(value.suite, 120),
+    recipe_version: value.recipe_version == null ? null : Math.max(1, Math.min(1000000, Number(value.recipe_version) || 1)),
     step_id: safeText(value.step_id, 120),
     step_label: safeText(value.step_label, 120),
     step_index: stepIndex,
@@ -62,6 +63,11 @@ export function normalizeExternalEvidenceMetadata(value) {
     title: safeText(value.title, 200),
     dom: value.dom && typeof value.dom === "object" ? value.dom : null,
     accessibility: value.accessibility && typeof value.accessibility === "object" ? value.accessibility : null,
+    assertions: Array.isArray(value.assertions) ? value.assertions.slice(0, 40).map(item => ({
+      id: safeText(item?.id, 120),
+      status: ["pass","fail","info"].includes(item?.status) ? item.status : "info",
+      detail: safeText(item?.detail, 300)
+    })) : [],
     trace: Array.isArray(value.trace) ? value.trace.slice(0, 100) : [],
     errors: Array.isArray(value.errors) ? value.errors.slice(0, 20).map(item => safeText(item, 300)) : []
   };
@@ -92,6 +98,7 @@ export async function ingestExternalEvidence(request, bucket) {
       run_id: metadata.run_id,
       run_label: metadata.run_label,
       suite: metadata.suite,
+      recipe_version: metadata.recipe_version,
       step_id: metadata.step_id,
       step_label: metadata.step_label,
       step_index: metadata.step_index,
@@ -99,6 +106,7 @@ export async function ingestExternalEvidence(request, bucket) {
       title: metadata.title,
       dom: metadata.dom,
       accessibility: metadata.accessibility,
+      assertions: metadata.assertions,
       trace: metadata.trace,
       errors: metadata.errors
     }

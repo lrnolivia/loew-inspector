@@ -1,4 +1,5 @@
 import { chromium } from "playwright";
+import { getBuiltInRecipe } from "../src/recipe-catalog.js";
 
 const target = new URL(process.env.TARGET_URL || "");
 const requestId = process.env.REQUEST_ID || "";
@@ -21,29 +22,6 @@ if (target.protocol !== "https:" || !(target.hostname === "field.loew.fi" || tar
   throw new Error("TARGET_URL must be the canonical field /qa/work/{projectId} route");
 }
 
-const SUITES = Object.freeze({
-  "field.canvas-first-paint": [
-    { id: "canvas-first-paint", label: "Canvas first paint", action: "first-paint" }
-  ],
-  "field.full": [
-    { id: "full", label: "Full", action: "layout", value: "Full" }
-  ],
-  "field.focus": [
-    { id: "focus", label: "Focus", action: "layout", value: "Focus" }
-  ],
-  "field.float": [
-    { id: "float", label: "Float", action: "layout", value: "Float" }
-  ],
-  "field.stage0": [
-    { id: "canvas-first-paint", label: "Canvas first paint", action: "first-paint" },
-    { id: "full", label: "Full", action: "layout", value: "Full" },
-    { id: "focus", label: "Focus", action: "layout", value: "Focus" },
-    { id: "float", label: "Float", action: "layout", value: "Float" }
-  ]
-});
-
-const steps = SUITES[suiteId];
-if (!steps) throw new Error("Unknown evidence suite");
 const runId = "run_" + crypto.randomUUID();
 const startedAt = new Date().toISOString();
 const accessHeader = JSON.stringify({
@@ -56,6 +34,19 @@ const authHeaders = {
   "CF-Access-Client-Secret": clientSecret
 };
 
+async function loadRecipe() {
+  const builtIn = getBuiltInRecipe(suiteId);
+  if (builtIn) return builtIn;
+  const response = await fetch(ingestBase + "/recipe/" + encodeURIComponent(suiteId), { headers: authHeaders });
+  if (!response.ok) throw new Error("Unknown evidence recipe: " + suiteId);
+  const payload = await response.json();
+  if (!payload?.recipe?.steps?.length) throw new Error("Stored recipe has no steps");
+  return payload.recipe;
+}
+
+const recipe = await loadRecipe();
+const steps = recipe.steps;
+
 async function postRun(status, completed, extra = {}) {
   const body = {
     run_id: runId,
@@ -65,6 +56,7 @@ async function postRun(status, completed, extra = {}) {
     project_id: projectId,
     environment,
     suite: suiteId,
+    recipe_version: recipe.recipe_version,
     engine: "github-chromium",
     engine_reason: "deterministic_recipe",
     status,
@@ -82,7 +74,7 @@ async function postRun(status, completed, extra = {}) {
   return response.json();
 }
 
-async function uploadCapture({ step, index, screenshot, title, dom, accessibility, errors, stepStatus }) {
+async function uploadCapture({ step, index, screenshot, title, dom, accessibility, assertions, errors, stepStatus }) {
   const context = {
     project: "field",
     project_id: projectId,
@@ -104,6 +96,7 @@ async function uploadCapture({ step, index, screenshot, title, dom, accessibilit
     run_id: runId,
     run_label: suiteId,
     suite: suiteId,
+    recipe_version: recipe.recipe_version,
     step_id: step.id,
     step_label: step.label,
     step_index: index + 1,
@@ -111,6 +104,7 @@ async function uploadCapture({ step, index, screenshot, title, dom, accessibilit
     title,
     dom,
     accessibility,
+    assertions,
     trace: [{ action: step.action, value: step.value || null, status: stepStatus }],
     errors
   };
@@ -141,13 +135,69 @@ async function waitForFirstPaint(page) {
 async function clickLayout(page, value) {
   const control = page.locator("[data-workspace-layout-control]").first();
   const trigger = control.locator("[data-workspace-mode-trigger]").first();
-  await trigger.hover({ timeout: 7000 });
-  await page.waitForTimeout(180);
+  if (await trigger.getAttribute("aria-expanded") !== "true") {
+    await trigger.hover({ timeout: 7000 });
+    await page.waitForTimeout(180);
+  }
 
   const option = control.getByRole("button").filter({ hasText: value }).first();
   await option.waitFor({ state: "visible", timeout: 7000 });
   await option.click({ timeout: 7000 });
   await page.waitForTimeout(350);
+}
+
+function locatorFor(page, locator) {
+  if (!locator || typeof locator !== "object") throw new Error("Recipe interaction requires a locator");
+  if (locator.type === "css") return page.locator(locator.value).first();
+  if (locator.type === "text") return page.getByText(locator.value, { exact: true }).first();
+  if (locator.type === "test_id") return page.getByTestId(locator.value).first();
+  if (locator.type === "role") return page.getByRole(locator.value, { name: locator.name || undefined, exact: true }).first();
+  throw new Error("Unsupported recipe locator");
+}
+
+async function runInteraction(page, interaction) {
+  if (interaction.action === "wait") {
+    await page.waitForTimeout(Math.min(10000, Math.max(0, Number(interaction.waitMs) || 500)));
+    return;
+  }
+  const target = interaction.locator ? locatorFor(page, interaction.locator) : null;
+  if (interaction.action === "click") return target.click({ timeout: 7000 });
+  if (interaction.action === "double_click") return target.dblclick({ timeout: 7000 });
+  if (interaction.action === "hover") return target.hover({ timeout: 7000 });
+  if (interaction.action === "type") return target.fill(String(interaction.value ?? ""), { timeout: 7000 });
+  if (interaction.action === "press") return target.press(String(interaction.key || ""), { timeout: 7000 });
+  if (interaction.action === "select") return target.selectOption({ label: String(interaction.value ?? "") }, { timeout: 7000 });
+  if (interaction.action === "scroll") {
+    if (target) return target.scrollIntoViewIfNeeded({ timeout: 7000 });
+    return page.mouse.wheel(Number(interaction.deltaX) || 0, Number(interaction.deltaY) || 0);
+  }
+  throw new Error("Unsupported recipe interaction");
+}
+
+async function executeStep(page, step) {
+  const assertions = [];
+  if (step.action === "first-paint") {
+    await waitForFirstPaint(page);
+    assertions.push({ id: "canvas.first-paint", status: "pass", detail: "Canvas content root and viewport attached." });
+    return assertions;
+  }
+  if (step.action === "workspace-layout") {
+    await clickLayout(page, step.value);
+    const control = page.locator("[data-workspace-layout-control]").first();
+    const trigger = control.locator("[data-workspace-mode-trigger]").first();
+    await trigger.waitFor({ state: "visible", timeout: 7000 });
+    const activeLabel = (await trigger.getAttribute("aria-label")) || "";
+    const pass = activeLabel.toLowerCase().includes(step.value.toLowerCase());
+    assertions.push({ id: "workspace.mode", status: pass ? "pass" : "fail", detail: step.value + " layout " + (pass ? "is active." : "did not become active.") });
+    if (!pass) throw new Error(step.value + " workspace layout did not become active");
+    return assertions;
+  }
+  if (step.action === "interaction") {
+    await runInteraction(page, step.interaction);
+    assertions.push({ id: "interaction.completed", status: "pass", detail: step.interaction.action + " completed." });
+    return assertions;
+  }
+  throw new Error("Unsupported recipe step: " + step.action);
 }
 
 async function snapshotSummaries(page) {
@@ -191,9 +241,9 @@ try {
     const beforeErrors = runtimeErrors.length;
     let stepStatus = "pass";
     let stepError = null;
+    let assertions = [];
     try {
-      if (step.action === "first-paint") await waitForFirstPaint(page);
-      if (step.action === "layout") await clickLayout(page, step.value);
+      assertions = await executeStep(page, step);
     } catch (error) {
       stepStatus = "failed";
       stepError = error instanceof Error ? error.message : String(error);
@@ -211,6 +261,7 @@ try {
       title: await page.title(),
       dom: summaries.dom,
       accessibility: summaries.accessibility,
+      assertions,
       errors,
       stepStatus
     });

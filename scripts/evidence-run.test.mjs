@@ -21,3 +21,27 @@ test("workspace layout recipes expand the real field layout control", async () =
   assert.match(source, /data-workspace-mode-trigger/);
   assert.match(source, /filter\(\{ hasText: value \}\)/);
 });
+
+
+test("evidence runner resolves recipes from the versioned catalog or Inspector store", async () => {
+  const source = await readFile(new URL("./evidence-run.mjs", import.meta.url), "utf8");
+  assert.match(source, /getBuiltInRecipe/);
+  assert.match(source, /\/recipe\//);
+  assert.match(source, /recipe_version/);
+  assert.match(source, /workspace\.mode/);
+});
+
+
+test("workspace layout recipe reuses an already-expanded control between suite steps", async () => {
+  const source = await readFile(new URL("./evidence-run.mjs", import.meta.url), "utf8");
+  assert.match(source, /getAttribute\("aria-expanded"\) !== "true"/);
+  assert.doesNotMatch(source, /await control\.locator\("\[data-workspace-mode-trigger\]"\)\.hover/);
+});
+
+
+test("workspace mode assertion reads the collapsed trigger's active-layout label", async () => {
+  const source = await readFile(new URL("./evidence-run.mjs", import.meta.url), "utf8");
+  assert.match(source, /trigger\.waitFor\(\{ state: "visible"/);
+  assert.match(source, /trigger\.getAttribute\("aria-label"\)/);
+  assert.match(source, /activeLabel\.toLowerCase\(\)\.includes\(step\.value\.toLowerCase\(\)\)/);
+});
