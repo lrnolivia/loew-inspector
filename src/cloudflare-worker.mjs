@@ -1,5 +1,5 @@
 import { applyWorkerSettings, publicWorkerSettings } from "./settings.mjs";
-import { listVisualEvidence, getVisualEvidence, getVisualImage } from "./visual-evidence.mjs";
+import { listVisualEvidence, getVisualEvidence, getVisualImage, compareVisualEvidence } from "./visual-evidence.mjs";
 const GITHUB_API = "https://api.github.com";
 const OWNER = "lrnolivia";
 const REPOSITORY = "loew-runner";
@@ -178,6 +178,15 @@ async function handleApi(request, env) {
       environment: url.searchParams.get("environment"),
       pr: url.searchParams.get("pr")
     }));
+  }
+
+  if (request.method === "GET" && url.pathname === "/api/visual/compare") {
+    const comparison = await compareVisualEvidence(
+      env.EVIDENCE,
+      url.searchParams.get("base"),
+      url.searchParams.get("current")
+    );
+    return comparison ? json(comparison) : json({ error: "Evidence comparison target not found." }, 404);
   }
 
   const visualMatch = url.pathname.match(/^\/api\/visual\/(vis_[a-zA-Z0-9-]+)(?:\/(image))?$/);

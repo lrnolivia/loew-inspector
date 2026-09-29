@@ -89,3 +89,38 @@ export async function getVisualImage(bucket, evidenceId) {
     size: object.size
   };
 }
+
+
+export function compareEvidenceRecords(base, current) {
+  if (!base || !current) throw new Error("Both evidence records are required");
+  const sameViewport = Number(base.viewport?.width) === Number(current.viewport?.width) &&
+    Number(base.viewport?.height) === Number(current.viewport?.height);
+  const domComparable = Boolean(base.dom && current.dom);
+  const a11yComparable = Boolean(base.accessibility && current.accessibility);
+  const domChanged = domComparable && (
+    Number(base.dom.html_bytes) !== Number(current.dom.html_bytes) ||
+    Number(base.dom.element_tag_count) !== Number(current.dom.element_tag_count)
+  );
+  const a11yChanged = a11yComparable && (
+    Number(base.accessibility.node_count) !== Number(current.accessibility.node_count) ||
+    Boolean(base.accessibility.available) !== Boolean(current.accessibility.available)
+  );
+  const contextMatch = (base.context?.project ?? null) === (current.context?.project ?? null) &&
+    (base.context?.surface ?? null) === (current.context?.surface ?? null);
+  return {
+    result: (!sameViewport || domChanged || a11yChanged) ? "changed" : "pass",
+    same_viewport: sameViewport,
+    context_match: contextMatch,
+    dom: { comparable: domComparable, changed: domChanged, base: base.dom ?? null, current: current.dom ?? null },
+    accessibility: { comparable: a11yComparable, changed: a11yChanged, base: base.accessibility ?? null, current: current.accessibility ?? null }
+  };
+}
+
+export async function compareVisualEvidence(bucket, baseId, currentId) {
+  const [base, current] = await Promise.all([
+    getVisualEvidence(bucket, baseId),
+    getVisualEvidence(bucket, currentId)
+  ]);
+  if (!base || !current) return null;
+  return { ok: true, base, current, comparison: compareEvidenceRecords(base, current) };
+}
