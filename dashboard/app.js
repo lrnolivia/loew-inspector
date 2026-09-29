@@ -20,6 +20,8 @@ let currentWorkers = [];
 let currentSection = "workers";
 let visualEvidence = [];
 let selectedEvidenceId = null;
+let baselineEvidenceId = null;
+let comparisonState = null;
 
 document.body.dataset.view = "overview";
 document.body.dataset.section = "workers";
@@ -75,6 +77,20 @@ function evidenceTitle(item) {
   return host;
 }
 
+async function loadComparison() {
+  comparisonState = null;
+  if (!baselineEvidenceId || baselineEvidenceId === selectedEvidenceId) {
+    renderVisualSelected();
+    return;
+  }
+  try {
+    comparisonState = await api("/api/visual/compare?base=" + encodeURIComponent(baselineEvidenceId) + "&current=" + encodeURIComponent(selectedEvidenceId));
+  } catch (error) {
+    comparisonState = { error: error.message };
+  }
+  renderVisualSelected();
+}
+
 function renderVisualSelected() {
   if (!visualEvidence.length) {
     visualContent.innerHTML = '<div class="visual-empty"><span class="visual-empty-mark">◌</span><strong>No visual evidence yet</strong><span>Ask inspector to capture a loew.fi surface.</span></div>';
@@ -90,6 +106,7 @@ function renderVisualSelected() {
 
   const trace = Array.isArray(selected.trace) ? selected.trace : [];
   const context = selected.context || {};
+  const comparison = comparisonState?.comparison;
   const facts = [
     ["evidence", selected.evidence_id],
     ["kind", selected.kind || "screenshot"],
@@ -107,6 +124,28 @@ function renderVisualSelected() {
 
   visualContent.innerHTML = `
     <div class="visual-main">
+      ${baselineEvidenceId && baselineEvidenceId !== selectedEvidenceId ? `
+        <div class="compare-summary compare-summary-${comparisonState?.error ? "failed" : comparison?.result || "checking"}">
+          <span>${escapeHtml(comparisonState?.error ? "failed" : comparison?.result || "checking")}</span>
+          <span>${escapeHtml(comparisonState?.error || (
+            comparison
+              ? (comparison.same_viewport ? "same viewport" : "viewport changed") +
+                (comparison.dom.comparable ? " · DOM " + (comparison.dom.changed ? "changed" : "stable") : "") +
+                (comparison.accessibility.comparable ? " · a11y " + (comparison.accessibility.changed ? "changed" : "stable") : "")
+              : "comparing evidence"
+          ))}</span>
+        </div>
+        <div class="compare-grid">
+          <figure class="visual-evidence-frame">
+            <img src="${escapeHtml(visualEvidence.find(item => item.evidence_id === baselineEvidenceId)?.screenshot_url || "")}" alt="Baseline visual evidence">
+            <figcaption class="visual-caption"><div><div class="visual-caption-title">baseline</div></div></figcaption>
+          </figure>
+          <figure class="visual-evidence-frame">
+            <img src="${escapeHtml(selected.screenshot_url)}" alt="Current visual evidence">
+            <figcaption class="visual-caption"><div><div class="visual-caption-title">current</div></div></figcaption>
+          </figure>
+        </div>
+      ` : `
       <figure class="visual-evidence-frame">
         <img src="${escapeHtml(selected.screenshot_url)}" alt="Browser evidence captured from ${escapeHtml(selected.target_url)}">
         <figcaption class="visual-caption">
@@ -117,6 +156,7 @@ function renderVisualSelected() {
           <div class="visual-caption-time">${escapeHtml(absoluteTime(selected.captured_at))}</div>
         </figcaption>
       </figure>
+      `}
 
       <div class="visual-meta-grid">
         <div class="visual-meta"><div class="visual-meta-label">project</div><div class="visual-meta-value">${escapeHtml(context.project || evidenceTitle(selected))}</div></div>
@@ -143,6 +183,15 @@ function renderVisualSelected() {
 
     <aside class="visual-side" aria-label="Recent visual evidence">
       <div class="visual-side-heading"><strong>recent</strong><span>newest first</span></div>
+      <label class="baseline-control">
+        <span>baseline</span>
+        <select id="visual-baseline-select">
+          <option value="">none</option>
+          ${visualEvidence.filter(item => item.evidence_id !== selectedEvidenceId).map(item => `
+            <option value="${escapeHtml(item.evidence_id)}" ${item.evidence_id === baselineEvidenceId ? "selected" : ""}>${escapeHtml(evidenceTitle(item))} · ${escapeHtml(relative(item.captured_at))}</option>
+          `).join("")}
+        </select>
+      </label>
       <div class="evidence-list">
         ${visualEvidence.map(item => `
           <button class="evidence-list-item ${item.evidence_id === selectedEvidenceId ? "active" : ""}" data-evidence-id="${escapeHtml(item.evidence_id)}" type="button">
@@ -161,8 +210,16 @@ function renderVisualSelected() {
   visualContent.querySelectorAll("[data-evidence-id]").forEach(button => {
     button.addEventListener("click", () => {
       selectedEvidenceId = button.dataset.evidenceId;
+      comparisonState = null;
       renderVisualSelected();
+      if (baselineEvidenceId && baselineEvidenceId !== selectedEvidenceId) loadComparison();
     });
+  });
+  visualContent.querySelector("#visual-baseline-select")?.addEventListener("change", event => {
+    baselineEvidenceId = event.currentTarget.value || null;
+    comparisonState = null;
+    if (baselineEvidenceId) loadComparison();
+    else renderVisualSelected();
   });
 }
 
