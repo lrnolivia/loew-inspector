@@ -1,5 +1,40 @@
 # loew-inspector
 
+Canonical source, browser evidence engine, and compatibility transport for protected read-only loew.fi inspection.
+
+## Gen 2 visual evidence
+
+Gen 2 keeps `fetch_loew_url` for bounded HTTP/Access diagnostics and adds Cloudflare Browser Run as an independent runtime-evidence path.
+
+```text
+normal Chat / plugin / GitHub fallback
+              ↓
+        loew-inspector
+       ↙              ↘
+HTTP diagnostics    Browser Run
+                         ↓
+                  rendered screenshot
+                  DOM/a11y snapshot
+                         ↓
+                 private R2 evidence
+                         ↓
+                    runner / visual
+```
+
+Current Gen 2 read-only tools:
+
+- `fetch_loew_url`
+- `browser_screenshot`
+- `browser_snapshot`
+
+Browser navigation is still restricted to HTTPS `loew.fi` and `*.loew.fi`. The inspector forwards its authenticated Access JWT as a browser request header; credentials are never embedded in URLs or returned in evidence metadata. Redirect validation remains in the HTTP diagnostic path.
+
+Screenshots and their metadata are stored privately in the `loew-inspector-evidence` R2 bucket. Normal Chat receives a compact evidence id/key record rather than depending on binary MCP image relay.
+
+The Browser Run Quick Actions used in Batches 1–2 are intentionally stateless and do not expose a console/network event stream. `browser_snapshot` marks those fields unsupported rather than pretending an empty list means no errors. Interactive Browser Run sessions in Gen 2 Batch 3 add those traces.
+
+`capture.yml` is the normal-Chat compatibility fallback. It mirrors the existing Composio → GitHub Actions transport and prints `LOEW_INSPECTOR_RESULT=` with the durable evidence id.
+
 Canonical source and compatibility transport for the protected, read-only loew.fi inspector.
 
 ## Architecture

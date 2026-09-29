@@ -1,0 +1,94 @@
+name: capture loew visual evidence
+
+run-name: "loew-inspector visual / ${{ inputs.request_id }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      url:
+        description: "HTTPS loew.fi URL to render"
+        required: true
+        type: string
+      action:
+        description: "Browser action"
+        required: true
+        default: "snapshot"
+        type: choice
+        options:
+          - snapshot
+          - screenshot
+      full_page:
+        description: "Capture full page"
+        required: true
+        default: false
+        type: boolean
+      selector:
+        description: "Optional CSS selector for screenshot action"
+        required: false
+        type: string
+      request_id:
+        description: "Correlation id"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    steps:
+      - name: Validate inputs
+        shell: bash
+        env:
+          TARGET_URL: ${{ inputs.url }}
+          REQUEST_ID: ${{ inputs.request_id }}
+        run: |
+          set -euo pipefail
+          node <<'NODE'
+          const u = new URL(process.env.TARGET_URL);
+          const host = u.hostname.toLowerCase();
+          if (u.protocol !== "https:" || !(host === "loew.fi" || host.endsWith(".loew.fi")) || u.username || u.password || u.port || u.hash) process.exit(2);
+          if (!/^[a-zA-Z0-9._-]{1,80}$/.test(process.env.REQUEST_ID)) process.exit(2);
+          NODE
+
+      - name: Call browser inspector
+        shell: bash
+        env:
+          TARGET_URL: ${{ inputs.url }}
+          ACTION: ${{ inputs.action }}
+          FULL_PAGE: ${{ inputs.full_page }}
+          SELECTOR: ${{ inputs.selector }}
+          REQUEST_ID: ${{ inputs.request_id }}
+          CF_ACCESS_CLIENT_ID: ${{ vars.CF_ACCESS_CLIENT_ID }}
+          CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF }}
+        run: |
+          set -euo pipefail
+          : "${CF_ACCESS_CLIENT_ID:?missing CF_ACCESS_CLIENT_ID repository variable}"
+          : "${CF_ACCESS_CLIENT_SECRET:?missing CF repository secret}"
+          tool="browser_${ACTION}"
+          args="$(node <<'NODE'
+          const args = {
+            url: process.env.TARGET_URL,
+            request_id: process.env.REQUEST_ID,
+            full_page: process.env.FULL_PAGE === "true"
+          };
+          if (process.env.ACTION === "screenshot" && process.env.SELECTOR) args.selector = process.env.SELECTOR;
+          process.stdout.write(JSON.stringify(args));
+          NODE
+          )"
+          body="$(node -e 'process.stdout.write(JSON.stringify({jsonrpc:"2.0",id:process.env.REQUEST_ID,method:"tools/call",params:{name:process.env.TOOL,arguments:JSON.parse(process.env.ARGS)}}))' TOOL="$tool" ARGS="$args")"
+          body_file="$(mktemp)"
+          trap 'rm -f "$body_file"' EXIT
+          status="$(curl --silent --show-error --output "$body_file" --write-out '%{http_code}' -X POST "https://loew-inspector-gateway.lrnoliv.workers.dev/mcp" -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID" -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET" -H "Content-Type: application/json" --data "$body")"
+          test "$status" = "200"
+          node - "$body_file" <<'NODE'
+          const fs = require("node:fs");
+          const parsed = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
+          if (parsed.error || parsed?.result?.isError || !parsed?.result?.structuredContent?.evidence_id) {
+            console.error(JSON.stringify(parsed));
+            process.exit(1);
+          }
+          console.log("LOEW_INSPECTOR_RESULT=" + JSON.stringify(parsed.result.structuredContent));
+          NODE

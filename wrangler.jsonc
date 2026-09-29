@@ -9,5 +9,11 @@
   "browser": {
     "binding": "BROWSER",
     "remote": true
-  }
+  },
+  "r2_buckets": [
+    {
+      "binding": "EVIDENCE",
+      "bucket_name": "loew-inspector-evidence"
+    }
+  ]
 }
