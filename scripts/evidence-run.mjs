@@ -26,7 +26,7 @@ if (target.protocol !== "https:" || !(target.hostname === "field.loew.fi" || tar
     (!isQaWork && !isBuilderSmoke)) {
   throw new Error("TARGET_URL must be field /qa/work/{projectId}, or field.loew.fi/builder/noauth for smoke runs");
 }
-const routeKind = isBuilderSmoke ? "builder-noauth" : "qa-work";
+const routeKind = isBuilderSmoke ? "builder-smoke" : "qa-work";
 
 const runId = "run_" + crypto.randomUUID();
 const startedAt = new Date().toISOString();
