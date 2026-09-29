@@ -4,11 +4,27 @@ const summaryEl = document.querySelector("#summary");
 const refreshButton = document.querySelector("#refresh");
 const connectionEl = document.querySelector("#connection");
 const tabs = [...document.querySelectorAll(".app-tab")];
+const primaryNav = [...document.querySelectorAll(".primary-nav-item")];
+const workersSection = document.querySelector("#workers-section");
+const visualSection = document.querySelector("#visual-section");
+const visualContent = document.querySelector("#visual-content");
+const visualCount = document.querySelector("#visual-count");
+const toolbarContext = document.querySelector("#toolbar-context");
+const visualProjectFilter = document.querySelector("#visual-project-filter");
+const visualEnvironmentFilter = document.querySelector("#visual-environment-filter");
+const visualPrFilter = document.querySelector("#visual-pr-filter");
+const visualClearFilters = document.querySelector("#visual-clear-filters");
 
 let selectedWorkerId = null;
 let currentWorkers = [];
+let currentSection = "workers";
+let visualEvidence = [];
+let selectedEvidenceId = null;
+let baselineEvidenceId = null;
+let comparisonState = null;
 
 document.body.dataset.view = "overview";
+document.body.dataset.section = "workers";
 
 function relative(value) {
   if (!value) return "—";
@@ -38,6 +54,255 @@ async function api(url, options) {
   catch { body = { error: text || `Unexpected ${response.status} response.` }; }
   if (!response.ok) throw Object.assign(new Error(body.error ?? "Request failed"), { status: response.status });
   return body;
+}
+
+
+function hostname(value) {
+  try { return new URL(value).hostname; }
+  catch { return "unknown"; }
+}
+
+function absoluteTime(value) {
+  const parsed = Date.parse(value);
+  if (!Number.isFinite(parsed)) return "—";
+  return new Intl.DateTimeFormat(undefined, {
+    month: "short", day: "numeric", hour: "numeric", minute: "2-digit", second: "2-digit"
+  }).format(parsed);
+}
+
+function evidenceTitle(item) {
+  const host = hostname(item.target_url);
+  if (host === "runner.loew.fi") return "runner";
+  if (host.endsWith(".loew.fi")) return host.slice(0, -".loew.fi".length);
+  return host;
+}
+
+async function computePixelDiff(baseUrl, currentUrl) {
+  const loadImage = (src) => new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error("Unable to load comparison image"));
+    image.src = src;
+  });
+  const [baseImage, currentImage] = await Promise.all([loadImage(baseUrl), loadImage(currentUrl)]);
+  if (baseImage.naturalWidth !== currentImage.naturalWidth || baseImage.naturalHeight !== currentImage.naturalHeight) {
+    return { comparable: false, reason: "image dimensions differ" };
+  }
+  const maxDimension = 900;
+  const scale = Math.min(1, maxDimension / Math.max(baseImage.naturalWidth, baseImage.naturalHeight));
+  const width = Math.max(1, Math.round(baseImage.naturalWidth * scale));
+  const height = Math.max(1, Math.round(baseImage.naturalHeight * scale));
+  const read = (image) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    ctx.drawImage(image, 0, 0, width, height);
+    return ctx.getImageData(0, 0, width, height).data;
+  };
+  const base = read(baseImage);
+  const current = read(currentImage);
+  let changed = 0;
+  for (let i = 0; i < base.length; i += 4) {
+    const delta = Math.max(
+      Math.abs(base[i] - current[i]),
+      Math.abs(base[i + 1] - current[i + 1]),
+      Math.abs(base[i + 2] - current[i + 2])
+    );
+    if (delta > 16) changed += 1;
+  }
+  const pixels = width * height;
+  return {
+    comparable: true,
+    changed_pixels: changed,
+    sampled_pixels: pixels,
+    changed_percent: pixels ? changed / pixels * 100 : 0,
+    sample_width: width,
+    sample_height: height
+  };
+}
+
+async function loadComparison() {
+  comparisonState = null;
+  if (!baselineEvidenceId || baselineEvidenceId === selectedEvidenceId) {
+    renderVisualSelected();
+    return;
+  }
+  try {
+    const metadata = await api("/api/visual/compare?base=" + encodeURIComponent(baselineEvidenceId) + "&current=" + encodeURIComponent(selectedEvidenceId));
+    const baseline = visualEvidence.find(item => item.evidence_id === baselineEvidenceId);
+    const current = visualEvidence.find(item => item.evidence_id === selectedEvidenceId);
+    const pixel = baseline && current ? await computePixelDiff(baseline.screenshot_url, current.screenshot_url) : null;
+    comparisonState = { ...metadata, pixel };
+    if (comparisonState.comparison && pixel?.comparable && pixel.changed_percent > 0.1) comparisonState.comparison.result = "changed";
+  } catch (error) {
+    comparisonState = { error: error.message };
+  }
+  renderVisualSelected();
+}
+
+function renderVisualSelected() {
+  if (!visualEvidence.length) {
+    visualContent.innerHTML = '<div class="visual-empty"><span class="visual-empty-mark">◌</span><strong>No visual evidence yet</strong><span>Ask inspector to capture a loew.fi surface.</span></div>';
+    visualCount.textContent = "0 captures";
+    return;
+  }
+
+  if (!selectedEvidenceId || !visualEvidence.some(item => item.evidence_id === selectedEvidenceId)) {
+    selectedEvidenceId = visualEvidence[0].evidence_id;
+  }
+  const selected = visualEvidence.find(item => item.evidence_id === selectedEvidenceId);
+  visualCount.textContent = visualEvidence.length + (visualEvidence.length === 1 ? " capture" : " captures");
+
+  const trace = Array.isArray(selected.trace) ? selected.trace : [];
+  const context = selected.context || {};
+  const comparison = comparisonState?.comparison;
+  const facts = [
+    ["evidence", selected.evidence_id],
+    ["kind", selected.kind || "screenshot"],
+    ["request", selected.request_id || "—"],
+    ["project", context.project || "—"],
+    ["environment", context.environment || "unknown"],
+    ["commit", context.commit_sha ? String(context.commit_sha).slice(0, 12) : "—"],
+    ["PR", context.pr_number || "—"],
+    ["deployment", context.deployment_id || "—"],
+    ["browser", selected.browser_ms ? Math.round(selected.browser_ms) + " ms" : "session"],
+    ["expires", selected.expires_at ? absoluteTime(selected.expires_at) : "—"],
+    ["bytes", Number(selected.screenshot_bytes || 0).toLocaleString()],
+    ["status", selected.http_status || "rendered"]
+  ];
+
+  visualContent.innerHTML = `
+    <div class="visual-main">
+      ${baselineEvidenceId && baselineEvidenceId !== selectedEvidenceId ? `
+        <div class="compare-summary compare-summary-${comparisonState?.error ? "failed" : comparison?.result || "checking"}">
+          <span>${escapeHtml(comparisonState?.error ? "failed" : comparison?.result || "checking")}</span>
+          <span>${escapeHtml(comparisonState?.error || (
+            comparison
+              ? (comparisonState?.pixel?.comparable ? comparisonState.pixel.changed_percent.toFixed(2) + "% pixel delta · " : comparisonState?.pixel?.reason ? comparisonState.pixel.reason + " · " : "") + (comparison.same_viewport ? "same viewport" : "viewport changed") +
+                (comparison.dom.comparable ? " · DOM " + (comparison.dom.changed ? "changed" : "stable") : "") +
+                (comparison.accessibility.comparable ? " · a11y " + (comparison.accessibility.changed ? "changed" : "stable") : "")
+              : "comparing evidence"
+          ))}</span>
+        </div>
+        <div class="compare-grid">
+          <figure class="visual-evidence-frame">
+            <img src="${escapeHtml(visualEvidence.find(item => item.evidence_id === baselineEvidenceId)?.screenshot_url || "")}" alt="Baseline visual evidence">
+            <figcaption class="visual-caption"><div><div class="visual-caption-title">baseline</div></div></figcaption>
+          </figure>
+          <figure class="visual-evidence-frame">
+            <img src="${escapeHtml(selected.screenshot_url)}" alt="Current visual evidence">
+            <figcaption class="visual-caption"><div><div class="visual-caption-title">current</div></div></figcaption>
+          </figure>
+        </div>
+      ` : `
+      <figure class="visual-evidence-frame">
+        <img src="${escapeHtml(selected.screenshot_url)}" alt="Browser evidence captured from ${escapeHtml(selected.target_url)}">
+        <figcaption class="visual-caption">
+          <div>
+            <div class="visual-caption-title">${escapeHtml(evidenceTitle(selected))}</div>
+            <div class="visual-caption-url">${escapeHtml(selected.target_url)}</div>
+          </div>
+          <div class="visual-caption-time">${escapeHtml(absoluteTime(selected.captured_at))}</div>
+        </figcaption>
+      </figure>
+      `}
+
+      <div class="visual-meta-grid">
+        <div class="visual-meta"><div class="visual-meta-label">project</div><div class="visual-meta-value">${escapeHtml(context.project || evidenceTitle(selected))}</div></div>
+        <div class="visual-meta"><div class="visual-meta-label">environment</div><div class="visual-meta-value">${escapeHtml(context.environment || "unknown")}</div></div>
+        <div class="visual-meta"><div class="visual-meta-label">viewport</div><div class="visual-meta-value">${escapeHtml(selected.viewport?.width || "—")} × ${escapeHtml(selected.viewport?.height || "—")}</div></div>
+        <div class="visual-meta"><div class="visual-meta-label">revision</div><div class="visual-meta-value">${escapeHtml(context.commit_sha ? String(context.commit_sha).slice(0, 12) : context.pr_number ? "PR #" + context.pr_number : "—")}</div></div>
+      </div>
+
+      <div class="visual-technical">
+        <section class="technical-section">
+          <h3>trace</h3>
+          ${trace.length
+            ? '<ol class="trace-list">' + trace.map(entry => '<li><span>' + escapeHtml(entry.action || "event") + (entry.locator?.value ? " · " + escapeHtml(entry.locator.value) : "") + '</span></li>').join("") + '</ol>'
+            : '<div class="state-copy">Single-shot capture · no interaction trace.</div>'}
+        </section>
+        <section class="technical-section">
+          <h3>evidence</h3>
+          <dl class="evidence-facts">
+            ${facts.map(([label,value]) => '<div class="evidence-fact"><dt>' + escapeHtml(label) + '</dt><dd>' + escapeHtml(value) + '</dd></div>').join("")}
+          </dl>
+        </section>
+      </div>
+    </div>
+
+    <aside class="visual-side" aria-label="Recent visual evidence">
+      <div class="visual-side-heading"><strong>recent</strong><span>newest first</span></div>
+      <label class="baseline-control">
+        <span>baseline</span>
+        <select id="visual-baseline-select">
+          <option value="">none</option>
+          ${visualEvidence.filter(item => item.evidence_id !== selectedEvidenceId).map(item => `
+            <option value="${escapeHtml(item.evidence_id)}" ${item.evidence_id === baselineEvidenceId ? "selected" : ""}>${escapeHtml(evidenceTitle(item))} · ${escapeHtml(relative(item.captured_at))}</option>
+          `).join("")}
+        </select>
+      </label>
+      <div class="evidence-list">
+        ${visualEvidence.map(item => `
+          <button class="evidence-list-item ${item.evidence_id === selectedEvidenceId ? "active" : ""}" data-evidence-id="${escapeHtml(item.evidence_id)}" type="button">
+            <img class="evidence-thumb" src="${escapeHtml(item.screenshot_url)}" alt="">
+            <span class="evidence-list-copy">
+              <span class="evidence-list-title">${escapeHtml(evidenceTitle(item))}</span>
+              <span class="evidence-list-meta">${escapeHtml(item.kind || "screenshot")} · ${escapeHtml(item.viewport?.width || "—")}×${escapeHtml(item.viewport?.height || "—")}</span>
+            </span>
+            <span class="evidence-list-time">${escapeHtml(relative(item.captured_at))}</span>
+          </button>
+        `).join("")}
+      </div>
+    </aside>
+  `;
+
+  visualContent.querySelectorAll("[data-evidence-id]").forEach(button => {
+    button.addEventListener("click", () => {
+      selectedEvidenceId = button.dataset.evidenceId;
+      comparisonState = null;
+      renderVisualSelected();
+      if (baselineEvidenceId && baselineEvidenceId !== selectedEvidenceId) loadComparison();
+    });
+  });
+  visualContent.querySelector("#visual-baseline-select")?.addEventListener("change", event => {
+    baselineEvidenceId = event.currentTarget.value || null;
+    comparisonState = null;
+    if (baselineEvidenceId) loadComparison();
+    else renderVisualSelected();
+  });
+}
+
+async function loadVisual() {
+  visualContent.innerHTML = '<div class="visual-empty"><span class="visual-empty-mark">◌</span><strong>Loading evidence</strong><span>Asking inspector what it saw.</span></div>';
+  try {
+    const params = new URLSearchParams();
+    if (visualProjectFilter?.value.trim()) params.set("project", visualProjectFilter.value.trim());
+    if (visualEnvironmentFilter?.value) params.set("environment", visualEnvironmentFilter.value);
+    if (visualPrFilter?.value) params.set("pr", visualPrFilter.value);
+    const payload = await api("/api/visual" + (params.size ? "?" + params.toString() : ""));
+    visualEvidence = Array.isArray(payload.evidence) ? payload.evidence : [];
+    renderVisualSelected();
+    setConnection("good", "CONNECTED");
+  } catch (error) {
+    visualEvidence = [];
+    visualCount.textContent = "";
+    visualContent.innerHTML = '<div class="visual-empty"><span class="visual-empty-mark">×</span><strong>Evidence unavailable</strong><span>' + escapeHtml(error.message) + '</span></div>';
+    setConnection("bad", error.status === 403 ? "ACCESS REQUIRED" : "VISUAL ERROR");
+  }
+}
+
+function setSection(section) {
+  currentSection = section === "visual" ? "visual" : "workers";
+  document.body.dataset.section = currentSection;
+  workersSection.hidden = currentSection !== "workers";
+  visualSection.hidden = currentSection !== "visual";
+  primaryNav.forEach(item => item.classList.toggle("active", item.dataset.section === currentSection));
+  toolbarContext.textContent = currentSection === "visual"
+    ? "INSPECTOR · BROWSER EVIDENCE"
+    : "CONFIG · RECOVERY · DIAGNOSTICS";
+  if (currentSection === "visual") loadVisual();
+  else load();
 }
 
 function statusTone(value) {
@@ -276,7 +541,29 @@ async function load() {
   }
 }
 
-refreshButton.addEventListener("click", load);
+refreshButton.addEventListener("click", () => currentSection === "visual" ? loadVisual() : load());
+[visualProjectFilter, visualEnvironmentFilter, visualPrFilter].forEach(control => {
+  control?.addEventListener("change", () => {
+    selectedEvidenceId = null;
+    loadVisual();
+  });
+});
+visualProjectFilter?.addEventListener("keydown", event => {
+  if (event.key === "Enter") {
+    selectedEvidenceId = null;
+    loadVisual();
+  }
+});
+visualClearFilters?.addEventListener("click", () => {
+  visualProjectFilter.value = "";
+  visualEnvironmentFilter.value = "";
+  visualPrFilter.value = "";
+  selectedEvidenceId = null;
+  loadVisual();
+});
+primaryNav.forEach((item) => {
+  item.addEventListener("click", () => setSection(item.dataset.section));
+});
 tabs.forEach((tab) => {
   tab.addEventListener("click", () => {
     tabs.forEach((item) => item.classList.toggle("active", item === tab));
