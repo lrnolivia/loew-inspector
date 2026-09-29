@@ -13,6 +13,18 @@ Before doing project-execution work, read:
 
 Resolve the current repository from Runner project records and the target repository's live bootstrap before following historical handoffs. For field, the current target is **`lrnolivia/field`**. Do not fall back to historical `revyme-loewfi` / `revyme-loew` / `revyme-löew` repository names or old local checkout paths.
 
+## Active field reorganization assignment
+
+If the user asks to pick up the field cleanup/re-org, repository normalization, branch cleanup, or worker-silo reorganization task, read these before mutating field:
+
+1. `assignments/field-repo-cleanup-reorg.json`
+2. `docs/FIELD_REPOSITORY_REORGANIZATION.md`
+3. `projects/field.json`
+4. current field reports in `reports/`
+5. fresh `lrnolivia/field` branch/PR/check state
+
+The assignment is intentionally a reconciliation/migration task, not a license to absorb all field implementation. Mobile Focus and Runner/Inspector infrastructure are protected active ownership lanes. Fresh Git/Runner state outranks the assignment's snapshot.
+
 Project QA files are overlays only. Bible section 11 controls QA engine routing, retry/watchdog behavior, classifications, fallbacks, danger-zone handoff, and promotion. A project may add paths and criteria; it may not silently replace Runner-first QA law.
 
 If the Bible is temporarily unavailable, follow the emergency invariants embedded in the target repository bootstrap and avoid destructive or ambiguous mutations until canonical authority is restored.

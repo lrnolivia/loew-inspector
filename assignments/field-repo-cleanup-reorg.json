@@ -1,0 +1,234 @@
+{
+  "schema": 1,
+  "id": "field-repo-cleanup-reorg-20260929",
+  "project": "field",
+  "status": "ready",
+  "mode": "plan-to-action",
+  "type": "repository-reorganization",
+  "execution_class": "first-class-worker",
+  "control_repository": "lrnolivia/loew-runner",
+  "target_repository": "lrnolivia/field",
+  "plan": "docs/FIELD_REPOSITORY_REORGANIZATION.md",
+  "authority": [
+    "contracts/manifest.json",
+    "LOEW_CHAT_BIBLE_CURRENT.md",
+    "LOEW_CHAT_BIBLE.md",
+    "projects/field.json",
+    "lrnolivia/field@main/AGENTS.md",
+    "live Git/Runner/Inspector state"
+  ],
+  "snapshot": {
+    "captured_at": "2026-09-29T22:55:52Z",
+    "field_main": "64fa810a66fc54d73c2f46ed2e352a8c3a3e568d",
+    "open_pr_count": 17,
+    "note": "Snapshot only. Re-read live Git state before every mutation."
+  },
+  "goal": "Convert field from chat-shaped historical branch/PR ownership into a clean architecture-shaped repository and worker topology without losing unique work or disrupting active Mobile and Runner/Inspector lanes.",
+  "owner_policy": {
+    "preserve_existing_mobile_worker": true,
+    "preserve_runner_inspector_infrastructure_owner": true,
+    "historical_field_worker_scopes_are_closing_inventory": true,
+    "cleanup_worker_does_not_become_product_subsystem_owner": true,
+    "new_first_class_workers_must_be_prepared_for_user_authorized_launch": true
+  },
+  "target_domains": [
+    {
+      "id": "canvas",
+      "name": "Canvas & Interaction",
+      "future_branch_prefix": "canvas/"
+    },
+    {
+      "id": "workspace",
+      "name": "Workspace Shell",
+      "future_branch_prefix": "workspace/"
+    },
+    {
+      "id": "controls",
+      "name": "Inspector & Design Controls",
+      "future_branch_prefix": "controls/"
+    },
+    {
+      "id": "assets",
+      "name": "Assets & Media",
+      "future_branch_prefix": "assets/"
+    },
+    {
+      "id": "mobile",
+      "name": "Mobile Focus",
+      "future_branch_prefix": "mobile/",
+      "existing_owner": true
+    }
+  ],
+  "transitional_branch_policy": {
+    "current_allowed_prefix": "field/",
+    "do_not_change_enforcement_until_verified": true,
+    "desired_future_prefixes": [
+      "canvas/",
+      "workspace/",
+      "controls/",
+      "assets/",
+      "mobile/"
+    ],
+    "future_roadmap_prefixes": [
+      "figma/",
+      "model/"
+    ],
+    "branch_lifetime": "short-lived bounded task branch; delete after merge/promotion",
+    "no_chat_continuation_branches": true
+  },
+  "owned_paths": [
+    "Runner control records for this assignment",
+    "field branch/PR inventory and cleanup metadata",
+    "field coordination/bootstrap docs only where required by the migration"
+  ],
+  "approved_shared_paths": [
+    "product source paths only when transplanting already-proven unique work into the correct fresh domain branch"
+  ],
+  "protected_paths": [
+    "PR #123 and its active Mobile branch except coordination-only reads",
+    "loew-runner implementation owned by the Runner/Inspector infrastructure agent",
+    "loew-inspector implementation owned by the Runner/Inspector infrastructure agent",
+    "field/main direct writes",
+    "unrelated product code"
+  ],
+  "tranches": [
+    {
+      "id": "0",
+      "name": "live inventory and truth recovery",
+      "mutation_allowed": false,
+      "required_output": "complete branch/PR cleanup ledger with unique-commit accounting and validation failure classification"
+    },
+    {
+      "id": "1",
+      "name": "salvage and transplant",
+      "mutation_allowed": true,
+      "rule": "fresh bounded domain branches from current main; transplant valuable deltas instead of preserving stale architecture"
+    },
+    {
+      "id": "2",
+      "name": "repository cleanup",
+      "mutation_allowed": true,
+      "rule": "close/delete only after unique work is accounted for"
+    },
+    {
+      "id": "3",
+      "name": "canonical ownership and branch policy",
+      "mutation_allowed": true,
+      "rule": "switch prefix enforcement only after Runner/GitHub workflow compatibility is proven"
+    },
+    {
+      "id": "4",
+      "name": "successor ownership packages",
+      "mutation_allowed": false,
+      "rule": "prepare first-class launch packages; do not silently create or impersonate workers"
+    }
+  ],
+  "initial_disposition_hints": [
+    {
+      "pr": 123,
+      "action": "KEEP ACTIVE",
+      "reason": "Mobile Focus is the protected continuing workstream."
+    },
+    {
+      "pr": 124,
+      "action": "TRANSPLANT",
+      "reason": "Left-panel work is valuable but deeply overlaps newer main; current main wins for Float/Inspector semantics."
+    },
+    {
+      "branch": "stage0/figma-frame-group-parity",
+      "action": "TRANSPLANT",
+      "target": "Canvas & Interaction"
+    },
+    {
+      "branch": "field/viewport-header-lockstep",
+      "action": "TRANSPLANT",
+      "target": "Canvas & Interaction"
+    },
+    {
+      "pr": 126,
+      "action": "VERIFY THEN CLOSE AS SUPERSEDED",
+      "reason": "Current main already contains the later merged compact PaintPicker implementation."
+    },
+    {
+      "pr": 83,
+      "action": "AUDIT UNIQUE COVERAGE THEN CLOSE OR TRANSPLANT",
+      "target": "Inspector & Design Controls"
+    },
+    {
+      "pr": 73,
+      "action": "SALVAGE ONLY STILL-USEFUL MOTION PRIMITIVES",
+      "target": "Workspace Shell"
+    },
+    {
+      "pr": 74,
+      "action": "AUDIT DURABLE PRODUCT-LANGUAGE DELTAS THEN CLOSE OR TRANSPLANT"
+    },
+    {
+      "pr": 27,
+      "action": "VERIFY THEN LIKELY CLOSE AS SUPERSEDED BY RUNNER-FIRST AUTHORITY"
+    },
+    {
+      "pr": 92,
+      "action": "RE-EVALUATE AGAINST CURRENT RUNNER/INSPECTOR QA ARCHITECTURE"
+    },
+    {
+      "pr": 28,
+      "action": "AUDIT WHETHER RUNNER HAS SUPERSEDED ITS COORDINATION PURPOSE"
+    },
+    {
+      "prs": [
+        5,
+        8,
+        9,
+        10,
+        11,
+        13,
+        14,
+        38
+      ],
+      "action": "QUARANTINE AND COMPARE AGAINST CURRENT MAIN BEFORE DECISION"
+    }
+  ],
+  "validation_failure_classes": [
+    "product_failure",
+    "qa_assertion",
+    "dependency_drift",
+    "auth",
+    "provider_quota",
+    "rate_limit",
+    "transport",
+    "provider_outage",
+    "stale_run"
+  ],
+  "non_goals": [
+    "Do not implement the entire Stage 0 roadmap.",
+    "Do not absorb Runner/Inspector infrastructure work.",
+    "Do not redesign Mobile Focus.",
+    "Do not force-push or rewrite published history.",
+    "Do not delete branches merely because they are old.",
+    "Do not treat red CI as product failure without classification.",
+    "Do not create first-class Workers without user authorization."
+  ],
+  "acceptance_criteria": [
+    "Paginate and classify all field remote branches and every open PR against fresh main.",
+    "Account for every unique unmerged commit before closure/deletion.",
+    "Preserve active Mobile work and Runner/Inspector infrastructure ownership.",
+    "Transplant valuable stranded work into fresh bounded domain branches from current main.",
+    "Close superseded/replaced PRs only after proof and leave concise reasons.",
+    "Delete obsolete remote branches only after their unique work is accounted for.",
+    "Record the durable Canvas, Workspace, Controls, Assets, and Mobile ownership boundaries in Runner.",
+    "Verify new branch prefixes against current automation before changing active enforcement.",
+    "Prepare first-class launch packages for Canvas, Workspace, Controls, and Assets if those owners do not already exist.",
+    "Persist a final cleanup ledger, current active-branch/PR set, and ordered Stage 0 successor queue in Runner.",
+    "Leave field/main functional and use no force-push/history rewrite."
+  ],
+  "required_report": [
+    "Findings",
+    "Changes",
+    "Validation",
+    "Risks",
+    "Open Questions",
+    "Final cleanup ledger",
+    "Successor ownership/assignment queue"
+  ]
+}

@@ -68,5 +68,55 @@
     "universal_authority": "lrnolivia/loew-runner@main/LOEW_CHAT_BIBLE.md",
     "local_bootstrap": "AGENTS.md",
     "historical_repository_targets_are_non_authoritative": true
+  },
+  "reorganization": {
+    "status": "ready",
+    "active_assignment": "assignments/field-repo-cleanup-reorg.json",
+    "plan": "docs/FIELD_REPOSITORY_REORGANIZATION.md",
+    "preserve_active_workstreams": [
+      "mobile-focus",
+      "runner-inspector-infrastructure"
+    ],
+    "historical_worker_reports_are_provenance_not_future_ownership": true,
+    "target_domains": {
+      "canvas": {
+        "name": "Canvas & Interaction",
+        "future_branch_prefix": "canvas/"
+      },
+      "workspace": {
+        "name": "Workspace Shell",
+        "future_branch_prefix": "workspace/"
+      },
+      "controls": {
+        "name": "Inspector & Design Controls",
+        "future_branch_prefix": "controls/"
+      },
+      "assets": {
+        "name": "Assets & Media",
+        "future_branch_prefix": "assets/"
+      },
+      "mobile": {
+        "name": "Mobile Focus",
+        "future_branch_prefix": "mobile/",
+        "preserve_existing_owner": true
+      }
+    },
+    "target_branch_policy": {
+      "durable_workers_short_lived_branches": true,
+      "no_chat_continuation_branches": true,
+      "delete_merged_task_branches": true,
+      "future_prefixes": [
+        "canvas/",
+        "workspace/",
+        "controls/",
+        "assets/",
+        "mobile/"
+      ],
+      "future_roadmap_prefixes": [
+        "figma/",
+        "model/"
+      ],
+      "keep_current_field_prefix_until_workflow_compatibility_verified": true
+    }
   }
 }
