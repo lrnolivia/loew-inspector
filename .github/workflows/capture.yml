@@ -17,6 +17,7 @@ on:
           - interact
           - capture
           - close
+          - recipe
       url:
         description: "HTTPS loew.fi URL for snapshot/screenshot/open"
         required: false
@@ -62,6 +63,14 @@ on:
         description: "Optional CSS selector for screenshot"
         required: false
         type: string
+      recipe:
+        description: "Named field QA recipe"
+        required: false
+        type: string
+      project_id:
+        description: "Real field project id for recipe context"
+        required: false
+        type: string
       request_id:
         description: "Correlation id"
         required: true
@@ -90,6 +99,8 @@ jobs:
           KEY: ${{ inputs.key }}
           FULL_PAGE: ${{ inputs.full_page }}
           SELECTOR: ${{ inputs.selector }}
+          RECIPE: ${{ inputs.recipe }}
+          PROJECT_ID: ${{ inputs.project_id }}
           REQUEST_ID: ${{ inputs.request_id }}
           CF_ACCESS_CLIENT_ID: ${{ vars.CF_ACCESS_CLIENT_ID }}
           CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF }}
@@ -102,7 +113,7 @@ jobs:
           args="$(node <<'NODE'
           const action = process.env.ACTION;
           const args = {};
-          if (["snapshot","screenshot","open"].includes(action)) {
+          if (["snapshot","screenshot","open","recipe"].includes(action)) {
             if (!process.env.TARGET_URL) process.exit(2);
             const u = new URL(process.env.TARGET_URL);
             const host = u.hostname.toLowerCase();
@@ -113,11 +124,16 @@ jobs:
             args.session_id = process.env.SESSION_ID;
             if (process.env.TARGET_ID) args.target_id = process.env.TARGET_ID;
           }
-          if (["snapshot","screenshot","capture"].includes(action)) {
+          if (["snapshot","screenshot","capture","recipe"].includes(action)) {
             args.request_id = process.env.REQUEST_ID;
             args.full_page = process.env.FULL_PAGE === "true";
           }
           if (action === "screenshot" && process.env.SELECTOR) args.selector = process.env.SELECTOR;
+          if (action === "recipe") {
+            if (!process.env.RECIPE || !process.env.PROJECT_ID) process.exit(2);
+            args.recipe = process.env.RECIPE;
+            args.context = { project: "field", project_id: process.env.PROJECT_ID, environment: "qa", surface: "editor", route_kind: "qa-work" };
+          }
           if (action === "interact") {
             args.action = process.env.INTERACTION;
             if (process.env.LOCATOR_TYPE && process.env.LOCATOR_VALUE) {
