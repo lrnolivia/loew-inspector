@@ -1,5 +1,15 @@
 # current state
 
+## Gen 2 Wave 1
+
+- Browser Run foundation: implemented on the Gen 2 branch
+- Browser binding: `BROWSER`
+- evidence store: private R2 bucket `loew-inspector-evidence`
+- browser tools: `browser_screenshot`, `browser_snapshot`
+- normal Chat compatibility workflow: `capture.yml`
+- HTTP inspector remains unchanged as a separate diagnostic path
+- Quick Actions limitation is explicit: console errors and failed-request traces arrive with interactive Browser Run sessions in Batch 3, not the stateless screenshot/snapshot path
+
 ## verified
 
 - deployed inspector gateway: `https://inspector.loew.fi/mcp`

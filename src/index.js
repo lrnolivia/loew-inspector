@@ -1,3 +1,6 @@
+import { browserRequestOptions, runQuickAction } from "./browser.js";
+import { storeEvidence, decodeBase64Bytes, summarizeSnapshot } from "./evidence.js";
+
 const VERSION = "0.4.0";
 const ACCESS_ISSUER = "https://loewfi.cloudflareaccess.com";
 const ACCESS_AUD = "6d19d2ef9eea644a9f55a049699a31110150fefebb1bca8c89632b9dd149ccd6";
@@ -226,47 +229,168 @@ async function mcp(request, access, env) {
 
   if (message.method === "tools/list") {
     return rpc(id, {
-      tools: [{
-        name: "fetch_loew_url",
-        title: "Fetch a protected loew.fi page",
-        description: "Read an HTTPS page on loew.fi or a loew.fi subdomain through the authenticated inspector. Redirects are revalidated and text responses are bounded.",
-        inputSchema: {
-          type: "object",
-          properties: {
-            url: { type: "string", description: "HTTPS loew.fi URL" },
-            method: { type: "string", enum: ["GET","HEAD"], default: "GET" }
+      tools: [
+        {
+          name: "fetch_loew_url",
+          title: "Fetch a protected loew.fi page",
+          description: "Read an HTTPS page on loew.fi or a loew.fi subdomain through the authenticated inspector. Redirects are revalidated and text responses are bounded.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              url: { type: "string", description: "HTTPS loew.fi URL" },
+              method: { type: "string", enum: ["GET","HEAD"], default: "GET" }
+            },
+            required: ["url"],
+            additionalProperties: false
           },
-          required: ["url"],
-          additionalProperties: false
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
         },
-        annotations: {
-          readOnlyHint: true,
-          destructiveHint: false,
-          openWorldHint: false
+        {
+          name: "browser_screenshot",
+          title: "Capture loew.fi visual evidence",
+          description: "Render an HTTPS loew.fi page in Cloudflare Browser Run, persist the PNG in inspector evidence storage, and return a compact evidence record.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              url: { type: "string", description: "HTTPS loew.fi URL" },
+              request_id: { type: "string", description: "Optional safe correlation id" },
+              full_page: { type: "boolean", default: false },
+              selector: { type: "string", description: "Optional CSS selector to capture" },
+              viewport: {
+                type: "object",
+                properties: {
+                  width: { type: "number", minimum: 320, maximum: 3840 },
+                  height: { type: "number", minimum: 240, maximum: 2160 },
+                  deviceScaleFactor: { type: "number", minimum: 1, maximum: 2 }
+                },
+                additionalProperties: false
+              }
+            },
+            required: ["url"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
+        },
+        {
+          name: "browser_snapshot",
+          title: "Capture loew.fi browser snapshot",
+          description: "Render an HTTPS loew.fi page and persist screenshot evidence while returning HTTP status plus rendered DOM and accessibility summaries.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              url: { type: "string", description: "HTTPS loew.fi URL" },
+              request_id: { type: "string", description: "Optional safe correlation id" },
+              full_page: { type: "boolean", default: false },
+              viewport: {
+                type: "object",
+                properties: {
+                  width: { type: "number", minimum: 320, maximum: 3840 },
+                  height: { type: "number", minimum: 240, maximum: 2160 },
+                  deviceScaleFactor: { type: "number", minimum: 1, maximum: 2 }
+                },
+                additionalProperties: false
+              }
+            },
+            required: ["url"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
         }
-      }]
+      ]
     });
   }
 
   if (message.method === "tools/call") {
-    if (message.params?.name !== "fetch_loew_url") {
-      return rpcError(id, -32602, "Unknown tool");
-    }
     try {
-      const args = message.params.arguments || {};
-      const target = validateTarget(args.url);
-      const method = args.method || "GET";
-      const result = await fetchTarget(target.toString(), method, access.token);
-      return rpc(id, {
-        content: [{ type: "text", text: JSON.stringify(result) }],
-        structuredContent: result
-      });
+      const name = message.params?.name;
+      const args = message.params?.arguments || {};
+
+      if (name === "fetch_loew_url") {
+        const target = validateTarget(args.url);
+        const method = args.method || "GET";
+        const result = await fetchTarget(target.toString(), method, access.token);
+        return rpc(id, {
+          content: [{ type: "text", text: JSON.stringify(result) }],
+          structuredContent: result
+        });
+      }
+
+      if (name === "browser_screenshot") {
+        const target = validateTarget(args.url);
+        const options = browserRequestOptions({
+          url: target,
+          accessJwt: access.token,
+          viewport: args.viewport,
+          selector: args.selector,
+          fullPage: args.full_page
+        });
+        const started = Date.now();
+        const response = await runQuickAction(env.BROWSER, "screenshot", options);
+        const browserMs = Number(response.headers.get("x-browser-ms-used") || 0) || null;
+        const png = new Uint8Array(await response.arrayBuffer());
+        const metadata = await storeEvidence(env.EVIDENCE, {
+          requestId: args.request_id,
+          targetUrl: target.toString(),
+          kind: "screenshot",
+          screenshotBytes: png,
+          browserMs,
+          viewport: options.viewport,
+          selector: options.selector ?? null,
+          fullPage: Boolean(args.full_page),
+          durationMs: Date.now() - started
+        });
+        return rpc(id, {
+          content: [{ type: "text", text: JSON.stringify(metadata) }],
+          structuredContent: metadata
+        });
+      }
+
+      if (name === "browser_snapshot") {
+        const target = validateTarget(args.url);
+        const probe = await fetchTarget(target.toString(), "GET", access.token);
+        const options = browserRequestOptions({
+          url: target,
+          accessJwt: access.token,
+          viewport: args.viewport,
+          fullPage: args.full_page
+        });
+        options.formats = ["content", "screenshot", "accessibilityTree"];
+        const started = Date.now();
+        const response = await runQuickAction(env.BROWSER, "snapshot", options);
+        const browserMs = Number(response.headers.get("x-browser-ms-used") || 0) || null;
+        const payload = await response.json();
+        const result = payload?.result ?? payload;
+        const screenshotBytes = decodeBase64Bytes(result?.screenshot);
+        const summary = summarizeSnapshot(result);
+        const metadata = await storeEvidence(env.EVIDENCE, {
+          requestId: args.request_id,
+          targetUrl: target.toString(),
+          kind: "snapshot",
+          screenshotBytes,
+          browserMs,
+          viewport: options.viewport,
+          fullPage: Boolean(args.full_page),
+          durationMs: Date.now() - started,
+          extra: {
+            http_status: probe.status,
+            final_url: probe.final_url,
+            title: summary.title,
+            dom: summary.dom,
+            accessibility: summary.accessibility,
+            console_errors: { supported: false, reason: "Quick Actions do not expose a console event stream; interactive Browser Run sessions add this in Gen 2 Batch 3." },
+            failed_requests: { supported: false, reason: "Quick Actions do not expose request-failure events; interactive Browser Run sessions add this in Gen 2 Batch 3." }
+          }
+        });
+        return rpc(id, {
+          content: [{ type: "text", text: JSON.stringify(metadata) }],
+          structuredContent: metadata
+        });
+      }
+
+      return rpcError(id, -32602, "Unknown tool");
     } catch (error) {
       return rpc(id, {
-        content: [{
-          type: "text",
-          text: error instanceof Error ? error.message : "Fetch failed"
-        }],
+        content: [{ type: "text", text: error instanceof Error ? error.message : "Inspector action failed" }],
         isError: true
       });
     }
