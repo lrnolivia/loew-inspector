@@ -4,11 +4,21 @@ const summaryEl = document.querySelector("#summary");
 const refreshButton = document.querySelector("#refresh");
 const connectionEl = document.querySelector("#connection");
 const tabs = [...document.querySelectorAll(".app-tab")];
+const primaryNav = [...document.querySelectorAll(".primary-nav-item")];
+const workersSection = document.querySelector("#workers-section");
+const visualSection = document.querySelector("#visual-section");
+const visualContent = document.querySelector("#visual-content");
+const visualCount = document.querySelector("#visual-count");
+const toolbarContext = document.querySelector("#toolbar-context");
 
 let selectedWorkerId = null;
 let currentWorkers = [];
+let currentSection = "workers";
+let visualEvidence = [];
+let selectedEvidenceId = null;
 
 document.body.dataset.view = "overview";
+document.body.dataset.section = "workers";
 
 function relative(value) {
   if (!value) return "—";
@@ -38,6 +48,139 @@ async function api(url, options) {
   catch { body = { error: text || `Unexpected ${response.status} response.` }; }
   if (!response.ok) throw Object.assign(new Error(body.error ?? "Request failed"), { status: response.status });
   return body;
+}
+
+
+function hostname(value) {
+  try { return new URL(value).hostname; }
+  catch { return "unknown"; }
+}
+
+function absoluteTime(value) {
+  const parsed = Date.parse(value);
+  if (!Number.isFinite(parsed)) return "—";
+  return new Intl.DateTimeFormat(undefined, {
+    month: "short", day: "numeric", hour: "numeric", minute: "2-digit", second: "2-digit"
+  }).format(parsed);
+}
+
+function evidenceTitle(item) {
+  const host = hostname(item.target_url);
+  if (host === "runner.loew.fi") return "runner";
+  if (host.endsWith(".loew.fi")) return host.slice(0, -".loew.fi".length);
+  return host;
+}
+
+function renderVisualSelected() {
+  if (!visualEvidence.length) {
+    visualContent.innerHTML = '<div class="visual-empty"><span class="visual-empty-mark">◌</span><strong>No visual evidence yet</strong><span>Ask inspector to capture a loew.fi surface.</span></div>';
+    visualCount.textContent = "0 captures";
+    return;
+  }
+
+  if (!selectedEvidenceId || !visualEvidence.some(item => item.evidence_id === selectedEvidenceId)) {
+    selectedEvidenceId = visualEvidence[0].evidence_id;
+  }
+  const selected = visualEvidence.find(item => item.evidence_id === selectedEvidenceId);
+  visualCount.textContent = visualEvidence.length + (visualEvidence.length === 1 ? " capture" : " captures");
+
+  const trace = Array.isArray(selected.trace) ? selected.trace : [];
+  const facts = [
+    ["evidence", selected.evidence_id],
+    ["kind", selected.kind || "screenshot"],
+    ["request", selected.request_id || "—"],
+    ["browser", selected.browser_ms ? Math.round(selected.browser_ms) + " ms" : "session"],
+    ["bytes", Number(selected.screenshot_bytes || 0).toLocaleString()],
+    ["status", selected.http_status || "rendered"]
+  ];
+
+  visualContent.innerHTML = `
+    <div class="visual-main">
+      <figure class="visual-evidence-frame">
+        <img src="${escapeHtml(selected.screenshot_url)}" alt="Browser evidence captured from ${escapeHtml(selected.target_url)}">
+        <figcaption class="visual-caption">
+          <div>
+            <div class="visual-caption-title">${escapeHtml(evidenceTitle(selected))}</div>
+            <div class="visual-caption-url">${escapeHtml(selected.target_url)}</div>
+          </div>
+          <div class="visual-caption-time">${escapeHtml(absoluteTime(selected.captured_at))}</div>
+        </figcaption>
+      </figure>
+
+      <div class="visual-meta-grid">
+        <div class="visual-meta"><div class="visual-meta-label">surface</div><div class="visual-meta-value">${escapeHtml(hostname(selected.target_url))}</div></div>
+        <div class="visual-meta"><div class="visual-meta-label">capture</div><div class="visual-meta-value">${escapeHtml(selected.kind || "screenshot")}</div></div>
+        <div class="visual-meta"><div class="visual-meta-label">viewport</div><div class="visual-meta-value">${escapeHtml(selected.viewport?.width || "—")} × ${escapeHtml(selected.viewport?.height || "—")}</div></div>
+        <div class="visual-meta"><div class="visual-meta-label">result</div><div class="visual-meta-value">${selected.ok === false ? "failed" : "captured"}</div></div>
+      </div>
+
+      <div class="visual-technical">
+        <section class="technical-section">
+          <h3>trace</h3>
+          ${trace.length
+            ? '<ol class="trace-list">' + trace.map(entry => '<li><span>' + escapeHtml(entry.action || "event") + (entry.locator?.value ? " · " + escapeHtml(entry.locator.value) : "") + '</span></li>').join("") + '</ol>'
+            : '<div class="state-copy">Single-shot capture · no interaction trace.</div>'}
+        </section>
+        <section class="technical-section">
+          <h3>evidence</h3>
+          <dl class="evidence-facts">
+            ${facts.map(([label,value]) => '<div class="evidence-fact"><dt>' + escapeHtml(label) + '</dt><dd>' + escapeHtml(value) + '</dd></div>').join("")}
+          </dl>
+        </section>
+      </div>
+    </div>
+
+    <aside class="visual-side" aria-label="Recent visual evidence">
+      <div class="visual-side-heading"><strong>recent</strong><span>newest first</span></div>
+      <div class="evidence-list">
+        ${visualEvidence.map(item => `
+          <button class="evidence-list-item ${item.evidence_id === selectedEvidenceId ? "active" : ""}" data-evidence-id="${escapeHtml(item.evidence_id)}" type="button">
+            <img class="evidence-thumb" src="${escapeHtml(item.screenshot_url)}" alt="">
+            <span class="evidence-list-copy">
+              <span class="evidence-list-title">${escapeHtml(evidenceTitle(item))}</span>
+              <span class="evidence-list-meta">${escapeHtml(item.kind || "screenshot")} · ${escapeHtml(item.viewport?.width || "—")}×${escapeHtml(item.viewport?.height || "—")}</span>
+            </span>
+            <span class="evidence-list-time">${escapeHtml(relative(item.captured_at))}</span>
+          </button>
+        `).join("")}
+      </div>
+    </aside>
+  `;
+
+  visualContent.querySelectorAll("[data-evidence-id]").forEach(button => {
+    button.addEventListener("click", () => {
+      selectedEvidenceId = button.dataset.evidenceId;
+      renderVisualSelected();
+    });
+  });
+}
+
+async function loadVisual() {
+  visualContent.innerHTML = '<div class="visual-empty"><span class="visual-empty-mark">◌</span><strong>Loading evidence</strong><span>Asking inspector what it saw.</span></div>';
+  try {
+    const payload = await api("/api/visual");
+    visualEvidence = Array.isArray(payload.evidence) ? payload.evidence : [];
+    renderVisualSelected();
+    setConnection("good", "CONNECTED");
+  } catch (error) {
+    visualEvidence = [];
+    visualCount.textContent = "";
+    visualContent.innerHTML = '<div class="visual-empty"><span class="visual-empty-mark">×</span><strong>Evidence unavailable</strong><span>' + escapeHtml(error.message) + '</span></div>';
+    setConnection("bad", error.status === 403 ? "ACCESS REQUIRED" : "VISUAL ERROR");
+  }
+}
+
+function setSection(section) {
+  currentSection = section === "visual" ? "visual" : "workers";
+  document.body.dataset.section = currentSection;
+  workersSection.hidden = currentSection !== "workers";
+  visualSection.hidden = currentSection !== "visual";
+  primaryNav.forEach(item => item.classList.toggle("active", item.dataset.section === currentSection));
+  toolbarContext.textContent = currentSection === "visual"
+    ? "INSPECTOR · BROWSER EVIDENCE"
+    : "CONFIG · RECOVERY · DIAGNOSTICS";
+  if (currentSection === "visual") loadVisual();
+  else load();
 }
 
 function statusTone(value) {
@@ -276,7 +419,10 @@ async function load() {
   }
 }
 
-refreshButton.addEventListener("click", load);
+refreshButton.addEventListener("click", () => currentSection === "visual" ? loadVisual() : load());
+primaryNav.forEach((item) => {
+  item.addEventListener("click", () => setSection(item.dataset.section));
+});
 tabs.forEach((tab) => {
   tab.addEventListener("click", () => {
     tabs.forEach((item) => item.classList.toggle("active", item === tab));

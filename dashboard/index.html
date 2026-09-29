@@ -32,15 +32,18 @@
       </div>
     </header>
 
-    <div class="app-toolbar" data-figma-component="App / Toolbar">
-      <strong>Maintenance console</strong>
+    <div class="app-toolbar terra-toolbar" data-figma-component="App / Toolbar">
+      <nav class="primary-nav" aria-label="Runner">
+        <button class="primary-nav-item active" data-section="workers" type="button">workers</button>
+        <button class="primary-nav-item" data-section="visual" type="button">visual</button>
+      </nav>
       <div class="toolbar-actions">
-        <span class="toolbar-meta">CONFIG · RECOVERY · DIAGNOSTICS</span>
+        <span id="toolbar-context" class="toolbar-meta">CONFIG · RECOVERY · DIAGNOSTICS</span>
         <button id="refresh" class="tp-button secondary compact" type="button">Refresh</button>
       </div>
     </div>
 
-    <div class="app-grid">
+    <div id="workers-section" class="app-grid app-section">
       <aside class="sidebar" aria-label="Workers">
         <div class="section-kicker">WORKERS</div>
         <div id="worker-nav" class="worker-nav"></div>
@@ -58,8 +61,27 @@
       </section>
     </div>
 
+    <section id="visual-section" class="app-section visual-section" hidden aria-live="polite">
+      <div class="visual-heading">
+        <div>
+          <div class="section-kicker flush">INSPECTOR EVIDENCE</div>
+          <h2>visual</h2>
+          <p>Browser truth, kept quiet enough to actually look at.</p>
+        </div>
+        <div id="visual-count" class="visual-count"></div>
+      </div>
+
+      <div id="visual-content" class="visual-content">
+        <div class="visual-empty">
+          <span class="visual-empty-mark">◌</span>
+          <strong>Loading evidence</strong>
+          <span>Asking inspector what it saw.</span>
+        </div>
+      </div>
+    </section>
+
     <footer>
-      <span>loew-runner · v0.3</span>
+      <span>loew-runner · v0.4</span>
       <span>Terra Prime Application UI</span>
     </footer>
   </main>

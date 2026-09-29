@@ -1,4 +1,5 @@
 import { applyWorkerSettings, publicWorkerSettings } from "./settings.mjs";
+import { listVisualEvidence, getVisualEvidence, getVisualImage } from "./visual-evidence.mjs";
 const GITHUB_API = "https://api.github.com";
 const OWNER = "lrnolivia";
 const REPOSITORY = "loew-runner";
@@ -165,11 +166,34 @@ async function handleApi(request, env) {
   const url = new URL(request.url);
 
   if (request.method === "GET" && url.pathname === "/api/health") {
-    return json({ ok: true, service: "loew-runner", version: "0.3" });
+    return json({ ok: true, service: "loew-runner", version: "0.4" });
   }
 
   const accessError = accessGuard(request, env);
   if (accessError) return accessError;
+
+  if (request.method === "GET" && url.pathname === "/api/visual") {
+    return json(await listVisualEvidence(env.EVIDENCE, 60));
+  }
+
+  const visualMatch = url.pathname.match(/^\/api\/visual\/(vis_[a-zA-Z0-9-]+)(?:\/(image))?$/);
+  if (request.method === "GET" && visualMatch) {
+    const [, evidenceId, resource] = visualMatch;
+    if (resource === "image") {
+      const image = await getVisualImage(env.EVIDENCE, evidenceId);
+      if (!image) return json({ error: "Evidence image not found." }, 404);
+      return new Response(image.body, {
+        headers: {
+          "Content-Type": image.contentType || "image/png",
+          "Cache-Control": "private, no-store",
+          "Content-Length": String(image.size)
+        }
+      });
+    }
+    const evidence = await getVisualEvidence(env.EVIDENCE, evidenceId);
+    return evidence ? json(evidence) : json({ error: "Evidence not found." }, 404);
+  }
+
   const tokenError = tokenGuard(env);
   if (tokenError) return tokenError;
 
