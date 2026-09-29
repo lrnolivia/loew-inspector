@@ -2,6 +2,25 @@
 
 Canonical source, browser evidence engine, and compatibility transport for protected read-only loew.fi inspection.
 
+## Gen 2.1 evidence controller
+
+Inspector no longer treats Cloudflare Browser Run as the product. It resolves evidence work across three engines:
+
+- `http`: status, headers, JSON, redirects, and cheap reachability checks
+- `github-chromium`: deterministic visual QA, multi-capture recipes, artifacts, and routine field validation
+- `browser-run`: scarce exploratory/session interaction for ad hoc normal-chat inspection
+
+Known deterministic recipes route to GitHub Chromium by default. Browser Run is reserved for exploratory interaction or explicit sessions. A Browser Run `429` is normalized to `status: deferred`, `reason: browser_capacity`, with `github-chromium` identified as the fallback where the request can be replayed deterministically.
+
+`evidence.yml` is the normal-chat workhorse for routine field QA. It opens the canonical real-project `/qa/work/{projectId}` route once, performs a suite in one Chromium process, and sends every screenshot into the same private R2 evidence contract through the authenticated inspector bridge. `field.stage0` currently captures Canvas first paint plus Full, Focus, and Float in one run.
+
+GitHub Chromium evidence and Browser Run evidence share the same metadata model, including engine, engine reason, project/deployment context, run id, suite, step, viewport, DOM summary, accessibility summary, trace, and errors. Runner should therefore present evidence without caring which engine produced it.
+
+Authenticated bridge endpoints:
+
+- `POST /evidence/ingest`: bounded PNG + normalized metadata from external evidence engines
+- `POST /evidence/run`: requested/queued/running/complete/deferred/failed run lifecycle record
+
 ## Gen 2 visual evidence
 
 Gen 2 keeps `fetch_loew_url` for bounded HTTP/Access diagnostics and adds Cloudflare Browser Run as an independent runtime-evidence path.

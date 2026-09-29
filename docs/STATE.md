@@ -1,5 +1,17 @@
 # current state
 
+## Gen 2.1
+
+- evidence controller chooses the cheapest capable engine deterministically
+- deterministic recipes use GitHub Chromium; Browser Run is reserved for exploratory/session work
+- Browser Run 429s are first-class deferred capacity states with retry metadata and GitHub Chromium fallback
+- authenticated external evidence ingest writes GitHub Chromium screenshots into the same private R2 contract
+- evidence runs have lifecycle state and grouped step metadata
+- `evidence.yml` executes one Chromium browser per suite
+- `field.stage0` currently captures Canvas first paint, Full, Focus, and Float against `/qa/work/{projectId}`
+- `/builder/noauth` remains smoke-only and is not used by real-project evidence runs
+
+
 ## Gen 2 Wave 1
 
 - Browser Run foundation: implemented on the Gen 2 branch
