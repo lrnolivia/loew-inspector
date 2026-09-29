@@ -60,11 +60,23 @@ async function inspect(url) {
   };
 }
 
+async function inspectBuild(url) {
+  const response = await fetch(url, { redirect: 'manual', signal: AbortSignal.timeout(15000) });
+  const body = await response.text();
+  return {
+    status: response.status,
+    content_type: response.headers.get('content-type') || '',
+    cf_ray: response.headers.get('cf-ray'),
+    body: body.slice(0, 1600),
+  };
+}
+
 await mkdir('qa-evidence', { recursive: true });
 let browser;
 try {
   result.checks.editor_http = await inspect(editorTarget);
   result.checks.canvas_http = await inspect(canvas);
+  result.checks.editor_build = await inspectBuild(new URL('/api/build', editor));
 
   browser = await chromium.launch({ headless: true });
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
@@ -80,6 +92,29 @@ try {
   } catch { /* Record the unresolved loading state below. */ }
   const iframe = page.locator('iframe[data-canvas-iframe]').first();
   const iframeSrc = await iframe.getAttribute('src').catch(() => null);
+  const scriptSrcs = await page.locator('script[src]').evaluateAll(nodes =>
+    nodes.map(node => node instanceof HTMLScriptElement ? node.src : '').filter(Boolean),
+  );
+  const bundleMarkers = [];
+  for (const src of scriptSrcs) {
+    try {
+      const scriptResponse = await page.request.get(src, { timeout: 15000 });
+      const scriptBody = await scriptResponse.text();
+      bundleMarkers.push({
+        src,
+        status: scriptResponse.status(),
+        bytes: scriptBody.length,
+        has_preview_sandbox_path: scriptBody.includes('/preview-sandbox/index.html'),
+        has_field_preview_suffix: scriptBody.includes('.field-preview.loew.fi'),
+      });
+    } catch (error) {
+      bundleMarkers.push({
+        src,
+        status: 0,
+        error: error instanceof Error ? error.message.slice(0, 200) : String(error).slice(0, 200),
+      });
+    }
+  }
   let firstPaint = false;
   if (iframeSrc?.startsWith(canvas.origin + '/')) {
     try {
@@ -97,6 +132,8 @@ try {
     starting_canvas_visible: await page.getByText('Starting canvas', { exact: true }).isVisible(),
     canvas_iframe_src: iframeSrc,
     canvas_first_paint: firstPaint,
+    script_srcs: scriptSrcs,
+    bundle_markers: bundleMarkers,
     errors: browserErrors.slice(0, 10),
   };
   const canvasPage = await browser.newPage({ viewport: { width: 1440, height: 900 } });
