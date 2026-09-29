@@ -77,6 +77,51 @@ function evidenceTitle(item) {
   return host;
 }
 
+async function computePixelDiff(baseUrl, currentUrl) {
+  const loadImage = (src) => new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(image);
+    image.onerror = () => reject(new Error("Unable to load comparison image"));
+    image.src = src;
+  });
+  const [baseImage, currentImage] = await Promise.all([loadImage(baseUrl), loadImage(currentUrl)]);
+  if (baseImage.naturalWidth !== currentImage.naturalWidth || baseImage.naturalHeight !== currentImage.naturalHeight) {
+    return { comparable: false, reason: "image dimensions differ" };
+  }
+  const maxDimension = 900;
+  const scale = Math.min(1, maxDimension / Math.max(baseImage.naturalWidth, baseImage.naturalHeight));
+  const width = Math.max(1, Math.round(baseImage.naturalWidth * scale));
+  const height = Math.max(1, Math.round(baseImage.naturalHeight * scale));
+  const read = (image) => {
+    const canvas = document.createElement("canvas");
+    canvas.width = width;
+    canvas.height = height;
+    const ctx = canvas.getContext("2d", { willReadFrequently: true });
+    ctx.drawImage(image, 0, 0, width, height);
+    return ctx.getImageData(0, 0, width, height).data;
+  };
+  const base = read(baseImage);
+  const current = read(currentImage);
+  let changed = 0;
+  for (let i = 0; i < base.length; i += 4) {
+    const delta = Math.max(
+      Math.abs(base[i] - current[i]),
+      Math.abs(base[i + 1] - current[i + 1]),
+      Math.abs(base[i + 2] - current[i + 2])
+    );
+    if (delta > 16) changed += 1;
+  }
+  const pixels = width * height;
+  return {
+    comparable: true,
+    changed_pixels: changed,
+    sampled_pixels: pixels,
+    changed_percent: pixels ? changed / pixels * 100 : 0,
+    sample_width: width,
+    sample_height: height
+  };
+}
+
 async function loadComparison() {
   comparisonState = null;
   if (!baselineEvidenceId || baselineEvidenceId === selectedEvidenceId) {
@@ -84,7 +129,12 @@ async function loadComparison() {
     return;
   }
   try {
-    comparisonState = await api("/api/visual/compare?base=" + encodeURIComponent(baselineEvidenceId) + "&current=" + encodeURIComponent(selectedEvidenceId));
+    const metadata = await api("/api/visual/compare?base=" + encodeURIComponent(baselineEvidenceId) + "&current=" + encodeURIComponent(selectedEvidenceId));
+    const baseline = visualEvidence.find(item => item.evidence_id === baselineEvidenceId);
+    const current = visualEvidence.find(item => item.evidence_id === selectedEvidenceId);
+    const pixel = baseline && current ? await computePixelDiff(baseline.screenshot_url, current.screenshot_url) : null;
+    comparisonState = { ...metadata, pixel };
+    if (comparisonState.comparison && pixel?.comparable && pixel.changed_percent > 0.1) comparisonState.comparison.result = "changed";
   } catch (error) {
     comparisonState = { error: error.message };
   }
@@ -129,7 +179,7 @@ function renderVisualSelected() {
           <span>${escapeHtml(comparisonState?.error ? "failed" : comparison?.result || "checking")}</span>
           <span>${escapeHtml(comparisonState?.error || (
             comparison
-              ? (comparison.same_viewport ? "same viewport" : "viewport changed") +
+              ? (comparisonState?.pixel?.comparable ? comparisonState.pixel.changed_percent.toFixed(2) + "% pixel delta · " : comparisonState?.pixel?.reason ? comparisonState.pixel.reason + " · " : "") + (comparison.same_viewport ? "same viewport" : "viewport changed") +
                 (comparison.dom.comparable ? " · DOM " + (comparison.dom.changed ? "changed" : "stable") : "") +
                 (comparison.accessibility.comparable ? " · a11y " + (comparison.accessibility.changed ? "changed" : "stable") : "")
               : "comparing evidence"
