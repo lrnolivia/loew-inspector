@@ -1,29 +1,65 @@
-name: capture loew visual evidence
+name: inspect loew browser
 
-run-name: "loew-inspector visual / ${{ inputs.request_id }}"
+run-name: "loew-inspector browser / ${{ inputs.request_id }}"
 
 on:
   workflow_dispatch:
     inputs:
-      url:
-        description: "HTTPS loew.fi URL to render"
-        required: true
-        type: string
       action:
-        description: "Browser action"
+        description: "Browser operation"
         required: true
         default: "snapshot"
         type: choice
         options:
           - snapshot
           - screenshot
+          - open
+          - interact
+          - capture
+          - close
+      url:
+        description: "HTTPS loew.fi URL for snapshot/screenshot/open"
+        required: false
+        type: string
+      session_id:
+        description: "Browser session id for interact/capture/close"
+        required: false
+        type: string
+      target_id:
+        description: "Optional browser target id"
+        required: false
+        type: string
+      interaction:
+        description: "click, double_click, hover, type, press, select, scroll, wait"
+        required: false
+        type: string
+      locator_type:
+        description: "role, text, test_id, or css"
+        required: false
+        type: string
+      locator_value:
+        description: "Locator value"
+        required: false
+        type: string
+      locator_name:
+        description: "Optional accessible name for role locator"
+        required: false
+        type: string
+      value:
+        description: "Value for type/select"
+        required: false
+        type: string
+      key:
+        description: "Key for press"
+        required: false
+        type: string
       full_page:
         description: "Capture full page"
         required: true
         default: false
         type: boolean
       selector:
-        description: "Optional CSS selector for screenshot action"
+        description: "Optional CSS selector for screenshot"
         required: false
         type: string
       request_id:
@@ -35,29 +71,23 @@ permissions:
   contents: read
 
 jobs:
-  capture:
+  browser:
     runs-on: ubuntu-latest
     timeout-minutes: 4
     steps:
-      - name: Validate inputs
-        shell: bash
-        env:
-          TARGET_URL: ${{ inputs.url }}
-          REQUEST_ID: ${{ inputs.request_id }}
-        run: |
-          set -euo pipefail
-          node <<'NODE'
-          const u = new URL(process.env.TARGET_URL);
-          const host = u.hostname.toLowerCase();
-          if (u.protocol !== "https:" || !(host === "loew.fi" || host.endsWith(".loew.fi")) || u.username || u.password || u.port || u.hash) process.exit(2);
-          if (!/^[a-zA-Z0-9._-]{1,80}$/.test(process.env.REQUEST_ID)) process.exit(2);
-          NODE
-
       - name: Call browser inspector
         shell: bash
         env:
-          TARGET_URL: ${{ inputs.url }}
           ACTION: ${{ inputs.action }}
+          TARGET_URL: ${{ inputs.url }}
+          SESSION_ID: ${{ inputs.session_id }}
+          TARGET_ID: ${{ inputs.target_id }}
+          INTERACTION: ${{ inputs.interaction }}
+          LOCATOR_TYPE: ${{ inputs.locator_type }}
+          LOCATOR_VALUE: ${{ inputs.locator_value }}
+          LOCATOR_NAME: ${{ inputs.locator_name }}
+          VALUE: ${{ inputs.value }}
+          KEY: ${{ inputs.key }}
           FULL_PAGE: ${{ inputs.full_page }}
           SELECTOR: ${{ inputs.selector }}
           REQUEST_ID: ${{ inputs.request_id }}
@@ -67,20 +97,42 @@ jobs:
           set -euo pipefail
           : "${CF_ACCESS_CLIENT_ID:?missing CF_ACCESS_CLIENT_ID repository variable}"
           : "${CF_ACCESS_CLIENT_SECRET:?missing CF repository secret}"
-          tool="browser_${ACTION}"
+          if ! [[ "$REQUEST_ID" =~ ^[a-zA-Z0-9._-]{1,80}$ ]]; then exit 2; fi
+
           args="$(node <<'NODE'
-          const args = {
-            url: process.env.TARGET_URL,
-            request_id: process.env.REQUEST_ID,
-            full_page: process.env.FULL_PAGE === "true"
-          };
-          if (process.env.ACTION === "screenshot" && process.env.SELECTOR) args.selector = process.env.SELECTOR;
+          const action = process.env.ACTION;
+          const args = {};
+          if (["snapshot","screenshot","open"].includes(action)) {
+            if (!process.env.TARGET_URL) process.exit(2);
+            const u = new URL(process.env.TARGET_URL);
+            const host = u.hostname.toLowerCase();
+            if (u.protocol !== "https:" || !(host === "loew.fi" || host.endsWith(".loew.fi")) || u.username || u.password || u.port || u.hash) process.exit(2);
+            args.url = u.toString();
+          } else {
+            if (!process.env.SESSION_ID) process.exit(2);
+            args.session_id = process.env.SESSION_ID;
+            if (process.env.TARGET_ID) args.target_id = process.env.TARGET_ID;
+          }
+          if (["snapshot","screenshot","capture"].includes(action)) {
+            args.request_id = process.env.REQUEST_ID;
+            args.full_page = process.env.FULL_PAGE === "true";
+          }
+          if (action === "screenshot" && process.env.SELECTOR) args.selector = process.env.SELECTOR;
+          if (action === "interact") {
+            args.action = process.env.INTERACTION;
+            if (process.env.LOCATOR_TYPE && process.env.LOCATOR_VALUE) {
+              args.locator = { type: process.env.LOCATOR_TYPE, value: process.env.LOCATOR_VALUE };
+              if (process.env.LOCATOR_NAME) args.locator.name = process.env.LOCATOR_NAME;
+            }
+            if (process.env.VALUE) args.value = process.env.VALUE;
+            if (process.env.KEY) args.key = process.env.KEY;
+          }
           process.stdout.write(JSON.stringify(args));
           NODE
           )"
+
+          tool="browser_$ACTION"
           body="$(TOOL="$tool" ARGS="$args" node -e 'process.stdout.write(JSON.stringify({jsonrpc:"2.0",id:process.env.REQUEST_ID,method:"tools/call",params:{name:process.env.TOOL,arguments:JSON.parse(process.env.ARGS)}}))')"
-          body_file="$(mktemp)"
-          trap 'rm -f "$body_file"' EXIT
           auth_header="$(node <<'NODE'
           process.stdout.write(JSON.stringify({
             "cf-access-client-id": process.env.CF_ACCESS_CLIENT_ID,
@@ -88,12 +140,14 @@ jobs:
           }));
           NODE
           )"
-          status="$(curl --silent --show-error --output "$body_file" --write-out '%{http_code}' -X POST "https://loew-inspector-gateway.lrnoliv.workers.dev/mcp" -H "Authorization: $auth_header" -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID" -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET" -H "Content-Type: application/json" --data "$body")"
+          body_file="$(mktemp)"
+          trap 'rm -f "$body_file"' EXIT
+          status="$(curl --silent --show-error --output "$body_file" --write-out '%{http_code}'             -X POST "https://loew-inspector-gateway.lrnoliv.workers.dev/mcp"             -H "Authorization: $auth_header"             -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID"             -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET"             -H "Content-Type: application/json"             --data "$body")"
           test "$status" = "200"
           node - "$body_file" <<'NODE'
           const fs = require("node:fs");
           const parsed = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
-          if (parsed.error || parsed?.result?.isError || !parsed?.result?.structuredContent?.evidence_id) {
+          if (parsed.error || parsed?.result?.isError || !parsed?.result?.structuredContent?.ok) {
             console.error(JSON.stringify(parsed));
             process.exit(1);
           }
