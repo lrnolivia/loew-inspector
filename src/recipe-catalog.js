@@ -93,6 +93,25 @@ const BUILT_INS = Object.freeze({
       })
     ])
   }),
+  "field.inspector-compact": Object.freeze({
+    id: "field.inspector-compact",
+    schema_version: RECIPE_SCHEMA_VERSION,
+    recipe_version: 1,
+    title: "Floating Inspector geometry",
+    description: "Verify compact and expanded floating Inspector geometry, responsive short-window behavior, and hard viewport margins.",
+    real_project: true,
+    verified: true,
+    engine: "github-chromium",
+    steps: Object.freeze([
+      Object.freeze({ id: "canvas-first-paint", label: "Canvas first paint", action: "first-paint" }),
+      Object.freeze({ id: "float", label: "Float workspace", action: "workspace-layout", value: "Float" }),
+      Object.freeze({ id: "compact-900", label: "Compact Inspector · 1440×900", action: "inspector-geometry", mode: "compact", viewport: Object.freeze({ width: 1440, height: 900 }) }),
+      Object.freeze({ id: "compact-620", label: "Compact Inspector · 1000×620", action: "inspector-geometry", mode: "compact", viewport: Object.freeze({ width: 1000, height: 620 }) }),
+      Object.freeze({ id: "compact-440", label: "Compact Inspector · 1000×440", action: "inspector-geometry", mode: "compact", viewport: Object.freeze({ width: 1000, height: 440 }) }),
+      Object.freeze({ id: "expanded-900", label: "Expanded Inspector · 1440×900", action: "inspector-geometry", mode: "expanded", viewport: Object.freeze({ width: 1440, height: 900 }) }),
+      Object.freeze({ id: "drag-bounds", label: "Floating Inspector hard margins", action: "inspector-drag-bounds", viewport: Object.freeze({ width: 1000, height: 620 }) })
+    ])
+  }),
   "field.stage0": Object.freeze({
     id: "field.stage0",
     schema_version: RECIPE_SCHEMA_VERSION,

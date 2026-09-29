@@ -54,3 +54,24 @@ test("evidence runner keeps read-only QA and editable builder smoke as separate 
   assert.match(source, /routeKind = isBuilderSmoke/);
   assert.match(source, /qa-evidence/);
 });
+
+
+test("compact Inspector recipe verifies responsive geometry and hard margins", async () => {
+  const source = await readFile(new URL("./evidence-run.mjs", import.meta.url), "utf8");
+  assert.match(source, /data-workspace-right-toggle/);
+  assert.match(source, /data-inspector-compact-main-tools/);
+  assert.match(source, /data-inspector-compact-actions/);
+  assert.match(source, /inspector\.compact\.shell-width/);
+  assert.match(source, /inspector\.compact\.optical-inset/);
+  assert.match(source, /inspector\.expanded\.toolbar-bottom/);
+  assert.match(source, /inspector\.drag\.upper-left-bound/);
+  assert.match(source, /inspector\.drag\.lower-right-bound/);
+  assert.match(source, /page\.setViewportSize/);
+});
+
+test("evidence viewport metadata follows each deterministic recipe step", async () => {
+  const source = await readFile(new URL("./evidence-run.mjs", import.meta.url), "utf8");
+  assert.match(source, /const viewport = page\.viewportSize\(\)/);
+  assert.match(source, /width: viewport\?\.width/);
+  assert.match(source, /height: viewport\?\.height/);
+});

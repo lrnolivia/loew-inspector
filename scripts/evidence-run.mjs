@@ -80,7 +80,7 @@ async function postRun(status, completed, extra = {}) {
   return response.json();
 }
 
-async function uploadCapture({ step, index, screenshot, title, dom, accessibility, assertions, errors, stepStatus }) {
+async function uploadCapture({ step, index, screenshot, title, dom, accessibility, assertions, errors, stepStatus, viewport }) {
   const context = {
     project: "field",
     project_id: projectId,
@@ -96,7 +96,7 @@ async function uploadCapture({ step, index, screenshot, title, dom, accessibilit
     target_url: target.toString(),
     kind: "qa_capture",
     context,
-    viewport: { width: 1440, height: 900, deviceScaleFactor: 1 },
+    viewport: { width: viewport?.width || 1440, height: viewport?.height || 900, deviceScaleFactor: 1 },
     engine: "github-chromium",
     engine_reason: "deterministic_recipe",
     run_id: runId,
@@ -180,6 +180,199 @@ async function runInteraction(page, interaction) {
   throw new Error("Unsupported recipe interaction");
 }
 
+async function ensureInspectorMode(page, mode) {
+  const compact = page.locator("[data-workspace-right-toggle]").first();
+  const expandedBody = page.locator("[data-workspace-right-body]").first();
+
+  if (mode === "compact") {
+    if (!await compact.isVisible().catch(() => false)) {
+      const collapse = page.locator('[data-workspace-collapse][data-side="right"]').first();
+      await collapse.waitFor({ state: "visible", timeout: 7000 });
+      await collapse.click({ timeout: 7000 });
+      await compact.waitFor({ state: "visible", timeout: 7000 });
+    }
+    return;
+  }
+
+  if (await compact.isVisible().catch(() => false)) {
+    const expand = compact.locator('[data-workspace-collapse][data-side="right"]').first();
+    await expand.waitFor({ state: "visible", timeout: 7000 });
+    await expand.click({ timeout: 7000 });
+  }
+  await expandedBody.waitFor({ state: "visible", timeout: 7000 });
+}
+
+function round1(value) {
+  return Math.round(Number(value) * 10) / 10;
+}
+
+function pushAssertion(assertions, id, pass, detail) {
+  assertions.push({ id, status: pass ? "pass" : "fail", detail });
+  if (!pass) throw new Error(detail);
+}
+
+async function compactInspectorAssertions(page, step, assertions) {
+  const viewport = step.viewport || { width: 1440, height: 900 };
+  await page.setViewportSize(viewport);
+  await page.waitForTimeout(220);
+  await ensureInspectorMode(page, "compact");
+  await page.waitForTimeout(220);
+
+  const compact = page.locator("[data-workspace-right-toggle]").first();
+  const leftRail = page.locator("[data-left-menu-rail]").first();
+  const design = compact.getByRole("button", { name: /open design inspector/i }).first();
+  const main = compact.locator("[data-inspector-compact-main-tools]").first();
+  const actions = compact.locator("[data-inspector-compact-actions]").first();
+  const autoHide = actions.locator("[data-workspace-autohide]").first();
+  const collapse = actions.locator("[data-workspace-collapse]").first();
+
+  for (const locator of [compact,leftRail,design,main,actions,autoHide,collapse]) {
+    await locator.waitFor({ state: "visible", timeout: 7000 });
+  }
+
+  const [shell,left,button,mainRect,actionsRect,autoRect,collapseRect] = await Promise.all([
+    compact.boundingBox(), leftRail.boundingBox(), design.boundingBox(), main.boundingBox(),
+    actions.boundingBox(), autoHide.boundingBox(), collapse.boundingBox()
+  ]);
+  if (!shell || !left || !button || !mainRect || !actionsRect || !autoRect || !collapseRect) {
+    throw new Error("Compact Inspector geometry could not be measured");
+  }
+
+  const right = viewport.width - (shell.x + shell.width);
+  const bottom = viewport.height - (shell.y + shell.height);
+  const inset = (shell.width - button.width) / 2;
+
+  pushAssertion(assertions, "inspector.compact.shell-width",
+    Math.abs(shell.width - 52) <= 1,
+    "Compact Inspector width=" + round1(shell.width) + "px; expected 52px.");
+  pushAssertion(assertions, "inspector.compact.left-right-parity",
+    Math.abs(shell.width - left.width) <= 1,
+    "Right rail=" + round1(shell.width) + "px; left rail=" + round1(left.width) + "px.");
+  pushAssertion(assertions, "inspector.compact.control-width",
+    Math.abs(button.width - 32) <= 1,
+    "Design control width=" + round1(button.width) + "px; expected 32px.");
+  pushAssertion(assertions, "inspector.compact.optical-inset",
+    Math.abs(inset - 10) <= 1,
+    "Optical side inset=" + round1(inset) + "px; expected 10px.");
+  pushAssertion(assertions, "inspector.compact.viewport-margins",
+    shell.y >= 11.5 && right >= 11.5 && bottom >= 11.5,
+    "Compact margins top=" + round1(shell.y) + " right=" + round1(right) + " bottom=" + round1(bottom) + ".");
+  pushAssertion(assertions, "inspector.compact.actions-visible",
+    actionsRect.y >= shell.y - 0.5 &&
+      actionsRect.y + actionsRect.height <= shell.y + shell.height + 0.5 &&
+      autoRect.height > 0 && collapseRect.height > 0,
+    "Compact workspace actions stay visible inside the shell at " + viewport.width + "×" + viewport.height + ".");
+  pushAssertion(assertions, "inspector.compact.no-overlap",
+    mainRect.y + mainRect.height <= actionsRect.y + 0.5,
+    "Main tools bottom=" + round1(mainRect.y + mainRect.height) + "; actions top=" + round1(actionsRect.y) + ".");
+
+  assertions.push({
+    id: "inspector.compact.geometry",
+    status: "info",
+    detail: JSON.stringify({
+      viewport,
+      shell: { x: round1(shell.x), y: round1(shell.y), width: round1(shell.width), height: round1(shell.height) },
+      left_width: round1(left.width),
+      control_width: round1(button.width),
+      optical_inset: round1(inset),
+      margins: { right: round1(right), bottom: round1(bottom) },
+      main_height: round1(mainRect.height),
+      actions_y: round1(actionsRect.y)
+    }).slice(0, 300)
+  });
+}
+
+async function expandedInspectorAssertions(page, step, assertions) {
+  const viewport = step.viewport || { width: 1440, height: 900 };
+  await page.setViewportSize(viewport);
+  await page.waitForTimeout(220);
+  await ensureInspectorMode(page, "expanded");
+  await page.waitForTimeout(260);
+
+  const header = page.locator("[data-workspace-right-header]").first();
+  const body = page.locator("[data-workspace-right-body]").first();
+  const toolbar = page.locator("#bottom-toolbar-container").first();
+  for (const locator of [header,body,toolbar]) await locator.waitFor({ state: "visible", timeout: 7000 });
+
+  const [headRect,bodyRect,toolbarRect] = await Promise.all([
+    header.boundingBox(), body.boundingBox(), toolbar.boundingBox()
+  ]);
+  if (!headRect || !bodyRect || !toolbarRect) throw new Error("Expanded Inspector geometry could not be measured");
+
+  const right = viewport.width - (headRect.x + headRect.width);
+  const inspectorBottom = viewport.height - (bodyRect.y + bodyRect.height);
+  const toolbarBottom = viewport.height - (toolbarRect.y + toolbarRect.height);
+
+  pushAssertion(assertions, "inspector.expanded.viewport-margins",
+    headRect.y >= 11.5 && right >= 11.5 && inspectorBottom >= 11.5,
+    "Expanded margins top=" + round1(headRect.y) + " right=" + round1(right) + " bottom=" + round1(inspectorBottom) + ".");
+  pushAssertion(assertions, "inspector.expanded.toolbar-bottom",
+    Math.abs(inspectorBottom - toolbarBottom) <= 1,
+    "Inspector bottom=" + round1(inspectorBottom) + "px; toolbar bottom=" + round1(toolbarBottom) + "px.");
+
+  assertions.push({
+    id: "inspector.expanded.geometry",
+    status: "info",
+    detail: JSON.stringify({
+      viewport,
+      header: { x: round1(headRect.x), y: round1(headRect.y), width: round1(headRect.width), height: round1(headRect.height) },
+      body: { y: round1(bodyRect.y), height: round1(bodyRect.height) },
+      margins: { right: round1(right), inspector_bottom: round1(inspectorBottom), toolbar_bottom: round1(toolbarBottom) }
+    }).slice(0, 300)
+  });
+}
+
+async function dragBoundsAssertions(page, step, assertions) {
+  const viewport = step.viewport || { width: 1000, height: 620 };
+  await page.setViewportSize(viewport);
+  await page.waitForTimeout(220);
+  await ensureInspectorMode(page, "expanded");
+  await page.waitForTimeout(220);
+
+  const header = page.locator("[data-workspace-right-header]").first();
+  const body = page.locator("[data-workspace-right-body]").first();
+  const handle = page.locator("[data-right-pane-drag-handle]").first();
+  await handle.waitFor({ state: "visible", timeout: 7000 });
+
+  async function dragBy(dx, dy) {
+    const box = await handle.boundingBox();
+    if (!box) throw new Error("Floating Inspector drag handle missing");
+    const x = box.x + box.width / 2;
+    const y = box.y + box.height / 2;
+    await page.mouse.move(x, y);
+    await page.mouse.down();
+    await page.mouse.move(x + dx, y + dy, { steps: 8 });
+    await page.mouse.up();
+    await page.waitForTimeout(180);
+  }
+
+  await dragBy(-5000, -5000);
+  const upper = await header.boundingBox();
+  if (!upper) throw new Error("Inspector disappeared after upper-left drag");
+  pushAssertion(assertions, "inspector.drag.upper-left-bound",
+    upper.x >= 11.5 && upper.y >= 11.5,
+    "Upper-left drag stopped at x=" + round1(upper.x) + " y=" + round1(upper.y) + ".");
+
+  await dragBy(5000, 5000);
+  const [lowerHead,lowerBody] = await Promise.all([header.boundingBox(), body.boundingBox()]);
+  if (!lowerHead || !lowerBody) throw new Error("Inspector disappeared after lower-right drag");
+  const right = viewport.width - (lowerHead.x + lowerHead.width);
+  const bottom = viewport.height - (lowerBody.y + lowerBody.height);
+  pushAssertion(assertions, "inspector.drag.lower-right-bound",
+    right >= 11.5 && bottom >= 11.5,
+    "Lower-right drag stopped with right=" + round1(right) + " bottom=" + round1(bottom) + " margins.");
+
+  assertions.push({
+    id: "inspector.drag.geometry",
+    status: "info",
+    detail: JSON.stringify({
+      viewport,
+      upper_left: { x: round1(upper.x), y: round1(upper.y) },
+      lower_right: { right: round1(right), bottom: round1(bottom) }
+    })
+  });
+}
+
 async function executeStep(page, step) {
   const assertions = [];
   if (step.action === "first-paint") {
@@ -201,6 +394,15 @@ async function executeStep(page, step) {
   if (step.action === "interaction") {
     await runInteraction(page, step.interaction);
     assertions.push({ id: "interaction.completed", status: "pass", detail: step.interaction.action + " completed." });
+    return assertions;
+  }
+  if (step.action === "inspector-geometry") {
+    if (step.mode === "compact") await compactInspectorAssertions(page, step, assertions);
+    else await expandedInspectorAssertions(page, step, assertions);
+    return assertions;
+  }
+  if (step.action === "inspector-drag-bounds") {
+    await dragBoundsAssertions(page, step, assertions);
     return assertions;
   }
   throw new Error("Unsupported recipe step: " + step.action);
@@ -259,6 +461,7 @@ try {
 
     const summaries = await snapshotSummaries(page);
     const screenshot = await page.screenshot({ fullPage: true });
+    const viewport = page.viewportSize() || { width: 1440, height: 900 };
     await writeFile(
       "qa-evidence/" + String(index + 1).padStart(2, "0") + "-" + step.id + ".png",
       screenshot,
@@ -274,7 +477,8 @@ try {
       accessibility: summaries.accessibility,
       assertions,
       errors,
-      stepStatus
+      stepStatus,
+      viewport
     });
     completed += 1;
     captures.push({
