@@ -22,76 +22,20 @@
 - scope note: PR #44 implements the concrete Selection-colors locate path. No separate Effects-row locate UI was invented because no corresponding effect-locate interaction exists in current source.
 - record note: `state/field.json` still describes the legacy enabled API-backed Runner worker's blocked 429 state. It is not current Night Shift progress and was intentionally not rewritten as healthy.
 
-## 2026-09-29 — field editor chrome, Media, and effects systems
+## 2026-09-29 — field left-panel Inspector parity
 
-- report source: normal ChatGPT Project chat
-- chat name: `field editor chrome, Media, and effects systems` (assigned from the primary goals because no explicit chat title was exposed)
-- target: `lrnolivia/field@main`
-- field main at report time: `64fa810a66fc54d73c2f46ed2e352a8c3a3e568d`
-- continuation branch: `field/editor-chrome-media-effects-continuation-20260929`
-- primary goal: make field's editor chrome, toolbar popouts, Media flows, and effects rendering behave like one coherent professional design system while preserving source/Design/Preview parity.
-
-### Shipped in this chat
-
-- PR #107 → merge `d7db56b9f00781995acce53612f69e92f05493c2`
-  - introduced the toolbar-popout / Media / effects correction batch.
-  - Shadow editing now uses a style-patch path that avoids blindly overwriting the shared CSS `filter` channel when editing ordinary box shadows.
-  - GradientText shimmer/highlight moved to a CSS-driven animation path that can run in Design and Preview, and `textShadow` is forwarded to the inner glyph span that actually paints the text.
-  - normal Media toolbar browser widened to 560px; spring-from-toolbar motion and bottom origin pointer retained.
-  - Image/Video upload surfaces were shortened.
-  - toolbar menus moved away from separate list/icon modes toward mixed list + visual-card composition.
-
-- PR #125 → merge `20a8a9e53338f50f70f9e2a6ff1a2ae88a744b8c`
-  - replaced the padded bottom-line/pill active-tab treatment with the short accent rectangle on the far-left edge of the selected tab.
-  - aligned `ChromeTabBar` and `ToolSegmentedControl` on the same selected-state language.
-  - tightened Gallery creation preview/empty-state density.
-  - did not add Media to the left toolbar.
-
-- repository follow-ups on main:
-  - `297faceb`: removed Media from the Insert data model.
-  - `f55e2a24`: removed the legacy Media gallery route.
-  - current product truth: Media is a first-class main-toolbar tool, not a left-toolbar destination and not an Insert category.
-
-- PR #127 → merge `d8798d2cdecfeeb38be6b956fd67985712cecdf3`
-  - toolbar popout cards now use the newer Media-derived visual language: framed glyph, quiet surface, restrained border/hover behavior.
-  - toolbar cards changed from square-ish icon tiles to compact landscape rows.
-  - Media Image / Gallery / Video / Audio creation cards changed to shorter landscape cards.
-  - mixed list + card composition and existing spring/origin behavior were preserved.
-  - Media/Gallery tests and the production editor build passed on the PR head before merge.
-
-### Current verified state
-
-- active selected tabs use the left-edge accent marker.
-- Media exists on the main toolbar.
-- Media does not exist as a left-toolbar destination.
-- Media is removed from Insert.
-- toolbar mixed-menu cards use the Media-derived landscape treatment.
-- Media creation cards are compact landscape cards.
-- Media toolbar popover still uses anchored spring motion and a bottom origin pointer.
-- the Shadow style-patch implementation is present on current main.
-- the GradientText CSS shimmer path is present; the old `useStaticCanvas()` freeze path is absent.
-- GradientText forwards `textShadow` to the visible glyph span.
-- later unrelated PaintPicker / inspector work landed after these commits; the contracts above were rechecked on current main and remain present.
-
-### Remaining / not fully QA-closed
-
-- live visual QA for Shadow on a real selected object:
-  - ordinary box shadow visibly paints in Design,
-  - Preview matches,
-  - unrelated filter effects remain intact while Shadow changes.
-
-- live visual QA for GradientText shimmer:
-  - travelling highlight animates in Design,
-  - Preview matches Design,
-  - text shadow remains visible on the glyph paint host.
-
-- compact and expanded Image / Video / Gallery / Audio upload/create routes need a browser pass to prove there is no remaining clipping.
-
-- mixed toolbar menus need one final visual sweep in the running editor to confirm the balance of list rows versus compact cards feels intentional in each menu.
-
-- the featured `Browse media` block is still intentionally larger than the four compact creation cards; if it still dominates visually, shrink that featured block instead of making surrounding cards larger.
-
-### Continuation state
-
-No known implementation from this chat remains only in an unmerged branch. The continuation branch is cut from current `field@main`, so it contains every shipped code change from this chat plus the newer mainline work. Resume from that branch for any visual-QA-driven follow-up so there is one obvious place to pick up the remaining work.
-
+- chat identity: `field left-panel Inspector parity` (derived from the primary product goal; no explicit chat title was available).
+- target: `lrnolivia/field`
+- primary goal: bring every left-panel content/menu surface up to the Inspector design language while keeping the left icon rail / toolbar shell visually unchanged; centralize the chrome in shared field CSS so the editor can be tuned coherently.
+- implementation branch: `field/left-panel-inspector-parity-20260929`
+- PR: #124 — `feat: unify left-panel chrome with Inspector`
+- durable branch head: `3dd8ca23d54aa9a10c5ea4ee458cd59ad90ee860`
+- field `main` observed while writing this report: `64fa810a66fc54d73c2f46ed2e352a8c3a3e568d`. Lauren explicitly said another `main` is still coming, so this SHA is a snapshot only. Refresh `main` before any reconciliation or merge.
+- branch implementation already committed: shared `src/styles/field-chrome.css`; Interface contrast preference/runtime mixes; shared left-panel primitives; visible redesigns for Pages/Layers, Insert, Library/Presets, Media, Locale, CMS, Branches, Vibe/detached Vibe; left-origin floating/toolbar content adapters; final visual matrix coverage. Toolbar/rail shell styling was intentionally left alone.
+- recent implementation commits: `73f051d` Pages/Layers + Insert; `66ebe37` Library + Presets; `bc6ea0a` Media + Locale; `64d782e` CMS + Branches; `233c308` Vibe + auxiliary surfaces; `adc2cc5` final parity matrix; `3dd8ca2` detached-Vibe QA isolation.
+- exact-head verification already obtained on `3dd8ca2` before the moving-main conflict: candidate build passed; Inspector visual QA passed; candidate lint matched the then-current main baseline with no branch-specific lint delta. The left-panel visual matrix had not been confirmed complete before main drift interrupted promotion.
+- Float/Inspector ownership changed after this branch was built. This branch contains an earlier Float expansion repair (`a2cbc7d`), but another worker has since fixed Float as part of the incoming `main`. New `main` is authoritative for Float/Inspector behavior. Do not blindly carry the branch's older workspace/Float implementation over it; retain only left-panel work and any still-useful non-conflicting regression coverage.
+- continuation integrity: all product and QA code from this chat is committed on the implementation branch. Verified branch artifacts include `src/styles/field-chrome.css` blob `abd46a5a...`, `src/editor/e2e/left-panel-visual-qa.spec.ts` blob `42bab651...`, and `.github/workflows/left-panel-parity-verify.yml` blob `1c93cd3a...`. There is no local-only or uncommitted reconciliation code to recover; the interrupted merge-prep step never wrote to Git.
+- resume from live Git truth: wait for the incoming `main`, refresh PR #124/head/base/merge-base, recompute changed-file overlap, and use current `main` as semantic truth for every overlap (especially Float/Inspector). Reapply only the left-panel parity deltas. The overlap set had already grown as `main` moved, so do not trust the old four-file conflict list.
+- before final QA, update the parity workflow's stale historical baseline reference so candidate test/lint comparison is against the new `main`, not `f94bd17`.
+- final gate: exact reconciled head must pass build, left-panel visual matrix, Inspector/Float non-regression guard, and candidate-vs-current-main test/lint comparison. Then squash-merge PR #124 only after the branch is fresh and those gates are satisfied.
