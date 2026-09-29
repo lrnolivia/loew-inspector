@@ -10,6 +10,10 @@ Before doing project-execution work, read:
 
 `LOEW_CHAT_BIBLE.md` is the universal operating authority. This repository owns universal execution process; target repositories own product truth.
 
+Resolve the current repository from Runner project records and the target repository's live bootstrap before following historical handoffs. For field, the current target is **`lrnolivia/field`**. Do not fall back to historical `revyme-loewfi` / `revyme-loew` / `revyme-löew` repository names or old local checkout paths.
+
+Project QA files are overlays only. Bible section 11 controls QA engine routing, retry/watchdog behavior, classifications, fallbacks, danger-zone handoff, and promotion. A project may add paths and criteria; it may not silently replace Runner-first QA law.
+
 If the Bible is temporarily unavailable, follow the emergency invariants embedded in the target repository bootstrap and avoid destructive or ambiguous mutations until canonical authority is restored.
 
 ## QA escape discipline
