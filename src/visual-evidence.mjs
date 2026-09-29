@@ -41,7 +41,13 @@ export function normalizeVisualFilters(input = {}) {
   const clean = (value, max = 128) => {
     if (value == null || value === "") return null;
     const text = String(value);
-    if (text.length > max || !/^[a-zA-Z0-9._:/-]+$/.test(text)) throw new Error("Invalid visual filter");
+    if (
+      text.length > max ||
+      !/^[a-zA-Z0-9._:/-]+$/.test(text) ||
+      text.includes("..") ||
+      text.startsWith("/") ||
+      text.startsWith(":")
+    ) throw new Error("Invalid visual filter");
     return text;
   };
   const project = clean(input.project, 80);
