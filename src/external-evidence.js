@@ -7,9 +7,12 @@ const ENGINES = new Set(["http","github-chromium","browser-run"]);
 
 function safeText(value, max = 160) {
   if (value == null || value === "") return null;
-  const text = String(value);
-  if (text.length > max || /[\x00-\x1f\x7f]/.test(text)) throw new Error("Invalid evidence metadata");
-  return text;
+  const text = String(value)
+    .replace(/[\x00-\x1f\x7f]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, max);
+  return text || null;
 }
 
 function validateTarget(value) {
