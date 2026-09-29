@@ -1,3 +1,5 @@
+import { mandatoryRepairsForPull, compareSatisfiesRepair, decodeRepairLedger } from '../lib/shared-repairs.mjs';
+
 const API = 'https://api.github.com';
 const field = 'lrnolivia/field';
 const inspector = 'lrnolivia/loew-inspector';
@@ -56,13 +58,47 @@ function deploymentForHead(comments, sha) {
   return null;
 }
 
+const repairLedgerFile = await github(
+  `/repos/${field}/contents/.field/shared-repairs.json?ref=${encodeURIComponent('field/control')}`
+);
+const repairLedger = decodeRepairLedger(repairLedgerFile);
+
+async function missingRepairsForPull(pull) {
+  const applicable = mandatoryRepairsForPull(repairLedger, pull, field);
+  const missing = [];
+  for (const repair of applicable) {
+    const compare = await github(
+      `/repos/${field}/compare/${repair.canonical_repair_sha}...${pull.head.sha}`
+    );
+    if (!compareSatisfiesRepair(compare)) {
+      missing.push({
+        id: repair.id,
+        canonical_repair_sha: repair.canonical_repair_sha,
+        compare_status: compare.status ?? null,
+      });
+    }
+  }
+  return missing;
+}
+
 const pulls = await allPages(`/repos/${field}/pulls?state=open`);
 const runs = await allPages(`/repos/${inspector}/actions/workflows/qa-preview.yml/runs?event=workflow_dispatch`, 10, 'workflow_runs');
 const known = new Set(runs.map(run => run.display_title));
-const result = { checked: pulls.length, dispatched: [], already_queued: [], missing_deployment: [] };
+const result = { checked: pulls.length, dispatched: [], already_queued: [], missing_deployment: [], stale_baseline: [] };
 
 for (const pull of pulls) {
   const requestId = `field-pr${pull.number}-${pull.head.sha.slice(0, 7)}`;
+  const missingRepairs = await missingRepairsForPull(pull);
+  if (missingRepairs.length) {
+    result.stale_baseline.push({
+      classification: 'STALE_BASELINE — RECONCILE REQUIRED',
+      request_id: requestId,
+      pr: pull.number,
+      head_sha: pull.head.sha,
+      missing_repairs: missingRepairs,
+    });
+    continue;
+  }
   if (known.has(`field Preview QA / ${requestId}`)) {
     result.already_queued.push(requestId);
     continue;
