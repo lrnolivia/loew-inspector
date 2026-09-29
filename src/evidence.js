@@ -84,6 +84,8 @@ export async function storeEvidence(bucket, {
   fullPage = false,
   durationMs,
   context = null,
+  engine = "browser-run",
+  engineReason = "direct_browser_capture",
   extra = {}
 }) {
   if (!bucket || typeof bucket.put !== "function") throw new Error("Evidence R2 binding unavailable");
@@ -105,6 +107,8 @@ export async function storeEvidence(bucket, {
     expires_at: expiresAt,
     retention_days: RETENTION_DAYS,
     context: normalizedContext,
+    engine,
+    engine_reason: engineReason,
     viewport,
     selector,
     full_page: Boolean(fullPage),

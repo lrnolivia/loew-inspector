@@ -47,7 +47,11 @@ export async function runQuickAction(binding, action, options) {
   if (!(response instanceof Response)) throw new Error("Browser Run returned an invalid response");
   if (!response.ok) {
     const detail = (await response.text()).slice(0, 300);
-    throw new Error(`Browser Run ${action} failed with ${response.status}: ${detail}`);
+    const error = new Error(`Browser Run ${action} failed with status=${response.status}: ${detail}`);
+    error.status = response.status;
+    const retryAfter = Number(response.headers.get("retry-after") || detail.match(/retryAfter\s*=\s*(\d+)/i)?.[1] || 0);
+    if (retryAfter) error.retryAfter = retryAfter;
+    throw error;
   }
   return response;
 }

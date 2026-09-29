@@ -2,8 +2,10 @@ import { browserRequestOptions, runQuickAction } from "./browser.js";
 import { storeEvidence, decodeBase64Bytes, summarizeSnapshot, normalizeEvidenceContext } from "./evidence.js";
 import { openBrowserSession, interactBrowserSession, captureBrowserSession, closeBrowserSession } from "./session.js";
 import { runBrowserRecipe, listBrowserRecipes } from "./recipes.js";
+import { evidenceEngines, planEvidenceRequest, normalizeBrowserCapacityError } from "./controller.js";
+import { ingestExternalEvidence, upsertEvidenceRun } from "./external-evidence.js";
 
-const VERSION = "0.6.0";
+const VERSION = "0.7.0";
 const EVIDENCE_CONTEXT_SCHEMA = {
   type: "object",
   properties: {
@@ -413,6 +415,29 @@ async function mcp(request, access, env) {
           annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
         },
         {
+          name: "evidence_plan",
+          title: "Plan a loew evidence check",
+          description: "Choose the cheapest capable evidence engine deterministically. Known recipes route to GitHub Chromium; exploratory sessions reserve Browser Run.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              requires: { type: "array", items: { type: "string", enum: ["http","headers","json","redirects","render","screenshot","snapshot","interaction","recipe","compare","artifact","exploratory","session"] }, maxItems: 12 },
+              recipe: { type: "string" },
+              exploratory: { type: "boolean", default: false },
+              preferred_engine: { type: "string", enum: ["http","github-chromium","browser-run"] }
+            },
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
+        },
+        {
+          name: "evidence_engines",
+          title: "List loew evidence engines",
+          description: "List the evidence engines and their deterministic capabilities.",
+          inputSchema: { type: "object", properties: {}, additionalProperties: false },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
+        },
+        {
           name: "browser_close",
           title: "Close a loew.fi browser session",
           description: "Close a Browser Run session and mark its persisted session record closed.",
@@ -574,6 +599,16 @@ async function mcp(request, access, env) {
         return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
       }
 
+      if (name === "evidence_plan") {
+        const result = planEvidenceRequest(args);
+        return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
+      }
+
+      if (name === "evidence_engines") {
+        const result = { ok: true, engines: evidenceEngines() };
+        return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
+      }
+
       if (name === "browser_close") {
         const result = await closeBrowserSession(env.BROWSER, env.EVIDENCE, args.session_id);
         return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
@@ -581,6 +616,13 @@ async function mcp(request, access, env) {
 
       return rpcError(id, -32602, "Unknown tool");
     } catch (error) {
+      const capacity = normalizeBrowserCapacityError(error);
+      if (capacity) {
+        return rpc(id, {
+          content: [{ type: "text", text: JSON.stringify(capacity) }],
+          structuredContent: capacity
+        });
+      }
       return rpc(id, {
         content: [{ type: "text", text: error instanceof Error ? error.message : "Inspector action failed" }],
         isError: true
@@ -615,6 +657,16 @@ export default {
           "WWW-Authenticate": 'Bearer resource_metadata="https://inspector.loew.fi/.well-known/oauth-protected-resource"'
         }
       );
+    }
+
+    if (url.pathname === "/evidence/ingest") {
+      try { return await ingestExternalEvidence(request, env.EVIDENCE); }
+      catch (error) { return json({ error: error instanceof Error ? error.message : "Evidence ingest failed" }, 400); }
+    }
+
+    if (url.pathname === "/evidence/run") {
+      try { return await upsertEvidenceRun(request, env.EVIDENCE); }
+      catch (error) { return json({ error: error instanceof Error ? error.message : "Evidence run update failed" }, 400); }
     }
 
     if (url.pathname === "/mcp") return mcp(request, access, env);
