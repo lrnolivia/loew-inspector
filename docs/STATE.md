@@ -8,7 +8,11 @@
 - browser tools: `browser_screenshot`, `browser_snapshot`
 - normal Chat compatibility workflow: `capture.yml`
 - HTTP inspector remains unchanged as a separate diagnostic path
-- Quick Actions limitation is explicit: console errors and failed-request traces arrive with interactive Browser Run sessions in Batch 3, not the stateless screenshot/snapshot path
+- Quick Actions limitation is explicit: console errors and failed-request traces are not fabricated
+- interactive session tools: browser_open, browser_interact, browser_capture, browser_close
+- session state is Browser Run + private R2 metadata, never Worker process memory
+- interaction vocabulary is bounded; arbitrary JavaScript is not exposed
+- cross-call console/network event history remains marked unsupported because Browser Run does not replay prior CDP event streams to a newly connected client
 
 ## verified
 

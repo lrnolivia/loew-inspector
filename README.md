@@ -21,11 +21,17 @@ HTTP diagnostics    Browser Run
                     runner / visual
 ```
 
-Current Gen 2 read-only tools:
+Current Gen 2 tools:
 
 - `fetch_loew_url`
 - `browser_screenshot`
 - `browser_snapshot`
+- `browser_open`
+- `browser_interact`
+- `browser_capture`
+- `browser_close`
+
+Persistent interaction uses Browser Run session ids rather than Worker memory. Each MCP request reconnects to the Browser Run session, refreshes the Access request header from the current authenticated call, and records a compact trace in private R2 session metadata. The interaction tool accepts only bounded semantic actions; callers cannot provide arbitrary JavaScript.
 
 Browser navigation is still restricted to HTTPS `loew.fi` and `*.loew.fi`. The inspector forwards its authenticated Access JWT as a browser request header; credentials are never embedded in URLs or returned in evidence metadata. Redirect validation remains in the HTTP diagnostic path.
 

@@ -1,7 +1,8 @@
 import { browserRequestOptions, runQuickAction } from "./browser.js";
 import { storeEvidence, decodeBase64Bytes, summarizeSnapshot } from "./evidence.js";
+import { openBrowserSession, interactBrowserSession, captureBrowserSession, closeBrowserSession } from "./session.js";
 
-const VERSION = "0.4.0";
+const VERSION = "0.5.0";
 const ACCESS_ISSUER = "https://loewfi.cloudflareaccess.com";
 const ACCESS_AUD = "6d19d2ef9eea644a9f55a049699a31110150fefebb1bca8c89632b9dd149ccd6";
 const BRIDGE_ACCESS_AUD = "042e98668017c064913a05705dd5e26de48153116ecb9bd574ec1128a559fd23";
@@ -295,6 +296,90 @@ async function mcp(request, access, env) {
             additionalProperties: false
           },
           annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
+        },
+        {
+          name: "browser_open",
+          title: "Open a loew.fi browser session",
+          description: "Open a persistent Browser Run session on an HTTPS loew.fi target and return opaque session and target ids for controlled follow-up interactions.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              url: { type: "string", description: "HTTPS loew.fi URL" },
+              keep_alive_ms: { type: "number", minimum: 10000, maximum: 1200000, default: 600000 },
+              viewport: {
+                type: "object",
+                properties: {
+                  width: { type: "number", minimum: 320, maximum: 3840 },
+                  height: { type: "number", minimum: 240, maximum: 2160 },
+                  deviceScaleFactor: { type: "number", minimum: 1, maximum: 2 }
+                },
+                additionalProperties: false
+              }
+            },
+            required: ["url"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false }
+        },
+        {
+          name: "browser_interact",
+          title: "Interact with a loew.fi browser session",
+          description: "Perform one bounded semantic action in an existing loew.fi Browser Run session. No arbitrary JavaScript is accepted.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              session_id: { type: "string" },
+              target_id: { type: "string" },
+              action: { type: "string", enum: ["click","double_click","hover","type","press","select","scroll","wait"] },
+              locator: {
+                type: "object",
+                properties: {
+                  type: { type: "string", enum: ["role","text","test_id","css"] },
+                  value: { type: "string" },
+                  name: { type: "string" }
+                },
+                required: ["type","value"],
+                additionalProperties: false
+              },
+              value: { type: "string" },
+              key: { type: "string" },
+              delta_x: { type: "number", minimum: -5000, maximum: 5000 },
+              delta_y: { type: "number", minimum: -5000, maximum: 5000 },
+              wait_ms: { type: "number", minimum: 0, maximum: 10000 }
+            },
+            required: ["session_id","action"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false }
+        },
+        {
+          name: "browser_capture",
+          title: "Capture an interactive browser session",
+          description: "Capture the current page in an existing Browser Run session and persist PNG evidence with the session interaction trace.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              session_id: { type: "string" },
+              target_id: { type: "string" },
+              request_id: { type: "string" },
+              full_page: { type: "boolean", default: false }
+            },
+            required: ["session_id"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
+        },
+        {
+          name: "browser_close",
+          title: "Close a loew.fi browser session",
+          description: "Close a Browser Run session and mark its persisted session record closed.",
+          inputSchema: {
+            type: "object",
+            properties: { session_id: { type: "string" } },
+            required: ["session_id"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false }
         }
       ]
     });
@@ -385,6 +470,49 @@ async function mcp(request, access, env) {
           content: [{ type: "text", text: JSON.stringify(metadata) }],
           structuredContent: metadata
         });
+      }
+
+      if (name === "browser_open") {
+        const target = validateTarget(args.url);
+        const result = await openBrowserSession(env.BROWSER, env.EVIDENCE, {
+          url: target,
+          accessJwt: access.token,
+          viewport: args.viewport,
+          keepAliveMs: args.keep_alive_ms
+        });
+        return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
+      }
+
+      if (name === "browser_interact") {
+        const result = await interactBrowserSession(env.BROWSER, env.EVIDENCE, {
+          sessionId: args.session_id,
+          targetId: args.target_id,
+          accessJwt: access.token,
+          action: args.action,
+          locator: args.locator,
+          value: args.value,
+          key: args.key,
+          deltaX: args.delta_x,
+          deltaY: args.delta_y,
+          waitMs: args.wait_ms
+        });
+        return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
+      }
+
+      if (name === "browser_capture") {
+        const result = await captureBrowserSession(env.BROWSER, env.EVIDENCE, {
+          sessionId: args.session_id,
+          targetId: args.target_id,
+          accessJwt: access.token,
+          requestId: args.request_id,
+          fullPage: args.full_page
+        });
+        return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
+      }
+
+      if (name === "browser_close") {
+        const result = await closeBrowserSession(env.BROWSER, env.EVIDENCE, args.session_id);
+        return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
       }
 
       return rpcError(id, -32602, "Unknown tool");
