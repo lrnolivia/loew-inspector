@@ -1019,3 +1019,68 @@ body[data-view="overview"] .diagnostics-only { display: none; }
   .visual-run-progress { display: none; }
   .visual-run-time { display: none; }
 }
+
+
+/* Terra Prime — deterministic run review */
+.run-review {
+  margin: 14px 0 12px;
+  border-top: 1px solid var(--color-border);
+  border-bottom: 1px solid var(--color-border);
+  background: color-mix(in srgb, var(--color-surface) 58%, transparent);
+}
+.run-review-head {
+  min-height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 9px 12px;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 72%, transparent);
+}
+.run-review-head > div:first-child { display: grid; grid-template-columns: auto auto; align-items: baseline; gap: 4px 10px; }
+.run-review-kicker { color: var(--color-neutral); font-size: 9px; letter-spacing: .08em; text-transform: uppercase; }
+.run-review-head strong { font-size: 11px; text-transform: uppercase; letter-spacing: .07em; }
+.run-review-head small { grid-column: 1 / -1; color: var(--color-text-secondary); font-size: 10px; }
+.run-review-pass .run-review-head strong { color: var(--color-success); }
+.run-review-changed .run-review-head strong { color: var(--color-warning); }
+.run-review-failed .run-review-head strong { color: var(--color-error); }
+.run-review-policy { display: grid; justify-items: end; gap: 3px; color: var(--color-neutral); font-size: 9px; }
+.run-review-steps { display: grid; }
+.run-review-step {
+  min-height: 42px;
+  display: grid;
+  grid-template-columns: 26px minmax(0,1fr) 70px;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--color-border) 52%, transparent);
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.run-review-step:last-child { border-bottom: 0; }
+.run-review-step:hover { background: var(--color-interactive); }
+.run-review-step-index { color: var(--color-neutral); font-size: 9px; text-align: center; }
+.run-review-step-copy { min-width: 0; display: grid; gap: 2px; }
+.run-review-step-copy strong { font-size: 10px; }
+.run-review-step-copy small { color: var(--color-neutral); font-size: 9px; }
+.run-review-step-result { justify-self: end; padding-right: 10px; font-size: 9px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase; }
+.run-review-step-pass .run-review-step-result { color: var(--color-success); }
+.run-review-step-changed .run-review-step-result { color: var(--color-warning); }
+.run-review-step-failed .run-review-step-result { color: var(--color-error); }
+
+.assertion-list { list-style: none; display: grid; gap: 6px; margin: 0; padding: 0; }
+.assertion-list li { display: grid; grid-template-columns: 48px minmax(0,1fr); gap: 2px 8px; align-items: baseline; font-size: 9px; }
+.assertion-list li > span { grid-row: 1 / span 2; text-transform: uppercase; letter-spacing: .07em; }
+.assertion-list li > strong { color: var(--color-text-secondary); font-size: 10px; }
+.assertion-list li > small { color: var(--color-neutral); font-size: 9px; }
+.assertion-pass > span { color: var(--color-success); }
+.assertion-fail > span { color: var(--color-error); }
+.assertion-info > span { color: var(--color-neutral); }
+
+@media (max-width: 700px) {
+  .run-review-head { align-items: flex-start; flex-direction: column; }
+  .run-review-policy { justify-items: start; }
+}

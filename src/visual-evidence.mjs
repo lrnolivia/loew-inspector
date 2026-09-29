@@ -102,19 +102,33 @@ export async function getVisualImage(bucket, evidenceId) {
 }
 
 
+function accessibilitySignature(value) {
+  if (!value || typeof value !== "object") return null;
+  return {
+    available: Boolean(value.available),
+    node_count: Number.isFinite(Number(value.node_count)) ? Number(value.node_count) : null,
+    line_count: Number.isFinite(Number(value.line_count)) ? Number(value.line_count) : null,
+    bytes: Number.isFinite(Number(value.bytes)) ? Number(value.bytes) : null
+  };
+}
+
 export function compareEvidenceRecords(base, current) {
   if (!base || !current) throw new Error("Both evidence records are required");
   const sameViewport = Number(base.viewport?.width) === Number(current.viewport?.width) &&
     Number(base.viewport?.height) === Number(current.viewport?.height);
   const domComparable = Boolean(base.dom && current.dom);
-  const a11yComparable = Boolean(base.accessibility && current.accessibility);
+  const baseA11y = accessibilitySignature(base.accessibility);
+  const currentA11y = accessibilitySignature(current.accessibility);
+  const a11yComparable = Boolean(baseA11y && currentA11y);
   const domChanged = domComparable && (
     Number(base.dom.html_bytes) !== Number(current.dom.html_bytes) ||
     Number(base.dom.element_tag_count) !== Number(current.dom.element_tag_count)
   );
   const a11yChanged = a11yComparable && (
-    Number(base.accessibility.node_count) !== Number(current.accessibility.node_count) ||
-    Boolean(base.accessibility.available) !== Boolean(current.accessibility.available)
+    baseA11y.available !== currentA11y.available ||
+    (baseA11y.node_count != null && currentA11y.node_count != null
+      ? baseA11y.node_count !== currentA11y.node_count
+      : baseA11y.line_count !== currentA11y.line_count || baseA11y.bytes !== currentA11y.bytes)
   );
   const contextMatch = (base.context?.project ?? null) === (current.context?.project ?? null) &&
     (base.context?.surface ?? null) === (current.context?.surface ?? null);
@@ -164,4 +178,100 @@ export async function listVisualRuns(bucket, limit = 20, filters = {}) {
     .sort((a, b) => String(b.updated_at || b.created_at || "").localeCompare(String(a.updated_at || a.created_at || "")))
     .slice(0, Math.max(1, Math.min(100, Number(limit) || 20)));
   return { ok: true, count: runs.length, filters: selected, runs };
+}
+
+
+export const BASELINE_POLICY = "previous_same_step_same_project_environment";
+
+export function evidenceAssertionState(record) {
+  const assertions = Array.isArray(record?.assertions) ? record.assertions : [];
+  if (assertions.some(item => item?.status === "fail")) return "failed";
+  const trace = Array.isArray(record?.trace) ? record.trace : [];
+  if (trace.some(item => item?.status === "failed")) return "failed";
+  if (assertions.some(item => item?.status === "pass")) return "pass";
+  return "unknown";
+}
+
+function baselineCompatible(candidate, current) {
+  if (!candidate || !current || candidate.evidence_id === current.evidence_id) return false;
+  if (!candidate.run_id || candidate.run_id === current.run_id) return false;
+  if (candidate.context?.project !== current.context?.project) return false;
+  if (candidate.context?.environment !== current.context?.environment) return false;
+  if ((candidate.suite ?? null) !== (current.suite ?? null)) return false;
+  if ((candidate.step_id ?? null) !== (current.step_id ?? null)) return false;
+  if (evidenceAssertionState(candidate) === "failed") return false;
+  const candidateTime = Date.parse(candidate.captured_at || "");
+  const currentTime = Date.parse(current.captured_at || "");
+  return Number.isFinite(candidateTime) && Number.isFinite(currentTime) && candidateTime < currentTime;
+}
+
+export function selectBaselineEvidence(records, current) {
+  return records
+    .filter(candidate => baselineCompatible(candidate, current))
+    .sort((a, b) => String(b.captured_at || "").localeCompare(String(a.captured_at || "")))[0] || null;
+}
+
+export function reviewRunRecords(run, allRecords) {
+  if (!run || !isRunId(run.run_id)) throw new Error("Invalid visual run");
+  const current = allRecords
+    .filter(record => record?.run_id === run.run_id && isEvidenceId(record.evidence_id))
+    .sort((a, b) => Number(a.step_index || 0) - Number(b.step_index || 0) || String(a.captured_at || "").localeCompare(String(b.captured_at || "")));
+
+  const steps = current.map(record => {
+    const assertionState = evidenceAssertionState(record);
+    const baseline = selectBaselineEvidence(allRecords, record);
+    const comparison = baseline ? compareEvidenceRecords(baseline, record) : null;
+    const result = assertionState === "failed" ? "failed" : comparison?.result === "changed" ? "changed" : "pass";
+    return {
+      step_id: record.step_id || null,
+      step_label: record.step_label || record.step_id || "capture",
+      step_index: Number(record.step_index || 0),
+      current_evidence_id: record.evidence_id,
+      baseline_evidence_id: baseline?.evidence_id || null,
+      baseline_available: Boolean(baseline),
+      assertion_state: assertionState,
+      assertions: Array.isArray(record.assertions) ? record.assertions : [],
+      comparison,
+      result
+    };
+  });
+
+  const counts = {
+    pass: steps.filter(step => step.result === "pass").length,
+    changed: steps.filter(step => step.result === "changed").length,
+    failed: steps.filter(step => step.result === "failed").length,
+    baseline_missing: steps.filter(step => !step.baseline_available).length
+  };
+  const firstDivergence = steps.find(step => step.result === "failed" || step.result === "changed") || null;
+  const result = counts.failed ? "failed" : counts.changed ? "changed" : "pass";
+
+  return {
+    run_id: run.run_id,
+    result,
+    baseline_policy: BASELINE_POLICY,
+    counts,
+    first_divergence: firstDivergence ? {
+      step_id: firstDivergence.step_id,
+      step_label: firstDivergence.step_label,
+      step_index: firstDivergence.step_index,
+      result: firstDivergence.result,
+      current_evidence_id: firstDivergence.current_evidence_id,
+      baseline_evidence_id: firstDivergence.baseline_evidence_id
+    } : null,
+    steps
+  };
+}
+
+export async function reviewVisualRun(bucket, runId) {
+  if (!isRunId(runId)) return null;
+  const runObject = await bucket.get(RUN_PREFIX + runId + ".json");
+  if (!runObject) return null;
+  let run;
+  try { run = await runObject.json(); } catch { return null; }
+  const objects = await listAllObjects(bucket);
+  const keys = metadataKeys(objects);
+  const records = (await Promise.all(keys.map(key => readJsonObject(bucket, key))))
+    .filter(record => record && isEvidenceId(record.evidence_id))
+    .map(record => ({ ...record, screenshot_url: "/api/visual/" + encodeURIComponent(record.evidence_id) + "/image" }));
+  return { ok: true, run, review: reviewRunRecords(run, records) };
 }

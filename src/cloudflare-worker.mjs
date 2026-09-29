@@ -1,5 +1,5 @@
 import { applyWorkerSettings, publicWorkerSettings } from "./settings.mjs";
-import { listVisualEvidence, getVisualEvidence, getVisualImage, compareVisualEvidence, listVisualRuns } from "./visual-evidence.mjs";
+import { listVisualEvidence, getVisualEvidence, getVisualImage, compareVisualEvidence, listVisualRuns, reviewVisualRun } from "./visual-evidence.mjs";
 const GITHUB_API = "https://api.github.com";
 const OWNER = "lrnolivia";
 const REPOSITORY = "loew-runner";
@@ -176,16 +176,22 @@ async function handleApi(request, env) {
     return json(await listVisualRuns(env.EVIDENCE, 30, {
       project: url.searchParams.get("project"),
       environment: url.searchParams.get("environment"),
-      pr: url.searchParams.get("pr"),
-      run: url.searchParams.get("run")
+      pr: url.searchParams.get("pr")
     }));
+  }
+
+  const runReviewMatch = url.pathname.match(/^\/api\/visual\/runs\/(run_[a-zA-Z0-9._-]{8,128})\/review$/);
+  if (request.method === "GET" && runReviewMatch) {
+    const review = await reviewVisualRun(env.EVIDENCE, runReviewMatch[1]);
+    return review ? json(review) : json({ error: "Evidence run not found." }, 404);
   }
 
   if (request.method === "GET" && url.pathname === "/api/visual") {
     return json(await listVisualEvidence(env.EVIDENCE, 60, {
       project: url.searchParams.get("project"),
       environment: url.searchParams.get("environment"),
-      pr: url.searchParams.get("pr")
+      pr: url.searchParams.get("pr"),
+      run: url.searchParams.get("run")
     }));
   }
 

@@ -22,6 +22,7 @@ let currentSection = "workers";
 let visualEvidence = [];
 let visualRuns = [];
 let selectedRunId = null;
+let visualRunReview = null;
 let selectedEvidenceId = null;
 let baselineEvidenceId = null;
 let comparisonState = null;
@@ -108,6 +109,7 @@ function renderVisualRuns() {
   visualRunsEl.querySelectorAll("[data-run-id]").forEach(button => {
     button.addEventListener("click", () => {
       selectedRunId = selectedRunId === button.dataset.runId ? null : button.dataset.runId;
+      visualRunReview = null;
       selectedEvidenceId = null;
       baselineEvidenceId = null;
       comparisonState = null;
@@ -180,6 +182,43 @@ async function loadComparison() {
   renderVisualSelected();
 }
 
+function reviewStepTone(result) {
+  return ["pass","changed","failed"].includes(result) ? result : "pass";
+}
+
+function renderRunReview() {
+  const review = visualRunReview?.review;
+  if (!selectedRunId || !review) return "";
+  const first = review.first_divergence;
+  const headline = first
+    ? "first divergence · " + (first.step_label || first.step_id || "step") + " · " + first.result
+    : "no deterministic divergence";
+  return `
+    <section class="run-review run-review-${escapeHtml(review.result)}" aria-label="Run review">
+      <div class="run-review-head">
+        <div>
+          <span class="run-review-kicker">review</span>
+          <strong>${escapeHtml(review.result)}</strong>
+          <small>${escapeHtml(headline)}</small>
+        </div>
+        <div class="run-review-policy">
+          <span>${escapeHtml(review.baseline_policy || "no baseline policy")}</span>
+          <span>${escapeHtml(review.counts?.pass || 0)} pass · ${escapeHtml(review.counts?.changed || 0)} changed · ${escapeHtml(review.counts?.failed || 0)} failed · ${escapeHtml(review.counts?.baseline_missing || 0)} without baseline</span>
+        </div>
+      </div>
+      <div class="run-review-steps">
+        ${(review.steps || []).map(step => `
+          <button type="button" class="run-review-step run-review-step-${reviewStepTone(step.result)}" data-review-evidence-id="${escapeHtml(step.current_evidence_id)}">
+            <span class="run-review-step-index">${escapeHtml(step.step_index || "—")}</span>
+            <span class="run-review-step-copy"><strong>${escapeHtml(step.step_label || step.step_id || "capture")}</strong><small>${step.baseline_available ? "baseline matched" : "no prior baseline"}</small></span>
+            <span class="run-review-step-result">${escapeHtml(step.result)}</span>
+          </button>
+        `).join("")}
+      </div>
+    </section>
+  `;
+}
+
 function renderVisualSelected() {
   if (!visualEvidence.length) {
     visualContent.innerHTML = '<div class="visual-empty"><span class="visual-empty-mark">◌</span><strong>No visual evidence yet</strong><span>Ask inspector to capture a loew.fi surface.</span></div>';
@@ -194,6 +233,7 @@ function renderVisualSelected() {
   visualCount.textContent = visualEvidence.length + (visualEvidence.length === 1 ? " capture" : " captures");
 
   const trace = Array.isArray(selected.trace) ? selected.trace : [];
+  const assertions = Array.isArray(selected.assertions) ? selected.assertions : [];
   const context = selected.context || {};
   const comparison = comparisonState?.comparison;
   const facts = [
@@ -215,6 +255,7 @@ function renderVisualSelected() {
   ];
 
   visualContent.innerHTML = `
+    ${renderRunReview()}
     <div class="visual-main">
       ${baselineEvidenceId && baselineEvidenceId !== selectedEvidenceId ? `
         <div class="compare-summary compare-summary-${comparisonState?.error ? "failed" : comparison?.result || "checking"}">
@@ -265,6 +306,12 @@ function renderVisualSelected() {
             : '<div class="state-copy">Single-shot capture · no interaction trace.</div>'}
         </section>
         <section class="technical-section">
+          <h3>assertions</h3>
+          ${assertions.length
+            ? '<ul class="assertion-list">' + assertions.map(item => '<li class="assertion-' + escapeHtml(item.status || "info") + '"><span>' + escapeHtml(item.status || "info") + '</span><strong>' + escapeHtml(item.id || "assertion") + '</strong><small>' + escapeHtml(item.detail || "") + '</small></li>').join("") + '</ul>'
+            : '<div class="state-copy">No deterministic assertions recorded for this capture.</div>'}
+        </section>
+        <section class="technical-section">
           <h3>evidence</h3>
           <dl class="evidence-facts">
             ${facts.map(([label,value]) => '<div class="evidence-fact"><dt>' + escapeHtml(label) + '</dt><dd>' + escapeHtml(value) + '</dd></div>').join("")}
@@ -299,6 +346,15 @@ function renderVisualSelected() {
     </aside>
   `;
 
+  visualContent.querySelectorAll("[data-review-evidence-id]").forEach(button => {
+    button.addEventListener("click", () => {
+      selectedEvidenceId = button.dataset.reviewEvidenceId;
+      baselineEvidenceId = null;
+      comparisonState = null;
+      renderVisualSelected();
+    });
+  });
+
   visualContent.querySelectorAll("[data-evidence-id]").forEach(button => {
     button.addEventListener("click", () => {
       selectedEvidenceId = button.dataset.evidenceId;
@@ -324,18 +380,21 @@ async function loadVisual() {
     if (visualPrFilter?.value) params.set("pr", visualPrFilter.value);
     const runParams = new URLSearchParams(params);
     if (selectedRunId) params.set("run", selectedRunId);
-    const [payload, runsPayload] = await Promise.all([
+    const [payload, runsPayload, reviewPayload] = await Promise.all([
       api("/api/visual" + (params.size ? "?" + params.toString() : "")),
-      api("/api/visual/runs" + (runParams.size ? "?" + runParams.toString() : ""))
+      api("/api/visual/runs" + (runParams.size ? "?" + runParams.toString() : "")),
+      selectedRunId ? api("/api/visual/runs/" + encodeURIComponent(selectedRunId) + "/review") : Promise.resolve(null)
     ]);
     visualEvidence = Array.isArray(payload.evidence) ? payload.evidence : [];
     visualRuns = Array.isArray(runsPayload.runs) ? runsPayload.runs : [];
+    visualRunReview = reviewPayload;
     renderVisualRuns();
     renderVisualSelected();
     setConnection("good", "CONNECTED");
   } catch (error) {
     visualEvidence = [];
     visualRuns = [];
+    visualRunReview = null;
     renderVisualRuns();
     visualCount.textContent = "";
     visualContent.innerHTML = '<div class="visual-empty"><span class="visual-empty-mark">×</span><strong>Evidence unavailable</strong><span>' + escapeHtml(error.message) + '</span></div>';
