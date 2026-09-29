@@ -30,3 +30,10 @@ test("evidence runner resolves recipes from the versioned catalog or Inspector s
   assert.match(source, /recipe_version/);
   assert.match(source, /workspace\.mode/);
 });
+
+
+test("workspace layout recipe reuses an already-expanded control between suite steps", async () => {
+  const source = await readFile(new URL("./evidence-run.mjs", import.meta.url), "utf8");
+  assert.match(source, /getAttribute\("aria-expanded"\) !== "true"/);
+  assert.doesNotMatch(source, /await control\.locator\("\[data-workspace-mode-trigger\]"\)\.hover/);
+});

@@ -135,8 +135,10 @@ async function waitForFirstPaint(page) {
 async function clickLayout(page, value) {
   const control = page.locator("[data-workspace-layout-control]").first();
   const trigger = control.locator("[data-workspace-mode-trigger]").first();
-  await trigger.hover({ timeout: 7000 });
-  await page.waitForTimeout(180);
+  if (await trigger.getAttribute("aria-expanded") !== "true") {
+    await trigger.hover({ timeout: 7000 });
+    await page.waitForTimeout(180);
+  }
 
   const option = control.getByRole("button").filter({ hasText: value }).first();
   await option.waitFor({ state: "visible", timeout: 7000 });
@@ -182,8 +184,6 @@ async function executeStep(page, step) {
   if (step.action === "workspace-layout") {
     await clickLayout(page, step.value);
     const control = page.locator("[data-workspace-layout-control]").first();
-    await control.locator("[data-workspace-mode-trigger]").hover({ timeout: 7000 });
-    await page.waitForTimeout(120);
     const option = control.getByRole("button").filter({ hasText: step.value }).first();
     const pressed = await option.getAttribute("aria-pressed");
     const pass = pressed === "true";
