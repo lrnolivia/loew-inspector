@@ -139,12 +139,14 @@ async function waitForFirstPaint(page) {
 }
 
 async function clickLayout(page, value) {
-  const exact = page.getByRole("button", { name: value, exact: true }).first();
-  if (await exact.count()) {
-    await exact.click({ timeout: 7000 });
-  } else {
-    await page.getByText(value, { exact: true }).first().click({ timeout: 7000 });
-  }
+  const control = page.locator("[data-workspace-layout-control]").first();
+  const trigger = control.locator("[data-workspace-mode-trigger]").first();
+  await trigger.hover({ timeout: 7000 });
+  await page.waitForTimeout(180);
+
+  const option = control.getByRole("button").filter({ hasText: value }).first();
+  await option.waitFor({ state: "visible", timeout: 7000 });
+  await option.click({ timeout: 7000 });
   await page.waitForTimeout(350);
 }
 
