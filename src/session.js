@@ -446,3 +446,16 @@ export function validateInteractionShape(args) {
   if (args.action === "wait" && (Number(args.waitMs) < 0 || Number(args.waitMs) > 10000)) throw new Error("Wait out of range");
   return true;
 }
+
+
+export async function getBrowserSessionTrace(bucket, sessionId) {
+  const meta = await readSession(bucket, assertSessionId(sessionId));
+  return {
+    session_id: meta.session_id,
+    target_url: meta.target_url,
+    current_url: meta.current_url,
+    context: meta.context ?? null,
+    status: meta.status,
+    trace: Array.isArray(meta.trace) ? meta.trace.slice(0, MAX_TRACE) : []
+  };
+}

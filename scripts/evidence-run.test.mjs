@@ -21,3 +21,12 @@ test("workspace layout recipes expand the real field layout control", async () =
   assert.match(source, /data-workspace-mode-trigger/);
   assert.match(source, /filter\(\{ hasText: value \}\)/);
 });
+
+
+test("evidence runner resolves recipes from the versioned catalog or Inspector store", async () => {
+  const source = await readFile(new URL("./evidence-run.mjs", import.meta.url), "utf8");
+  assert.match(source, /getBuiltInRecipe/);
+  assert.match(source, /\/recipe\//);
+  assert.match(source, /recipe_version/);
+  assert.match(source, /workspace\.mode/);
+});

@@ -4,6 +4,7 @@ import { openBrowserSession, interactBrowserSession, captureBrowserSession, clos
 import { runBrowserRecipe, listBrowserRecipes } from "./recipes.js";
 import { evidenceEngines, planEvidenceRequest, normalizeBrowserCapacityError } from "./controller.js";
 import { ingestExternalEvidence, upsertEvidenceRun } from "./external-evidence.js";
+import { getRecipe, listRecipes, saveRecipeFromSession } from "./recipe-store.js";
 
 const VERSION = "0.7.0";
 const EVIDENCE_CONTEXT_SCHEMA = {
@@ -438,6 +439,30 @@ async function mcp(request, access, env) {
           annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
         },
         {
+          name: "recipe_list",
+          title: "List loew visual QA recipes",
+          description: "List versioned built-in and saved deterministic evidence recipes.",
+          inputSchema: { type: "object", properties: {}, additionalProperties: false },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
+        },
+        {
+          name: "recipe_from_session",
+          title: "Save a browser trace as a deterministic QA recipe",
+          description: "Compile replayable bounded interactions from an Inspector browser session into a versioned recipe stored in private evidence R2.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              session_id: { type: "string" },
+              recipe_id: { type: "string" },
+              title: { type: "string" },
+              description: { type: "string" }
+            },
+            required: ["session_id","recipe_id"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false }
+        },
+        {
           name: "browser_close",
           title: "Close a loew.fi browser session",
           description: "Close a Browser Run session and mark its persisted session record closed.",
@@ -609,6 +634,22 @@ async function mcp(request, access, env) {
         return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
       }
 
+      if (name === "recipe_list") {
+        const result = { ok: true, recipes: await listRecipes(env.EVIDENCE) };
+        return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
+      }
+
+      if (name === "recipe_from_session") {
+        const recipe = await saveRecipeFromSession(env.EVIDENCE, {
+          sessionId: args.session_id,
+          recipeId: args.recipe_id,
+          title: args.title,
+          description: args.description
+        });
+        const result = { ok: true, recipe };
+        return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
+      }
+
       if (name === "browser_close") {
         const result = await closeBrowserSession(env.BROWSER, env.EVIDENCE, args.session_id);
         return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
@@ -657,6 +698,21 @@ export default {
           "WWW-Authenticate": 'Bearer resource_metadata="https://inspector.loew.fi/.well-known/oauth-protected-resource"'
         }
       );
+    }
+
+    const recipeMatch = url.pathname.match(/^\/recipe\/([a-z0-9][a-z0-9._-]{2,80})$/);
+    if (request.method === "GET" && recipeMatch) {
+      try {
+        const recipe = await getRecipe(env.EVIDENCE, recipeMatch[1]);
+        return recipe ? json({ ok: true, recipe }) : json({ error: "Recipe not found" }, 404);
+      } catch (error) {
+        return json({ error: error instanceof Error ? error.message : "Recipe lookup failed" }, 400);
+      }
+    }
+
+    if (request.method === "GET" && url.pathname === "/recipes") {
+      try { return json({ ok: true, recipes: await listRecipes(env.EVIDENCE) }); }
+      catch (error) { return json({ error: error instanceof Error ? error.message : "Recipe list failed" }, 400); }
     }
 
     if (url.pathname === "/evidence/ingest") {
