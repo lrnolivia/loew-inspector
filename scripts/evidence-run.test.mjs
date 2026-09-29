@@ -13,3 +13,11 @@ test("evidence runner uses one Chromium launch for the suite", async () => {
   assert.equal((source.match(/chromium\.launch/g) || []).length, 1);
   assert.match(source, /LOEW_EVIDENCE_RESULT=/);
 });
+
+
+test("workspace layout recipes expand the real field layout control", async () => {
+  const source = await readFile(new URL("./evidence-run.mjs", import.meta.url), "utf8");
+  assert.match(source, /data-workspace-layout-control/);
+  assert.match(source, /data-workspace-mode-trigger/);
+  assert.match(source, /filter\(\{ hasText: value \}\)/);
+});
