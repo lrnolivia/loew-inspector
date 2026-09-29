@@ -3,12 +3,13 @@
 Before doing project-execution work, read:
 
 1. `contracts/manifest.json`
-2. `LOEW_CHAT_BIBLE.md`
-3. the applicable local Runner/Night Shift contract
-4. the target project's own `AGENTS.md` / product instructions
-5. live Git/runtime/control state
+2. `LOEW_CHAT_BIBLE_CURRENT.md`
+3. `LOEW_CHAT_BIBLE.md` (base law incorporated by the current authority file)
+4. the applicable local Runner/Night Shift contract
+5. the target project's own `AGENTS.md` / product instructions
+6. live Git/runtime/control state
 
-`LOEW_CHAT_BIBLE.md` is the universal operating authority. This repository owns universal execution process; target repositories own product truth.
+`LOEW_CHAT_BIBLE_CURRENT.md` is the current universal entry authority and incorporates `LOEW_CHAT_BIBLE.md` as base law. This repository owns universal execution process; target repositories own product truth.
 
 Resolve the current repository from Runner project records and the target repository's live bootstrap before following historical handoffs. For field, the current target is **`lrnolivia/field`**. Do not fall back to historical `revyme-loewfi` / `revyme-loew` / `revyme-löew` repository names or old local checkout paths.
 

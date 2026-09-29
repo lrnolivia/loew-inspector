@@ -2,15 +2,19 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 
+const currentBible = fs.readFileSync(new URL("../LOEW_CHAT_BIBLE_CURRENT.md", import.meta.url), "utf8");
 const bible = fs.readFileSync(new URL("../LOEW_CHAT_BIBLE.md", import.meta.url), "utf8");
 const manifest = JSON.parse(fs.readFileSync(new URL("../contracts/manifest.json", import.meta.url), "utf8"));
 const nightShift = fs.readFileSync(new URL("../night-shift/CONTRACT.md", import.meta.url), "utf8");
 const blockers = fs.readFileSync(new URL("../night-shift/BLOCKER_POLICY.md", import.meta.url), "utf8");
 
 test("universal manifest points to the current Bible", () => {
-  assert.equal(manifest.contract, "LOEW_CHAT_BIBLE.md");
-  assert.equal(manifest.version, "2026-09-29.1");
+  assert.equal(manifest.contract, "LOEW_CHAT_BIBLE_CURRENT.md");
+  assert.equal(manifest.version, "2026-09-29.2");
   assert.equal(manifest.watchdog.identical_failure_attempts, 2);
+  assert.equal(manifest.qa_authority.runner_first, true);
+  assert.equal(manifest.qa_authority.project_qa_is_overlay, true);
+  assert.equal(manifest.target_resolution.runner_project_registry_first, true);
 });
 
 test("Bible keeps core recovery invariants", () => {
@@ -39,11 +43,16 @@ test("Bible keeps QA loop escape and danger-zone law", () => {
     "human qa required",
     "browser run",
     "github chromium",
-    "automatic promotion"
+    "automatic promotion",
+    "runner-first qa authority"
   ]) {
     assert.ok(lower.includes(phrase), "missing QA invariant: " + phrase);
   }
   assert.ok(bible.includes("DANGER ZONE — HUMAN QA REQUIRED"));
+  assert.ok(currentBible.toLowerCase().includes("runner-first qa is law"));
+  assert.ok(currentBible.includes("lrnolivia/field"));
+  assert.ok(currentBible.includes("/qa/work/<projectId>"));
+  assert.ok(currentBible.includes("/builder/noauth"));
 });
 
 test("Night Shift policies inherit the universal law", () => {

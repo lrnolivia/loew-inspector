@@ -2,7 +2,7 @@
   "schema": 1,
   "version": "2026-09-29.2",
   "authority": "lrnolivia/loew-runner@main",
-  "contract": "LOEW_CHAT_BIBLE.md",
+  "contract": "LOEW_CHAT_BIBLE_CURRENT.md",
   "applies_to": "all lrnolivia/loew project execution chats unless explicitly overridden by the user",
   "required_bootstrap": [
     "contracts/manifest.json",
@@ -34,7 +34,7 @@
     "persist-next-action"
   ],
   "qa_authority": {
-    "contract": "LOEW_CHAT_BIBLE.md",
+    "contract": "LOEW_CHAT_BIBLE_CURRENT.md",
     "section": "11",
     "runner_first": true,
     "project_qa_is_overlay": true
