@@ -68,7 +68,22 @@
           <h2>visual</h2>
           <p>Browser truth, kept quiet enough to actually look at.</p>
         </div>
-        <div id="visual-count" class="visual-count"></div>
+        <div class="visual-heading-tools">
+          <div id="visual-count" class="visual-count"></div>
+          <div class="visual-filters" aria-label="Visual evidence filters">
+            <input id="visual-project-filter" class="visual-filter" type="text" placeholder="project" aria-label="Filter by project">
+            <select id="visual-environment-filter" class="visual-filter" aria-label="Filter by environment">
+              <option value="">all environments</option>
+              <option value="production">production</option>
+              <option value="preview">preview</option>
+              <option value="qa">qa</option>
+              <option value="smoke">smoke</option>
+              <option value="unknown">unknown</option>
+            </select>
+            <input id="visual-pr-filter" class="visual-filter visual-filter-pr" type="number" min="1" placeholder="PR" aria-label="Filter by PR">
+            <button id="visual-clear-filters" class="visual-filter-clear" type="button">clear</button>
+          </div>
+        </div>
       </div>
 
       <div id="visual-content" class="visual-content">

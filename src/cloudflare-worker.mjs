@@ -173,7 +173,11 @@ async function handleApi(request, env) {
   if (accessError) return accessError;
 
   if (request.method === "GET" && url.pathname === "/api/visual") {
-    return json(await listVisualEvidence(env.EVIDENCE, 60));
+    return json(await listVisualEvidence(env.EVIDENCE, 60, {
+      project: url.searchParams.get("project"),
+      environment: url.searchParams.get("environment"),
+      pr: url.searchParams.get("pr")
+    }));
   }
 
   const visualMatch = url.pathname.match(/^\/api\/visual\/(vis_[a-zA-Z0-9-]+)(?:\/(image))?$/);

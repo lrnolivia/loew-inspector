@@ -10,6 +10,10 @@ const visualSection = document.querySelector("#visual-section");
 const visualContent = document.querySelector("#visual-content");
 const visualCount = document.querySelector("#visual-count");
 const toolbarContext = document.querySelector("#toolbar-context");
+const visualProjectFilter = document.querySelector("#visual-project-filter");
+const visualEnvironmentFilter = document.querySelector("#visual-environment-filter");
+const visualPrFilter = document.querySelector("#visual-pr-filter");
+const visualClearFilters = document.querySelector("#visual-clear-filters");
 
 let selectedWorkerId = null;
 let currentWorkers = [];
@@ -85,11 +89,18 @@ function renderVisualSelected() {
   visualCount.textContent = visualEvidence.length + (visualEvidence.length === 1 ? " capture" : " captures");
 
   const trace = Array.isArray(selected.trace) ? selected.trace : [];
+  const context = selected.context || {};
   const facts = [
     ["evidence", selected.evidence_id],
     ["kind", selected.kind || "screenshot"],
     ["request", selected.request_id || "—"],
+    ["project", context.project || "—"],
+    ["environment", context.environment || "unknown"],
+    ["commit", context.commit_sha ? String(context.commit_sha).slice(0, 12) : "—"],
+    ["PR", context.pr_number || "—"],
+    ["deployment", context.deployment_id || "—"],
     ["browser", selected.browser_ms ? Math.round(selected.browser_ms) + " ms" : "session"],
+    ["expires", selected.expires_at ? absoluteTime(selected.expires_at) : "—"],
     ["bytes", Number(selected.screenshot_bytes || 0).toLocaleString()],
     ["status", selected.http_status || "rendered"]
   ];
@@ -108,10 +119,10 @@ function renderVisualSelected() {
       </figure>
 
       <div class="visual-meta-grid">
-        <div class="visual-meta"><div class="visual-meta-label">surface</div><div class="visual-meta-value">${escapeHtml(hostname(selected.target_url))}</div></div>
-        <div class="visual-meta"><div class="visual-meta-label">capture</div><div class="visual-meta-value">${escapeHtml(selected.kind || "screenshot")}</div></div>
+        <div class="visual-meta"><div class="visual-meta-label">project</div><div class="visual-meta-value">${escapeHtml(context.project || evidenceTitle(selected))}</div></div>
+        <div class="visual-meta"><div class="visual-meta-label">environment</div><div class="visual-meta-value">${escapeHtml(context.environment || "unknown")}</div></div>
         <div class="visual-meta"><div class="visual-meta-label">viewport</div><div class="visual-meta-value">${escapeHtml(selected.viewport?.width || "—")} × ${escapeHtml(selected.viewport?.height || "—")}</div></div>
-        <div class="visual-meta"><div class="visual-meta-label">result</div><div class="visual-meta-value">${selected.ok === false ? "failed" : "captured"}</div></div>
+        <div class="visual-meta"><div class="visual-meta-label">revision</div><div class="visual-meta-value">${escapeHtml(context.commit_sha ? String(context.commit_sha).slice(0, 12) : context.pr_number ? "PR #" + context.pr_number : "—")}</div></div>
       </div>
 
       <div class="visual-technical">
@@ -158,7 +169,11 @@ function renderVisualSelected() {
 async function loadVisual() {
   visualContent.innerHTML = '<div class="visual-empty"><span class="visual-empty-mark">◌</span><strong>Loading evidence</strong><span>Asking inspector what it saw.</span></div>';
   try {
-    const payload = await api("/api/visual");
+    const params = new URLSearchParams();
+    if (visualProjectFilter?.value.trim()) params.set("project", visualProjectFilter.value.trim());
+    if (visualEnvironmentFilter?.value) params.set("environment", visualEnvironmentFilter.value);
+    if (visualPrFilter?.value) params.set("pr", visualPrFilter.value);
+    const payload = await api("/api/visual" + (params.size ? "?" + params.toString() : ""));
     visualEvidence = Array.isArray(payload.evidence) ? payload.evidence : [];
     renderVisualSelected();
     setConnection("good", "CONNECTED");
@@ -420,6 +435,25 @@ async function load() {
 }
 
 refreshButton.addEventListener("click", () => currentSection === "visual" ? loadVisual() : load());
+[visualProjectFilter, visualEnvironmentFilter, visualPrFilter].forEach(control => {
+  control?.addEventListener("change", () => {
+    selectedEvidenceId = null;
+    loadVisual();
+  });
+});
+visualProjectFilter?.addEventListener("keydown", event => {
+  if (event.key === "Enter") {
+    selectedEvidenceId = null;
+    loadVisual();
+  }
+});
+visualClearFilters?.addEventListener("click", () => {
+  visualProjectFilter.value = "";
+  visualEnvironmentFilter.value = "";
+  visualPrFilter.value = "";
+  selectedEvidenceId = null;
+  loadVisual();
+});
 primaryNav.forEach((item) => {
   item.addEventListener("click", () => setSection(item.dataset.section));
 });

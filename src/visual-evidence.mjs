@@ -37,18 +37,37 @@ async function findEvidenceMetadataKey(bucket, evidenceId) {
   return metadataKeys(objects).find(key => key.endsWith(suffix)) || null;
 }
 
-export async function listVisualEvidence(bucket, limit = 60) {
+export function normalizeVisualFilters(input = {}) {
+  const clean = (value, max = 128) => {
+    if (value == null || value === "") return null;
+    const text = String(value);
+    if (text.length > max || !/^[a-zA-Z0-9._:/-]+$/.test(text)) throw new Error("Invalid visual filter");
+    return text;
+  };
+  const project = clean(input.project, 80);
+  const environment = clean(input.environment, 32);
+  const pr = input.pr == null || input.pr === "" ? null : Number(input.pr);
+  if (environment && !["production","preview","qa","smoke","unknown"].includes(environment)) throw new Error("Invalid visual environment");
+  if (pr != null && (!Number.isInteger(pr) || pr < 1 || pr > 1000000)) throw new Error("Invalid visual PR");
+  return { project, environment, pr };
+}
+
+export async function listVisualEvidence(bucket, limit = 60, filters = {}) {
+  const selected = normalizeVisualFilters(filters);
   const objects = await listAllObjects(bucket);
   const keys = metadataKeys(objects);
   const records = (await Promise.all(keys.map(key => readJsonObject(bucket, key))))
     .filter(record => record && isEvidenceId(record.evidence_id))
+    .filter(record => !selected.project || record.context?.project === selected.project)
+    .filter(record => !selected.environment || record.context?.environment === selected.environment)
+    .filter(record => !selected.pr || Number(record.context?.pr_number) === selected.pr)
     .sort((a, b) => String(b.captured_at || "").localeCompare(String(a.captured_at || "")))
     .slice(0, Math.max(1, Math.min(100, Number(limit) || 60)))
     .map(record => ({
       ...record,
       screenshot_url: "/api/visual/" + encodeURIComponent(record.evidence_id) + "/image"
     }));
-  return { ok: true, count: records.length, evidence: records };
+  return { ok: true, count: records.length, filters: selected, evidence: records };
 }
 
 export async function getVisualEvidence(bucket, evidenceId) {
