@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026-09-27.1",
+  "version": "2026-09-29.1",
   "authority": "lrnolivia/loew-runner@main",
   "contract": "LOEW_CHAT_BIBLE.md",
   "applies_to": "all lrnolivia/loew project execution chats unless explicitly overridden by the user",

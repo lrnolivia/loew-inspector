@@ -9,7 +9,7 @@ const blockers = fs.readFileSync(new URL("../night-shift/BLOCKER_POLICY.md", imp
 
 test("universal manifest points to the current Bible", () => {
   assert.equal(manifest.contract, "LOEW_CHAT_BIBLE.md");
-  assert.equal(manifest.version, "2026-09-27.1");
+  assert.equal(manifest.version, "2026-09-29.1");
   assert.equal(manifest.watchdog.identical_failure_attempts, 2);
 });
 
@@ -27,6 +27,23 @@ test("Bible keeps core recovery invariants", () => {
   ]) {
     assert.ok(lower.includes(phrase), "missing invariant: " + phrase);
   }
+});
+
+test("Bible keeps QA loop escape and danger-zone law", () => {
+  const lower = bible.toLowerCase();
+  for (const phrase of [
+    "qa self-correction",
+    "qa loop watchdog",
+    "when to abandon automated qa",
+    "danger zone preview",
+    "human qa required",
+    "browser run",
+    "github chromium",
+    "automatic promotion"
+  ]) {
+    assert.ok(lower.includes(phrase), "missing QA invariant: " + phrase);
+  }
+  assert.ok(bible.includes("DANGER ZONE — HUMAN QA REQUIRED"));
 });
 
 test("Night Shift policies inherit the universal law", () => {

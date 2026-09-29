@@ -11,3 +11,34 @@ Before doing project-execution work, read:
 `LOEW_CHAT_BIBLE.md` is the universal operating authority. This repository owns universal execution process; target repositories own product truth.
 
 If the Bible is temporarily unavailable, follow the emergency invariants embedded in the target repository bootstrap and avoid destructive or ambiguous mutations until canonical authority is restored.
+
+## QA escape discipline
+
+QA is bounded verification, not an infinite search for green.
+
+Before runtime QA, read Bible section 11 plus the target project's QA overlay. Bind every result to the exact artifact/SHA actually tested.
+
+Use the cheapest capable evidence path first:
+
+1. HTTP/read-only inspection for reachability, status, headers, JSON, and redirects.
+2. deterministic project checks and GitHub Chromium/Inspector recipes for routine web-visible QA.
+3. Browser Run only when exploratory interaction or a live browser session adds unique value.
+4. project-native or authenticated harnesses where the acceptance criterion requires them.
+
+A Browser Run capacity error such as HTTP 429 is a harness-capacity state, not a product failure. Honor its retry metadata and use a deterministic fallback when one can prove the same criterion. Do not hammer the scarce engine.
+
+For one acceptance criterion:
+
+- the same failure fingerprint may occur at most twice without new evidence
+- a clearly harness-owned defect gets at most one bounded repair cycle before the original check is retried
+- a clearly local product defect may be self-corrected only from the first evidenced divergence, not by weakening assertions or hiding symptoms
+- after a bounded repair, use at most one materially independent fallback path unless the project explicitly requires more
+- if automated QA still cannot converge, stop the loop and classify the uncertainty
+
+When automation is exhausted but the artifact is safe for human inspection, hand it to the **danger zone preview** instead of continuing speculative QA.
+
+A danger zone handoff must be exact-SHA, isolated from production writes, excluded from automatic promotion, and accompanied by a compact human-QA packet containing the PR/branch/SHA, preview URL, acceptance criterion, known failures or uncertainty, evidence IDs/screenshots, exact reproduction steps, and the specific question the user needs to answer.
+
+Do not use danger zone to bypass a repeatable product failure, security/auth boundary, destructive migration, data-integrity risk, required deterministic check, or missing authority. Those remain blockers.
+
+After a danger zone handoff, stop mutating the product merely to chase QA. Resume only from new evidence, a user verdict, or a materially new hypothesis.

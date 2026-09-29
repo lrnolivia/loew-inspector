@@ -1,6 +1,6 @@
 # loew chat bible
 
-Version: `2026-09-27.1`  
+Version: `2026-09-29.1`  
 Canonical authority: `lrnolivia/loew-runner@main`
 
 This is the universal operating contract for loew.fi ChatGPT, Codex, Work, Contract Worker, Night Shift, PJM, Master, Worker, and other project-execution chats.
@@ -197,23 +197,212 @@ Never report a mutation as successful only because the write call returned succe
 
 ## 11. QA law
 
+QA exists to produce decision-quality evidence against an exact artifact. It is not an infinite search for green.
+
 Missing evidence is not a pass.
 
 A build is not automatically runtime QA.
 
-Runtime evidence belongs to the exact tested artifact/SHA.
+Runtime evidence belongs to the exact tested artifact/SHA. If the tested head changes, affected runtime evidence is stale.
 
-If the tested head changes, affected runtime evidence is stale.
+Classify harness inability separately from product failure. Do not modify product code merely to hide a broken QA harness, weaken an assertion, move a baseline, or cosmetically conceal the first point of divergence.
 
-Classify harness inability separately from product failure.
+For web-visible work, browser-driven interaction is preferred when the acceptance criterion is user-visible behavior. For native/system work, use the project-specific runtime harness.
 
-Do not modify product code merely to hide a broken QA harness.
+### 11.1 Evidence unit
 
-For web-visible work, browser-driven interaction is preferred when the acceptance criterion is user-visible behavior.
+Treat one QA work unit as:
 
-Use Inspector for protected read-only infrastructure verification when appropriate.
+`exact artifact/SHA + acceptance criterion + harness + evidence + classification`
 
-For native/system work, use the project-specific runtime harness.
+A QA conclusion must preserve enough information to reconstruct that unit.
+
+Preferred universal classifications are:
+
+- `PASS` — direct evidence proves the criterion on the recorded artifact
+- `FAIL — PRODUCT` — the harness successfully exercised the criterion and the product violated it
+- `BLOCKED/UNVERIFIED — HARNESS` — product correctness is unknown because the harness could not prove it
+- `BLOCKED — ENVIRONMENT` — an external/runtime environment required for the criterion is unavailable or invalid
+- `DANGER ZONE — HUMAN QA REQUIRED` — automation is intentionally abandoned and an isolated exact-SHA preview is ready for user judgment
+- `NOT RUN` — the required check has not been attempted
+
+Projects may specialize the product name, for example `FAIL — FIELD`, without weakening the meaning.
+
+### 11.2 Evidence-engine routing and fallbacks
+
+Choose a harness by required capability, not habit.
+
+For loew web QA where the Inspector 2.1 evidence controller is available, the default routing is:
+
+1. **HTTP/read-only inspection** for reachability, status, headers, JSON, redirects, and cheap infrastructure truth.
+2. **GitHub Chromium / deterministic Inspector recipes** for routine visual QA, exact-SHA project Preview checks, repeatable interaction, screenshots, DOM/a11y summaries, and grouped QA runs.
+3. **Browser Run** for exploratory interaction, live ad hoc browsing, or session behavior that cannot be expressed deterministically.
+4. **project-specific native/authenticated harnesses** when the criterion requires state, credentials, persistence, platform behavior, or an environment the generic browser paths cannot prove.
+
+Browser Run is a scarce interactive lane, not the default routine QA engine.
+
+If Browser Run returns capacity/rate-limit state such as HTTP 429:
+
+- record it as harness capacity, not product failure
+- preserve `retry_after` or equivalent evidence
+- do not retry before that window merely hoping for a different answer
+- route deterministic work to GitHub Chromium when it can prove the same criterion
+- queue or hand off genuinely exploratory work rather than hammering the capacity limit
+
+A fallback is valid only when it exercises the same acceptance criterion through a materially independent failure domain. A second tool that repeats the same broken assumption is not a fallback.
+
+Production may not be used to claim an unmerged exact branch Preview was validated.
+
+### 11.3 QA self-correction
+
+Agents may self-correct QA, but correction is bounded and evidence-led.
+
+**Harness self-repair**
+
+If evidence shows our own QA machinery is defective:
+
+1. isolate the harness defect from product behavior
+2. make one bounded, reversible harness repair for that failure class
+3. validate the harness repair itself
+4. retry the original criterion once
+5. if it still fails with the same fingerprint, stop repairing that path and use an independent fallback or exit automation
+
+Do not stack speculative harness fixes.
+
+**Product self-correction**
+
+If the harness successfully proves a local product defect within the assignment:
+
+1. identify the first evidenced point of divergence
+2. make the smallest product correction that addresses that cause
+3. rerun the same acceptance criterion against the new exact head
+4. preserve before/after evidence
+
+Do not fix a downstream screenshot symptom when the divergence starts earlier in source, state, layout, routing, or runtime behavior.
+
+Without materially new evidence, do not perform more than two product correction cycles for the same acceptance criterion. A second cycle must test a changed root-cause hypothesis, not a variation of the same guess.
+
+If correction causes a different failure class, stop and re-diagnose from fresh truth instead of entering whack-a-mole QA.
+
+Delegated QA workers, including GitHub Copilot, inherit the same limits. They may repair bounded local defects; they may not lower the bar to manufacture a pass.
+
+### 11.4 QA loop watchdog
+
+Section 8 applies fully to QA, with additional exit rules.
+
+Automated QA is considered non-converging when any of the following is true:
+
+- the same QA failure fingerprint occurs twice without new evidence
+- one bounded harness repair plus retry returns the same failure class
+- two materially independent harnesses cannot produce a trustworthy conclusion
+- two product correction cycles for one criterion fail to converge
+- the next proposed action is only another equivalent screenshot, retry, selector guess, baseline change, or cosmetic patch
+- infrastructure capacity/entitlement is unavailable and the approved fallback cannot prove the criterion
+- the remaining question is primarily visual, experiential, semantic, or product judgment rather than something automation can prove deterministically
+
+When non-convergence is detected, stop automated QA for that criterion. Do not hide the loop with new status prose or a different tool name.
+
+### 11.5 When to abandon automated QA
+
+Abandon automated QA deliberately when continuing would add retries rather than information.
+
+After refreshing live truth, choose one of two exits:
+
+**Block the path** when the unresolved issue involves:
+
+- repeatable product failure
+- security, authentication, authorization, secrets, or privacy boundaries
+- destructive migration or production-write risk
+- data-integrity uncertainty
+- missing authority or required credentials
+- required deterministic checks that are actually failing
+- semantic/product-direction conflict
+- no safe isolated Preview representing the exact artifact
+
+**Use danger zone preview** when:
+
+- deterministic checks that can safely run are green or explicitly inapplicable
+- the artifact builds/deploys safely enough for isolated viewing
+- the remaining uncertainty is runtime interaction, visual quality, ambiguity, flakiness, or a harness limitation
+- a human can answer the remaining question more efficiently than another automated retry
+- the Preview can be isolated from production writes and tied to the exact artifact/SHA
+
+Abandoning automation is not a pass. It is an explicit transfer of the remaining QA decision.
+
+### 11.6 Danger zone preview
+
+**danger zone preview** is the universal human-QA escape hatch for safe but unresolved work.
+
+It is a state and promotion boundary, not permission to deploy questionable work to production. A project may implement it using its existing exact-SHA branch Preview system or a dedicated Preview tier. Do not invent a public production-like environment when an isolated exact-SHA Preview already exists.
+
+A danger zone preview must:
+
+- represent the exact branch/PR head being handed off
+- be isolated from production mutation; read-only production snapshots are allowed only where the project explicitly provides them
+- be visibly identified in durable state as `DANGER ZONE — HUMAN QA REQUIRED`
+- be excluded from automatic promotion/merge while that state is active
+- preserve all completed deterministic evidence rather than discarding it
+- preserve known failures and uncertainty rather than presenting the build as green
+- avoid secrets, broad auth bypasses, destructive fixtures, or production data mutation
+- be short-lived or otherwise easy to invalidate when the head changes
+
+For field, the project QA overlay remains authoritative: use the exact branch Preview and `/qa/work/<projectId>` for read-only real-project truth when applicable; `/builder/noauth` remains smoke-only.
+
+The human-QA packet must include:
+
+- repository, PR/branch, and exact head SHA
+- Preview URL and relevant runtime path
+- acceptance criterion or decision requested
+- what deterministic QA passed
+- what failed, flaked, or could not be proven
+- failure fingerprint and attempted fallback/repair summary when relevant
+- evidence IDs, screenshots, logs, or Runner review links when available
+- minimal reproduction steps
+- expected behavior and observed ambiguity
+- one explicit question for the user
+
+After creating the packet, stop product mutation for that criterion until one of these occurs:
+
+- the user returns `HUMAN PASS`
+- the user returns `HUMAN FAIL` with new evidence
+- the user makes a product-direction decision
+- materially new automated evidence becomes available
+
+A human pass may satisfy a runtime/human-judgment QA requirement only when project policy allows it. It never overrides failed required tests, security gates, branch protection, destructive-migration approval, or other mandatory deterministic checks.
+
+### 11.7 Danger zone is not a dumping ground
+
+Do not send known broken work to danger zone merely because automated QA is inconvenient.
+
+A repeatable product defect remains `FAIL — PRODUCT` unless the user explicitly asks to inspect that broken state.
+
+Do not use danger zone to evade:
+
+- required CI or deterministic checks
+- security/auth review
+- production-readiness requirements
+- a semantic conflict
+- assignment ownership
+- exact-SHA evidence
+- a real blocker that needs authority or a decision
+
+The purpose of danger zone is to end low-information QA loops and obtain high-value human evidence, not to weaken the promotion gate.
+
+### 11.8 QA closure and promotion
+
+Before QA is considered closed, persist:
+
+- exact tested head/artifact
+- criterion
+- harness/engine
+- evidence
+- classification
+- any repair/fallback attempts
+- next action or human verdict
+
+Automatic promotion requires the project's normal gate. `DANGER ZONE — HUMAN QA REQUIRED` is a stop state for automatic promotion.
+
+When human QA resolves the uncertainty, record the verdict against the exact Preview/SHA. If the head changes afterward, the human evidence is stale just like automated runtime evidence.
 
 ## 12. Blocker classes
 
