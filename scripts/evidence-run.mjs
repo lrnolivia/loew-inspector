@@ -184,9 +184,10 @@ async function executeStep(page, step) {
   if (step.action === "workspace-layout") {
     await clickLayout(page, step.value);
     const control = page.locator("[data-workspace-layout-control]").first();
-    const option = control.getByRole("button").filter({ hasText: step.value }).first();
-    const pressed = await option.getAttribute("aria-pressed");
-    const pass = pressed === "true";
+    const trigger = control.locator("[data-workspace-mode-trigger]").first();
+    await trigger.waitFor({ state: "visible", timeout: 7000 });
+    const activeLabel = (await trigger.getAttribute("aria-label")) || "";
+    const pass = activeLabel.toLowerCase().includes(step.value.toLowerCase());
     assertions.push({ id: "workspace.mode", status: pass ? "pass" : "fail", detail: step.value + " layout " + (pass ? "is active." : "did not become active.") });
     if (!pass) throw new Error(step.value + " workspace layout did not become active");
     return assertions;

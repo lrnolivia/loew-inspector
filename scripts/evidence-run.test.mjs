@@ -37,3 +37,11 @@ test("workspace layout recipe reuses an already-expanded control between suite s
   assert.match(source, /getAttribute\("aria-expanded"\) !== "true"/);
   assert.doesNotMatch(source, /await control\.locator\("\[data-workspace-mode-trigger\]"\)\.hover/);
 });
+
+
+test("workspace mode assertion reads the collapsed trigger's active-layout label", async () => {
+  const source = await readFile(new URL("./evidence-run.mjs", import.meta.url), "utf8");
+  assert.match(source, /trigger\.waitFor\(\{ state: "visible"/);
+  assert.match(source, /trigger\.getAttribute\("aria-label"\)/);
+  assert.match(source, /activeLabel\.toLowerCase\(\)\.includes\(step\.value\.toLowerCase\(\)\)/);
+});
