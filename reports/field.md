@@ -59,3 +59,106 @@
   5. define Pattern source reconciliation when `data-field-pattern` metadata and manually edited CSS diverge; hidden metadata must not silently override source truth.
   6. after live visual QA, tune shared picker density once more only if needed; do not fork per-property picker sizing.
 - resume sequence: re-read current Runner manifest/Bible and `field/AGENTS.md`; refresh `main` and the continuation branch; if `main` has advanced, use new `main` as semantic truth and reconcile only this workstream's remaining deltas. Start with live launcher QA, then fix any universal-launch routing regressions, then Libraries semantics, then the PaintLayer/multi-fill architecture. Do not reopen the already-settled anchored-popover or one-picker-everywhere decisions without a concrete regression.
+
+## 2026-09-29 — field Stage 0 Figma behavioral parity
+
+- chat identity: `field Stage 0 Figma behavioral parity` (derived from the primary goal; no explicit chat title was available).
+- target: `lrnolivia/field`
+- primary goal: close Stage 0 against official Figma Learn/Help Center interaction semantics, not by copying Figma's visual styling. The durable contract is `docs/FIGMA_BEHAVIOR_PARITY.md`: Figma documented behavior → current field behavior → parity status → discrepancy/fix → regression coverage.
+- reference scope supplied by Lauren: selection/canvas interaction; hierarchy/reparenting; frames/groups; move/resize/snapping/guides/duplication; Auto Layout/constraints; booleans/masks. Preserve behavior that already passes, fix the first deterministic divergence, and add real-Chromium coverage where reliable.
+
+### merged from this workstream
+
+- PR #106 → merge `264dd67a8f339f026c28bfeb047e0c60ec4f4e31`: **Figma selection behavioral parity — Batch 1**.
+  - fixed real marquee start after the transparent canvas input surface had become the actual pointer surface.
+  - fixed Cmd/Ctrl-marquee so nested layers can be selected without also selecting the containing parent.
+  - real Chromium locked parent-first click, Ctrl deep-click, double-click drill-in, Enter/Shift+Enter, Tab/Shift+Tab, Shift toggle, empty-canvas deselect, normal marquee, and Ctrl-marquee.
+  - successful parity run: `36554371773`.
+- PR #109 → merge `c2fa2f90e7cae1b90f929167ebf94477df7c6452`: **Figma hierarchy behavioral parity — Space overrides**.
+  - creator tools contextually own held Space as Figma's parenting bypass instead of pan.
+  - Hand/pan highlight stays off while Space is serving the creator-parenting override.
+  - ordinary absolute children can be dragged outside their frame while held Space keeps the current parent; releasing Space restores normal live exit/reparent behavior.
+  - flow/grid children were intentionally deferred to Batch 4 because their correct Figma analogue is **Ignore auto layout**, not a fake snap-back or silent absolute conversion.
+  - successful Node 22 + real-Chromium run: `36559986981`.
+
+### current resumable work
+
+- working branch: `stage0/figma-frame-group-parity`
+- durable branch head: `a54e1f99782cff76b3ecdc65859de46866c3f827`
+- merge base for this branch: `c2fa2f90e7cae1b90f929167ebf94477df7c6452`
+- field `main` observed at this checkpoint: `64fa810a66fc54d73c2f46ed2e352a8c3a3e568d`.
+- branch divergence at checkpoint: 4 commits ahead / 49 commits behind `main`.
+- overlap check: the 49 newer `main` commits do **not** touch any of the branch's nine product/test/doc paths. Reconcile/update the branch before promotion, but do not assume old exact-SHA runtime evidence survives that update.
+
+Current branch commits after the merge base:
+
+- `d162786101e2cbcd8178d010e78bddd62ac53f5c` — Frame-tool click/no-drag creates Figma-style default Frame behavior.
+- `89e0d31c362a7b7c4142afeb28950584fdecfe92` — temporary frame/group verification workflow.
+- `c245499b304d770feedc16038cae7a15273d6229` — broader Group-vs-Frame Chromium audit, standard Frame-selection shortcut, and fixture coverage.
+- `a54e1f99782cff76b3ecdc65859de46866c3f827` — first-divergence diagnostics for failing frame encapsulation / wrap behavior.
+
+The branch contains all code/tests/docs needed to continue; there is no chat-only or local-only implementation state to recover. Important committed branch artifacts include:
+
+- `src/canvas/creators/FrameCreator.ts`
+  - click/no-drag Frame creation now produces a fixed `100×100` Frame.
+  - click inside an eligible frame nests the new Frame there.
+  - held Space still bypasses automatic parenting.
+  - click-created Frames intentionally skip drag-over sibling encapsulation.
+- `src/canvas/shortcuts.ts`
+  - canonical Figma-style Frame Selection chord is primary+Alt+G (Ctrl/Cmd+Alt+G).
+  - historical Shift+Alt+A remains as a hidden compatibility alias.
+  - Group / Ungroup remain primary+G / primary+Shift+G.
+- `src/canvas/drag/e2e/fixtures/seeds.ts`
+  - includes `GROUP_FRAME_SEMANTICS` fixture for native Group vs fixed Frame comparison.
+- `src/canvas/drag/e2e/figma-frame-parity.spec.ts`
+  - covers nested 100×100 click-created Frame and Space bypass.
+- `src/canvas/drag/e2e/figma-group-frame-parity.spec.ts`
+  - covers Group-first selection / double-click drill-in, Group child motion + bounds refit, fixed Frame dimensions under child motion, Group/Ungroup world-geometry preservation, and primary+Alt+G Frame Selection geometry.
+- `src/canvas/drag/e2e/figma-frame-diagnostics.spec.ts`
+  - current first-divergence probe for the unresolved frame failures.
+- `.github/workflows/stage0-figma-frame-parity-one-shot.yml`
+  - currently intentionally narrowed to the diagnostics spec. Do not interpret its green status as full Frame/Group parity.
+
+### verified on the current branch
+
+- deterministic Frame/Group suites: `130/130` tests green in run `36561552322`:
+  - `src/canvas/commands.test.ts`
+  - `src/code/groups/group-semantics.test.ts`
+  - `src/code/groups/group-refit.test.ts`
+  - `src/editor/native-group-inspector-contract.test.ts`
+- click-frame Chromium behavior is green:
+  - Frame-tool click inside a Frame creates a nested fixed 100×100 Frame.
+  - Space + Frame-tool click bypasses that parent.
+- latest diagnostic run `36562205110` is green because both diagnostics executed successfully; it is evidence, **not** a parity pass.
+
+### unresolved first divergences
+
+1. **drag-created Frame encapsulation is failing in real Chromium**.
+   - full verifier run `36561552322` shows the auto-text + px-box encapsulation path leaves both `cap` and `box` under `hero`.
+   - diagnostic run `36562205110` is stronger: after the draw gesture, `capParent = hero`, `boxParent = hero`, `added = []`, and source code is unchanged. The failure therefore occurs before/at Frame creation/commit, not in a later child-reparent rendering step.
+   - the canvas-root encapsulation variant was flaky in the full verifier (failed once with null parent, passed retry). Treat it as unstable evidence until the first divergence above is fixed and rerun deterministically.
+
+2. **Frame/Layout-from-selection moves a centered absolute SVG instead of preserving world geometry**.
+   - full verifier run `36561552322` shows both Create Layout and Create Frame failing the <3px preservation contract; observed X deltas ranged from ~46px to ~103px.
+   - diagnostic run `36562205110` proves the mutation does commit: `star` becomes a child of a new Frame and stays there, but its screen position shifts immediately and remains shifted.
+   - source after Frame wrap shows the wrapper using percentage/translate centering while the child is rewritten to `left: 0px; top: 0px`; this is the current first-divergence area to inspect in wrap-in-frame coordinate normalization, not a screenshot/timing issue.
+
+### exact continuation order
+
+1. refresh current `main`, branch head, open PRs, and overlap before mutation.
+2. keep `stage0/figma-frame-group-parity@a54e1f9` as the durable checkpoint. Update/reconcile it onto current `main` only after rechecking overlap; exact-SHA browser evidence must then be rerun.
+3. fix **drag-created Frame encapsulation first**, tracing why the real drag creates no Frame/source mutation in `ENCAPSULATE_MIXED`. Do not weaken `frame-encapsulation.spec.ts`.
+4. fix **wrap-in-frame / wrap-in-layout world-coordinate preservation** for centered/translated absolute children at the source-mutation coordinate conversion. Do not compensate cosmetically in Canvas.
+5. restore the temporary verifier from diagnostics-only to the complete frame/group gate and run:
+   - deterministic Frame/Group contracts;
+   - `figma-frame-parity.spec.ts`;
+   - `figma-group-frame-parity.spec.ts`;
+   - `frame-encapsulation.spec.ts`;
+   - `wrap-in-parent.spec.ts`.
+6. only after those are green, update `docs/FIGMA_BEHAVIOR_PARITY.md` rows from gap/pending to verified, remove the temporary workflow/diagnostic-only surface, build the exact code-only head, and open/merge the focused Batch 2 Frame/Group PR.
+7. after Batch 2 closes, continue Stage 0 with Batch 3 move/resize/snapping/guides/duplication, then Batch 4 Auto Layout/constraints (including flow/grid Space behavior via Ignore auto layout), then Batch 5 boolean/mask geometry semantics.
+
+### completion boundary
+
+Stage 0 is explicitly **not complete**. Do not declare it complete from Inspector polish, Layers contracts, Preview parity, or these Batch 1/2 merges alone. The official-Figma behavioral matrix remains the gate: foundational rows must be audited, true gaps fixed at first divergence, and the agreed core flows covered in real Chromium.
+
