@@ -1,0 +1,81 @@
+name: loew evidence run
+
+run-name: "loew evidence / ${{ inputs.request_id }}"
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_url:
+        description: "Canonical field /qa/work/<projectId> URL"
+        required: true
+        type: string
+      project_id:
+        description: "Real field project ID"
+        required: true
+        type: string
+      suite:
+        description: "Deterministic QA suite"
+        required: true
+        default: "field.stage0"
+        type: choice
+        options:
+          - field.stage0
+          - field.canvas-first-paint
+          - field.full
+          - field.focus
+          - field.float
+      environment:
+        description: "Evidence environment"
+        required: true
+        default: "qa"
+        type: choice
+        options:
+          - qa
+          - production
+          - preview
+      request_id:
+        description: "Correlation id"
+        required: true
+        type: string
+      commit_sha:
+        description: "Optional authoritative commit SHA"
+        required: false
+        type: string
+      pr_number:
+        description: "Optional authoritative PR number"
+        required: false
+        type: string
+      deployment_id:
+        description: "Optional authoritative deployment id"
+        required: false
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  evidence:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      TARGET_URL: ${{ inputs.target_url }}
+      PROJECT_ID: ${{ inputs.project_id }}
+      SUITE: ${{ inputs.suite }}
+      ENVIRONMENT: ${{ inputs.environment }}
+      REQUEST_ID: ${{ inputs.request_id }}
+      COMMIT_SHA: ${{ inputs.commit_sha }}
+      PR_NUMBER: ${{ inputs.pr_number }}
+      DEPLOYMENT_ID: ${{ inputs.deployment_id }}
+      CF_ACCESS_CLIENT_ID: ${{ vars.CF_ACCESS_CLIENT_ID }}
+      CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Install Chromium
+        run: |
+          npm ci
+          npx playwright install --with-deps chromium
+      - name: Run deterministic evidence suite
+        run: node scripts/evidence-run.mjs
