@@ -224,8 +224,28 @@ function normalizeKey(key) {
   return value === "Space" ? " " : value;
 }
 
+function isAllowedLoewUrl(value) {
+  let url;
+  try { url = new URL(String(value)); } catch { return false; }
+  const host = url.hostname.toLowerCase();
+  return url.protocol === "https:" && (host === "loew.fi" || host.endsWith(".loew.fi")) &&
+    !url.username && !url.password && !url.port;
+}
+
 async function pageIdentity(client, pageSessionId) {
   return evaluate(client, pageSessionId, "({ title: document.title.slice(0, 200), url: location.href })");
+}
+
+async function enforceTopLevelLoewNavigation(client, pageSessionId, previousUrl) {
+  const identity = await pageIdentity(client, pageSessionId);
+  if (isAllowedLoewUrl(identity?.url)) return identity;
+  if (isAllowedLoewUrl(previousUrl)) {
+    try {
+      await client.send("Page.navigate", { url: previousUrl }, pageSessionId, 15000);
+      await delay(250);
+    } catch {}
+  }
+  throw new Error("Browser interaction attempted to leave loew.fi");
 }
 
 export async function openBrowserSession(binding, bucket, { url, accessJwt, viewport, keepAliveMs = 600000 }) {
@@ -327,7 +347,7 @@ export async function interactBrowserSession(binding, bucket, args) {
     }
 
     await delay(150);
-    const identity = await pageIdentity(connected.client, connected.pageSessionId);
+    const identity = await enforceTopLevelLoewNavigation(connected.client, connected.pageSessionId, meta.current_url);
     meta.current_url = identity?.url || meta.current_url;
     meta.title = identity?.title || meta.title;
     meta.target_id = chosenTarget;
@@ -406,6 +426,10 @@ export async function closeBrowserSession(binding, bucket, sessionId) {
   appendTrace(meta, { action: "close" });
   await writeSession(bucket, meta);
   return { ok: true, session_id: sid, status: "closed", trace_length: meta.trace.length };
+}
+
+export function validateLoewNavigationForTest(value) {
+  return isAllowedLoewUrl(value);
 }
 
 export function validateInteractionShape(args) {
