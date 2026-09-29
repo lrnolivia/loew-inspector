@@ -162,3 +162,67 @@ The branch contains all code/tests/docs needed to continue; there is no chat-onl
 
 Stage 0 is explicitly **not complete**. Do not declare it complete from Inspector polish, Layers contracts, Preview parity, or these Batch 1/2 merges alone. The official-Figma behavioral matrix remains the gate: foundational rows must be audited, true gaps fixed at first divergence, and the agreed core flows covered in real Chromium.
 
+
+## 2026-09-29 — field Media system architecture & hardening
+
+- chat/workstream: `field Media system architecture & hardening` (no explicit chat title was available, so this name reflects the primary goal rather than incidental fixes)
+- canonical repository: `lrnolivia/field`
+- current field main at closeout: `64fa810a66fc54d73c2f46ed2e352a8c3a3e568d`
+- continuation branch: `field/media-system-architecture`
+- continuation branch head: `64fa810a66fc54d73c2f46ed2e352a8c3a3e568d`
+- branch status: exact match with current `main` at closeout; safe resume point containing all code needed to continue this workstream
+
+### shipped Media architecture
+
+- `79e9b2c`: project-scoped Media session/catalog/upload state; async uploads retain original project ownership
+- `986c2dd`: contextual toolbar Media replacement for a single compatible image/video/audio selection
+- `2ad35b1`: place new toolbar Media inside a selected structural container via the canonical insertion engine; async placement intent is captured before upload completion
+- `148b2b9`: preserve selected container placement through the multi-step/async Gallery wizard
+- `d9e94ea`: remove the rendered `Insert → Media` route and make Media toolbar-owned
+- `61e56dc`: restore a distinct mixed-media/library glyph so Media does not read as Image
+- PR #107 merged as `d7db56b`: toolbar/popout/Media visual polish reconciled with canonical Media behavior
+- `297face`: remove Media from the Insert data model itself; no `MEDIA_ITEMS`, `media-library`, or top-level Media Insert category remains
+- `f55e2a2`: remove the proven-dead legacy `media-gallery` toolbar compatibility route from the panel union/host
+- Media architecture handoff was refreshed during the workstream to reflect project isolation, contextual placement, toolbar-only entry, Gallery behavior, and removed legacy paths
+
+### settled current behavior
+
+- Media is a first-class bottom-toolbar system, not an Insert category
+- canonical entry flow: bottom-toolbar Media → anchored Media shell → typed browser → expanded workspace when needed
+- matching selected media node → replace source
+- selected structural container → place inside
+- otherwise → insert normally
+- Gallery remains composition intent over images, not a Media type
+- one shared catalog/ingest/queue/dedup model remains underneath toolbar, contextual, Content, Fill/CMS, Gallery, and browser surfaces
+- `/qa/work/<projectId>` remains read-only real-project truth; creator controls such as Media and Insert are intentionally gated there
+- `/builder/noauth` remains smoke-only and is used only for editable creator-surface smoke evidence
+
+### Runner / Inspector QA evidence
+
+- added deterministic Inspector recipe `field.media-toolbar` in loew-inspector commit `29dab1c`: first paint → Media open → Media close → Insert open
+- added editable smoke evidence lane + screenshot artifact upload in loew-inspector commit `187d888` without weakening real `/qa/work`
+- corrected evidence route classification to canonical `builder-smoke` in loew-inspector commit `6b03039`
+- successful evidence run: `run_c39f49e9-f5bf-435b-a478-021b27bd4481`
+- request: `field-media-toolbar-smoke-r2-20260929`
+- tested field commit recorded by the run: `64888da072282562aefe7e1d2d8e38e77eb42861`
+- all four deterministic steps passed: canvas first paint, toolbar Media open, toolbar Media close, Insert open
+- screenshot artifact: GitHub Actions artifact `11064772560` from loew-inspector run `36636977872`
+- evidence confirms toolbar Media opens/closes and Insert no longer exposes Media; this was smoke UI evidence, not real-project persistence evidence
+- later field main advanced to `64fa810a66fc54d73c2f46ed2e352a8c3a3e568d`, so the interaction evidence is useful historical proof but is stale for exact-head claims under Runner QA law
+
+### intentionally deferred / remaining
+
+- immediate next task: run the required deterministic validation against the continuation branch/current head: `npm ci`, `npm run build:all`, `npm run test:run`, and `npm run lint`
+- after deterministic validation, rerun the Media smoke recipe against the exact continuation-branch artifact/head if web-visible Media files changed since the prior evidence run
+- visual judgment only after that: inspect the compact Media launcher for remaining density/translucency/heaviness; do not redesign architecture unless a real behavioral issue appears
+- longer-term non-blocking Media architecture remains intentionally deferred: deterministic Code-mode binary ingest, persistent cross-session/public-source asset identity/materialization, real generated-Media provider, and the usage/provenance relationship graph
+- do not reopen Preview/TLS work from this workstream
+
+### resume contract
+
+1. bootstrap from current Runner authority and fresh Git truth
+2. checkout/target `field/media-system-architecture`
+3. confirm its head against `main`; at this closeout both are `64fa810a66fc54d73c2f46ed2e352a8c3a3e568d`
+4. run the full required validation suite before more Media implementation
+5. if validation passes, perform exact-head Runner QA for the toolbar-owned Media flow only as needed
+6. treat future Media provider/persistence/provenance work as separate follow-up tranches rather than silently broadening this closeout
