@@ -5,6 +5,7 @@ const editor = new URL(process.env.EDITOR_URL);
 const canvas = new URL(process.env.CANVAS_URL);
 const sha = process.env.HEAD_SHA || '';
 const requestId = process.env.REQUEST_ID || '';
+const projectId = (process.env.PROJECT_ID || '').trim();
 const suffixes = [
   ['.field-preview.loew.fi', editor],
   ['.canvas-preview.loew.fi', canvas],
@@ -12,6 +13,9 @@ const suffixes = [
 
 if (!/^[a-f0-9]{40}$/i.test(sha) || !/^[a-zA-Z0-9._-]{1,80}$/.test(requestId)) {
   throw new Error('A full PR head SHA and safe request ID are required');
+}
+if (projectId && !/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$/.test(projectId)) {
+  throw new Error('Invalid field project ID');
 }
 for (const [suffix, url] of suffixes) {
   if (url.protocol !== 'https:' || !url.hostname.endsWith(suffix) ||
@@ -28,10 +32,17 @@ if (!/^[a-f0-9]{8}$/.test(editorName)) {
   throw new Error('Use matching immutable deployment URLs from the Cloudflare PR comment');
 }
 
+const editorTarget = new URL(
+  projectId ? `/qa/work/${encodeURIComponent(projectId)}` : '/builder/noauth',
+  editor,
+);
+
 const result = {
   request_id: requestId,
   head_sha: sha,
+  project_id: projectId || null,
   editor_url: editor.href,
+  editor_target: editorTarget.href,
   canvas_url: canvas.href,
   checks: {},
 };
@@ -52,7 +63,7 @@ async function inspect(url) {
 await mkdir('qa-evidence', { recursive: true });
 let browser;
 try {
-  result.checks.editor_http = await inspect(new URL('/builder/noauth', editor));
+  result.checks.editor_http = await inspect(editorTarget);
   result.checks.canvas_http = await inspect(canvas);
 
   browser = await chromium.launch({ headless: true });
@@ -60,7 +71,7 @@ try {
   const browserErrors = [];
   page.on('pageerror', error => browserErrors.push(error.message.slice(0, 300)));
   page.on('requestfailed', request => browserErrors.push(`${request.url()} ${request.failure()?.errorText}`.slice(0, 300)));
-  const response = await page.goto(new URL('/builder/noauth', editor).href, {
+  const response = await page.goto(editorTarget.href, {
     waitUntil: 'domcontentloaded', timeout: 20000,
   });
   await page.waitForTimeout(5000);
