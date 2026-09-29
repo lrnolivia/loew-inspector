@@ -21,6 +21,10 @@ on:
         description: "Correlation id"
         required: true
         type: string
+      project_id:
+        description: "Optional real field project ID; uses /qa/work/<id> instead of /builder/noauth"
+        required: false
+        type: string
 
 permissions:
   contents: read
@@ -44,6 +48,7 @@ jobs:
       CANVAS_URL: ${{ inputs.canvas_url }}
       HEAD_SHA: ${{ inputs.head_sha }}
       REQUEST_ID: ${{ inputs.request_id }}
+      PROJECT_ID: ${{ inputs.project_id }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
