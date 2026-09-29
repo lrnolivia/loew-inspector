@@ -1,4 +1,5 @@
 import { chromium } from "playwright";
+import { mkdir, writeFile } from "node:fs/promises";
 import { getBuiltInRecipe } from "../src/recipe-catalog.js";
 
 const target = new URL(process.env.TARGET_URL || "");
@@ -16,11 +17,16 @@ const ingestBase = process.env.INSPECTOR_BRIDGE || "https://loew-inspector-gatew
 if (!/^[a-zA-Z0-9._-]{1,80}$/.test(requestId)) throw new Error("Safe request id required");
 if (!/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$/.test(projectId)) throw new Error("Valid project id required");
 if (!clientId || !clientSecret) throw new Error("Inspector bridge credentials required");
+const isQaWork = target.pathname === "/qa/work/" + encodeURIComponent(projectId);
+const isBuilderSmoke = environment === "smoke" &&
+  target.hostname === "field.loew.fi" &&
+  target.pathname === "/builder/noauth";
 if (target.protocol !== "https:" || !(target.hostname === "field.loew.fi" || target.hostname.endsWith(".field-preview.loew.fi")) ||
     target.username || target.password || target.port || target.search || target.hash ||
-    target.pathname !== "/qa/work/" + encodeURIComponent(projectId)) {
-  throw new Error("TARGET_URL must be the canonical field /qa/work/{projectId} route");
+    (!isQaWork && !isBuilderSmoke)) {
+  throw new Error("TARGET_URL must be field /qa/work/{projectId}, or field.loew.fi/builder/noauth for smoke runs");
 }
+const routeKind = isBuilderSmoke ? "builder-noauth" : "qa-work";
 
 const runId = "run_" + crypto.randomUUID();
 const startedAt = new Date().toISOString();
@@ -80,7 +86,7 @@ async function uploadCapture({ step, index, screenshot, title, dom, accessibilit
     project_id: projectId,
     environment,
     surface: "editor",
-    route_kind: "qa-work",
+    route_kind: routeKind,
     commit_sha: commitSha || null,
     pr_number: Number.isInteger(prNumber) && prNumber > 0 ? prNumber : null,
     deployment_id: deploymentId || null
@@ -224,6 +230,7 @@ let browser;
 let completed = 0;
 let failed = 0;
 const captures = [];
+await mkdir("qa-evidence", { recursive: true });
 try {
   await postRun("running", 0);
   browser = await chromium.launch({ headless: true });
@@ -252,6 +259,10 @@ try {
 
     const summaries = await snapshotSummaries(page);
     const screenshot = await page.screenshot({ fullPage: true });
+    await writeFile(
+      "qa-evidence/" + String(index + 1).padStart(2, "0") + "-" + step.id + ".png",
+      screenshot,
+    );
     const errors = runtimeErrors.slice(beforeErrors, beforeErrors + 20);
     if (stepError) errors.unshift(stepError);
     const stored = await uploadCapture({
@@ -276,7 +287,7 @@ try {
 
   const status = failed ? "failed" : "complete";
   await postRun(status, completed, failed ? { error: failed + " step(s) failed" } : {});
-  console.log("LOEW_EVIDENCE_RESULT=" + JSON.stringify({
+  const finalResult = {
     ok: !failed,
     run_id: runId,
     request_id: requestId,
@@ -284,7 +295,9 @@ try {
     engine: "github-chromium",
     status,
     captures
-  }));
+  };
+  await writeFile("qa-evidence/result.json", JSON.stringify(finalResult, null, 2));
+  console.log("LOEW_EVIDENCE_RESULT=" + JSON.stringify(finalResult));
   if (failed) process.exitCode = 1;
 } catch (error) {
   const message = error instanceof Error ? error.message : String(error);

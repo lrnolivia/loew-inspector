@@ -45,3 +45,12 @@ test("workspace mode assertion reads the collapsed trigger's active-layout label
   assert.match(source, /trigger\.getAttribute\("aria-label"\)/);
   assert.match(source, /activeLabel\.toLowerCase\(\)\.includes\(step\.value\.toLowerCase\(\)\)/);
 });
+
+
+test("evidence runner keeps read-only QA and editable builder smoke as separate lanes", async () => {
+  const source = await readFile(new URL("./evidence-run.mjs", import.meta.url), "utf8");
+  assert.match(source, /isBuilderSmoke/);
+  assert.match(source, /builder\\/noauth/);
+  assert.match(source, /routeKind = isBuilderSmoke/);
+  assert.match(source, /qa-evidence/);
+});

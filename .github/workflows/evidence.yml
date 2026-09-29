@@ -6,11 +6,11 @@ on:
   workflow_dispatch:
     inputs:
       target_url:
-        description: "Canonical field /qa/work/<projectId> URL"
+        description: "field /qa/work/<projectId> or /builder/noauth smoke URL"
         required: true
         type: string
       project_id:
-        description: "Real field project ID"
+        description: "Real field project ID, or builder-noauth for smoke runs"
         required: true
         type: string
       suite:
@@ -27,6 +27,7 @@ on:
           - qa
           - production
           - preview
+          - smoke
       request_id:
         description: "Correlation id"
         required: true
@@ -73,3 +74,10 @@ jobs:
           npx playwright install --with-deps chromium
       - name: Run deterministic evidence suite
         run: node scripts/evidence-run.mjs
+      - name: Save screenshot evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: "evidence-${{ inputs.request_id }}"
+          path: qa-evidence/
+          if-no-files-found: ignore
