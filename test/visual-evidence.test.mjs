@@ -111,3 +111,37 @@ test("run review reports assertion failures before visual comparison and first d
   assert.equal(review.first_divergence.step_id, "full");
   assert.equal(review.steps[0].baseline_evidence_id, "vis_base12345");
 });
+
+
+test("ignores tiny serialization drift when structure and accessibility shape are stable", () => {
+  const base = {
+    viewport: { width: 1440, height: 900 },
+    context: { project: "field", surface: "editor" },
+    dom: { html_bytes: 106880, element_tag_count: 528 },
+    accessibility: { available: true, line_count: 88, bytes: 2711 }
+  };
+  const current = {
+    viewport: { width: 1440, height: 900 },
+    context: { project: "field", surface: "editor" },
+    dom: { html_bytes: 107099, element_tag_count: 528 },
+    accessibility: { available: true, line_count: 88, bytes: 2706 }
+  };
+  const comparison = compareEvidenceRecords(base, current);
+  assert.equal(comparison.result, "pass");
+  assert.equal(comparison.dom.changed, false);
+  assert.equal(comparison.accessibility.changed, false);
+});
+
+test("still reports materially different DOM byte drift when structure count is unchanged", () => {
+  const base = {
+    viewport: { width: 1440, height: 900 },
+    context: { project: "field", surface: "editor" },
+    dom: { html_bytes: 1000, element_tag_count: 40 },
+    accessibility: { available: true, line_count: 20, bytes: 500 }
+  };
+  const current = {
+    ...structuredClone(base),
+    dom: { html_bytes: 1010, element_tag_count: 40 }
+  };
+  assert.equal(compareEvidenceRecords(base, current).result, "changed");
+});

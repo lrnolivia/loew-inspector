@@ -112,6 +112,17 @@ function accessibilitySignature(value) {
   };
 }
 
+const DOM_BYTE_RATIO_TOLERANCE = 0.005;
+const A11Y_BYTE_RATIO_TOLERANCE = 0.01;
+
+function relativeDeltaExceeded(baseValue, currentValue, ratioTolerance) {
+  const baseNumber = Number(baseValue);
+  const currentNumber = Number(currentValue);
+  if (!Number.isFinite(baseNumber) || !Number.isFinite(currentNumber)) return baseNumber !== currentNumber;
+  const scale = Math.max(Math.abs(baseNumber), Math.abs(currentNumber), 1);
+  return Math.abs(baseNumber - currentNumber) / scale > ratioTolerance;
+}
+
 export function compareEvidenceRecords(base, current) {
   if (!base || !current) throw new Error("Both evidence records are required");
   const sameViewport = Number(base.viewport?.width) === Number(current.viewport?.width) &&
@@ -120,15 +131,17 @@ export function compareEvidenceRecords(base, current) {
   const baseA11y = accessibilitySignature(base.accessibility);
   const currentA11y = accessibilitySignature(current.accessibility);
   const a11yComparable = Boolean(baseA11y && currentA11y);
-  const domChanged = domComparable && (
-    Number(base.dom.html_bytes) !== Number(current.dom.html_bytes) ||
-    Number(base.dom.element_tag_count) !== Number(current.dom.element_tag_count)
-  );
+  const domElementChanged = domComparable &&
+    Number(base.dom.element_tag_count) !== Number(current.dom.element_tag_count);
+  const domBytesChanged = domComparable &&
+    relativeDeltaExceeded(base.dom.html_bytes, current.dom.html_bytes, DOM_BYTE_RATIO_TOLERANCE);
+  const domChanged = domComparable && (domElementChanged || domBytesChanged);
   const a11yChanged = a11yComparable && (
     baseA11y.available !== currentA11y.available ||
     (baseA11y.node_count != null && currentA11y.node_count != null
       ? baseA11y.node_count !== currentA11y.node_count
-      : baseA11y.line_count !== currentA11y.line_count || baseA11y.bytes !== currentA11y.bytes)
+      : baseA11y.line_count !== currentA11y.line_count ||
+        relativeDeltaExceeded(baseA11y.bytes, currentA11y.bytes, A11Y_BYTE_RATIO_TOLERANCE))
   );
   const contextMatch = (base.context?.project ?? null) === (current.context?.project ?? null) &&
     (base.context?.surface ?? null) === (current.context?.surface ?? null);
@@ -136,8 +149,24 @@ export function compareEvidenceRecords(base, current) {
     result: (!sameViewport || domChanged || a11yChanged) ? "changed" : "pass",
     same_viewport: sameViewport,
     context_match: contextMatch,
-    dom: { comparable: domComparable, changed: domChanged, base: base.dom ?? null, current: current.dom ?? null },
-    accessibility: { comparable: a11yComparable, changed: a11yChanged, base: base.accessibility ?? null, current: current.accessibility ?? null }
+    dom: {
+      comparable: domComparable,
+      changed: domChanged,
+      html_bytes_delta: domComparable ? Number(current.dom.html_bytes || 0) - Number(base.dom.html_bytes || 0) : null,
+      html_bytes_ratio_tolerance: DOM_BYTE_RATIO_TOLERANCE,
+      base: base.dom ?? null,
+      current: current.dom ?? null
+    },
+    accessibility: {
+      comparable: a11yComparable,
+      changed: a11yChanged,
+      bytes_delta: a11yComparable && baseA11y.bytes != null && currentA11y.bytes != null
+        ? Number(currentA11y.bytes) - Number(baseA11y.bytes)
+        : null,
+      bytes_ratio_tolerance: A11Y_BYTE_RATIO_TOLERANCE,
+      base: base.accessibility ?? null,
+      current: current.accessibility ?? null
+    }
   };
 }
 

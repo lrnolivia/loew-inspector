@@ -25,6 +25,21 @@ normal ChatGPT / Project chats
 
 The first pilot is **field**.
 
+## Gen 2.1 visual evidence
+
+Runner now includes the protected `visual` review surface for loew inspector evidence. It is an evidence/review console, not a browser engine.
+
+- Inspector chooses among HTTP, GitHub Chromium, and scarce Cloudflare Browser Run capacity.
+- GitHub Chromium is the deterministic workhorse for real-project `/qa/work/{projectId}` recipes.
+- Evidence is normalized into private R2 regardless of capture engine.
+- Runs group multiple captures from one browser session and expose progress/state in `visual`.
+- Versioned recipes can be compiled from bounded Browser Run traces and replayed deterministically.
+- Review uses explicit assertions first, then same-step/same-project/same-environment baselines, structured DOM/accessibility comparison, manual pixel-delta comparison, and first-divergence reporting.
+- Tiny serialization-only byte drift is tolerated when structural counts remain stable; material DOM/accessibility changes still surface.
+- `/builder/noauth` remains smoke-only. Real project QA uses `/qa/work/{projectId}`.
+
+Current Gen 2.1 Runner package: **v0.6.0**.
+
 ## Design goals
 
 - one scheduler can manage many jobs
