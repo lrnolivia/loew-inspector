@@ -2,7 +2,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test src/*.test.js"
+    "test": "node --test src/*.test.js scripts/browser-call.test.mjs"
   },
   "devDependencies": {
     "playwright": "1.60.0"
