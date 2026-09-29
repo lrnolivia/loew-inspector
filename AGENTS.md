@@ -59,3 +59,15 @@ A danger zone handoff must be exact-SHA, isolated from production writes, exclud
 Do not use danger zone to bypass a repeatable product failure, security/auth boundary, destructive migration, data-integrity risk, required deterministic check, or missing authority. Those remain blockers.
 
 After a danger zone handoff, stop mutating the product merely to chase QA. Resume only from new evidence, a user verdict, or a materially new hypothesis.
+
+## Runner 3.0 human control plane
+
+If the user asks to pick up Runner 3.0, the project-management dashboard, assignment UI, project overview, agent/worker topology, overlap management, repo hygiene, notes/tracker consolidation, handoff generation, or the human control-plane work, read:
+
+1. `assignments/runner-3-human-control-plane.json`
+2. `docs/RUNNER_3_0_HUMAN_CONTROL_PLANE.md`
+3. fresh Runner main/dashboard/server state
+4. current Runner/Inspector infrastructure ownership before changing capacity/execution logic
+
+Runner 3.0 core workflows must not depend on paid model inference. Preserve existing visual evidence and scheduler controls while migrating to the project-first UI.
+
