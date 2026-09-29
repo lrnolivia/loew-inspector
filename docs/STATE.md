@@ -1,5 +1,13 @@
 # current state
 
+## GitHub browser bridge failure handling
+
+- `capture.yml` persists every result in `browser-result.json` and exposes `status` / `qa_passed` outputs.
+- Browser capacity, HTTP 429, and temporary gateway 502/503/504 states are deferred, with QA explicitly blocked/unverified. A successful dispatch job alone does not prove QA passed.
+- Retry metadata and deterministic fallback hints are preserved; no capacity retry occurs before reset and no automatic fallback claims session equivalence.
+- Snapshot/screenshot gateway failures get at most one bounded retry when Retry-After is ten seconds or less. Session mutations and uncertain transport outcomes are never automatically replayed.
+- Authentication, malformed responses, RPC/tool errors, and failed QA results remain failures.
+
 ## Gen 2.1
 
 - evidence controller chooses the cheapest capable engine deterministically

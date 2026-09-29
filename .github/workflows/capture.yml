@@ -83,8 +83,16 @@ jobs:
   browser:
     runs-on: ubuntu-latest
     timeout-minutes: 4
+    outputs:
+      status: ${{ steps.browser.outputs.status }}
+      qa_passed: ${{ steps.browser.outputs.qa_passed }}
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
       - name: Call browser inspector
+        id: browser
         shell: bash
         env:
           ACTION: ${{ inputs.action }}
@@ -149,23 +157,14 @@ jobs:
 
           tool="browser_$ACTION"
           body="$(TOOL="$tool" ARGS="$args" node -e 'process.stdout.write(JSON.stringify({jsonrpc:"2.0",id:process.env.REQUEST_ID,method:"tools/call",params:{name:process.env.TOOL,arguments:JSON.parse(process.env.ARGS)}}))')"
-          auth_header="$(node <<'NODE'
-          process.stdout.write(JSON.stringify({
-            "cf-access-client-id": process.env.CF_ACCESS_CLIENT_ID,
-            "cf-access-client-secret": process.env.CF_ACCESS_CLIENT_SECRET
-          }));
-          NODE
-          )"
           body_file="$(mktemp)"
           trap 'rm -f "$body_file"' EXIT
-          status="$(curl --silent --show-error --output "$body_file" --write-out '%{http_code}'             -X POST "https://loew-inspector-gateway.lrnoliv.workers.dev/mcp"             -H "Authorization: $auth_header"             -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID"             -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET"             -H "Content-Type: application/json"             --data "$body")"
-          test "$status" = "200"
-          node - "$body_file" <<'NODE'
-          const fs = require("node:fs");
-          const parsed = JSON.parse(fs.readFileSync(process.argv[2], "utf8"));
-          if (parsed.error || parsed?.result?.isError || !parsed?.result?.structuredContent?.ok) {
-            console.error(JSON.stringify(parsed));
-            process.exit(1);
-          }
-          console.log("LOEW_INSPECTOR_RESULT=" + JSON.stringify(parsed.result.structuredContent));
-          NODE
+          printf '%s' "$body" > "$body_file"
+          node scripts/browser-call.mjs "$body_file"
+      - name: Save browser operation result
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: "browser-result-${{ inputs.request_id }}"
+          path: qa-evidence/browser-result.json
+          if-no-files-found: ignore
