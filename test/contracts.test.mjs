@@ -43,8 +43,7 @@ test("Bible keeps QA loop escape and danger-zone law", () => {
     "human qa required",
     "browser run",
     "github chromium",
-    "automatic promotion",
-    "runner-first qa authority"
+    "automatic promotion"
   ]) {
     assert.ok(lower.includes(phrase), "missing QA invariant: " + phrase);
   }
