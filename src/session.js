@@ -1,5 +1,5 @@
 import { normalizeViewport } from "./browser.js";
-import { decodeBase64Bytes, storeEvidence } from "./evidence.js";
+import { decodeBase64Bytes, storeEvidence, normalizeEvidenceContext } from "./evidence.js";
 
 const SESSION_RE = /^[a-zA-Z0-9_-]{8,128}$/;
 const TARGET_RE = /^[a-zA-Z0-9._:-]{1,256}$/;
@@ -248,7 +248,7 @@ async function enforceTopLevelLoewNavigation(client, pageSessionId, previousUrl)
   throw new Error("Browser interaction attempted to leave loew.fi");
 }
 
-export async function openBrowserSession(binding, bucket, { url, accessJwt, viewport, keepAliveMs = 600000 }) {
+export async function openBrowserSession(binding, bucket, { url, accessJwt, viewport, keepAliveMs = 600000, context = null }) {
   if (!binding?.acquire || !binding?.devtools) throw new Error("Browser Run session API unavailable");
   const vp = normalizeViewport(viewport);
   const keepAlive = Math.min(1200000, Math.max(10000, Number(keepAliveMs) || 600000));
@@ -281,6 +281,7 @@ export async function openBrowserSession(binding, bucket, { url, accessJwt, view
       title: identity?.title || "",
       viewport: vp,
       keep_alive_ms: keepAlive,
+      context: normalizeEvidenceContext(context),
       status: "open",
       created_at: now,
       updated_at: now,
@@ -375,7 +376,7 @@ export async function interactBrowserSession(binding, bucket, args) {
   }
 }
 
-export async function captureBrowserSession(binding, bucket, { sessionId, targetId, accessJwt, requestId, fullPage = false }) {
+export async function captureBrowserSession(binding, bucket, { sessionId, targetId, accessJwt, requestId, fullPage = false, context = null }) {
   const meta = await readSession(bucket, assertSessionId(sessionId));
   if (meta.status !== "open") throw new Error("Browser session is not open");
   const chosenTarget = assertTargetId(targetId) || meta.target_id;
@@ -404,6 +405,7 @@ export async function captureBrowserSession(binding, bucket, { sessionId, target
       viewport: meta.viewport,
       fullPage: Boolean(fullPage),
       durationMs: Date.now() - started,
+      context: context ?? meta.context,
       extra: {
         session_id: meta.session_id,
         target_id: chosenTarget,

@@ -1,8 +1,22 @@
 import { browserRequestOptions, runQuickAction } from "./browser.js";
-import { storeEvidence, decodeBase64Bytes, summarizeSnapshot } from "./evidence.js";
+import { storeEvidence, decodeBase64Bytes, summarizeSnapshot, normalizeEvidenceContext } from "./evidence.js";
 import { openBrowserSession, interactBrowserSession, captureBrowserSession, closeBrowserSession } from "./session.js";
 
-const VERSION = "0.5.0";
+const VERSION = "0.6.0";
+const EVIDENCE_CONTEXT_SCHEMA = {
+  type: "object",
+  properties: {
+    project: { type: "string", maxLength: 80 },
+    project_id: { type: "string", maxLength: 128 },
+    environment: { type: "string", enum: ["production","preview","qa","smoke","unknown"] },
+    surface: { type: "string", maxLength: 80 },
+    route_kind: { type: "string", enum: ["qa-work","builder-smoke","runner","other"] },
+    commit_sha: { type: "string", maxLength: 64 },
+    pr_number: { type: "integer", minimum: 1, maximum: 1000000 },
+    deployment_id: { type: "string", maxLength: 128 }
+  },
+  additionalProperties: false
+};
 const ACCESS_ISSUER = "https://loewfi.cloudflareaccess.com";
 const ACCESS_AUD = "6d19d2ef9eea644a9f55a049699a31110150fefebb1bca8c89632b9dd149ccd6";
 const BRIDGE_ACCESS_AUD = "042e98668017c064913a05705dd5e26de48153116ecb9bd574ec1128a559fd23";
@@ -255,6 +269,7 @@ async function mcp(request, access, env) {
             properties: {
               url: { type: "string", description: "HTTPS loew.fi URL" },
               request_id: { type: "string", description: "Optional safe correlation id" },
+              context: EVIDENCE_CONTEXT_SCHEMA,
               full_page: { type: "boolean", default: false },
               selector: { type: "string", description: "Optional CSS selector to capture" },
               viewport: {
@@ -281,6 +296,7 @@ async function mcp(request, access, env) {
             properties: {
               url: { type: "string", description: "HTTPS loew.fi URL" },
               request_id: { type: "string", description: "Optional safe correlation id" },
+              context: EVIDENCE_CONTEXT_SCHEMA,
               full_page: { type: "boolean", default: false },
               viewport: {
                 type: "object",
@@ -305,6 +321,7 @@ async function mcp(request, access, env) {
             type: "object",
             properties: {
               url: { type: "string", description: "HTTPS loew.fi URL" },
+              context: EVIDENCE_CONTEXT_SCHEMA,
               keep_alive_ms: { type: "number", minimum: 10000, maximum: 1200000, default: 600000 },
               viewport: {
                 type: "object",
@@ -362,6 +379,7 @@ async function mcp(request, access, env) {
               session_id: { type: "string" },
               target_id: { type: "string" },
               request_id: { type: "string" },
+              context: EVIDENCE_CONTEXT_SCHEMA,
               full_page: { type: "boolean", default: false }
             },
             required: ["session_id"],
@@ -422,7 +440,8 @@ async function mcp(request, access, env) {
           viewport: options.viewport,
           selector: options.selector ?? null,
           fullPage: Boolean(args.full_page),
-          durationMs: Date.now() - started
+          durationMs: Date.now() - started,
+          context: args.context
         });
         return rpc(id, {
           content: [{ type: "text", text: JSON.stringify(metadata) }],
@@ -456,6 +475,7 @@ async function mcp(request, access, env) {
           viewport: options.viewport,
           fullPage: Boolean(args.full_page),
           durationMs: Date.now() - started,
+          context: args.context,
           extra: {
             http_status: probe.status,
             final_url: probe.final_url,
@@ -478,7 +498,8 @@ async function mcp(request, access, env) {
           url: target,
           accessJwt: access.token,
           viewport: args.viewport,
-          keepAliveMs: args.keep_alive_ms
+          keepAliveMs: args.keep_alive_ms,
+          context: args.context
         });
         return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
       }
@@ -505,7 +526,8 @@ async function mcp(request, access, env) {
           targetId: args.target_id,
           accessJwt: access.token,
           requestId: args.request_id,
-          fullPage: args.full_page
+          fullPage: args.full_page,
+          context: args.context
         });
         return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
       }
