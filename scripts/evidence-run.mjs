@@ -178,7 +178,7 @@ try {
   const page = await browser.newPage({ viewport: { width: 1440, height: 900 } });
   const runtimeErrors = [];
   page.on("pageerror", error => runtimeErrors.push("page: " + error.message.slice(0, 260)));
-  page.on("requestfailed", request => runtimeErrors.push("request: " + request.url() + " " + (request.failure()?.errorText || "")).slice(0, 300));
+  page.on("requestfailed", request => runtimeErrors.push(("request: " + request.url() + " " + (request.failure()?.errorText || "")).slice(0, 300)));
 
   const response = await page.goto(target.toString(), { waitUntil: "domcontentloaded", timeout: 25000 });
   if ((response?.status() || 0) !== 200) throw new Error("Editor QA route returned " + (response?.status() || 0));
