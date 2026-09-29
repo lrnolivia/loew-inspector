@@ -1,4 +1,4 @@
-const VERSION = "0.3.2";
+const VERSION = "0.4.0";
 const ACCESS_ISSUER = "https://loewfi.cloudflareaccess.com";
 const ACCESS_AUD = "6d19d2ef9eea644a9f55a049699a31110150fefebb1bca8c89632b9dd149ccd6";
 const BRIDGE_ACCESS_AUD = "042e98668017c064913a05705dd5e26de48153116ecb9bd574ec1128a559fd23";
@@ -186,7 +186,7 @@ function rpcError(id, code, message) {
   return json({ jsonrpc: "2.0", id, error: { code, message } });
 }
 
-async function mcp(request, access) {
+async function mcp(request, access, env) {
   if (request.method !== "POST") {
     return json({ error: "Method not allowed" }, 405, { allow: "POST" });
   }
@@ -276,7 +276,7 @@ async function mcp(request, access) {
 }
 
 export default {
-  async fetch(request) {
+  async fetch(request, env) {
     const url = new URL(request.url);
 
     if (url.pathname === "/health" && request.method === "GET") {
@@ -285,7 +285,8 @@ export default {
         service: "loew-inspector",
         version: VERSION,
         auth: "cloudflare-managed-oauth",
-        downstream_auth: "linked-app-token"
+        downstream_auth: "linked-app-token",
+        browser_runtime: Boolean(env?.BROWSER)
       });
     }
 
@@ -300,7 +301,7 @@ export default {
       );
     }
 
-    if (url.pathname === "/mcp") return mcp(request, access);
+    if (url.pathname === "/mcp") return mcp(request, access, env);
 
     if (url.pathname === "/setup") {
       return json({
