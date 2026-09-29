@@ -53,6 +53,46 @@ const BUILT_INS = Object.freeze({
       Object.freeze({ id: "float", label: "Float", action: "workspace-layout", value: "Float" })
     ])
   }),
+  "field.media-toolbar": Object.freeze({
+    id: "field.media-toolbar",
+    schema_version: RECIPE_SCHEMA_VERSION,
+    recipe_version: 1,
+    title: "Media toolbar and Insert separation",
+    description: "Verify Media opens from the bottom toolbar and is absent from the Insert sidebar.",
+    real_project: true,
+    verified: true,
+    engine: "github-chromium",
+    steps: Object.freeze([
+      Object.freeze({ id: "canvas-first-paint", label: "Canvas first paint", action: "first-paint" }),
+      Object.freeze({
+        id: "media-open",
+        label: "Open toolbar Media",
+        action: "interaction",
+        interaction: Object.freeze({
+          action: "click",
+          locator: Object.freeze({ type: "css", value: "[data-toolbar-tool=\"media\"]" })
+        })
+      }),
+      Object.freeze({
+        id: "media-close",
+        label: "Close toolbar Media",
+        action: "interaction",
+        interaction: Object.freeze({
+          action: "click",
+          locator: Object.freeze({ type: "css", value: "[data-toolbar-tool=\"media\"]" })
+        })
+      }),
+      Object.freeze({
+        id: "insert-open",
+        label: "Open Insert sidebar",
+        action: "interaction",
+        interaction: Object.freeze({
+          action: "click",
+          locator: Object.freeze({ type: "css", value: "[data-left-menu-item=\"insert\"]" })
+        })
+      })
+    ])
+  }),
   "field.stage0": Object.freeze({
     id: "field.stage0",
     schema_version: RECIPE_SCHEMA_VERSION,
