@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T23:04:19.863Z",
+  "updated_at": "2026-09-30T23:05:29.874Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -1310,7 +1310,8 @@
         "docs/skills/",
         "docs/relay/RELAY_1_9_RELEASE.md",
         "docs/relay/DEVELOPMENT_CADENCE.md",
-        "docs/relay/findings/"
+        "docs/relay/findings/",
+        "src/coordination-engine.js"
       ],
       "resources": [
         "relay-1.9-release",
@@ -1331,12 +1332,12 @@
       ],
       "goal": "Ship Relay 1.9 as the skills-runtime and creative-intelligence release, including a first-class assignment-amendment workflow and planning skills that use the findings ledger to route worthwhile discoveries into the right existing or future assignment instead of leaving them as inert notes or spawning unnecessary parallel work.",
       "acceptance": "Release metadata/docs identify Relay 1.9.0. Add first-class relay.SKILLS registry/runtime with deterministic JIT resolution, provenance/license/integrity metadata, capability gating, bounded context, project-private overlays, and creative/platform/performance packs for web, macOS, Windows, Android and GNOME plus safe GitHub/Cloudflare operational expertise. Add a canonical Runner amendment transaction for queued and claimed assignments. Amendments must preserve stable assignment identity and ownership, use expected-record/CAS + readback, record who/when/what changed and why, reject stale revisions, and enforce immutable fields where safety requires it (for example claimed branch/base identity). Supported amendment scope must include at minimum goal, acceptance, next_action, paths/resources and task-class/ledger linkage where those fields exist; path/resource changes remain conflict-checked against current ownership. Queue amendments must not require deleting/recreating the assignment. Claimed amendments must not silently replace branch/baseline or bypass admission. Expose amendment history/readback clearly enough for UI and agents to explain the current assignment versus prior intent.\n\nMake findings/suggestions an active planning input. Add a planning/coordination skill that instructs agents to scan relevant open RFS entries when shaping/rescoping work, classify each as adopt/defer/reject/supersede, place adopted findings into the most appropriate existing assignment through the canonical amendment flow when safe, otherwise create/link a deliberately classified successor, and update the RFS entry with assignment linkage/status. Do not treat the ledger as an automatic backlog or create duplicate assignments merely because a finding exists. Skills must know the amendment flow and prefer it over hand-editing coordination state.\n\nSystem-wide UI doctrine: inline cards use a direct human headline plus a short parsable description; exact technical details are one click away or subordinate small copy. Human-QA requests identify the exact surface/change, intended result, evidence/live-preview identity and 1–3 concrete checks rather than generic questions. Live interactive previews are the preferred human-review surface when viable; show health/expiry, preserve exact commit/deployment identity, support revive/refresh where bounded, and use screenshots primarily as durable evidence/fallback. Tests cover amendment safety/history/conflict handling, ledger→assignment routing behavior, skill resolution/provenance/tool gating, UI copy hierarchy, QA specificity and live-preview lifecycle. Existing 1.8 contracts stay compatible; no parallel state store, giant prompt dump, one-tool-per-skill explosion or new standing credentials.",
-      "next_action": "Phase A now: implement/test canonical assignment amendments plus audit/history; add planning/coordination skills that consume findings and use amendments; implement low-overhead resume checkpoints. Also codify universal loew development cadence: prefer coherent x.x.# patch releases for independently shippable architecture/tool/contract slices across every project, not only Relay or 1.9. For patches that change MCP/tool/schema/contract/client-discovery surfaces, canonical sequence is exact-source merge/deploy -> runtime verification -> refresh/reload tool integration -> reopen/refresh consuming client/session when required -> verify the new surface -> continue from the new canonical state. Avoid needless refreshes for patches that cannot affect consumer surfaces and avoid meaningless version churn. Record this as durable doctrine + skill behavior. Keep shared 1.8 UI paths untouched until 1.8 formally closes.",
+      "next_action": "First shippable 1.9 architecture patch: implement canonical Runner amend for queued/claimed assignments with bounded audit history, CAS/readback and conflict-safe path/resource changes; codify universal patch cadence + size-limit doctrine. Ship this coherent slice, refresh Relay tools/reopen ChatGPT, verify amend from the consumer side, then continue with scalable SOURCE patch/chunk transport and resume checkpoints on refreshed main.",
       "base_sha": "47fb7b4f73afc3407977503fb706c4935711aee5",
       "state": "active",
       "created_at": "2026-09-30T22:49:27.571Z",
-      "updated_at": "2026-09-30T23:02:42.248Z",
-      "lease_until": "2026-10-01T11:02:42.248Z"
+      "updated_at": "2026-09-30T23:05:29.874Z",
+      "lease_until": "2026-10-01T11:05:29.874Z"
     }
   ],
   "migrated_from": "loew-inspector"
