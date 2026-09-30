@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T14:50:07.004Z",
+  "updated_at": "2026-09-30T14:56:46.210Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -658,10 +658,16 @@
       "acceptance": "Relay contains an implementation-ready monorepo layout with MCP/web apps plus runner and inspector subsystem packages; loew-runner source and meaningful Git history/provenance are preserved in the consolidation rather than copied as anonymous files; existing Inspector/Relay history remains intact from the repository rename; package/workspace/test/build boundaries are explicit; night shift is represented as a Relay feature/view, not another product; no production routing or old repository deletion occurs yet; exact source and history import are independently verifiable before Batch 3.",
       "next_action": "Resume Batch 2 exact-head history-preserving import; user has authorized sequential consolidation through Batch 6 after each batch admission, checks and accounting.",
       "base_sha": "2ddc8fdbbda871ad91e563fc657bcc4c382fd236",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T14:39:45.880Z",
-      "updated_at": "2026-09-30T14:50:07.004Z",
-      "lease_until": "2026-10-01T02:50:07.004Z"
+      "updated_at": "2026-09-30T14:56:46.210Z",
+      "lease_until": "2026-10-01T02:56:46.210Z",
+      "pr": 41,
+      "merged_head_sha": "fdefc6c724f94cbf9605cfa72665208380a7ee2b",
+      "merge_commit_sha": "fc3eb586931d33c887d5e2b58c63a8e002fecf33",
+      "evidence": "https://github.com/lrnolivia/relay/pull/41; exact head fdefc6c724f94cbf9605cfa72665208380a7ee2b passed 76 Inspector, 45 Runner, 3 provenance/layout tests plus CI and Runner admission. Runner 71a5fdbae3303b28a840579d816dc846aaae5186 and all 246 original ancestors preserved with two-parent import and merge commit; both source and Relay ancestry verified against remote main. docs/MONOREPO_LAYOUT.md and docs/RUNNER_IMPORT_PROVENANCE.md account code/history boundaries; live control state and runtime untouched.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T14:56:46.210Z"
     }
   ]
 }
