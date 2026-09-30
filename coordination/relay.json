@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T20:15:42.602Z",
+  "updated_at": "2026-09-30T20:16:32.440Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -851,7 +851,8 @@
         "features/night-shift/",
         "docs/relay/",
         "packages/runner/src/",
-        "apps/web/api.js"
+        "apps/web/api.js",
+        ".superdesign/"
       ],
       "resources": [
         "relay-shared-interface-brand",
@@ -859,12 +860,12 @@
       ],
       "goal": "Add supplied official Relay icon and thick animated interface glyphs, with Runner/Inspector marks used only for internal subsystem context.",
       "acceptance": "Shared web/MCP carries exact provided assets, coherent rounded animated glyphs, accessible labels and reduced-motion support; focused browser/build and exact-head admission pass.",
-      "next_action": "Apply Terra Prime App Examples, Flow Patterns and Foundations: sidebar, badges, Orient/Act/Resolve progressive review, official brand assets and thick animated glyphs; discover genuine project icons from registered repositories. Validate shared web/MCP, exact-head admission and production readback.",
+      "next_action": "Prepare local Superdesign context and authenticated canvas with supplied brand assets; apply user-selected Terra Prime app/component/flow design, validate shared interface and repository icon discovery, exact-head ship/readback.",
       "base_sha": "c9f6af7e51e478d25c1cb58f89f782063246ae20",
       "state": "active",
       "created_at": "2026-09-30T20:02:57.628Z",
-      "updated_at": "2026-09-30T20:15:42.602Z",
-      "lease_until": "2026-10-01T08:15:42.602Z"
+      "updated_at": "2026-09-30T20:16:32.440Z",
+      "lease_until": "2026-10-01T08:16:32.440Z"
     }
   ],
   "migrated_from": "loew-inspector"
