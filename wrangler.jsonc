@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "loew-inspector-gateway",
+  "name": "loew-inspector",
   "main": "src/index.js",
   "compatibility_date": "2026-09-29",
   "compatibility_flags": [
@@ -23,7 +23,7 @@
   ],
   "vars": {
     "CLOUDFLARE_ACCOUNT_ID": "8df30cd302a4d4a4c01db9863c712166",
-    "RELAY_CLOUDFLARE_WRITE_SCRIPTS": "loew-inspector-gateway",
+    "RELAY_CLOUDFLARE_WRITE_SCRIPTS": "loew-inspector",
     "RELAY_GITHUB_APP_ID": "5133504"
   },
   "browser": {

@@ -8,7 +8,7 @@ test("relay.CLOUD status is truthful and writes are bounded", () => {
   assert.equal(empty.builds_configured, false);
   assert.deepEqual(empty.required_bindings, ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN"]);
   assert.deepEqual(empty.builds_required_bindings, ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_BUILDS_API_TOKEN"]);
-  assert.deepEqual(cloudWriteScripts({}), ["loew-inspector-gateway"]);
+  assert.deepEqual(cloudWriteScripts({}), ["loew-inspector"]);
   const ready = cloudStatus({
     CLOUDFLARE_ACCOUNT_ID: "a",
     CLOUDFLARE_API_TOKEN: "primary",
@@ -30,7 +30,7 @@ test("relay.CLOUD uses the dedicated user token only for Workers Builds", async 
     if (String(url).endsWith("/workers/scripts")) {
       return new Response(JSON.stringify({
         success: true,
-        result: [{ id: "loew-inspector-gateway", tag: "worker-tag" }]
+        result: [{ id: "loew-inspector", tag: "worker-tag" }]
       }), { status: 200, headers: { "content-type": "application/json" } });
     }
     if (String(url).endsWith("/builds/workers/worker-tag/builds")) {
@@ -47,7 +47,7 @@ test("relay.CLOUD uses the dedicated user token only for Workers Builds", async 
       CLOUDFLARE_ACCOUNT_ID: "account",
       CLOUDFLARE_API_TOKEN: "primary-token",
       CLOUDFLARE_BUILDS_API_TOKEN: "builds-token"
-    }, "loew-inspector-gateway");
+    }, "loew-inspector");
 
     assert.deepEqual(result, { builds: [] });
     assert.deepEqual(authorizations, [
