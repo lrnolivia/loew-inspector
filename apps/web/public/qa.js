@@ -68,12 +68,12 @@ syncLaunch();
 function buildStage() {
   const node = document.createElement("section");
   node.className = "qa-stage";
-  node.setAttribute("aria-label", "Runner QA review");
+  node.setAttribute("aria-label", "Relay QA review");
   node.innerHTML =
     '<div class="qa-preview"></div>' +
     '<div class="qa-preview-toolbar" aria-label="Preview controls"></div>' +
-    '<aside class="qa-companion" role="dialog" aria-label="Runner QA questions"></aside>' +
-    '<button type="button" class="qa-mini">runner qa · reopen</button>';
+    '<aside class="qa-companion" role="dialog" aria-label="Relay QA questions"></aside>' +
+    '<button type="button" class="qa-mini">relay review · reopen</button>';
   document.body.appendChild(node);
   document.body.classList.add("qa-open");
   node.querySelector(".qa-mini").addEventListener("click", function () {
@@ -155,7 +155,7 @@ export async function openQa(evidenceId) {
       '<div class="qa-preview-message">QA could not open: ' + qaEscape(error.message) + "</div>";
     const panel = stage.querySelector(".qa-companion");
     panel.innerHTML =
-      '<div class="qa-panel-head"><div class="qa-panel-brand"><strong>runner qa</strong><small>could not load</small></div>' +
+      '<div class="qa-panel-head"><div class="qa-panel-brand"><strong>relay review</strong><small>could not load</small></div>' +
       '<button type="button" class="qa-icon-button" data-qa-close aria-label="Close QA">×</button></div>' +
       '<div class="qa-panel-body"><p class="qa-question-reason">' + qaEscape(error.message) + "</p></div>";
     panel.querySelector("[data-qa-close]").addEventListener("click", closeQa);

@@ -1,3 +1,4 @@
+import { githubApiRequest, sourceAuthStatus } from "../../../src/source.js";
 import { applyWorkerSettings, publicWorkerSettings } from "./settings.mjs";
 import { listVisualEvidence, getVisualEvidence, getVisualImage, compareVisualEvidence, listVisualRuns, reviewVisualRun } from "./visual-evidence.mjs";
 import { getQaReview, saveQaReview, qaQuestionsForEvidence, inspectLivePreview } from "./human-qa.mjs";
@@ -18,7 +19,8 @@ function json(value, status = 200, headers = {}) {
   });
 }
 
-function accessGuard(request, env) {
+function accessGuard(request, env, authenticatedMcp = false) {
+  if (authenticatedMcp) return null;
   if (String(env.REQUIRE_ACCESS ?? "true") === "false") return null;
   const assertion = request.headers.get("Cf-Access-Jwt-Assertion");
   if (assertion) return null;
@@ -27,15 +29,16 @@ function accessGuard(request, env) {
   }, 403);
 }
 
-function humanQaGuard(request) {
+function humanQaGuard(request, authenticatedMcp = false) {
+  if (authenticatedMcp) return null;
   if (request.headers.get("Cf-Access-Jwt-Assertion")) return null;
   return json({ error: "Human QA is available only through the Access-protected Runner." }, 403);
 }
 
 function tokenGuard(env) {
-  if (env.RUNNER_GITHUB_TOKEN) return null;
+  if (env.RUNNER_GITHUB_TOKEN || sourceAuthStatus(env).write_enabled) return null;
   return json({
-    error: "RUNNER_GITHUB_TOKEN is not configured as a Cloudflare Worker runtime secret."
+    error: "Relay GitHub App authentication is not configured."
   }, 503);
 }
 
@@ -50,6 +53,10 @@ function githubHeaders(env, extra = {}) {
 }
 
 async function githubRequest(env, path, options = {}) {
+  if (!env.RUNNER_GITHUB_TOKEN) return githubApiRequest(env, path, {
+    ...options,
+    body: typeof options.body === "string" ? JSON.parse(options.body) : options.body
+  });
   const response = await fetch(`${GITHUB_API}${path}`, {
     ...options,
     headers: githubHeaders(env, options.headers)
@@ -226,15 +233,35 @@ async function dispatchWorkflow(env, workflow, inputs = {}) {
   return { ok: true, workflow };
 }
 
-async function handleApi(request, env) {
+export async function handleApi(request, env, { authenticatedMcp = false } = {}) {
   const url = new URL(request.url);
 
   if (request.method === "GET" && url.pathname === "/api/health") {
-    return json({ ok: true, service: "loew-runner", version: "0.6" });
+    return json({ ok: true, service: "relay", subsystem: "runner", version: "0.6" });
   }
 
-  const accessError = accessGuard(request, env);
+  const accessError = accessGuard(request, env, authenticatedMcp);
   if (accessError) return accessError;
+
+  if (request.method === "POST" && !authenticatedMcp) {
+    const origin = request.headers.get("Origin");
+    if (origin && origin !== url.origin) return json({ error: "Cross-origin control writes are blocked." }, 403);
+  }
+  if (request.method === "GET" && url.pathname === "/api/projects") {
+    const entries = await githubRequest(env, `/repos/${OWNER}/${REPOSITORY}/contents/projects?ref=main`);
+    const projects = await Promise.all(entries.filter(item => item.type === "file" && item.name.endsWith(".json"))
+      .map(item => readJsonFile(env, "projects/" + item.name)));
+    return json({ projects: projects.map(item => item.value).filter(item => !item.alias_of) });
+  }
+  const projectMatch = url.pathname.match(/^\/api\/projects\/([a-zA-Z0-9._-]+)$/);
+  if (request.method === "GET" && projectMatch) {
+    const registration = await readJsonFile(env, "projects/" + projectMatch[1] + ".json");
+    const project = registration.value;
+    if (project.alias_of) return json({ error: "Use the canonical project " + project.alias_of }, 409);
+    const record = project.coordination?.record;
+    const coordination = record ? await readJsonFile(env, record) : null;
+    return json({ project, coordination: coordination?.value || null, record_sha: coordination?.sha || null });
+  }
 
   if (request.method === "GET" && url.pathname === "/api/visual/runs") {
     return json(await listVisualRuns(env.EVIDENCE, 30, {
@@ -270,7 +297,7 @@ async function handleApi(request, env) {
 
   const qaMatch = url.pathname.match(/^\/api\/visual\/(vis_[a-zA-Z0-9-]{8,128})\/qa$/);
   if (qaMatch && (request.method === "GET" || request.method === "POST")) {
-    const qaAccessError = humanQaGuard(request);
+    const qaAccessError = humanQaGuard(request, authenticatedMcp);
     if (qaAccessError) return qaAccessError;
     const evidence = await getVisualEvidence(env.EVIDENCE, qaMatch[1]);
     if (!evidence) return json({ error: "Evidence not found." }, 404);
@@ -285,7 +312,7 @@ async function handleApi(request, env) {
 
   const liveMatch = url.pathname.match(/^\/api\/visual\/(vis_[a-zA-Z0-9-]{8,128})\/live$/);
   if (request.method === "GET" && liveMatch) {
-    const qaAccessError = humanQaGuard(request);
+    const qaAccessError = humanQaGuard(request, authenticatedMcp);
     if (qaAccessError) return qaAccessError;
     const evidence = await getVisualEvidence(env.EVIDENCE, liveMatch[1]);
     if (!evidence) return json({ error: "Evidence not found." }, 404);

@@ -71,7 +71,7 @@ async function performAction(worker, action, button, ui) {
       action === "toggle"
         ? (worker.enabled ? "Automatic checks paused." : "Automatic checks resumed.")
         : action === "repair"
-          ? "Runner is preparing the guarded fix."
+          ? "Relay is preparing the guarded fix."
           : action === "doctor"
             ? "Setup check started."
             : "Project check started."
@@ -211,7 +211,7 @@ export async function loadToday(ui) {
     ui.setConnection("Connected", "good");
   } catch (error) {
     ui.setConnection(error.status === 403 ? "Access needed" : "Couldn’t connect", "bad");
-    document.querySelector("#today-attention").innerHTML = '<div class="operator-empty">Runner could not load project status.</div>';
+    document.querySelector("#today-attention").innerHTML = '<div class="operator-empty">Relay could not load project status.</div>';
     document.querySelector("#today-automations").innerHTML = "";
   }
 }

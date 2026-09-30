@@ -3,5 +3,13 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "Reserved web app boundary; current operator and QA implementation is imported with Runner."
+  "description": "Shared Relay operator and artifact-bound review interface for web and MCP app.",
+  "devDependencies": {
+    "esbuild": "0.25.10"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node --test test/*.test.mjs",
+    "check": "node --check ../mcp/index.js"
+  }
 }

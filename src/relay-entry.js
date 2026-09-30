@@ -1,3 +1,4 @@
+import { uiApiTool, callUiApi } from "../apps/web/api.js";
 import legacy from "./index.js";
 import { callSourceLifecycleTool } from "./source-lifecycle.js";
 import { runnerCleanupTool, callRunnerCleanup, validateRunnerCleanupArguments } from "./runner-cleanup.js";
@@ -72,7 +73,7 @@ export function augmentToolList(tools) {
     securitySchemes: schemes,
     _meta: { ...(old?._meta || {}), securitySchemes: schemes }
   };
-  const extensionTools = [...lifecycle, runnerCleanupTool, cloudUploadTool];
+  const extensionTools = [...lifecycle, runnerCleanupTool, cloudUploadTool, uiApiTool];
   const names = new Set(extensionTools.map(tool => tool.name));
   const kept = list.filter(tool => tool.name !== createBranch.name && !names.has(tool.name));
   return [
@@ -81,7 +82,7 @@ export function augmentToolList(tools) {
     ...extensionTools.map(tool => ({
       ...tool,
       securitySchemes: schemes,
-      _meta: { securitySchemes: schemes }
+      _meta: { ...(tool._meta || {}), securitySchemes: schemes }
     }))
   ];
 }
@@ -164,7 +165,7 @@ function patchVersion(payload) {
 }
 
 function isExtensionTool(name) {
-  return name === createBranch.name || lifecycle.some(tool => tool.name === name) || name === runnerCleanupTool.name || name === cloudUploadTool.name;
+  return name === uiApiTool.name || name === createBranch.name || lifecycle.some(tool => tool.name === name) || name === runnerCleanupTool.name || name === cloudUploadTool.name;
 }
 async function authProbe(request, message, env) {
   const headers = new Headers(request.headers);
@@ -220,7 +221,9 @@ export default {
       try {
         const name = message.params.name;
         let result;
-        if (name === runnerCleanupTool.name) {
+        if (name === uiApiTool.name) {
+          result = await callUiApi(message.params?.arguments || {}, env);
+        } else if (name === runnerCleanupTool.name) {
           const args = validateRunnerCleanupArguments(message.params?.arguments || {});
           result = await callRunnerCleanup(args, env);
         } else if (name === cloudUploadTool.name) {

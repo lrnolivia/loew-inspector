@@ -2,12 +2,12 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "npm run test:inspector && npm run test:runner && npm run test:layout && npm run test:contracts",
+    "test": "npm run test:inspector && npm run test:runner && npm run test:layout && npm run test:contracts && npm test --workspace @relay/web",
     "test:inspector": "npm test --workspace @relay/inspector",
     "test:runner": "npm test --workspace @relay/runner",
     "test:layout": "node --test packages/runner/layout.test.mjs",
     "check": "npm run check --workspaces --if-present",
-    "build": "npm run check",
+    "build": "npm run build --workspace @relay/web && npm run check",
     "tick": "node packages/runner/src/cli.mjs tick",
     "run": "node packages/runner/src/cli.mjs run",
     "test:contracts": "node --test test/*.test.mjs"

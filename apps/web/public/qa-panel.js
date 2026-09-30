@@ -101,12 +101,12 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
 
   panel.innerHTML =
     '<div class="qa-panel-head">' +
-      '<div class="qa-panel-brand"><strong>runner qa</strong><small>' +
+      '<div class="qa-panel-brand"><strong>relay review</strong><small>' +
         qaEscape((context.project || evidence.title || "capture") + (evidence.step_label ? " · " + evidence.step_label : "")) +
       "</small></div>" +
       '<div class="qa-panel-tools">' +
-        '<button type="button" class="qa-icon-button" data-qa-side aria-label="Move Runner to the other side" title="Move panel">⇆</button>' +
-        '<button type="button" class="qa-icon-button" data-qa-minimize aria-label="Minimize Runner" title="Minimize">—</button>' +
+        '<button type="button" class="qa-icon-button" data-qa-side aria-label="Move review to the other side" title="Move panel">⇆</button>' +
+        '<button type="button" class="qa-icon-button" data-qa-minimize aria-label="Minimize review" title="Minimize">—</button>' +
         '<button type="button" class="qa-icon-button" data-qa-close aria-label="Close QA" title="Close">×</button>' +
       "</div>" +
     "</div>" +

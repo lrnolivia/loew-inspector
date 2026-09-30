@@ -1,9 +1,6 @@
 
-const OWNER = "lrnolivia";
-const REPO = "loew-runner";
-const RAW = "https://raw.githubusercontent.com/" + OWNER + "/" + REPO + "/main/";
-
 const names = {
+  relay: "relay",
   "bazzite-custom": "loewOS",
   field: "field",
   gamebridge: "GameBridge",
@@ -34,36 +31,12 @@ async function fetchJson(url) {
 }
 
 export async function loadProjectIndex() {
-  const cached = sessionStorage.getItem("runner-project-index");
-  if (cached) {
-    try {
-      const parsed = JSON.parse(cached);
-      if (Date.now() - parsed.saved < 300000 && Array.isArray(parsed.items)) return parsed.items;
-    } catch {}
-  }
-
-  try {
-    const data = await fetchJson("https://api.github.com/repos/" + OWNER + "/" + REPO + "/contents/projects?ref=main");
-    const items = (Array.isArray(data) ? data : [])
-      .filter(item => item.type === "file" && item.name.endsWith(".json"))
-      .map(item => item.name.slice(0, -5))
-      .sort((a, b) => projectName(a).localeCompare(projectName(b)));
-    sessionStorage.setItem("runner-project-index", JSON.stringify({ saved: Date.now(), items }));
-    return items;
-  } catch {
-    return Object.keys(names).sort((a, b) => projectName(a).localeCompare(projectName(b)));
-  }
+  const { projects } = await fetchJson("/api/projects");
+  return projects.map(project => project.id).sort((a, b) => projectName(a).localeCompare(projectName(b)));
 }
 
 export async function loadProjectDetail(id) {
-  const project = await fetchJson(RAW + "projects/" + encodeURIComponent(id) + ".json");
-  let coordination = null;
-  const record = project.coordination && project.coordination.record;
-  if (record) {
-    try { coordination = await fetchJson(RAW + record); }
-    catch { coordination = null; }
-  }
-  return { project, coordination };
+  return fetchJson("/api/projects/" + encodeURIComponent(id));
 }
 
 export function stateLabel(state) {
@@ -117,7 +90,7 @@ export function renderProjectDetail(target, id, data) {
         <h2>${esc(project.name || projectName(id))}</h2>
         <p>${current.length ? current.length + " thing" + (current.length === 1 ? "" : "s") + " happening now" : "Nothing active right now"}${queued.length ? " · " + queued.length + " up next" : ""}</p>
       </div>
-      <span class="project-health ${project.managed ? "good" : "quiet"}">${project.managed ? "Managed by Runner" : "Tracked"}</span>
+      <span class="project-health ${project.managed ? "good" : "quiet"}">${project.managed ? "Managed by Relay" : "Tracked"}</span>
     </div>
 
     <section class="project-work-section">

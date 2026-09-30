@@ -1,3 +1,5 @@
+import { openQa } from "./qa.js";
+import { loadNightShift } from "../../../features/night-shift/view.js";
 
 import { loadToday } from "./operator-today.js";
 import { bindReviewFilters, loadReview } from "./operator-review.js";
@@ -16,8 +18,8 @@ let selectedProject = null;
 const projectCache = new Map();
 
 function route() {
-  const page = (location.hash || "#today").slice(1);
-  return ["today", "projects", "review"].includes(page) ? page : "today";
+  const page = (location.hash || "#today").slice(1).split("?")[0];
+  return ["today", "projects", "review", "night-shift"].includes(page) ? page : "today";
 }
 
 function setConnection(label, tone = "quiet") {
@@ -46,11 +48,14 @@ async function selectProject(id) {
     if (!projectCache.has(id)) projectCache.set(id, await loadProjectDetail(id));
     renderProjectDetail(projectDetail, id, projectCache.get(id));
   } catch {
-    projectDetail.innerHTML = '<div class="operator-empty">Runner could not load this project right now.</div>';
+    projectDetail.innerHTML = '<div class="operator-empty">Relay could not load this project right now.</div>';
   }
 }
 
 async function loadProjects() {
+  const linked = new URLSearchParams(location.hash.split("?")[1] || "").get("project");
+  if (linked) selectedProject = linked;
+  projectCache.clear();
   if (!projectIds.length) projectIds = await loadProjectIndex();
   if (!selectedProject || !projectIds.includes(selectedProject)) selectedProject = projectIds[0] || null;
 
@@ -71,7 +76,7 @@ async function loadProjects() {
 function openProject(id) {
   selectedProject = id;
   if (location.hash === "#projects") loadProjects();
-  else location.hash = "projects";
+  else location.hash = "projects?project=" + encodeURIComponent(id);
 }
 
 const ui = { setConnection, notify, openProject };
@@ -90,7 +95,12 @@ async function showPage(name) {
     setConnection("Connected", "good");
     await loadProjects();
   }
-  if (name === "review") await loadReview(ui);
+  if (name === "review") {
+    await loadReview(ui);
+    const evidence = new URLSearchParams(location.hash.split("?")[1] || "").get("evidence");
+    if (evidence && /^vis_[a-zA-Z0-9-]{8,128}$/.test(evidence)) await openQa(evidence);
+  }
+  if (name === "night-shift") await loadNightShift(ui);
 }
 
 nav.forEach(button => {
@@ -103,4 +113,4 @@ nav.forEach(button => {
 
 window.addEventListener("hashchange", () => showPage(route()));
 bindReviewFilters();
-showPage(route());
+showPage(route()).catch(error => { setConnection("Couldn’t connect", "bad"); notify(error.message, "bad"); });
