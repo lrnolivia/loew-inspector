@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T12:42:26.691Z",
+  "updated_at": "2026-09-30T12:43:04.310Z",
   "legacy_branches": [
     "control",
     "main",
@@ -264,12 +264,12 @@
       ],
       "goal": "Turn Runner visual evidence into a human QA workspace with full-screen live preview and a floating Runner companion for targeted questions, notes, and verdicts.",
       "acceptance": "Live preview owns the screen when the captured environment is still reachable; Runner floats above it in a compact accessible panel with targeted QA questions, notes, looks-good/needs-work/not-sure responses, screenshot fallback when preview is dead, and technical evidence behind progressive disclosure. No existing Relay/Runner safety gates are weakened.",
-      "next_action": "Correct QA overlay color hierarchy only: keep Runner’s native warm charcoal palette, remove colder hardcoded near-black/gray fills, and make secondary QA headers darker than their surrounding panels.",
+      "next_action": "Palette correction applied at d3c31dfa058d12c042febd6a0e0e9620e89327fa: keep Runner’s native warm charcoal palette, use darker warm secondary QA headers, and avoid the TV/Arc greige palette. Exact-head CI/Cloudflare checks are running; visual runtime review remains required before merge.",
       "base_sha": "5ce9f02fbdbe0004c3249934d0f642fb2ffa5bce",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-09-30T11:52:04.751Z",
-      "updated_at": "2026-09-30T12:42:26.691Z",
-      "lease_until": "2026-10-01T00:42:26.691Z"
+      "updated_at": "2026-09-30T12:43:04.310Z",
+      "lease_until": "2026-10-01T00:43:04.310Z"
     }
   ]
 }
