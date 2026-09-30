@@ -6,8 +6,10 @@ import { evidenceEngines, planEvidenceRequest, normalizeBrowserCapacityError } f
 import { ingestExternalEvidence, upsertEvidenceRun } from "./external-evidence.js";
 import { getRecipe, listRecipes, saveRecipeFromSession } from "./recipe-store.js";
 import { RELAY_CONTROL_CENTER_URI, relayControlCenterResource } from "./relay-ui.js";
+import { sourceAuthStatus, githubApiRequest as sourceGithubApiRequest, commitSourceFiles } from "./source.js";
+import { cloudStatus, listCloudScripts, cloudWorkerSummary, cloudBuilds, deployCloudVersion } from "./cloud.js";
 
-const VERSION = "0.9.0";
+const VERSION = "1.0.0";
 const EVIDENCE_CONTEXT_SCHEMA = {
   type: "object",
   properties: {
@@ -117,40 +119,7 @@ function configuredSourceOwner(env, requested) {
 }
 
 async function githubApiRequest(env, path, options = {}) {
-  const method = options.method || "GET";
-  const write = !["GET", "HEAD"].includes(method);
-  const token = env?.RELAY_GITHUB_TOKEN;
-  if (write && !token) {
-    throw new Error("relay.SOURCE writes are not configured: RELAY_GITHUB_TOKEN is missing");
-  }
-  if (typeof path !== "string" || !path.startsWith("/") || path.includes("://")) throw new Error("Invalid GitHub API path");
-
-  const headers = {
-    Accept: "application/vnd.github+json",
-    "X-GitHub-Api-Version": GITHUB_API_VERSION,
-    "User-Agent": "relay-by-loew-fi"
-  };
-  if (token) headers.Authorization = `Bearer ${token}`;
-  if (options.body !== undefined) headers["Content-Type"] = "application/json";
-
-  const response = await fetch(RELAY_GITHUB_API + path, {
-    method,
-    headers,
-    body: options.body === undefined ? undefined : JSON.stringify(options.body),
-    signal: AbortSignal.timeout(TARGET_TIMEOUT_MS)
-  });
-  const text = await response.text();
-  let body = null;
-  if (text) {
-    try { body = JSON.parse(text); }
-    catch { body = { message: text.slice(0, 1000) }; }
-  }
-  if (!response.ok) {
-    const error = new Error(body?.message || `GitHub request failed with ${response.status}`);
-    error.status = response.status;
-    throw error;
-  }
-  return body;
+  return sourceGithubApiRequest(env, path, options);
 }
 
 async function runnerApiRequest(accessJwt, path, options = {}) {
@@ -485,6 +454,13 @@ async function mcp(request, access, env) {
           annotations: { readOnlyHint: false, destructiveHint: true, openWorldHint: false }
         },
         {
+          name: "relay_source_status",
+          title: "Relay source status",
+          description: "Report relay.SOURCE authentication mode and whether guarded GitHub writes are available.",
+          inputSchema: { type: "object", properties: {}, additionalProperties: false },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
+        },
+        {
           name: "relay_source_repo",
           title: "Read a GitHub repository",
           description: "Read repository metadata through relay.SOURCE. The owner is restricted to the configured Relay GitHub owner.",
@@ -586,6 +562,38 @@ async function mcp(request, access, env) {
           annotations: { readOnlyHint: false, destructiveHint: true, openWorldHint: true }
         },
         {
+          name: "relay_source_commit_files",
+          title: "Commit multiple GitHub files",
+          description: "Atomically commit 1-20 UTF-8 files to an existing non-default branch through relay.SOURCE.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              owner: { type: "string" },
+              repo: { type: "string" },
+              branch: { type: "string" },
+              message: { type: "string" },
+              expected_head_sha: { type: "string" },
+              files: {
+                type: "array",
+                minItems: 1,
+                maxItems: 20,
+                items: {
+                  type: "object",
+                  properties: {
+                    path: { type: "string" },
+                    content: { type: "string" }
+                  },
+                  required: ["path", "content"],
+                  additionalProperties: false
+                }
+              }
+            },
+            required: ["repo", "branch", "message", "files"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: false, destructiveHint: true, openWorldHint: true }
+        },
+        {
           name: "relay_source_open_pull_request",
           title: "Open a GitHub pull request",
           description: "Open a pull request through relay.SOURCE. Requires RELAY_GITHUB_TOKEN.",
@@ -604,6 +612,53 @@ async function mcp(request, access, env) {
             additionalProperties: false
           },
           annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true }
+        },
+        {
+          name: "relay_cloud_scripts",
+          title: "List Cloudflare Workers",
+          description: "List Worker scripts visible to relay.CLOUD.",
+          inputSchema: { type: "object", properties: {}, additionalProperties: false },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true }
+        },
+        {
+          name: "relay_cloud_worker",
+          title: "Read Cloudflare Worker state",
+          description: "Read one Worker's settings, deployments, versions, and custom domains through relay.CLOUD.",
+          inputSchema: {
+            type: "object",
+            properties: { script: { type: "string" } },
+            required: ["script"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true }
+        },
+        {
+          name: "relay_cloud_builds",
+          title: "Read Cloudflare Worker builds",
+          description: "Read Workers Builds history for one Worker through relay.CLOUD.",
+          inputSchema: {
+            type: "object",
+            properties: { script: { type: "string" } },
+            required: ["script"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true }
+        },
+        {
+          name: "relay_cloud_deploy_version",
+          title: "Deploy a Cloudflare Worker version",
+          description: "Deploy or roll back an explicitly allowed Worker to an existing version at 100% traffic.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              script: { type: "string" },
+              version_id: { type: "string" },
+              message: { type: "string" }
+            },
+            required: ["script", "version_id"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: false, destructiveHint: true, openWorldHint: true }
         },
         {
           name: "relay_cloud_status",
@@ -907,11 +962,13 @@ async function mcp(request, access, env) {
             runner_read: true,
             runner_write: true,
             source_read: true,
-            source_write: Boolean(env?.RELAY_GITHUB_TOKEN),
-            cloud_control: Boolean(env?.CLOUDFLARE_API_TOKEN && env?.CLOUDFLARE_ACCOUNT_ID),
+            source_write: sourceAuthStatus(env).write_enabled,
+            cloud_control: cloudStatus(env).configured,
             verify: true
           },
           source_owner: String(env?.RELAY_GITHUB_OWNER || RELAY_GITHUB_OWNER),
+          source: sourceAuthStatus(env),
+          cloud: cloudStatus(env),
           legacy_verify_aliases: Object.keys(LEGACY_TOOL_ALIASES).length
         });
       }
@@ -933,6 +990,10 @@ async function mcp(request, access, env) {
           { method: "POST", body: args.payload || {} }
         );
         return relayResult(id, { ok: true, worker_id: workerId, action, result });
+      }
+
+      if (name === "relay_source_status") {
+        return relayResult(id, sourceAuthStatus(env));
       }
 
       if (name === "relay_source_repo") {
@@ -1029,6 +1090,21 @@ async function mcp(request, access, env) {
         return relayResult(id, { ok: true, result });
       }
 
+      if (name === "relay_source_commit_files") {
+        const owner = configuredSourceOwner(env, args.owner);
+        const repo = validateIdentifier(args.repo, "repository");
+        const branch = validateBranch(args.branch);
+        const result = await commitSourceFiles(env, {
+          owner,
+          repo,
+          branch,
+          files: args.files,
+          message: args.message,
+          expectedHeadSha: args.expected_head_sha
+        });
+        return relayResult(id, result);
+      }
+
       if (name === "relay_source_open_pull_request") {
         const owner = configuredSourceOwner(env, args.owner);
         const repo = validateIdentifier(args.repo, "repository");
@@ -1052,15 +1128,24 @@ async function mcp(request, access, env) {
         return relayResult(id, { ok: true, pull_request: result });
       }
 
+      if (name === "relay_cloud_scripts") {
+        return relayResult(id, { ok: true, scripts: await listCloudScripts(env) });
+      }
+
+      if (name === "relay_cloud_worker") {
+        return relayResult(id, await cloudWorkerSummary(env, args.script));
+      }
+
+      if (name === "relay_cloud_builds") {
+        return relayResult(id, { ok: true, script: args.script, builds: await cloudBuilds(env, args.script) });
+      }
+
+      if (name === "relay_cloud_deploy_version") {
+        return relayResult(id, await deployCloudVersion(env, args.script, args.version_id, args.message));
+      }
+
       if (name === "relay_cloud_status") {
-        return relayResult(id, {
-          ok: true,
-          namespace: "relay.CLOUD",
-          configured: Boolean(env?.CLOUDFLARE_API_TOKEN && env?.CLOUDFLARE_ACCOUNT_ID),
-          account_configured: Boolean(env?.CLOUDFLARE_ACCOUNT_ID),
-          token_configured: Boolean(env?.CLOUDFLARE_API_TOKEN),
-          mutation_tools_exposed: false
-        });
+        return relayResult(id, cloudStatus(env));
       }
 
       if (name === "relay_verify_fetch_url") {

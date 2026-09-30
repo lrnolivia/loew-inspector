@@ -440,9 +440,10 @@ const RELAY_CONTROL_CENTER_HTML = String.raw`<!doctype html>
     const sourceWrite = byId("source-write-pill");
     sourceWrite.textContent = caps.source_write ? "read / write" : "read only";
     sourceWrite.className = "pill " + (caps.source_write ? "good" : "warn");
+    const source = state.source || {};
     text("source-copy", caps.source_write
-      ? "GitHub reads and guarded writes are available for " + safe(state.source_owner) + "."
-      : "GitHub reads are live. Relay-native writes are waiting for a first-party source credential.");
+      ? "GitHub reads and guarded writes are live via " + safe(source.auth_mode, "Relay auth") + " for " + safe(state.source_owner) + "."
+      : "GitHub reads are live. Configure the Relay GitHub App to enable guarded writes.");
 
     const cloud = state.cloud || {};
     const cloudPill = byId("cloud-pill");
@@ -475,18 +476,21 @@ const RELAY_CONTROL_CENTER_HTML = String.raw`<!doctype html>
     app.classList.add("loading");
     refreshButton.disabled = true;
     try {
-      const [statusResponse, workersResponse, cloudResponse, verifyResponse] = await Promise.all([
+      const [statusResponse, workersResponse, sourceResponse, cloudResponse, verifyResponse] = await Promise.all([
         callTool("relay_control_status"),
         callTool("relay_runner_workers"),
+        callTool("relay_source_status"),
         callTool("relay_cloud_status"),
         callTool("relay_verify_evidence_engines")
       ]);
       const status = toolData(statusResponse) || {};
       const workers = toolData(workersResponse) || {};
+      const source = toolData(sourceResponse) || {};
       const cloud = toolData(cloudResponse) || {};
       const verify = toolData(verifyResponse) || {};
       state = Object.assign({}, state, status, {
         workers: workers.workers || [],
+        source,
         cloud,
         verify,
         generated_at: new Date().toISOString()
