@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T12:19:25.058Z",
+  "updated_at": "2026-09-30T12:23:25.843Z",
   "legacy_branches": [
     "control",
     "main",
@@ -255,7 +255,8 @@
         "dashboard/friendly.css",
         "src/cloudflare-worker.mjs",
         "src/human-qa.mjs",
-        "test/human-qa.test.mjs"
+        "test/human-qa.test.mjs",
+        "package.json"
       ],
       "resources": [
         "runner-human-qa",
@@ -263,12 +264,12 @@
       ],
       "goal": "Turn Runner visual evidence into a human QA workspace with full-screen live preview and a floating Runner companion for targeted questions, notes, and verdicts.",
       "acceptance": "Live preview owns the screen when the captured environment is still reachable; Runner floats above it in a compact accessible panel with targeted QA questions, notes, looks-good/needs-work/not-sure responses, screenshot fallback when preview is dead, and technical evidence behind progressive disclosure. No existing Relay/Runner safety gates are weakened.",
-      "next_action": "Run ownership preflight, open the draft PR, require check/test/admission, then verify the web-visible QA experience before promotion.",
+      "next_action": "Extend the repository syntax gate to all dashboard JavaScript, then rerun exact-head admission/test/build checks.",
       "base_sha": "5ce9f02fbdbe0004c3249934d0f642fb2ffa5bce",
       "state": "active",
       "created_at": "2026-09-30T11:52:04.751Z",
-      "updated_at": "2026-09-30T12:19:25.058Z",
-      "lease_until": "2026-10-01T00:19:25.058Z"
+      "updated_at": "2026-09-30T12:23:25.843Z",
+      "lease_until": "2026-10-01T00:23:25.843Z"
     }
   ]
 }
