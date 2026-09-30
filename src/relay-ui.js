@@ -247,11 +247,11 @@ const RELAY_CONTROL_CENTER_HTML = String.raw`<!doctype html>
   </header>
 
   <section class="grid" aria-label="Relay namespaces">
-    <div class="ns"><div class="ns-name">CONTROL</div><div class="ns-value"><span id="control-state">ready</span></div></div>
-    <div class="ns"><div class="ns-name">RUNNER</div><div class="ns-value"><span id="runner-state">—</span></div></div>
-    <div class="ns"><div class="ns-name">SOURCE</div><div class="ns-value"><span id="source-state">—</span></div></div>
-    <div class="ns"><div class="ns-name">CLOUD</div><div class="ns-value"><span id="cloud-state">—</span></div></div>
-    <div class="ns"><div class="ns-name">VERIFY</div><div class="ns-value"><span id="verify-state">—</span></div></div>
+    <div class="ns"><div class="ns-name">relay.CONTROL</div><div class="ns-value"><span id="control-state">ready</span></div></div>
+    <div class="ns"><div class="ns-name">relay.RUNNER</div><div class="ns-value"><span id="runner-state">—</span></div></div>
+    <div class="ns"><div class="ns-name">relay.SOURCE</div><div class="ns-value"><span id="source-state">—</span></div></div>
+    <div class="ns"><div class="ns-name">relay.CLOUD</div><div class="ns-value"><span id="cloud-state">—</span></div></div>
+    <div class="ns"><div class="ns-name">relay.VERIFY</div><div class="ns-value"><span id="verify-state">—</span></div></div>
   </section>
 
   <div class="content">
