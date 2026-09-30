@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T09:22:52.858Z",
+  "updated_at": "2026-09-30T09:25:46.826Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -65,10 +65,16 @@
       "acceptance": "wrangler.jsonc contains CLOUDFLARE_ACCOUNT_ID, RELAY_CLOUDFLARE_WRITE_SCRIPTS, and RELAY_GITHUB_APP_ID; RELAY_GITHUB_APP_PRIVATE_KEY remains Cloudflare Secret only; required checks pass.",
       "next_action": "Create the claimed branch from live main, apply the safe Wrangler vars, open a draft PR, and verify admission.",
       "base_sha": "746f2eb5b1fcf40bfee29c24b69b5c4027967d61",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T09:22:52.858Z",
-      "updated_at": "2026-09-30T09:22:52.858Z",
-      "lease_until": "2026-09-30T21:22:52.858Z"
+      "updated_at": "2026-09-30T09:25:46.826Z",
+      "lease_until": "2026-09-30T21:25:46.826Z",
+      "pr": 29,
+      "merged_head_sha": "7047cf6754368b461851502f5a1f1233d83a4680",
+      "merge_commit_sha": "52204b6ad15610f19b3c1fee99bfd692704aa9cd",
+      "evidence": "https://github.com/lrnolivia/loew-inspector/pull/29",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T09:25:46.826Z"
     }
   ]
 }
