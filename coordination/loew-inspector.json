@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T14:07:23.167Z",
+  "updated_at": "2026-09-30T14:11:12.570Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -583,12 +583,12 @@
       ],
       "goal": "Consolidate Relay, Runner and Inspector into one canonical lowercase `relay` product, repository, MCP app and web app. Runner and Inspector become internal subsystems/packages; night shift becomes a Relay feature/view; separate product subdomains and duplicated dashboards are retired.",
       "acceptance": "Canonical repository is lrnolivia/relay; existing loew-inspector history is preserved by rename and loew-runner history/code is imported into the Relay monorepo without losing provenance; Relay has one shared state/receipt model, one MCP app and one web app; runner becomes the coordination/automation package, inspector becomes verification/evidence/visual-review package, and night shift is a feature/view; old runner/inspector web subdomains are removed or redirect to Relay deep links; existing open PRs/branches remain reachable through GitHub rename redirects and are explicitly reconciled; Runner coordination/project registration is migrated to canonical project id relay; Cloudflare production runs from Relay with old endpoints retained only as bounded compatibility redirects during cutover; tests and live verification pass before old runtime identities are retired.",
-      "next_action": "Program owner only. Execute consolidation batches 1-6 in order with exact-head tests/readback at every gate. No old hostname/script/project/repo identity may be retired until its Relay replacement is verified; final state is one repo/product/web+MCP hostname: relay.",
+      "next_action": "Authoritative execution order is: identity bridge -> monorepo import -> control/state migration -> Cloudflare/runtime cutover -> legacy retirement -> unified web + in-chat UI. Treat the originally numbered b4 UI assignment as the final implementation gate, after old runtime/product surfaces are retired. Exact-head tests/readback are required between every stage.",
       "base_sha": "907de20f18209d6fee400c9d74cfde16f8623cba",
       "state": "active",
       "created_at": "2026-09-30T13:57:50.279Z",
-      "updated_at": "2026-09-30T14:05:12.006Z",
-      "lease_until": "2026-10-01T02:05:12.006Z"
+      "updated_at": "2026-09-30T14:11:12.570Z",
+      "lease_until": "2026-10-01T02:11:12.570Z"
     }
   ]
 }
