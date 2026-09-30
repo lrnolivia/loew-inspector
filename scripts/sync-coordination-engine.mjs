@@ -1,0 +1,10 @@
+import { execFileSync } from 'node:child_process';
+import { writeFile, readFile } from 'node:fs/promises';
+const remote = JSON.parse(execFileSync('gh', ['api', 'repos/lrnolivia/loew-runner/contents/src/coordination.mjs?ref=main'], { encoding: 'utf8' }));
+const engine = Buffer.from(remote.content, 'base64').toString('utf8');
+const target = new URL('../src/runner-control.js', import.meta.url);
+const adapter = await readFile(target, 'utf8');
+if (!/export const RUNNER_ENGINE_SHA = '[a-f0-9]{40}';/.test(adapter)) throw new Error('Engine provenance marker missing');
+await writeFile(new URL('../src/coordination-engine.js', import.meta.url), engine);
+await writeFile(target, adapter.replace(/export const RUNNER_ENGINE_SHA = '[a-f0-9]{40}';/, `export const RUNNER_ENGINE_SHA = '${remote.sha}';`));
+console.log(`Synced canonical Runner engine ${remote.sha}; inspect and test before publication.`);

@@ -8,9 +8,10 @@ import { getRecipe, listRecipes, saveRecipeFromSession } from "./recipe-store.js
 import { RELAY_CONTROL_CENTER_URI, relayControlCenterResource } from "./relay-ui.js";
 import { RELAY_SKILL_EXTENSION, relaySkillCatalog, relaySkillByUri, relaySkillResourceDescriptors, relaySkillResource } from "./skills.js";
 import { sourceAuthStatus, githubApiRequest as sourceGithubApiRequest, commitSourceFiles } from "./source.js";
+import { runnerControlTools, callRunnerControl, runnerControlError } from "./runner-control.js";
 import { cloudStatus, listCloudScripts, cloudWorkerSummary, cloudBuilds, deployCloudVersion } from "./cloud.js";
 
-const VERSION = "1.1.0";
+const VERSION = "1.2.0";
 const EVIDENCE_CONTEXT_SCHEMA = {
   type: "object",
   properties: {
@@ -426,6 +427,7 @@ async function mcp(request, access, env) {
   if (message.method === "tools/list") {
     const securitySchemes = [{ type: "oauth2", scopes: [] }];
     const tools = [
+      ...runnerControlTools,
 
         {
           name: "relay_ui_control_center",
@@ -934,13 +936,21 @@ async function mcp(request, access, env) {
       const args = message.params?.arguments || {};
 
 
+      if (runnerControlTools.some(tool => tool.name === name)) {
+        try { return relayResult(id, await callRunnerControl(name, args, env)); }
+        catch (error) {
+          const failure = runnerControlError(error);
+          return rpc(id, { content: [{ type: "text", text: JSON.stringify(failure) }], structuredContent: failure, isError: true });
+        }
+      }
+
       if (name === "relay_ui_control_center") {
         const workers = await runnerApiRequest(access.token, "/api/workers");
         const capabilities = {
           runner_read: true,
           runner_write: true,
           source_read: true,
-          source_write: Boolean(env?.RELAY_GITHUB_TOKEN),
+          source_write: sourceAuthStatus(env).write_enabled,
           cloud_control: Boolean(env?.CLOUDFLARE_API_TOKEN && env?.CLOUDFLARE_ACCOUNT_ID),
           verify: true
         };
