@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T23:37:27.475Z",
+  "updated_at": "2026-09-30T23:37:56.654Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -733,7 +733,7 @@
         "RFS-021",
         "RFS-022"
       ],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-09-30T23:34:11.812Z"
     },
     {
@@ -1830,6 +1830,32 @@
       "created_at": "2026-09-30T22:49:27.571Z",
       "updated_at": "2026-09-30T23:37:27.475Z",
       "lease_until": "2026-10-01T11:37:27.475Z"
+    },
+    {
+      "id": "relay-1.9.2-source-scale-20260930",
+      "owner": "relay-1.9.2-source-scale-20260930",
+      "branch": "relay/1.9.2-source-scale-20260930",
+      "paths": [
+        "src/source.js",
+        "src/source.test.js",
+        "src/source-lifecycle.js",
+        "src/source-lifecycle.test.js",
+        "src/relay-entry.js",
+        "src/relay-entry.test.js",
+        "docs/relay/RELAY_1_9_2_RELEASE.md"
+      ],
+      "resources": [
+        "relay-1.9.2-release",
+        "relay-source-scalable-mutations"
+      ],
+      "goal": "Ship Relay 1.9.2 with scalable bounded SOURCE text mutation.",
+      "acceptance": "Add exact-SHA bounded edit and append operations with deterministic readback, stale-state rejection, default-branch protection, and focused tests. Ship through normal admission, merge, deploy, runtime verification, and client refresh.",
+      "next_action": "Implement exact-SHA text edit first, then append support and tests.",
+      "base_sha": "5dc5242da630a1c0bed534423b408418394fb757",
+      "state": "active",
+      "created_at": "2026-09-30T23:37:56.654Z",
+      "updated_at": "2026-09-30T23:37:56.654Z",
+      "lease_until": "2026-10-01T11:37:56.654Z"
     }
   ],
   "migrated_from": "loew-inspector"
