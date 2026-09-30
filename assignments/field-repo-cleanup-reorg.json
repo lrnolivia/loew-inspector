@@ -237,7 +237,7 @@
     "open_prs": 19,
     "ledger": "docs/field/reorganization/2026-09-30-inventory.json",
     "handoff": "docs/field/reorganization/MAIN_FIELD_WORKER_CONSOLIDATION.md",
-    "phase": "canvas consolidation is regression-free against exact main; current Registry rerun and Preview-routing closeout remain",
+    "phase": "Canvas PR #135 merged and production identity verified; serial Workspace/Dashboard recovery next",
     "user_direction": "Retain branches until code, unfinished intent and QA have durable destinations. Existing main field worker consolidates; no new workers.",
     "mutations_in_field": [
       {
@@ -250,10 +250,10 @@
         "pr": 135,
         "branch": "field/consolidation-canvas-20260930",
         "head": "57f4765b591286c6c456439ba217d8de282c38c9",
-        "state": "draft; clean install/build/lint and Media/Workers/admission are green on the current validation lane. Diagnostic Registry run 36694828578 / job 109820178700 compared the branch to exact main 760774a6bd628827f93190fb0abaf7a6e26acbea: 57 branch failures vs 61 baseline failures, zero branch-only failures, and four baseline-only failures. Current head 57f4765b591286c6c456439ba217d8de282c38c9 updates the Registry gate to reject branch regressions while allowing baseline-only improvements; rerun 36697728462 / job 109829617442 is in progress. Exact loew Preview custom hosts remain blocked by Cloudflare 1053."
+        "state": "Merged at 2026-09-30T10:14:32Z as 854038a3e84f41cd590a4ad18b24fcd4127e2fba after Registry 36697728462 and exact-head Preview QA 36700859927 / 36700862882 passed."
       }
     ],
-    "next_action": "Wait for Registry rerun 36697728462 / job 109829617442 on exact head 57f4765b591286c6c456439ba217d8de282c38c9. Do not repair the four exact-main-only failures as #135 regressions. If the rerun is green, preserve this source candidate and proceed to exact-head deployed Preview QA. Preview custom hosts are a separate Cloudflare 1053 routing blocker; production Group QA and the exact workers.dev fallback have rendered successfully. Do not merge until the required Registry gate and exact-head Preview QA are both cleared.",
+    "next_action": "Complete Canvas claim and return shared-file scope to Mobile, then serially admit preserved Dashboard recovery against fresh main. Original branches retained; connected panels deferred.",
     "deferred_panel_requirements": "docs/field/reorganization/DEFERRED_CONNECTED_PANEL_REQUIREMENTS_20260930.md",
     "panel_implementation": "deferred by user on 2026-09-30; instructions only; uncommitted experiments withdrawn",
     "implementation_checkpoint": "docs/field/reorganization/EXECUTION_CHECKPOINT_20260930.md",
@@ -274,9 +274,17 @@
       ],
       "current_registry_run": 36697728462,
       "current_registry_job": 109829617442,
-      "preview_blocker": "loew preview custom hosts return Cloudflare 1053; treat as preview-routing infrastructure until disproven",
+      "preview_blocker": "Relay Worker fetch returns 1053; direct HTTP and GitHub Chromium prove exact-head custom-host Preview works",
       "relay_preview_failure_evidence": "vis_ec1567cf-2eab-4779-997c-ee641fb2ef9d",
-      "relay_production_control_evidence": "vis_5f651b2a-7b7a-4016-8f35-c89d4a83bbb0"
+      "relay_production_control_evidence": "vis_5f651b2a-7b7a-4016-8f35-c89d4a83bbb0",
+      "current_registry_status": "success",
+      "preview_preflight_run": 36700859927,
+      "preview_stage0_run": 36700862882,
+      "preview_deployment_id": "6255045b-1ed2-4cea-81b4-d44d353923c9",
+      "preview_status": "PASS",
+      "merge_commit": "854038a3e84f41cd590a4ad18b24fcd4127e2fba",
+      "production_deployment_id": "2ae1aa2f-dbc1-4aed-b883-0951c9da32af",
+      "promotion_receipt": "docs/field/reorganization/CANVAS_PROMOTION_RECEIPT_20260930.md"
     }
   }
 }
