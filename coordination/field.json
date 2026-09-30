@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T08:30:37.874Z",
+  "updated_at": "2026-09-30T09:48:09.866Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -354,12 +354,12 @@
       ],
       "goal": "Recover stranded Frame/Group parity into current main, preserving existing Mobile ownership.",
       "acceptance": "100x100 click Frames, Space parenting bypass, primary Alt G Frame Selection; browser encapsulation, wrapping and native Group world geometry pass; original branches retained until acceptance and QA accounted.",
-      "next_action": "Verify exact-head 962d5d0c815586a584fcd25d0c893af86b8fd690 with baseline-aware Registry run 36690068320. If branch/main failure fingerprints differ, repair only evidenced branch regressions; if identical, preserve baseline debt and proceed to exact-deployment runtime QA. loew preview aliases currently return Cloudflare 1053 while exact workers.dev deployment renders read-only Group QA.",
+      "next_action": "Exact-head continuation is 57f4765b591286c6c456439ba217d8de282c38c9. Diagnostic Registry run 36694828578 / job 109820178700 proved branch-only failures: none; exact-main-only failures: 4 (crop-math cover overflow, two CameraAnimator reduced-motion expectations, workspace-layout viewport-padding hard margin). Current workflow now rejects branch regressions while allowing baseline-only improvements. Current Registry rerun 36697728462 / job 109829617442 is in progress; Workers build and Media/editor build are green. Do not repair baseline-only failures as #135 regressions. If Registry turns green, proceed to exact-head deployed Preview QA; loew preview custom hosts remain a separate Cloudflare 1053 routing blocker while known real-project production QA and exact workers.dev fallback have rendered.",
       "base_sha": "760774a6bd628827f93190fb0abaf7a6e26acbea",
       "state": "active",
       "created_at": "2026-09-30T05:31:47.089Z",
-      "updated_at": "2026-09-30T08:30:37.874Z",
-      "lease_until": "2026-09-30T20:30:37.874Z"
+      "updated_at": "2026-09-30T09:48:09.866Z",
+      "lease_until": "2026-09-30T21:48:09.866Z"
     }
   ]
 }
