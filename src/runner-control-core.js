@@ -1,7 +1,7 @@
 import { githubApiRequest } from './source.js';
 import { transition, evaluate, occupying, normalizeScope } from './coordination-engine.js';
 
-export const RUNNER_ENGINE_SHA = 'a987e034544c4ea1956e0ee96ab3bd83b4f7ebd1';
+export const RUNNER_ENGINE_SHA = '302bfe1df311f5df8e171373a362255bdff8eb1d';
 export const DEFAULT_RUNNER_CONTROL_REPOSITORY = 'lrnolivia/relay';
 
 export class ControlError extends Error {
@@ -153,8 +153,9 @@ async function mutate(api, control, controlRepository, context, args) {
   }
 
   const allowed = {
-    queue: ['id', 'owner', 'paths', 'resources', 'goal', 'acceptance', 'next_action'],
-    claim: ['id', 'owner', 'branch', 'paths', 'resources', 'goal', 'acceptance', 'next_action'],
+    queue: ['id', 'owner', 'paths', 'resources', 'goal', 'acceptance', 'next_action', 'task_class', 'ledger_refs'],
+    claim: ['id', 'owner', 'branch', 'paths', 'resources', 'goal', 'acceptance', 'next_action', 'task_class', 'ledger_refs'],
+    amend: ['id', 'owner', 'paths', 'resources', 'goal', 'acceptance', 'next_action', 'task_class', 'ledger_refs', 'reason'],
     rescope: ['id', 'owner', 'paths', 'resources', 'next_action'],
     heartbeat: ['id', 'owner', 'next_action'],
     hold: ['id', 'owner', 'next_action'],
@@ -168,6 +169,7 @@ async function mutate(api, control, controlRepository, context, args) {
   const required = {
     queue: ['paths', 'goal', 'acceptance', 'next_action'],
     claim: ['branch', 'paths', 'goal', 'acceptance', 'next_action'],
+    amend: ['reason'],
     rescope: ['paths', 'resources', 'next_action'],
     heartbeat: ['next_action'],
     hold: ['next_action'],
@@ -260,10 +262,17 @@ async function mutate(api, control, controlRepository, context, args) {
     });
   }
 
-  const collection = args.action === 'queue' ? 'queue' : 'claims';
+  const activeClaim = verified.value.claims.find(item => item.id === request.id && occupying(item));
+  const queuedItem = verified.value.queue.find(item => item.id === request.id);
+  const assignment = args.action === 'queue'
+    ? queuedItem
+    : args.action === 'amend'
+      ? (activeClaim || queuedItem)
+      : verified.value.claims.find(item => item.id === request.id);
   return result({ ...context, record: verified }, {
     action: args.action,
-    claim: verified.value[collection].find(item => item.id === request.id),
+    claim: assignment,
+    assignment,
     receipt: {
       repository: controlRepository,
       path: `coordination/${args.project}.json`,

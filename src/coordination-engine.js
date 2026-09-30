@@ -16,20 +16,98 @@ export function covered(file, scopes) {
   return scopes.some((scope) => file === scope || (scope.endsWith('/') && file.startsWith(scope)));
 }
 
+const TASK_CLASSES = new Set(['design', 'architecture', 'maintenance']);
+const AMENDABLE_FIELDS = ['goal', 'acceptance', 'next_action', 'paths', 'resources', 'task_class', 'ledger_refs'];
+
+function normalizeResources(values) {
+  if (!Array.isArray(values) || values.some((value) => typeof value !== 'string' || !value)) throw new Error('Resources must be a valid string array.');
+  return [...new Set(values)];
+}
+function normalizeTaskClass(value) {
+  if (value === undefined) return undefined;
+  if (!TASK_CLASSES.has(value)) throw new Error('Task class must be design, architecture, or maintenance.');
+  return value;
+}
+function normalizeLedgerRefs(values) {
+  if (values === undefined) return undefined;
+  if (!Array.isArray(values) || values.length > 50 || values.some((value) => typeof value !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,99}$/.test(value))) throw new Error('Ledger refs must be stable identifiers.');
+  return [...new Set(values)];
+}
+function auditValue(value) {
+  if (typeof value === 'string') return value.length > 600 ? value.slice(0, 597) + '...' : value;
+  if (Array.isArray(value)) return value.length > 20 ? [...value.slice(0, 20), `... +${value.length - 20} more`] : [...value];
+  return value ?? null;
+}
+function appendAmendment(target, request, fields, before, now) {
+  const entry = {
+    at: now.toISOString(), by: request.owner, reason: request.reason, fields,
+    before: Object.fromEntries(fields.map((field) => [field, auditValue(before[field])])),
+    after: Object.fromEntries(fields.map((field) => [field, auditValue(target[field])]))
+  };
+  target.amendment_count = Number(target.amendment_count || 0) + 1;
+  target.amendments = [...(Array.isArray(target.amendments) ? target.amendments : []), entry].slice(-20);
+}
+
 export function transition(record, request, policy, now = new Date()) {
   if (record.migration_frozen) throw new Error("Control authority migrated to " + record.migration_frozen.canonical_repository + "; refresh canonical Relay state before writing.");
   const next = structuredClone(record);
   const claims = next.claims;
   const current = claims.find((c) => c.id === request.id);
+  const queued = next.queue.find((q) => q.id === request.id);
   if (!request.id || !request.owner) throw new Error('Stable assignment id and owner id are required.');
   if (request.action === 'queue') {
-    if (current || next.queue.some((q) => q.id === request.id)) throw new Error('Assignment already exists; resume it.');
+    if (current || queued) throw new Error('Assignment already exists; resume it.');
     if (!request.goal || !request.acceptance || !request.next_action || !request.paths?.length) throw new Error('Queue requires goal, acceptance, next action and proposed paths.');
     next.queue.push({ id: request.id, owner: request.owner, goal: request.goal, acceptance: request.acceptance,
-      next_action: request.next_action, paths: request.paths.map(normalizeScope), resources: request.resources ?? [], state: 'queued', created_at: now.toISOString() });
+      next_action: request.next_action, paths: request.paths.map(normalizeScope), resources: normalizeResources(request.resources ?? []),
+      ...(request.task_class ? { task_class: normalizeTaskClass(request.task_class) } : {}),
+      ...(request.ledger_refs ? { ledger_refs: normalizeLedgerRefs(request.ledger_refs) } : {}),
+      state: 'queued', created_at: now.toISOString() });
     next.updated_at = now.toISOString();
     return next;
   }
+  if (request.action === 'amend') {
+    if (typeof request.reason !== 'string' || !request.reason.trim() || request.reason.length > 1000) throw new Error('Amendment requires a concise reason.');
+    if (current && !occupying(current)) throw new Error('Completed assignments cannot be amended.');
+    const target = current || (queued?.state === 'queued' ? queued : null);
+    if (!target) throw new Error('Amendment requires a queued or active assignment.');
+    if (target.owner !== request.owner) throw new Error('Assignment belongs to another owner; use an authorized handoff.');
+    const supplied = AMENDABLE_FIELDS.filter((field) => Object.prototype.hasOwnProperty.call(request, field));
+    if (!supplied.length) throw new Error('Amendment requires at least one mutable assignment field.');
+    const patch = {};
+    if ('goal' in request) { if (typeof request.goal !== 'string' || !request.goal.trim()) throw new Error('Goal cannot be empty.'); patch.goal = request.goal; }
+    if ('acceptance' in request) { if (typeof request.acceptance !== 'string' || !request.acceptance.trim()) throw new Error('Acceptance cannot be empty.'); patch.acceptance = request.acceptance; }
+    if ('next_action' in request) { if (typeof request.next_action !== 'string' || !request.next_action.trim()) throw new Error('Next action cannot be empty.'); patch.next_action = request.next_action; }
+    if ('paths' in request) { if (!Array.isArray(request.paths) || !request.paths.length) throw new Error('Assignment paths cannot be empty.'); patch.paths = request.paths.map(normalizeScope); }
+    if ('resources' in request) patch.resources = normalizeResources(request.resources);
+    if ('task_class' in request) patch.task_class = normalizeTaskClass(request.task_class);
+    if ('ledger_refs' in request) patch.ledger_refs = normalizeLedgerRefs(request.ledger_refs);
+    const before = Object.fromEntries(supplied.map((field) => [field, target[field]]));
+    const preview = { ...target, ...patch };
+    const changed = supplied.filter((field) => JSON.stringify(before[field]) !== JSON.stringify(preview[field]));
+    if (!changed.length) throw new Error('Amendment does not change assignment state.');
+    if (current) {
+      for (const claim of claims.filter((claim) => claim.id !== current.id && occupying(claim))) {
+        if (preview.paths.some((a) => claim.paths.some((b) => overlaps(a, b))) || preview.resources.some((resource) => claim.resources.includes(resource))) {
+          throw new Error(`Amendment overlaps ${claim.id}. Split or defer the scope instead.`);
+        }
+      }
+    }
+    Object.assign(target, patch);
+    appendAmendment(target, request, changed, before, now);
+    target.updated_at = now.toISOString();
+    if (current) {
+      target.lease_until = new Date(now.getTime() + policy.lease_hours * 3600000).toISOString();
+      if (queued) {
+        for (const field of changed) queued[field] = structuredClone(target[field]);
+        queued.updated_at = now.toISOString();
+        appendAmendment(queued, request, changed, before, now);
+      }
+    }
+    next.updated_at = now.toISOString();
+    return next;
+  }
+
   if (current && current.owner !== request.owner) throw new Error('Claim belongs to another owner; use an authorized handoff.');
   if (request.action === 'rescope') {
     if (!current || !occupying(current) || !request.paths || !request.resources) throw new Error('Rescope requires the current owner, full paths and full resources.');
@@ -44,7 +122,7 @@ export function transition(record, request, policy, now = new Date()) {
     if (!request.branch || !policy.branch_prefixes.some((prefix) => request.branch.startsWith(prefix)) || policy.excluded_branches.includes(request.branch)) throw new Error('Branch is not an allowed implementation branch.');
     if (!request.goal || !request.acceptance || !request.next_action || !request.base_sha) throw new Error('Goal, acceptance, next action and live main SHA are required.');
     const paths = (request.paths ?? []).map(normalizeScope);
-    const resources = request.resources ?? [];
+    const resources = normalizeResources(request.resources ?? []);
     if (!paths.length || resources.some((r) => typeof r !== 'string' || !r)) throw new Error('Explicit paths and valid resource names are required.');
     const active = claims.filter(occupying);
     if (active.length >= policy.max_active_branches) throw new Error('Active branch budget reached. Finish or reconcile existing work before starting another implementation.');
@@ -55,6 +133,8 @@ export function transition(record, request, policy, now = new Date()) {
     }
     claims.push({ id: request.id, owner: request.owner, branch: request.branch, paths, resources,
       goal: request.goal, acceptance: request.acceptance, next_action: request.next_action,
+      ...(request.task_class ? { task_class: normalizeTaskClass(request.task_class) } : {}),
+      ...(request.ledger_refs ? { ledger_refs: normalizeLedgerRefs(request.ledger_refs) } : {}),
       base_sha: request.base_sha, state: 'active', created_at: now.toISOString() });
     const queued = next.queue.find((q) => q.id === request.id);
     if (queued && queued.owner !== request.owner) throw new Error('Queued assignment belongs to another owner.');

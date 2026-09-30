@@ -9,13 +9,15 @@ import {
 import { callProgress } from './progress-api.js';
 import { projectCloudStatus, deployProjectCloudVersion } from './project-cloud.js';
 
-const MUTATIONS = ['queue', 'claim', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete'];
+const MUTATIONS = ['queue', 'claim', 'amend', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete'];
 const text = (max = 500) => ({ type: 'string', minLength: 1, maxLength: max });
 const identity = { ...text(100), pattern: '^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$' };
 const projectSchema = { ...text(80), pattern: '^[a-z0-9-]+$' };
 const shaSchema = { type: 'string', pattern: '^[a-f0-9]{40}$' };
 const pathsSchema = { type: 'array', minItems: 1, maxItems: 200, items: text(500), uniqueItems: true };
 const resourcesSchema = { type: 'array', maxItems: 100, items: text(200), uniqueItems: true };
+const ledgerRefsSchema = { type: 'array', maxItems: 50, items: identity, uniqueItems: true };
+const taskClassSchema = { type: 'string', enum: ['design', 'architecture', 'maintenance'] };
 const requestProperties = {
   id: identity,
   owner: identity,
@@ -25,6 +27,9 @@ const requestProperties = {
   goal: text(2000),
   acceptance: text(4000),
   next_action: text(2000),
+  reason: text(1000),
+  task_class: taskClassSchema,
+  ledger_refs: ledgerRefsSchema,
   successor: identity,
   pr: { type: 'integer', minimum: 1, maximum: 1000000 },
   work_accounted: { type: 'boolean' },
@@ -81,7 +86,7 @@ const DEFINITIONS = [
   },
   {
     name: 'relay_runner_coordinate',
-    description: 'Perform one SHA-checked Runner queue/claim/rescope/heartbeat/hold/handoff/completion transaction. On claim, Relay resolves and pins base_sha from the live registered default branch; callers must omit base_sha. Completion requires a verified merged PR. No blind release or takeover.',
+    description: 'Perform one SHA-checked Runner queue/claim/amend/rescope/heartbeat/hold/handoff/completion transaction. Amend updates queued or claimed intent with bounded audit history while preserving claimed branch/base identity. On claim, Relay resolves and pins base_sha from the live registered default branch; callers must omit base_sha. Completion requires a verified merged PR. No blind release or takeover.',
     inputSchema: schema({
       project: projectSchema,
       action: { type: 'string', enum: MUTATIONS },
