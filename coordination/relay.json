@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T21:53:59.556Z",
+  "updated_at": "2026-09-30T21:54:52.130Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -340,6 +340,45 @@
       ],
       "state": "claimed",
       "created_at": "2026-09-30T21:16:23.785Z"
+    },
+    {
+      "id": "relay-1.7.5-observed-progress-pipeline-20260930",
+      "owner": "relay-1.7.5-observed-progress-pipeline-20260930",
+      "goal": "Ship Relay 1.7.5 as an independently deployable observed-progress backend release that gives Relay one canonical, evidence-backed answer to 'what is actually happening right now?' before the 1.8 UI lands. Build the server-side progress/operation piping that 1.8 consumes; do not depend on or implement the 1.8 dashboard/card presentation.",
+      "acceptance": "Release-facing metadata identifies the backend release as Relay 1.7.5 and it can merge/deploy independently while relay-1.8-contextual-ui-20260930 continues on its separate UI-only scope. Introduce a canonical observed-progress model/receipt/event stream that reconciles Runner coordination state with concrete GitHub and Cloudflare evidence instead of treating claim state, next_action prose, lease presence, or declaration time as execution progress. Each tracked operation/assignment exposes a canonical stage, latest concrete progress event, last meaningful progress timestamp, worker heartbeat/freshness separately from external-system activity, exact known source/base/head/branch/PR/check/merge/version/deployment/runtime identities, waiting/blocker reason, and recovery action. The model must distinguish at least reserved-but-idle, working, waiting-on-external-system, waiting-for-human, blocked, possibly-stale, officially-stale/unresponsive, failed, rolled-back, and complete. A live GitHub/Cloudflare job must prevent false 'worker frozen' conclusions while still showing that the worker itself is waiting; a dead heartbeat, quota/rate/auth/tool failure must be represented plainly with last successful stage and recovery. Implement the 5-minute meaningful-heartbeat target, 10-minute possibly-stale evaluation, and 20-minute official-stale default as backend semantics/configurable policy, without silently extending stale thresholds. Persist durable progress events/receipts so reconnecting clients can reconstruct the timeline without chat history; repeated observations of unchanged state must not spam duplicate events. Add reconciliation logic for obvious coordination drift: completed/absorbed/superseded intent must be classifiable separately from live work, orphan/unregistered branches must be surfaced as reconciliation findings, and umbrella/held reservations must not be presented as active execution merely because they still occupy policy capacity. Expose a stable backwards-compatible MCP/API contract that 1.8 can consume for project/assignment/operation progress and recent events; existing 1.7 tools/clients continue to work. This release does not redesign dashboard/cards and must not write 1.8 UI files. Tests must cover Runner-only reserved state versus observed work, GitHub check/PR waits, Cloudflare deploy waits, heartbeat freshness, stale transitions, deduped events, exact identity propagation, drift/reconciliation classification, and 1.8 consumer contract shape. Required install/tests, exact-head admission, merge, exact-source deployment, runtime readback and durable completion receipt must pass.",
+      "next_action": "Claim this as soon as a branch slot is legitimately available, without taking over or folding into the active 1.8 branch. Implement the canonical progress schema/event receipt first, then evidence adapters/reconciliation for Runner + GitHub + Cloudflare, then expose the stable consumer API/tool contract. Keep all UI rendering in 1.8. Before completion, leave a precise consumer handoff in docs/relay/RELAY_1_7_5_RELEASE.md describing the fields/events 1.8 must bind to and explicitly stating that UI must not infer progress from claim state or next_action prose.",
+      "paths": [
+        "src/index.js",
+        "src/relay-entry.js",
+        "src/runner-control.js",
+        "src/runner-control-core.js",
+        "src/source-lifecycle.js",
+        "src/operations.js",
+        "src/operation-receipts.js",
+        "src/operation-events.js",
+        "src/progress-observation.js",
+        "src/progress-reconciliation.js",
+        "src/progress-api.js",
+        "src/relay-entry.test.js",
+        "src/operations.test.js",
+        "src/operation-receipts.test.js",
+        "src/operation-events.test.js",
+        "src/progress-observation.test.js",
+        "src/progress-reconciliation.test.js",
+        "src/progress-api.test.js",
+        "docs/relay/RELAY_1_7_5_RELEASE.md"
+      ],
+      "resources": [
+        "relay-1.7.5-release",
+        "relay-operation-framework",
+        "relay-observed-progress-pipeline",
+        "relay-progress-reconciliation",
+        "relay-progress-heartbeats",
+        "relay-stale-work-alerts",
+        "relay-publication-receipts"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T21:54:52.130Z"
     }
   ],
   "claims": [
