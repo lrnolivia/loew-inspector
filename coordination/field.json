@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T05:40:47.466Z",
+  "updated_at": "2026-09-30T05:42:22.512Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -270,19 +270,29 @@
         "src/code/features/paste-engine/copy/copy-instance.test.ts",
         "src/code/project/component-translations.test.ts",
         "src/code/project/translation-ops.test.ts",
-        "src/ai/agent/tools/cms.test.ts"
+        "src/ai/agent/tools/cms.test.ts",
+        "src/editor/fill-picker-shell-contract.test.ts",
+        "src/editor/ui/color-picker-page-colors-contract.test.ts",
+        "src/editor/ui/gradient-preset-contract.test.ts",
+        "src/editor/ui/paint-picker-universal-contract.test.ts",
+        "src/editor/ui/pattern-fill-contract.test.ts",
+        "src/editor/ui/shader-fill-contract.test.ts",
+        "src/editor/workspace-layout.test.ts",
+        "src/canvas/image-dims.test.ts",
+        "src/canvas/transform/CameraAnimator.test.ts",
+        "src/canvas/gallery/crop-math.test.ts"
       ],
       "resources": [
         "canvas-group-frame-parity"
       ],
       "goal": "Recover stranded Frame/Group parity into current main, preserving existing Mobile ownership.",
       "acceptance": "100x100 click Frames, Space parenting bypass, primary Alt G Frame Selection; browser encapsulation, wrapping and native Group world geometry pass; original branches retained until acceptance and QA accounted.",
-      "next_action": "Repair incomplete ProjectFS test doubles to unblock required validation without changing product or weakening assertions.",
+      "next_action": "Repair transformed source-read URLs and missing browser test APIs; preserve assertions and product behavior.",
       "base_sha": "760774a6bd628827f93190fb0abaf7a6e26acbea",
       "state": "active",
       "created_at": "2026-09-30T05:31:47.089Z",
-      "updated_at": "2026-09-30T05:40:47.466Z",
-      "lease_until": "2026-09-30T17:40:47.466Z"
+      "updated_at": "2026-09-30T05:42:22.512Z",
+      "lease_until": "2026-09-30T17:42:22.512Z"
     }
   ]
 }
