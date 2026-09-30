@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T13:37:08.427Z",
+  "updated_at": "2026-09-30T13:41:26.690Z",
   "legacy_branches": [
     "control",
     "main",
@@ -392,10 +392,16 @@
       "acceptance": "Runner has three clear jobs: Today, Projects, Review. The same dashboard is not repeated across surfaces; Review is an inbox that opens directly into full-screen QA instead of rendering technical evidence below; Projects expose current/queued work in plain language; worker actions are contextual and unsupported controls are not shown; technical metadata is progressive disclosure; existing safety and QA persistence remain authoritative.",
       "next_action": "Implement the redesign as small task-specific modules: shell navigation, Today, Projects, Review. Preserve full-screen QA and remove the old dashboard presentation from the shipped page.",
       "base_sha": "700b69946b9705251597bce611e13fa9ce699a01",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T13:04:26.421Z",
-      "updated_at": "2026-09-30T13:15:00.049Z",
-      "lease_until": "2026-10-01T01:15:00.049Z"
+      "updated_at": "2026-09-30T13:41:26.690Z",
+      "lease_until": "2026-10-01T01:41:26.690Z",
+      "pr": 43,
+      "merged_head_sha": "faacdfdb1a8355b3008326e320041809fc3863c4",
+      "merge_commit_sha": "4e581179bb6dcab519c73dfdab4cfb6e34f44e6d",
+      "evidence": "https://github.com/lrnolivia/loew-runner/pull/43 — exact-head tests, Runner admission and Worker build passed; operator redesign merged intact before night shift identity migration.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T13:41:26.690Z"
     },
     {
       "id": "night-shift-product-rebrand-20260930",
