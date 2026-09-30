@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T10:29:05.753Z",
+  "updated_at": "2026-09-30T10:34:08.012Z",
   "legacy_branches": [
     "control",
     "main",
@@ -108,12 +108,18 @@
       ],
       "goal": "Persist consolidated Relay roadmap and review-centered MCP app UI handoff for the existing Relay worker.",
       "acceptance": "Roadmap, ownership, baseline, conflicts, screenshots, approvals, phased criteria and worker startup instructions are merged into Runner and linked from its project docs.",
-      "next_action": "Publish documentation only; verify checks, merge and close this documentation claim.",
+      "next_action": "Documentation completed: six-batch Relay worker handoff merged, tools/templates first, with explicit Composio-free normal workflow gate. Existing Relay worker to adopt and admit implementation scope.",
       "base_sha": "c59af9afb59d58a89a94770ba0766ca5901e96ef",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T10:29:05.753Z",
-      "updated_at": "2026-09-30T10:29:05.753Z",
-      "lease_until": "2026-09-30T22:29:05.753Z"
+      "updated_at": "2026-09-30T10:34:08.012Z",
+      "lease_until": "2026-09-30T22:29:05.753Z",
+      "pr": 36,
+      "merged_head_sha": "353090ad852195a164e2dfc0eb80d8f66eca6af9",
+      "merge_commit_sha": "1cf8b15acfd19761b7a318634c8336c287f3ea0e",
+      "evidence": "https://github.com/lrnolivia/loew-runner/pull/36",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T10:34:08.012Z"
     }
   ]
 }
