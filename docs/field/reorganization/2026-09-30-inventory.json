@@ -1,10 +1,19 @@
 {
   "schema": 1,
   "assignment": "field-repo-cleanup-reorg-20260929",
-  "captured_at": "2026-09-30T04:53:00Z",
-  "method": "132 actual remote heads; symbolic origin/HEAD excluded; rev-list ahead/behind; git cherry patch equivalence; patch-equivalent candidates have zero unmerged merge commits; 19 open PRs paginated",
+  "captured_at": "2026-09-30T04:53:30Z",
+  "status": "reviewed_inventory_ready_for_main_worker",
   "main": "0ea02501704e61d5133477d69fe677ad53295a56",
-  "status": "in_progress",
+  "branch_count": 132,
+  "open_pr_count": 19,
+  "method": "All API branch pages plus full Git clone; symbolic origin/HEAD excluded; git rev-list and git cherry; open and closed PR inventories; branch net-path/blob comparison; current Runner reports and historical field/control assignment metadata.",
+  "limits": [
+    "Patch equivalence is not workstream completion.",
+    "373 distinct unique non-merge commits; review unique merge-resolution commits separately.",
+    "No fresh runtime QA or full deterministic validation run in this review.",
+    "No source branch published, PR closed, branch deleted, or merge performed."
+  ],
+  "user_direction": "Preserve all branches until work is reviewed and planned; existing main field worker must consolidate. No new first-class workers.",
   "branches": [
     {
       "branch": "codex/field-chrome-batch-1",
@@ -18,7 +27,9 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "codex/field-chrome-batch-2",
@@ -35,7 +46,9 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "codex/field-chrome-batch-3",
@@ -53,7 +66,9 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "codex/field-chrome-batch-4",
@@ -74,7 +89,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 54,
+          "merged_at": "2026-09-29T02:43:58Z"
+        }
+      ]
     },
     {
       "branch": "codex/final-toolbar-media-consolidation-20260929",
@@ -84,8 +106,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 125,
+          "merged_at": "2026-09-29T21:36:47Z"
+        }
+      ]
     },
     {
       "branch": "codex/functional-effect-previews-20260929",
@@ -95,8 +124,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 105,
+          "merged_at": "2026-09-29T10:03:42Z"
+        }
+      ]
     },
     {
       "branch": "codex/general-settings-depth-20260929",
@@ -106,8 +142,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 76,
+          "merged_at": "2026-09-29T05:33:47Z"
+        }
+      ]
     },
     {
       "branch": "codex/general-settings-tabs-20260929",
@@ -117,8 +160,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 99,
+          "merged_at": "2026-09-29T08:58:21Z"
+        }
+      ]
     },
     {
       "branch": "codex/lowercase-headings-toggle-20260929",
@@ -128,8 +178,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 69,
+          "merged_at": "2026-09-29T05:03:44Z"
+        }
+      ]
     },
     {
       "branch": "codex/media-visual-polish-20260929",
@@ -139,8 +196,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "assets",
+      "closed_prs": [
+        {
+          "number": 101,
+          "merged_at": "2026-09-29T09:12:32Z"
+        }
+      ]
     },
     {
       "branch": "codex/panel-width-presets-lock-20260929",
@@ -150,8 +214,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 102,
+          "merged_at": "2026-09-29T09:19:43Z"
+        }
+      ]
     },
     {
       "branch": "codex/popup-tabs-media-polish-20260929",
@@ -161,8 +232,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 103,
+          "merged_at": "2026-09-29T09:42:04Z"
+        }
+      ]
     },
     {
       "branch": "codex/settings-architecture-20260928",
@@ -172,8 +250,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 63,
+          "merged_at": "2026-09-29T04:20:34Z"
+        }
+      ]
     },
     {
       "branch": "codex/settings-preview-visual-refresh-20260929",
@@ -183,8 +268,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 97,
+          "merged_at": "2026-09-29T08:51:55Z"
+        }
+      ]
     },
     {
       "branch": "codex/settings-surface-split-20260929",
@@ -194,8 +286,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 72,
+          "merged_at": "2026-09-29T05:13:49Z"
+        }
+      ]
     },
     {
       "branch": "codex/settings-visual-polish-20260929",
@@ -205,8 +304,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 65,
+          "merged_at": "2026-09-29T04:28:28Z"
+        }
+      ]
     },
     {
       "branch": "codex/sleep-batch-toolbar-media-effects-20260929",
@@ -216,8 +322,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 107,
+          "merged_at": "2026-09-29T21:27:49Z"
+        }
+      ]
     },
     {
       "branch": "codex/toolbar-media-card-style-20260929",
@@ -227,8 +340,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 127,
+          "merged_at": "2026-09-29T22:06:22Z"
+        }
+      ]
     },
     {
       "branch": "codex/toolbar-media-final-pass-20260929",
@@ -243,7 +363,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 110,
+          "merged_at": null
+        }
+      ]
     },
     {
       "branch": "codex/ui-heading-case-20260929",
@@ -253,8 +380,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 67,
+          "merged_at": "2026-09-29T04:48:47Z"
+        }
+      ]
     },
     {
       "branch": "codex/universal-tabs-media-padding-rotate-fix-20260929",
@@ -264,8 +398,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 104,
+          "merged_at": "2026-09-29T09:54:28Z"
+        }
+      ]
     },
     {
       "branch": "docs/product-language",
@@ -278,7 +419,9 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "feat/fill-page-colors-batch-8",
@@ -288,8 +431,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 98,
+          "merged_at": "2026-09-29T08:54:15Z"
+        }
+      ]
     },
     {
       "branch": "feat/fill-picker-shell-batch-1",
@@ -299,8 +449,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 85,
+          "merged_at": "2026-09-29T05:59:03Z"
+        }
+      ]
     },
     {
       "branch": "feat/fill-shell-hardening-batch-5",
@@ -310,8 +467,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 93,
+          "merged_at": "2026-09-29T08:35:34Z"
+        }
+      ]
     },
     {
       "branch": "feat/gradient-libraries-batch-6",
@@ -321,8 +485,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 94,
+          "merged_at": "2026-09-29T08:43:39Z"
+        }
+      ]
     },
     {
       "branch": "feat/native-pattern-fill-batch-2",
@@ -332,8 +503,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 86,
+          "merged_at": "2026-09-29T06:37:35Z"
+        }
+      ]
     },
     {
       "branch": "feat/oklch-color-mode-batch-9",
@@ -346,7 +524,9 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "controls",
+      "closed_prs": []
     },
     {
       "branch": "feat/pattern-media-source-batch-7",
@@ -356,8 +536,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 96,
+          "merged_at": "2026-09-29T08:50:00Z"
+        }
+      ]
     },
     {
       "branch": "feat/pattern-monster-library-batch-3",
@@ -367,8 +554,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 88,
+          "merged_at": "2026-09-29T06:52:58Z"
+        }
+      ]
     },
     {
       "branch": "feat/shader-fill-batch-4",
@@ -378,8 +572,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 91,
+          "merged_at": "2026-09-29T08:20:06Z"
+        }
+      ]
     },
     {
       "branch": "feat/universal-paint-picker-20260929",
@@ -405,7 +606,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 108,
+          "merged_at": "2026-09-29T21:48:35Z"
+        }
+      ]
     },
     {
       "branch": "field/about-build-info",
@@ -420,7 +628,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 57,
+          "merged_at": "2026-09-29T03:16:22Z"
+        }
+      ]
     },
     {
       "branch": "field/brand-casing-final",
@@ -437,7 +652,9 @@
         74
       ],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "field/browser-preview-qa-canonical",
@@ -447,8 +664,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "coordination / infrastructure",
+      "closed_prs": [
+        {
+          "number": 16,
+          "merged_at": "2026-09-27T04:11:16Z"
+        }
+      ]
     },
     {
       "branch": "field/canonical-collapse-state",
@@ -460,8 +684,15 @@
         "3ebfaece77d092e4be31b5c90be05b3dd685bdf1"
       ],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "All non-merge commits patch-equivalent to current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 48,
+          "merged_at": "2026-09-29T00:16:24Z"
+        }
+      ]
     },
     {
       "branch": "field/canonical-docked-wrappers",
@@ -473,8 +704,15 @@
         "2e5ecd14d28b7bdaa8d785cf0c9d37b6bad146f4"
       ],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "All non-merge commits patch-equivalent to current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 49,
+          "merged_at": "2026-09-29T00:22:05Z"
+        }
+      ]
     },
     {
       "branch": "field/chrome-global-utilities",
@@ -488,7 +726,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 56,
+          "merged_at": "2026-09-29T03:02:10Z"
+        }
+      ]
     },
     {
       "branch": "field/ci-lockfile-repair",
@@ -503,7 +748,9 @@
         129
       ],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "maintenance",
+      "closed_prs": []
     },
     {
       "branch": "field/control",
@@ -640,7 +887,9 @@
       ],
       "prs": [],
       "disposition": "KEEP EXCLUDED",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Historical coordination/provenance retained; never merge into main.",
+      "domain": "coordination / infrastructure",
+      "closed_prs": []
     },
     {
       "branch": "field/dashboard-collection-semantics",
@@ -656,7 +905,9 @@
         13
       ],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "field/dashboard-editor-left-rail-handoff",
@@ -666,8 +917,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "coordination / infrastructure",
+      "closed_prs": [
+        {
+          "number": 32,
+          "merged_at": "2026-09-27T07:20:29Z"
+        }
+      ]
     },
     {
       "branch": "field/dashboard-empty-state-semantics",
@@ -682,7 +940,9 @@
         14
       ],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "field/dashboard-interaction-polish",
@@ -697,7 +957,9 @@
         5
       ],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "field/dashboard-manual-refresh",
@@ -711,7 +973,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 55,
+          "merged_at": "2026-09-29T02:30:07Z"
+        }
+      ]
     },
     {
       "branch": "field/dashboard-new-project-focus-flow",
@@ -727,7 +996,9 @@
         10
       ],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "field/dashboard-open-thumbnails",
@@ -739,8 +1010,15 @@
         "ceef65d79928195b7e8cd1d566567653e8acb07c"
       ],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "All non-merge commits patch-equivalent to current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 52,
+          "merged_at": "2026-09-29T00:36:23Z"
+        }
+      ]
     },
     {
       "branch": "field/dashboard-rename-dialog-hardening",
@@ -757,7 +1035,9 @@
         8
       ],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "field/dashboard-sidebar-navigation-semantics",
@@ -772,7 +1052,9 @@
         11
       ],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "field/editor-chrome-media-effects-continuation-20260929",
@@ -782,8 +1064,10 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "controls",
+      "closed_prs": []
     },
     {
       "branch": "field/field-branch-preview-live-qa",
@@ -793,8 +1077,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "coordination / infrastructure",
+      "closed_prs": [
+        {
+          "number": 15,
+          "merged_at": "2026-09-27T03:22:02Z"
+        }
+      ]
     },
     {
       "branch": "field/field-glyph-completion-sweep",
@@ -804,8 +1095,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 41,
+          "merged_at": "2026-09-27T11:09:11Z"
+        }
+      ]
     },
     {
       "branch": "field/field-glyph-explicit-coverage",
@@ -819,7 +1117,9 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "field/field-glyph-semantic-states",
@@ -834,7 +1134,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 39,
+          "merged_at": "2026-09-27T10:25:20Z"
+        }
+      ]
     },
     {
       "branch": "field/field-glyph-system",
@@ -844,8 +1151,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 30,
+          "merged_at": "2026-09-27T09:24:27Z"
+        }
+      ]
     },
     {
       "branch": "field/field-glyph-test-path",
@@ -855,8 +1169,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 42,
+          "merged_at": "2026-09-27T15:48:34Z"
+        }
+      ]
     },
     {
       "branch": "field/field-motion-quality",
@@ -877,7 +1198,9 @@
         73
       ],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "field/field-motion-semantic-controls",
@@ -887,8 +1210,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "coordination / infrastructure",
+      "closed_prs": [
+        {
+          "number": 12,
+          "merged_at": "2026-09-27T06:37:51Z"
+        }
+      ]
     },
     {
       "branch": "field/field-preview-canvas-host-routing",
@@ -903,7 +1233,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "coordination / infrastructure",
+      "closed_prs": [
+        {
+          "number": 19,
+          "merged_at": "2026-09-27T05:53:17Z"
+        }
+      ]
     },
     {
       "branch": "field/field-root-instruction-cleanup",
@@ -913,8 +1250,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "coordination / infrastructure",
+      "closed_prs": [
+        {
+          "number": 7,
+          "merged_at": "2026-09-26T15:26:36Z"
+        }
+      ]
     },
     {
       "branch": "field/field-worker-coordination-v2",
@@ -933,7 +1277,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "coordination / infrastructure",
+      "closed_prs": [
+        {
+          "number": 2,
+          "merged_at": "2026-09-26T10:20:20Z"
+        }
+      ]
     },
     {
       "branch": "field/figui3-canvas-inspector-recovery-20260927",
@@ -943,8 +1294,10 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "field/fix-left-rail-floating",
@@ -959,7 +1312,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 70,
+          "merged_at": "2026-09-29T05:18:20Z"
+        }
+      ]
     },
     {
       "branch": "field/fix-lockfile-swc-helper",
@@ -977,7 +1337,9 @@
         132
       ],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "maintenance",
+      "closed_prs": []
     },
     {
       "branch": "field/focus-camera-hardening",
@@ -987,8 +1349,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "canvas",
+      "closed_prs": [
+        {
+          "number": 66,
+          "merged_at": "2026-09-29T04:39:46Z"
+        }
+      ]
     },
     {
       "branch": "field/focus-camera-text-session",
@@ -1004,7 +1373,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "canvas",
+      "closed_prs": [
+        {
+          "number": 60,
+          "merged_at": "2026-09-29T04:13:58Z"
+        }
+      ]
     },
     {
       "branch": "field/frame-hug-autolayout-padding",
@@ -1016,8 +1392,15 @@
         "848f140141e608388beb7ccfdca34c8ec0cefdf9"
       ],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "All non-merge commits patch-equivalent to current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "canvas",
+      "closed_prs": [
+        {
+          "number": 51,
+          "merged_at": "2026-09-29T00:30:33Z"
+        }
+      ]
     },
     {
       "branch": "field/handoff-kit-canonical-source",
@@ -1032,7 +1415,9 @@
         27
       ],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "coordination / infrastructure",
+      "closed_prs": []
     },
     {
       "branch": "field/inspector-autohide-arrow-layout",
@@ -1046,7 +1431,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 45,
+          "merged_at": "2026-09-28T07:53:56Z"
+        }
+      ]
     },
     {
       "branch": "field/inspector-controls-zoom",
@@ -1058,8 +1450,15 @@
         "ef7b69faf8544425016a8d8ea5221d9fe7e43cca"
       ],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "All non-merge commits patch-equivalent to current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "coordination / infrastructure",
+      "closed_prs": [
+        {
+          "number": 46,
+          "merged_at": "2026-09-29T00:08:49Z"
+        }
+      ]
     },
     {
       "branch": "field/inspector-pane-motion",
@@ -1071,8 +1470,15 @@
         "cf68ca177d95da0181fe429652084b6e6645b80d"
       ],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "All non-merge commits patch-equivalent to current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 61,
+          "merged_at": "2026-09-29T03:50:16Z"
+        }
+      ]
     },
     {
       "branch": "field/inspector-provenance-write-targets",
@@ -1094,7 +1500,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 26,
+          "merged_at": "2026-09-27T06:29:59Z"
+        }
+      ]
     },
     {
       "branch": "field/inspector-system-visual-qa",
@@ -1104,8 +1517,10 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "field/interrupted-ready-batch",
@@ -1117,8 +1532,15 @@
         "bbf2bec8e4d057b83b233bc232e69c2e5de0660e"
       ],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "All non-merge commits patch-equivalent to current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 43,
+          "merged_at": "2026-09-28T07:23:50Z"
+        }
+      ]
     },
     {
       "branch": "field/layout-pill-identity",
@@ -1130,8 +1552,15 @@
         "8110675895332c1e142029df90494b6ede94df5f"
       ],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "All non-merge commits patch-equivalent to current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 47,
+          "merged_at": "2026-09-29T00:14:59Z"
+        }
+      ]
     },
     {
       "branch": "field/left-panel-inspector-parity-20260929",
@@ -1162,7 +1591,9 @@
         124
       ],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "field/main-menu-natural-height",
@@ -1174,8 +1605,15 @@
         "9dfd501d769ae32bc9753295baf5a58360d3f3b8"
       ],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "All non-merge commits patch-equivalent to current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 59,
+          "merged_at": "2026-09-29T03:25:47Z"
+        }
+      ]
     },
     {
       "branch": "field/media-system-architecture",
@@ -1185,8 +1623,10 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "assets",
+      "closed_prs": []
     },
     {
       "branch": "field/media-system-foundation",
@@ -1227,7 +1667,9 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "assets",
+      "closed_prs": []
     },
     {
       "branch": "field/mobile-docs-qa-20260929",
@@ -1240,7 +1682,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "mobile",
+      "closed_prs": [
+        {
+          "number": 130,
+          "merged_at": null
+        }
+      ]
     },
     {
       "branch": "field/mobile-focus-touch-camera-20260929",
@@ -1264,7 +1713,9 @@
         123
       ],
       "disposition": "KEEP ACTIVE",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "mobile",
+      "closed_prs": []
     },
     {
       "branch": "field/native-gallery-qol-creation-flow",
@@ -1274,8 +1725,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "assets",
+      "closed_prs": [
+        {
+          "number": 3,
+          "merged_at": "2026-09-27T07:09:50Z"
+        }
+      ]
     },
     {
       "branch": "field/native-group-lifecycle-integrity",
@@ -1292,7 +1750,14 @@
       ],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "canvas",
+      "closed_prs": [
+        {
+          "number": 18,
+          "merged_at": "2026-09-27T07:01:32Z"
+        }
+      ]
     },
     {
       "branch": "field/native-scale-visual-metrics-repair",
@@ -1308,7 +1773,9 @@
         9
       ],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "canvas",
+      "closed_prs": []
     },
     {
       "branch": "field/night-shift-blocker-repair-policy",
@@ -1318,8 +1785,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "coordination / infrastructure",
+      "closed_prs": [
+        {
+          "number": 6,
+          "merged_at": "2026-09-26T10:39:26Z"
+        }
+      ]
     },
     {
       "branch": "field/options-panel-effects",
@@ -1336,7 +1810,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 79,
+          "merged_at": null
+        }
+      ]
     },
     {
       "branch": "field/options-panel-effects-v2",
@@ -1351,7 +1832,14 @@
       ],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 81,
+          "merged_at": null
+        }
+      ]
     },
     {
       "branch": "field/options-panel-effects-v3",
@@ -1367,7 +1855,9 @@
         83
       ],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "controls",
+      "closed_prs": []
     },
     {
       "branch": "field/options-panel-finish",
@@ -1379,8 +1869,15 @@
         "f54253cd7e66e855e3dc1f91214dd2e42cc1431f"
       ],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "All non-merge commits patch-equivalent to current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 87,
+          "merged_at": "2026-09-29T06:48:58Z"
+        }
+      ]
     },
     {
       "branch": "field/options-panel-foundation",
@@ -1395,7 +1892,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 75,
+          "merged_at": "2026-09-29T05:48:36Z"
+        }
+      ]
     },
     {
       "branch": "field/options-panel-stroke",
@@ -1410,7 +1914,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 78,
+          "merged_at": null
+        }
+      ]
     },
     {
       "branch": "field/options-panel-stroke-v2",
@@ -1422,8 +1933,15 @@
         "cc3fd8d17fb14d08863a282077d4594dc87a7c8a"
       ],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "All non-merge commits patch-equivalent to current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 80,
+          "merged_at": "2026-09-29T05:54:45Z"
+        }
+      ]
     },
     {
       "branch": "field/pane-control-polish",
@@ -1435,8 +1953,15 @@
         "f3ca75538a6d16164b98180fb29a702f71e84103"
       ],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "All non-merge commits patch-equivalent to current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "coordination / infrastructure",
+      "closed_prs": [
+        {
+          "number": 58,
+          "merged_at": "2026-09-29T03:20:30Z"
+        }
+      ]
     },
     {
       "branch": "field/product-language-rebase",
@@ -1446,8 +1971,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 82,
+          "merged_at": "2026-09-29T05:58:21Z"
+        }
+      ]
     },
     {
       "branch": "field/product-language-sweep",
@@ -1471,7 +2003,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 68,
+          "merged_at": null
+        }
+      ]
     },
     {
       "branch": "field/project-loading-veil",
@@ -1481,8 +2020,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 34,
+          "merged_at": "2026-09-27T07:34:02Z"
+        }
+      ]
     },
     {
       "branch": "field/project-loading-veil-dark-mark",
@@ -1492,8 +2038,10 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "field/project-loading-veil-figma-match",
@@ -1503,8 +2051,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 37,
+          "merged_at": "2026-09-27T08:24:15Z"
+        }
+      ]
     },
     {
       "branch": "field/project-loading-veil-native-mesh",
@@ -1539,7 +2094,9 @@
         38
       ],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "field/project-switch-isolation",
@@ -1555,7 +2112,14 @@
       ],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 53,
+          "merged_at": "2026-09-29T02:14:30Z"
+        }
+      ]
     },
     {
       "branch": "field/selection-color-camera-restore",
@@ -1567,8 +2131,15 @@
         "b3a0943abd84ab6fdda5a984217c4c5e1422dc2b"
       ],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "All non-merge commits patch-equivalent to current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "canvas",
+      "closed_prs": [
+        {
+          "number": 44,
+          "merged_at": "2026-09-28T07:41:49Z"
+        }
+      ]
     },
     {
       "branch": "field/shared-repair-ledger",
@@ -1663,7 +2234,9 @@
         28
       ],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "coordination / infrastructure",
+      "closed_prs": []
     },
     {
       "branch": "field/text-hover-glyph-shine",
@@ -1675,8 +2248,15 @@
         "ad5722dbf28b9229692446e14ee7cc0661070774"
       ],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "All non-merge commits patch-equivalent to current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "canvas",
+      "closed_prs": [
+        {
+          "number": 50,
+          "merged_at": "2026-09-29T00:24:14Z"
+        }
+      ]
     },
     {
       "branch": "field/toolbar-glyph-stage-fix",
@@ -1689,7 +2269,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 40,
+          "merged_at": null
+        }
+      ]
     },
     {
       "branch": "field/universal-paint-picker-continuation-20260929",
@@ -1699,8 +2286,10 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "controls",
+      "closed_prs": []
     },
     {
       "branch": "field/universal-runner-authority",
@@ -1714,7 +2303,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "coordination / infrastructure",
+      "closed_prs": [
+        {
+          "number": 31,
+          "merged_at": "2026-09-27T07:10:30Z"
+        }
+      ]
     },
     {
       "branch": "field/viewport-header-lockstep",
@@ -1730,7 +2326,9 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "canvas",
+      "closed_prs": []
     },
     {
       "branch": "field/visual-hierarchy-pass",
@@ -1742,8 +2340,15 @@
         "2cd248de5a748177e98041931a1a3169096e4daa"
       ],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "All non-merge commits patch-equivalent to current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 64,
+          "merged_at": "2026-09-29T04:25:12Z"
+        }
+      ]
     },
     {
       "branch": "field/workspace-layout-names",
@@ -1757,7 +2362,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 62,
+          "merged_at": "2026-09-29T04:15:03Z"
+        }
+      ]
     },
     {
       "branch": "figui3-locate-padding-inspector-pass",
@@ -1767,8 +2379,10 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": []
     },
     {
       "branch": "figui3-selection-inspector-canvas-readiness",
@@ -1790,7 +2404,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "canvas",
+      "closed_prs": [
+        {
+          "number": 17,
+          "merged_at": "2026-09-27T04:14:55Z"
+        }
+      ]
     },
     {
       "branch": "figui3-toolbar-locate-pass",
@@ -1805,7 +2426,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 36,
+          "merged_at": "2026-09-27T08:09:20Z"
+        }
+      ]
     },
     {
       "branch": "fix/compact-paint-picker-20260929",
@@ -1820,7 +2448,9 @@
         126
       ],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "controls",
+      "closed_prs": []
     },
     {
       "branch": "fix/compact-paint-picker-v2-20260929",
@@ -1833,7 +2463,9 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "controls",
+      "closed_prs": []
     },
     {
       "branch": "fix/compact-paint-picker-v3-20260929",
@@ -1853,7 +2485,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 128,
+          "merged_at": "2026-09-29T22:08:18Z"
+        }
+      ]
     },
     {
       "branch": "fix/real-project-qa-access",
@@ -1865,8 +2504,15 @@
         "4adb9d870c29877638dc15fd0ca65db9d19978d2"
       ],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "All non-merge commits patch-equivalent to current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "coordination / infrastructure",
+      "closed_prs": [
+        {
+          "number": 89,
+          "merged_at": "2026-09-29T07:30:50Z"
+        }
+      ]
     },
     {
       "branch": "fix/selection-color-locate-keyline",
@@ -1882,7 +2528,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "canvas",
+      "closed_prs": [
+        {
+          "number": 33,
+          "merged_at": "2026-09-27T07:26:18Z"
+        }
+      ]
     },
     {
       "branch": "fix/selection-color-painted-geometry",
@@ -1898,7 +2551,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 29,
+          "merged_at": "2026-09-27T07:01:04Z"
+        }
+      ]
     },
     {
       "branch": "fix/selection-color-three-layer-glow",
@@ -1910,8 +2570,15 @@
         "17d5a25593fe8f85ac20c5c967afa346f794b370"
       ],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "All non-merge commits patch-equivalent to current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "canvas",
+      "closed_prs": [
+        {
+          "number": 35,
+          "merged_at": "2026-09-27T07:37:28Z"
+        }
+      ]
     },
     {
       "branch": "main",
@@ -1922,7 +2589,9 @@
       "equivalent": [],
       "prs": [],
       "disposition": "KEEP MAIN",
-      "reason": "Branch head reachable from current main."
+      "reason": "Integration truth; no direct writes.",
+      "domain": "integration",
+      "closed_prs": []
     },
     {
       "branch": "qa/frame-group-baseline",
@@ -1935,7 +2604,9 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "canvas",
+      "closed_prs": []
     },
     {
       "branch": "qa/preview-host-fix",
@@ -1951,7 +2622,9 @@
         92
       ],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "coordination / infrastructure",
+      "closed_prs": []
     },
     {
       "branch": "relay-write-proof",
@@ -1964,7 +2637,14 @@
       "equivalent": [],
       "prs": [],
       "disposition": "KEEP EXCLUDED",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Excluded proof branch; retain unless separately approved for retirement.",
+      "domain": "coordination / infrastructure",
+      "closed_prs": [
+        {
+          "number": 1,
+          "merged_at": null
+        }
+      ]
     },
     {
       "branch": "stage0/canvas-preview-parity-closeout",
@@ -1974,8 +2654,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "canvas",
+      "closed_prs": [
+        {
+          "number": 84,
+          "merged_at": "2026-09-29T08:39:00Z"
+        }
+      ]
     },
     {
       "branch": "stage0/figma-frame-group-parity",
@@ -1991,7 +2678,9 @@
       "equivalent": [],
       "prs": [],
       "disposition": "QUARANTINE — SEMANTIC REVIEW",
-      "reason": "Unique patch IDs require semantic accounting; original branch retained."
+      "reason": "Unique non-merge commits recorded; original branch retained for semantic review.",
+      "domain": "canvas",
+      "closed_prs": []
     },
     {
       "branch": "stage0/figma-hierarchy-parity",
@@ -2001,8 +2690,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "canvas",
+      "closed_prs": [
+        {
+          "number": 109,
+          "merged_at": "2026-09-29T11:14:38Z"
+        }
+      ]
     },
     {
       "branch": "stage0/figma-selection-parity",
@@ -2012,8 +2708,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "canvas",
+      "closed_prs": [
+        {
+          "number": 106,
+          "merged_at": "2026-09-29T10:19:55Z"
+        }
+      ]
     },
     {
       "branch": "stage0/geometry-inspector-consolidation",
@@ -2023,8 +2726,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "controls",
+      "closed_prs": [
+        {
+          "number": 71,
+          "merged_at": "2026-09-29T05:30:24Z"
+        }
+      ]
     },
     {
       "branch": "stage0/layers-lock-selection-closeout",
@@ -2034,8 +2744,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "canvas",
+      "closed_prs": [
+        {
+          "number": 77,
+          "merged_at": "2026-09-29T05:43:52Z"
+        }
+      ]
     },
     {
       "branch": "stage0/preview-runtime-url-single-source",
@@ -2045,8 +2762,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "workspace",
+      "closed_prs": [
+        {
+          "number": 100,
+          "merged_at": "2026-09-29T09:51:41Z"
+        }
+      ]
     },
     {
       "branch": "stage0/text-edit-inspector-selection",
@@ -2056,8 +2780,15 @@
       "unique": [],
       "equivalent": [],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "canvas",
+      "closed_prs": [
+        {
+          "number": 90,
+          "merged_at": "2026-09-29T08:23:42Z"
+        }
+      ]
     },
     {
       "branch": "worker/figui3-selection-locate-skeleton",
@@ -2069,8 +2800,188 @@
         "05b4ca731d7a3d0cc2ebeb32f52acedd3d2cc1c2"
       ],
       "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "All non-merge commits patch-equivalent to current main."
+      "disposition": "INTEGRATED / PATCH-EQUIVALENT — COMPLETION REVIEW REQUIRED",
+      "reason": "Code reachability/patch equivalence proven; workstream completion and current QA are NOT inferred.",
+      "domain": "canvas",
+      "closed_prs": [
+        {
+          "number": 21,
+          "merged_at": "2026-09-27T05:21:14Z"
+        }
+      ]
+    }
+  ],
+  "open_prs": [
+    {
+      "number": 132,
+      "title": "fix: repair npm lockfile peer dependency",
+      "branch": "field/fix-lockfile-swc-helper",
+      "head": "03205f3ac490c99b109d3ad4eb5202e3f117bf7b",
+      "draft": true,
+      "disposition": "VERIFY / LAND FIRST",
+      "next_action": "One-file lock repair; exact-head Cloudflare passed. Install/build historical evidence exists; full required test/lint gates are not cleared."
+    },
+    {
+      "number": 129,
+      "title": "fix: repair npm 10 lockfile and restore reproducible media CI",
+      "branch": "field/ci-lockfile-repair",
+      "head": "61a7159b9730f7bcdc2586c948fd89555c5858ef",
+      "draft": true,
+      "disposition": "COMPARE / SALVAGE CI INTENT",
+      "next_action": "Same nested helper entry as #132 apart from formatting; adds strict npm ci, dependency path triggers, and cancellation. Do not discard the CI improvements as duplicate lock work."
+    },
+    {
+      "number": 126,
+      "title": "Compact the universal PaintPicker",
+      "branch": "fix/compact-paint-picker-20260929",
+      "head": "8194864cb8fdf7398244a9c016c211a67da67df3",
+      "draft": false,
+      "disposition": "LIKELY SUPERSEDED — VERIFY FIRST",
+      "next_action": "Later merged #128 has compact picker plus nested launcher fix. Ten changed-path blobs match current main; three differ. Verify remaining contracts before closure."
+    },
+    {
+      "number": 124,
+      "title": "feat: unify left-panel chrome with Inspector",
+      "branch": "field/left-panel-inspector-parity-20260929",
+      "head": "3dd8ca23d54aa9a10c5ea4ee458cd59ad90ee860",
+      "draft": false,
+      "disposition": "RECOVER LEFT-PANEL WORK",
+      "next_action": "Preserve new shared CSS and panel work; reconcile against current main Float/Inspector and protected Mobile overlap. Current-main shell behavior wins."
+    },
+    {
+      "number": 123,
+      "title": "[field] mobile Focus editor — touch, adaptive panels and keyboard",
+      "branch": "field/mobile-focus-touch-camera-20260929",
+      "head": "0a4c2cef6ce9a76dcc9011466956266bd00feb73",
+      "draft": true,
+      "disposition": "KEEP ACTIVE — PROTECTED",
+      "next_action": "Existing Mobile owner; no rename, closure, branch rewrite or takeover. Camera test and physical-phone gates remain with that owner."
+    },
+    {
+      "number": 92,
+      "title": "QA: immutable Preview host fix",
+      "branch": "qa/preview-host-fix",
+      "head": "f9c881f3d3e14cee9e6b47b3e067ad177dac639b",
+      "draft": true,
+      "disposition": "LIKELY SUPERSEDED QA MARKER",
+      "next_action": "Diff is a temporary QA doc and source-touch comment. Current main uses shared Preview URL helper. Verify immutable host behavior with infrastructure owner, not a routing rewrite."
+    },
+    {
+      "number": 83,
+      "title": "Migrate effects to Inspector options panels",
+      "branch": "field/options-panel-effects-v3",
+      "head": "e09f3940df94d141fcde3b85e53090333aa8a2f8",
+      "draft": false,
+      "disposition": "AUDIT CONTROLS COVERAGE",
+      "next_action": "Current main has newer effects grammar and canonical PaintPicker. Compare remaining semantics and tests; preserve any real gap before closure."
+    },
+    {
+      "number": 74,
+      "title": "[field] Apply product language and Brand casing",
+      "branch": "field/brand-casing-final",
+      "head": "d980b26d6475239b2107fb6ef5197179ef360acc",
+      "draft": false,
+      "disposition": "AUDIT PRODUCT-LANGUAGE INTENT",
+      "next_action": "Old Brand casing reconstructs sentence case; main's newer single boolean preserves authored text when off. Preserve durable docs, not the older competing formatter."
+    },
+    {
+      "number": 73,
+      "title": "Polish field chrome motion quality",
+      "branch": "field/field-motion-quality",
+      "head": "1df55eae326651c2a51d752b9ad3cee16f6ddb6f",
+      "draft": true,
+      "disposition": "RECOVER USEFUL MOTION PRIMITIVES",
+      "next_action": "field.MOTION is partly integrated; quality branch has unique projection/coalescing/motion observatory changes. Review shared shell overlap and reduced-motion behavior."
+    },
+    {
+      "number": 38,
+      "title": "[field] Refine loading veil with uploaded logo and pulse glow",
+      "branch": "field/project-loading-veil-native-mesh",
+      "head": "bbee73a02f4032934190ab2e0d5aad53530cdd64",
+      "draft": true,
+      "disposition": "REVIEW LOADER DECISION / COVERAGE",
+      "next_action": "Native-mesh loader and asset are absent on current main; do not assume old desired visuals are obsolete. Compare newer loading lifecycle and product decisions before salvage or retirement."
+    },
+    {
+      "number": 28,
+      "title": "[field/control] Add shared repair baseline ledger",
+      "branch": "field/shared-repair-ledger",
+      "head": "e183add529e0f98589a3bb4ae3cc9c3539603780",
+      "draft": false,
+      "disposition": "PRESERVE CONTROL HISTORY / RECONCILE",
+      "next_action": "Historical repair ledger and control metadata; compare Runner canonical records, preserve history, do not merge field/control into main."
+    },
+    {
+      "number": 27,
+      "title": "[field] Make main canonical for handoff-kit process",
+      "branch": "field/handoff-kit-canonical-source",
+      "head": "b6fdda6955cba77bbe1d1232227b0bb48b7d9520",
+      "draft": false,
+      "disposition": "REVIEW AS SUPERSEDED EXECUTION LAW",
+      "next_action": "Old main-canonical handoff kit conflicts with Runner-first authority. Preserve only useful tooling coverage; never resurrect its local authority."
+    },
+    {
+      "number": 14,
+      "title": "[field] dashboard-empty-state-semantics",
+      "branch": "field/dashboard-empty-state-semantics",
+      "head": "79e64730ff918899d55002bae334a78ee6496c18",
+      "draft": true,
+      "disposition": "RECOVER DASHBOARD EMPTY STATES",
+      "next_action": "Unique source/test delta absent from main; review meaningful collection-empty versus no-project messaging and coverage."
+    },
+    {
+      "number": 13,
+      "title": "[field] dashboard-collection-semantics",
+      "branch": "field/dashboard-collection-semantics",
+      "head": "d357212178f18280b932b0fd0d1be51c3d7f2427",
+      "draft": true,
+      "disposition": "RECOVER DASHBOARD COLLECTION SEMANTICS",
+      "next_action": "Unique count labels, grid/card semantics and coverage; tests absent on main."
+    },
+    {
+      "number": 11,
+      "title": "[field] dashboard-sidebar-navigation-semantics",
+      "branch": "field/dashboard-sidebar-navigation-semantics",
+      "head": "f33552d437b3f761f4b669b4107d3f9d1d439849",
+      "draft": true,
+      "disposition": "RECOVER DASHBOARD NAVIGATION",
+      "next_action": "Unique sidebar semantics/coverage absent from main; preserve keyboard/current-state behavior."
+    },
+    {
+      "number": 10,
+      "title": "[field] dashboard-new-project-focus-flow",
+      "branch": "field/dashboard-new-project-focus-flow",
+      "head": "e1527fe71eaf30319555601f05406fd3be68ada6",
+      "draft": true,
+      "disposition": "RECOVER NEW-PROJECT FOCUS",
+      "next_action": "Unique wizard focus implementation/test coverage; reconcile current wizard."
+    },
+    {
+      "number": 9,
+      "title": "[field] native-scale-visual-metrics-repair",
+      "branch": "field/native-scale-visual-metrics-repair",
+      "head": "751bbe9dae4f55ee0207245e82c6e8eed48b4dab",
+      "draft": true,
+      "disposition": "RECOVER / VERIFY SCALE CORRECTNESS",
+      "next_action": "Unique SVG stroke/dash visual-metric persistence and tests; previous runtime-closeout record is not current pass."
+    },
+    {
+      "number": 8,
+      "title": "[field] dashboard-rename-dialog-hardening",
+      "branch": "field/dashboard-rename-dialog-hardening",
+      "head": "24294802256a1b19d4774dafbe861cf9ae6444e9",
+      "draft": true,
+      "disposition": "RECOVER RENAME HARDENING",
+      "next_action": "Unique rename focus/selection and tests; reconcile current dialogs rather than copying outdated UI."
+    },
+    {
+      "number": 5,
+      "title": "[field] dashboard-interaction-polish",
+      "branch": "field/dashboard-interaction-polish",
+      "head": "736ddfafb34ee561fadd0bd6f039726a44afae2b",
+      "draft": true,
+      "disposition": "RECOVER PROJECT ACTIONS",
+      "next_action": "Delete dialog and interaction tests absent from main; compare current delete/menu flow and preserve accessibility and destructive-action safeguards."
     }
   ]
 }
