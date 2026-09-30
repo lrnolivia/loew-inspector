@@ -1,4 +1,8 @@
 import http from "node:http";
+import { execFile } from "node:child_process";
+import { promisify } from "node:util";
+import { projectIcon } from "../../packages/runner/src/project-icons.mjs";
+const execute = promisify(execFile);
 import fs from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -18,6 +22,11 @@ const server = http.createServer(async (req, res) => {
       const files = (await fs.readdir(path.join(root, "projects"))).filter(name => name.endsWith(".json"));
       const projects = await Promise.all(files.map(file => read("projects/" + file)));
       return send(200, { projects: projects.filter(project => !project.alias_of) });
+    }
+    const iconMatch = url.pathname.match(/^\/api\/projects\/([a-zA-Z0-9._-]+)\/icon$/);
+    if (iconMatch) {
+      const project = await read("projects/" + iconMatch[1] + ".json");
+      return send(200, await projectIcon(project, async apiPath => JSON.parse((await execute("gh", ["api", apiPath], { maxBuffer: 8 * 1024 * 1024, timeout: 15000 })).stdout), "local-gh"));
     }
     const match = url.pathname.match(/^\/api\/projects\/([a-zA-Z0-9._-]+)$/);
     if (match) {

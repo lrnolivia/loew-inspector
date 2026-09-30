@@ -1,3 +1,5 @@
+import { glyph } from "../../../packages/shared-ui/glyphs.js";
+import { iconSlot, hydrateProjectIcons } from "./project-icons.js";
 
 import { esc, loadProjectDetail, loadProjectIndex, projectName, stateLabel } from "./operator-projects.js";
 
@@ -53,13 +55,14 @@ function primaryAction(worker) {
 }
 
 async function performAction(worker, action, button, ui) {
-  const original = button.textContent;
+  const original = button.innerHTML;
   const pending = {
     toggle: worker.enabled ? "Pausing…" : "Resuming…",
     run: "Checking…",
     doctor: "Checking setup…",
     repair: "Preparing…"
   };
+  ui.setFlow("act", "Recording your request");
   button.disabled = true;
   button.textContent = pending[action] || "Working…";
 
@@ -79,11 +82,12 @@ async function performAction(worker, action, button, ui) {
     workers = await api("/api/workers");
     renderAttention(ui);
     renderAutomations(ui);
+    ui.setFlow("resolve", "Request recorded");
   } catch (error) {
     ui.notify(error.message, "bad");
   } finally {
     button.disabled = false;
-    button.textContent = original;
+    button.innerHTML = original;
   }
 }
 
@@ -112,12 +116,13 @@ function renderAttention(ui) {
             : "The automatic check stopped and needs another look.";
     return `
       <article class="attention-card">
-        <div><span>${esc(projectName(worker.id))}</span><strong>${esc(text)}</strong></div>
-        <button type="button" data-jump-worker="${esc(worker.id)}">See the action</button>
+        <div class="attention-copy"><span class="attention-project">${iconSlot(worker.id)}${esc(projectName(worker.id))}</span><strong>${esc(text)}</strong></div>
+        <div class="attention-action"><span class="badge" data-tone="act">Needs a decision</span><button type="button" data-jump-worker="${esc(worker.id)}">See the action ${glyph("next")}</button></div>
       </article>
     `;
   }).join("");
 
+  hydrateProjectIcons(target);
   target.querySelectorAll("[data-jump-worker]").forEach(button => {
     button.addEventListener("click", () => {
       const row = [...document.querySelectorAll("[data-worker-id]")].find(item => item.dataset.workerId === button.dataset.jumpWorker);
@@ -139,12 +144,12 @@ function renderAutomations(ui) {
     return `
       <article class="automation-row" data-worker-id="${esc(worker.id)}">
         <div class="automation-main">
-          <div class="automation-title"><strong>${esc(worker.name || projectName(worker.id))}</strong><span class="operator-state">${esc(plainStatus(worker))}</span></div>
+          <div class="automation-title"><span class="project-name">${iconSlot(worker.id)}<strong>${esc(worker.name || projectName(worker.id))}</strong></span><span class="operator-state" data-tone="${["blocked", "failed", "waiting_credentials"].includes(state.status) ? "bad" : plainStatus(worker) === "All good" ? "good" : "quiet"}">${esc(plainStatus(worker))}</span></div>
           <p>Last checked ${esc(relative(state.last_run_at))} · ${worker.enabled ? "next " + esc(relative(state.next_run_at)) : "automatic checks are off"}</p>
         </div>
-        <button class="operator-button ${action.tone}" data-worker-action="${action.action}" type="button">${esc(action.label)}</button>
+        <button class="operator-button ${action.tone}" data-worker-action="${action.action}" type="button">${glyph(action.action === "repair" ? "repair" : "play")} ${esc(action.label)}</button>
         <details class="automation-more">
-          <summary>More</summary>
+          <summary aria-label="More automatic check controls">${glyph("more")}</summary>
           <div class="automation-menu">
             ${worker.enabled && action.action !== "toggle" ? '<button type="button" data-worker-action="toggle">Pause automatic checks</button>' : ""}
             <div>Runner changes code only through its guarded branch and review flow.</div>
@@ -154,6 +159,7 @@ function renderAutomations(ui) {
     `;
   }).join("");
 
+  hydrateProjectIcons(target);
   target.querySelectorAll("[data-worker-id]").forEach(row => {
     const worker = workers.find(item => item.id === row.dataset.workerId);
     row.querySelectorAll("[data-worker-action]").forEach(button => {
@@ -187,12 +193,13 @@ async function loadProjectWork(ui) {
 
     target.innerHTML = items.length ? items.slice(0, 6).map(({ projectId, item }) => `
       <button class="today-task" type="button" data-open-project="${esc(projectId)}">
-        <span class="today-task-project">${esc(projectName(projectId))}</span>
+        <span class="today-task-project">${iconSlot(projectId)}${esc(projectName(projectId))}</span>
         <span class="today-task-title">${esc(item.goal || item.id || "Work item")}</span>
         <span class="today-task-state">${esc(stateLabel(item.state))}</span>
       </button>
     `).join("") : '<div class="operator-empty">No project work is waiting on you.</div>';
 
+    hydrateProjectIcons(target);
     target.querySelectorAll("[data-open-project]").forEach(button => {
       button.addEventListener("click", () => ui.openProject(button.dataset.openProject));
     });

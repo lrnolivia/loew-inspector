@@ -8,6 +8,7 @@ let state = null;
 let questionIndex = 0;
 let previewMode = "captured";
 let saveTimer = null;
+const saving = new Set();
 
 async function api(url, options) {
   const response = await fetch(url, {
@@ -82,6 +83,13 @@ function buildStage() {
   return node;
 }
 
+function edited() {
+  state.revision++; state.dirty = true; state.saved = false;
+  stage?.querySelector(".qa-resolution")?.remove();
+  const badge = stage?.querySelector(".qa-flow-badge");
+  if (badge) { badge.dataset.tone = "act"; badge.textContent = "Act · record your decision"; }
+}
+
 function handlers() {
   return {
     close: closeQa,
@@ -96,6 +104,7 @@ function handlers() {
       repaintPanel();
     },
     answer: function (id, answer) {
+      edited();
       if (!state.review.answers) state.review.answers = {};
       state.review.answers[id] = answer;
       repaintPanel();
@@ -108,15 +117,17 @@ function handlers() {
       }
     },
     notes: function (notes) {
+      edited();
       state.review.notes = notes;
       queueSave(650);
     },
     overall: function (verdict) {
+      edited();
       state.review.overall = verdict;
       repaintPanel();
       queueSave(80);
     },
-    save: saveReview
+    save: () => saveReview()
   };
 }
 
@@ -144,7 +155,7 @@ export async function openQa(evidenceId) {
       evidence: results[0].evidence,
       questions: results[0].questions || [],
       review: results[0].review || { answers: {}, notes: "", overall: null },
-      live: results[1].live || {}
+      live: results[1].live || {}, saved: Boolean(results[0].review?.updated_at), dirty: false, revision: 0
     };
     questionIndex = 0;
     previewMode = state.live.active && state.live.embeddable ? "live" : "captured";
@@ -169,18 +180,22 @@ function queueSave(delay) {
   if (message) message.textContent = "Saving…";
 }
 
-async function saveReview() {
-  if (!state || !state.evidence) return;
+async function saveReview(snapshot = null) {
+  const activeState = snapshot || state;
+  if (!activeState || !activeState.evidence) return;
   if (saveTimer) {
     clearTimeout(saveTimer);
     saveTimer = null;
   }
 
-  const evidenceId = state.evidence.evidence_id;
+  if (saving.has(activeState)) { activeState.saveAgain = true; return; }
+  saving.add(activeState);
+  const revision = activeState.revision;
+  const evidenceId = activeState.evidence.evidence_id;
   const review = {
-    answers: { ...(state.review.answers || {}) },
-    notes: state.review.notes || "",
-    overall: state.review.overall || null
+    answers: { ...(activeState.review.answers || {}) },
+    notes: activeState.review.notes || "",
+    overall: activeState.review.overall || null
   };
   const activeStage = stage;
   const message = activeStage && activeStage.querySelector(".qa-save-state");
@@ -194,8 +209,17 @@ async function saveReview() {
         body: JSON.stringify(review)
       }
     );
-    if (state?.evidence?.evidence_id === evidenceId) state.review = payload.review;
-    if (message?.isConnected) {
+    if (state === activeState && activeState.revision === revision) {
+      state.review = payload.review; state.saved = true; state.dirty = false;
+      const badge = stage?.querySelector(".qa-flow-badge");
+      if (badge) { badge.dataset.tone = state.review.overall ? "resolve" : "orient"; badge.textContent = state.review.overall ? "Resolve · review recorded" : "Orient · answers recorded"; }
+      if (state.review.overall && !stage.querySelector(".qa-resolution")) {
+        const resolved = document.createElement("section"); resolved.className = "qa-resolution";
+        resolved.innerHTML = '<span class="badge" data-tone="resolve">Recorded</span><strong>Your review is saved.</strong><p>Attached to this exact capture.</p>';
+        stage.querySelector(".qa-details").before(resolved);
+      }
+    }
+    if (message?.isConnected && activeState.revision === revision) {
       message.textContent = "Saved " + new Date(payload.review.updated_at).toLocaleTimeString([], {
         hour: "numeric",
         minute: "2-digit"
@@ -203,6 +227,9 @@ async function saveReview() {
     }
   } catch (error) {
     if (message?.isConnected) message.textContent = "Could not save · " + error.message;
+  } finally {
+    saving.delete(activeState);
+    if (activeState.saveAgain) { activeState.saveAgain = false; setTimeout(() => saveReview(activeState), 80); }
   }
 }
 

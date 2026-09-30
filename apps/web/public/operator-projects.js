@@ -1,3 +1,4 @@
+import { iconSlot, hydrateProjectIcons } from "./project-icons.js";
 
 const names = {
   relay: "relay",
@@ -87,7 +88,7 @@ export function renderProjectDetail(target, id, data) {
   target.innerHTML = `
     <div class="project-detail-head">
       <div>
-        <h2>${esc(project.name || projectName(id))}</h2>
+        <h2 class="project-name">${iconSlot(id)}${esc(project.name || projectName(id))}</h2>
         <p>${current.length ? current.length + " thing" + (current.length === 1 ? "" : "s") + " happening now" : "Nothing active right now"}${queued.length ? " · " + queued.length + " up next" : ""}</p>
       </div>
       <span class="project-health ${project.managed ? "good" : "quiet"}">${project.managed ? "Managed by Relay" : "Tracked"}</span>
@@ -110,4 +111,5 @@ export function renderProjectDetail(target, id, data) {
       </details>
     ` : ""}
   `;
+  hydrateProjectIcons(target);
 }

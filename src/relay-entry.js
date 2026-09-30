@@ -6,7 +6,7 @@ import { cloudUploadTool, callCloudUpload, validateCloudUploadArguments } from "
 import { QA_SKILL_URI, qaSkillCatalogEntry, qaSkillResourceDescriptor, qaSkillResource } from "./qa-skill.js";
 import { LOEW_NAMING_SKILL_URI, loewNamingSkillCatalogEntry, loewNamingSkillResourceDescriptor, loewNamingSkillResource } from "./loew-naming-skill.js";
 
-export const RELAY_EXTENSION_VERSION = "1.6.0";
+export const RELAY_EXTENSION_VERSION = "1.7.0";
 
 const createBranch = {
   name: "relay_source_create_branch",

@@ -18,12 +18,16 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - run: npm ci
+      - name: Install deterministic production screenshot harness
+        run: npx playwright install --with-deps chromium
       - name: Verify exact-source production surface
         env:
           CF_ACCESS_CLIENT_ID: ${{ vars.CF_ACCESS_CLIENT_ID }}
           CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF }}
           EXPECTED_SOURCE_SHA: ${{ inputs.source_sha }}
           SMOKE_RESULT_PATH: ${{ runner.temp }}/relay-production-smoke.json
+          BROWSER_CAPTURE: 'true'
         run: node apps/mcp/production-smoke.mjs
       - uses: actions/upload-artifact@v4
         if: always()
