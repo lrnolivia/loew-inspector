@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T10:44:27.358Z",
+  "updated_at": "2026-09-30T10:48:06.433Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -391,7 +391,8 @@
         "src/editor/mobile-workspace-presentation.test.ts",
         "src/editor/mobile-workspace-presentation.ts",
         "src/canvas/mouse/CanvasMouseController.ts",
-        "src/canvas/transform/CameraCommands.ts"
+        "src/canvas/transform/CameraCommands.ts",
+        "src/canvas/ViewportHeaderManager.ts"
       ],
       "resources": [
         "dashboard-project-actions",
@@ -400,12 +401,12 @@
       ],
       "goal": "Consolidate Dashboard and explicitly user-authorized Mobile recovery onto current main",
       "acceptance": "Existing Dashboard/create/refresh behavior and current-main Canvas semantics preserved; touch/mobile focused checks and runtime arbitration verified; current user removes Mobile protection, connected-panel follow-up remains deferred; original branches retained",
-      "next_action": "Recover Mobile #123 product delta into #136 without stale lock/workflow changes, reconcile CameraCommands against current main, diagnose evidenced two-finger camera runtime failure, and preserve physical iPhone keyboard QA as unproven.",
+      "next_action": "Mobile runtime proves two-finger touch on viewport header pans camera but also commits viewport source movement. Repair header pointer ownership/cancellation; retain expected pan and exact source assertions; then focused runtime/rotation/pinch checks.",
       "base_sha": "854038a3e84f41cd590a4ad18b24fcd4127e2fba",
       "state": "active",
       "created_at": "2026-09-30T10:21:02.409Z",
-      "updated_at": "2026-09-30T10:44:27.358Z",
-      "lease_until": "2026-09-30T22:44:27.358Z"
+      "updated_at": "2026-09-30T10:48:06.433Z",
+      "lease_until": "2026-09-30T22:48:06.433Z"
     }
   ]
 }
