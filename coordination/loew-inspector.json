@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T14:07:11.227Z",
+  "updated_at": "2026-09-30T14:07:17.597Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -217,6 +217,29 @@
       ],
       "state": "queued",
       "created_at": "2026-09-30T14:07:11.227Z"
+    },
+    {
+      "id": "relay-consolidation-b5-cloudflare-cutover-20260930",
+      "owner": "relay-consolidation-b5-cloudflare-cutover-20260930",
+      "goal": "Batch 5: create and cut production over to the canonical Relay Worker/runtime at relay.loew.fi while preserving useful Cloudflare infrastructure and proving MCP/web continuity before any destructive cleanup.",
+      "acceptance": "Canonical Worker/script identity is relay and exact merged Relay source is deployed to it; relay.loew.fi serves the unified web app and /mcp endpoint; existing useful secrets, Browser binding, R2 data/binding, account identity and Access policy/application are preserved or retargeted instead of needlessly recreated; Access/OAuth/self-hosted-domain/callback metadata points at relay.loew.fi only where product routing is concerned; Cloudflare write allowlists and deployment annotations use relay; the full MCP tool/resource/skill surface, web app, GitHub operations, QA/evidence and release flows are verified on the new runtime; old scripts/domains remain untouched until verification is complete.",
+      "next_action": "Start after Batch 4 exact-head merge. Create/deploy the new Relay runtime, retarget Access and hostname bindings, then run end-to-end verification. Do not delete legacy resources in this batch.",
+      "paths": [
+        "wrangler.jsonc",
+        "apps/mcp/",
+        "apps/web/",
+        "src/",
+        "test/",
+        "docs/"
+      ],
+      "resources": [
+        "relay-cloudflare-runtime",
+        "relay-mcp-production",
+        "relay-access",
+        "relay-release-orchestration"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T14:07:17.597Z"
     }
   ],
   "claims": [
