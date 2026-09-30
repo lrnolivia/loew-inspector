@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T23:36:36.300Z",
+  "updated_at": "2026-09-30T23:37:17.898Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -799,18 +799,35 @@
     {
       "id": "relay-1.9.5-planning-ledger-skill-20260930",
       "owner": "relay-1.9.5-planning-ledger-skill-20260930",
-      "goal": "Ship Relay 1.9.5 as the planning/coordination intelligence release that turns findings and amendments into a coherent work-routing system.",
-      "acceptance": "Planning skill scans relevant RFS entries, classifies adopt/defer/reject/supersede, prefers canonical amend into the best existing assignment when safe, creates a successor only for genuinely independent ownership, updates ledger linkage/status, and consults latest resume checkpoint before reconstructing work. The ledger remains planning input rather than automatic backlog. Tests cover duplicate avoidance and routing decisions.",
-      "next_action": "Begin after the skills runtime core ships.",
+      "goal": "Ship Relay 1.9.5 as the planning/coordination intelligence release: ledger routing, worker communication, assignment taxonomy/labels/tags, and designated task roles that drive routing and skill posture without becoming authorization.",
+      "acceptance": "Planning/coordination skills scan relevant findings and latest resume state before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff over hidden state; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and human role names such as The Architect, The Art Director, The Builder, The Researcher, The Verifier, The Caretaker, The Release Captain and The Coordinator. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/branch/PR/evidence identity, state impact and requested action, and reconcile against canonical state before acting. Messages never silently change ownership/scope. Expose taxonomy/roles to routing, filtering, checkpoints and skill resolution; roles never grant authority. Tests cover validation, amendment history, duplicate avoidance, message classification/reconciliation and role-driven skill selection.",
+      "next_action": "Begin after 1.9.4 skills-runtime core. Implement taxonomy/role data model and bounded communication/planning skill contracts first, then ledger routing and routing/filter integration.",
       "paths": [
         "skills/planning/",
+        "skills/coordination/",
+        "contracts/assignments/",
+        "src/assignment-taxonomy.js",
+        "src/assignment-taxonomy.test.js",
+        "src/worker-communication.js",
+        "src/worker-communication.test.js",
+        "src/runner-control.js",
+        "src/runner-control-core.js",
+        "src/coordination-engine.js",
+        "src/coordination.mjs",
         "docs/relay/findings/",
         "docs/relay/RELAY_1_9_5_RELEASE.md"
       ],
       "resources": [
         "relay-1.9.5-release",
         "relay-ledger-routing",
-        "relay-planning-skill"
+        "relay-planning-skill",
+        "relay-worker-communication-skill",
+        "relay-interworker-handoffs",
+        "relay-canonical-state-reconciliation",
+        "relay-assignment-taxonomy",
+        "relay-assignment-labels-tags",
+        "relay-worker-roles",
+        "relay-role-skill-resolution"
       ],
       "task_class": "architecture",
       "ledger_refs": [
@@ -825,7 +842,70 @@
         "RFS-020"
       ],
       "state": "queued",
-      "created_at": "2026-09-30T23:34:25.953Z"
+      "created_at": "2026-09-30T23:34:25.953Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-09-30T23:37:17.898Z",
+          "by": "relay-1.9.5-planning-ledger-skill-20260930",
+          "reason": "Route the concurrently discovered worker-communication, assignment-taxonomy and role requirements into the existing planned coordination slice instead of leaving them only on the umbrella or creating duplicate parallel work.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action",
+            "paths",
+            "resources"
+          ],
+          "before": {
+            "goal": "Ship Relay 1.9.5 as the planning/coordination intelligence release that turns findings and amendments into a coherent work-routing system.",
+            "acceptance": "Planning skill scans relevant RFS entries, classifies adopt/defer/reject/supersede, prefers canonical amend into the best existing assignment when safe, creates a successor only for genuinely independent ownership, updates ledger linkage/status, and consults latest resume checkpoint before reconstructing work. The ledger remains planning input rather than automatic backlog. Tests cover duplicate avoidance and routing decisions.",
+            "next_action": "Begin after the skills runtime core ships.",
+            "paths": [
+              "skills/planning/",
+              "docs/relay/findings/",
+              "docs/relay/RELAY_1_9_5_RELEASE.md"
+            ],
+            "resources": [
+              "relay-1.9.5-release",
+              "relay-ledger-routing",
+              "relay-planning-skill"
+            ]
+          },
+          "after": {
+            "goal": "Ship Relay 1.9.5 as the planning/coordination intelligence release: ledger routing, worker communication, assignment taxonomy/labels/tags, and designated task roles that drive routing and skill posture without becoming authorization.",
+            "acceptance": "Planning/coordination skills scan relevant findings and latest resume state before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff over hidden state; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and human role names such as The Architect, The Art Director, The Builder, The Researcher, The Verifier, The Caretaker, The Release Captain and The Coordinator. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/bra...",
+            "next_action": "Begin after 1.9.4 skills-runtime core. Implement taxonomy/role data model and bounded communication/planning skill contracts first, then ledger routing and routing/filter integration.",
+            "paths": [
+              "skills/planning/",
+              "skills/coordination/",
+              "contracts/assignments/",
+              "src/assignment-taxonomy.js",
+              "src/assignment-taxonomy.test.js",
+              "src/worker-communication.js",
+              "src/worker-communication.test.js",
+              "src/runner-control.js",
+              "src/runner-control-core.js",
+              "src/coordination-engine.js",
+              "src/coordination.mjs",
+              "docs/relay/findings/",
+              "docs/relay/RELAY_1_9_5_RELEASE.md"
+            ],
+            "resources": [
+              "relay-1.9.5-release",
+              "relay-ledger-routing",
+              "relay-planning-skill",
+              "relay-worker-communication-skill",
+              "relay-interworker-handoffs",
+              "relay-canonical-state-reconciliation",
+              "relay-assignment-taxonomy",
+              "relay-assignment-labels-tags",
+              "relay-worker-roles",
+              "relay-role-skill-resolution"
+            ]
+          }
+        }
+      ],
+      "updated_at": "2026-09-30T23:37:17.898Z"
     },
     {
       "id": "relay-1.9.6-creative-platform-packs-20260930",
