@@ -29,7 +29,7 @@
       <button type="button" data-nav="night-shift">night shift</button>
     </nav>
     <div class="operator-utility">
-      <button id="app-settings" class="utility-button" type="button"><span>ChatGPT app settings</span><span aria-hidden="true">↗</span></button>
+      <button id="app-settings" class="utility-button" type="button"><span>ChatGPT settings</span><span class="utility-arrow" aria-hidden="true">↗</span></button>
     </div>
   </header>
 
@@ -37,10 +37,10 @@
     <div class="workspace-context">
       <div class="workspace-left">
         <span>Your workspace <span aria-hidden="true">/</span> <span id="workspace-page">Today</span></span>
-        <label class="project-context-control"><span>project</span><select id="project-context" aria-label="Project context"><option value="">all projects</option></select></label>
       </div>
       <div id="operator-connection" class="operator-connection" data-tone="quiet" aria-live="polite">Connecting…</div>
     </div>
+    <nav id="project-tabs" class="project-tabs" role="tablist" aria-label="Project context"></nav>
     <section class="operator-page" data-page="today">
       <header class="page-heading">
         <h1>Today</h1>
@@ -75,15 +75,9 @@
         <p>See what each project is doing now and what comes next.</p>
       </header>
 
-      <div class="project-layout">
-        <aside class="project-list-shell" aria-label="Projects">
-          <input id="project-search" class="project-search" type="search" placeholder="Find a project" autocomplete="off">
-          <div id="project-list" class="project-list"></div>
-        </aside>
-        <section id="project-detail" class="project-detail" aria-live="polite">
-          <div class="operator-loading">Opening projects…</div>
-        </section>
-      </div>
+      <section id="project-detail" class="project-detail" aria-live="polite">
+        <div class="operator-loading">Choose a project above.</div>
+      </section>
     </section>
 
     <section class="operator-page" data-page="review" hidden>
