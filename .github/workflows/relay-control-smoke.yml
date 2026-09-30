@@ -7,7 +7,7 @@ on:
         description: Registered project
         type: string
         required: true
-        default: loew-inspector
+        default: relay
       assignment:
         description: Optional current assignment for same-owner heartbeat smoke
         type: string

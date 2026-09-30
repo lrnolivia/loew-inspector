@@ -3,7 +3,7 @@ import { listVisualEvidence, getVisualEvidence, getVisualImage, compareVisualEvi
 import { getQaReview, saveQaReview, qaQuestionsForEvidence, inspectLivePreview } from "./human-qa.mjs";
 const GITHUB_API = "https://api.github.com";
 const OWNER = "lrnolivia";
-const REPOSITORY = "loew-runner";
+const REPOSITORY = "relay";
 const BRANCH = "main";
 const API_VERSION = "2022-11-28";
 

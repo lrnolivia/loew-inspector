@@ -1,0 +1,37 @@
+{
+  "schema": 1,
+  "project": "gamebridge",
+  "updated_at": "2026-09-30T09:12:52.559Z",
+  "legacy_branches": [
+    "main",
+    "runner/universal-authority"
+  ],
+  "queue": [],
+  "claims": [
+    {
+      "id": "gamebridge-coordination-bootstrap-20260930",
+      "owner": "normal-chat-project-registry-20260930",
+      "branch": "gamebridge/coordination-bootstrap",
+      "paths": [
+        ".github/workflows/runner-coordination.yml"
+      ],
+      "resources": [
+        "runner-work-admission"
+      ],
+      "goal": "Install Field-style Runner coordination admission and managed branch hygiene for lrnolivia/GameBridge.",
+      "acceptance": "Pull requests are gated by a live Runner claim; scheduled/manual audit and cleanup use the canonical loew-runner coordination engine; no product files are changed.",
+      "next_action": "Create the claimed bootstrap branch, add the parameterized coordination workflow, open the draft PR, verify admission, then merge with squash.",
+      "base_sha": "6491b202205f1c7ebaeac2dc3caf58227ce47c2a",
+      "state": "completed",
+      "created_at": "2026-09-30T09:05:59.201Z",
+      "updated_at": "2026-09-30T09:12:52.559Z",
+      "lease_until": "2026-09-30T21:12:52.559Z",
+      "pr": 2,
+      "merged_head_sha": "afa70e3c0adf4de5ed428f1213d0a2807b8ad0af",
+      "merge_commit_sha": "3606f651319891a094a1e80625ac36591be79f4c",
+      "evidence": "https://github.com/lrnolivia/GameBridge/pull/2",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T09:12:52.559Z"
+    }
+  ]
+}

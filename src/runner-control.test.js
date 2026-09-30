@@ -5,19 +5,19 @@ import { readFile } from 'node:fs/promises';
 import { callRunnerControl, runnerControlTools, runnerControlError, RUNNER_ENGINE_SHA, runnerControlRepository } from './runner-control.js';
 const sha = 'a'.repeat(40);
 const newSha = 'b'.repeat(40);
-const defaultRequest = { id: 'task', owner: 'worker', branch: 'loew-inspector/task', paths: ['src/'], resources: ['relay-control'], goal: 'Native tools', acceptance: 'Policy enforced', next_action: 'Implement' };
+const defaultRequest = { id: 'task', owner: 'worker', branch: 'relay/task', paths: ['src/'], resources: ['relay-control'], goal: 'Native tools', acceptance: 'Policy enforced', next_action: 'Implement' };
 function fixture(options = {}) {
-  let record = { schema: 1, project: 'loew-inspector', claims: options.claims || [], queue: [], legacy_branches: ['main', 'old-task'] };
+  let record = { schema: 1, project: 'relay', claims: options.claims || [], queue: [], legacy_branches: ['main', 'old-task'] };
   let revision = sha;
   const writes = [];
   const calls = [];
-  const registration = { id: 'loew-inspector', repository: 'lrnolivia/loew-inspector', managed: true, default_branch: 'main', implementation: { branch_prefixes: ['loew-inspector/'], excluded_branches: ['main'] }, coordination: { status: 'enabled', record: 'coordination/loew-inspector.json', max_active_branches: 4, lease_hours: 12 } };
+  const registration = { id: 'relay', repository: 'lrnolivia/relay', managed: true, default_branch: 'main', implementation: { branch_prefixes: ['relay/'], excluded_branches: ['main'] }, coordination: { status: 'enabled', record: 'coordination/relay.json', max_active_branches: 4, lease_hours: 12 } };
   const file = (value, revision = sha) => ({ type: 'file', sha: revision, encoding: 'base64', content: Buffer.from(typeof value === 'string' ? value : JSON.stringify(value)).toString('base64') });
   const api = async (path, request) => {
     calls.push(path);
     if (path.includes('src/coordination.mjs')) return file('', options.engineSha || RUNNER_ENGINE_SHA);
-    if (path.includes('projects/loew-inspector.json')) return file(registration);
-    if (path.includes('coordination/loew-inspector.json')) {
+    if (path.includes('projects/relay.json')) return file(registration);
+    if (path.includes('coordination/relay.json')) {
       if (request?.method === 'PUT') {
         writes.push(request);
         if (options.conflict) { revision = newSha; throw Object.assign(new Error('Conflict'), { status: 409 }); }
@@ -38,7 +38,7 @@ function fixture(options = {}) {
   };
   return { api, writes, calls, get record() { return record; } };
 }
-const coordinate = (f, action, request = defaultRequest, expected_record_sha = sha) => callRunnerControl('relay_runner_coordinate', { project: 'loew-inspector', action, request, expected_record_sha }, {}, f.api);
+const coordinate = (f, action, request = defaultRequest, expected_record_sha = sha) => callRunnerControl('relay_runner_coordinate', { project: 'relay', action, request, expected_record_sha }, {}, f.api);
 const claim = (extra = {}) => ({ ...defaultRequest, state: 'active', base_sha: sha, created_at: new Date().toISOString(), lease_until: new Date(Date.now() + 3600000).toISOString(), ...extra });
 
 test('generated policy is byte-exact Runner source with correct Git blob provenance', async () => {
@@ -66,7 +66,7 @@ test('claim derives live base and writes only Runner coordination with exact CAS
   assert.equal(f.writes[0].body.branch, 'main');
 });
 test('held and expired reservations deny overlapping paths and semantic resources', async () => {
-  for (const c of [claim({ id: 'existing', owner: 'other', branch: 'loew-inspector/other', state: 'held' }), claim({ id: 'existing', owner: 'other', branch: 'loew-inspector/other', lease_until: '2000-01-01' })]) {
+  for (const c of [claim({ id: 'existing', owner: 'other', branch: 'relay/other', state: 'held' }), claim({ id: 'existing', owner: 'other', branch: 'relay/other', lease_until: '2000-01-01' })]) {
     const f = fixture({ claims: [c] });
     await assert.rejects(coordinate(f, 'claim'), /Ownership overlaps/);
     await assert.rejects(coordinate(f, 'claim', { ...defaultRequest, paths: ['other/file'] }), /Ownership overlaps/);
@@ -76,7 +76,7 @@ test('held and expired reservations deny overlapping paths and semantic resource
 test('owner cannot take another claim; branch budget and duplicate identities enforced', async () => {
   const f = fixture({ claims: [claim({ owner: 'other' })] });
   await assert.rejects(coordinate(f, 'heartbeat', { id: 'task', owner: 'worker', next_action: 'Renew' }), /another owner/);
-  const full = fixture({ claims: Array.from({ length: 4 }, (_, i) => claim({ id: `existing-${i}`, owner: `owner-${i}`, branch: `loew-inspector/${i}`, paths: [`other-${i}/`], resources: [] })) });
+  const full = fixture({ claims: Array.from({ length: 4 }, (_, i) => claim({ id: `existing-${i}`, owner: `owner-${i}`, branch: `relay/${i}`, paths: [`other-${i}/`], resources: [] })) });
   await assert.rejects(coordinate(full, 'claim'), /budget reached/);
   const duplicate = fixture({ claims: [claim()] });
   await assert.rejects(coordinate(duplicate, 'claim'), /already exists/);
@@ -115,8 +115,8 @@ test('existing and frozen legacy branches cannot be repurposed as new admission'
   await assert.rejects(coordinate(legacy, 'claim', { ...defaultRequest, branch: 'old-task' }), /reserved/);
 });
 test('completion uses provider merged identity and denies unmerged or wrong branch', async () => {
-  const request = { id: 'task', owner: 'worker', pr: 9, evidence: 'https://github.com/lrnolivia/loew-inspector/pull/9', work_accounted: true };
-  const pr = { merged: true, base: { ref: 'main', repo: { full_name: 'lrnolivia/loew-inspector' } }, head: { ref: defaultRequest.branch, sha, repo: { full_name: 'lrnolivia/loew-inspector' } }, merge_commit_sha: newSha };
+  const request = { id: 'task', owner: 'worker', pr: 9, evidence: 'https://github.com/lrnolivia/relay/pull/9', work_accounted: true };
+  const pr = { merged: true, base: { ref: 'main', repo: { full_name: 'lrnolivia/relay' } }, head: { ref: defaultRequest.branch, sha, repo: { full_name: 'lrnolivia/relay' } }, merge_commit_sha: newSha };
   const f = fixture({ claims: [claim()], pr });
   const result = await coordinate(f, 'complete', request);
   assert.equal(result.claim.state, 'completed');
@@ -128,7 +128,7 @@ test('completion uses provider merged identity and denies unmerged or wrong bran
   await assert.rejects(coordinate(notMerged, 'complete', request), /claimed same-repository PR/);
 });
 test('preflight requires current owner, active lease and complete scoped paths', async () => {
-  const args = { project: 'loew-inspector', id: 'task', owner: 'worker', paths: ['src/index.js'] };
+  const args = { project: 'relay', id: 'task', owner: 'worker', paths: ['src/index.js'] };
   const f = fixture({ claims: [claim()], branches: [{ name: defaultRequest.branch }] });
   assert.equal((await callRunnerControl('relay_runner_preflight', args, {}, f.api)).admitted, 'task');
   await assert.rejects(callRunnerControl('relay_runner_preflight', { ...args, paths: ['other/file'] }, {}, f.api), /exceed/);
@@ -137,7 +137,7 @@ test('preflight requires current owner, active lease and complete scoped paths',
 });
 test('assignment lookup tells the truth about held and expired owner reservation', async () => {
   const f = fixture({ claims: [claim({ state: 'held', lease_until: '2000-01-01' })] });
-  const result = await callRunnerControl('relay_runner_assignments', { project: 'loew-inspector', assignment: 'task' }, {}, f.api);
+  const result = await callRunnerControl('relay_runner_assignments', { project: 'relay', assignment: 'task' }, {}, f.api);
   assert.equal(result.claims[0].reserved, true);
   assert.equal(result.claims[0].lease_expired, true);
 });
@@ -151,9 +151,9 @@ test('provider failure classification never echoes provider secrets', () => {
 test('Runner control authority is configurable for Relay migration and validates owner scope', async () => {
   const f = fixture();
   const env = { RELAY_RUNNER_CONTROL_REPOSITORY: 'lrnolivia/relay' };
-  const result = await callRunnerControl('relay_runner_project', { project: 'loew-inspector' }, env, f.api);
+  const result = await callRunnerControl('relay_runner_project', { project: 'relay' }, env, f.api);
   assert.equal(result.ok, true);
-  assert.ok(f.calls.some(path => path.startsWith('/repos/lrnolivia/relay/contents/projects/loew-inspector.json')));
+  assert.ok(f.calls.some(path => path.startsWith('/repos/lrnolivia/relay/contents/projects/relay.json')));
   assert.equal(runnerControlRepository(env), 'lrnolivia/relay');
   assert.throws(
     () => runnerControlRepository({ RELAY_RUNNER_CONTROL_REPOSITORY: 'other/relay' }),

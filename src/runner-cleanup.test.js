@@ -12,7 +12,7 @@ function completed(extra = {}) {
   return {
     id: "done-task",
     owner: "worker",
-    branch: "loew-inspector/done-task",
+    branch: "relay/done-task",
     paths: ["src/file.js"],
     resources: ["cleanup-test"],
     goal: "done",
@@ -26,7 +26,7 @@ function completed(extra = {}) {
     pr: 9,
     merged_head_sha: head,
     merge_commit_sha: merge,
-    evidence: "https://github.com/lrnolivia/loew-inspector/pull/9",
+    evidence: "https://github.com/lrnolivia/relay/pull/9",
     work_accounted: true,
     completed_at: "2026-09-30T01:00:00.000Z",
     ...extra
@@ -37,7 +37,7 @@ function active(extra = {}) {
   return {
     id: "active-task",
     owner: "other",
-    branch: "loew-inspector/active-task",
+    branch: "relay/active-task",
     paths: ["other/"],
     resources: [],
     goal: "active",
@@ -54,32 +54,32 @@ function active(extra = {}) {
 
 function fixture(options = {}) {
   const registration = {
-    id: "loew-inspector",
-    name: "loew inspector",
-    repository: "lrnolivia/loew-inspector",
+    id: "relay",
+    name: "relay",
+    repository: "lrnolivia/relay",
     managed: true,
     default_branch: "main",
     implementation: {
-      branch_prefixes: ["loew-inspector/"],
+      branch_prefixes: ["relay/"],
       excluded_branches: ["main"]
     },
     coordination: {
       status: "enabled",
-      record: "coordination/loew-inspector.json",
+      record: "coordination/relay.json",
       max_active_branches: 4,
       lease_hours: 12
     }
   };
   const record = {
     schema: 1,
-    project: "loew-inspector",
+    project: "relay",
     claims: options.claims || [completed()],
     queue: [],
     legacy_branches: options.legacy || ["main"]
   };
   const branches = new Map([
     ["main", "d".repeat(40)],
-    ["loew-inspector/done-task", options.branchHead || head]
+    ["relay/done-task", options.branchHead || head]
   ]);
   for (const [name, sha] of Object.entries(options.extraBranches || {})) branches.set(name, sha);
   const deletes = [];
@@ -93,34 +93,34 @@ function fixture(options = {}) {
   const pr = options.pr || {
     number: 9,
     merged: true,
-    base: { ref: "main", repo: { full_name: "lrnolivia/loew-inspector" } },
+    base: { ref: "main", repo: { full_name: "lrnolivia/relay" } },
     head: {
-      ref: "loew-inspector/done-task",
+      ref: "relay/done-task",
       sha: head,
-      repo: { full_name: "lrnolivia/loew-inspector" }
+      repo: { full_name: "lrnolivia/relay" }
     },
     merge_commit_sha: merge
   };
 
   const api = async (path, request = {}) => {
     calls.push({ path, request });
-    if (path.includes("/contents/projects/loew-inspector.json")) return file(registration, "f".repeat(40));
-    if (path.includes("/contents/coordination/loew-inspector.json")) {
+    if (path.includes("/contents/projects/relay.json")) return file(registration, "f".repeat(40));
+    if (path.includes("/contents/coordination/relay.json")) {
       const value = typeof options.recordOnReread === "function" ? options.recordOnReread(record, calls) : record;
       return file(value, "1".repeat(40));
     }
     if (path.includes("/contents/src/coordination.mjs")) return file("", options.engineSha || RUNNER_ENGINE_SHA);
-    if (path.includes("/repos/lrnolivia/loew-inspector/branches?")) {
+    if (path.includes("/repos/lrnolivia/relay/branches?")) {
       return [...branches.entries()].map(([name, sha]) => ({ name, commit: { sha } }));
     }
-    if (path.endsWith("/repos/lrnolivia/loew-inspector/pulls/9")) return pr;
-    if (path.includes("/git/ref/heads/loew-inspector/done-task")) {
-      if (!branches.has("loew-inspector/done-task")) throw Object.assign(new Error("Not Found"), { status: 404 });
-      return { object: { sha: branches.get("loew-inspector/done-task") } };
+    if (path.endsWith("/repos/lrnolivia/relay/pulls/9")) return pr;
+    if (path.includes("/git/ref/heads/relay/done-task")) {
+      if (!branches.has("relay/done-task")) throw Object.assign(new Error("Not Found"), { status: 404 });
+      return { object: { sha: branches.get("relay/done-task") } };
     }
-    if (path.includes("/git/refs/heads/loew-inspector/done-task") && request.method === "DELETE") {
-      deletes.push("loew-inspector/done-task");
-      branches.delete("loew-inspector/done-task");
+    if (path.includes("/git/refs/heads/relay/done-task") && request.method === "DELETE") {
+      deletes.push("relay/done-task");
+      branches.delete("relay/done-task");
       return null;
     }
     throw new Error(`Unexpected path ${path}`);
@@ -129,14 +129,14 @@ function fixture(options = {}) {
 }
 
 test("cleanup requires an explicit bounded mode", () => {
-  assert.throws(() => validateRunnerCleanupArguments({ project: "loew-inspector" }), /mode/);
-  assert.throws(() => validateRunnerCleanupArguments({ project: "loew-inspector", mode: "all" }), /dry_run or execute/);
-  assert.throws(() => validateRunnerCleanupArguments({ project: "loew-inspector", mode: "execute", branch: "x" }), /Unsupported argument/);
+  assert.throws(() => validateRunnerCleanupArguments({ project: "relay" }), /mode/);
+  assert.throws(() => validateRunnerCleanupArguments({ project: "relay", mode: "all" }), /dry_run or execute/);
+  assert.throws(() => validateRunnerCleanupArguments({ project: "relay", mode: "execute", branch: "x" }), /Unsupported argument/);
 });
 
 test("dry-run reports exact eligible completion without deleting", async () => {
   const f = fixture();
-  const result = await callRunnerCleanup({ project: "loew-inspector", mode: "dry_run" }, {}, f.api);
+  const result = await callRunnerCleanup({ project: "relay", mode: "dry_run" }, {}, f.api);
   assert.equal(result.ok, true);
   assert.equal(result.mode, "dry_run");
   assert.equal(result.eligible.length, 1);
@@ -147,11 +147,11 @@ test("dry-run reports exact eligible completion without deleting", async () => {
 
 test("execute revalidates completion and exact head then verifies deletion", async () => {
   const f = fixture();
-  const result = await callRunnerCleanup({ project: "loew-inspector", mode: "execute" }, {}, f.api);
-  assert.deepEqual(result.deleted, ["loew-inspector/done-task"]);
-  assert.equal(f.branches.has("loew-inspector/done-task"), false);
+  const result = await callRunnerCleanup({ project: "relay", mode: "execute" }, {}, f.api);
+  assert.deepEqual(result.deleted, ["relay/done-task"]);
+  assert.equal(f.branches.has("relay/done-task"), false);
   assert.equal(f.deletes.length, 1);
-  const coordinationReads = f.calls.filter(call => call.path.includes("/contents/coordination/loew-inspector.json"));
+  const coordinationReads = f.calls.filter(call => call.path.includes("/contents/coordination/relay.json"));
   assert.ok(coordinationReads.length >= 2);
   const prReads = f.calls.filter(call => call.path.endsWith("/pulls/9"));
   assert.ok(prReads.length >= 2);
@@ -159,7 +159,7 @@ test("execute revalidates completion and exact head then verifies deletion", asy
 
 test("post-merge commits are retained and never deleted", async () => {
   const f = fixture({ branchHead: other });
-  const result = await callRunnerCleanup({ project: "loew-inspector", mode: "execute" }, {}, f.api);
+  const result = await callRunnerCleanup({ project: "relay", mode: "execute" }, {}, f.api);
   assert.deepEqual(result.deleted, []);
   assert.equal(result.retained.some(item => item.reason === "post_merge_commits"), true);
   assert.deepEqual(f.deletes, []);
@@ -169,10 +169,10 @@ test("active ownership on a completed branch retains the branch", async () => {
   const f = fixture({
     claims: [
       completed(),
-      active({ branch: "loew-inspector/done-task", paths: ["other/"], resources: ["other"] })
+      active({ branch: "relay/done-task", paths: ["other/"], resources: ["other"] })
     ]
   });
-  const result = await callRunnerCleanup({ project: "loew-inspector", mode: "execute" }, {}, f.api);
+  const result = await callRunnerCleanup({ project: "relay", mode: "execute" }, {}, f.api);
   assert.deepEqual(result.deleted, []);
   assert.equal(result.retained.some(item => item.reason === "active_ownership"), true);
 });
@@ -182,13 +182,13 @@ test("changed merged evidence fails closed before deletion", async () => {
     pr: {
       number: 9,
       merged: true,
-      base: { ref: "main", repo: { full_name: "lrnolivia/loew-inspector" } },
-      head: { ref: "loew-inspector/done-task", sha: other, repo: { full_name: "lrnolivia/loew-inspector" } },
+      base: { ref: "main", repo: { full_name: "lrnolivia/relay" } },
+      head: { ref: "relay/done-task", sha: other, repo: { full_name: "lrnolivia/relay" } },
       merge_commit_sha: merge
     }
   });
   await assert.rejects(
-    callRunnerCleanup({ project: "loew-inspector", mode: "execute" }, {}, f.api),
+    callRunnerCleanup({ project: "relay", mode: "execute" }, {}, f.api),
     /Merged evidence changed/
   );
   assert.deepEqual(f.deletes, []);
@@ -197,7 +197,7 @@ test("changed merged evidence fails closed before deletion", async () => {
 test("Runner engine drift fails closed", async () => {
   const f = fixture({ engineSha: other });
   await assert.rejects(
-    callRunnerCleanup({ project: "loew-inspector", mode: "dry_run" }, {}, f.api),
+    callRunnerCleanup({ project: "relay", mode: "dry_run" }, {}, f.api),
     /Runner engine changed/
   );
   assert.deepEqual(f.deletes, []);
@@ -223,10 +223,10 @@ test("Relay extension publishes cleanup as a destructive bounded tool", () => {
 test("cleanup reads policy and coordination from configured Relay control authority", async () => {
   const f = fixture();
   const result = await callRunnerCleanup(
-    { project: "loew-inspector", mode: "dry_run" },
+    { project: "relay", mode: "dry_run" },
     { RELAY_RUNNER_CONTROL_REPOSITORY: "lrnolivia/relay" },
     f.api
   );
   assert.equal(result.ok, true);
-  assert.ok(f.calls.some(call => call.path.startsWith("/repos/lrnolivia/relay/contents/projects/loew-inspector.json")));
+  assert.ok(f.calls.some(call => call.path.startsWith("/repos/lrnolivia/relay/contents/projects/relay.json")));
 });
