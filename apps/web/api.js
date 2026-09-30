@@ -23,13 +23,13 @@ export function validateUiRequest(args) {
   const path = args.path;
   if (typeof path !== "string" || path.length > 1024 || !path.startsWith("/api/") || /[\\#%]/.test(path) || path.includes("..")) throw new Error("Invalid UI path");
   const url = new URL(path, "https://relay.loew.fi");
-  const reads = /^\/api\/(?:health|projects(?:\/[a-zA-Z0-9._-]+(?:\/icon)?)?|workers|visual(?:\/runs(?:\/run_[a-zA-Z0-9._-]{8,128}\/review)?|\/compare|\/vis_[a-zA-Z0-9-]{8,128}(?:\/(?:image|qa|live))?)?)$/;
+  const reads = /^\/api\/(?:health|progress\/[a-zA-Z0-9._-]+|projects(?:\/[a-zA-Z0-9._-]+(?:\/icon)?)?|workers|visual(?:\/runs(?:\/run_[a-zA-Z0-9._-]{8,128}\/review)?|\/compare|\/vis_[a-zA-Z0-9-]{8,128}(?:\/(?:image|qa|live))?)?)$/;
   const writes = /^\/api\/(?:workers\/[a-zA-Z0-9._-]+\/(?:toggle|settings|run|doctor|repair)|visual\/vis_[a-zA-Z0-9-]{8,128}\/qa)$/;
   if (method === "GET" ? !reads.test(url.pathname) : method !== "POST" || !writes.test(url.pathname)) throw new Error("UI route or method is not allowed");
   if (method === "GET" && args.body !== undefined) throw new Error("GET cannot contain a body");
   if (args.body !== undefined && (!args.body || typeof args.body !== "object" || Array.isArray(args.body))) throw new Error("Invalid UI body");
   if (JSON.stringify(args.body || {}).length > 16384) throw new Error("UI body exceeds limit");
-  for (const key of url.searchParams.keys()) if (!["project", "environment", "pr", "run", "base", "current"].includes(key)) throw new Error("Unsupported UI filter");
+  for (const key of url.searchParams.keys()) if (!["project", "environment", "pr", "run", "base", "current", "assignment"].includes(key)) throw new Error("Unsupported UI filter");
   return { path, method, body: args.body };
 }
 

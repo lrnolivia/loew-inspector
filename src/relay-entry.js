@@ -5,8 +5,9 @@ import { runnerCleanupTool, callRunnerCleanup, validateRunnerCleanupArguments } 
 import { cloudUploadTool, callCloudUpload, validateCloudUploadArguments } from "./cloud-upload.js";
 import { QA_SKILL_URI, qaSkillCatalogEntry, qaSkillResourceDescriptor, qaSkillResource } from "./qa-skill.js";
 import { LOEW_NAMING_SKILL_URI, loewNamingSkillCatalogEntry, loewNamingSkillResourceDescriptor, loewNamingSkillResource } from "./loew-naming-skill.js";
+import { RELAY_CONTEXT_CARD_URI, relayContextCardDescriptor, relayContextCardResource, contextualizeRelayTool } from "./relay-chat-ui.js";
 
-export const RELAY_EXTENSION_VERSION = "1.7.5";
+export const RELAY_EXTENSION_VERSION = "1.8.0";
 
 const createBranch = {
   name: "relay_source_create_branch",
@@ -81,11 +82,12 @@ export function augmentToolList(tools) {
   };
   const kept = list
     .filter(tool => tool.name !== createBranch.name && !names.has(tool.name))
-    .map(tool => sourceDescriptions[tool.name] ? { ...tool, description: sourceDescriptions[tool.name] } : tool);
+    .map(tool => sourceDescriptions[tool.name] ? { ...tool, description: sourceDescriptions[tool.name] } : tool)
+    .map(contextualizeRelayTool);
   return [
     ...kept,
-    replacement,
-    ...extensionTools.map(tool => ({
+    contextualizeRelayTool(replacement),
+    ...extensionTools.map(tool => contextualizeRelayTool({
       ...tool,
       securitySchemes: schemes,
       _meta: { ...(tool._meta || {}), securitySchemes: schemes }
@@ -95,6 +97,7 @@ export function augmentToolList(tools) {
 
 export function augmentResourceList(resources) {
   const list = Array.isArray(resources) ? [...resources] : [];
+  if (!list.some(resource => resource?.uri === RELAY_CONTEXT_CARD_URI)) list.push(relayContextCardDescriptor());
   if (!list.some(resource => resource?.uri === QA_SKILL_URI)) list.push(qaSkillResourceDescriptor());
   if (!list.some(resource => resource?.uri === LOEW_NAMING_SKILL_URI)) list.push(loewNamingSkillResourceDescriptor());
   return list;
@@ -260,6 +263,7 @@ export default {
       });
     }
     if (message.method === "resources/read" && response.status === 200) {
+      if (message.params?.uri === RELAY_CONTEXT_CARD_URI) return rpcResult(message.id ?? null, { contents: [relayContextCardResource()] }, response.headers);
       if (message.params?.uri === QA_SKILL_URI) return rpcResult(message.id ?? null, { contents: [qaSkillResource()] }, response.headers);
       if (message.params?.uri === LOEW_NAMING_SKILL_URI) return rpcResult(message.id ?? null, { contents: [loewNamingSkillResource()] }, response.headers);
     }

@@ -10,7 +10,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Momo+Trust+Display&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/operator.css">
+  <link rel="stylesheet" href="/operator.css">\n  <link rel="stylesheet" href="/operator-1.8.css">
   <link rel="stylesheet" href="/qa.css">
 </head>
 <body>
@@ -26,14 +26,21 @@
       <button type="button" data-nav="today">Today</button>
       <button type="button" data-nav="projects">Projects</button>
       <button type="button" data-nav="review">Review</button>
-      <button type="button" data-nav="night-shift">Night Shift</button>
+      <button type="button" data-nav="night-shift">night shift</button>
     </nav>
-
-
+    <div class="operator-utility">
+      <button id="app-settings" class="utility-button" type="button"><span>ChatGPT app settings</span><span aria-hidden="true">↗</span></button>
+    </div>
   </header>
 
   <main class="operator-shell">
-    <div class="workspace-context"><span>Your workspace <span aria-hidden="true">/</span> <span id="workspace-page">Today</span></span><div id="operator-connection" class="operator-connection" data-tone="quiet" aria-live="polite">Connecting…</div></div>
+    <div class="workspace-context">
+      <div class="workspace-left">
+        <span>Your workspace <span aria-hidden="true">/</span> <span id="workspace-page">Today</span></span>
+        <label class="project-context-control"><span>project</span><select id="project-context" aria-label="Project context"><option value="">all projects</option></select></label>
+      </div>
+      <div id="operator-connection" class="operator-connection" data-tone="quiet" aria-live="polite">Connecting…</div>
+    </div>
     <section class="operator-page" data-page="today">
       <header class="page-heading">
         <h1>Today</h1>
@@ -69,7 +76,10 @@
       </header>
 
       <div class="project-layout">
-        <aside id="project-list" class="project-list" aria-label="Projects"></aside>
+        <aside class="project-list-shell" aria-label="Projects">
+          <input id="project-search" class="project-search" type="search" placeholder="Find a project" autocomplete="off">
+          <div id="project-list" class="project-list"></div>
+        </aside>
         <section id="project-detail" class="project-detail" aria-live="polite">
           <div class="operator-loading">Opening projects…</div>
         </section>
@@ -95,7 +105,7 @@
       </div>
     </section>
     <section class="operator-page" data-page="night-shift" hidden>
-      <header class="page-heading"><h1>Night Shift</h1><p>Automatic work, its latest results, and the controls you already use.</p></header>
+      <header class="page-heading"><h1>night shift</h1><p>Unattended activity, its latest results, and the controls you already use.</p></header>
       <div id="night-shift-work" aria-live="polite"></div>
     </section>
   </main>
