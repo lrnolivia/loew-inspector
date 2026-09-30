@@ -6,6 +6,7 @@ import {
   runnerControlBase,
   runnerControlRepository
 } from './runner-control-core.js';
+import { callProgress } from './progress-api.js';
 
 const MUTATIONS = ['queue', 'claim', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete'];
 const text = (max = 500) => ({ type: 'string', minLength: 1, maxLength: max });
@@ -149,6 +150,7 @@ export async function callRunnerControl(name, args, env, apiOverride) {
   const definition = DEFINITIONS.find(item => item.name === name);
   if (!definition) return null;
   validateControlArguments(args, definition.inputSchema);
+  if (name === 'relay_runner_progress') return callProgress(args, env, apiOverride);
   return callRunnerControlCore(name, args, env, apiOverride);
 }
 
