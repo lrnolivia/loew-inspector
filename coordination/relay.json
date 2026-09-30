@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T15:30:48.923Z",
+  "updated_at": "2026-09-30T15:30:52.208Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -215,7 +215,7 @@
         "relay-night-shift-view",
         "suite-shared-shell"
       ],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-09-30T14:07:11.227Z"
     },
     {
@@ -688,6 +688,42 @@
       "created_at": "2026-09-30T14:57:47.568Z",
       "updated_at": "2026-09-30T15:30:48.923Z",
       "lease_until": "2026-10-01T03:30:48.923Z"
+    },
+    {
+      "id": "relay-consolidation-b4-unified-ui-20260930",
+      "owner": "relay-consolidation-b4-unified-ui-20260930",
+      "branch": "relay/consolidation-b4-unified-ui",
+      "paths": [
+        "apps/",
+        "features/night-shift/",
+        "packages/runner/",
+        "packages/inspector/",
+        "packages/shared-ui/",
+        "test/",
+        "src/relay-ui.js",
+        "src/relay-entry.js",
+        "src/relay-entry.test.js",
+        "wrangler.jsonc",
+        "package.json",
+        "package-lock.json",
+        ".github/workflows/",
+        "docs/UNIFIED_UI.md"
+      ],
+      "resources": [
+        "relay-mcp-app-ui",
+        "relay-web-dashboard",
+        "relay-human-qa-ui",
+        "relay-night-shift-view",
+        "suite-shared-shell"
+      ],
+      "goal": "Ship one Relay web and in-chat experience from shared existing operator/QA state and views.",
+      "acceptance": "Today, Projects, Review and Night Shift share canonical state and QA identity; web and MCP app use existing operator/QA components; mobile and fullscreen QA work; no second approval/evidence store.",
+      "next_action": "Reuse imported operator/QA interface, add Night Shift feature and canonical web/MCP shared routing, preserve exact QA/artifact contracts.",
+      "base_sha": "fe40a797ed7db1c43ca3e2d088db4c0f1ca844df",
+      "state": "active",
+      "created_at": "2026-09-30T15:30:52.208Z",
+      "updated_at": "2026-09-30T15:30:52.208Z",
+      "lease_until": "2026-10-01T03:30:52.208Z"
     }
   ],
   "migrated_from": "loew-inspector"
