@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T10:37:40.359Z",
+  "updated_at": "2026-09-30T10:44:09.559Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -324,53 +324,6 @@
       "completed_at": "2026-09-30T10:20:20.264Z"
     },
     {
-      "id": "field-mobile-focus",
-      "owner": "existing-mobile-owner",
-      "branch": "field/mobile-focus-touch-camera-20260929",
-      "paths": [
-        ".github/workflows/mobile-focus-verify.yml",
-        "src/App.tsx",
-        "src/canvas/Canvas.tsx",
-        "src/canvas/hooks/useCanvasTouchInteraction.test.ts",
-        "src/canvas/hooks/useCanvasTouchInteraction.ts",
-        "src/canvas/hooks/useCanvasTransform.touch.test.ts",
-        "src/canvas/hooks/useCanvasTransform.ts",
-        "src/canvas/selection/ResizeHandles.tsx",
-        "src/canvas/selection/RotateHandle.tsx",
-        "src/canvas/selection/ScaleHandles.tsx",
-        "src/canvas/selection/SelectionBox.tsx",
-        "src/canvas/selection/useTouchHandleTargets.ts",
-        "src/canvas/transform/InputHandler.touch.test.ts",
-        "src/canvas/transform/InputHandler.ts",
-        "src/code/stores/workspace-panels-store.ts",
-        "src/editor/BottomToolbar.tsx",
-        "src/editor/ChromeIslands.tsx",
-        "src/editor/FloatingLeftPanelHost.tsx",
-        "src/editor/MobileFocusCoordinator.tsx",
-        "src/editor/ToolbarPanelHost.tsx",
-        "src/editor/e2e/mobile-focus.spec.ts",
-        "src/editor/mobile-focus-state.test.ts",
-        "src/editor/mobile-toolbar.test.ts",
-        "src/editor/mobile-workspace-presentation.test.ts",
-        "src/editor/mobile-workspace-presentation.ts",
-        "package-lock.json",
-        "src/canvas/mouse/CanvasMouseController.ts",
-        "src/canvas/transform/CameraCommands.ts"
-      ],
-      "resources": [
-        "canvas-touch-input",
-        "mobile-shell"
-      ],
-      "goal": "Continue protected Mobile Focus work with its existing owner.",
-      "acceptance": "Existing Mobile handoff and PR #123 acceptance criteria.",
-      "next_action": "Serial shared-file window closed: Canvas PR #135 merged as 854038a3e84f41cd590a4ad18b24fcd4127e2fba and claim completed. package-lock.json, CanvasMouseController.ts and CameraCommands.ts returned to existing Mobile owner. Reconcile Mobile against current main before touching them. Protected Mobile/device QA remains; connected-panel implementation stays deferred until explicit user resume.",
-      "base_sha": "64fa810a66fc54d73c2f46ed2e352a8c3a3e568d",
-      "state": "active",
-      "created_at": "2026-09-30T05:06:12.798659Z",
-      "updated_at": "2026-09-30T10:20:23.102Z",
-      "lease_until": "2026-09-30T22:20:23.102Z"
-    },
-    {
       "id": "field-consolidation-workspace-20260930",
       "owner": "01a0f1bf-3464-7b61-a3ac-f5d494bf7ef3",
       "branch": "field/consolidation-workspace-20260930",
@@ -406,6 +359,25 @@
       "created_at": "2026-09-30T10:21:02.409Z",
       "updated_at": "2026-09-30T10:37:40.359Z",
       "lease_until": "2026-09-30T22:37:40.359Z"
+    },
+    {
+      "id": "field-mobile-focus",
+      "owner": "existing-mobile-owner",
+      "branch": "field/mobile-focus-touch-camera-20260929",
+      "paths": [
+        ".github/workflows/mobile-focus-verify.yml"
+      ],
+      "resources": [
+        "mobile-historical-qa-accounting"
+      ],
+      "goal": "Retain original Mobile PR #123 and historical verification provenance during user-authorized consolidation",
+      "acceptance": "Original branch and runtime/iPhone evidence retained; product implementation moves to consolidated #136 under explicit user authorization",
+      "next_action": "User explicitly removed Mobile protection and authorized current worker on 2026-09-30. Product paths released to consolidated recovery claim; preserve original #123 branch/workflow as provenance until all code and iPhone QA accounted.",
+      "base_sha": "64fa810a66fc54d73c2f46ed2e352a8c3a3e568d",
+      "state": "active",
+      "created_at": "2026-09-30T05:06:12.798659Z",
+      "updated_at": "2026-09-30T10:44:09.559Z",
+      "lease_until": "2026-09-30T22:44:09.559Z"
     }
   ]
 }
