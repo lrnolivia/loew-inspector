@@ -1,11 +1,11 @@
 # loew chat bible
 
-Version: `2026-09-29.1`  
+Version: `2026-09-30.1`  
 Canonical authority: `lrnolivia/loew-runner@main`
 
-This is the universal operating contract for loew.fi ChatGPT, Codex, Work, Contract Worker, Night Shift, PJM, Master, Worker, and other project-execution chats.
+This is the single universal operating contract for loew.fi ChatGPT, Codex, Work, Contract Worker, Night Shift, PJM, Master, Worker, and other project-execution chats.
 
-Project repositories own product truth. `loew-runner` owns universal execution law.
+`loew-runner` owns universal execution law AND all non-product documentation (handoffs, notes, trackers, state, decisions, research, operations, role/worker/night-shift contracts, assignment/mail/QA records, audits, archives, and release history). Project repositories own product truth only. See section 18.
 
 A project may add product-specific instructions, ownership, commands, QA details, or transport constraints. It must not silently fork the universal operating rules in this document.
 
@@ -30,13 +30,16 @@ Before meaningful work:
 
 1. read the current `contracts/manifest.json`
 2. read this Bible from `loew-runner/main`
-3. read the target repository's root `AGENTS.md` or equivalent local overlay
-4. read the applicable role contract
-5. read the current assignment, mailbox/state, QA record, and live branch/PR state
-6. inspect fresh source/runtime evidence before inheriting a previous conclusion
-7. choose one bounded next action
+3. read the current `projects/<project-id>.json` record when Runner manages the project
+4. read the target repository's root `AGENTS.md` stub or equivalent local overlay
+5. read the applicable role contract
+6. read the current assignment, mailbox/state, QA record, and live branch/PR state
+7. inspect fresh Git/source/runtime evidence before inheriting a previous conclusion
+8. choose one bounded next action
 
 A previous run saying `BLOCKED`, `PASS`, `FAIL`, `DONE`, or `READY` is evidence, not current truth. Revalidate it when it matters.
+
+A copied Bible, prior chat conclusion, old handoff, or stale local clone is not sufficient current authority. If a target repository contains older process wording, treat it as a project overlay only and apply this Bible first.
 
 If the Bible cannot be retrieved, use the emergency invariants in the target repo's bootstrap, avoid destructive or ambiguous mutations, and retry retrieval before broadening scope.
 
@@ -404,6 +407,23 @@ Automatic promotion requires the project's normal gate. `DANGER ZONE — HUMAN Q
 
 When human QA resolves the uncertainty, record the verdict against the exact Preview/SHA. If the head changes afterward, the human evidence is stale just like automated runtime evidence.
 
+### 11.9 Project QA overlays
+
+Runner owns universal QA engine routing, exact-artifact/SHA evidence rules, classification meanings, retry/watchdog limits, self-correction budgets, fallback requirements, danger-zone behavior, and promotion boundaries (sections 11.1-11.8).
+
+Project QA documents are overlays only. They may add project paths, fixtures, commands, environments, or acceptance criteria. They may not silently weaken, replace, or reorder Runner QA law.
+
+Overlay location follows section 18: project QA overlay documents are execution docs and live in Runner under `docs/<project-id>/`, unless they describe product behavior, in which case they are product truth and stay in the repository (with a Runner mirror).
+
+For **field**:
+
+- test the exact branch/PR head and exact branch Preview
+- use `/qa/work/<projectId>` for read-only real saved-project truth
+- `/builder/noauth` is smoke-only
+- a successful build is not runtime QA
+- production does not prove an unmerged branch
+- if the tested head changes, affected runtime evidence is stale
+
 ## 12. Blocker classes
 
 Repairable/local blockers include our metadata, stale bookkeeping, safe harness defects, transient infrastructure, deterministic tool mistakes, and safe dependency drift.
@@ -470,3 +490,58 @@ When the canonical Bible is temporarily unreachable:
 - respect project-specific product truth and current role contracts
 
 These emergency invariants are a fallback only. Retrieve the current Bible as soon as possible.
+
+## 18. Documentation ownership law
+
+`loew-runner` is the single home for all non-product documentation. There is exactly one Bible: `LOEW_CHAT_BIBLE.md`.
+
+### 18.1 What repositories may keep
+
+A project repository may keep ONLY:
+
+- (a) product-truth docs: product bibles and specs that describe what the product is
+- (b) README, LICENSE, NOTICE, and tooling-required files
+- (c) a thin `AGENTS.md` stub (required at `<target-repo>/AGENTS.md` by the manifest) that points to this Bible and does not carry execution law or notes
+
+### 18.2 Product-truth mirrors
+
+Every product-truth doc in a repository gets a synced mirror in Runner at `docs/<project-id>/product/<same-path>`. The repository copy is authoritative for content; Runner mirrors it. Never edit the mirror as the source.
+
+### 18.3 What lives in Runner
+
+Everything else lives in Runner under `docs/<project-id>/`:
+
+- handoffs, notes, trackers, state
+- decisions, research, operations
+- worker, role, and night-shift contracts
+- assignment, mail, and QA records
+- audits and archives
+- ALL release history (for example rtxForge `RELEASE-x.md`)
+
+### 18.4 Migration hygiene
+
+A migrated repository doc gets a one-line pointer only if something still references its path; otherwise delete it. Migrate carefully: configuration that reads repo files (for example a worker config) must be updated in the same change, and tooling with installers or tests must be moved as a unit, not copied piecemeal.
+
+### 18.5 Agent rule
+
+Agents write handoffs, notes, trackers, and other non-product docs to Runner, never to project repositories. If a project repository holds such a doc, treat it as legacy evidence pending migration and do not extend it.
+
+## 19. Current-target resolution
+
+Before following a historical handoff, chat memory, old checkout path, or copied instruction:
+
+1. read `contracts/manifest.json`
+2. resolve managed projects from the current `projects/<project-id>.json`
+3. read the target repository's current root `AGENTS.md`
+4. read the applicable role/assignment/control/QA state
+5. refresh Git/runtime truth
+
+Historical repository names and local checkout paths are evidence only unless current Runner/project truth still selects them.
+
+For **field**, the canonical repository is `lrnolivia/field`.
+
+Do not search for, clone, resume, or mutate `revyme-loewfi`, `revyme-loew`, `revyme-löew`, or old local Revyme checkout paths as current field targets.
+
+Revyme-prefixed identifiers inside `lrnolivia/field` may remain when they are real compatibility, protocol, dependency, storage, or attribution contracts.
+
+For field-specific stale sources that cannot yet be edited through repository authority, see `docs/FIELD_GUIDANCE_CLEANUP_MANIFEST.md`. Those sources are non-authoritative for current repository identity, execution process, and QA law until cleaned up.

@@ -1,9 +1,27 @@
 {
   "schema": 1,
-  "version": "2026-09-29.2",
+  "version": "2026-09-30.1",
   "authority": "lrnolivia/loew-runner@main",
-  "contract": "LOEW_CHAT_BIBLE_CURRENT.md",
+  "contract": "LOEW_CHAT_BIBLE.md",
+  "single_bible": true,
+  "retired_contracts": [
+    "LOEW_CHAT_BIBLE_CURRENT.md"
+  ],
   "applies_to": "all lrnolivia/loew project execution chats unless explicitly overridden by the user",
+  "documentation_ownership": {
+    "section": "18",
+    "runner_owns_all_non_product_docs": true,
+    "repos_own_product_truth_only": true,
+    "repo_may_keep": [
+      "product-truth docs",
+      "README, LICENSE, NOTICE and tooling-required files",
+      "thin AGENTS.md stub"
+    ],
+    "non_product_docs_path": "docs/<project-id>/",
+    "product_mirror_path": "docs/<project-id>/product/<same-path>",
+    "repo_copy_authoritative_for_product_docs": true,
+    "agents_write_non_product_docs_to_runner": true
+  },
   "required_bootstrap": [
     "contracts/manifest.json",
     "LOEW_CHAT_BIBLE.md",
@@ -34,7 +52,7 @@
     "persist-next-action"
   ],
   "qa_authority": {
-    "contract": "LOEW_CHAT_BIBLE_CURRENT.md",
+    "contract": "LOEW_CHAT_BIBLE.md",
     "section": "11",
     "runner_first": true,
     "project_qa_is_overlay": true

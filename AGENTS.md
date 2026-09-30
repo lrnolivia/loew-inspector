@@ -3,13 +3,16 @@
 Before doing project-execution work, read:
 
 1. `contracts/manifest.json`
-2. `LOEW_CHAT_BIBLE_CURRENT.md`
-3. `LOEW_CHAT_BIBLE.md` (base law incorporated by the current authority file)
-4. the applicable local Runner/Night Shift contract
-5. the target project's own `AGENTS.md` / product instructions
-6. live Git/runtime/control state
+2. `LOEW_CHAT_BIBLE.md` (the single Bible; `LOEW_CHAT_BIBLE_CURRENT.md` is a retired tombstone)
+3. the applicable local Runner/Night Shift contract
+4. the target project's `AGENTS.md` stub and any product-truth docs it points to
+5. live Git/runtime/control state
 
-`LOEW_CHAT_BIBLE_CURRENT.md` is the current universal entry authority and incorporates `LOEW_CHAT_BIBLE.md` as base law. This repository owns universal execution process; target repositories own product truth.
+`LOEW_CHAT_BIBLE.md` is the single universal entry authority. This repository owns universal execution process AND all non-product documentation; target repositories own product truth only.
+
+## Documentation ownership rule
+
+Handoffs, notes, trackers, state, decisions, research, operations docs, worker/role/night-shift contracts, assignment/mail/QA records, audits, archives, and release history are written to this repository under `docs/<project-id>/`, never to project repositories. Project repositories keep only product-truth docs, README/LICENSE/NOTICE/tooling files, and a thin `AGENTS.md` stub. Product-truth docs are mirrored here at `docs/<project-id>/product/<same-path>`; the repository copy is authoritative for content. See Bible section 18.
 
 Resolve the current repository from Runner project records and the target repository's live bootstrap before following historical handoffs. For field, the current target is **`lrnolivia/field`**. Do not fall back to historical `revyme-loewfi` / `revyme-loew` / `revyme-löew` repository names or old local checkout paths.
 
@@ -70,4 +73,3 @@ If the user asks to pick up Runner 3.0, the project-management dashboard, assign
 4. current Runner/Inspector infrastructure ownership before changing capacity/execution logic
 
 Runner 3.0 core workflows must not depend on paid model inference. Preserve existing visual evidence and scheduler controls while migrating to the project-first UI.
-
