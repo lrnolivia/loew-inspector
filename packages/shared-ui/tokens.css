@@ -33,11 +33,11 @@
     --color-text-secondary: #69635e;
     --color-good: #16794e;
     --color-bad: #b3283e;
-    --color-orient: #087a88;
+    --color-link: #087a88;
   }
 }
 body { font-family: Inter, system-ui, sans-serif; font-size: 19px; line-height: 28px; }
-a { color: var(--color-orient); text-underline-offset: 4px; }
+a { color: var(--color-link, var(--color-orient)); text-underline-offset: 4px; }
 button, summary, a, input, textarea { -webkit-tap-highlight-color: transparent; }
 a:focus-visible, input:focus-visible { outline: 2px solid var(--color-focus); outline-offset: 4px; }
 .operator-topbar { min-height: 112px; gap: 24px; border: 0; }

@@ -1,3 +1,6 @@
+import { glyph } from "../../../packages/shared-ui/glyphs.js";
+import { brand } from "./brand.js";
+import { iconSlot, hydrateProjectIcons } from "./project-icons.js";
 import { openQa } from "./qa.js";
 import { loadNightShift } from "../../../features/night-shift/view.js";
 
@@ -16,6 +19,36 @@ let toastTimer = null;
 let projectIds = [];
 let selectedProject = null;
 const projectCache = new Map();
+const navigation = {
+  today: ["Today", "Current focus", "today"],
+  projects: ["Runner", "Projects & coordination", "projects"],
+  review: ["Inspector", "Review & evidence", "review"],
+  "night-shift": ["Night Shift", "Automatic work", "moon"]
+};
+nav.forEach(button => {
+  const [label, detail, icon] = navigation[button.dataset.nav];
+  button.setAttribute("aria-label", label);
+  const tool = button.dataset.nav === "projects" ? "runner" : button.dataset.nav === "review" ? "inspector" : null;
+  button.innerHTML = '<span class="glyph-chip">' + (tool ? '<img class="tool-mark" src="' + brand[tool] + '" alt="">' : glyph(icon)) + '</span><span class="nav-copy"><strong>' + label + '</strong><small>' + detail + '</small></span><span class="nav-chevron">' + glyph("next") + '</span>';
+});
+pages.forEach(page => {
+  const heading = page.querySelector(".page-heading");
+  const flow = document.createElement("div"); flow.className = "flow-band"; flow.setAttribute("aria-label", "Current flow");
+  flow.innerHTML = '<span class="flow-stages"><span data-flow-step="orient" class="current">Orient</span>' + glyph("next") + '<span data-flow-step="act">Act</span>' + glyph("next") + '<span data-flow-step="resolve">Resolve</span></span><span class="badge" data-flow-label data-tone="orient">Understand what needs you</span>';
+  heading.after(flow);
+  const system = page.dataset.page === "review" ? "inspector" : ["projects", "today", "night-shift"].includes(page.dataset.page) ? "runner" : null;
+  if (system) {
+    const context = document.createElement("div"); context.className = "subsystem-context";
+    context.innerHTML = '<img src="' + brand[system] + '" alt=""><span>' + (system === "inspector" ? "Inspector · screen review" : "Runner · coordination & execution") + '</span>';
+    heading.prepend(context);
+  }
+});
+function setFlow(phase, label) {
+  const page = pages.find(item => !item.hidden); if (!page) return;
+  page.querySelectorAll("[data-flow-step]").forEach(step => step.classList.toggle("current", step.dataset.flowStep === phase));
+  page.querySelector(".flow-band").dataset.phase = phase;
+  const badge = page.querySelector("[data-flow-label]"); badge.dataset.tone = phase; badge.textContent = label;
+}
 
 function route() {
   const page = (location.hash || "#today").slice(1).split("?")[0];
@@ -61,8 +94,8 @@ async function loadProjects() {
 
   projectList.innerHTML = projectIds.length ? projectIds.map(id => `
     <button class="project-list-item ${id === selectedProject ? "active" : ""}" type="button" data-project-id="${esc(id)}">
-      <strong>${esc(projectName(id))}</strong>
-      <span>Open</span>
+      ${iconSlot(id)}<strong>${esc(projectName(id))}</strong>
+      <span class="nav-chevron">${glyph("next")}</span>
     </button>
   `).join("") : '<div class="operator-empty">No projects are registered.</div>';
 
@@ -70,6 +103,7 @@ async function loadProjects() {
     button.addEventListener("click", () => selectProject(button.dataset.projectId));
   });
 
+  hydrateProjectIcons(projectList);
   if (selectedProject) await selectProject(selectedProject);
 }
 
@@ -79,7 +113,7 @@ function openProject(id) {
   else location.hash = "projects?project=" + encodeURIComponent(id);
 }
 
-const ui = { setConnection, notify, openProject };
+const ui = { setConnection, notify, openProject, setFlow };
 
 async function showPage(name) {
   pages.forEach(page => { page.hidden = page.dataset.page !== name; });
@@ -90,6 +124,8 @@ async function showPage(name) {
   });
 
   document.body.dataset.page = name;
+  document.querySelector("#workspace-page").textContent = navigation[name][0];
+  setFlow("orient", name === "review" ? "Choose a screen to inspect" : "Understand what needs you");
   if (name === "today") await loadToday(ui);
   if (name === "projects") {
     setConnection("Connected", "good");

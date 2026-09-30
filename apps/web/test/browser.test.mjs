@@ -22,6 +22,7 @@ test("shared interface works on web and MCP host transport, including mobile, de
     if (asset) { res.setHeader("Content-Type", asset.type); return res.end(asset.text); }
     if (url.pathname === "/host") { res.setHeader("Content-Type", "text/html"); return res.end('<iframe id="app" style="width:100%;height:900px;border:0"></iframe>'); }
     if (url.pathname === "/api/projects") return send({ projects: [project] });
+    if (url.pathname === "/api/projects/relay/icon") return send({ status: "found", icon: { data_url: "data:image/png;base64," + pixel.toString("base64"), repository: "lrnolivia/relay", path: "apps/web/public/brand/relay-loop.png", blob_sha: "b".repeat(40) } });
     if (url.pathname === "/api/projects/relay") return send({ project, coordination: { claims: [{ id: "work", state: "active", goal: "Complete consolidation" }] } });
     if (url.pathname === "/api/workers") return send(workers);
     if (url.pathname === "/api/visual") return send({ evidence: [evidence] });
@@ -70,6 +71,15 @@ test("shared interface works on web and MCP host transport, including mobile, de
       await view.locator("#operator-connection").filter({ hasText: "Connected" }).waitFor();
       await view.getByRole("button", { name: "Projects", exact: true }).click();
       await view.locator("#project-detail").filter({ hasText: "Complete consolidation" }).waitFor();
+      await view.locator('#project-list [data-repo-icon="relay"][data-icon-sha="' + "b".repeat(40) + '"] img').waitFor();
+      assert.equal(await view.locator('#project-list [data-repo-icon="relay"]').evaluate(node => getComputedStyle(node).backgroundColor), "rgba(0, 0, 0, 0)");
+      for (const width of [560, 900, 1360]) {
+        await page.setViewportSize({ width, height: 1000 });
+        assert.equal(await view.locator("body").evaluate(() => document.documentElement.scrollWidth > innerWidth), false, mode + " viewport " + width);
+      }
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      assert.equal(await view.locator(".relay-glyph").first().evaluate(node => getComputedStyle(node).transitionDuration), "0s");
+      await page.emulateMedia({ reducedMotion: "no-preference" });
       await view.getByRole("button", { name: "Night Shift", exact: true }).click();
       await view.locator("#night-shift-work").filter({ hasText: "Latest canonical run" }).waitFor();
       await view.getByRole("button", { name: "Review", exact: true }).click();
@@ -78,7 +88,11 @@ test("shared interface works on web and MCP host transport, including mobile, de
       await view.getByRole("button", { name: "Yes", exact: true }).click();
       await view.getByRole("button", { name: "Looks good", exact: true }).click();
       await view.locator(".qa-save-state").filter({ hasText: "Saved" }).waitFor();
+      await view.locator(".qa-resolution").filter({ hasText: "Your review is saved" }).waitFor();
       assert.equal(review.evidence_id, evidence.evidence_id); assert.equal(review.answers.intent, "yes");
+      await view.locator(".qa-notes textarea").fill("A durable note on this exact capture.");
+      await view.locator(".qa-save-state").filter({ hasText: "Saved" }).waitFor();
+      assert.equal(await view.locator(".qa-notes textarea").inputValue(), "A durable note on this exact capture.");
       await view.getByRole("button", { name: "Close QA", exact: true }).click();
       if (mode === "web") {
         await page.goto(origin + "#projects?project=relay");

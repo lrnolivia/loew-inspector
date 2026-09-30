@@ -1,4 +1,5 @@
 import { githubApiRequest, sourceAuthStatus } from "../../../src/source.js";
+import { projectIcon } from "./project-icons.mjs";
 import { applyWorkerSettings, publicWorkerSettings } from "./settings.mjs";
 import { listVisualEvidence, getVisualEvidence, getVisualImage, compareVisualEvidence, listVisualRuns, reviewVisualRun } from "./visual-evidence.mjs";
 import { getQaReview, saveQaReview, qaQuestionsForEvidence, inspectLivePreview } from "./human-qa.mjs";
@@ -252,6 +253,12 @@ export async function handleApi(request, env, { authenticatedMcp = false } = {})
     const projects = await Promise.all(entries.filter(item => item.type === "file" && item.name.endsWith(".json"))
       .map(item => readJsonFile(env, "projects/" + item.name)));
     return json({ projects: projects.map(item => item.value).filter(item => !item.alias_of) });
+  }
+  const iconMatch = url.pathname.match(/^\/api\/projects\/([a-zA-Z0-9._-]+)\/icon$/);
+  if (request.method === "GET" && iconMatch) {
+    const registration = await readJsonFile(env, "projects/" + iconMatch[1] + ".json");
+    if (registration.value.alias_of) return json({ error: "Use the canonical project " + registration.value.alias_of }, 409);
+    return json(await projectIcon(registration.value, path => githubRequest(env, path), env.RUNNER_GITHUB_TOKEN || env.RELAY_GITHUB_TOKEN || env.RELAY_GITHUB_APP_PRIVATE_KEY || "public-read"));
   }
   const projectMatch = url.pathname.match(/^\/api\/projects\/([a-zA-Z0-9._-]+)$/);
   if (request.method === "GET" && projectMatch) {

@@ -4,11 +4,12 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 const here = path.dirname(fileURLToPath(import.meta.url));
 const source = async name => fs.readFile(path.join(here, "public", name), "utf8");
-const bundle = async entry => (await build({ entryPoints: [path.join(here, entry)], bundle: true, write: false, format: "iife", target: "es2022", minify: true })).outputFiles[0].text;
+const bundle = async entry => (await build({ entryPoints: [path.join(here, entry)], bundle: true, write: false, format: "iife", target: "es2022", minify: true, loader: { ".png": "dataurl" } })).outputFiles[0].text;
 const script = await bundle("public/operator.js");
 const bridge = await bundle("mcp-bridge.js");
-const css = await source("operator.css") + "\n" + await source("qa.css") + "\n" + await fs.readFile(path.join(here, "../../packages/shared-ui/tokens.css"), "utf8");
-const html = (await source("index.html")).replace(/<link rel="stylesheet" href="\/(?:operator|qa).css">/g, "").replace("</head>", "<style>" + css + "</style></head>");
+const relayIcon = "data:image/png;base64," + (await fs.readFile(path.join(here, "public/brand/relay-loop.png"))).toString("base64");
+const css = await source("operator.css") + "\n" + await source("qa.css") + "\n" + await fs.readFile(path.join(here, "../../packages/shared-ui/tokens.css"), "utf8") + "\n" + await fs.readFile(path.join(here, "../../packages/shared-ui/components.css"), "utf8");
+const html = (await source("index.html")).replaceAll("__RELAY_ICON__", relayIcon).replace(/<link rel="stylesheet" href="\/(?:operator|qa).css">/g, "").replace("</head>", "<style>" + css + "</style></head>");
 const escapeScript = value => value.replace(/<\/script/gi, "<\\/script");
 const mcpHtml = html.replace('<script type="module" src="/relay-app.js"></script>', '<script>' + escapeScript(bridge + "\n" + script) + '</script>');
 const assets = {

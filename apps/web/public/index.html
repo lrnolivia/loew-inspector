@@ -4,7 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#111110">
-  <title>loew.fi relay</title>
+  <title>relay</title>
+  <link rel="icon" type="image/png" href="__RELAY_ICON__">
+  <link rel="apple-touch-icon" href="__RELAY_ICON__">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Momo+Trust+Display&display=swap" rel="stylesheet">
@@ -12,12 +14,14 @@
   <link rel="stylesheet" href="/qa.css">
 </head>
 <body>
+  <div class="terra-accent" aria-hidden="true"><span></span><span></span><span></span><span></span><span></span></div>
   <header class="operator-topbar">
     <div class="operator-brand">
-      <strong>relay</strong>
+      <img src="__RELAY_ICON__" alt="" width="52" height="52"><strong>relay</strong>
       <span>project control</span>
     </div>
 
+    <div class="nav-label">WORK</div>
     <nav class="operator-nav" aria-label="Relay">
       <button type="button" data-nav="today">Today</button>
       <button type="button" data-nav="projects">Projects</button>
@@ -25,10 +29,11 @@
       <button type="button" data-nav="night-shift">Night Shift</button>
     </nav>
 
-    <div id="operator-connection" class="operator-connection" data-tone="quiet" aria-live="polite">Connecting…</div>
+
   </header>
 
   <main class="operator-shell">
+    <div class="workspace-context"><span>Your workspace <span aria-hidden="true">/</span> <span id="workspace-page">Today</span></span><div id="operator-connection" class="operator-connection" data-tone="quiet" aria-live="polite">Connecting…</div></div>
     <section class="operator-page" data-page="today">
       <header class="page-heading">
         <h1>Today</h1>

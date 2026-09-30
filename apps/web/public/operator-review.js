@@ -1,3 +1,4 @@
+import { iconSlot, hydrateProjectIcons } from "./project-icons.js";
 
 import { openQa } from "./qa.js";
 import { esc, projectName } from "./operator-projects.js";
@@ -69,7 +70,7 @@ function renderReview() {
       <button class="review-row" type="button" data-review-id="${esc(item.evidence_id)}">
         <img src="${esc(item.screenshot_url)}" alt="">
         <span class="review-copy">
-          <span class="review-project">${esc(projectName(context.project || "review"))}</span>
+          <span class="review-project project-name">${iconSlot(context.project)}${esc(projectName(context.project || "review"))}</span>
           <strong>${esc(evidenceTitle(item))}</strong>
           <small>${esc(context.environment || "capture")} · ${esc(relative(item.captured_at))}</small>
         </span>
@@ -78,6 +79,7 @@ function renderReview() {
     `;
   }).join("");
 
+  hydrateProjectIcons(target);
   target.querySelectorAll("[data-review-id]").forEach(button => {
     button.addEventListener("click", () => openQa(button.dataset.reviewId));
   });

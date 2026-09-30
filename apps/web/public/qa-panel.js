@@ -1,3 +1,5 @@
+import { glyph } from "../../../packages/shared-ui/glyphs.js";
+import { brand } from "./brand.js";
 
 export function qaEscape(value) {
   return String(value == null ? "" : value).replace(/[&<>"']/g, function (char) {
@@ -88,8 +90,8 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
       }).join("") +
       "</div>" +
       '<div class="qa-question-nav">' +
-      '<button type="button" class="qa-text-button" data-qa-prev ' + (questionIndex === 0 ? "disabled" : "") + ">← Previous</button>" +
-      '<button type="button" class="qa-text-button" data-qa-next ' + (questionIndex >= questions.length - 1 ? "disabled" : "") + ">Next →</button>" +
+      '<button type="button" class="qa-text-button" data-qa-prev ' + (questionIndex === 0 ? "disabled" : "") + ">" + glyph("previous") + " Previous</button>" +
+      '<button type="button" class="qa-text-button" data-qa-next ' + (questionIndex >= questions.length - 1 ? "disabled" : "") + ">Next " + glyph("next") + "</button>" +
       "</div></section>";
   } else {
     questionHtml =
@@ -101,18 +103,19 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
 
   panel.innerHTML =
     '<div class="qa-panel-head">' +
-      '<div class="qa-panel-brand"><strong>relay review</strong><small>' +
+      '<div class="qa-panel-brand"><img src="' + brand.inspector + '" alt=""><div><strong>Inspector</strong><small>' +
         qaEscape((context.project || evidence.title || "capture") + (evidence.step_label ? " · " + evidence.step_label : "")) +
-      "</small></div>" +
+      "</small></div></div>" +
       '<div class="qa-panel-tools">' +
-        '<button type="button" class="qa-icon-button" data-qa-side aria-label="Move review to the other side" title="Move panel">⇆</button>' +
-        '<button type="button" class="qa-icon-button" data-qa-minimize aria-label="Minimize review" title="Minimize">—</button>' +
-        '<button type="button" class="qa-icon-button" data-qa-close aria-label="Close QA" title="Close">×</button>' +
+        '<button type="button" class="qa-icon-button" data-qa-side aria-label="Move review to the other side" title="Move panel">' + glyph("move") + '</button>' +
+        '<button type="button" class="qa-icon-button" data-qa-minimize aria-label="Minimize review" title="Minimize">' + glyph("minimize") + '</button>' +
+        '<button type="button" class="qa-icon-button" data-qa-close aria-label="Close QA" title="Close">' + glyph("close") + '</button>' +
       "</div>" +
     "</div>" +
     '<div class="qa-panel-body">' +
       '<div class="qa-status-line"><span>' + qaEscape(context.environment || "unknown") + "</span><span>" +
         qaEscape(live.active ? "preview active" : "capture only") + "</span></div>" +
+      '<span class="badge qa-flow-badge" data-tone="' + (state.saved && review.overall ? "resolve" : state.dirty ? "act" : "orient") + '">' + (state.saved && review.overall ? "Resolve · review recorded" : state.dirty ? "Act · record your decision" : "Orient · inspect this capture") + '</span>' +
       questionHtml +
       '<label class="qa-notes"><span>Notes</span><textarea maxlength="6000" placeholder="Anything you notice, in your own words…">' +
         qaEscape(review.notes || "") + "</textarea></label>" +
@@ -124,7 +127,8 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
       "</div></div>" +
       '<div class="qa-save-row"><span class="qa-save-state" aria-live="polite">' +
         qaEscape(review.updated_at ? "Saved " + new Date(review.updated_at).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Not saved yet") +
-        '</span><button type="button" class="qa-save-button" data-qa-save>Save review</button></div>' +
+        '</span><button type="button" class="qa-save-button" data-qa-save>' + glyph("save") + ' Save review</button></div>' +
+      (state.saved && review.overall ? '<section class="qa-resolution"><span class="badge" data-tone="resolve">Recorded</span><strong>Your review is saved.</strong><p>' + qaEscape(verdictLabel(review.overall)) + ' · attached to this exact capture.</p></section>' : "") +
       '<details class="qa-details"><summary>Technical details</summary><dl>' +
         '<div><dt>capture</dt><dd>' + qaEscape(evidence.evidence_id || "—") + "</dd></div>" +
         '<div><dt>viewport</dt><dd>' + qaEscape(evidence.viewport && evidence.viewport.width ? evidence.viewport.width + " × " + evidence.viewport.height : "—") + "</dd></div>" +
