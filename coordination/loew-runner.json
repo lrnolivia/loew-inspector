@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T13:15:00.049Z",
+  "updated_at": "2026-09-30T13:27:08.179Z",
   "legacy_branches": [
     "control",
     "main",
@@ -58,6 +58,24 @@
       ],
       "state": "queued",
       "created_at": "2026-09-30T12:47:51.587Z"
+    },
+    {
+      "id": "loew-utility-suite-brand-20260930",
+      "owner": "loew-utility-suite-brand-20260930",
+      "goal": "Define and brand Runner, Relay and Inspector as one seamless loew.fi utility suite with distinct product roles, shared navigation/identity, and an implementation-ready design/IA contract.",
+      "acceptance": "Produce a concise product architecture and brand system that defines the suite name/umbrella identity, relationship of Runner/Relay/Inspector, subdomain roles, shared navigation model, naming/tone, shared visual language/tokens, product differentiation, icon/mark direction and cross-surface information architecture; Runner is defined as orchestration/coordination, Relay as control/operations/MCP app, and Inspector as visual review/verification unless the user approves a different role split; the suite can feel like one dashboard while preserving clear product identity; no product rename is executed until the user selects/approves the suite naming direction; output includes an implementation-ready contracts/suite-shell.json consumed by web surfaces.",
+      "next_action": "Develop 2-4 strong suite naming/brand directions plus one recommended architecture for user review, then lock the approved shared shell/identity contract before dashboard integration work claims overlapping UI resources.",
+      "paths": [
+        "docs/suite/",
+        "contracts/suite-shell.json"
+      ],
+      "resources": [
+        "loew-utility-suite-brand",
+        "suite-product-architecture",
+        "suite-shared-shell"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T13:27:08.179Z"
     }
   ],
   "claims": [
