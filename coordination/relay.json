@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T20:40:37.664Z",
+  "updated_at": "2026-09-30T20:40:58.266Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -277,6 +277,34 @@
       "created_at": "2026-09-30T14:07:23.167Z",
       "merge_commit_sha": "1c77c7dd303804b2f8cf70809cfafd0577215276",
       "completed_by": "relay-consolidation-b6-retirement-20260930"
+    },
+    {
+      "id": "relay-1.7-tool-identity-20260930",
+      "owner": "relay-1.7-tool-identity-20260930",
+      "goal": "Ship Relay 1.7 as the unified product identity release: Relay remains the sole product/control plane, while Runner and Inspector are restored as named, visible first-class tools/features inside Relay with their own approved icons and recognizable product presence.",
+      "acceptance": "Canonical service/version metadata and release-facing UI/docs identify the resulting release as Relay 1.7.0. Relay keeps the official loop as the parent/product mark. Runner is visibly named and uses the approved dispatch/queue mark on coordination, project, queue, worker and execution-state surfaces. Inspector is visibly named and uses the approved packets/layers mark on inspection, visual QA, screenshot/evidence, browser-interaction and verification surfaces. Relay navigation and relevant headers/cards expose Runner and Inspector as recognizable tools rather than hiding them behind generic workflow nouns. Source, Cloud and Night Shift stay functional and are not force-branded for symmetry. Standalone Runner/Inspector products, repos, stores and domains remain retired; no runner.loew.fi or inspector.loew.fi resurrection. Durable state, evidence and control ownership remain inside Relay. Existing MCP/API clients remain compatible: technical namespace changes must be additive/aliased or deferred rather than breaking current tools. Preserve the exact approved official icon geometry/spacing. Reuse useful work from the held relay-brand-glyphs branch where safe. Build/tests, exact-head admission, responsive web/MCP UI checks and authenticated production smoke must pass before deployment.",
+      "next_action": "Treat the held relay-brand-glyphs-20260930 work as source material only; do not ship its obsolete technical-context-only identity rule. Claim this assignment when the held branch is reconciled, then implement the 1.7 naming/version/UI identity pass with Runner and Inspector visibly present inside Relay and preserve consolidation boundaries.",
+      "paths": [
+        "apps/web/",
+        "apps/mcp/",
+        "packages/shared-ui/",
+        "packages/runner/",
+        "packages/inspector/",
+        "features/night-shift/",
+        "docs/relay/",
+        "package.json",
+        ".superdesign/",
+        ".github/workflows/relay-production-smoke.yml"
+      ],
+      "resources": [
+        "relay-1.7-release",
+        "relay-shared-interface-brand",
+        "relay-runner-tool-identity",
+        "relay-inspector-tool-identity",
+        "relay-project-icon-discovery"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T20:40:58.266Z"
     }
   ],
   "claims": [
