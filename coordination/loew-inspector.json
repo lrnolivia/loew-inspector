@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T11:48:35.639Z",
+  "updated_at": "2026-09-30T11:50:39.053Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -235,10 +235,16 @@
       "acceptance": "Dry-run and execute modes only consider completed, work-accounted, non-legacy, non-excluded managed branches; exact merged PR/head identity and current ownership/head are revalidated before deletion; post-merge commits and active ownership are retained; deletion readback is mandatory; tests and Runner admission pass.",
       "next_action": "Update the existing extension-version test for Relay 1.4.0, rerun exact-head CI, then promote only if tests and Runner admission pass.",
       "base_sha": "c0f4e93f60e3dca76676612f90e2fc782dec55e8",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T11:42:32.252Z",
-      "updated_at": "2026-09-30T11:48:35.639Z",
-      "lease_until": "2026-09-30T23:48:35.639Z"
+      "updated_at": "2026-09-30T11:50:39.053Z",
+      "lease_until": "2026-09-30T23:50:39.053Z",
+      "pr": 36,
+      "merged_head_sha": "0d3fd77ad2555e43a0d79f1d896ea81ecbb1e775",
+      "merge_commit_sha": "df2223abab501d1134f70dc7c6ae7921edc74ece",
+      "evidence": "https://github.com/lrnolivia/loew-inspector/pull/36 — exact-head tests and Runner admission passed; Relay native ready/merge succeeded.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T11:50:39.053Z"
     }
   ]
 }
