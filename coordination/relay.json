@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T20:02:57.628Z",
+  "updated_at": "2026-09-30T20:04:15.307Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -849,19 +849,22 @@
         "apps/web/",
         "packages/shared-ui/",
         "features/night-shift/",
-        "docs/relay/"
+        "docs/relay/",
+        "packages/runner/src/",
+        "apps/web/api.js"
       ],
       "resources": [
-        "relay-shared-interface-brand"
+        "relay-shared-interface-brand",
+        "relay-project-icon-discovery"
       ],
       "goal": "Add supplied official Relay icon and thick animated interface glyphs, with Runner/Inspector marks used only for internal subsystem context.",
       "acceptance": "Shared web/MCP carries exact provided assets, coherent rounded animated glyphs, accessible labels and reduced-motion support; focused browser/build and exact-head admission pass.",
-      "next_action": "Inspect Field glyph motion, admit source branch, implement shared icon system and validate web/MCP before native ship.",
+      "next_action": "Discover genuine project icon assets from live registered repositories via existing authenticated GitHub source; implement cached bounded read-only icon route and shared web/MCP glyphs.",
       "base_sha": "c9f6af7e51e478d25c1cb58f89f782063246ae20",
       "state": "active",
       "created_at": "2026-09-30T20:02:57.628Z",
-      "updated_at": "2026-09-30T20:02:57.628Z",
-      "lease_until": "2026-10-01T08:02:57.628Z"
+      "updated_at": "2026-09-30T20:04:15.307Z",
+      "lease_until": "2026-10-01T08:04:15.307Z"
     }
   ],
   "migrated_from": "loew-inspector"
