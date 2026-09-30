@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T20:50:22.477Z",
+  "updated_at": "2026-09-30T20:50:31.756Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -928,12 +928,12 @@
       ],
       "goal": "Add supplied official Relay icon and thick animated interface glyphs, with Runner/Inspector marks used only for internal subsystem context.",
       "acceptance": "Shared web/MCP carries exact provided assets, coherent rounded animated glyphs, accessible labels and reduced-motion support; focused browser/build and exact-head admission pass.",
-      "next_action": "User explicitly added queued Relay 1.7 to this pass. Reconcile superseded identity work: freeze existing checkout/diff as source material; reserve only docs/relay/brand-recovery/ for a disposition PR. Transfer useful uncommitted design/assets into newly admitted 1.7 checkout. No obsolete identity implementation will be published.",
+      "next_action": "Frozen superseded implementation diff retained in relay-b2-consolidation checkout; useful assets/design transferred under separately admitted relay-1.7-tool-identity-20260930. Only reserved scope is docs/relay/brand-recovery/ for exact disposition accounting; do not publish obsolete identity implementation.",
       "base_sha": "c9f6af7e51e478d25c1cb58f89f782063246ae20",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-09-30T20:02:57.628Z",
-      "updated_at": "2026-09-30T20:50:22.477Z",
-      "lease_until": "2026-10-01T08:50:22.477Z"
+      "updated_at": "2026-09-30T20:50:31.756Z",
+      "lease_until": "2026-10-01T08:50:31.756Z"
     }
   ],
   "migrated_from": "loew-inspector"
