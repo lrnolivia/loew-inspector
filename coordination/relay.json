@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T20:38:43.618Z",
+  "updated_at": "2026-09-30T20:39:53.526Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -877,10 +877,16 @@
       "acceptance": "Record current user-authorized owner, serial hotfix/Workspace state, exact validation, preserved toolbar patch and safe next action. Documentation only.",
       "next_action": "Admit corrected Relay-prefix documentation publication, close unadmitted bootstrap PR48 with exact replacement pointer; merge current docs after gate.",
       "base_sha": "6f6d3c72c58224aaae6973b48a0149b6e97499cc",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T20:38:22.783Z",
-      "updated_at": "2026-09-30T20:38:22.783Z",
-      "lease_until": "2026-10-01T08:38:22.783Z"
+      "updated_at": "2026-09-30T20:39:53.526Z",
+      "lease_until": "2026-10-01T08:39:53.526Z",
+      "pr": 49,
+      "merged_head_sha": "1d0ff58f03caede69ce63e47934eef6f04d1a175",
+      "merge_commit_sha": "f66d11f8736a47b4dde3f10632fe891760d2f2ba",
+      "evidence": "https://github.com/lrnolivia/relay/pull/49; live ownership receipt and byte-preserved Mobile toolbar recovery, documentation-only change; admission passed.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T20:39:53.526Z"
     },
     {
       "id": "relay-brand-glyphs-20260930",
