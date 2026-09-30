@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T09:13:07.329Z",
+  "updated_at": "2026-09-30T10:18:56.013Z",
   "legacy_branches": [
     "control",
     "main",
@@ -40,6 +40,28 @@
       "evidence": "https://github.com/lrnolivia/loew-runner/pull/32",
       "work_accounted": true,
       "completed_at": "2026-09-30T09:13:07.329Z"
+    },
+    {
+      "id": "field-canvas-promotion-docs-20260930",
+      "owner": "01a0f1bf-3464-7b61-a3ac-f5d494bf7ef3",
+      "branch": "loew-runner/field-preview-closeout-20260930",
+      "paths": [
+        "assignments/field-repo-cleanup-reorg.json",
+        "docs/field/reorganization/CANVAS_PROMOTION_RECEIPT_20260930.md",
+        "docs/field/reorganization/EXECUTION_CHECKPOINT_20260930.md",
+        "docs/field/reorganization/PUBLICATION_HANDOFF_20260930.md"
+      ],
+      "resources": [
+        "field-reorganization-records"
+      ],
+      "goal": "Persist verified Field Canvas merge and exact Preview evidence",
+      "acceptance": "Exact merged/deployed identities and passed Registry/Preview results are durable; older blocker snapshot superseded without touching infrastructure code",
+      "next_action": "Repair missed documentation admission: admit correct branch, rename existing PR #33 branch without history rewrite, rerun exact ownership gate, then merge verified receipt.",
+      "base_sha": "dee9cd40d3555dab30f35661fb914f82bcd1083f",
+      "state": "active",
+      "created_at": "2026-09-30T10:18:56.013Z",
+      "updated_at": "2026-09-30T10:18:56.013Z",
+      "lease_until": "2026-09-30T22:18:56.013Z"
     }
   ]
 }
