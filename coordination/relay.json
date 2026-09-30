@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T23:30:52.618Z",
+  "updated_at": "2026-09-30T23:32:05.259Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -384,8 +384,8 @@
       "id": "relay-1.9-skills-runtime-creative-20260930",
       "owner": "relay-1.9-skills-runtime-creative-20260930",
       "goal": "Ship Relay 1.9 as the skills-runtime and creative-intelligence release: add a first-class relay.SKILLS system that discovers, validates, versions, resolves and loads portable expertise on demand, then use it to make Relay substantially stronger at aesthetic direction, interaction/flow, motion, platform-native UI craft and performance across web, macOS, Windows, Android and Linux/GNOME while expanding its engineering, GitHub and Cloudflare expertise without bloating the permanent MCP/tool surface.",
-      "acceptance": "Release-facing metadata/docs identify Relay 1.9.0. Introduce a first-class skills registry/runtime with stable catalog/search/read/resolve/install-or-vendor/update/audit behavior and a manifest that records id/name/version/source, Relay-authored vs licensed-upstream vs private-project origin, license/provenance/source URL or repository+revision, integrity/hash, tags, dependencies, required/optional MCP capabilities, supported platforms, compatibility and update policy. Portable SKILL.md bundles may include references/scripts/assets, but untrusted executable content never gains ambient authority; validation, path containment, size/context budgets and dependency/capability checks fail closed. Skills are selected and loaded just-in-time from task intent/capability requirements rather than injected wholesale; resolution is deterministic/explainable and can report why a skill was chosen, rejected or unavailable. Add an upstream ingestion policy/pipeline that license-audits and pins redistributable skills instead of copying proprietary installed skills; preserve attribution and make update drift auditable. Creative priority packs cover aesthetic/art direction and anti-slop judgment, information architecture and interaction flow, design systems/tokens/components, motion/animation/microinteraction, visual-reference analysis and visual QA, plus platform-native guidance for web, macOS/SwiftUI, Windows/WinUI, Android/Material and Linux/GNOME/GTK/libadwaita. Figma-bound skills may orchestrate the real Figma MCP when present but must declare that dependency and degrade cleanly when absent; Relay does not counterfeit external tools. Performance/optimization is co-equal with creative quality: packs cover asset/image/font budgets, animation/compositor discipline, JS/CSS/runtime cost, rendering/hydration, network/cache/CDN strategy, Core Web Vitals or platform-equivalent profiling, and performance-aware visual effects; aesthetically ambitious output must carry explicit performance checks/budgets rather than disabling effects by default. Supporting packs cover build/frontend engineering, research/source-driven development, documentation, release engineering, testing/QA, accessibility and security; these are lower product priority for the current solo workflow but must provide a safe production baseline and be composable with creative packs. Expand GitHub skills around branch/PR/check/release/repository workflows and Cloudflare skills around Workers, builds/deployments, bindings, Access, cache/CDN/R2/browser/evidence flows, always reusing Relay's bounded SOURCE/CLOUD mutation primitives and exact-head/readback safety rather than bypassing them. Provide project-private skill overlays so Terra Prime/Field/other loew doctrine can extend general skills without forking upstream bundles. Add tests for manifest validation, provenance/license policy, deterministic resolution, JIT context limits, dependency/tool gating, hostile/pathological bundles, update/version drift and representative cross-pack composition. Existing Relay 1.8 contextual UI/progress contracts remain compatible. No giant prompt dump, no one-tool-per-skill explosion, no new standing credentials. Required install/tests, exact-head admission, release verification and durable 1.9 completion receipt must pass.",
-      "next_action": "Begin only after Relay 1.8 is merged or its skill-facing contracts are stable enough not to collide. Phase A: specify the skill manifest, provenance/license model, trust boundaries, resolver and JIT context budget. Phase B: implement registry/read/resolve/audit with a tiny MCP surface and representative fixture skills. Phase C: seed the high-priority Creative pack (aesthetic, flow, motion, visual QA, performance) plus platform adapters for web/macOS/Windows/Android/GNOME and Figma dependency bindings. Phase D: add build/research/docs/release/testing/accessibility/security plus GitHub and Cloudflare operational packs. Phase E: add upstream import/update auditing, project-private overlays, cross-pack composition tests, docs and 1.9 release verification. Treat public upstream candidates such as Impeccable/MengTo-style design skill libraries only as candidates until their exact license/provenance is verified at import time.",
+      "acceptance": "Relay 1.9 is complete when its patch train ships:\n\n- relay.SKILLS: deterministic JIT resolution, bounded context, provenance/license/integrity metadata, capability gating, project-private overlays, safe upstream audit/update behavior, and composable creative/platform/performance/GitHub/Cloudflare packs. Creative coverage includes aesthetic direction, flow/IA, motion, visual QA, optimization, web, macOS, Windows, Android and GNOME. Figma-bound skills use the real dependency when present.\n- canonical assignment amendments for queued/claimed work with stable identity/ownership, immutable claimed branch/base identity, CAS/readback, conflict-safe scope changes and bounded who/when/what/why history. Planning skills use amend rather than hand-editing state.\n- findings-ledger routing: classify adopt/defer/reject/supersede, route adopted findings into the best existing assignment when safe, otherwise create a deliberate successor, and keep RFS linkage/status current. The ledger is planning input, not automatic backlog.\n- low-overhead durable resume checkpoints derived from canonical evidence: assignment/branch/base/head, changed paths, commits, PR/check/deploy stage, last successful action, blocker/wait state, next action, QA context, ledger refs and exact evidence identities. Dedupe unchanged state and expose a latest-valid resume contract.\n- universal meaningful x.x.# patch cadence: test/admit exact source, merge, deploy if applicable, verify runtime/readback, refresh affected integrations, refresh consuming client when needed, verify the new surface, then continue from canonical state.\n- file/document/context/request-size ceilings never block valid work. Automatically switch to patch/edit, append, bounded chunks, indexed/sharded logical documents and deterministic reassembly while preserving ownership, provenance and exact-SHA/CAS safety.\n- Relay 1.8 UI compatibility: human headline + short description, technical detail subordinate, specific QA requests, and live previews preferred when viable with exact identity.\n\nTests cover amendment safety/history/conflicts, ledger routing, checkpoints/resume, size-safe transport, skill provenance/resolution/tool gating, composition and UI/QA contracts. No parallel state store, giant permanent prompt dump, one-tool-per-skill explosion or new standing credentials.",
+      "next_action": "Verify this amend via readback/history and queue reconciliation. Then split remaining 1.9 work into clean patch successors. Start Relay 1.9.2 with scalable SOURCE patch/edit/append/chunk transport and exact-SHA/CAS/readback; ship, refresh tools, then continue with resume checkpoints and skills/planning/creative slices.",
       "paths": [
         "packages/skills/",
         "skills/",
@@ -427,7 +427,48 @@
         "relay-project-skill-overlays"
       ],
       "state": "claimed",
-      "created_at": "2026-09-30T22:12:36.691Z"
+      "created_at": "2026-09-30T22:12:36.691Z",
+      "task_class": "architecture",
+      "ledger_refs": [
+        "RFS-018",
+        "RFS-019",
+        "RFS-020",
+        "RFS-021",
+        "RFS-022"
+      ],
+      "updated_at": "2026-09-30T23:32:05.259Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-09-30T23:32:05.259Z",
+          "by": "relay-1.9-skills-runtime-creative-20260930",
+          "reason": "Verify the 1.9.1 amend flow from the refreshed consumer and fold resume checkpoints, patch cadence, and size-safe transport into the canonical 1.9 roadmap.",
+          "fields": [
+            "acceptance",
+            "next_action",
+            "task_class",
+            "ledger_refs"
+          ],
+          "before": {
+            "acceptance": "Release metadata/docs identify Relay 1.9.0. Add first-class relay.SKILLS registry/runtime with deterministic JIT resolution, provenance/license/integrity metadata, capability gating, bounded context, project-private overlays, and creative/platform/performance packs for web, macOS, Windows, Android and GNOME plus safe GitHub/Cloudflare operational expertise. Add a canonical Runner amendment transaction for queued and claimed assignments. Amendments must preserve stable assignment identity and ownership, use expected-record/CAS + readback, record who/when/what changed and why, reject stale re...",
+            "next_action": "Relay 1.9.1 is merged and deployed from PR #55 exact merge de6aee58153b224bd8dd74d564dc21ab950c50dd as Worker v49 e8748187-4830-4cb8-8aa6-9dc379fc2e9a at 100%. Refresh/reload Relay tools and reopen/refresh ChatGPT so the client discovers the new Runner amend schema. First refreshed-session action: verify amend from the consumer side by folding RFS-020/RFS-021/RFS-022 and patch-cadence/resumability acceptance into the roadmap, then account remaining 1.9 intent into clean x.x.# successor assignments/branches rather than continuing on the merged 1.9.1 branch. Next implementation slice: scalabl...",
+            "task_class": null,
+            "ledger_refs": null
+          },
+          "after": {
+            "acceptance": "Relay 1.9 is complete when its patch train ships:\n\n- relay.SKILLS: deterministic JIT resolution, bounded context, provenance/license/integrity metadata, capability gating, project-private overlays, safe upstream audit/update behavior, and composable creative/platform/performance/GitHub/Cloudflare packs. Creative coverage includes aesthetic direction, flow/IA, motion, visual QA, optimization, web, macOS, Windows, Android and GNOME. Figma-bound skills use the real dependency when present.\n- canonical assignment amendments for queued/claimed work with stable identity/ownership, immutable claim...",
+            "next_action": "Verify this amend via readback/history and queue reconciliation. Then split remaining 1.9 work into clean patch successors. Start Relay 1.9.2 with scalable SOURCE patch/edit/append/chunk transport and exact-SHA/CAS/readback; ship, refresh tools, then continue with resume checkpoints and skills/planning/creative slices.",
+            "task_class": "architecture",
+            "ledger_refs": [
+              "RFS-018",
+              "RFS-019",
+              "RFS-020",
+              "RFS-021",
+              "RFS-022"
+            ]
+          }
+        }
+      ]
     },
     {
       "id": "relay-findings-suggestions-20260930",
@@ -1419,13 +1460,53 @@
         "relay-tool-refresh-cycle"
       ],
       "goal": "Ship Relay 1.9 as the skills-runtime and creative-intelligence release, including a first-class assignment-amendment workflow and planning skills that use the findings ledger to route worthwhile discoveries into the right existing or future assignment instead of leaving them as inert notes or spawning unnecessary parallel work.",
-      "acceptance": "Release metadata/docs identify Relay 1.9.0. Add first-class relay.SKILLS registry/runtime with deterministic JIT resolution, provenance/license/integrity metadata, capability gating, bounded context, project-private overlays, and creative/platform/performance packs for web, macOS, Windows, Android and GNOME plus safe GitHub/Cloudflare operational expertise. Add a canonical Runner amendment transaction for queued and claimed assignments. Amendments must preserve stable assignment identity and ownership, use expected-record/CAS + readback, record who/when/what changed and why, reject stale revisions, and enforce immutable fields where safety requires it (for example claimed branch/base identity). Supported amendment scope must include at minimum goal, acceptance, next_action, paths/resources and task-class/ledger linkage where those fields exist; path/resource changes remain conflict-checked against current ownership. Queue amendments must not require deleting/recreating the assignment. Claimed amendments must not silently replace branch/baseline or bypass admission. Expose amendment history/readback clearly enough for UI and agents to explain the current assignment versus prior intent.\n\nMake findings/suggestions an active planning input. Add a planning/coordination skill that instructs agents to scan relevant open RFS entries when shaping/rescoping work, classify each as adopt/defer/reject/supersede, place adopted findings into the most appropriate existing assignment through the canonical amendment flow when safe, otherwise create/link a deliberately classified successor, and update the RFS entry with assignment linkage/status. Do not treat the ledger as an automatic backlog or create duplicate assignments merely because a finding exists. Skills must know the amendment flow and prefer it over hand-editing coordination state.\n\nSystem-wide UI doctrine: inline cards use a direct human headline plus a short parsable description; exact technical details are one click away or subordinate small copy. Human-QA requests identify the exact surface/change, intended result, evidence/live-preview identity and 1–3 concrete checks rather than generic questions. Live interactive previews are the preferred human-review surface when viable; show health/expiry, preserve exact commit/deployment identity, support revive/refresh where bounded, and use screenshots primarily as durable evidence/fallback. Tests cover amendment safety/history/conflict handling, ledger→assignment routing behavior, skill resolution/provenance/tool gating, UI copy hierarchy, QA specificity and live-preview lifecycle. Existing 1.8 contracts stay compatible; no parallel state store, giant prompt dump, one-tool-per-skill explosion or new standing credentials.",
-      "next_action": "Relay 1.9.1 is merged and deployed from PR #55 exact merge de6aee58153b224bd8dd74d564dc21ab950c50dd as Worker v49 e8748187-4830-4cb8-8aa6-9dc379fc2e9a at 100%. Refresh/reload Relay tools and reopen/refresh ChatGPT so the client discovers the new Runner amend schema. First refreshed-session action: verify amend from the consumer side by folding RFS-020/RFS-021/RFS-022 and patch-cadence/resumability acceptance into the roadmap, then account remaining 1.9 intent into clean x.x.# successor assignments/branches rather than continuing on the merged 1.9.1 branch. Next implementation slice: scalable relay.SOURCE patch/edit/chunk/append transport so size limits never block canonical work.",
+      "acceptance": "Relay 1.9 is complete when its patch train ships:\n\n- relay.SKILLS: deterministic JIT resolution, bounded context, provenance/license/integrity metadata, capability gating, project-private overlays, safe upstream audit/update behavior, and composable creative/platform/performance/GitHub/Cloudflare packs. Creative coverage includes aesthetic direction, flow/IA, motion, visual QA, optimization, web, macOS, Windows, Android and GNOME. Figma-bound skills use the real dependency when present.\n- canonical assignment amendments for queued/claimed work with stable identity/ownership, immutable claimed branch/base identity, CAS/readback, conflict-safe scope changes and bounded who/when/what/why history. Planning skills use amend rather than hand-editing state.\n- findings-ledger routing: classify adopt/defer/reject/supersede, route adopted findings into the best existing assignment when safe, otherwise create a deliberate successor, and keep RFS linkage/status current. The ledger is planning input, not automatic backlog.\n- low-overhead durable resume checkpoints derived from canonical evidence: assignment/branch/base/head, changed paths, commits, PR/check/deploy stage, last successful action, blocker/wait state, next action, QA context, ledger refs and exact evidence identities. Dedupe unchanged state and expose a latest-valid resume contract.\n- universal meaningful x.x.# patch cadence: test/admit exact source, merge, deploy if applicable, verify runtime/readback, refresh affected integrations, refresh consuming client when needed, verify the new surface, then continue from canonical state.\n- file/document/context/request-size ceilings never block valid work. Automatically switch to patch/edit, append, bounded chunks, indexed/sharded logical documents and deterministic reassembly while preserving ownership, provenance and exact-SHA/CAS safety.\n- Relay 1.8 UI compatibility: human headline + short description, technical detail subordinate, specific QA requests, and live previews preferred when viable with exact identity.\n\nTests cover amendment safety/history/conflicts, ledger routing, checkpoints/resume, size-safe transport, skill provenance/resolution/tool gating, composition and UI/QA contracts. No parallel state store, giant permanent prompt dump, one-tool-per-skill explosion or new standing credentials.",
+      "next_action": "Verify this amend via readback/history and queue reconciliation. Then split remaining 1.9 work into clean patch successors. Start Relay 1.9.2 with scalable SOURCE patch/edit/append/chunk transport and exact-SHA/CAS/readback; ship, refresh tools, then continue with resume checkpoints and skills/planning/creative slices.",
       "base_sha": "47fb7b4f73afc3407977503fb706c4935711aee5",
       "state": "active",
       "created_at": "2026-09-30T22:49:27.571Z",
-      "updated_at": "2026-09-30T23:19:00.712Z",
-      "lease_until": "2026-10-01T11:19:00.712Z"
+      "updated_at": "2026-09-30T23:32:05.259Z",
+      "lease_until": "2026-10-01T11:32:05.259Z",
+      "task_class": "architecture",
+      "ledger_refs": [
+        "RFS-018",
+        "RFS-019",
+        "RFS-020",
+        "RFS-021",
+        "RFS-022"
+      ],
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-09-30T23:32:05.259Z",
+          "by": "relay-1.9-skills-runtime-creative-20260930",
+          "reason": "Verify the 1.9.1 amend flow from the refreshed consumer and fold resume checkpoints, patch cadence, and size-safe transport into the canonical 1.9 roadmap.",
+          "fields": [
+            "acceptance",
+            "next_action",
+            "task_class",
+            "ledger_refs"
+          ],
+          "before": {
+            "acceptance": "Release metadata/docs identify Relay 1.9.0. Add first-class relay.SKILLS registry/runtime with deterministic JIT resolution, provenance/license/integrity metadata, capability gating, bounded context, project-private overlays, and creative/platform/performance packs for web, macOS, Windows, Android and GNOME plus safe GitHub/Cloudflare operational expertise. Add a canonical Runner amendment transaction for queued and claimed assignments. Amendments must preserve stable assignment identity and ownership, use expected-record/CAS + readback, record who/when/what changed and why, reject stale re...",
+            "next_action": "Relay 1.9.1 is merged and deployed from PR #55 exact merge de6aee58153b224bd8dd74d564dc21ab950c50dd as Worker v49 e8748187-4830-4cb8-8aa6-9dc379fc2e9a at 100%. Refresh/reload Relay tools and reopen/refresh ChatGPT so the client discovers the new Runner amend schema. First refreshed-session action: verify amend from the consumer side by folding RFS-020/RFS-021/RFS-022 and patch-cadence/resumability acceptance into the roadmap, then account remaining 1.9 intent into clean x.x.# successor assignments/branches rather than continuing on the merged 1.9.1 branch. Next implementation slice: scalabl...",
+            "task_class": null,
+            "ledger_refs": null
+          },
+          "after": {
+            "acceptance": "Relay 1.9 is complete when its patch train ships:\n\n- relay.SKILLS: deterministic JIT resolution, bounded context, provenance/license/integrity metadata, capability gating, project-private overlays, safe upstream audit/update behavior, and composable creative/platform/performance/GitHub/Cloudflare packs. Creative coverage includes aesthetic direction, flow/IA, motion, visual QA, optimization, web, macOS, Windows, Android and GNOME. Figma-bound skills use the real dependency when present.\n- canonical assignment amendments for queued/claimed work with stable identity/ownership, immutable claim...",
+            "next_action": "Verify this amend via readback/history and queue reconciliation. Then split remaining 1.9 work into clean patch successors. Start Relay 1.9.2 with scalable SOURCE patch/edit/append/chunk transport and exact-SHA/CAS/readback; ship, refresh tools, then continue with resume checkpoints and skills/planning/creative slices.",
+            "task_class": "architecture",
+            "ledger_refs": [
+              "RFS-018",
+              "RFS-019",
+              "RFS-020",
+              "RFS-021",
+              "RFS-022"
+            ]
+          }
+        }
+      ]
     }
   ],
   "migrated_from": "loew-inspector"
