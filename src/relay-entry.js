@@ -3,6 +3,7 @@ import { callSourceLifecycleTool } from "./source-lifecycle.js";
 import { runnerCleanupTool, callRunnerCleanup, validateRunnerCleanupArguments } from "./runner-cleanup.js";
 import { cloudUploadTool, callCloudUpload, validateCloudUploadArguments } from "./cloud-upload.js";
 import { QA_SKILL_URI, qaSkillCatalogEntry, qaSkillResourceDescriptor, qaSkillResource } from "./qa-skill.js";
+import { LOEW_NAMING_SKILL_URI, loewNamingSkillCatalogEntry, loewNamingSkillResourceDescriptor, loewNamingSkillResource } from "./loew-naming-skill.js";
 
 export const RELAY_EXTENSION_VERSION = "1.6.0";
 
@@ -86,15 +87,17 @@ export function augmentToolList(tools) {
 }
 
 export function augmentResourceList(resources) {
-  const list = Array.isArray(resources) ? resources : [];
-  if (list.some(resource => resource?.uri === QA_SKILL_URI)) return list;
-  return [...list, qaSkillResourceDescriptor()];
+  const list = Array.isArray(resources) ? [...resources] : [];
+  if (!list.some(resource => resource?.uri === QA_SKILL_URI)) list.push(qaSkillResourceDescriptor());
+  if (!list.some(resource => resource?.uri === LOEW_NAMING_SKILL_URI)) list.push(loewNamingSkillResourceDescriptor());
+  return list;
 }
 
 export function augmentSkillList(skills) {
-  const list = Array.isArray(skills) ? skills : [];
-  if (list.some(skill => skill?.uri === QA_SKILL_URI)) return list;
-  return [...list, qaSkillCatalogEntry()];
+  const list = Array.isArray(skills) ? [...skills] : [];
+  if (!list.some(skill => skill?.uri === QA_SKILL_URI)) list.push(qaSkillCatalogEntry());
+  if (!list.some(skill => skill?.uri === LOEW_NAMING_SKILL_URI)) list.push(loewNamingSkillCatalogEntry());
+  return list;
 }
 
 function rpcResult(id, result, sourceHeaders) {
@@ -247,8 +250,9 @@ export default {
         if (payload?.result?.resources) payload.result.resources = augmentResourceList(payload.result.resources);
       });
     }
-    if (message.method === "resources/read" && message.params?.uri === QA_SKILL_URI && response.status === 200) {
-      return rpcResult(message.id ?? null, { contents: [qaSkillResource()] }, response.headers);
+    if (message.method === "resources/read" && response.status === 200) {
+      if (message.params?.uri === QA_SKILL_URI) return rpcResult(message.id ?? null, { contents: [qaSkillResource()] }, response.headers);
+      if (message.params?.uri === LOEW_NAMING_SKILL_URI) return rpcResult(message.id ?? null, { contents: [loewNamingSkillResource()] }, response.headers);
     }
     if (message.method === "skills/list") {
       return rewrite(response, payload => {
@@ -256,8 +260,9 @@ export default {
         if (payload?.result?.skills) payload.result.skills = augmentSkillList(payload.result.skills);
       });
     }
-    if (message.method === "skills/get" && message.params?.uri === QA_SKILL_URI && response.status === 200) {
-      return rpcResult(message.id ?? null, { skill: qaSkillCatalogEntry() }, response.headers);
+    if (message.method === "skills/get" && response.status === 200) {
+      if (message.params?.uri === QA_SKILL_URI) return rpcResult(message.id ?? null, { skill: qaSkillCatalogEntry() }, response.headers);
+      if (message.params?.uri === LOEW_NAMING_SKILL_URI) return rpcResult(message.id ?? null, { skill: loewNamingSkillCatalogEntry() }, response.headers);
     }
     if (message.method === "tools/list") {
       return rewrite(response, payload => {
