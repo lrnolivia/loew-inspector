@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T14:06:55.351Z",
+  "updated_at": "2026-09-30T14:07:00.575Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -142,6 +142,29 @@
       ],
       "state": "queued",
       "created_at": "2026-09-30T14:06:55.351Z"
+    },
+    {
+      "id": "relay-consolidation-b2-monorepo-import-20260930",
+      "owner": "relay-consolidation-b2-monorepo-import-20260930",
+      "goal": "Batch 2: import loew-runner code and history into lrnolivia/relay and establish the monorepo layout where runner and inspector are internal subsystems and night shift is a Relay feature.",
+      "acceptance": "Relay contains an implementation-ready monorepo layout with MCP/web apps plus runner and inspector subsystem packages; loew-runner source and meaningful Git history/provenance are preserved in the consolidation rather than copied as anonymous files; existing Inspector/Relay history remains intact from the repository rename; package/workspace/test/build boundaries are explicit; night shift is represented as a Relay feature/view, not another product; no production routing or old repository deletion occurs yet; exact source and history import are independently verifiable before Batch 3.",
+      "next_action": "Start only after Batch 1 is merged and verified. Import history/code first, then normalize package boundaries without rewriting provenance.",
+      "paths": [
+        "apps/",
+        "packages/",
+        "features/",
+        "package.json",
+        "README.md",
+        ".github/workflows/",
+        "docs/"
+      ],
+      "resources": [
+        "relay-monorepo",
+        "relay-runner-subsystem",
+        "relay-inspector-subsystem"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T14:07:00.575Z"
     }
   ],
   "claims": [
