@@ -205,3 +205,12 @@ test("canonical relay Worker identity is allowed before runtime cutover", async 
   assert.equal(f.uploads.length, 1);
   assert.equal(f.uploads[0].metadata.annotations["workers/repository_url"], "https://github.com/lrnolivia/relay");
 });
+
+test('upload includes multiline named imports and reexports', async () => {
+ const f = fixture({entry: 'export {\n value\n} from "./dep.js";\nexport default {};\n'});
+ const result = await uploadCloudSourceVersion(args, f.env, {github:f.github, cloud:f.cloud, rawUpload:f.rawUpload});
+ assert.ok(result.modules.includes('src/dep.js'));
+ const g = fixture({entry: 'import {\n value\n} from "./dep.js";\nexport default {value};\n'});
+ const imported = await uploadCloudSourceVersion(args,g.env,{github:g.github,cloud:g.cloud,rawUpload:g.rawUpload});
+ assert.ok(imported.modules.includes('src/dep.js'));
+});
