@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T22:02:48.872Z",
+  "updated_at": "2026-09-30T22:11:51.809Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -1128,7 +1128,8 @@
         "src/cloud.test.js",
         "src/cloud-upload.test.js",
         "src/runner-control.test.js",
-        "src/source.test.js"
+        "src/source.test.js",
+        "wrangler.jsonc"
       ],
       "resources": [
         "relay-1.7.5-release",
@@ -1144,12 +1145,12 @@
       ],
       "goal": "Ship Relay 1.7.5 as an independently deployable observed-progress backend release that gives Relay one canonical, evidence-backed answer to what is actually happening right now before the 1.8 UI lands. Also make the GitHub/Runner control-plane contract self-explanatory and move Cloud write authority toward canonical project registration so deployment permission is explicit, bounded and discoverable.",
       "acceptance": "Release-facing metadata identifies Relay 1.7.5 and it can merge/deploy independently while 1.8 continues on its UI-only scope. Add a canonical observed-progress model/event receipt stream reconciled from Runner + GitHub + Cloudflare evidence, not claim state/next_action/leases. Expose canonical stage, latest concrete event, last meaningful progress timestamp, worker heartbeat separately from external-system activity, exact source/base/head/branch/PR/check/merge/version/deployment/runtime identities, waiting/blocker reason and recovery action. Distinguish reserved-but-idle, working, waiting-on-external-system, waiting-for-human, blocked, possibly-stale, officially-stale/unresponsive, failed, rolled-back and complete. Implement 5m heartbeat target, 10m possibly-stale evaluation and 20m official-stale default, deduping unchanged observations. Classify coordination drift including absorbed/superseded intent, held/umbrella reservations, and orphan/unregistered branches without presenting them as active execution. Expose a stable backwards-compatible MCP/API consumer contract for 1.8. Runner claim semantics must explicitly document/test that base_sha is resolved server-side from live default-branch state and is not caller input; generic relay.SOURCE direct-default-branch writes remain forbidden with errors directing coordination writes through relay.RUNNER; GitHub-App-only coordination writes must work without RELAY_GITHUB_TOKEN. Cloud control must preserve explicit safety while adding canonical project-registration mapping for Cloudflare Worker identity/write authority. Preserve current live write allowance for relay, field, loewfi, loewtorials and thetake as compatibility/fail-closed migration behavior; do not use wildcard authority or widen credentials. Non-Worker projects such as gamebridge, loew-shell and rtxforge must not become deployable merely by being registered. No 1.8 UI files may be changed. Tests cover observed progress, external waits, heartbeat/stale transitions, deduping, exact identity propagation, drift classification, consumer contract, server-derived base_sha, GitHub-App-only coordination writes and project-scoped Cloud authorization. Required install/tests, exact-head admission, merge, exact-source deployment, runtime readback and durable completion receipt must pass.",
-      "next_action": "Implement additive observed-progress tools and project-aware Cloud authorization. Add relay_runner_progress as a read-only evidence-derived snapshot with canonical stage/freshness/exact identities; keep existing Runner tools compatible. Add project-cloud resolver/validator and new project-aware Cloud deploy surface layered over the current env allowlist; keep legacy script deploy/upload tools working. Preserve server-derived base_sha and SOURCE main-write prohibition, improve descriptions/errors, add project cloud metadata for relay/field/loewfi/loewtorials/thetake, tests, release handoff, then PR/merge/deploy exact source.",
+      "next_action": "Finish 1.7.5 with observed-progress tools, project-aware Cloud authorization, durable five-Worker runtime allowlist in wrangler.jsonc, server-derived base_sha/source-guard clarity, tests and release handoff. Then preflight exact scope, open draft PR, satisfy required checks, merge, exact-source upload/deploy, runtime readback and completion receipt.",
       "base_sha": "5eba775bedfb13673bb3082f130cb30980a31c02",
       "state": "active",
       "created_at": "2026-09-30T21:59:29.730Z",
-      "updated_at": "2026-09-30T22:02:48.872Z",
-      "lease_until": "2026-10-01T10:02:48.872Z"
+      "updated_at": "2026-09-30T22:11:51.809Z",
+      "lease_until": "2026-10-01T10:11:51.809Z"
     }
   ],
   "migrated_from": "loew-inspector"
