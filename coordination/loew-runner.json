@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T13:06:10.165Z",
+  "updated_at": "2026-09-30T13:09:37.092Z",
   "legacy_branches": [
     "control",
     "main",
@@ -338,6 +338,7 @@
       "paths": [
         "dashboard/index.html",
         "dashboard/operator.js",
+        "dashboard/operator-projects.js",
         "dashboard/operator.css",
         "dashboard/qa.js",
         "src/cloudflare-worker.mjs",
@@ -350,12 +351,12 @@
       ],
       "goal": "Replace the developer-dashboard flow with a novice-friendly operator experience for QA, projects, and tasks while preserving existing Runner capabilities.",
       "acceptance": "Runner has three clear jobs: Today, Projects, Review. The same dashboard is not repeated across surfaces; Review is an inbox that opens directly into full-screen QA instead of rendering technical evidence below; Projects expose current/queued work in plain language; worker actions are contextual and unsupported controls are not shown; technical metadata is progressive disclosure; existing safety and QA persistence remain authoritative.",
-      "next_action": "Build the new operator shell from current main, add a read-only project/work projection endpoint, wire Review items directly to full-screen QA, and verify desktop/mobile plus action behavior before promotion.",
+      "next_action": "Replace the old dashboard presentation with Today / Projects / Review; keep project registry reads client-side for this pass, make worker actions contextual with persistent feedback, and make Review a true inbox that opens full-screen QA.",
       "base_sha": "700b69946b9705251597bce611e13fa9ce699a01",
       "state": "active",
       "created_at": "2026-09-30T13:04:26.421Z",
-      "updated_at": "2026-09-30T13:04:26.421Z",
-      "lease_until": "2026-10-01T01:04:26.421Z"
+      "updated_at": "2026-09-30T13:09:37.092Z",
+      "lease_until": "2026-10-01T01:09:37.092Z"
     }
   ]
 }
