@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T22:13:04.211Z",
+  "updated_at": "2026-09-30T22:19:08.436Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -1198,10 +1198,16 @@
       "acceptance": "Release-facing metadata identifies Relay 1.7.5 and it can merge/deploy independently while 1.8 continues on its UI-only scope. Add a canonical observed-progress model/event receipt stream reconciled from Runner + GitHub + Cloudflare evidence, not claim state/next_action/leases. Expose canonical stage, latest concrete event, last meaningful progress timestamp, worker heartbeat separately from external-system activity, exact source/base/head/branch/PR/check/merge/version/deployment/runtime identities, waiting/blocker reason and recovery action. Distinguish reserved-but-idle, working, waiting-on-external-system, waiting-for-human, blocked, possibly-stale, officially-stale/unresponsive, failed, rolled-back and complete. Implement 5m heartbeat target, 10m possibly-stale evaluation and 20m official-stale default, deduping unchanged observations. Classify coordination drift including absorbed/superseded intent, held/umbrella reservations, and orphan/unregistered branches without presenting them as active execution. Expose a stable backwards-compatible MCP/API consumer contract for 1.8. Runner claim semantics must explicitly document/test that base_sha is resolved server-side from live default-branch state and is not caller input; generic relay.SOURCE direct-default-branch writes remain forbidden with errors directing coordination writes through relay.RUNNER; GitHub-App-only coordination writes must work without RELAY_GITHUB_TOKEN. Cloud control must preserve explicit safety while adding canonical project-registration mapping for Cloudflare Worker identity/write authority. Preserve current live write allowance for relay, field, loewfi, loewtorials and thetake as compatibility/fail-closed migration behavior; do not use wildcard authority or widen credentials. Non-Worker projects such as gamebridge, loew-shell and rtxforge must not become deployable merely by being registered. No 1.8 UI files may be changed. Tests cover observed progress, external waits, heartbeat/stale transitions, deduping, exact identity propagation, drift classification, consumer contract, server-derived base_sha, GitHub-App-only coordination writes and project-scoped Cloud authorization. Required install/tests, exact-head admission, merge, exact-source deployment, runtime readback and durable completion receipt must pass.",
       "next_action": "Finish 1.7.5 with observed-progress tools, project-aware Cloud authorization, durable five-Worker runtime allowlist in wrangler.jsonc, server-derived base_sha/source-guard clarity, tests and release handoff. Then preflight exact scope, open draft PR, satisfy required checks, merge, exact-source upload/deploy, runtime readback and completion receipt.",
       "base_sha": "5eba775bedfb13673bb3082f130cb30980a31c02",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T21:59:29.730Z",
-      "updated_at": "2026-09-30T22:13:04.211Z",
-      "lease_until": "2026-10-01T10:13:04.211Z"
+      "updated_at": "2026-09-30T22:19:08.436Z",
+      "lease_until": "2026-10-01T10:19:08.436Z",
+      "pr": 52,
+      "merged_head_sha": "499443364d51982980617bfd9495f3057761e543",
+      "merge_commit_sha": "b047eac596cc689e46cfb3bf9139f6342861fb8c",
+      "evidence": "Relay 1.7.5 shipped independently of 1.8. Exact PR head 499443364d51982980617bfd9495f3057761e543 passed Runner coordination admission and full workspace tests/build, then PR #52 squash-merged to b047eac596cc689e46cfb3bf9139f6342861fb8c. Exact merged source upload produced Cloudflare Worker v47 version 7aa03c78-60d3-4bbb-9c7c-75aa486a4c9c and deployment 34c1aa37-5c38-4693-8a02-1ab2728d4563 at 100%. Runtime readback reports Relay 1.7.5, GitHub App source auth with write_enabled true and no legacy token, Cloud authorization_mode project-registration+runtime-allowlist, write_scripts relay/field/loewfi/loewtorials/thetake, and production annotations bound to exact merge b047eac596cc689e46cfb3bf9139f6342861fb8c. Source main readback was exactly b047eac596cc689e46cfb3bf9139f6342861fb8c before this completion receipt. Release handoff docs/relay/RELAY_1_7_5_RELEASE.md documents the observed-progress consumer contract for 1.8.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T22:19:08.436Z"
     }
   ],
   "migrated_from": "loew-inspector"
