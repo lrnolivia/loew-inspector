@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T23:34:11.812Z",
+  "updated_at": "2026-09-30T23:34:16.534Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -619,6 +619,33 @@
       ],
       "state": "queued",
       "created_at": "2026-09-30T23:34:11.812Z"
+    },
+    {
+      "id": "relay-1.9.3-resume-checkpoints-20260930",
+      "owner": "relay-1.9.3-resume-checkpoints-20260930",
+      "goal": "Ship Relay 1.9.3 as the low-overhead durable resume/checkpoint release for interrupted workers and chats.",
+      "acceptance": "Derive compact checkpoints from canonical assignment/source/PR/check/deploy/evidence state at meaningful transitions and bounded cadence; include exact identities, current stage, last successful action, blocker/wait state, next action, QA context and ledger refs; dedupe unchanged snapshots; expose latest-valid resume/read contract; no model-authored long handoff required. Tests cover dedupe, stale evidence, external waits, exact identity and interrupted resume.",
+      "next_action": "Begin only after 1.9.2 ships and client refresh is verified.",
+      "paths": [
+        "contracts/resume/",
+        "src/resume-checkpoints.js",
+        "src/resume-checkpoints.test.js",
+        "docs/relay/RELAY_1_9_3_RELEASE.md"
+      ],
+      "resources": [
+        "relay-1.9.3-release",
+        "relay-resume-checkpoints",
+        "relay-passive-snapshots",
+        "relay-worker-resumability"
+      ],
+      "task_class": "architecture",
+      "ledger_refs": [
+        "RFS-006",
+        "RFS-020",
+        "RFS-021"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T23:34:16.534Z"
     }
   ],
   "claims": [
