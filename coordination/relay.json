@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T22:49:27.571Z",
+  "updated_at": "2026-09-30T22:51:57.497Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -445,6 +445,27 @@
       ],
       "state": "claimed",
       "created_at": "2026-09-30T22:20:03.641Z"
+    },
+    {
+      "id": "relay-1.8.1-icon-hotfix-20260930",
+      "owner": "relay-1.8.1-icon-hotfix-20260930",
+      "goal": "Ship the immediate post-1.8 design-only icon/illustration hotfix without reopening Relay 1.8 architecture or maintenance work.",
+      "acceptance": "Consume docs/relay/RELAY_1_8_ICON_HOTFIX_HANDOFF.md from the shipped 1.8 release. Finalize only approved Today and lowercase night shift marks/icons plus any replacement Relay illustrations that materially improve the UI. Preserve approved Relay/Runner/Inspector geometry exactly. Keep Terra Prime restraint and responsive/reduced-motion behavior. Do not absorb or modify the separate held MCP icon metadata PR #47; avoid apps/mcp/index.js, apps/mcp/branding.js and test/mcp-branding.test.mjs. Do not change observed-progress, Runner, Source, Cloud, authorization, or coordination architecture. Treat this as task class design.",
+      "next_action": "After Relay 1.8 completes, claim a fresh design-only branch from then-current main, review the 1.8 icon handoff and approved assets, implement only the visual hotfix, run responsive rendering checks, merge through Relay, deploy exact source if runtime assets changed, and close the assignment.",
+      "paths": [
+        "apps/web/public/brand/",
+        "packages/shared-ui/glyphs.js",
+        "apps/web/public/operator-1.8.css",
+        "docs/relay/RELAY_1_8_1_ICON_HOTFIX.md"
+      ],
+      "resources": [
+        "relay-design",
+        "relay-today-icon",
+        "relay-night-shift-icon",
+        "relay-illustration-refresh"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T22:51:57.497Z"
     }
   ],
   "claims": [
