@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T20:50:46.277Z",
+  "updated_at": "2026-09-30T21:07:17.090Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -951,6 +951,7 @@
         "package.json",
         "package-lock.json",
         "src/relay-entry.js",
+        "src/relay-entry.test.js",
         ".superdesign/",
         ".github/workflows/relay-production-smoke.yml"
       ],
@@ -963,12 +964,12 @@
       ],
       "goal": "Ship Relay 1.7 as the unified product identity release: Relay remains the sole product/control plane, while Runner and Inspector are restored as named, visible first-class tools/features inside Relay with their own approved icons and recognizable product presence.",
       "acceptance": "Canonical service/version metadata and release-facing UI/docs identify the resulting release as Relay 1.7.0. Relay keeps the official loop as the parent/product mark. Runner is visibly named and uses the approved dispatch/queue mark on coordination, project, queue, worker and execution-state surfaces. Inspector is visibly named and uses the approved packets/layers mark on inspection, visual QA, screenshot/evidence, browser-interaction and verification surfaces. Relay navigation and relevant headers/cards expose Runner and Inspector as recognizable tools rather than hiding them behind generic workflow nouns. Source, Cloud and Night Shift stay functional and are not force-branded for symmetry. Standalone Runner/Inspector products, repos, stores and domains remain retired; no runner.loew.fi or inspector.loew.fi resurrection. Durable state, evidence and control ownership remain inside Relay. Existing MCP/API clients remain compatible: technical namespace changes must be additive/aliased or deferred rather than breaking current tools. Preserve the exact approved official icon geometry/spacing. Reuse useful work from the held relay-brand-glyphs branch where safe. Build/tests, exact-head admission, responsive web/MCP UI checks and authenticated production smoke must pass before deployment.",
-      "next_action": "Reuse frozen useful icon/glyph/design diff from superseded brand pass in separate admitted checkout. Preserve held MCP icon metadata assignment untouched. Implement visible Runner/Inspector tools, version 1.7.0, stronger buttons, genuine smaller project icons, animated glyphs, five-color bar and width/height responsiveness; test exact head, draft/ready/merge through Relay, authenticate smoke and deploy/readback.",
+      "next_action": "Update the stale Relay extension version assertion in src/relay-entry.test.js from 1.6.0 to 1.7.0 on the existing branch, then merge PR #50 through Relay, deploy the exact merged source, read back production, and complete the same assignment.",
       "base_sha": "d065ed9c531acfa8692d73eef75ca7eeea16e281",
       "state": "active",
       "created_at": "2026-09-30T20:50:46.277Z",
-      "updated_at": "2026-09-30T20:50:46.277Z",
-      "lease_until": "2026-10-01T08:50:46.277Z"
+      "updated_at": "2026-09-30T21:07:17.090Z",
+      "lease_until": "2026-10-01T09:07:17.090Z"
     }
   ],
   "migrated_from": "loew-inspector"
