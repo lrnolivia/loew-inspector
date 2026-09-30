@@ -1,0 +1,7 @@
+{
+  "name": "@relay/web",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Reserved web app boundary; current operator and QA implementation is imported with Runner."
+}

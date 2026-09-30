@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#151412">
+  <title>loew.fi runner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Momo+Trust+Display&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/operator.css">
+  <link rel="stylesheet" href="/qa.css">
+</head>
+<body>
+  <header class="operator-topbar">
+    <div class="operator-brand">
+      <strong>runner</strong>
+      <span>project control</span>
+    </div>
+
+    <nav class="operator-nav" aria-label="Runner">
+      <button type="button" data-nav="today">Today</button>
+      <button type="button" data-nav="projects">Projects</button>
+      <button type="button" data-nav="review">Review</button>
+    </nav>
+
+    <div id="operator-connection" class="operator-connection" data-tone="quiet" aria-live="polite">Connecting…</div>
+  </header>
+
+  <main class="operator-shell">
+    <section class="operator-page" data-page="today">
+      <header class="page-heading">
+        <h1>Today</h1>
+        <p>What needs you, what’s moving, and nothing else.</p>
+      </header>
+
+      <section class="operator-section">
+        <h2>Needs you</h2>
+        <div id="today-attention"></div>
+      </section>
+
+      <section class="operator-section">
+        <div class="section-heading">
+          <h2>Work happening now</h2>
+          <span>Across your projects</span>
+        </div>
+        <div id="today-work"></div>
+      </section>
+
+      <section class="operator-section">
+        <div class="section-heading">
+          <h2>Automatic checks</h2>
+          <span>Runner watches these for you</span>
+        </div>
+        <div id="today-automations"></div>
+      </section>
+    </section>
+
+    <section class="operator-page" data-page="projects" hidden>
+      <header class="page-heading">
+        <h1>Projects</h1>
+        <p>See what each project is doing now and what comes next.</p>
+      </header>
+
+      <div class="project-layout">
+        <aside id="project-list" class="project-list" aria-label="Projects"></aside>
+        <section id="project-detail" class="project-detail" aria-live="polite">
+          <div class="operator-loading">Opening projects…</div>
+        </section>
+      </div>
+    </section>
+
+    <section class="operator-page" data-page="review" hidden>
+      <header class="page-heading review-heading">
+        <div>
+          <h1>Review</h1>
+          <p>Open a screen, answer a few questions, and move on.</p>
+        </div>
+        <strong id="review-count"></strong>
+      </header>
+
+      <div id="review-filters" class="review-filters" role="group" aria-label="Review filter">
+        <button type="button" class="active" data-review-mode="needs">Needs review</button>
+        <button type="button" data-review-mode="all">All</button>
+      </div>
+
+      <div id="review-list" class="review-list" aria-live="polite">
+        <div class="operator-loading">Checking what needs your eyes…</div>
+      </div>
+    </section>
+  </main>
+
+  <div id="operator-toast" class="operator-toast" data-tone="good" role="status" aria-live="polite" hidden></div>
+
+  <script type="module" src="/operator.js"></script>
+</body>
+</html>
