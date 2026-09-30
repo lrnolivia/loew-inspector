@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T10:21:55.165Z",
+  "updated_at": "2026-09-30T10:22:13.020Z",
   "legacy_branches": [
     "control",
     "main",
@@ -58,10 +58,16 @@
       "acceptance": "Exact merged/deployed identities and passed Registry/Preview results are durable; older blocker snapshot superseded without touching infrastructure code",
       "next_action": "Repair missed documentation admission: admit correct branch, rename existing PR #33 branch without history rewrite, rerun exact ownership gate, then merge verified receipt.",
       "base_sha": "dee9cd40d3555dab30f35661fb914f82bcd1083f",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T10:18:56.013Z",
-      "updated_at": "2026-09-30T10:18:56.013Z",
-      "lease_until": "2026-09-30T22:18:56.013Z"
+      "updated_at": "2026-09-30T10:22:13.020Z",
+      "lease_until": "2026-09-30T22:22:13.020Z",
+      "pr": 34,
+      "merged_head_sha": "67f4701b4e844599b547314605a54f6d9318cd5e",
+      "merge_commit_sha": "9689fef445e214d6e033cf9d68999544562aabf1",
+      "evidence": "https://github.com/lrnolivia/loew-runner/pull/34; Canvas promotion receipt and assignment/checkpoints merged as 9689fef445e214d6e033cf9d68999544562aabf1. Source/runtime identities preserved, no infrastructure implementation changes.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T10:22:13.020Z"
     },
     {
       "id": "loew-runner-relay-closeout-20260930",
