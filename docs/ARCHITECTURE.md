@@ -197,7 +197,7 @@ The first implementation is npm/Node because field is the pilot.
 
 ## Dashboard
 
-Routine Runner operation is headless. The dashboard is a maintenance/admin surface for configuration, recovery, and explicit intervention.
+The approved Runner 3.0 direction is a project-first human control plane. The shipped 0.6 dashboard remains worker-first until migration. Scheduled/headless automations stay a subsystem under Infrastructure; first-class Team identities remain separate. See `STATE.md` for verified implementation and `RUNNER_3_0_HUMAN_CONTROL_PLANE.md` for accepted product scope.
 
 It should eventually support:
 
