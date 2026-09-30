@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T12:50:53.986Z",
+  "updated_at": "2026-09-30T12:53:23.593Z",
   "legacy_branches": [
     "control",
     "main",
@@ -288,12 +288,12 @@
       ],
       "goal": "Turn Runner visual evidence into a human QA workspace with full-screen live preview and a floating Runner companion for targeted questions, notes, and verdicts.",
       "acceptance": "Live preview owns the screen when the captured environment is still reachable; Runner floats above it in a compact accessible panel with targeted QA questions, notes, looks-good/needs-work/not-sure responses, screenshot fallback when preview is dead, and technical evidence behind progressive disclosure. No existing Relay/Runner safety gates are weakened.",
-      "next_action": "Implement Runner-wide hierarchy as a small final override stylesheet: smaller secondary headings and selective warm-light emphasis cards, plus matching QA question-card hierarchy.",
+      "next_action": "Visually review exact branch head 660d87437d4edc5b5b97226cd22b6b30bae838df. Hierarchy pass is implemented: smaller secondary titles, warm-light emphasis on the first human summary, selected review run, and active QA question card. Exact-head test, Runner admission, Cloudflare build, preflight, and audit are green; keep PR #41 unmerged until visual review.",
       "base_sha": "5ce9f02fbdbe0004c3249934d0f642fb2ffa5bce",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-09-30T11:52:04.751Z",
-      "updated_at": "2026-09-30T12:50:53.986Z",
-      "lease_until": "2026-10-01T00:50:53.986Z"
+      "updated_at": "2026-09-30T12:53:23.593Z",
+      "lease_until": "2026-10-01T00:53:23.593Z"
     }
   ]
 }
