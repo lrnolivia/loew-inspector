@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T10:44:09.559Z",
+  "updated_at": "2026-09-30T10:44:27.358Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -324,6 +324,25 @@
       "completed_at": "2026-09-30T10:20:20.264Z"
     },
     {
+      "id": "field-mobile-focus",
+      "owner": "existing-mobile-owner",
+      "branch": "field/mobile-focus-touch-camera-20260929",
+      "paths": [
+        ".github/workflows/mobile-focus-verify.yml"
+      ],
+      "resources": [
+        "mobile-historical-qa-accounting"
+      ],
+      "goal": "Retain original Mobile PR #123 and historical verification provenance during user-authorized consolidation",
+      "acceptance": "Original branch and runtime/iPhone evidence retained; product implementation moves to consolidated #136 under explicit user authorization",
+      "next_action": "User explicitly removed Mobile protection and authorized current worker on 2026-09-30. Product paths released to consolidated recovery claim; preserve original #123 branch/workflow as provenance until all code and iPhone QA accounted.",
+      "base_sha": "64fa810a66fc54d73c2f46ed2e352a8c3a3e568d",
+      "state": "active",
+      "created_at": "2026-09-30T05:06:12.798659Z",
+      "updated_at": "2026-09-30T10:44:09.559Z",
+      "lease_until": "2026-09-30T22:44:09.559Z"
+    },
+    {
       "id": "field-consolidation-workspace-20260930",
       "owner": "01a0f1bf-3464-7b61-a3ac-f5d494bf7ef3",
       "branch": "field/consolidation-workspace-20260930",
@@ -346,38 +365,47 @@
         "src/dashboard/ProjectGrid.tsx",
         "src/dashboard/RenameProjectDialog.test.tsx",
         "src/dashboard/RenameProjectDialog.tsx",
-        "src/styles/dashboard.css"
+        "src/styles/dashboard.css",
+        "src/App.tsx",
+        "src/canvas/Canvas.tsx",
+        "src/canvas/hooks/useCanvasTouchInteraction.test.ts",
+        "src/canvas/hooks/useCanvasTouchInteraction.ts",
+        "src/canvas/hooks/useCanvasTransform.touch.test.ts",
+        "src/canvas/hooks/useCanvasTransform.ts",
+        "src/canvas/selection/ResizeHandles.tsx",
+        "src/canvas/selection/RotateHandle.tsx",
+        "src/canvas/selection/ScaleHandles.tsx",
+        "src/canvas/selection/SelectionBox.tsx",
+        "src/canvas/selection/useTouchHandleTargets.ts",
+        "src/canvas/transform/InputHandler.touch.test.ts",
+        "src/canvas/transform/InputHandler.ts",
+        "src/code/stores/workspace-panels-store.ts",
+        "src/editor/BottomToolbar.tsx",
+        "src/editor/ChromeIslands.tsx",
+        "src/editor/FloatingLeftPanelHost.tsx",
+        "src/editor/MobileFocusCoordinator.tsx",
+        "src/editor/ToolbarPanelHost.tsx",
+        "src/editor/e2e/mobile-focus.spec.ts",
+        "src/editor/mobile-focus-state.test.ts",
+        "src/editor/mobile-toolbar.test.ts",
+        "src/editor/mobile-workspace-presentation.test.ts",
+        "src/editor/mobile-workspace-presentation.ts",
+        "src/canvas/mouse/CanvasMouseController.ts",
+        "src/canvas/transform/CameraCommands.ts"
       ],
       "resources": [
-        "dashboard-project-actions"
+        "dashboard-project-actions",
+        "canvas-touch-input",
+        "mobile-shell"
       ],
-      "goal": "Recover preserved Dashboard collection, rename, delete confirmation and accessibility work onto current main",
-      "acceptance": "Existing create/refresh/thumbnail behavior preserved; focused tests and registry pass; authenticated persistence and exact Preview QA accounted before promotion; originals retained",
-      "next_action": "Dashboard draft #136 head 9fd1357d54841e255efb0596b2be4162958fc879 published: recovered 19 paths; retryable rename/delete errors, modal focus containment and project menu keyboard navigation complete. Focused 25 tests and lint pass. Older-head Registry 36702480952 is pending and cannot validate current head. User directs implementation over Preview troubleshooting. Preserve current claim and originals; authenticated persistence QA remains unproven. Controls #83 review finds current main already advances effects, while historical Fill shell assertions conflict with canonical PaintPicker; do not transplant blindly. Next finish Dashboard publication gates in background, then ordered Controls/Assets recovery; connected panels deferred, Mobile protected.",
+      "goal": "Consolidate Dashboard and explicitly user-authorized Mobile recovery onto current main",
+      "acceptance": "Existing Dashboard/create/refresh behavior and current-main Canvas semantics preserved; touch/mobile focused checks and runtime arbitration verified; current user removes Mobile protection, connected-panel follow-up remains deferred; original branches retained",
+      "next_action": "Recover Mobile #123 product delta into #136 without stale lock/workflow changes, reconcile CameraCommands against current main, diagnose evidenced two-finger camera runtime failure, and preserve physical iPhone keyboard QA as unproven.",
       "base_sha": "854038a3e84f41cd590a4ad18b24fcd4127e2fba",
       "state": "active",
       "created_at": "2026-09-30T10:21:02.409Z",
-      "updated_at": "2026-09-30T10:37:40.359Z",
-      "lease_until": "2026-09-30T22:37:40.359Z"
-    },
-    {
-      "id": "field-mobile-focus",
-      "owner": "existing-mobile-owner",
-      "branch": "field/mobile-focus-touch-camera-20260929",
-      "paths": [
-        ".github/workflows/mobile-focus-verify.yml"
-      ],
-      "resources": [
-        "mobile-historical-qa-accounting"
-      ],
-      "goal": "Retain original Mobile PR #123 and historical verification provenance during user-authorized consolidation",
-      "acceptance": "Original branch and runtime/iPhone evidence retained; product implementation moves to consolidated #136 under explicit user authorization",
-      "next_action": "User explicitly removed Mobile protection and authorized current worker on 2026-09-30. Product paths released to consolidated recovery claim; preserve original #123 branch/workflow as provenance until all code and iPhone QA accounted.",
-      "base_sha": "64fa810a66fc54d73c2f46ed2e352a8c3a3e568d",
-      "state": "active",
-      "created_at": "2026-09-30T05:06:12.798659Z",
-      "updated_at": "2026-09-30T10:44:09.559Z",
-      "lease_until": "2026-09-30T22:44:09.559Z"
+      "updated_at": "2026-09-30T10:44:27.358Z",
+      "lease_until": "2026-09-30T22:44:27.358Z"
     }
   ]
 }
