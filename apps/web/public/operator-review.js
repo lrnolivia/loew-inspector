@@ -95,13 +95,13 @@ export function bindReviewFilters() {
   });
 }
 
-export async function loadReview(ui) {
+export async function loadReview(ui, projectId = "") {
   const target = document.querySelector("#review-list");
   const count = document.querySelector("#review-count");
   target.innerHTML = '<div class="operator-loading">Checking what needs your eyes…</div>';
 
   try {
-    const payload = await api("/api/visual");
+    const payload = await api("/api/visual" + (projectId ? "?project=" + encodeURIComponent(projectId) : ""));
     const raw = Array.isArray(payload.evidence) ? payload.evidence : [];
     const deduped = [];
     const seen = new Set();
@@ -130,6 +130,8 @@ export async function loadReview(ui) {
     }));
 
     renderReview();
+    const needs = reviewItems.filter(item => !item.qaReview?.overall).length;
+    ui.setOverviewDetail(needs + " awaiting review · " + (reviewItems.length - needs) + " reviewed in this view");
     ui.setConnection("Connected", "good");
   } catch (error) {
     count.textContent = "";
