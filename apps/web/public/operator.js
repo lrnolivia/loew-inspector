@@ -65,6 +65,11 @@ function setFlow(phase, label) {
   const target = band.querySelector("[data-flow-label]");
   if (target && label) target.textContent = label;
 }
+function setOverviewDetail(label) {
+  const page = pages.find(item => !item.hidden);
+  const detail = page?.querySelector(".page-overview-detail");
+  if (detail && label) detail.textContent = label;
+}
 
 function route() {
   const page = (location.hash || "#today").slice(1).split("?")[0];
@@ -164,7 +169,7 @@ async function openSettings() {
   }
 }
 
-const ui = { setConnection, notify, openProject, setFlow, contextProject };
+const ui = { setConnection, notify, openProject, setFlow, setOverviewDetail, contextProject };
 
 async function showPage(name) {
   await ensureProjects().catch(() => []);
