@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T22:20:03.641Z",
+  "updated_at": "2026-09-30T22:20:16.090Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -443,7 +443,7 @@
         "relay-publishing-findings",
         "relay-work-classification"
       ],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-09-30T22:20:03.641Z"
     }
   ],
@@ -1225,6 +1225,27 @@
       "evidence": "Relay 1.7.5 shipped independently of 1.8. Exact PR head 499443364d51982980617bfd9495f3057761e543 passed Runner coordination admission and full workspace tests/build, then PR #52 squash-merged to b047eac596cc689e46cfb3bf9139f6342861fb8c. Exact merged source upload produced Cloudflare Worker v47 version 7aa03c78-60d3-4bbb-9c7c-75aa486a4c9c and deployment 34c1aa37-5c38-4693-8a02-1ab2728d4563 at 100%. Runtime readback reports Relay 1.7.5, GitHub App source auth with write_enabled true and no legacy token, Cloud authorization_mode project-registration+runtime-allowlist, write_scripts relay/field/loewfi/loewtorials/thetake, and production annotations bound to exact merge b047eac596cc689e46cfb3bf9139f6342861fb8c. Source main readback was exactly b047eac596cc689e46cfb3bf9139f6342861fb8c before this completion receipt. Release handoff docs/relay/RELAY_1_7_5_RELEASE.md documents the observed-progress consumer contract for 1.8.",
       "work_accounted": true,
       "completed_at": "2026-09-30T22:19:08.436Z"
+    },
+    {
+      "id": "relay-findings-suggestions-20260930",
+      "owner": "relay-findings-suggestions-20260930",
+      "branch": "relay/findings-suggestions-20260930",
+      "paths": [
+        "docs/relay/findings/suggestions.md"
+      ],
+      "resources": [
+        "relay-maintenance",
+        "relay-publishing-findings",
+        "relay-work-classification"
+      ],
+      "goal": "Create a durable running Relay findings/suggestions ledger for publishing, coordination and workflow wrinkles discovered during real releases, so future builds can selectively pick up useful improvements without reopening old release work.",
+      "acceptance": "Add docs/relay/findings/suggestions.md as a running list with dated findings, impact, suggested remedy, status and recommended task class. Seed it with concrete issues observed through Relay 1.7/1.7.5 publishing and coordination, including queue lifecycle residue, stale/held reservations, exact-source config drift risk, MCP payload-size limits, source-auth/tool-authority ambiguity, server-derived base_sha clarity, Cloud authorization layering, product-source-vs-coordination-main identity, external wait visibility, umbrella/absorbed work reconciliation, verification anomalies, and separating design vs architecture vs maintenance work to reduce collisions. This is docs-only maintenance; no product/runtime code changes.",
+      "next_action": "Write and merge the docs-only findings ledger. Do not deploy a Worker for this follow-up.",
+      "base_sha": "2f9cea031943d21eaa45b1e3c64a4786c3be584d",
+      "state": "active",
+      "created_at": "2026-09-30T22:20:16.090Z",
+      "updated_at": "2026-09-30T22:20:16.090Z",
+      "lease_until": "2026-10-01T10:20:16.090Z"
     }
   ],
   "migrated_from": "loew-inspector"
