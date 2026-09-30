@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T09:05:56.666Z",
+  "updated_at": "2026-09-30T09:12:56.538Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -40,10 +40,16 @@
       "acceptance": "Pull requests are gated by a live Runner claim; scheduled/manual audit and cleanup use the canonical loew-runner coordination engine; no product files are changed.",
       "next_action": "Create the claimed bootstrap branch, add the parameterized coordination workflow, open the draft PR, verify admission, then merge with squash.",
       "base_sha": "7f5820cd0c2bab3c0540f9efbe59f5399e3e6d5d",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T09:05:56.666Z",
-      "updated_at": "2026-09-30T09:05:56.666Z",
-      "lease_until": "2026-09-30T21:05:56.666Z"
+      "updated_at": "2026-09-30T09:12:56.538Z",
+      "lease_until": "2026-09-30T21:12:56.538Z",
+      "pr": 27,
+      "merged_head_sha": "b70df23015d83a18172687e7a28007173808eb9f",
+      "merge_commit_sha": "746f2eb5b1fcf40bfee29c24b69b5c4027967d61",
+      "evidence": "https://github.com/lrnolivia/loew-inspector/pull/27",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T09:12:56.538Z"
     }
   ]
 }
