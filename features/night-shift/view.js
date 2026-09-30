@@ -1,14 +1,17 @@
 import { iconSlot, hydrateProjectIcons } from "../../apps/web/public/project-icons.js";
 import { esc, projectName } from "../../apps/web/public/operator-projects.js";
 
-export async function loadNightShift(ui) {
+export async function loadNightShift(ui, projectId = "") {
   const target = document.querySelector("#night-shift-work");
   target.innerHTML = '<div class="operator-loading">Opening automatic work…</div>';
   try {
     const response = await fetch("/api/workers");
     if (!response.ok) throw new Error("Automatic work could not be loaded.");
     const workers = await response.json();
-    target.innerHTML = workers.length ? workers.map(worker => {
+    const visible = projectId ? workers.filter(worker => worker.id === projectId) : workers;
+    const blockedCount = visible.filter(worker => Boolean(worker.runtime?.last_error)).length;
+    ui.setOverviewDetail(visible.length + " unattended " + (visible.length === 1 ? "check" : "checks") + " · " + blockedCount + " need attention");
+    target.innerHTML = visible.length ? visible.map(worker => {
       const state = worker.runtime || {};
       const blocked = Boolean(state.last_error);
       const error = /insufficient_quota|credit_balance_exhausted|no credits remaining/i.test(state.last_error || "")
@@ -20,7 +23,7 @@ export async function loadNightShift(ui) {
         <small>${esc(state.last_run_at ? "Last run · " + new Date(state.last_run_at).toLocaleString() : "No run recorded")}</small>
         ${state.last_error ? `<p>${esc(error)}</p>` : ""}
         <p><a href="#projects?project=${encodeURIComponent(worker.id)}">Open project</a> · <a href="#today">Manage automatic checks</a></p></div></article>`;
-    }).join("") : '<div class="operator-empty">No automatic work is configured.</div>';
+    }).join("") : '<div class="operator-empty">No unattended work matches this project context.</div>';
     hydrateProjectIcons(target);
     ui.setConnection("Connected", "good");
   } catch (error) {

@@ -15,6 +15,19 @@ test("shared interface works on web and MCP host transport, including mobile, de
   let review = null;
   const project = { id: "relay", name: "relay", managed: true };
   const workers = [{ id: "relay", enabled: false, name: "relay", runtime: { status: "idle", last_summary: "Latest canonical run" } }];
+  const progress = {
+    contract_version: "1.7.5", observed_progress: true, project: "relay",
+    progress: [{
+      assignment: "Complete consolidation", observed: true, state: "working", stage: "implementation",
+      worker: { heartbeat_at: "2026-09-30T15:00:00Z", freshness: "fresh" },
+      external: { active: false, system: null, detail: null },
+      last_meaningful_progress_at: "2026-09-30T15:00:00Z",
+      latest_event: { type: "source-commit", at: "2026-09-30T15:00:00Z" },
+      identities: { branch: "relay/test", head_sha: "c".repeat(40) },
+      next_action: "Keep implementing"
+    }],
+    queue: []
+  };
   const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, "http://localhost");
     const send = body => { res.setHeader("Content-Type", "application/json"); res.end(JSON.stringify(body)); };
@@ -23,7 +36,8 @@ test("shared interface works on web and MCP host transport, including mobile, de
     if (url.pathname === "/host") { res.setHeader("Content-Type", "text/html"); return res.end('<iframe id="app" style="width:100%;height:900px;border:0"></iframe>'); }
     if (url.pathname === "/api/projects") return send({ projects: [project] });
     if (url.pathname === "/api/projects/relay/icon") return send({ status: "found", icon: { data_url: "data:image/png;base64," + pixel.toString("base64"), repository: "lrnolivia/relay", path: "apps/web/public/brand/relay-loop.png", blob_sha: "b".repeat(40) } });
-    if (url.pathname === "/api/projects/relay") return send({ project, coordination: { claims: [{ id: "work", state: "active", goal: "Complete consolidation" }] } });
+    if (url.pathname === "/api/projects/relay") return send({ project, coordination: { claims: [{ id: "work", state: "active", goal: "Legacy claim context" }] } });
+    if (url.pathname === "/api/progress/relay") return send(progress);
     if (url.pathname === "/api/workers") return send(workers);
     if (url.pathname === "/api/visual") return send({ evidence: [evidence] });
     if (url.pathname.endsWith("/image")) { res.setHeader("Content-Type", "image/png"); return res.end(pixel); }
@@ -80,7 +94,9 @@ test("shared interface works on web and MCP host transport, including mobile, de
       await page.emulateMedia({ reducedMotion: "reduce" });
       assert.equal(await view.locator(".relay-glyph").first().evaluate(node => getComputedStyle(node).transitionDuration), "0s");
       await page.emulateMedia({ reducedMotion: "no-preference" });
-      await view.getByRole("button", { name: "Night Shift", exact: true }).click();
+      assert.equal(await view.locator(".flow-band").count(), 0);
+      assert.equal(await view.locator(".page-overview").count() > 0, true);
+      await view.getByRole("button", { name: "night shift", exact: true }).click();
       await view.locator("#night-shift-work").filter({ hasText: "Latest canonical run" }).waitFor();
       await view.getByRole("button", { name: "Inspector", exact: true }).click();
       if (mode === "mcp") await view.getByRole("button", { name: "All", exact: true }).click();

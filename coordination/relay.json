@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T22:49:27.571Z",
+  "updated_at": "2026-09-30T23:09:37.771Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -445,6 +445,27 @@
       ],
       "state": "claimed",
       "created_at": "2026-09-30T22:20:03.641Z"
+    },
+    {
+      "id": "relay-1.8.1-icon-hotfix-20260930",
+      "owner": "relay-1.8.1-icon-hotfix-20260930",
+      "goal": "Ship the immediate post-1.8 design-only icon/illustration hotfix without reopening Relay 1.8 architecture or maintenance work.",
+      "acceptance": "Consume docs/relay/RELAY_1_8_ICON_HOTFIX_HANDOFF.md from the shipped 1.8 release. Finalize only approved Today and lowercase night shift marks/icons plus any replacement Relay illustrations that materially improve the UI. Preserve approved Relay/Runner/Inspector geometry exactly. Keep Terra Prime restraint and responsive/reduced-motion behavior. Do not absorb or modify the separate held MCP icon metadata PR #47; avoid apps/mcp/index.js, apps/mcp/branding.js and test/mcp-branding.test.mjs. Do not change observed-progress, Runner, Source, Cloud, authorization, or coordination architecture. Treat this as task class design.",
+      "next_action": "After Relay 1.8 completes, claim a fresh design-only branch from then-current main, review the 1.8 icon handoff and approved assets, implement only the visual hotfix, run responsive rendering checks, merge through Relay, deploy exact source if runtime assets changed, and close the assignment.",
+      "paths": [
+        "apps/web/public/brand/",
+        "packages/shared-ui/glyphs.js",
+        "apps/web/public/operator-1.8.css",
+        "docs/relay/RELAY_1_8_1_ICON_HOTFIX.md"
+      ],
+      "resources": [
+        "relay-design",
+        "relay-today-icon",
+        "relay-night-shift-icon",
+        "relay-illustration-refresh"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T22:51:57.497Z"
     }
   ],
   "claims": [
@@ -1238,7 +1259,8 @@
         "src/relay-entry.test.js",
         "apps/web/api.js",
         "packages/runner/src/cloudflare-worker.mjs",
-        "apps/web/build.mjs"
+        "apps/web/build.mjs",
+        "apps/web/generated.js"
       ],
       "resources": [
         "relay-1.8-release",
@@ -1254,10 +1276,16 @@
       "acceptance": "Release as Relay 1.8.0. Required order: (1) durable operation/receipt/liveness model + contextual MCP cards, (2) dashboard/web panel reusing those contracts, (3) broad motion/polish. Card work must encode project context/filter hooks, ordering, overview-state, button and motion primitives so dashboard findings flow back into shared cards instead of diverging. Cards cover Runner project/assignment/preflight, Source PR/check/merge, Cloud release/deploy, Inspector evidence/review/human-QA and multi-step operations; preserve exact identities, refresh where supported, and expand into the shared Relay app. Liveness: meaningful heartbeat/current stage/next action every 5 minutes while progressing; at 10 minutes without meaningful progress surface one possibly-stale warning/check and determine whether an external dependency is still running; at 20 minutes without meaningful progress mark officially stale/unresponsive unless current evidence proves the underlying external job is still active. Blocked, failed, official-stale, waiting-for-human and complete transitions emit one durable attention event; unchanged healthy progress does not spam. Show external waits honestly; quota/rate/auth/tool/dead-heartbeat failures must show last good stage + recovery. Redesign project picker/sidebar to be compact/useful, use available height, avoid an artificially short list, and add practical filtering/search/grouping while keeping project identity legible. Now / Up Next / Finished need stronger hierarchy and newest/recently changed first. Runner, Inspector and `night shift` use identical project-by-project navigation/context mechanics, with distinct compact top overviews: Runner=coordination/execution, Inspector=review/evidence/QA, night shift=unattended activity. Fold Orient → Act → Resolve into that compact page overview where useful instead of a detached strip. Human-facing copy is exactly lowercase `night shift`; never ship `Night Shift`. Buttons must remain obvious buttons: avoid flat highlight fills that read as cards; use depth/press states, stronger text, soft pastel color-matched surfaces, and white text on sufficiently colorful/dark surfaces. Preserve Terra Prime restraint. After structure stabilizes, add ambient system motion, bouncy Field-like glyph motion, tactile transitions/state-change animation and reduced-motion fallbacks. Existing headless clients remain compatible; web/MCP share one state model. New Today/night shift icons + Relay illustrations are NOT a 1.8 blocker. Before completion create an immediate post-release icon-hotfix handoff/assignment; approved assets may land mid-build only if they do not become a dependency. Required tests, exact-head admission, MCP/web rendering checks and authenticated production readback must pass.",
       "next_action": "Implement Relay 1.8 presentation against shipped 1.7.5 observed-progress truth. Add only minimal integration bridges: authenticated Runner /api/progress/:project, relay_ui_request allowance, contextual MCP card resource/metadata, version 1.8.0, dashboard/project/review/night shift presentation, ChatGPT app-settings link, motion and tests. Do not touch apps/mcp/index.js because PR #47 owns it, and do not fork the 1.7.5 state machine. Use observed progress for Now/Up Next/Finished and liveness; keep next_action contextual only. Human-facing night shift must be lowercase. After green tests/rendering, create required immediate post-release icon-hotfix handoff, merge/deploy exact source, runtime readback, then complete and verify reserved:false.",
       "base_sha": "e30c58966f7e2b172ed88299c8c57d62bc9cf1c2",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T21:32:04.707Z",
-      "updated_at": "2026-09-30T22:37:35.811Z",
-      "lease_until": "2026-10-01T10:37:35.811Z"
+      "updated_at": "2026-09-30T23:04:19.863Z",
+      "lease_until": "2026-10-01T11:04:19.863Z",
+      "pr": 54,
+      "merged_head_sha": "8a68f5f1ccac9f860a40ddcbff92478a20406645",
+      "merge_commit_sha": "fdecc72147709e4862b5f5da3f2dcc6e0cb105ea",
+      "evidence": "Relay 1.8.0 shipped from PR #54. Exact PR head 8a68f5f1ccac9f860a40ddcbff92478a20406645 merged as fdecc72147709e4862b5f5da3f2dcc6e0cb105ea. Cloudflare Worker version 85673ccb-6efb-4145-86c5-c75c3fd8526f is deployed at 100% via deployment 0d950af2-f86e-476c-a8c7-ff4f145c7ca9, annotated to exact merge fdecc72147709e4862b5f5da3f2dcc6e0cb105ea. Runtime relay.CONTROL readback reports version 1.8.0 with Runner/Source/Cloud/Verify capabilities healthy. 1.8.1 icon successor handoff was created in release scope; remaining future improvements are owned by later assignments/ledger.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T23:04:19.863Z"
     },
     {
       "id": "relay-1.9-skills-runtime-creative-20260930",
@@ -1267,18 +1295,27 @@
         "packages/skills/",
         "skills/",
         "contracts/skills/",
+        "contracts/resume/",
         "src/skills-registry.js",
         "src/skills-resolver.js",
         "src/skills-runtime.js",
         "src/skills-audit.js",
         "src/skills-upstream.js",
+        "src/resume-checkpoints.js",
+        "src/resume-checkpoints.test.js",
         "src/runner-control.js",
         "src/runner-control-core.js",
         "src/coordination.mjs",
         "src/runner-control.test.js",
         "docs/skills/",
         "docs/relay/RELAY_1_9_RELEASE.md",
-        "docs/relay/findings/suggestions.md"
+        "docs/relay/DEVELOPMENT_CADENCE.md",
+        "docs/relay/findings/",
+        "src/coordination-engine.js",
+        "src/runner-amend.test.js",
+        "src/relay-entry.js",
+        "src/relay-entry.test.js",
+        "docs/relay/RELAY_1_9_1_RELEASE.md"
       ],
       "resources": [
         "relay-1.9-release",
@@ -1290,16 +1327,21 @@
         "relay-performance-optimization",
         "relay-assignment-amendment",
         "relay-ledger-routing",
-        "relay-planning-skill"
+        "relay-planning-skill",
+        "relay-resume-checkpoints",
+        "relay-passive-snapshots",
+        "relay-worker-resumability",
+        "loew-patch-release-cadence",
+        "relay-tool-refresh-cycle"
       ],
       "goal": "Ship Relay 1.9 as the skills-runtime and creative-intelligence release, including a first-class assignment-amendment workflow and planning skills that use the findings ledger to route worthwhile discoveries into the right existing or future assignment instead of leaving them as inert notes or spawning unnecessary parallel work.",
       "acceptance": "Release metadata/docs identify Relay 1.9.0. Add first-class relay.SKILLS registry/runtime with deterministic JIT resolution, provenance/license/integrity metadata, capability gating, bounded context, project-private overlays, and creative/platform/performance packs for web, macOS, Windows, Android and GNOME plus safe GitHub/Cloudflare operational expertise. Add a canonical Runner amendment transaction for queued and claimed assignments. Amendments must preserve stable assignment identity and ownership, use expected-record/CAS + readback, record who/when/what changed and why, reject stale revisions, and enforce immutable fields where safety requires it (for example claimed branch/base identity). Supported amendment scope must include at minimum goal, acceptance, next_action, paths/resources and task-class/ledger linkage where those fields exist; path/resource changes remain conflict-checked against current ownership. Queue amendments must not require deleting/recreating the assignment. Claimed amendments must not silently replace branch/baseline or bypass admission. Expose amendment history/readback clearly enough for UI and agents to explain the current assignment versus prior intent.\n\nMake findings/suggestions an active planning input. Add a planning/coordination skill that instructs agents to scan relevant open RFS entries when shaping/rescoping work, classify each as adopt/defer/reject/supersede, place adopted findings into the most appropriate existing assignment through the canonical amendment flow when safe, otherwise create/link a deliberately classified successor, and update the RFS entry with assignment linkage/status. Do not treat the ledger as an automatic backlog or create duplicate assignments merely because a finding exists. Skills must know the amendment flow and prefer it over hand-editing coordination state.\n\nSystem-wide UI doctrine: inline cards use a direct human headline plus a short parsable description; exact technical details are one click away or subordinate small copy. Human-QA requests identify the exact surface/change, intended result, evidence/live-preview identity and 1–3 concrete checks rather than generic questions. Live interactive previews are the preferred human-review surface when viable; show health/expiry, preserve exact commit/deployment identity, support revive/refresh where bounded, and use screenshots primarily as durable evidence/fallback. Tests cover amendment safety/history/conflict handling, ledger→assignment routing behavior, skill resolution/provenance/tool gating, UI copy hierarchy, QA specificity and live-preview lifecycle. Existing 1.8 contracts stay compatible; no parallel state store, giant prompt dump, one-tool-per-skill explosion or new standing credentials.",
-      "next_action": "Phase A now: implement and test the canonical assignment-amendment transaction plus its audit/history shape; add RFS entries for the missing amendment flow and ledger-to-assignment routing and mark them adopted by 1.9; define the planning/coordination skill contract that consults the ledger and uses amendments intelligently. Keep this branch off 1.8-owned UI paths. Then build the skills registry/runtime and creative/platform/performance packs. After 1.8 lands, rescope 1.9 to the relevant shared UI paths and apply the human-card, specific-QA and live-preview doctrine without duplicating 1.8 state.",
+      "next_action": "Finish and ship Relay 1.9.1 as the first universal small-slice architecture release: canonical Runner amend + audit history, patch-release/size-limit doctrine, focused tests, runtime version 1.9.1. Merge/deploy exact source, refresh MCP tools and reopen/refresh ChatGPT, verify amend from the refreshed consumer surface, then continue the next patch from new main with scalable SOURCE patch/chunk transport.",
       "base_sha": "47fb7b4f73afc3407977503fb706c4935711aee5",
       "state": "active",
       "created_at": "2026-09-30T22:49:27.571Z",
-      "updated_at": "2026-09-30T22:49:27.571Z",
-      "lease_until": "2026-10-01T10:49:27.571Z"
+      "updated_at": "2026-09-30T23:09:37.771Z",
+      "lease_until": "2026-10-01T11:09:37.771Z"
     }
   ],
   "migrated_from": "loew-inspector"

@@ -6,7 +6,7 @@ export function relayControlCenterResource() {
     mimeType: "text/html;profile=mcp-app",
     text: mcpHtml,
     _meta: {
-      ui: { prefersBorder: false, csp: { resourceDomains: ["https://fonts.googleapis.com", "https://fonts.gstatic.com", "blob:"], frameDomains: ["https://*.loew.fi"] } },
+      ui: { prefersBorder: false, csp: { resourceDomains: ["https://fonts.googleapis.com", "https://fonts.gstatic.com", "blob:"], frameDomains: ["https://*.loew.fi"], redirectDomains: ["https://chatgpt.com"] } },
       "openai/ui": { availableDisplayModes: ["inline", "fullscreen"] }
     }
   };

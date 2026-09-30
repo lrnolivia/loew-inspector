@@ -1,4 +1,5 @@
 import { githubApiRequest, sourceAuthStatus } from "../../../src/source.js";
+import { callProgress } from "../../../src/progress-api.js";
 import { projectIcon } from "./project-icons.mjs";
 import { applyWorkerSettings, publicWorkerSettings } from "./settings.mjs";
 import { listVisualEvidence, getVisualEvidence, getVisualImage, compareVisualEvidence, listVisualRuns, reviewVisualRun } from "./visual-evidence.mjs";
@@ -254,6 +255,12 @@ export async function handleApi(request, env, { authenticatedMcp = false } = {})
       .map(item => readJsonFile(env, "projects/" + item.name)));
     return json({ projects: projects.map(item => item.value).filter(item => !item.alias_of) });
   }
+  const progressMatch = url.pathname.match(/^\/api\/progress\/([a-zA-Z0-9._-]+)$/);
+  if (request.method === "GET" && progressMatch) {
+    const assignment = url.searchParams.get("assignment") || undefined;
+    return json(await callProgress({ project: progressMatch[1], assignment }, env));
+  }
+
   const iconMatch = url.pathname.match(/^\/api\/projects\/([a-zA-Z0-9._-]+)\/icon$/);
   if (request.method === "GET" && iconMatch) {
     const registration = await readJsonFile(env, "projects/" + iconMatch[1] + ".json");
