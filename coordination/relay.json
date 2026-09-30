@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T16:18:32.231Z",
+  "updated_at": "2026-09-30T16:19:25.311Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -260,7 +260,7 @@
         "relay-cloudflare-runtime",
         "relay-control-state"
       ],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-09-30T14:07:23.167Z"
     }
   ],
@@ -772,6 +772,40 @@
       "evidence": "PR45 exact head2c293793a87d876325bff03acda427bfe7c31a0a passed CI/admission; mergeea8fd9b7f63e9c132908e901f2949ba19fdb98b5 deployed same Worker734382bfc38a43cfb8cf9115116ed688 renamed relay, version21b95737-16d0-4ded-babb-1b77586bbe9e deploymentfd1098cc-8db5-4e04-91cb-c7422a54e755100%. Authenticated production smoke https://github.com/lrnolivia/relay/actions/runs/36742121446 passed exact-source web/MCP/API/module/binding verification. Native uploader readback reconciled30modules sameversion; live MCP app connected. Secrets Browser R2 OAuth preserved.",
       "work_accounted": true,
       "completed_at": "2026-09-30T16:18:32.231Z"
+    },
+    {
+      "id": "relay-consolidation-b6-retirement-20260930",
+      "owner": "relay-consolidation-b6-retirement-20260930",
+      "branch": "relay/consolidation-b6-retirement",
+      "paths": [
+        "README.md",
+        "AGENTS.md",
+        "wrangler.jsonc",
+        ".github/workflows/",
+        "docs/relay/",
+        "test/",
+        "src/",
+        "scripts/",
+        "contracts/",
+        "projects/",
+        "workers/",
+        "packages/",
+        "apps/",
+        "coordination/"
+      ],
+      "resources": [
+        "relay-legacy-retirement",
+        "relay-cloudflare-runtime",
+        "relay-control-state"
+      ],
+      "goal": "Retire legacy product/runtime identities while preserving Git provenance and recovery ownership.",
+      "acceptance": "Canonical Relay only; exact-head checks and production readback; recoverable original repository retained as archive.",
+      "next_action": "Canonicalize active registries and runtime; preserve immutable history then retire verified legacy surfaces.",
+      "base_sha": "04d806fbdb08143f9b751fb091eadfcf695b7910",
+      "state": "active",
+      "created_at": "2026-09-30T16:19:25.311Z",
+      "updated_at": "2026-09-30T16:19:25.311Z",
+      "lease_until": "2026-10-01T04:19:25.311Z"
     }
   ],
   "migrated_from": "loew-inspector"
