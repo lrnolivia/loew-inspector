@@ -7,107 +7,91 @@
   <title>loew.fi runner</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=Momo+Trust+Display&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/styles.css">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=Momo+Trust+Display&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/operator.css">
   <link rel="stylesheet" href="/qa.css">
-  <link rel="stylesheet" href="/friendly.css">
-  <link rel="stylesheet" href="/hierarchy.css">
 </head>
 <body>
-  <div class="terra-accent" aria-hidden="true">
-    <span class="accent-photo"></span>
-    <span class="accent-design"></span>
-    <span class="accent-software"></span>
-  </div>
-
-  <main class="shell">
-    <header class="brand-header">
-      <div>
-        <div class="eyebrow">LOEW.FI / RUNNER</div>
-        <h1>runner</h1>
-        <p class="lede">what’s happening · what needs you</p>
-      </div>
-      <div class="header-status">
-        <span id="connection" class="status-pill status-neutral">
-          <span class="status-dot"></span>
-          <span>CONNECTING</span>
-        </span>
-      </div>
-    </header>
-
-    <div class="app-toolbar terra-toolbar" data-figma-component="App / Toolbar">
-      <nav class="primary-nav" aria-label="Runner">
-        <button class="primary-nav-item active" data-section="workers" type="button">status</button>
-        <button class="primary-nav-item" data-section="visual" type="button">review</button>
-      </nav>
-      <div class="toolbar-actions">
-        <span id="toolbar-context" class="toolbar-meta">WHAT’S RUNNING · WHAT NEEDS YOU</span>
-        <button id="refresh" class="tp-button secondary compact" type="button">Refresh</button>
-      </div>
+  <header class="operator-topbar">
+    <div class="operator-brand">
+      <strong>runner</strong>
+      <span>project control</span>
     </div>
 
-    <div id="workers-section" class="app-grid app-section">
-      <aside class="sidebar" aria-label="Workers">
-        <div class="section-kicker">CURRENT AUTOMATION</div>
-        <div id="worker-nav" class="worker-nav"></div>
-        <div class="sidebar-note">Runner watches your projects safely. Anything that can change code still goes through the normal guarded branch and review flow.</div>
-      </aside>
+    <nav class="operator-nav" aria-label="Runner">
+      <button type="button" data-nav="today">Today</button>
+      <button type="button" data-nav="projects">Projects</button>
+      <button type="button" data-nav="review">Review</button>
+    </nav>
 
-      <section class="workspace">
-        <nav class="tabs" aria-label="Runner view">
-          <button class="app-tab active" data-view="overview" type="button">At a glance</button>
-          <button class="app-tab" data-view="diagnostics" type="button">Technical details</button>
-        </nav>
+    <div id="operator-connection" class="operator-connection" data-tone="quiet" aria-live="polite">Connecting…</div>
+  </header>
 
-        <section class="summary" id="summary" aria-label="Runner summary"></section>
-        <section class="workers" id="workers" aria-live="polite"></section>
+  <main class="operator-shell">
+    <section class="operator-page" data-page="today">
+      <header class="page-heading">
+        <h1>Today</h1>
+        <p>What needs you, what’s moving, and nothing else.</p>
+      </header>
+
+      <section class="operator-section">
+        <h2>Needs you</h2>
+        <div id="today-attention"></div>
       </section>
-    </div>
 
-    <section id="visual-section" class="app-section visual-section" hidden aria-live="polite">
-      <div class="visual-heading">
-        <div>
-          <div class="section-kicker flush">YOUR QA INBOX</div>
-          <h2>review</h2>
-          <p>Open a live preview, answer what Runner needs to know, and leave notes.</p>
+      <section class="operator-section">
+        <div class="section-heading">
+          <h2>Work happening now</h2>
+          <span>Across your projects</span>
         </div>
-        <div class="visual-heading-tools">
-          <div id="visual-count" class="visual-count"></div>
-          <div class="visual-filters" aria-label="Visual evidence filters">
-            <input id="visual-project-filter" class="visual-filter" type="text" placeholder="project" aria-label="Filter by project">
-            <select id="visual-environment-filter" class="visual-filter" aria-label="Filter by environment">
-              <option value="">all environments</option>
-              <option value="production">production</option>
-              <option value="preview">preview</option>
-              <option value="qa">qa</option>
-              <option value="smoke">smoke</option>
-              <option value="unknown">unknown</option>
-            </select>
-            <input id="visual-pr-filter" class="visual-filter visual-filter-pr" type="number" min="1" placeholder="PR" aria-label="Filter by PR">
-            <button id="visual-clear-filters" class="visual-filter-clear" type="button">clear</button>
-          </div>
-        </div>
-      </div>
+        <div id="today-work"></div>
+      </section>
 
-      <div id="visual-runs" class="visual-runs" aria-label="Evidence runs"></div>
-
-      <div id="visual-content" class="visual-content">
-        <div class="visual-empty">
-          <span class="visual-empty-mark">◌</span>
-          <strong>Loading reviews</strong>
-          <span>Checking what Runner wants your eyes on.</span>
+      <section class="operator-section">
+        <div class="section-heading">
+          <h2>Automatic checks</h2>
+          <span>Runner watches these for you</span>
         </div>
+        <div id="today-automations"></div>
+      </section>
+    </section>
+
+    <section class="operator-page" data-page="projects" hidden>
+      <header class="page-heading">
+        <h1>Projects</h1>
+        <p>See what each project is doing now and what comes next.</p>
+      </header>
+
+      <div class="project-layout">
+        <aside id="project-list" class="project-list" aria-label="Projects"></aside>
+        <section id="project-detail" class="project-detail" aria-live="polite">
+          <div class="operator-loading">Opening projects…</div>
+        </section>
       </div>
     </section>
 
-    <footer>
-      <span>loew-runner · v0.6</span>
-      <span>Terra Prime Application UI</span>
-    </footer>
+    <section class="operator-page" data-page="review" hidden>
+      <header class="page-heading review-heading">
+        <div>
+          <h1>Review</h1>
+          <p>Open a screen, answer a few questions, and move on.</p>
+        </div>
+        <strong id="review-count"></strong>
+      </header>
+
+      <div id="review-filters" class="review-filters" role="group" aria-label="Review filter">
+        <button type="button" class="active" data-review-mode="needs">Needs review</button>
+        <button type="button" data-review-mode="all">All</button>
+      </div>
+
+      <div id="review-list" class="review-list" aria-live="polite">
+        <div class="operator-loading">Checking what needs your eyes…</div>
+      </div>
+    </section>
   </main>
 
-  <script type="module" src="/app.js"></script>
-  <script type="module" src="/qa.js"></script>
-  <script type="module" src="/friendly.js"></script>
+  <div id="operator-toast" class="operator-toast" data-tone="good" role="status" aria-live="polite" hidden></div>
+
+  <script type="module" src="/operator.js"></script>
 </body>
 </html>

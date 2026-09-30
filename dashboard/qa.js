@@ -129,7 +129,7 @@ function setView(mode) {
   renderQaToolbar(stage, state, previewMode, setView);
 }
 
-async function openQa(evidenceId) {
+export async function openQa(evidenceId) {
   if (stage) closeQa();
   stage = buildStage();
   stage.querySelector(".qa-preview").innerHTML =
