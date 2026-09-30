@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T11:31:24.832Z",
+  "updated_at": "2026-09-30T11:42:32.252Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -217,6 +217,26 @@
       "evidence": "https://github.com/lrnolivia/loew-inspector/pull/34 — tested/merged head 7173c9ce47a15cb97ca7bdf492eef851f75a77c7; test run 36708849678 passed; Runner admission run 36708849601 passed; squash merge c0f4e93f60e3dca76676612f90e2fc782dec55e8.",
       "work_accounted": true,
       "completed_at": "2026-09-30T11:31:24.832Z"
+    },
+    {
+      "id": "relay-native-cleanup-20260930",
+      "owner": "normal-chat-relay-cleanup-20260930",
+      "branch": "loew-inspector/relay-native-cleanup",
+      "paths": [
+        "src/runner-control.js",
+        "src/runner-control.test.js"
+      ],
+      "resources": [
+        "relay-runner-cleanup"
+      ],
+      "goal": "Expose Runner's existing policy-eligible managed branch cleanup as one bounded native Relay operation.",
+      "acceptance": "Dry-run and execute modes only consider completed, work-accounted, non-legacy, non-excluded managed branches; exact merged PR/head identity and current ownership/head are revalidated before deletion; post-merge commits and active ownership are retained; deletion readback is mandatory; tests and Runner admission pass.",
+      "next_action": "Implement relay_runner_cleanup in runner-control using the canonical cleanup contract, add dry-run/execute tests, open a draft PR, and verify exact-head checks.",
+      "base_sha": "c0f4e93f60e3dca76676612f90e2fc782dec55e8",
+      "state": "active",
+      "created_at": "2026-09-30T11:42:32.252Z",
+      "updated_at": "2026-09-30T11:42:32.252Z",
+      "lease_until": "2026-09-30T23:42:32.252Z"
     }
   ]
 }
