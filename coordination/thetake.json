@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "thetake",
-  "updated_at": "2026-09-30T09:06:01.719Z",
+  "updated_at": "2026-09-30T09:12:58.076Z",
   "legacy_branches": [
     "docs/move-to-runner",
     "main",
@@ -23,10 +23,16 @@
       "acceptance": "Pull requests are gated by a live Runner claim; scheduled/manual audit and cleanup use the canonical loew-runner coordination engine; no product files are changed.",
       "next_action": "Create the claimed bootstrap branch, add the parameterized coordination workflow, open the draft PR, verify admission, then merge with squash.",
       "base_sha": "4bcaf37748cbbfab75cd407395946bf896045eb4",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T09:06:01.719Z",
-      "updated_at": "2026-09-30T09:06:01.719Z",
-      "lease_until": "2026-09-30T21:06:01.719Z"
+      "updated_at": "2026-09-30T09:12:58.076Z",
+      "lease_until": "2026-09-30T21:12:58.076Z",
+      "pr": 3,
+      "merged_head_sha": "fe2a9d2147d9e1174c5da3ff2db08d6dc095fa59",
+      "merge_commit_sha": "3645a887b75d1a83ade5969ab2bdc8e45936b2cc",
+      "evidence": "https://github.com/lrnolivia/thetake/pull/3",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T09:12:58.076Z"
     }
   ]
 }
