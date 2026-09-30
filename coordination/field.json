@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T05:58:15.845Z",
+  "updated_at": "2026-09-30T06:06:48.435Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -354,12 +354,12 @@
       ],
       "goal": "Recover stranded Frame/Group parity into current main, preserving existing Mobile ownership.",
       "acceptance": "100x100 click Frames, Space parenting bypass, primary Alt G Frame Selection; browser encapsulation, wrapping and native Group world geometry pass; original branches retained until acceptance and QA accounted.",
-      "next_action": "User authorized push/merge of safe work and successor handoffs. Publish preserved 77e8148 as draft; required install/test/lint and exact Preview remain blockers, preserve Mobile scope.",
+      "next_action": "Published draft Field #135 at 77e81482897d6530989882c6df18669d5e4cfde4. Intake handoff in Runner docs/field/reorganization/PUBLICATION_HANDOFF_20260930.md. Await next authorized run/atomic handoff: serial Mobile-owned lockfile and five lint fixes, 57 test failures, exact-head Preview then merge. Deferred panels remain instructions only.",
       "base_sha": "760774a6bd628827f93190fb0abaf7a6e26acbea",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-09-30T05:31:47.089Z",
-      "updated_at": "2026-09-30T05:58:15.845Z",
-      "lease_until": "2026-09-30T17:58:15.845Z"
+      "updated_at": "2026-09-30T06:06:48.435Z",
+      "lease_until": "2026-09-30T18:06:48.435Z"
     }
   ]
 }
