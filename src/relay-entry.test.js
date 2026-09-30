@@ -45,7 +45,7 @@ test("server validation rejects unsupported and cross-action PR fields", () => {
 
 test("server validation accepts exact-head merge input", () => {
   const args = {
-    repo: "loew-inspector",
+    repo: "relay",
     number: 32,
     action: "merge",
     expected_head_sha: "b".repeat(40),
