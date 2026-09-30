@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T13:25:51.183Z",
+  "updated_at": "2026-09-30T13:25:57.685Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -74,6 +74,27 @@
       ],
       "state": "queued",
       "created_at": "2026-09-30T13:25:51.183Z"
+    },
+    {
+      "id": "relay-web-dashboard-20260930",
+      "owner": "relay-web-dashboard-20260930",
+      "goal": "Expose Relay's MCP App dashboard as a first-class authenticated web dashboard on relay.loew.fi with parity to the in-chat state model and controls.",
+      "acceptance": "relay.loew.fi presents the same projects, durable operations, publication receipts, QA handoffs, release state, recovery/rollback actions and history as the MCP App without duplicating state; shared components/data adapters are reused where practical; deep links can open a specific project/operation/release/QA item; auth and mutations use Relay's existing bounded control plane; web and in-chat surfaces remain behaviorally consistent; the dashboard consumes the future shared suite shell/navigation so Relay feels like one utility with Runner and Inspector rather than a separate website.",
+      "next_action": "Implement after the operation framework and core MCP App view-model/components are stable; do not create a second state or approval system for web.",
+      "paths": [
+        "web/relay/",
+        "src/relay-web.js",
+        "src/relay-ui.js",
+        "src/index.js",
+        "src/relay-web.test.js"
+      ],
+      "resources": [
+        "relay-web-dashboard",
+        "relay-mcp-app-ui",
+        "suite-shared-shell"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T13:25:57.685Z"
     }
   ],
   "claims": [
