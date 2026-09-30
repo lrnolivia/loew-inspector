@@ -12,7 +12,7 @@ const clientSecret = process.env.CF_ACCESS_CLIENT_SECRET || "";
 const commitSha = process.env.COMMIT_SHA || "";
 const prNumber = process.env.PR_NUMBER ? Number(process.env.PR_NUMBER) : null;
 const deploymentId = process.env.DEPLOYMENT_ID || "";
-const ingestBase = process.env.INSPECTOR_BRIDGE || "https://loew-inspector-gateway.lrnoliv.workers.dev";
+const ingestBase = process.env.INSPECTOR_BRIDGE || "https://relay.loew.fi";
 
 if (!/^[a-zA-Z0-9._-]{1,80}$/.test(requestId)) throw new Error("Safe request id required");
 if (!/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,127}$/.test(projectId)) throw new Error("Valid project id required");

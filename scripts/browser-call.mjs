@@ -41,7 +41,7 @@ export async function callBrowser(body, { fetchImpl = fetch, sleep = ms => new P
   for (let attempt = 1; attempt <= 2; attempt++) {
     let response;
     try {
-      response = await fetchImpl('https://loew-inspector-gateway.lrnoliv.workers.dev/mcp', {
+      response = await fetchImpl('https://relay.loew.fi/mcp', {
         method: 'POST', signal: AbortSignal.timeout(60000), body,
         headers: {
           Authorization: JSON.stringify({ 'cf-access-client-id': env.CF_ACCESS_CLIENT_ID, 'cf-access-client-secret': env.CF_ACCESS_CLIENT_SECRET }),
