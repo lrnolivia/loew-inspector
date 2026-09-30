@@ -1,0 +1,226 @@
+import legacy from "./index.js";
+import { callSourceLifecycleTool } from "./source-lifecycle.js";
+
+export const RELAY_EXTENSION_VERSION = "1.3.0";
+
+const createBranch = {
+  name: "relay_source_create_branch",
+  title: "Create a GitHub branch",
+  description: "Create a branch through relay.SOURCE from a branch name or exact 40-character commit SHA, with readback reconciliation.",
+  inputSchema: {
+    type: "object",
+    properties: {
+      owner: { type: "string" },
+      repo: { type: "string" },
+      branch: { type: "string" },
+      base: { type: "string", default: "main", description: "Base branch name or exact 40-character commit SHA." }
+    },
+    required: ["repo", "branch"],
+    additionalProperties: false
+  },
+  annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true }
+};
+
+const lifecycle = [
+  {
+    name: "relay_source_inventory",
+    title: "Inspect GitHub branches and PR heads",
+    description: "Read bounded paginated branch and open-PR inventory with exact head SHAs through relay.SOURCE.",
+    inputSchema: {
+      type: "object",
+      properties: { owner: { type: "string" }, repo: { type: "string" } },
+      required: ["repo"],
+      additionalProperties: false
+    },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true }
+  },
+  {
+    name: "relay_source_pull_request_action",
+    title: "Act on an exact-head pull request",
+    description: "Update metadata, mark ready, or merge only while the PR head matches the supplied SHA. Merge requires green check runs and commit statuses and never requests a protection bypass.",
+    inputSchema: {
+      type: "object",
+      properties: {
+        owner: { type: "string" },
+        repo: { type: "string" },
+        number: { type: "integer", minimum: 1, maximum: 1000000 },
+        action: { type: "string", enum: ["update", "ready", "merge"] },
+        expected_head_sha: { type: "string", pattern: "^[a-fA-F0-9]{40}$" },
+        title: { type: "string" },
+        body: { type: "string" },
+        base: { type: "string" },
+        merge_method: { type: "string", enum: ["merge", "squash", "rebase"], default: "squash" }
+      },
+      required: ["repo", "number", "action", "expected_head_sha"],
+      additionalProperties: false
+    },
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: true }
+  }
+];
+
+export function augmentToolList(tools) {
+  const list = Array.isArray(tools) ? tools : [];
+  const old = list.find(tool => tool.name === createBranch.name);
+  const schemes = old?.securitySchemes || list[0]?.securitySchemes || [{ type: "oauth2", scopes: [] }];
+  const replacement = {
+    ...(old || {}),
+    ...createBranch,
+    securitySchemes: schemes,
+    _meta: { ...(old?._meta || {}), securitySchemes: schemes }
+  };
+  const names = new Set(lifecycle.map(tool => tool.name));
+  const kept = list.filter(tool => tool.name !== createBranch.name && !names.has(tool.name));
+  return [
+    ...kept,
+    replacement,
+    ...lifecycle.map(tool => ({
+      ...tool,
+      securitySchemes: schemes,
+      _meta: { securitySchemes: schemes }
+    }))
+  ];
+}
+
+export function validateLifecycleArguments(name, args) {
+  if (!args || typeof args !== "object" || Array.isArray(args)) throw new Error("Tool arguments must be an object");
+  const common = ["owner", "repo"];
+  let allowed, required;
+  if (name === "relay_source_inventory") {
+    allowed = common; required = ["repo"];
+  } else if (name === "relay_source_create_branch") {
+    allowed = [...common, "branch", "base"]; required = ["repo", "branch"];
+  } else if (name === "relay_source_pull_request_action") {
+    allowed = [...common, "number", "action", "expected_head_sha", "title", "body", "base", "merge_method"];
+    required = ["repo", "number", "action", "expected_head_sha"];
+  } else throw new Error("Unknown source lifecycle tool");
+  for (const key of Object.keys(args)) if (!allowed.includes(key)) throw new Error(`Unsupported argument: ${key}`);
+  for (const key of required) if (!(key in args)) throw new Error(`Missing required argument: ${key}`);
+
+  if (name === "relay_source_pull_request_action") {
+    const action = args.action;
+    if (!["update", "ready", "merge"].includes(action)) throw new Error("Unsupported pull request action");
+    const supplied = key => key in args;
+    if (action === "update" && !["title", "body", "base"].some(supplied)) throw new Error("Metadata update requires title, body, or base");
+    if (action === "ready" && ["title", "body", "base", "merge_method"].some(supplied)) throw new Error("Ready action does not accept update or merge fields");
+    if (action === "merge" && ["title", "body", "base"].some(supplied)) throw new Error("Merge action does not accept metadata fields");
+  }
+  return args;
+}
+
+function responseJson(payload, status = 200, sourceHeaders) {
+  const headers = new Headers(sourceHeaders || {});
+  headers.set("content-type", "application/json; charset=utf-8");
+  headers.delete("content-length");
+  return new Response(JSON.stringify(payload), { status, headers });
+}
+async function rewrite(response, mutate) {
+  const body = await response.text();
+  let payload;
+  try { payload = JSON.parse(body); } catch { return new Response(body, { status: response.status, headers: response.headers }); }
+  mutate(payload);
+  return responseJson(payload, response.status, response.headers);
+}
+function patchVersion(payload) {
+  if (payload?.version) payload.version = RELAY_EXTENSION_VERSION;
+  if (payload?.result?.serverInfo?.version) payload.result.serverInfo.version = RELAY_EXTENSION_VERSION;
+  const structured = payload?.result?.structuredContent;
+  if (structured?.version) structured.version = RELAY_EXTENSION_VERSION;
+  const content = payload?.result?.content;
+  if (Array.isArray(content)) {
+    for (const item of content) {
+      if (item?.type !== "text" || typeof item.text !== "string") continue;
+      try {
+        const value = JSON.parse(item.text);
+        if (value?.version) {
+          value.version = RELAY_EXTENSION_VERSION;
+          item.text = JSON.stringify(value);
+        }
+      } catch {}
+    }
+  }
+}
+
+function isLifecycleTool(name) {
+  return name === createBranch.name || lifecycle.some(tool => tool.name === name);
+}
+async function authProbe(request, message, env) {
+  const headers = new Headers(request.headers);
+  headers.delete("content-length");
+  const probe = {
+    jsonrpc: "2.0",
+    id: message.id ?? null,
+    method: "tools/call",
+    params: { name: "__relay_extension_auth_probe__", arguments: {} }
+  };
+  return legacy.fetch(new Request(request.url, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(probe)
+  }), env);
+}
+async function readMcp(request) {
+  const url = new URL(request.url);
+  if (url.pathname !== "/mcp" || request.method !== "POST" || !request.headers.get("content-type")?.startsWith("application/json")) return null;
+  const raw = await request.clone().text();
+  if (raw.length > 16384) return null;
+  try { return JSON.parse(raw); } catch { return null; }
+}
+function toolResult(id, result) {
+  return responseJson({
+    jsonrpc: "2.0",
+    id,
+    result: {
+      content: [{ type: "text", text: JSON.stringify(result) }],
+      structuredContent: result
+    }
+  });
+}
+function toolError(id, error) {
+  return responseJson({
+    jsonrpc: "2.0",
+    id,
+    result: {
+      content: [{ type: "text", text: error instanceof Error ? error.message : "Relay source lifecycle action failed" }],
+      isError: true
+    }
+  });
+}
+
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    const message = await readMcp(request);
+
+    if (message?.method === "tools/call" && isLifecycleTool(message.params?.name)) {
+      const auth = await authProbe(request, message, env);
+      if (auth.status !== 200) return auth;
+      try {
+        const name = message.params.name;
+        const args = validateLifecycleArguments(name, message.params?.arguments || {});
+        const result = await callSourceLifecycleTool(name, args, env);
+        return toolResult(message.id ?? null, result);
+      } catch (error) {
+        return toolError(message.id ?? null, error);
+      }
+    }
+
+    const response = await legacy.fetch(request, env);
+
+    if (url.pathname === "/health" || url.pathname === "/") {
+      return rewrite(response, patchVersion);
+    }
+    if (!message) return response;
+
+    if (message.method === "initialize") return rewrite(response, patchVersion);
+    if (message.method === "tools/list") {
+      return rewrite(response, payload => {
+        patchVersion(payload);
+        if (payload?.result?.tools) payload.result.tools = augmentToolList(payload.result.tools);
+      });
+    }
+    if (message.method === "tools/call" && ["relay_control_status", "relay_ui_control_center"].includes(message.params?.name)) {
+      return rewrite(response, patchVersion);
+    }
+    return response;
+  }
+};
