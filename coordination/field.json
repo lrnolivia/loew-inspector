@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T05:46:59.994Z",
+  "updated_at": "2026-09-30T05:53:57.892Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -354,12 +354,12 @@
       ],
       "goal": "Recover stranded Frame/Group parity into current main, preserving existing Mobile ownership.",
       "acceptance": "100x100 click Frames, Space parenting bypass, primary Alt G Frame Selection; browser encapsulation, wrapping and native Group world geometry pass; original branches retained until acceptance and QA accounted.",
-      "next_action": "Repair inherited import/declaration lint errors on unreserved paths; preserve module side effects, Mobile ownership and all validation rules.",
+      "next_action": "Stopped at explicit user request. Preserve local commit 77e8148 and unpublished consolidation branch; do not resume implementation, tests, push or merge until user resumes.",
       "base_sha": "760774a6bd628827f93190fb0abaf7a6e26acbea",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-09-30T05:31:47.089Z",
-      "updated_at": "2026-09-30T05:46:59.994Z",
-      "lease_until": "2026-09-30T17:46:59.994Z"
+      "updated_at": "2026-09-30T05:53:57.892Z",
+      "lease_until": "2026-09-30T17:53:57.892Z"
     }
   ]
 }
