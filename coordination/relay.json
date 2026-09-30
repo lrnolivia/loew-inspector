@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T14:58:55.630Z",
+  "updated_at": "2026-09-30T15:24:08.236Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -453,7 +453,7 @@
       "pr": 34,
       "merged_head_sha": "7173c9ce47a15cb97ca7bdf492eef851f75a77c7",
       "merge_commit_sha": "c0f4e93f60e3dca76676612f90e2fc782dec55e8",
-      "evidence": "https://github.com/lrnolivia/loew-inspector/pull/34 \u2014 tested/merged head 7173c9ce47a15cb97ca7bdf492eef851f75a77c7; test run 36708849678 passed; Runner admission run 36708849601 passed; squash merge c0f4e93f60e3dca76676612f90e2fc782dec55e8.",
+      "evidence": "https://github.com/lrnolivia/loew-inspector/pull/34 — tested/merged head 7173c9ce47a15cb97ca7bdf492eef851f75a77c7; test run 36708849678 passed; Runner admission run 36708849601 passed; squash merge c0f4e93f60e3dca76676612f90e2fc782dec55e8.",
       "work_accounted": true,
       "completed_at": "2026-09-30T11:31:24.832Z"
     },
@@ -481,7 +481,7 @@
       "pr": 36,
       "merged_head_sha": "0d3fd77ad2555e43a0d79f1d896ea81ecbb1e775",
       "merge_commit_sha": "df2223abab501d1134f70dc7c6ae7921edc74ece",
-      "evidence": "https://github.com/lrnolivia/loew-inspector/pull/36 \u2014 exact-head tests and Runner admission passed; Relay native ready/merge succeeded.",
+      "evidence": "https://github.com/lrnolivia/loew-inspector/pull/36 — exact-head tests and Runner admission passed; Relay native ready/merge succeeded.",
       "work_accounted": true,
       "completed_at": "2026-09-30T11:50:39.053Z"
     },
@@ -510,7 +510,7 @@
       "pr": 37,
       "merged_head_sha": "fc042aa2d648cc79dc8b267a00d43a674034f648",
       "merge_commit_sha": "5edb12474f3ac86bc265b8a197bcdecb17b70d62",
-      "evidence": "https://github.com/lrnolivia/loew-inspector/pull/37 \u2014 exact-head tests and Runner admission passed; Relay native ready/merge succeeded.",
+      "evidence": "https://github.com/lrnolivia/loew-inspector/pull/37 — exact-head tests and Runner admission passed; Relay native ready/merge succeeded.",
       "work_accounted": true,
       "completed_at": "2026-09-30T12:00:38.741Z"
     },
@@ -538,7 +538,7 @@
       "pr": 38,
       "merged_head_sha": "dfa75d2a1944b42f4084381a737ab4789fb2e164",
       "merge_commit_sha": "57378a504025ff5816959c423f34fe0824b82f2d",
-      "evidence": "https://github.com/lrnolivia/loew-inspector/pull/38 \u2014 exact-head tests and Runner admission passed; human-qa skill published through native MCP Skills/Resources discovery.",
+      "evidence": "https://github.com/lrnolivia/loew-inspector/pull/38 — exact-head tests and Runner admission passed; human-qa skill published through native MCP Skills/Resources discovery.",
       "work_accounted": true,
       "completed_at": "2026-09-30T13:04:56.038Z"
     },
@@ -567,7 +567,7 @@
       "pr": 39,
       "merged_head_sha": "dd0924776d96bc3b6881f1292c326fd23dd6924e",
       "merge_commit_sha": "907de20f18209d6fee400c9d74cfde16f8623cba",
-      "evidence": "https://github.com/lrnolivia/loew-inspector/pull/39 \u2014 exact head dd0924776d96bc3b6881f1292c326fd23dd6924e; test and Runner admission passed; squash merge 907de20f18209d6fee400c9d74cfde16f8623cba.",
+      "evidence": "https://github.com/lrnolivia/loew-inspector/pull/39 — exact head dd0924776d96bc3b6881f1292c326fd23dd6924e; test and Runner admission passed; squash merge 907de20f18209d6fee400c9d74cfde16f8623cba.",
       "work_accounted": true,
       "completed_at": "2026-09-30T13:45:29.562Z"
     },
@@ -630,7 +630,7 @@
       "pr": 40,
       "merged_head_sha": "9f94676a1f8c6e432e03851159917c682ef33940",
       "merge_commit_sha": "2ddc8fdbbda871ad91e563fc657bcc4c382fd236",
-      "evidence": "https://github.com/lrnolivia/relay/pull/40 \u2014 Batch 1 identity bridge merged at exact tested head 9f94676a1f8c6e432e03851159917c682ef33940; tests and Runner admission passed after control-plane registration was bridged to lrnolivia/relay; squash merge 2ddc8fdbbda871ad91e563fc657bcc4c382fd236.",
+      "evidence": "https://github.com/lrnolivia/relay/pull/40 — Batch 1 identity bridge merged at exact tested head 9f94676a1f8c6e432e03851159917c682ef33940; tests and Runner admission passed after control-plane registration was bridged to lrnolivia/relay; squash merge 2ddc8fdbbda871ad91e563fc657bcc4c382fd236.",
       "work_accounted": true,
       "completed_at": "2026-09-30T14:37:28.301Z"
     },
@@ -731,12 +731,12 @@
       ],
       "goal": "Migrate canonical coordination authority, registries, contracts and durable state to Relay with exact snapshot manifest and lossless history.",
       "acceptance": "All live records retained, canonical project relay, shared deterministic engine and exact-head CAS preserved; no runtime rename or retirement; before/after readback proven.",
-      "next_action": "Import exact state snapshot and migrate canonical authority with source hash/count manifest; preserve active claims, source writes must reconcile before authority switch.",
+      "next_action": "Canonical Relay read/preflight now passes on deployed exact B3 source. Repair evidenced multiline uploader defect on same Batch 3 branch, prove native exact-source upload, then close state migration.",
       "base_sha": "fc3eb586931d33c887d5e2b58c63a8e002fecf33",
       "state": "active",
       "created_at": "2026-09-30T14:57:47.568Z",
-      "updated_at": "2026-09-30T14:58:55.630Z",
-      "lease_until": "2026-10-01T02:58:55.630Z"
+      "updated_at": "2026-09-30T15:24:08.236Z",
+      "lease_until": "2026-10-01T03:24:08.236Z"
     }
   ],
   "migrated_from": "loew-inspector"
