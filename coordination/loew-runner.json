@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T10:22:13.020Z",
+  "updated_at": "2026-09-30T10:24:31.194Z",
   "legacy_branches": [
     "control",
     "main",
@@ -82,12 +82,18 @@
       ],
       "goal": "Record completed Relay credentials and in-place Inspector rename with exact deployment evidence.",
       "acceptance": "Runner state records merged PRs, current Worker name/ID/deployment, retained bindings/domains and successful live tools without inventing legacy retirement.",
-      "next_action": "Update existing operational docs and merge through Runner checks.",
+      "next_action": "Completed: docs merged after test, admission and Builds checks passed. Relay credential and Worker rename closeout fully recorded.",
       "base_sha": "9689fef445e214d6e033cf9d68999544562aabf1",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T10:21:55.165Z",
-      "updated_at": "2026-09-30T10:21:55.165Z",
-      "lease_until": "2026-09-30T22:21:55.165Z"
+      "updated_at": "2026-09-30T10:24:31.194Z",
+      "lease_until": "2026-09-30T22:21:55.165Z",
+      "pr": 35,
+      "merged_head_sha": "c91e132efef072f29afdf1961a32269222516c68",
+      "merge_commit_sha": "8a44092b5ab67f4d46f4c97c8ad397c520ceb3a7",
+      "evidence": "https://github.com/lrnolivia/loew-runner/pull/35",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T10:24:31.194Z"
     }
   ]
 }
