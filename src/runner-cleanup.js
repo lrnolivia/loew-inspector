@@ -1,8 +1,7 @@
 import { githubApiRequest } from "./source.js";
 import { occupying } from "./coordination-engine.js";
-import { RUNNER_ENGINE_SHA } from "./runner-control.js";
+import { RUNNER_ENGINE_SHA, runnerControlBase } from "./runner-control.js";
 
-const CONTROL = "/repos/lrnolivia/loew-runner";
 const SHA = /^[a-f0-9]{40}$/;
 const PROJECT = /^[a-z0-9-]+$/;
 
@@ -10,16 +9,16 @@ function decode(content) {
   return Buffer.from(String(content || "").replace(/\s/g, ""), "base64").toString("utf8");
 }
 
-async function read(api, path, ref = "main") {
-  const file = await api(`${CONTROL}/contents/${path}?ref=${encodeURIComponent(ref)}`);
+async function read(api, control, path, ref = "main") {
+  const file = await api(`${control}/contents/${path}?ref=${encodeURIComponent(ref)}`);
   if (file?.type !== "file" || file.encoding !== "base64" || !file.sha || file.truncated) {
     throw new Error("Runner file response is incomplete");
   }
   return { sha: file.sha, content: decode(file.content) };
 }
 
-async function jsonFile(api, path) {
-  const file = await read(api, path);
+async function jsonFile(api, control, path) {
+  const file = await read(api, control, path);
   return { ...file, value: JSON.parse(file.content) };
 }
 
@@ -38,9 +37,9 @@ function branchRef(name) {
   return String(name).split("/").map(encodeURIComponent).join("/");
 }
 
-async function context(api, project) {
+async function context(api, control, project) {
   if (typeof project !== "string" || !PROJECT.test(project)) throw new Error("Invalid project");
-  const registrationFile = await jsonFile(api, `projects/${project}.json`);
+  const registrationFile = await jsonFile(api, control, `projects/${project}.json`);
   const registration = registrationFile.value;
   if (
     registration?.id !== project ||
@@ -58,7 +57,7 @@ async function context(api, project) {
   ) {
     throw new Error("Project cleanup policy is incomplete");
   }
-  const recordFile = await jsonFile(api, registration.coordination.record);
+  const recordFile = await jsonFile(api, control, registration.coordination.record);
   const record = recordFile.value;
   if (
     record?.project !== project ||
@@ -67,7 +66,7 @@ async function context(api, project) {
   ) {
     throw new Error("Invalid Runner coordination record");
   }
-  const engine = await read(api, "src/coordination.mjs");
+  const engine = await read(api, control, "src/coordination.mjs");
   if (engine.sha !== RUNNER_ENGINE_SHA) {
     throw new Error("Runner engine changed; refresh cleanup adapter before mutation");
   }
@@ -158,8 +157,8 @@ async function eligibleClaims(api, ctx) {
   return { eligible, retained };
 }
 
-async function rereadClaim(api, project, candidate) {
-  const record = await jsonFile(api, `coordination/${project}.json`);
+async function rereadClaim(api, control, project, candidate) {
+  const record = await jsonFile(api, control, `coordination/${project}.json`);
   const claim = record.value.claims.find(item => item.id === candidate.assignment);
   if (
     !claim ||
@@ -207,7 +206,8 @@ export function validateRunnerCleanupArguments(args) {
 export async function callRunnerCleanup(args, env, apiOverride) {
   validateRunnerCleanupArguments(args);
   const api = apiOverride || ((path, options) => githubApiRequest(env, path, options));
-  const ctx = await context(api, args.project);
+  const control = runnerControlBase(env);
+  const ctx = await context(api, control, args.project);
   const scan = await eligibleClaims(api, ctx);
 
   if (args.mode === "dry_run") {
@@ -229,7 +229,7 @@ export async function callRunnerCleanup(args, env, apiOverride) {
   const deleted = [];
   const retained = [...scan.retained];
   for (const candidate of scan.eligible) {
-    const latest = await rereadClaim(api, args.project, candidate);
+    const latest = await rereadClaim(api, control, args.project, candidate);
     const latestCtx = { ...ctx, record: latest.record.value, recordFile: latest.record };
     if (protectedByPolicy(latestCtx, latest.claim)) {
       retained.push({ branch: candidate.branch, assignment: candidate.assignment, reason: "protected_policy" });
