@@ -5,6 +5,10 @@ function configured(env) {
   return Boolean(env?.CLOUDFLARE_ACCOUNT_ID && env?.CLOUDFLARE_API_TOKEN);
 }
 
+function buildsConfigured(env) {
+  return Boolean(env?.CLOUDFLARE_ACCOUNT_ID && env?.CLOUDFLARE_BUILDS_API_TOKEN);
+}
+
 export function cloudWriteScripts(env) {
   const configuredList = String(env?.RELAY_CLOUDFLARE_WRITE_SCRIPTS || "")
     .split(",")
@@ -20,11 +24,17 @@ export function cloudStatus(env) {
     configured: configured(env),
     account_configured: Boolean(env?.CLOUDFLARE_ACCOUNT_ID),
     token_configured: Boolean(env?.CLOUDFLARE_API_TOKEN),
+    builds_configured: buildsConfigured(env),
+    builds_token_configured: Boolean(env?.CLOUDFLARE_BUILDS_API_TOKEN),
     mutation_tools_exposed: true,
     write_scripts: cloudWriteScripts(env),
     required_bindings: configured(env) ? [] : [
       ...(!env?.CLOUDFLARE_ACCOUNT_ID ? ["CLOUDFLARE_ACCOUNT_ID"] : []),
       ...(!env?.CLOUDFLARE_API_TOKEN ? ["CLOUDFLARE_API_TOKEN"] : [])
+    ],
+    builds_required_bindings: buildsConfigured(env) ? [] : [
+      ...(!env?.CLOUDFLARE_ACCOUNT_ID ? ["CLOUDFLARE_ACCOUNT_ID"] : []),
+      ...(!env?.CLOUDFLARE_BUILDS_API_TOKEN ? ["CLOUDFLARE_BUILDS_API_TOKEN"] : [])
     ]
   };
 }
@@ -46,13 +56,14 @@ function assertWritable(env, script) {
 }
 
 export async function cloudflareApiRequest(env, path, options = {}) {
-  if (!configured(env)) throw new Error("relay.CLOUD credentials are not configured");
+  const token = options.token || env?.CLOUDFLARE_API_TOKEN;
+  if (!env?.CLOUDFLARE_ACCOUNT_ID || !token) throw new Error("relay.CLOUD credentials are not configured");
   const accountId = String(env.CLOUDFLARE_ACCOUNT_ID);
   if (typeof path !== "string" || !path.startsWith("/accounts/" + accountId + "/") || path.includes("://")) {
     throw new Error("Invalid Cloudflare API path");
   }
   const headers = {
-    Authorization: "Bearer " + env.CLOUDFLARE_API_TOKEN,
+    Authorization: "Bearer " + token,
     Accept: "application/json"
   };
   if (options.body !== undefined) headers["Content-Type"] = "application/json";
@@ -107,10 +118,15 @@ export async function cloudWorkerSummary(env, scriptName) {
 
 export async function cloudBuilds(env, scriptName) {
   const script = validateScriptName(scriptName);
+  if (!buildsConfigured(env)) throw new Error("relay.CLOUD Workers Builds credential is not configured");
   const id = String(env.CLOUDFLARE_ACCOUNT_ID);
   const record = await scriptRecord(env, script);
   const externalId = record?.tag || record?.id || script;
-  return cloudflareApiRequest(env, "/accounts/" + id + "/builds/workers/" + encodeURIComponent(externalId) + "/builds");
+  return cloudflareApiRequest(
+    env,
+    "/accounts/" + id + "/builds/workers/" + encodeURIComponent(externalId) + "/builds",
+    { token: env.CLOUDFLARE_BUILDS_API_TOKEN }
+  );
 }
 
 export async function deployCloudVersion(env, scriptName, versionId, message) {
