@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T20:52:12.782Z",
+  "updated_at": "2026-09-30T20:52:15.100Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -371,7 +371,7 @@
     },
     {
       "id": "field-consolidation-workspace-20260930",
-      "owner": "01a0f1bf-3464-7b61-a3ac-f5d494bf7ef3",
+      "owner": "01a0f0ae-4e8c-7e62-ae7a-3b02faa398f5",
       "branch": "field/consolidation-workspace-20260930",
       "paths": [
         "src/Dashboard.tsx",
@@ -427,12 +427,12 @@
       ],
       "goal": "Consolidate Dashboard and explicitly user-authorized Mobile recovery onto current main",
       "acceptance": "Existing Dashboard/create/refresh behavior and current-main Canvas semantics preserved; touch/mobile focused checks and runtime arbitration verified; current user removes Mobile protection, connected-panel follow-up remains deferred; original branches retained",
-      "next_action": "User explicitly requested stop and documentation on 2026-09-30. Do not resume, merge, edit or wake automatically until user explicitly continues. Read canonical docs/field/reorganization/STOP_HANDOFF_20260930.md and refresh live state. Same consolidation chat owns authorized continuation; Workspace remains a serial reservation.",
+      "next_action": "Explicit user requests immediate merge of published #136 without further checks, after hotfix137 merged. Preserve dirty Mobile WIP uncommitted; do not resume implementation; hold remaining work and document after published-head merge.",
       "base_sha": "854038a3e84f41cd590a4ad18b24fcd4127e2fba",
       "state": "held",
       "created_at": "2026-09-30T10:21:02.409Z",
-      "updated_at": "2026-09-30T20:50:16.391Z",
-      "lease_until": "2026-10-01T08:50:16.391Z"
+      "updated_at": "2026-09-30T20:52:15.100Z",
+      "lease_until": "2026-10-01T08:52:15.100Z"
     },
     {
       "id": "field-ui-hotfix-20260930",
