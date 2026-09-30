@@ -1369,7 +1369,7 @@ export default {
       return json({
         ok: true,
         service: "relay",
-        runtime_verify: "loew-inspector",
+        runtime_verify: "relay",
         version: VERSION,
         auth: "cloudflare-managed-oauth",
         downstream_auth: "linked-app-token",
@@ -1426,7 +1426,7 @@ export default {
       return json({
         ok: true,
         service: "relay",
-        runtime_verify: "loew-inspector",
+        runtime_verify: "relay",
         version: VERSION,
         authenticated: true
       });
