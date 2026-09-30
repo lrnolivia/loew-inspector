@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T11:20:33.166Z",
+  "updated_at": "2026-09-30T11:28:26.400Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -177,10 +177,16 @@
       "acceptance": "Relay's published MCP skill resources explicitly forbid routing, handoff, redirection, or suggestions to move Relay/loew.fi work to ChatGPT Work mode; missing capabilities are reported in the current chat.",
       "next_action": "Create the admitted branch, update MCP skill resources, open a draft PR, run tests/admission, and promote if checks pass.",
       "base_sha": "4d18720d757abb8d44d14173154ce74cc6ca6214",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T11:16:56.777Z",
-      "updated_at": "2026-09-30T11:16:56.777Z",
-      "lease_until": "2026-09-30T23:16:56.777Z"
+      "updated_at": "2026-09-30T11:28:26.400Z",
+      "lease_until": "2026-09-30T23:28:26.400Z",
+      "pr": 33,
+      "merged_head_sha": "7573ac713ef9f58625b853882ac280232bb13d34",
+      "merge_commit_sha": "b1cc18f9e7f69e67f5000d983d2e1fba45c590b1",
+      "evidence": "PR #33 merged as b1cc18f9e7f69e67f5000d983d2e1fba45c590b1 after exact-head test and Runner coordination admission passed. Cloudflare Worker loew-inspector version 37 (463a1188-8123-4ee6-bcb9-e95b983b05ef) deployed at 100% via deployment d76b9d79-b11e-43a1-930e-47f01aee90b9. Live bundle verification returned all five skill URIs present, five Chat surface invariant sections, all five new SHA-256 skill digests present, and the stale relay-control digest absent.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T11:28:26.400Z"
     },
     {
       "id": "relay-source-lifecycle-20260930",
