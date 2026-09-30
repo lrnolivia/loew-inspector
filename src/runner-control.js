@@ -7,6 +7,7 @@ import {
   runnerControlRepository
 } from './runner-control-core.js';
 import { callProgress } from './progress-api.js';
+import { projectCloudStatus, deployProjectCloudVersion } from './project-cloud.js';
 
 const MUTATIONS = ['queue', 'claim', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete'];
 const text = (max = 500) => ({ type: 'string', minLength: 1, maxLength: max });
@@ -56,6 +57,17 @@ const DEFINITIONS = [
     name: 'relay_runner_progress',
     description: 'Read evidence-derived execution progress for current claims and queued work. Progress is derived from Runner, GitHub and configured Cloud evidence; claim state and next_action prose are context, not proof of execution.',
     inputSchema: schema({ project: projectSchema, assignment: identity }, ['project'])
+  },
+  {
+    name: 'relay_cloud_project',
+    description: 'Resolve canonical project-to-Cloudflare Worker authority. A project is writable only when its registration allows writes and the Worker remains in Relay\'s runtime allowlist.',
+    inputSchema: schema({ project: projectSchema }, ['project'])
+  },
+  {
+    name: 'relay_cloud_deploy_project_version',
+    description: 'Deploy an existing Cloudflare Worker version by canonical Relay project identity. Project registration and the runtime Worker allowlist must both authorize the mutation.',
+    inputSchema: schema({ project: projectSchema, version_id: text(128), message: text(1000) }, ['project', 'version_id']),
+    mutation: true
   },
   {
     name: 'relay_runner_preflight',
@@ -151,6 +163,10 @@ export async function callRunnerControl(name, args, env, apiOverride) {
   if (!definition) return null;
   validateControlArguments(args, definition.inputSchema);
   if (name === 'relay_runner_progress') return callProgress(args, env, apiOverride);
+  if (name === 'relay_cloud_project') return projectCloudStatus(env, args.project, apiOverride);
+  if (name === 'relay_cloud_deploy_project_version') {
+    return deployProjectCloudVersion(env, args.project, args.version_id, args.message, { github: apiOverride });
+  }
   return callRunnerControlCore(name, args, env, apiOverride);
 }
 
