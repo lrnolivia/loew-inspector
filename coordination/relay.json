@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T23:19:00.712Z",
+  "updated_at": "2026-09-30T23:30:52.618Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -449,23 +449,107 @@
     {
       "id": "relay-1.8.1-icon-hotfix-20260930",
       "owner": "relay-1.8.1-icon-hotfix-20260930",
-      "goal": "Ship the immediate post-1.8 design-only icon/illustration hotfix without reopening Relay 1.8 architecture or maintenance work.",
-      "acceptance": "Consume docs/relay/RELAY_1_8_ICON_HOTFIX_HANDOFF.md from the shipped 1.8 release. Finalize only approved Today and lowercase night shift marks/icons plus any replacement Relay illustrations that materially improve the UI. Preserve approved Relay/Runner/Inspector geometry exactly. Keep Terra Prime restraint and responsive/reduced-motion behavior. Do not absorb or modify the separate held MCP icon metadata PR #47; avoid apps/mcp/index.js, apps/mcp/branding.js and test/mcp-branding.test.mjs. Do not change observed-progress, Runner, Source, Cloud, authorization, or coordination architecture. Treat this as task class design.",
-      "next_action": "After Relay 1.8 completes, claim a fresh design-only branch from then-current main, review the 1.8 icon handoff and approved assets, implement only the visual hotfix, run responsive rendering checks, merge through Relay, deploy exact source if runtime assets changed, and close the assignment.",
+      "goal": "Ship the immediate post-1.8 design repair on top of current Relay main. Fix the visible 1.8 UI regressions without reopening observed-progress/control-plane architecture: remove fake underline/depth treatments, rebuild the ChatGPT app-settings affordance, repair broken action-card/endcap geometry, replace the nested project sidebar with a shared horizontal scrollable project-tab rail across Today/Runner/Inspector/night shift, and simplify the dashboard into useful flat Terra Prime information surfaces with no gradients.",
+      "acceptance": "Task class design. Build from then-current Relay main and preserve all newer 1.9.x architecture/contracts. No gradients. Clickable surfaces must not use underline-like bottom borders or fake inset endcaps. Buttons should read as intentional controls through shape, spacing, weight, hover/press motion and restrained tonal fill—not card-like blocks. The ChatGPT app-settings control must feel native to the sidebar/utility area and visually subordinate to primary navigation. Eliminate the nested vertical project sidebar; use one horizontally scrollable project-tab rail with clear selected state, keyboard/focus support and graceful overflow, and make that project context available on Today, Runner, Inspector and lowercase night shift. Runner content should use the full panel width beneath the project rail. The top dashboard/overview panel must be simplified into compact useful status/metrics with flat Terra Prime surfaces, no gradients and no decorative filler. Repair attention/action cards so controls remain inside the card geometry at all widths; no detached right-side caps. Preserve approved Relay/Runner/Inspector marks and all observed-progress data semantics. Responsive desktop/mobile and reduced-motion behavior must remain sound. Do not touch PR #47-owned MCP identity files or 1.9 architecture/skills files. Regenerate checked-in web bundle, pass browser/workspace tests, verify responsive screenshots against the supplied bug screenshots, merge/deploy exact source if runtime assets changed, and close the assignment.",
+      "next_action": "Claim from current post-1.9.1 main. First replace the nested project sidebar with a horizontal shared project-tab rail and flatten page-overview/dashboard styling. Then remove underline/bottom-border button styling, redesign ChatGPT app settings as a quiet native utility action, and repair attention/action-card geometry so buttons stay inside cards. Keep all progress/state data unchanged. Regenerate bundle, run exact-head tests and responsive visual verification, then merge/deploy and close.",
       "paths": [
-        "apps/web/public/brand/",
-        "packages/shared-ui/glyphs.js",
+        "apps/web/public/index.html",
+        "apps/web/public/operator.js",
+        "apps/web/public/operator-today.js",
+        "apps/web/public/operator-projects.js",
+        "apps/web/public/operator-review.js",
+        "apps/web/public/operator.css",
         "apps/web/public/operator-1.8.css",
+        "apps/web/public/qa.css",
+        "apps/web/build.mjs",
+        "apps/web/generated.js",
+        "apps/web/test/browser.test.mjs",
+        "features/night-shift/view.js",
+        "packages/shared-ui/",
         "docs/relay/RELAY_1_8_1_ICON_HOTFIX.md"
       ],
       "resources": [
         "relay-design",
+        "relay-ui-repair",
+        "relay-project-tabs",
+        "relay-dashboard-simplification",
+        "relay-control-affordances",
+        "relay-responsive-layout",
         "relay-today-icon",
         "relay-night-shift-icon",
         "relay-illustration-refresh"
       ],
       "state": "queued",
-      "created_at": "2026-09-30T22:51:57.497Z"
+      "created_at": "2026-09-30T22:51:57.497Z",
+      "task_class": "design",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-09-30T23:30:52.618Z",
+          "by": "relay-1.8.1-icon-hotfix-20260930",
+          "reason": "User review of shipped 1.8 screenshots found major visual regressions: underline-like clickable surfaces, gross app-settings button, broken action endcaps, unusable nested project sidebar, useless/ugly dashboard panel, and unwanted gradients. Fold into the existing immediate post-1.8 design successor rather than creating parallel repair work.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action",
+            "paths",
+            "resources",
+            "task_class"
+          ],
+          "before": {
+            "goal": "Ship the immediate post-1.8 design-only icon/illustration hotfix without reopening Relay 1.8 architecture or maintenance work.",
+            "acceptance": "Consume docs/relay/RELAY_1_8_ICON_HOTFIX_HANDOFF.md from the shipped 1.8 release. Finalize only approved Today and lowercase night shift marks/icons plus any replacement Relay illustrations that materially improve the UI. Preserve approved Relay/Runner/Inspector geometry exactly. Keep Terra Prime restraint and responsive/reduced-motion behavior. Do not absorb or modify the separate held MCP icon metadata PR #47; avoid apps/mcp/index.js, apps/mcp/branding.js and test/mcp-branding.test.mjs. Do not change observed-progress, Runner, Source, Cloud, authorization, or coordination architecture. Tr...",
+            "next_action": "After Relay 1.8 completes, claim a fresh design-only branch from then-current main, review the 1.8 icon handoff and approved assets, implement only the visual hotfix, run responsive rendering checks, merge through Relay, deploy exact source if runtime assets changed, and close the assignment.",
+            "paths": [
+              "apps/web/public/brand/",
+              "packages/shared-ui/glyphs.js",
+              "apps/web/public/operator-1.8.css",
+              "docs/relay/RELAY_1_8_1_ICON_HOTFIX.md"
+            ],
+            "resources": [
+              "relay-design",
+              "relay-today-icon",
+              "relay-night-shift-icon",
+              "relay-illustration-refresh"
+            ],
+            "task_class": null
+          },
+          "after": {
+            "goal": "Ship the immediate post-1.8 design repair on top of current Relay main. Fix the visible 1.8 UI regressions without reopening observed-progress/control-plane architecture: remove fake underline/depth treatments, rebuild the ChatGPT app-settings affordance, repair broken action-card/endcap geometry, replace the nested project sidebar with a shared horizontal scrollable project-tab rail across Today/Runner/Inspector/night shift, and simplify the dashboard into useful flat Terra Prime information surfaces with no gradients.",
+            "acceptance": "Task class design. Build from then-current Relay main and preserve all newer 1.9.x architecture/contracts. No gradients. Clickable surfaces must not use underline-like bottom borders or fake inset endcaps. Buttons should read as intentional controls through shape, spacing, weight, hover/press motion and restrained tonal fill—not card-like blocks. The ChatGPT app-settings control must feel native to the sidebar/utility area and visually subordinate to primary navigation. Eliminate the nested vertical project sidebar; use one horizontally scrollable project-tab rail with clear selected state,...",
+            "next_action": "Claim from current post-1.9.1 main. First replace the nested project sidebar with a horizontal shared project-tab rail and flatten page-overview/dashboard styling. Then remove underline/bottom-border button styling, redesign ChatGPT app settings as a quiet native utility action, and repair attention/action-card geometry so buttons stay inside cards. Keep all progress/state data unchanged. Regenerate bundle, run exact-head tests and responsive visual verification, then merge/deploy and close.",
+            "paths": [
+              "apps/web/public/index.html",
+              "apps/web/public/operator.js",
+              "apps/web/public/operator-today.js",
+              "apps/web/public/operator-projects.js",
+              "apps/web/public/operator-review.js",
+              "apps/web/public/operator.css",
+              "apps/web/public/operator-1.8.css",
+              "apps/web/public/qa.css",
+              "apps/web/build.mjs",
+              "apps/web/generated.js",
+              "apps/web/test/browser.test.mjs",
+              "features/night-shift/view.js",
+              "packages/shared-ui/",
+              "docs/relay/RELAY_1_8_1_ICON_HOTFIX.md"
+            ],
+            "resources": [
+              "relay-design",
+              "relay-ui-repair",
+              "relay-project-tabs",
+              "relay-dashboard-simplification",
+              "relay-control-affordances",
+              "relay-responsive-layout",
+              "relay-today-icon",
+              "relay-night-shift-icon",
+              "relay-illustration-refresh"
+            ],
+            "task_class": "design"
+          }
+        }
+      ],
+      "updated_at": "2026-09-30T23:30:52.618Z"
     }
   ],
   "claims": [
