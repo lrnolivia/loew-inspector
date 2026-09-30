@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T21:14:43.411Z",
+  "updated_at": "2026-09-30T21:16:23.785Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -305,6 +305,41 @@
       ],
       "state": "claimed",
       "created_at": "2026-09-30T20:40:58.266Z"
+    },
+    {
+      "id": "relay-1.8-contextual-ui-20260930",
+      "owner": "relay-1.8-contextual-ui-20260930",
+      "goal": "Ship Relay 1.8 as the contextual MCP experience and liveness release: ordinary Relay work should surface compact interactive cards for the relevant Runner, Inspector, Source and Cloud context, while every long-running operation exposes durable progress, heartbeat and stuck-state visibility so the user never has to guess whether a worker is still moving.",
+      "acceptance": "Canonical service/version metadata and release-facing UI/docs identify the resulting release as Relay 1.8.0. ChatGPT can render compact contextual cards for at least Runner project/assignment/preflight state, Source pull request/check/merge state, Cloud release/deployment state, Inspector evidence/review/human-QA state, and durable multi-step operations; cards preserve exact artifact/operation identity, refresh in place where the client supports it, and expand into the shared Relay app/fullscreen view instead of creating parallel mini-products. Cards clearly distinguish queued, working, waiting-on-external-system, waiting-for-human, blocked, stale/unresponsive, failed, rolled-back and complete states. Long-running active operations persist a meaningful heartbeat/updated_at plus human-readable current stage and next action at least every 10 minutes while work is genuinely progressing. By default, 20 minutes without a meaningful heartbeat/progress signal marks an active operation stale; the threshold may be configurable by operation class but must never silently extend itself. Crossing into blocked, failed, stale, waiting-for-human or complete emits one durable notification/attention event; repeated checks do not spam unless the state materially changes. If GitHub/Cloudflare/another dependency is still demonstrably running, Relay says so instead of falsely labeling the worker frozen; if the worker actually stopped heartbeating or hit quota/rate/auth/tool failure, Relay says that plainly and includes the last successful stage plus recovery action. Operation receipts persist stage/state, exact source/head/PR/check/merge/version/deployment/runtime identities, timestamps, retry/reconciliation history and waiting/blocker reasons so reconnecting clients can resume without chat history. Human-QA cards consume the existing Runner QA-helper/Visuals contracts and remain bound to exact evidence identity. Existing headless tools remain compatible; contextual UI is additive. Runner and Inspector retain the 1.7 identities/icons. Web and MCP surfaces use the same state model. Mobile/desktop layouts remain usable. Required tests, exact-head admission, MCP/web rendering checks and authenticated production readback pass before completion.",
+      "next_action": "Treat queued relay-operation-framework-20260930 and relay-mcp-app-ui-20260930 as prerequisite/source scope for this 1.8 release, not independent competing product directions. First stabilize the durable operation/receipt and progress-event model, including heartbeat/stale semantics and attention events; then bind contextual output templates/cards to existing Relay tools and the shared app, preserve 1.7 Runner/Inspector identity, validate exact-head behavior, ship as Relay 1.8.0, and leave a durable completion receipt.",
+      "paths": [
+        "src/relay-chat-ui.js",
+        "src/relay-operation-ui.js",
+        "src/relay-qa-ui.js",
+        "src/relay-project-ui.js",
+        "src/relay-release-ui.js",
+        "src/relay-ui.js",
+        "src/relay-entry.js",
+        "src/operations.js",
+        "src/operation-receipts.js",
+        "src/operation-events.js",
+        "apps/mcp/",
+        "apps/web/",
+        "packages/shared-ui/",
+        "test/",
+        "docs/relay/"
+      ],
+      "resources": [
+        "relay-1.8-release",
+        "relay-mcp-app-ui",
+        "relay-operation-framework",
+        "relay-contextual-cards",
+        "relay-progress-heartbeats",
+        "relay-stale-work-alerts",
+        "relay-human-qa"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T21:16:23.785Z"
     }
   ],
   "claims": [
