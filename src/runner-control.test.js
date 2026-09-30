@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { createHash } from 'node:crypto';
 import { readFile } from 'node:fs/promises';
-import { callRunnerControl, runnerControlTools, runnerControlError, RUNNER_ENGINE_SHA } from './runner-control.js';
+import { callRunnerControl, runnerControlTools, runnerControlError, RUNNER_ENGINE_SHA, runnerControlRepository } from './runner-control.js';
 const sha = 'a'.repeat(40);
 const newSha = 'b'.repeat(40);
 const defaultRequest = { id: 'task', owner: 'worker', branch: 'loew-inspector/task', paths: ['src/'], resources: ['relay-control'], goal: 'Native tools', acceptance: 'Policy enforced', next_action: 'Implement' };
@@ -145,4 +145,18 @@ test('provider failure classification never echoes provider secrets', () => {
   const result = runnerControlError(Object.assign(new Error('token secret'), { status: 403 }));
   assert.equal(result.error.class, 'permission');
   assert.equal(JSON.stringify(result).includes('secret'), false);
+});
+
+
+test('Runner control authority is configurable for Relay migration and validates owner scope', async () => {
+  const f = fixture();
+  const env = { RELAY_RUNNER_CONTROL_REPOSITORY: 'lrnolivia/relay' };
+  const result = await callRunnerControl('relay_runner_project', { project: 'loew-inspector' }, env, f.api);
+  assert.equal(result.ok, true);
+  assert.ok(f.calls.some(path => path.startsWith('/repos/lrnolivia/relay/contents/projects/loew-inspector.json')));
+  assert.equal(runnerControlRepository(env), 'lrnolivia/relay');
+  assert.throws(
+    () => runnerControlRepository({ RELAY_RUNNER_CONTROL_REPOSITORY: 'other/relay' }),
+    /Invalid Runner control repository binding/
+  );
 });

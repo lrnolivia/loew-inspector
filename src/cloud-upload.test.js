@@ -4,7 +4,7 @@ import { uploadCloudSourceVersion, validateCloudUploadArguments } from "./cloud-
 
 const commit = "a".repeat(40);
 const owner = "lrnolivia";
-const repo = "loew-inspector";
+const repo = "relay";
 const script = "loew-inspector";
 
 function encoded(content, path) {
@@ -72,7 +72,7 @@ function fixture(options = {}) {
 
   const env = {
     RELAY_GITHUB_OWNER: owner,
-    RELAY_CLOUDFLARE_WRITE_SCRIPTS: script,
+    RELAY_CLOUDFLARE_WRITE_SCRIPTS: options.writeScripts || "loew-inspector,relay",
     CLOUDFLARE_ACCOUNT_ID: "account123",
     CLOUDFLARE_API_TOKEN: "token"
   };
@@ -191,4 +191,17 @@ test("unsupported relative module types are rejected instead of silently omitted
     /must include \.js or \.mjs/
   );
   assert.equal(f.uploads.length, 0);
+});
+
+
+test("canonical relay Worker identity is allowed before runtime cutover", async () => {
+  const f = fixture({ wranglerName: "relay" });
+  const result = await uploadCloudSourceVersion(
+    { ...args, script: "relay" },
+    f.env,
+    { github: f.github, cloud: f.cloud, rawUpload: f.rawUpload }
+  );
+  assert.equal(result.ok, true);
+  assert.equal(f.uploads.length, 1);
+  assert.equal(f.uploads[0].metadata.annotations["workers/repository_url"], "https://github.com/lrnolivia/relay");
 });

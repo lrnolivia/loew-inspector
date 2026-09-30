@@ -5,13 +5,13 @@ import { createSourceBranch, sourceInventory, sourcePullRequestAction } from "./
 test("inventory returns exact default, branch and open PR heads", async () => {
   const main = "a".repeat(40), branch = "b".repeat(40), pr = "c".repeat(40);
   const request = async (_env, path) => {
-    if (path === "/repos/lrnolivia/loew-inspector") return { default_branch: "main" };
+    if (path === "/repos/lrnolivia/relay") return { default_branch: "main" };
     if (path.includes("/git/ref/heads/main")) return { object: { sha: main } };
     if (path.includes("/branches?")) return [{ name: "main", commit: { sha: branch }, protected: true }];
     if (path.includes("/pulls?state=open")) return [{ number: 4, title: "x", draft: true, head: { ref: "x", sha: pr }, base: { ref: "main" }, state: "open" }];
     throw new Error("unexpected " + path);
   };
-  const got = await sourceInventory({}, { repo: "loew-inspector" }, request);
+  const got = await sourceInventory({}, { repo: "relay" }, request);
   assert.equal(got.default_head_sha, main);
   assert.equal(got.branches[0].head_sha, branch);
   assert.equal(got.open_pull_requests[0].head_sha, pr);
@@ -24,12 +24,12 @@ test("branch creation accepts an exact commit SHA and verifies readback", async 
     if (path.endsWith("/git/commits/" + base)) return { sha: base };
     if (path.endsWith("/git/refs") && options.method === "POST") {
       createBody = options.body;
-      return { ref: "refs/heads/loew-inspector/exact", object: { sha: base } };
+      return { ref: "refs/heads/relay/exact", object: { sha: base } };
     }
-    if (path.includes("/git/ref/heads/loew-inspector/exact")) return { object: { sha: base } };
+    if (path.includes("/git/ref/heads/relay/exact")) return { object: { sha: base } };
     throw new Error("unexpected " + path);
   };
-  const got = await createSourceBranch({}, { repo: "loew-inspector", branch: "loew-inspector/exact", base }, request);
+  const got = await createSourceBranch({}, { repo: "relay", branch: "relay/exact", base }, request);
   assert.equal(createBody.sha, base);
   assert.equal(got.head_sha, base);
   assert.equal(got.reconciled_after_transport_error, false);
@@ -40,10 +40,10 @@ test("branch creation reconciles a provider error after a successful write", asy
   const request = async (_env, path, options = {}) => {
     if (path.includes("/git/ref/heads/main")) return { object: { sha: base } };
     if (path.endsWith("/git/refs") && options.method === "POST") throw new Error("timeout");
-    if (path.includes("/git/ref/heads/loew-inspector/reconciled")) return { object: { sha: base } };
+    if (path.includes("/git/ref/heads/relay/reconciled")) return { object: { sha: base } };
     throw new Error("unexpected " + path);
   };
-  const got = await createSourceBranch({}, { repo: "loew-inspector", branch: "loew-inspector/reconciled", base: "main" }, request);
+  const got = await createSourceBranch({}, { repo: "relay", branch: "relay/reconciled", base: "main" }, request);
   assert.equal(got.reconciled_after_transport_error, true);
 });
 
@@ -54,7 +54,7 @@ test("PR action rejects a changed head before mutation", async () => {
     return { state: "open", head: { sha: "0".repeat(40) } };
   };
   await assert.rejects(
-    sourcePullRequestAction({}, { repo: "loew-inspector", number: 1, action: "update", expected_head_sha: "f".repeat(40), title: "no" }, request),
+    sourcePullRequestAction({}, { repo: "relay", number: 1, action: "update", expected_head_sha: "f".repeat(40), title: "no" }, request),
     /head changed/
   );
   assert.equal(calls, 1);
@@ -74,7 +74,7 @@ test("ready-for-review revalidates exact head after GraphQL mutation", async () 
     assert.equal(variables.pullRequestId, "PR_node");
     return {};
   };
-  const got = await sourcePullRequestAction({}, { repo: "loew-inspector", number: 7, action: "ready", expected_head_sha: head }, request, graphql);
+  const got = await sourcePullRequestAction({}, { repo: "relay", number: 7, action: "ready", expected_head_sha: head }, request, graphql);
   assert.equal(called, true);
   assert.equal(got.pull_request.draft, false);
 });
@@ -89,7 +89,7 @@ test("merge rejects a non-green exact head without calling merge", async () => {
     throw new Error("unexpected " + path);
   };
   await assert.rejects(
-    sourcePullRequestAction({}, { repo: "loew-inspector", number: 9, action: "merge", expected_head_sha: head }, request),
+    sourcePullRequestAction({}, { repo: "relay", number: 9, action: "merge", expected_head_sha: head }, request),
     /not green/
   );
   assert.equal(merged, false);
@@ -111,7 +111,7 @@ test("merge binds provider mutation to the expected green SHA", async () => {
     }
     throw new Error("unexpected " + path);
   };
-  const got = await sourcePullRequestAction({}, { repo: "loew-inspector", number: 10, action: "merge", expected_head_sha: head, merge_method: "squash" }, request);
+  const got = await sourcePullRequestAction({}, { repo: "relay", number: 10, action: "merge", expected_head_sha: head, merge_method: "squash" }, request);
   assert.equal(mergeBody.sha, head);
   assert.equal(mergeBody.merge_method, "squash");
   assert.equal(got.merge.merged, true);

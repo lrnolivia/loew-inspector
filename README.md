@@ -1,6 +1,6 @@
-# loew-inspector
+# relay
 
-Canonical source, browser evidence engine, and compatibility transport for protected read-only loew.fi inspection.
+relay is the canonical loew.fi control-plane source. inspector evidence and runner coordination are being consolidated here in gated batches.
 
 ## Gen 2.1 evidence controller
 
@@ -94,11 +94,11 @@ The workflow accepts only HTTPS loew.fi URLs and GET/HEAD, and fails unless the 
 
 `qa-preview.yml` is one `workflow_dispatch` call from the same connected GitHub/Composio transport. Supply the full field PR head SHA, a correlation ID, and the matching **immutable** editor and Canvas deployment URLs in the Cloudflare Preview comment on that PR. When editor behavior depends on real saved project state, also supply `project_id`; the workflow will open the branch build at `/qa/work/<project_id>` instead of the disposable `/builder/noauth` route. The workflow calls `inspect.yml` for a protected runner read, then checks both Preview hosts from GitHub Actions and opens them in Chromium. It reports `LOEW_INSPECTOR_RESULT=` in the runner job and `LOEW_QA_RESULT=` in the Preview job, with browser screenshots attached to the run.
 
-In a normal ChatGPT conversation, ask the connected GitHub tool to read the field PR head SHA and latest Cloudflare Preview comment, dispatch `lrnolivia/loew-inspector` workflow `qa-preview.yml` on `main` with `editor_url`, `canvas_url`, `head_sha`, and `request_id`, wait for completion, then read both job logs and the screenshot artifact. The two Preview URLs must have the same eight-character deployment prefix. A new PR commit requires a new Cloudflare deployment and a fresh QA run.
+In a normal ChatGPT conversation, ask the connected GitHub tool to read the field PR head SHA and latest Cloudflare Preview comment, dispatch `lrnolivia/relay` workflow `qa-preview.yml` on `main` with `editor_url`, `canvas_url`, `head_sha`, and `request_id`, wait for completion, then read both job logs and the screenshot artifact. The two Preview URLs must have the same eight-character deployment prefix. A new PR commit requires a new Cloudflare deployment and a fresh QA run.
 
 This is a Preview preflight: it verifies editor reachability, Canvas routing and isolation headers, and Canvas iframe first paint in a browser. Feature-specific interaction QA still follows field's browser Preview QA protocol. The inspector Worker itself currently receives Cloudflare `400` / `error code: 1053` when it fetches Worker Preview hosts, even though direct GitHub/browser requests can reach them. Therefore the workflow uses the inspector for the protected runner and a direct browser check for branch Previews. A plain HTTP probe of the editor's `/builder/noauth` route also returned `404` while Chromium loaded the same route with `200`; the workflow records that probe but gates on browser runtime evidence. These transport differences remain visible in the QA evidence; Access was not loosened.
 
-Verified on field PR #19 at head `c871cc9afaf7dfae517665c5c8f2eea8f37ebe77`: [QA run 36297329899](https://github.com/lrnolivia/loew-inspector/actions/runs/36297329899) was dispatched and read through the connected Composio GitHub action. Both jobs passed: protected runner returned HTTP 200 through inspector, and Chromium loaded the immutable editor/Canvas deployment `8a2a8555` with Canvas iframe first paint and all four isolation headers. The browser screenshots are attached to the run. This proves the connected GitHub action can invoke the new workflow; the earlier run 36296334657 separately proved that connection from a normal ChatGPT conversation.
+Verified on field PR #19 at head `c871cc9afaf7dfae517665c5c8f2eea8f37ebe77`: [QA run 36297329899](https://github.com/lrnolivia/relay/actions/runs/36297329899) was dispatched and read through the connected Composio GitHub action. Both jobs passed: protected runner returned HTTP 200 through inspector, and Chromium loaded the immutable editor/Canvas deployment `8a2a8555` with Canvas iframe first paint and all four isolation headers. The browser screenshots are attached to the run. This proves the connected GitHub action can invoke the new workflow; the earlier run 36296334657 separately proved that connection from a normal ChatGPT conversation.
 
 `schedule-preview-qa.yml` checks all open `lrnolivia/field` PRs hourly. For each PR head, it reads the matching successful Cloudflare deployment row, takes the paired immutable editor/Canvas URLs, and dispatches `qa-preview.yml` once for that head. It uses this repository's scoped `GITHUB_TOKEN`; no new Access credential is shared with runner. Missing deployments are recorded in `LOEW_PREVIEW_SCHEDULER_RESULT=` and are never guessed. A new commit gets a new QA run. The scheduler looks back through recent QA workflow runs to avoid repeat dispatches; very old unchanged heads may eventually be rechecked after the run history window rolls over.
 
@@ -131,3 +131,13 @@ The compatibility workflow uses:
 - repository secret `CF` (the matching Access client secret)
 
 Never commit their values.
+
+
+## consolidation status
+
+Canonical source repository: `lrnolivia/relay`.
+
+Batch 1 deliberately leaves the deployed Worker named `loew-inspector` and Runner control authority bound to `lrnolivia/loew-runner`. Those are temporary migration bindings, not canonical product/source identities. Later gated batches move state/runtime and retire the old identities.
+
+
+Runner admission now resolves this renamed repository directly through the updated control-plane registration.
