@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T20:51:27.452Z",
+  "updated_at": "2026-09-30T20:52:12.782Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -466,10 +466,16 @@
       "acceptance": "PaintPicker is materially smaller in width and vertical density and nested ColorInput launchers remain nested floating ToolPopups; toolbar mixed cards and Media creation cards render through the same shared component and Media descriptions are removed; RightHeader has an explicit bg-panel shell surface and separator so the avatar/zoom/theme/preview/publish bar is visibly part of the Inspector; contract tests assert all three; verify exact-head visual state through Relay before promotion.",
       "next_action": "User explicitly requested no further checks and immediate merge of published hotfix #137 and #136 on 2026-09-30. Merge exact published f918185a through ordinary GitHub merge, then stop and document. Do not resume unpublished Mobile or broader consolidation.",
       "base_sha": "854038a3e84f41cd590a4ad18b24fcd4127e2fba",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T11:40:16.059Z",
-      "updated_at": "2026-09-30T20:51:27.452Z",
-      "lease_until": "2026-10-01T08:51:27.452Z"
+      "updated_at": "2026-09-30T20:52:12.782Z",
+      "lease_until": "2026-10-01T08:52:12.782Z",
+      "pr": 137,
+      "merged_head_sha": "f918185a3a5646943520c8f9e4be610a49c57972",
+      "merge_commit_sha": "06c2b0e00c45451e72a7de1c7382f6b0b53df3c0",
+      "evidence": "Merged exact published f918185a as 06c2b0e00c45451e72a7de1c7382f6b0b53df3c0 on explicit user instruction no checks merge hotfix &136 to main now. Existing focused/local/Preview evidence remains in PR137; final pending Registry was not awaited. Stop receipt will be docs/field/reorganization/STOP_HANDOFF_20260930.md. Deferred connected landscape geometry remains in separate deferred requirements.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T20:52:12.782Z"
     }
   ]
 }
