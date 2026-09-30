@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T13:25:45.579Z",
+  "updated_at": "2026-09-30T13:25:51.183Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -49,6 +49,31 @@
       ],
       "state": "queued",
       "created_at": "2026-09-30T13:25:45.579Z"
+    },
+    {
+      "id": "relay-mcp-app-ui-20260930",
+      "owner": "relay-mcp-app-ui-20260930",
+      "goal": "Make Relay's primary product experience an interactive in-chat MCP App rather than a prose wrapper around headless tools.",
+      "acceptance": "ChatGPT can render compact live operation cards, project status, release/deployment state and human-QA requests directly in conversation; human-QA UI consumes the canonical Runner QA-helper contract and Visuals IDs, supports targeted questions/checklists/notes/verdicts, and can expand into a full-screen review experience without creating a parallel store; render surfaces reuse durable Relay operation receipts and existing bounded mutation tools; headless production tools remain mostly headless; UI can send bounded follow-up actions/messages, refresh state, and preserve exact artifact identity; stale artifact/evidence state is visibly invalidated; mobile/desktop layouts remain useful; picture-in-picture/persistent mini-status may be explored where supported but is not required for correctness.",
+      "next_action": "Begin after the durable operation receipt shape is stable enough to consume. Treat the current qa-shell design as authoritative for human review interaction; wire to it rather than redesigning it.",
+      "paths": [
+        "src/relay-chat-ui.js",
+        "src/relay-operation-ui.js",
+        "src/relay-qa-ui.js",
+        "src/relay-project-ui.js",
+        "src/relay-release-ui.js",
+        "src/relay-ui.js",
+        "src/relay-entry.js",
+        "src/relay-chat-ui.test.js"
+      ],
+      "resources": [
+        "relay-mcp-app-ui",
+        "relay-operation-framework",
+        "runner-human-qa",
+        "relay-publication-receipts"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T13:25:51.183Z"
     }
   ],
   "claims": [
