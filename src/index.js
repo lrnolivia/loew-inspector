@@ -247,8 +247,8 @@ async function mcp(request, access, env) {
   if (message.method === "ping") return rpc(id, {});
 
   if (message.method === "tools/list") {
-    return rpc(id, {
-      tools: [
+    const securitySchemes = [{ type: "oauth2", scopes: [] }];
+    const tools = [
         {
           name: "fetch_loew_url",
           title: "Fetch a protected loew.fi page",
@@ -474,7 +474,13 @@ async function mcp(request, access, env) {
           },
           annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false }
         }
-      ]
+    ];
+    return rpc(id, {
+      tools: tools.map((tool) => ({
+        ...tool,
+        securitySchemes,
+        _meta: { ...(tool._meta || {}), securitySchemes }
+      }))
     });
   }
 
@@ -692,10 +698,10 @@ export default {
     const access = await verifyAccessJwt(request);
     if (!access) {
       return json(
-        { error: "Authentication required" },
+        { error: "invalid_token", error_description: "Authentication required" },
         401,
         {
-          "WWW-Authenticate": 'Bearer resource_metadata="https://inspector.loew.fi/.well-known/oauth-protected-resource"'
+          "WWW-Authenticate": 'Bearer resource_metadata="https://inspector.loew.fi/.well-known/oauth-protected-resource/mcp", error="invalid_token", error_description="Authentication required"'
         }
       );
     }
