@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T14:26:06.626Z",
+  "updated_at": "2026-09-30T14:37:28.301Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -623,10 +623,16 @@
       "acceptance": "Canonical source repository references resolve lrnolivia/relay directly with no reliance on GitHub rename redirects; MCP source annotations, upload/source lifecycle logic and repository allowlists understand relay; Runner-control repository/project identity is configurable or migration-aware rather than permanently hardcoded to loew-runner; the existing live MCP remains usable throughout this batch; tests cover identity/config migration and fail closed on ambiguous control authority; no old production hostname/script is deleted or switched in this batch.",
       "next_action": "Split Runner control into a small public tool/schema wrapper plus a configurable authority core module, then finish the Relay identity bridge tests and config without production cutover.",
       "base_sha": "907de20f18209d6fee400c9d74cfde16f8623cba",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T14:13:54.913Z",
-      "updated_at": "2026-09-30T14:26:06.626Z",
-      "lease_until": "2026-10-01T02:26:06.626Z"
+      "updated_at": "2026-09-30T14:37:28.301Z",
+      "lease_until": "2026-10-01T02:37:28.301Z",
+      "pr": 40,
+      "merged_head_sha": "9f94676a1f8c6e432e03851159917c682ef33940",
+      "merge_commit_sha": "2ddc8fdbbda871ad91e563fc657bcc4c382fd236",
+      "evidence": "https://github.com/lrnolivia/relay/pull/40 — Batch 1 identity bridge merged at exact tested head 9f94676a1f8c6e432e03851159917c682ef33940; tests and Runner admission passed after control-plane registration was bridged to lrnolivia/relay; squash merge 2ddc8fdbbda871ad91e563fc657bcc4c382fd236.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T14:37:28.301Z"
     }
   ]
 }
