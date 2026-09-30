@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T23:34:16.534Z",
+  "updated_at": "2026-09-30T23:34:21.335Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -646,6 +646,39 @@
       ],
       "state": "queued",
       "created_at": "2026-09-30T23:34:16.534Z"
+    },
+    {
+      "id": "relay-1.9.4-skills-runtime-core-20260930",
+      "owner": "relay-1.9.4-skills-runtime-core-20260930",
+      "goal": "Ship Relay 1.9.4 as the first-class skills registry/runtime foundation.",
+      "acceptance": "Implement manifest validation, provenance/license/integrity metadata, deterministic JIT resolution with bounded context, dependency/capability gating, project-private overlays and auditable upstream update policy. Untrusted bundles get no ambient authority. Keep MCP surface small and explain why skills are selected/rejected/unavailable. Tests cover validation, provenance, version drift, path containment, context budgets and tool gating.",
+      "next_action": "Begin after resume/checkpoint foundation is stable so skills can consume canonical resume/planning context.",
+      "paths": [
+        "packages/skills/",
+        "contracts/skills/",
+        "src/skills-registry.js",
+        "src/skills-resolver.js",
+        "src/skills-runtime.js",
+        "src/skills-audit.js",
+        "src/skills-upstream.js",
+        "docs/skills/",
+        "docs/relay/RELAY_1_9_4_RELEASE.md"
+      ],
+      "resources": [
+        "relay-1.9.4-release",
+        "relay-skills-runtime",
+        "relay-skill-registry",
+        "relay-skill-provenance",
+        "relay-jit-skill-loading"
+      ],
+      "task_class": "architecture",
+      "ledger_refs": [
+        "RFS-019",
+        "RFS-021",
+        "RFS-022"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T23:34:21.335Z"
     }
   ],
   "claims": [
