@@ -280,7 +280,7 @@ export async function callRunnerControlCore(name, args, env = {}, apiOverride) {
   const api = apiOverride || ((path, options) => githubApiRequest(env, path, options));
   const controlRepository = runnerControlRepository(env);
   const control = runnerControlBase(env);
-  if (controlRepository === "lrnolivia/relay" && args.project === "loew-inspector") args = { ...args, project: "relay" };
+  if (controlRepository === "lrnolivia/relay" && ["loew-inspector", "loew-runner"].includes(args.project)) args = { ...args, project: "relay" };
 
   if (name === 'relay_runner_projects') {
     const files = await api(`${control}/contents/projects?ref=main`);

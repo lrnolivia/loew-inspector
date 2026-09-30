@@ -1,3 +1,7 @@
+# Historical pre-consolidation record
+
+This document retains historical evidence. Current authority is `lrnolivia/relay@main`, project `relay`, Worker `relay`, web `https://relay.loew.fi`, MCP `https://relay.loew.fi/mcp`. Runtime and retirement truth: [Relay retirement](relay/LEGACY_RETIREMENT.md). Historical hostnames and repository instructions below must not be used for current execution.
+
 # loew.fi access + control surfaces
 
 Updated: 2026-09-30  

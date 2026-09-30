@@ -11,4 +11,4 @@ Composio is valid for remote GitHub/control-plane operations on any platform. An
 If Runner is temporarily unreachable, use conservative fallback behavior: refresh live state, do not invent evidence, bound identical retries, change strategy instead of looping, verify writes, preserve authority/ownership boundaries, park only the blocked path, and persist the next safe action. Reload the canonical Bible as soon as access returns.
 
 
-Consolidation rule: canonical source is `lrnolivia/relay`. Until the control-state migration batch completes, Runner authority may remain explicitly bound to `lrnolivia/loew-runner`; do not infer that the old repository is canonical Relay source.
+Canonical source, coordination authority, runtime and MCP binding are `lrnolivia/relay`, project `relay`, and `https://relay.loew.fi/mcp`. Old repository/project names are recovery references only.

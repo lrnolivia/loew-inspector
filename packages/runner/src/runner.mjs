@@ -55,7 +55,7 @@ function budgetBlockReason(config, state) {
 }
 
 async function waitForCredential(state) {
-  const message = "OPENAI_API_KEY is not configured in loew-runner GitHub Actions secrets.";
+  const message = "OPENAI_API_KEY is not configured in Relay GitHub Actions secrets.";
   if (state.status === "waiting_credentials" && state.last_error === message) return state;
   state.status = "waiting_credentials";
   state.last_error = message;

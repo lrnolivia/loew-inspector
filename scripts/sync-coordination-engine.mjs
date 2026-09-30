@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process';
 import { writeFile, readFile } from 'node:fs/promises';
-const remote = JSON.parse(execFileSync('gh', ['api', 'repos/lrnolivia/loew-runner/contents/src/coordination.mjs?ref=main'], { encoding: 'utf8' }));
+const remote = JSON.parse(execFileSync('gh', ['api', 'repos/lrnolivia/relay/contents/src/coordination.mjs?ref=main'], { encoding: 'utf8' }));
 const engine = Buffer.from(remote.content, 'base64').toString('utf8');
 const target = new URL('../src/runner-control.js', import.meta.url);
 const adapter = await readFile(target, 'utf8');

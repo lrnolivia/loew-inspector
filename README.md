@@ -28,7 +28,7 @@ Gen 2 keeps `fetch_loew_url` for bounded HTTP/Access diagnostics and adds Cloudf
 ```text
 normal Chat / plugin / GitHub fallback
               ↓
-        loew-inspector
+        relay
        ↙              ↘
 HTTP diagnostics    Browser Run
                          ↓
@@ -86,7 +86,7 @@ normal ChatGPT / relay
   -> protected loew.fi target
 ```
 
-GitHub Actions calls `https://relay.loew.fi/mcp`. The relay Access app accepts the scoped GitHub bridge service token for workflow automation and Managed OAuth for human ChatGPT sessions. The same authenticated relay/inspector Worker uses linked-app trust for protected downstream reads. Legacy inspector hostnames remain compatibility surfaces only while migration cleanup is completed; current operational topology and rollback details live in loew-runner.
+GitHub Actions calls `https://relay.loew.fi/mcp`. The relay Access app accepts the scoped GitHub bridge service token for workflow automation and Managed OAuth for human ChatGPT sessions. The same authenticated Relay Worker uses linked-app trust for protected downstream reads. current operational topology and rollback details live in docs/relay/.
 
 The workflow accepts only HTTPS loew.fi URLs and GET/HEAD, and fails unless the target response is HTTP 200. It preserves the inspector's HTML, JSON, and other supported read results in `LOEW_INSPECTOR_RESULT=` for the caller to read from the run log. This bridge transports the same MCP tool; it is not another inspector implementation.
 
@@ -110,7 +110,7 @@ Cloudflare Free-plan Bot Fight Mode challenged both GitHub's request and the ins
 
 Preview is runtime truth.
 
-Do not create a second preview/runtime engine inside loew-runner or loew-inspector.
+Runner and Inspector are internal Relay subsystems; reuse the existing evidence/runtime engine.
 
 Inspector QA is optional external verification around Preview. It is useful for:
 
@@ -137,7 +137,7 @@ Never commit their values.
 
 Canonical source repository: `lrnolivia/relay`.
 
-Batch 1 deliberately leaves the deployed Worker named `loew-inspector` and Runner control authority bound to `lrnolivia/loew-runner`. Those are temporary migration bindings, not canonical product/source identities. Later gated batches move state/runtime and retire the old identities.
+Consolidation establishes `relay` as the Worker, managed project, source and coordination authority. Runner and Inspector are internal packages; Night Shift is a Relay feature. Historical repository names and the retained evidence bucket identity are provenance and recovery references. See `docs/relay/LEGACY_RETIREMENT.md`.
 
 
 Runner admission now resolves this renamed repository directly through the updated control-plane registration.

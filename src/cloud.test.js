@@ -8,7 +8,7 @@ test("relay.CLOUD status is truthful and writes are bounded", () => {
   assert.equal(empty.builds_configured, false);
   assert.deepEqual(empty.required_bindings, ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_API_TOKEN"]);
   assert.deepEqual(empty.builds_required_bindings, ["CLOUDFLARE_ACCOUNT_ID", "CLOUDFLARE_BUILDS_API_TOKEN"]);
-  assert.deepEqual(cloudWriteScripts({}), ["loew-inspector", "relay"]);
+  assert.deepEqual(cloudWriteScripts({}), ["relay"]);
   const ready = cloudStatus({
     CLOUDFLARE_ACCOUNT_ID: "a",
     CLOUDFLARE_API_TOKEN: "primary",

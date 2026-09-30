@@ -1,6 +1,6 @@
 const API = 'https://api.github.com';
 const field = 'lrnolivia/field';
-const inspector = 'lrnolivia/loew-inspector';
+const inspector = 'lrnolivia/relay';
 const token = process.env.GITHUB_TOKEN || process.env.GH_TOKEN;
 const dryRun = process.argv.includes('--dry-run');
 
@@ -13,7 +13,7 @@ async function github(path, options = {}) {
       Accept: 'application/vnd.github+json',
       Authorization: `Bearer ${token}`,
       'X-GitHub-Api-Version': '2022-11-28',
-      'User-Agent': 'loew-inspector-preview-scheduler',
+      'User-Agent': 'relay-preview-scheduler',
       ...(options.body ? { 'Content-Type': 'application/json' } : {}),
     },
     signal: AbortSignal.timeout(15000),

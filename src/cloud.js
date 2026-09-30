@@ -1,5 +1,5 @@
 const CLOUDFLARE_API = "https://api.cloudflare.com/client/v4";
-const DEFAULT_WRITE_SCRIPTS = ["loew-inspector", "relay"];
+const DEFAULT_WRITE_SCRIPTS = ["relay"];
 
 function configured(env) {
   return Boolean(env?.CLOUDFLARE_ACCOUNT_ID && env?.CLOUDFLARE_API_TOKEN);

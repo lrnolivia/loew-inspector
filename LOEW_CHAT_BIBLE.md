@@ -29,7 +29,7 @@ When instructions conflict, stop only the conflicting action, preserve evidence,
 Before meaningful work:
 
 1. read the current `contracts/manifest.json`
-2. read this Bible from `loew-runner/main`
+2. read this Bible from `lrnolivia/relay@main`
 3. read the current `projects/<project-id>.json` record when Runner manages the project
 4. read the target repository's root `AGENTS.md` stub or equivalent local overlay
 5. read the applicable role contract

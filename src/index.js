@@ -28,8 +28,6 @@ const EVIDENCE_CONTEXT_SCHEMA = {
   additionalProperties: false
 };
 const ACCESS_ISSUER = "https://loewfi.cloudflareaccess.com";
-const ACCESS_AUD = "6d19d2ef9eea644a9f55a049699a31110150fefebb1bca8c89632b9dd149ccd6";
-const BRIDGE_ACCESS_AUD = "042e98668017c064913a05705dd5e26de48153116ecb9bd574ec1128a559fd23";
 const RELAY_ACCESS_AUD = "7d90e5b24c6c74b4bd0fb36699e0a65a3aa25057763986ca1b8ce1a52d528819";
 const MAX_BODY_BYTES = 262144;
 const MAX_REDIRECTS = 5;
@@ -44,7 +42,6 @@ const TEXT_TYPES = /^(text\/|application\/(?:json|xml|javascript|xhtml\+xml|[^;]
 
 const RELAY_GITHUB_API = "https://api.github.com";
 const RELAY_GITHUB_OWNER = "lrnolivia";
-const RUNNER_ORIGIN = "https://runner.loew.fi";
 const GITHUB_API_VERSION = "2022-11-28";
 const LEGACY_TOOL_ALIASES = Object.freeze({
   fetch_loew_url: "relay_verify_fetch_url",
@@ -217,7 +214,7 @@ async function verifyAccessJwt(request) {
       header.alg !== "RS256" ||
       typeof header.kid !== "string" ||
       claims.iss !== ACCESS_ISSUER ||
-      (!aud.includes(ACCESS_AUD) && !aud.includes(BRIDGE_ACCESS_AUD) && !aud.includes(RELAY_ACCESS_AUD)) ||
+      !aud.includes(RELAY_ACCESS_AUD) ||
       typeof claims.exp !== "number" || claims.exp <= now ||
       (typeof claims.nbf === "number" && claims.nbf > now)
     ) return null;

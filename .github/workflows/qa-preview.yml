@@ -34,7 +34,7 @@ jobs:
     name: Protected runner via inspector
     uses: ./.github/workflows/inspect.yml
     with:
-      url: https://runner.loew.fi/api/workers
+      url: https://relay.loew.fi/api/workers
       method: GET
       request_id: "${{ inputs.request_id }}-runner"
     secrets: inherit

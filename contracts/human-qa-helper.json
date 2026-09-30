@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "version": "2026-09-30.1",
-  "authority": "lrnolivia/loew-runner@main",
+  "authority": "lrnolivia/relay@main",
   "name": "runner-human-qa-helper",
   "purpose": "Canonical contract for agents populating Runner's human QA helper with artifact-bound questions, checklists, notes, verdicts, and Visuals evidence.",
   "applies_when": [
