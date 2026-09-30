@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T05:21:36.629Z",
+  "updated_at": "2026-09-30T05:23:55.218Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -138,7 +138,29 @@
     "stage0/text-edit-inspector-selection",
     "worker/figui3-selection-locate-skeleton"
   ],
-  "queue": [],
+  "queue": [
+    {
+      "id": "field-connected-panel-followup-20260930",
+      "owner": "01a0f0ae-4e8c-7e62-ae7a-3b02faa398f5",
+      "goal": "Deferred user-reported connected landscape chrome, Inspector top bar and Insert detail panel geometry; instructions only until user resumes.",
+      "acceptance": "docs/field/reorganization/DEFERRED_CONNECTED_PANEL_REQUIREMENTS_20260930.md; landscape uses desktop connected Float geometry, portrait preserves sheets, exact-head touch/browser and iOS gates.",
+      "next_action": "Remain queued; user deferred implementation. On explicit resume, reconcile serial ownership with the existing Mobile owner before admission; do not create a new worker.",
+      "paths": [
+        "src/App.tsx",
+        "src/editor/ChromeIslands.tsx",
+        "src/editor/FloatingLeftPanelHost.tsx",
+        "src/editor/ToolbarPanelHost.tsx",
+        "src/editor/header/RightHeader.tsx",
+        "src/editor/left-toolbar/panels/insert/index.tsx"
+      ],
+      "resources": [
+        "mobile-shell",
+        "workspace-floating-geometry"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T05:23:55.218Z"
+    }
+  ],
   "claims": [
     {
       "id": "field-mobile-focus",
