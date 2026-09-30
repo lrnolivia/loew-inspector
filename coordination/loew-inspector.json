@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T14:56:46.210Z",
+  "updated_at": "2026-09-30T14:57:47.568Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -190,7 +190,7 @@
         "runner-human-qa",
         "runner-visual-evidence"
       ],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-09-30T14:07:05.927Z"
     },
     {
@@ -668,6 +668,56 @@
       "evidence": "https://github.com/lrnolivia/relay/pull/41; exact head fdefc6c724f94cbf9605cfa72665208380a7ee2b passed 76 Inspector, 45 Runner, 3 provenance/layout tests plus CI and Runner admission. Runner 71a5fdbae3303b28a840579d816dc846aaae5186 and all 246 original ancestors preserved with two-parent import and merge commit; both source and Relay ancestry verified against remote main. docs/MONOREPO_LAYOUT.md and docs/RUNNER_IMPORT_PROVENANCE.md account code/history boundaries; live control state and runtime untouched.",
       "work_accounted": true,
       "completed_at": "2026-09-30T14:56:46.210Z"
+    },
+    {
+      "id": "relay-consolidation-b3-control-state-20260930",
+      "owner": "relay-consolidation-b3-control-state-20260930",
+      "branch": "loew-inspector/relay-b3-control-state",
+      "paths": [
+        "packages/",
+        "contracts/",
+        "projects/",
+        "coordination/",
+        "src/",
+        "test/",
+        "scripts/",
+        "workers/",
+        "state/",
+        "assignments/",
+        "reports/",
+        "night-shift/",
+        "templates/",
+        "LOEW_CHAT_BIBLE.md",
+        "LOEW_CHAT_BIBLE_CURRENT.md",
+        "AGENTS.md",
+        "package.json",
+        "package-lock.json",
+        ".gitignore",
+        "wrangler.jsonc",
+        ".github/workflows/",
+        "docs/ACCESS_CONTROL.md",
+        "docs/WORK_COORDINATION.md",
+        "docs/HUMAN_QA_HELPER.md",
+        "docs/VISUAL_EVIDENCE_POLICY.md",
+        "docs/CONTROL_STATE_MIGRATION.md",
+        "docs/MONOREPO_LAYOUT.md",
+        "docs/RUNNER_IMPORT_PROVENANCE.md"
+      ],
+      "resources": [
+        "relay-control-state",
+        "relay-operation-framework",
+        "relay-publication-receipts",
+        "runner-human-qa",
+        "runner-visual-evidence"
+      ],
+      "goal": "Migrate canonical coordination authority, registries, contracts and durable state to Relay with exact snapshot manifest and lossless history.",
+      "acceptance": "All live records retained, canonical project relay, shared deterministic engine and exact-head CAS preserved; no runtime rename or retirement; before/after readback proven.",
+      "next_action": "Inventory fresh Runner snapshot and all active ownership, rescope exact documentation import paths before writes; freeze snapshot updates and switch authority only after exact-state readback.",
+      "base_sha": "fc3eb586931d33c887d5e2b58c63a8e002fecf33",
+      "state": "active",
+      "created_at": "2026-09-30T14:57:47.568Z",
+      "updated_at": "2026-09-30T14:57:47.568Z",
+      "lease_until": "2026-10-01T02:57:47.568Z"
     }
   ]
 }
