@@ -2,8 +2,9 @@ import legacy from "./index.js";
 import { callSourceLifecycleTool } from "./source-lifecycle.js";
 import { runnerCleanupTool, callRunnerCleanup, validateRunnerCleanupArguments } from "./runner-cleanup.js";
 import { cloudUploadTool, callCloudUpload, validateCloudUploadArguments } from "./cloud-upload.js";
+import { QA_SKILL_URI, qaSkillCatalogEntry, qaSkillResourceDescriptor, qaSkillResource } from "./qa-skill.js";
 
-export const RELAY_EXTENSION_VERSION = "1.5.0";
+export const RELAY_EXTENSION_VERSION = "1.6.0";
 
 const createBranch = {
   name: "relay_source_create_branch",
@@ -82,6 +83,22 @@ export function augmentToolList(tools) {
       _meta: { securitySchemes: schemes }
     }))
   ];
+}
+
+export function augmentResourceList(resources) {
+  const list = Array.isArray(resources) ? resources : [];
+  if (list.some(resource => resource?.uri === QA_SKILL_URI)) return list;
+  return [...list, qaSkillResourceDescriptor()];
+}
+
+export function augmentSkillList(skills) {
+  const list = Array.isArray(skills) ? skills : [];
+  if (list.some(skill => skill?.uri === QA_SKILL_URI)) return list;
+  return [...list, qaSkillCatalogEntry()];
+}
+
+function rpcResult(id, result, sourceHeaders) {
+  return responseJson({ jsonrpc: "2.0", id, result }, 200, sourceHeaders);
 }
 
 export function validateLifecycleArguments(name, args) {
@@ -224,6 +241,24 @@ export default {
     if (!message) return response;
 
     if (message.method === "initialize") return rewrite(response, patchVersion);
+    if (message.method === "resources/list") {
+      return rewrite(response, payload => {
+        patchVersion(payload);
+        if (payload?.result?.resources) payload.result.resources = augmentResourceList(payload.result.resources);
+      });
+    }
+    if (message.method === "resources/read" && message.params?.uri === QA_SKILL_URI && response.status === 200) {
+      return rpcResult(message.id ?? null, { contents: [qaSkillResource()] }, response.headers);
+    }
+    if (message.method === "skills/list") {
+      return rewrite(response, payload => {
+        patchVersion(payload);
+        if (payload?.result?.skills) payload.result.skills = augmentSkillList(payload.result.skills);
+      });
+    }
+    if (message.method === "skills/get" && message.params?.uri === QA_SKILL_URI && response.status === 200) {
+      return rpcResult(message.id ?? null, { skill: qaSkillCatalogEntry() }, response.headers);
+    }
     if (message.method === "tools/list") {
       return rewrite(response, payload => {
         patchVersion(payload);
