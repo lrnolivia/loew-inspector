@@ -11,7 +11,6 @@
   "plan": "docs/FIELD_REPOSITORY_REORGANIZATION.md",
   "authority": [
     "contracts/manifest.json",
-    "LOEW_CHAT_BIBLE_CURRENT.md",
     "LOEW_CHAT_BIBLE.md",
     "projects/field.json",
     "lrnolivia/field@main/AGENTS.md",

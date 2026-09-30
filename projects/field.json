@@ -42,7 +42,7 @@
     "browser_run": "exploratory-or-session-only",
     "real_project_entrypoint": "/qa/work/<projectId>",
     "smoke_only_entrypoint": "/builder/noauth",
-    "project_overlay": ".field/handoff-kit/qa/BROWSER_PREVIEW_QA_PROTOCOL.md",
+    "project_overlay": "docs/field/qa/BROWSER_PREVIEW_QA_PROTOCOL.md",
     "preview_endpoints": [
       "https://field.loew.fi",
       "https://canvas.field.loew.fi",
