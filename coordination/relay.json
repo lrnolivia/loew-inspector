@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T16:39:20.445Z",
+  "updated_at": "2026-09-30T20:02:57.628Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -840,6 +840,28 @@
       "evidence": "PR46 exact head0cfbf1dd012cb6b2757d07ab390ecc4929b64e1a passed workspace CI, browser checks and Runner admission; ready and merge through Relay, squash1c77c7dd303804b2f8cf70809cfafd0577215276. Native Relay upload/deploy versiond083b75f-9fed-45a3-a9ca-5d240024b81f, deploymentde24e5cb-0ee7-4c37-8a00-f5cfd99c8193 at100%. Authenticated exact-source production passed before retirement run36744930723 and after retirement run36745549674. Legacy runner/inspector/relay-inspector domains and DNS absent, routes empty, old Access apps removed and Field/Relay audiences/policies retained. Legacy Runner Worker absent; Relay workers.dev and preview ingress disabled. loew-runner archived after exact12branch/8PR inventory and frozen3972446 ancestor proof. Canonical guarded Night Shift run36745545426 success; model execution parked without OPENAIKEY, all state retained. CAS ledger7d57cd145e7ee9cf921b395d600e5500225bca86 superseded standaloneInspector queue, reconciled completedbatchqueues and preserved allowners. SharedR2/Browser/secrets/OAuth retained; onlycanonicalRelay active.",
       "work_accounted": true,
       "completed_at": "2026-09-30T16:39:17.366Z"
+    },
+    {
+      "id": "relay-brand-glyphs-20260930",
+      "owner": "codex-relay-brand-glyphs-20260930",
+      "branch": "relay/brand-glyphs-20260930",
+      "paths": [
+        "apps/web/",
+        "packages/shared-ui/",
+        "features/night-shift/",
+        "docs/relay/"
+      ],
+      "resources": [
+        "relay-shared-interface-brand"
+      ],
+      "goal": "Add supplied official Relay icon and thick animated interface glyphs, with Runner/Inspector marks used only for internal subsystem context.",
+      "acceptance": "Shared web/MCP carries exact provided assets, coherent rounded animated glyphs, accessible labels and reduced-motion support; focused browser/build and exact-head admission pass.",
+      "next_action": "Inspect Field glyph motion, admit source branch, implement shared icon system and validate web/MCP before native ship.",
+      "base_sha": "c9f6af7e51e478d25c1cb58f89f782063246ae20",
+      "state": "active",
+      "created_at": "2026-09-30T20:02:57.628Z",
+      "updated_at": "2026-09-30T20:02:57.628Z",
+      "lease_until": "2026-10-01T08:02:57.628Z"
     }
   ],
   "migrated_from": "loew-inspector"
