@@ -23,13 +23,15 @@ test("Relay extension publishes source inventory and exact-head PR action", () =
   const names = tools.map(tool => tool.name);
   assert.ok(names.includes("relay_source_inventory"));
   assert.ok(names.includes("relay_source_pull_request_action"));
+  assert.ok(names.includes("relay_source_edit_text"));
+  assert.ok(names.includes("relay_source_append_text"));
   const branch = tools.find(tool => tool.name === "relay_source_create_branch");
   assert.match(branch.description, /exact 40-character commit SHA/);
   assert.equal(branch._meta.existing, true);
   assert.ok(names.includes("relay_runner_cleanup"));
   assert.ok(names.includes("relay_cloud_upload_version"));
   assert.equal(tools.find(tool => tool.name === "relay_source_update_file").description.includes("GitHub App preferred"), true);
-  assert.equal(RELAY_EXTENSION_VERSION, "1.9.1");
+  assert.equal(RELAY_EXTENSION_VERSION, "1.9.2");
 });
 
 test("server validation rejects unsupported and cross-action PR fields", () => {
