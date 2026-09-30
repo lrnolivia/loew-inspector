@@ -112,7 +112,7 @@ async function readSourceFile(github, owner, repo, path, commitSha) {
 function relativeImports(source) {
   const found = new Set();
   const patterns = [
-    /(?:import|export)\s+(?:[^'"\n]*?\s+from\s*)?["'](\.{1,2}\/[^"']+)["']/g,
+    /(?:import|export)\s+(?:[^'";]*?\s+from\s*)?["'](\.{1,2}\/[^"']+)["']/g,
     /import\s*\(\s*["'](\.{1,2}\/[^"']+)["']\s*\)/g
   ];
   for (const pattern of patterns) {
