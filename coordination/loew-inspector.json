@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T13:25:57.685Z",
+  "updated_at": "2026-09-30T13:26:02.774Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -95,6 +95,28 @@
       ],
       "state": "queued",
       "created_at": "2026-09-30T13:25:57.685Z"
+    },
+    {
+      "id": "inspector-visual-review-web-20260930",
+      "owner": "inspector-visual-review-web-20260930",
+      "goal": "Make inspector.loew.fi the suite's dedicated visual-review dashboard, moving the visual review experience out of Runner's product surface while keeping Runner as the coordination/evidence authority.",
+      "acceptance": "Inspector web renders screenshots, videos, live-preview availability, targeted QA-helper questions/checklists, notes/verdicts, upload/archive/expiry state and exact operation/publication context from Runner/Relay; Runner remains authoritative for Visuals receipts, QA identity and coordination rather than duplicating those stores in Inspector; Inspector supports direct links to exact evidence/run/artifact and full-screen review; Runner dashboard links/deep-links into Inspector for visual review instead of maintaining a competing review UI once migration is complete; the design consumes the shared suite shell and feels seamless with runner.loew.fi and relay.loew.fi; migration preserves historical review/evidence identity.",
+      "next_action": "Start only after Runner's current operator/qa-shell design and Visuals backend contracts settle enough to consume. Treat this as a presentation migration/integration, not an evidence-authority migration.",
+      "paths": [
+        "web/inspector/",
+        "src/inspector-ui.js",
+        "src/inspector-runner-bridge.js",
+        "src/index.js",
+        "src/inspector-ui.test.js"
+      ],
+      "resources": [
+        "inspector-web-dashboard",
+        "runner-human-qa",
+        "runner-visual-evidence",
+        "suite-shared-shell"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T13:26:02.774Z"
     }
   ],
   "claims": [
