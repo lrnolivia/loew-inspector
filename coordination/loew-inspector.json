@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T14:57:47.568Z",
+  "updated_at": "2026-09-30T14:58:55.630Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -701,7 +701,26 @@
         "docs/VISUAL_EVIDENCE_POLICY.md",
         "docs/CONTROL_STATE_MIGRATION.md",
         "docs/MONOREPO_LAYOUT.md",
-        "docs/RUNNER_IMPORT_PROVENANCE.md"
+        "docs/RUNNER_IMPORT_PROVENANCE.md",
+        "docs/ARCHITECTURE.md",
+        "docs/FIELD_GUIDANCE_CLEANUP_MANIFEST.md",
+        "docs/FIELD_NIGHT_SHIFT_MIGRATION.md",
+        "docs/FIELD_REPOSITORY_REORGANIZATION.md",
+        "docs/RUNNER_3_0_HUMAN_CONTROL_PLANE.md",
+        "docs/STATE.md",
+        "docs/TERRA_PRIME_DASHBOARD_MAPPING.md",
+        "docs/archive/",
+        "docs/bazzite-custom/",
+        "docs/field/",
+        "docs/gamebridge/",
+        "docs/loew-inspector/",
+        "docs/loew-runner/",
+        "docs/loew-shell/",
+        "docs/loewfi/",
+        "docs/loewtorials/",
+        "docs/rtxforge-mfg/",
+        "docs/rtxforge/",
+        "docs/thetake/"
       ],
       "resources": [
         "relay-control-state",
@@ -712,12 +731,12 @@
       ],
       "goal": "Migrate canonical coordination authority, registries, contracts and durable state to Relay with exact snapshot manifest and lossless history.",
       "acceptance": "All live records retained, canonical project relay, shared deterministic engine and exact-head CAS preserved; no runtime rename or retirement; before/after readback proven.",
-      "next_action": "Inventory fresh Runner snapshot and all active ownership, rescope exact documentation import paths before writes; freeze snapshot updates and switch authority only after exact-state readback.",
+      "next_action": "Import exact state snapshot and migrate canonical authority with source hash/count manifest; preserve active claims, source writes must reconcile before authority switch.",
       "base_sha": "fc3eb586931d33c887d5e2b58c63a8e002fecf33",
       "state": "active",
       "created_at": "2026-09-30T14:57:47.568Z",
-      "updated_at": "2026-09-30T14:57:47.568Z",
-      "lease_until": "2026-10-01T02:57:47.568Z"
+      "updated_at": "2026-09-30T14:58:55.630Z",
+      "lease_until": "2026-10-01T02:58:55.630Z"
     }
   ]
 }
