@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T14:07:00.575Z",
+  "updated_at": "2026-09-30T14:07:05.927Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -165,6 +165,33 @@
       ],
       "state": "queued",
       "created_at": "2026-09-30T14:07:00.575Z"
+    },
+    {
+      "id": "relay-consolidation-b3-control-state-20260930",
+      "owner": "relay-consolidation-b3-control-state-20260930",
+      "goal": "Batch 3: migrate durable coordination, QA, Visuals and operation authority into Relay so the canonical managed project/control identity becomes relay and the MCP no longer depends on a separate loew-runner repository.",
+      "acceptance": "Canonical managed project id is relay; current active/held/completed coordination history, queued roadmap, QA helper contracts, Visuals identity and publication/operation receipts are migrated without loss or duplication; runner remains an internal coordination engine rather than a separate product/repo; inspector remains an internal verification/evidence engine; Relay MCP runner-control tools read/write the new canonical state and preserve exact-head/readback safety; old loew-runner/loew-inspector ids are no longer required for active control; stale pre-consolidation queued work is explicitly migrated or marked superseded rather than remaining actionable.",
+      "next_action": "Start after Batch 2 history/package import is verified. Migrate state with before/after manifests and exact-count/readback checks before switching MCP authority.",
+      "paths": [
+        "packages/runner/",
+        "packages/inspector/",
+        "packages/shared/",
+        "contracts/",
+        "projects/",
+        "coordination/",
+        "src/",
+        "test/",
+        "docs/"
+      ],
+      "resources": [
+        "relay-control-state",
+        "relay-operation-framework",
+        "relay-publication-receipts",
+        "runner-human-qa",
+        "runner-visual-evidence"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T14:07:05.927Z"
     }
   ],
   "claims": [
