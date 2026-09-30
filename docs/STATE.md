@@ -13,21 +13,17 @@ Updated: 2026-09-30. Baseline inspected: `1fec12ce7b7271afc3eeeb9fd8b73368a25f61
 
 ## Access/control migration snapshot
 
-Verified 2026-09-30:
+Updated 2026-09-30: backend cutover and reusable-policy cleanup verified; legacy retirement pending normal ChatGPT OAuth tool-call evidence.
 
-- `relay` plugin is at v0.4.1 with the Relay Loop mark packaged as `assets/relay.png` for both `composerIcon` and `logo`. The immutable backend/package name remains `relay-github`; the human-facing product name is `relay`.
-- Canonical OAuth/MCP ingress is `https://relay.loew.fi/mcp`. Cloudflare Managed OAuth discovery and ChatGPT authentication are verified. A post-auth inspector tool invocation through the new canonical hostname is still required before retiring the old inspector MCP path.
-- `relay.loew.fi`, `relay-inspector.loew.fi`, and `inspector.loew.fi` currently route to the same `loew-inspector-gateway` Worker. The latter two are compatibility/legacy hostnames, not the target product identity.
-- Access app `relay` keeps `Only Me` and Managed OAuth/DCR. It currently also retains `relay-inspector.loew.fi` as a compatibility destination.
-- Access app `loew.fi private` protects `loew.fi` and `*.loew.fi`. During migration it intentionally carries both new relay trust and old inspector/service-token trust. Do not delete old trust until authenticated relay access is proven against downstream protected resources and Access traffic shows the legacy path is idle.
-- `field-qa` remains the working public/bypass boundary for field QA routes. External probes after removing `field-access` still showed the field root protected while `/builder/noauth`, `canvas.field.loew.fi`, and `preview.field.loew.fi` remained publicly reachable as intended.
-- Redundant Runner Access apps `runner-access`, `loew-runner`, and `loew-runner - Cloudflare Workers` were removed after the broad private boundary was verified and the Runner-specific apps showed no recent Access traffic.
-- Redundant `field-access` was removed after the broad private boundary plus `field-qa` behavior was re-probed successfully.
-- Legacy `loew-inspector-mcp` and `loew-inspector GitHub transport` remain on purpose. The GitHub transport still had substantial recent traffic and is a live fallback.
-- Several reusable policies with zero app references remain cleanup candidates; they should be removed only after another reference-count check.
-- Observed caveat: `https://relay.loew.fi/health` still redirects through the broad `loew.fi private` boundary even though the relay app carries a public `/health` override. Do not assume a public override on one overlapping Access app bypasses a separate wildcard app.
-
-Detailed IDs, rollback data, and the migration checklist are in `docs/ACCESS_CONTROL.md`.
+- relay v0.4.2 is current, with Relay Loop at assets/relay.png wired to composerIcon and logo; both MCP configurations select https://relay.loew.fi/mcp.
+- inspector auth PR #21 merged c1c84888f581ac985c50a083b202a90070949182, 26 tests passed, explicitly deployed Worker version ef55a05c-ab23-4856-9038-6f869d9e5727 at 100%.
+- Canonical relay automation reads protected Runner JSON (run 36670686271) and field HTML (run 36670928962), both target HTTP 200. Access logs confirm relay → loew.fi private.
+- loew.fi private protects only field.loew.fi and runner.loew.fi. Public loew.fi, thetake, loewtorials, Canvas and Preview remain public. relay health now returns 200.
+- Reusable policies are down to Only Me. All seven others were deleted after zero-reference checks; needed compatibility token trust and field QA bypass are app-local.
+- Current audit: five apps / one reusable policy / two service tokens. Old inspector MCP, workers.dev transport, aliases and old token remain as deliberate compatibility pending the direct normal-chat OAuth gate.
+- Keep relay-github-bridge token after legacy retirement: canonical GitHub Actions still uses it through relay.
+- inspector PR #22 aligns source custom-domain routes with live relay routes. It leaves workers.dev enabled until the gate passes.
+- See docs/ACCESS_CONTROL.md for exact IDs, deployment rollback, route results and the remaining authorized sequence. Do not report this migration fully complete until direct normal ChatGPT OAuth tool execution is proven.
 
 ## Baseline repository cleanup ledger
 

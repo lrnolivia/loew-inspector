@@ -57,6 +57,8 @@ Cloudflare Access applications are authentication/trust boundaries, not a projec
 
 The canonical ChatGPT OAuth/MCP ingress is `https://relay.loew.fi/mcp`. The live endpoint is currently backed by the inspector gateway while relay continues to route source/cloud work through the appropriate connected providers. See `docs/ACCESS_CONTROL.md` for exact current topology, legacy compatibility paths, IDs, verification state, and the safe migration/rollback procedure.
 
+The shared private boundary now lists only `field.loew.fi` and `runner.loew.fi`; public properties are outside it. The canonical relay backend and linked trust path are verified through GitHub automation. Only `Only Me` remains reusable; machine/QA policies are app-local. Legacy auth paths remain until a direct normal ChatGPT OAuth tool call passes.
+
 ## Three kinds of truth
 
 ### Product truth
