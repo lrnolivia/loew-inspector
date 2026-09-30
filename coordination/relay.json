@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T23:35:15.207Z",
+  "updated_at": "2026-09-30T23:36:07.836Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -1422,10 +1422,16 @@
       "acceptance": "Shared web/MCP carries exact provided assets, coherent rounded animated glyphs, accessible labels and reduced-motion support; focused browser/build and exact-head admission pass.",
       "next_action": "Publish one docs-only superseded-work disposition on the existing branch, merge it, complete this stale reservation, and do not publish obsolete brand/UI implementation.",
       "base_sha": "c9f6af7e51e478d25c1cb58f89f782063246ae20",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T20:02:57.628Z",
-      "updated_at": "2026-09-30T23:34:51.806Z",
-      "lease_until": "2026-10-01T11:34:51.806Z"
+      "updated_at": "2026-09-30T23:36:07.836Z",
+      "lease_until": "2026-10-01T11:36:07.836Z",
+      "pr": 57,
+      "merged_head_sha": "0a146c105707ceeaf02da7e36ecbeef32685ac95",
+      "merge_commit_sha": "656caee46fb8b44faf94827ef051cbf587747e63",
+      "evidence": "Superseded brand-glyph reservation closed honestly through same-branch docs-only PR #57. Branch had zero unique implementation commits before the disposition receipt; obsolete UI/brand implementation remains unpublished. Canonical identity work is the already-shipped Relay 1.7 release. PR #57 exact head 0a146c105707ceeaf02da7e36ecbeef32685ac95 passed Runner admission and squash-merged as 656caee46fb8b44faf94827ef051cbf587747e63.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T23:36:07.836Z"
     },
     {
       "id": "relay-1.7-tool-identity-20260930",
