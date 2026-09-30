@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T13:58:46.235Z",
+  "updated_at": "2026-09-30T14:02:38.410Z",
   "legacy_branches": [
     "control",
     "main",
@@ -415,12 +415,12 @@
       ],
       "goal": "Rebrand the human-facing loew runner product to lowercase `night shift` while preserving durable technical ids/repository/coordination compatibility and positioning it inside lowercase `dash`.",
       "acceptance": "User-facing product identity is `night shift`; project registry display name is updated; README/bootstrap/package metadata explain `night shift` and `dash`; durable ids such as loew-runner repo/project/coordination record remain stable unless a separate migration is proven safe; Cloudflare config adds/uses the new night shift web identity without removing compatibility paths; existing current UI work is not overwritten; contract tests cover the identity migration; all names are lowercase in product copy.",
-      "next_action": "Hold as historical migration evidence only. Do not ship standalone Night Shift branding. The active human-facing product direction is Relay; Night Shift may later exist only as a Relay view/feature.",
+      "next_action": "Historical evidence only. Do not ship standalone Night Shift branding. Relay is the canonical product; Night Shift may survive only as an internal Relay feature/view after consolidation.",
       "base_sha": "9d488cb5ddbff8b4649892d4c39ad334b322a8ad",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-09-30T13:37:08.427Z",
-      "updated_at": "2026-09-30T13:58:46.235Z",
-      "lease_until": "2026-10-01T01:58:46.235Z"
+      "updated_at": "2026-09-30T14:02:38.410Z",
+      "lease_until": "2026-10-01T02:02:38.410Z"
     }
   ]
 }
