@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T20:50:13.826Z",
+  "updated_at": "2026-09-30T20:50:16.391Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -427,12 +427,12 @@
       ],
       "goal": "Consolidate Dashboard and explicitly user-authorized Mobile recovery onto current main",
       "acceptance": "Existing Dashboard/create/refresh behavior and current-main Canvas semantics preserved; touch/mobile focused checks and runtime arbitration verified; current user removes Mobile protection, connected-panel follow-up remains deferred; original branches retained",
-      "next_action": "User authorized this consolidation chat to own everything. Serial publication: preserve #136 checkout unchanged while same human-authorized chat adopts and finishes hotfix #137 first; return #136 to 01a0f0ae afterward. No other worker should resume this held reservation.",
+      "next_action": "User explicitly requested stop and documentation on 2026-09-30. Do not resume, merge, edit or wake automatically until user explicitly continues. Read canonical docs/field/reorganization/STOP_HANDOFF_20260930.md and refresh live state. Same consolidation chat owns authorized continuation; Workspace remains a serial reservation.",
       "base_sha": "854038a3e84f41cd590a4ad18b24fcd4127e2fba",
       "state": "held",
       "created_at": "2026-09-30T10:21:02.409Z",
-      "updated_at": "2026-09-30T20:10:38.808Z",
-      "lease_until": "2026-10-01T08:10:38.808Z"
+      "updated_at": "2026-09-30T20:50:16.391Z",
+      "lease_until": "2026-10-01T08:50:16.391Z"
     },
     {
       "id": "field-ui-hotfix-20260930",
