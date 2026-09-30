@@ -24,21 +24,27 @@ try {
   const initialized = await rpc("initialize", { protocolVersion: "2025-06-18", capabilities: {}, clientInfo: { name: "relay-production-smoke", version: "1" } });
   if (initialized.serverInfo.name !== "relay") throw new Error("Unexpected MCP identity");
   const tools = await rpc("tools/list");
-  for (const name of ["relay_ui_control_center", "relay_ui_request", "relay_source_pull_request_action", "relay_runner_coordinate", "relay_cloud_upload_version", "relay_verify_fetch_url"]) {
+  for (const name of ["relay_ui_control_center", "relay_ui_request", "relay_runner_progress", "relay_source_pull_request_action", "relay_runner_coordinate", "relay_cloud_upload_version", "relay_verify_fetch_url"]) {
     if (!tools.tools.some(tool => tool.name === name)) throw new Error("Missing tool " + name);
   }
   const resources = await rpc("resources/list");
   const skills = await rpc("skills/list");
   if (skills.skills.length < 6) throw new Error("Skill surface incomplete");
+  if (!resources.resources.some(resource => resource.uri === "ui://relay/context-card/v1.html")) throw new Error("Relay contextual card resource missing");
   const app = await rpc("resources/read", { uri: "ui://relay/control-center/v1.html" });
-  if (!app.contents[0].text.includes('data-page="night-shift"')) throw new Error("Shared app missing");
+  if (!app.contents[0].text.includes('data-page="night-shift"') || app.contents[0].text.includes(">Night Shift<")) throw new Error("Shared app missing or night shift copy is stale");
+  const card = await rpc("resources/read", { uri: "ui://relay/context-card/v1.html" });
+  if (!card.contents[0].text.includes("observed progress")) throw new Error("Contextual card contract missing");
   await call("relay_source_status");
   await call("relay_source_repo", { repo: "relay" });
   await call("relay_runner_project", { project: "relay" });
   await call("relay_runner_workers");
-  for (const path of ["/api/projects", "/api/projects/relay", "/api/projects/relay/icon", "/api/workers", "/api/visual"]) {
+  for (const path of ["/api/projects", "/api/projects/relay", "/api/progress/relay", "/api/projects/relay/icon", "/api/workers", "/api/visual"]) {
     const result = await call("relay_ui_request", { path });
     if (result.status !== 200) throw new Error("UI API failed " + path);
+    if (path === "/api/progress/relay") {
+      if (result.body.contract_version !== "1.7.5" || result.body.observed_progress !== true) throw new Error("Observed-progress UI contract failed");
+    }
     if (path === "/api/projects/relay/icon") {
       if (result.body.status !== "found" || result.body.icon.repository !== "lrnolivia/relay" || result.body.icon.path !== "apps/web/public/brand/relay-loop.png" || !/^[a-f0-9]{40}$/.test(result.body.icon.blob_sha)) throw new Error("Genuine Relay icon provenance failed");
     }
@@ -52,10 +58,10 @@ try {
   const active = worker.deployments.deployments[0].versions[0].version_id;
   const version = worker.versions.items.find(version => version.id === active);
   if (version?.annotations?.["workers/commit_sha"] !== process.env.EXPECTED_SOURCE_SHA) throw new Error("Deployed source does not match expected SHA");
-  for (const path of ["/", "/relay-app.js", "/api/projects", "/api/projects/relay/icon", "/api/workers", "/api/visual"]) {
+  for (const path of ["/", "/relay-app.js", "/api/projects", "/api/progress/relay", "/api/projects/relay/icon", "/api/workers", "/api/visual"]) {
     const response = await fetch("https://relay.loew.fi" + path, { headers, redirect: "manual", signal: AbortSignal.timeout(45000) });
     if (response.status !== 200) throw new Error("Web route failed " + path + " HTTP " + response.status);
-    if (path === "/" && !(await response.text()).includes("Night Shift")) throw new Error("Web shell missing");
+    if (path === "/" && !(await response.text()).includes("night shift")) throw new Error("Web shell missing lowercase night shift");
     results.push({ web_path: path, status: response.status });
   }
   if (process.env.BROWSER_CAPTURE === "true") {
@@ -71,7 +77,7 @@ try {
         await page.route("https://relay.loew.fi/**", route => route.continue({ headers: { ...route.request().headers(), ...headers } }));
         await page.goto("https://relay.loew.fi", { waitUntil: "domcontentloaded" });
         await page.locator("#operator-connection").filter({ hasText: "Connected" }).waitFor();
-        await page.getByRole("button", { name: "Projects", exact: true }).click();
+        await page.getByRole("button", { name: "Runner", exact: true }).click();
         await page.locator('#project-list [data-repo-icon="relay"][data-icon-source="lrnolivia/relay/apps/web/public/brand/relay-loop.png"] img').waitFor();
         await page.locator('#project-list [data-project-id="relay"]').click();
         await page.locator(".project-detail-head h2").filter({ hasText: "relay" }).waitFor();
