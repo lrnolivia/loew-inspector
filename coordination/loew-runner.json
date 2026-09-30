@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T10:18:56.013Z",
+  "updated_at": "2026-09-30T10:21:55.165Z",
   "legacy_branches": [
     "control",
     "main",
@@ -62,6 +62,26 @@
       "created_at": "2026-09-30T10:18:56.013Z",
       "updated_at": "2026-09-30T10:18:56.013Z",
       "lease_until": "2026-09-30T22:18:56.013Z"
+    },
+    {
+      "id": "loew-runner-relay-closeout-20260930",
+      "owner": "codex-relay-finalization-20260930",
+      "branch": "loew-runner/relay-closeout",
+      "paths": [
+        "docs/ACCESS_CONTROL.md",
+        "docs/loew-inspector/STATE.md"
+      ],
+      "resources": [
+        "relay-closeout-docs"
+      ],
+      "goal": "Record completed Relay credentials and in-place Inspector rename with exact deployment evidence.",
+      "acceptance": "Runner state records merged PRs, current Worker name/ID/deployment, retained bindings/domains and successful live tools without inventing legacy retirement.",
+      "next_action": "Update existing operational docs and merge through Runner checks.",
+      "base_sha": "9689fef445e214d6e033cf9d68999544562aabf1",
+      "state": "active",
+      "created_at": "2026-09-30T10:21:55.165Z",
+      "updated_at": "2026-09-30T10:21:55.165Z",
+      "lease_until": "2026-09-30T22:21:55.165Z"
     }
   ]
 }
