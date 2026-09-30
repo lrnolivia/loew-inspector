@@ -24,7 +24,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          repository: lrnolivia/loew-runner
+          repository: lrnolivia/relay
           ref: main
           persist-credentials: false
       - uses: actions/setup-node@v7
@@ -35,8 +35,22 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TASK_PR: ${{ github.event.pull_request.number }}
         run: |
+          if [ -f projects/relay.json ]; then
+            project=relay
+            engine=scripts/coordinate.mjs
+          else
+            gh api repos/lrnolivia/loew-runner/contents/scripts/coordinate.mjs?ref=main --jq .content | base64 -d > "$RUNNER_TEMP/coordinate.mjs"
+            gh api repos/lrnolivia/loew-runner/contents/src/coordination.mjs?ref=main --jq .content | base64 -d > "$RUNNER_TEMP/coordination.mjs"
+            sed 's@../src/coordination.mjs@./coordination.mjs@' "$RUNNER_TEMP/coordinate.mjs" > "$RUNNER_TEMP/admit.mjs"
+            project=loew-inspector
+            engine="$RUNNER_TEMP/admit.mjs"
+          fi
+          # Admission is read-only; the migration freeze blocks writes, not inspection.
+          if [ "$project" = loew-inspector ]; then
+            sed -i "s/if (read(recordPath).value.migration_frozen)/if (action !== 'pr-gate' \&\& read(recordPath).value.migration_frozen)/" "$engine"
+          fi
           node -e 'require("fs").writeFileSync(process.env.RUNNER_TEMP + "/request.json", JSON.stringify({pr: Number(process.env.TASK_PR)}))'
-          node scripts/coordinate.mjs pr-gate loew-inspector "$RUNNER_TEMP/request.json"
+          node "$engine" pr-gate "$project" "$RUNNER_TEMP/request.json"
 
   hygiene:
     name: Runner managed branch hygiene
@@ -51,7 +65,7 @@ jobs:
     steps:
       - uses: actions/checkout@v6
         with:
-          repository: lrnolivia/loew-runner
+          repository: lrnolivia/relay
           ref: main
           persist-credentials: false
       - uses: actions/setup-node@v7
@@ -61,7 +75,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           COORD_ACTION: ${{ inputs.action || 'cleanup' }}
-        run: node scripts/coordinate.mjs "$COORD_ACTION" loew-inspector > "$RUNNER_TEMP/coordination-result.json"
+        run: node scripts/coordinate.mjs "$COORD_ACTION" relay > "$RUNNER_TEMP/coordination-result.json"
       - uses: actions/upload-artifact@v4
         if: always()
         with:

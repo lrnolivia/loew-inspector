@@ -1,8 +1,8 @@
 import { githubApiRequest } from './source.js';
 import { transition, evaluate, occupying, normalizeScope } from './coordination-engine.js';
 
-export const RUNNER_ENGINE_SHA = 'e2624d48d2c03c2c3ed20bfc38646dcfc5c690c2';
-export const DEFAULT_RUNNER_CONTROL_REPOSITORY = 'lrnolivia/loew-runner';
+export const RUNNER_ENGINE_SHA = 'a987e034544c4ea1956e0ee96ab3bd83b4f7ebd1';
+export const DEFAULT_RUNNER_CONTROL_REPOSITORY = 'lrnolivia/relay';
 
 export class ControlError extends Error {
   constructor(code, message, extra = {}) {
@@ -280,6 +280,7 @@ export async function callRunnerControlCore(name, args, env = {}, apiOverride) {
   const api = apiOverride || ((path, options) => githubApiRequest(env, path, options));
   const controlRepository = runnerControlRepository(env);
   const control = runnerControlBase(env);
+  if (controlRepository === "lrnolivia/relay" && args.project === "loew-inspector") args = { ...args, project: "relay" };
 
   if (name === 'relay_runner_projects') {
     const files = await api(`${control}/contents/projects?ref=main`);
@@ -289,6 +290,7 @@ export async function callRunnerControlCore(name, args, env = {}, apiOverride) {
     const projects = [];
     for (const file of files.filter(item => item.type === 'file' && /^[a-z0-9-]+\.json$/.test(item.name))) {
       const project = await jsonFile(api, control, `projects/${file.name}`);
+      if (project.value.alias_of) continue;
       projects.push({
         id: project.value.id,
         name: project.value.name,

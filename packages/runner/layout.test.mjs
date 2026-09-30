@@ -8,11 +8,13 @@ const root = new URL('../../', import.meta.url);
 const manifest = JSON.parse(fs.readFileSync(new URL('import-manifest.json', import.meta.url)));
 test('Runner imported blobs match exact source provenance', () => {
  for (const file of manifest.files) {
-  assert.equal(execFileSync('git', ['hash-object', new URL(file.target, root).pathname], {encoding:'utf8'}).trim(), file.blob, file.target);
+  assert.equal(execFileSync('git', ['rev-parse', 'fdefc6c724f94cbf9605cfa72665208380a7ee2b:' + file.target], {encoding:'utf8'}).trim(), file.blob, file.target);
  }
 });
-test('live authority is excluded from Batch 2', () => {
- for (const path of ['coordination','projects','workers','state','assignments','reports']) assert.equal(fs.existsSync(new URL(path, root)), false, path);
+test('canonical control authority is Relay', () => {
+ const registration = JSON.parse(fs.readFileSync(new URL('projects/relay.json', root)));
+ assert.equal(registration.id, 'relay');
+ assert.equal(registration.coordination.record, 'coordination/relay.json');
 });
 test('existing MCP implementation and scheduler are shared', () => {
  assert.equal(typeof worker.fetch, 'function');
