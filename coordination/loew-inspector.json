@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T11:43:52.644Z",
+  "updated_at": "2026-09-30T11:48:35.639Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -224,6 +224,7 @@
       "branch": "loew-inspector/relay-native-cleanup",
       "paths": [
         "src/relay-entry.js",
+        "src/relay-entry.test.js",
         "src/runner-cleanup.js",
         "src/runner-cleanup.test.js"
       ],
@@ -232,12 +233,12 @@
       ],
       "goal": "Expose Runner's existing policy-eligible managed branch cleanup as one bounded native Relay operation.",
       "acceptance": "Dry-run and execute modes only consider completed, work-accounted, non-legacy, non-excluded managed branches; exact merged PR/head identity and current ownership/head are revalidated before deletion; post-merge commits and active ownership are retained; deletion readback is mandatory; tests and Runner admission pass.",
-      "next_action": "Expose relay_runner_cleanup through the existing small Relay extension and implement canonical dry-run/execute cleanup in a dedicated bounded adapter.",
+      "next_action": "Update the existing extension-version test for Relay 1.4.0, rerun exact-head CI, then promote only if tests and Runner admission pass.",
       "base_sha": "c0f4e93f60e3dca76676612f90e2fc782dec55e8",
       "state": "active",
       "created_at": "2026-09-30T11:42:32.252Z",
-      "updated_at": "2026-09-30T11:43:52.644Z",
-      "lease_until": "2026-09-30T23:43:52.644Z"
+      "updated_at": "2026-09-30T11:48:35.639Z",
+      "lease_until": "2026-09-30T23:48:35.639Z"
     }
   ]
 }
