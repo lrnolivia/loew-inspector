@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { RELAY_EXTENSION_VERSION, augmentToolList, augmentResourceList, augmentSkillList, validateLifecycleArguments } from "./relay-entry.js";
 import { QA_SKILL_URI } from "./qa-skill.js";
 import { LOEW_NAMING_SKILL_URI } from "./loew-naming-skill.js";
+import { RELAY_CONTEXT_CARD_URI } from "./relay-chat-ui.js";
 
 test("Relay extension publishes source inventory and exact-head PR action", () => {
   const tools = augmentToolList([{
@@ -28,7 +29,7 @@ test("Relay extension publishes source inventory and exact-head PR action", () =
   assert.ok(names.includes("relay_runner_cleanup"));
   assert.ok(names.includes("relay_cloud_upload_version"));
   assert.equal(tools.find(tool => tool.name === "relay_source_update_file").description.includes("GitHub App preferred"), true);
-  assert.equal(RELAY_EXTENSION_VERSION, "1.7.5");
+  assert.equal(RELAY_EXTENSION_VERSION, "1.9.1");
 });
 
 test("server validation rejects unsupported and cross-action PR fields", () => {
@@ -65,6 +66,7 @@ test("server validation accepts exact-head merge input", () => {
 test("Relay extension appends native QA and loew naming skills once", () => {
   const resources = augmentResourceList([{ uri: "skill://relay/existing/SKILL.md" }]);
   const skills = augmentSkillList([{ uri: "skill://relay/existing/SKILL.md" }]);
+  assert.equal(resources.filter(item => item.uri === RELAY_CONTEXT_CARD_URI).length, 1);
   for (const uri of [QA_SKILL_URI, LOEW_NAMING_SKILL_URI]) {
     assert.equal(resources.filter(item => item.uri === uri).length, 1);
     assert.equal(skills.filter(item => item.uri === uri).length, 1);
@@ -72,6 +74,7 @@ test("Relay extension appends native QA and loew naming skills once", () => {
 
   const resourcesAgain = augmentResourceList(resources);
   const skillsAgain = augmentSkillList(skills);
+  assert.equal(resourcesAgain.filter(item => item.uri === RELAY_CONTEXT_CARD_URI).length, 1);
   for (const uri of [QA_SKILL_URI, LOEW_NAMING_SKILL_URI]) {
     assert.equal(resourcesAgain.filter(item => item.uri === uri).length, 1);
     assert.equal(skillsAgain.filter(item => item.uri === uri).length, 1);
