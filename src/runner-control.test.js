@@ -47,7 +47,7 @@ test('generated policy is byte-exact Runner source with correct Git blob provena
   assert.equal(hash, RUNNER_ENGINE_SHA);
 });
 test('definitions describe reads and bounded writes with strict server validation', async () => {
-  assert.equal(runnerControlTools.length, 7);
+  assert.equal(runnerControlTools.length, 9);
   const f = fixture();
   await assert.rejects(coordinate(f, 'release'), /unsupported/);
   await assert.rejects(coordinate(f, 'claim', { ...defaultRequest, merged_head_sha: sha }), /unsupported/);
