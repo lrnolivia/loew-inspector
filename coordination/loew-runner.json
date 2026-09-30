@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T14:33:27.818Z",
+  "updated_at": "2026-09-30T14:35:37.292Z",
   "legacy_branches": [
     "control",
     "main",
@@ -436,10 +436,16 @@
       "acceptance": "Only the registered repository identity changes from lrnolivia/loew-inspector to lrnolivia/relay; project id, coordination record, branch policy, QA authority and durable state remain unchanged; exact-head checks and Runner admission pass after the bridge.",
       "next_action": "Create the exact-main branch, update the repository field only, open a draft PR, verify, merge, then rerun Relay Batch 1 admission.",
       "base_sha": "49fc1ffeb990e59fbf808f45e36c9f613e6804bf",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T14:33:27.818Z",
-      "updated_at": "2026-09-30T14:33:27.818Z",
-      "lease_until": "2026-10-01T02:33:27.818Z"
+      "updated_at": "2026-09-30T14:35:37.292Z",
+      "lease_until": "2026-10-01T02:35:37.292Z",
+      "pr": 44,
+      "merged_head_sha": "0a40f08cb74fa7ab61aa0db1932fa5350089d6c3",
+      "merge_commit_sha": "66b9ea1745bdf382e38be5ea541335cbb2306dc2",
+      "evidence": "https://github.com/lrnolivia/loew-runner/pull/44 — project registration now points to lrnolivia/relay; exact-head tests and Runner admission passed; squash merge 66b9ea1745bdf382e38be5ea541335cbb2306dc2.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T14:35:37.292Z"
     }
   ]
 }
