@@ -167,7 +167,7 @@ export async function commitSourceFiles(env, { owner, repo, branch, files, messa
 
   const repoBase = "/repos/" + encodeURIComponent(owner) + "/" + encodeURIComponent(repo);
   const repository = await githubApiRequest(env, repoBase);
-  if (branch === repository?.default_branch) throw new Error("relay.SOURCE refuses direct default-branch commits");
+  if (branch === repository?.default_branch) throw new Error("relay.SOURCE refuses direct default-branch commits; coordination control state must be mutated through relay.RUNNER");
 
   const encodedBranch = branch.split("/").map(encodeURIComponent).join("/");
   const ref = await githubApiRequest(env, repoBase + "/git/ref/heads/" + encodedBranch);

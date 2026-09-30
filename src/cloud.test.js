@@ -18,6 +18,7 @@ test("relay.CLOUD status is truthful and writes are bounded", () => {
   assert.equal(ready.configured, true);
   assert.equal(ready.builds_configured, true);
   assert.equal(ready.builds_token_configured, true);
+  assert.equal(ready.authorization_mode, "project-registration+runtime-allowlist");
   assert.deepEqual(ready.write_scripts, ["one", "two"]);
   assert.deepEqual(ready.builds_required_bindings, []);
 });

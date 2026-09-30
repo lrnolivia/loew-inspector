@@ -134,5 +134,10 @@
     "status": "enabled",
     "admission_workflow": "lrnolivia/field:.github/workflows/runner-coordination.yml",
     "cleanup_workflow": "lrnolivia/field:.github/workflows/runner-coordination.yml"
+  },
+  "cloud": {
+    "provider": "cloudflare",
+    "worker": "field",
+    "write": true
   }
 }

@@ -27,6 +27,7 @@ export function cloudStatus(env) {
     builds_configured: buildsConfigured(env),
     builds_token_configured: Boolean(env?.CLOUDFLARE_BUILDS_API_TOKEN),
     mutation_tools_exposed: true,
+    authorization_mode: "project-registration+runtime-allowlist",
     write_scripts: cloudWriteScripts(env),
     required_bindings: configured(env) ? [] : [
       ...(!env?.CLOUDFLARE_ACCOUNT_ID ? ["CLOUDFLARE_ACCOUNT_ID"] : []),

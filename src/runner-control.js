@@ -6,6 +6,8 @@ import {
   runnerControlBase,
   runnerControlRepository
 } from './runner-control-core.js';
+import { callProgress } from './progress-api.js';
+import { projectCloudStatus, deployProjectCloudVersion } from './project-cloud.js';
 
 const MUTATIONS = ['queue', 'claim', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete'];
 const text = (max = 500) => ({ type: 'string', minLength: 1, maxLength: max });
@@ -52,6 +54,22 @@ const DEFINITIONS = [
     inputSchema: schema({ project: projectSchema, assignment: identity }, ['project'])
   },
   {
+    name: 'relay_runner_progress',
+    description: 'Read evidence-derived execution progress for current claims and queued work. Progress is derived from Runner, GitHub and configured Cloud evidence; claim state and next_action prose are context, not proof of execution.',
+    inputSchema: schema({ project: projectSchema, assignment: identity }, ['project'])
+  },
+  {
+    name: 'relay_cloud_project',
+    description: 'Resolve canonical project-to-Cloudflare Worker authority. A project is writable only when its registration allows writes and the Worker remains in Relay\'s runtime allowlist.',
+    inputSchema: schema({ project: projectSchema }, ['project'])
+  },
+  {
+    name: 'relay_cloud_deploy_project_version',
+    description: 'Deploy an existing Cloudflare Worker version by canonical Relay project identity. Project registration and the runtime Worker allowlist must both authorize the mutation.',
+    inputSchema: schema({ project: projectSchema, version_id: text(128), message: text(1000) }, ['project', 'version_id']),
+    mutation: true
+  },
+  {
     name: 'relay_runner_preflight',
     description: 'Check live ownership, declared paths, branch/PR inventory and canonical policy before work. A pass is admission evidence only.',
     inputSchema: schema({ project: projectSchema, id: identity, owner: identity, paths: pathsSchema }, ['project', 'id', 'owner', 'paths'])
@@ -63,7 +81,7 @@ const DEFINITIONS = [
   },
   {
     name: 'relay_runner_coordinate',
-    description: 'Perform one SHA-checked Runner queue/claim/rescope/heartbeat/hold/handoff/completion transaction. Completion requires a verified merged PR. No blind release or takeover.',
+    description: 'Perform one SHA-checked Runner queue/claim/rescope/heartbeat/hold/handoff/completion transaction. On claim, Relay resolves and pins base_sha from the live registered default branch; callers must omit base_sha. Completion requires a verified merged PR. No blind release or takeover.',
     inputSchema: schema({
       project: projectSchema,
       action: { type: 'string', enum: MUTATIONS },
@@ -101,7 +119,12 @@ export function validateControlArguments(value, spec, path = 'arguments') {
       if (!(key in value)) throw new ControlError('validation', `${path}.${key} is required`);
     }
     for (const [key, item] of Object.entries(value)) {
-      if (!spec.properties[key]) throw new ControlError('validation', `${path}.${key} is unsupported`);
+      if (!spec.properties[key]) {
+        if (key === 'base_sha' && path.endsWith('.request')) {
+          throw new ControlError('validation', 'base_sha is resolved automatically from live main during claim; omit request.base_sha');
+        }
+        throw new ControlError('validation', `${path}.${key} is unsupported`);
+      }
       validateControlArguments(item, spec.properties[key], `${path}.${key}`);
     }
   } else if (spec.type === 'array') {
@@ -139,6 +162,11 @@ export async function callRunnerControl(name, args, env, apiOverride) {
   const definition = DEFINITIONS.find(item => item.name === name);
   if (!definition) return null;
   validateControlArguments(args, definition.inputSchema);
+  if (name === 'relay_runner_progress') return callProgress(args, env, apiOverride);
+  if (name === 'relay_cloud_project') return projectCloudStatus(env, args.project, apiOverride);
+  if (name === 'relay_cloud_deploy_project_version') {
+    return deployProjectCloudVersion(env, args.project, args.version_id, args.message, { github: apiOverride });
+  }
   return callRunnerControlCore(name, args, env, apiOverride);
 }
 
