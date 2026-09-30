@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loewfi",
-  "updated_at": "2026-09-30T09:06:00.507Z",
+  "updated_at": "2026-09-30T09:12:55.911Z",
   "legacy_branches": [
     "main",
     "runner/universal-authority"
@@ -22,10 +22,16 @@
       "acceptance": "Pull requests are gated by a live Runner claim; scheduled/manual audit and cleanup use the canonical loew-runner coordination engine; no product files are changed.",
       "next_action": "Create the claimed bootstrap branch, add the parameterized coordination workflow, open the draft PR, verify admission, then merge with squash.",
       "base_sha": "28473bb0f9728384ac7b338e0eb24181952dc916",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T09:06:00.507Z",
-      "updated_at": "2026-09-30T09:06:00.507Z",
-      "lease_until": "2026-09-30T21:06:00.507Z"
+      "updated_at": "2026-09-30T09:12:55.911Z",
+      "lease_until": "2026-09-30T21:12:55.911Z",
+      "pr": 3,
+      "merged_head_sha": "afcc5131d4b7ac863462eb7bb267abd098edf476",
+      "merge_commit_sha": "82cf4225187ba63cd5f69e819149f208a5db5bb1",
+      "evidence": "https://github.com/lrnolivia/loewfi/pull/3",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T09:12:55.911Z"
     }
   ]
 }
