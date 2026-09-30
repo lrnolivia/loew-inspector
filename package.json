@@ -9,7 +9,7 @@
     "dev": "node --watch src/server.mjs",
     "tick": "node src/cli.mjs tick",
     "run": "node src/cli.mjs run",
-    "check": "node --check src/*.mjs && node --check scripts/*.mjs && node --check dashboard/app.js",
+    "check": "node --check src/*.mjs && node --check scripts/*.mjs && node --check dashboard/*.js",
     "test": "node --test test/*.test.mjs"
   },
   "engines": {

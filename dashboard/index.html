@@ -9,6 +9,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,400;0,600;1,400&family=Momo+Trust+Display&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/styles.css">
+  <link rel="stylesheet" href="/qa.css">
+  <link rel="stylesheet" href="/friendly.css">
+  <link rel="stylesheet" href="/hierarchy.css">
 </head>
 <body>
   <div class="terra-accent" aria-hidden="true">
@@ -22,7 +25,7 @@
       <div>
         <div class="eyebrow">LOEW.FI / RUNNER</div>
         <h1>runner</h1>
-        <p class="lede">headless by default · open for intervention</p>
+        <p class="lede">what’s happening · what needs you</p>
       </div>
       <div class="header-status">
         <span id="connection" class="status-pill status-neutral">
@@ -34,26 +37,26 @@
 
     <div class="app-toolbar terra-toolbar" data-figma-component="App / Toolbar">
       <nav class="primary-nav" aria-label="Runner">
-        <button class="primary-nav-item active" data-section="workers" type="button">workers</button>
-        <button class="primary-nav-item" data-section="visual" type="button">visual</button>
+        <button class="primary-nav-item active" data-section="workers" type="button">status</button>
+        <button class="primary-nav-item" data-section="visual" type="button">review</button>
       </nav>
       <div class="toolbar-actions">
-        <span id="toolbar-context" class="toolbar-meta">CONFIG · RECOVERY · DIAGNOSTICS</span>
+        <span id="toolbar-context" class="toolbar-meta">WHAT’S RUNNING · WHAT NEEDS YOU</span>
         <button id="refresh" class="tp-button secondary compact" type="button">Refresh</button>
       </div>
     </div>
 
     <div id="workers-section" class="app-grid app-section">
       <aside class="sidebar" aria-label="Workers">
-        <div class="section-kicker">WORKERS</div>
+        <div class="section-kicker">CURRENT AUTOMATION</div>
         <div id="worker-nav" class="worker-nav"></div>
-        <div class="sidebar-note">Target repositories remain read-only unless a guarded workflow explicitly says otherwise.</div>
+        <div class="sidebar-note">Runner watches your projects safely. Anything that can change code still goes through the normal guarded branch and review flow.</div>
       </aside>
 
       <section class="workspace">
         <nav class="tabs" aria-label="Runner view">
-          <button class="app-tab active" data-view="overview" type="button">Intervention</button>
-          <button class="app-tab" data-view="diagnostics" type="button">Diagnostics</button>
+          <button class="app-tab active" data-view="overview" type="button">At a glance</button>
+          <button class="app-tab" data-view="diagnostics" type="button">Technical details</button>
         </nav>
 
         <section class="summary" id="summary" aria-label="Runner summary"></section>
@@ -64,9 +67,9 @@
     <section id="visual-section" class="app-section visual-section" hidden aria-live="polite">
       <div class="visual-heading">
         <div>
-          <div class="section-kicker flush">INSPECTOR EVIDENCE</div>
-          <h2>visual</h2>
-          <p>Browser truth, kept quiet enough to actually look at.</p>
+          <div class="section-kicker flush">YOUR QA INBOX</div>
+          <h2>review</h2>
+          <p>Open a live preview, answer what Runner needs to know, and leave notes.</p>
         </div>
         <div class="visual-heading-tools">
           <div id="visual-count" class="visual-count"></div>
@@ -91,8 +94,8 @@
       <div id="visual-content" class="visual-content">
         <div class="visual-empty">
           <span class="visual-empty-mark">◌</span>
-          <strong>Loading evidence</strong>
-          <span>Asking inspector what it saw.</span>
+          <strong>Loading reviews</strong>
+          <span>Checking what Runner wants your eyes on.</span>
         </div>
       </div>
     </section>
@@ -104,5 +107,7 @@
   </main>
 
   <script type="module" src="/app.js"></script>
+  <script type="module" src="/qa.js"></script>
+  <script type="module" src="/friendly.js"></script>
 </body>
 </html>
