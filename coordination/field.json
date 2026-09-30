@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T05:33:32.477Z",
+  "updated_at": "2026-09-30T05:40:47.466Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -249,19 +249,40 @@
         "src/canvas/drag/strategies/AbsoluteInFrameStrategy.ts",
         "src/code/groups/",
         "src/editor/figui3-toolbar-shortcuts.test.ts",
-        "src/canvas/drag/strategies/AbsoluteInFrameStrategy.test.ts"
+        "src/canvas/drag/strategies/AbsoluteInFrameStrategy.test.ts",
+        "src/canvas/canvas-css-clamp.test.ts",
+        "src/canvas/ghost-deep-structure.test.ts",
+        "src/canvas/instance-inline-root.test.ts",
+        "src/canvas/master-hug-tile.test.ts",
+        "src/canvas/renderer-live-important-sweep.test.ts",
+        "src/canvas/renderer-patch-skip.test.ts",
+        "src/canvas/template-responsive-repro.test.ts",
+        "src/canvas/tile-paint-repro.test.ts",
+        "src/canvas/text-edit/CanvasTextEditController.test.ts",
+        "src/code/features/cascade-delete-variable.test.ts",
+        "src/code/features/remove-component-cursor.test.ts",
+        "src/code/features/remove-component-prop.test.ts",
+        "src/code/components/component-ops.test.ts",
+        "src/code/project/cms-page-ops.test.ts",
+        "src/code/project/modify-file.test.ts",
+        "src/editor/tools/FormStateTool.test.tsx",
+        "src/ai/agent/tools/set-page-variable.test.ts",
+        "src/code/features/paste-engine/copy/copy-instance.test.ts",
+        "src/code/project/component-translations.test.ts",
+        "src/code/project/translation-ops.test.ts",
+        "src/ai/agent/tools/cms.test.ts"
       ],
       "resources": [
         "canvas-group-frame-parity"
       ],
       "goal": "Recover stranded Frame/Group parity into current main, preserving existing Mobile ownership.",
       "acceptance": "100x100 click Frames, Space parenting bypass, primary Alt G Frame Selection; browser encapsulation, wrapping and native Group world geometry pass; original branches retained until acceptance and QA accounted.",
-      "next_action": "Correct native Group child auto-pin conversion; regression evidence proves percent writes prevent derived bounds refit.",
+      "next_action": "Repair incomplete ProjectFS test doubles to unblock required validation without changing product or weakening assertions.",
       "base_sha": "760774a6bd628827f93190fb0abaf7a6e26acbea",
       "state": "active",
       "created_at": "2026-09-30T05:31:47.089Z",
-      "updated_at": "2026-09-30T05:33:32.477Z",
-      "lease_until": "2026-09-30T17:33:32.477Z"
+      "updated_at": "2026-09-30T05:40:47.466Z",
+      "lease_until": "2026-09-30T17:40:47.466Z"
     }
   ]
 }
