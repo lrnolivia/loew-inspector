@@ -162,7 +162,7 @@
     },
     {
       "id": "field-ui-hotfix-20260930",
-      "owner": "chatgpt-field-hotfix-20260930",
+      "owner": "01a0f0ae-4e8c-7e62-ae7a-3b02faa398f5",
       "goal": "Hotfix the three user-verified UI regressions on current field main: make the universal PaintPicker genuinely compact while preserving working nested color launchers; make toolbar popout cards and Media creation cards use one exact shared card treatment with no descriptions; restore the Inspector avatar-to-Publish header bar as explicit shell chrome.",
       "acceptance": "PaintPicker is materially smaller in width and vertical density and nested ColorInput launchers remain nested floating ToolPopups; toolbar mixed cards and Media creation cards render through the same shared component and Media descriptions are removed; RightHeader has an explicit bg-panel shell surface and separator so the avatar/zoom/theme/preview/publish bar is visibly part of the Inspector; contract tests assert all three; verify exact-head visual state through Relay before promotion.",
       "next_action": "Claim from current main, implement only these hotfixes, run targeted checks, then Relay visual QA on a real project.",
@@ -184,7 +184,8 @@
         "inspector-shell-header"
       ],
       "state": "claimed",
-      "created_at": "2026-09-30T11:39:55.123Z"
+      "created_at": "2026-09-30T11:39:55.123Z",
+      "ownership_reconciliation": "User explicitly transferred all consolidation/hotfix ownership to this chat; repair stale claimed-queue owner left unchanged by handoff protocol."
     }
   ],
   "claims": [
