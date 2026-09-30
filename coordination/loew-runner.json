@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T12:53:58.626Z",
+  "updated_at": "2026-09-30T12:55:18.031Z",
   "legacy_branches": [
     "control",
     "main",
@@ -290,10 +290,16 @@
       "acceptance": "Live preview owns the screen when the captured environment is still reachable; Runner floats above it in a compact accessible panel with targeted QA questions, notes, looks-good/needs-work/not-sure responses, screenshot fallback when preview is dead, and technical evidence behind progressive disclosure. No existing Relay/Runner safety gates are weakened.",
       "next_action": "Visually review exact branch head 660d87437d4edc5b5b97226cd22b6b30bae838df. Hierarchy pass is implemented: smaller secondary titles, warm-light emphasis on the first human summary, selected review run, and active QA question card. Exact-head test, Runner admission, Cloudflare build, preflight, and audit are green; keep PR #41 unmerged until visual review.",
       "base_sha": "5ce9f02fbdbe0004c3249934d0f642fb2ffa5bce",
-      "state": "held",
+      "state": "completed",
       "created_at": "2026-09-30T11:52:04.751Z",
-      "updated_at": "2026-09-30T12:53:23.593Z",
-      "lease_until": "2026-10-01T00:53:23.593Z"
+      "updated_at": "2026-09-30T12:55:18.031Z",
+      "lease_until": "2026-10-01T00:55:18.031Z",
+      "pr": 41,
+      "merged_head_sha": "660d87437d4edc5b5b97226cd22b6b30bae838df",
+      "merge_commit_sha": "45b57d09bb2391c766f426aa89979b92456d3e31",
+      "evidence": "User visually blessed the exact feature state before merge. PR #41 merged from exact green head 660d87437d4edc5b5b97226cd22b6b30bae838df as squash commit 45b57d09bb2391c766f426aa89979b92456d3e31. Post-merge test and Workers build succeeded. Cloudflare production deployment version 159 (13521c21-a0d7-4146-babc-2e55450e1c8c) is at 100%, and authenticated fetch of https://runner.loew.fi/ returned 200 with qa.css, friendly.css, hierarchy.css, status/review labels, and the new QA scripts present.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T12:55:18.031Z"
     },
     {
       "id": "runner-human-qa-helper-contract-20260930",
