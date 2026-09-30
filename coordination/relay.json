@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T15:47:15.749Z",
+  "updated_at": "2026-09-30T16:00:15.919Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -728,10 +728,16 @@
       "acceptance": "Today, Projects, Review and Night Shift share canonical state and QA identity; web and MCP app use existing operator/QA components; mobile and fullscreen QA work; no second approval/evidence store.",
       "next_action": "Apply provided Terra Prime foundations without illustrations; validate shared web/MCP views and artifact-bound review.",
       "base_sha": "fe40a797ed7db1c43ca3e2d088db4c0f1ca844df",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T15:30:52.208Z",
-      "updated_at": "2026-09-30T15:47:15.749Z",
-      "lease_until": "2026-10-01T03:47:15.749Z"
+      "updated_at": "2026-09-30T16:00:15.919Z",
+      "lease_until": "2026-10-01T04:00:15.919Z",
+      "pr": 44,
+      "merged_head_sha": "c31e014f22a0b16c801098fbe72f37100a107c78",
+      "merge_commit_sha": "633612837f1b4f5312320d64852683d3aed8611f",
+      "evidence": "PR44 exacthead c31e014f22a0b16c801098fbe72f37100a107c78; 77 Inspector,45Runner,3layout,8contracts,4web tests and generated build check passed; required CI/Runner admission green. Shared HTTP/MCP browser navigation, artifact review save/readback, deep links, mobile light/dark desktop verified. Merge 633612837f1b4f5312320d64852683d3aed8611f. Production rollout belongs to B5.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T16:00:15.919Z"
     }
   ],
   "migrated_from": "loew-inspector"
