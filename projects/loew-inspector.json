@@ -1,7 +1,7 @@
 {
   "id": "loew-inspector",
   "name": "loew inspector",
-  "repository": "lrnolivia/loew-inspector",
+  "repository": "lrnolivia/relay",
   "managed": true,
   "default_branch": "main",
   "implementation": {
@@ -69,5 +69,6 @@
     "status": "enabled",
     "admission_workflow": "lrnolivia/loew-inspector:.github/workflows/runner-coordination.yml",
     "cleanup_workflow": "lrnolivia/loew-inspector:.github/workflows/runner-coordination.yml"
-  }
+  },
+  "migrated_repository_from": "lrnolivia/loew-inspector"
 }
