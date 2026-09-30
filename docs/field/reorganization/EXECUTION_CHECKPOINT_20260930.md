@@ -1,3 +1,5 @@
+Current superseding receipt: [live ownership and recovery](LIVE_OWNERSHIP_RECEIPT_20260930.md). Read it before historical checkpoints below.
+
 ## Verified promotion — 2026-09-30 10:14 UTC
 
 PR #135 merged as `854038a3e84f41cd590a4ad18b24fcd4127e2fba` after Registry and exact-head deployed Preview QA passed. Production `/api/build` reports this merge and deployment `2ae1aa2f-dbc1-4aed-b883-0951c9da32af`. [Current receipt](CANVAS_PROMOTION_RECEIPT_20260930.md) supersedes older pending/Preview-blocked statements below. Relay Worker fetch 1053 is a transport-path limitation; direct HTTP and GitHub Chromium passed on exact Preview deployment `6255045b…`. No DNS, domain, Access or product routing change was needed. Preserve original branches, Mobile and deferred-panel scope. Next: complete Canvas claim/shared-file return, then serially admit preserved Dashboard work against fresh main.
