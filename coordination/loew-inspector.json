@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T11:50:39.053Z",
+  "updated_at": "2026-09-30T11:52:33.597Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -245,6 +245,29 @@
       "evidence": "https://github.com/lrnolivia/loew-inspector/pull/36 — exact-head tests and Runner admission passed; Relay native ready/merge succeeded.",
       "work_accounted": true,
       "completed_at": "2026-09-30T11:50:39.053Z"
+    },
+    {
+      "id": "relay-cloud-source-upload-20260930",
+      "owner": "normal-chat-relay-cloud-upload-20260930",
+      "branch": "loew-inspector/relay-cloud-source-upload",
+      "paths": [
+        "src/cloud-upload.js",
+        "src/cloud-upload.test.js",
+        "src/relay-entry.js",
+        "src/relay-entry.test.js",
+        "src/runner-cleanup.test.js"
+      ],
+      "resources": [
+        "relay-cloud-source-upload"
+      ],
+      "goal": "Add a bounded native Relay operation that uploads an undeployed Cloudflare Worker version from an exact GitHub commit without exposing arbitrary cloud writes.",
+      "acceptance": "Upload accepts an exact source commit and allowlisted Worker only; derives entrypoint/compatibility from committed Wrangler config; includes only bounded relative JS modules from that commit; inherits existing binding identities in strict mode; never deploys implicitly; reconciles duplicate or timed-out writes by exact commit annotation/version readback; tests and Runner admission pass.",
+      "next_action": "Implement the isolated cloud upload adapter and Relay extension registration, then open a draft PR and validate exact-head tests/admission.",
+      "base_sha": "df2223abab501d1134f70dc7c6ae7921edc74ece",
+      "state": "active",
+      "created_at": "2026-09-30T11:52:33.597Z",
+      "updated_at": "2026-09-30T11:52:33.597Z",
+      "lease_until": "2026-09-30T23:52:33.597Z"
     }
   ]
 }
