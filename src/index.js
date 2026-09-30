@@ -6,10 +6,11 @@ import { evidenceEngines, planEvidenceRequest, normalizeBrowserCapacityError } f
 import { ingestExternalEvidence, upsertEvidenceRun } from "./external-evidence.js";
 import { getRecipe, listRecipes, saveRecipeFromSession } from "./recipe-store.js";
 import { RELAY_CONTROL_CENTER_URI, relayControlCenterResource } from "./relay-ui.js";
+import { RELAY_SKILL_EXTENSION, relaySkillCatalog, relaySkillByUri, relaySkillResourceDescriptors, relaySkillResource } from "./skills.js";
 import { sourceAuthStatus, githubApiRequest as sourceGithubApiRequest, commitSourceFiles } from "./source.js";
 import { cloudStatus, listCloudScripts, cloudWorkerSummary, cloudBuilds, deployCloudVersion } from "./cloud.js";
 
-const VERSION = "1.0.0";
+const VERSION = "1.1.0";
 const EVIDENCE_CONTEXT_SCHEMA = {
   type: "object",
   properties: {
@@ -370,13 +371,17 @@ async function mcp(request, access, env) {
   if (message.method === "initialize") {
     return rpc(id, {
       protocolVersion: "2025-03-26",
-      capabilities: { tools: {}, resources: {} },
-      serverInfo: { name: "relay", version: VERSION }
+      capabilities: {
+        tools: {},
+        resources: {},
+        extensions: { [RELAY_SKILL_EXTENSION]: {} }
+      },
+      serverInfo: { name: "relay", version: VERSION },
+      instructions: "Relay coordinates managed loew.fi work. When Relay is explicitly requested, use Relay MCP namespaces first; inspect relay.CONTROL, resolve current Runner authority and exact repo/worker before writes, use non-default branches and draft PRs for normal source work, verify resulting state through relay.VERIFY, and never silently substitute another GitHub/browser/cloud integration for a Relay capability."
     });
   }
 
   if (message.method === "ping") return rpc(id, {});
-
 
   if (message.method === "resources/list") {
     return rpc(id, {
@@ -387,15 +392,35 @@ async function mcp(request, access, env) {
           title: "Relay control center",
           description: "Interactive control surface for relay.CONTROL, relay.RUNNER, relay.SOURCE, relay.CLOUD, and relay.VERIFY.",
           mimeType: "text/html;profile=mcp-app"
-        }
+        },
+        ...relaySkillResourceDescriptors()
       ]
     });
   }
 
   if (message.method === "resources/read") {
     const uri = message.params?.uri;
-    if (uri !== RELAY_CONTROL_CENTER_URI) return rpcError(id, -32602, "Unknown resource");
-    return rpc(id, { contents: [relayControlCenterResource()] });
+    if (uri === RELAY_CONTROL_CENTER_URI) {
+      return rpc(id, { contents: [relayControlCenterResource()] });
+    }
+    const skillResource = relaySkillResource(uri);
+    if (skillResource) return rpc(id, { contents: [skillResource] });
+    return rpcError(id, -32602, "Unknown resource");
+  }
+
+  if (message.method === "skills/list") {
+    const cursor = message.params?.cursor;
+    if (cursor !== undefined && cursor !== null && cursor !== "") {
+      return rpcError(id, -32602, "Invalid skills cursor");
+    }
+    return rpc(id, { skills: relaySkillCatalog() });
+  }
+
+  if (message.method === "skills/get") {
+    const uri = message.params?.uri;
+    const skill = relaySkillByUri(uri);
+    if (!skill) return rpcError(id, -32602, "Unknown skill");
+    return rpc(id, { skill });
   }
 
   if (message.method === "tools/list") {
