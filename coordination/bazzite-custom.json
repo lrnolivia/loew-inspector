@@ -1,0 +1,14 @@
+{
+  "schema": 1,
+  "project": "bazzite-custom",
+  "updated_at": "2026-09-30T08:58:00.000Z",
+  "legacy_branches": [
+    "docs/move-to-runner",
+    "fix/keyd-containerfile-heredocs",
+    "kde",
+    "main",
+    "runner/universal-authority"
+  ],
+  "queue": [],
+  "claims": []
+}

@@ -1,0 +1,19 @@
+{
+  "schema": 1,
+  "project": "loew-runner",
+  "updated_at": "2026-09-30T08:58:00.000Z",
+  "legacy_branches": [
+    "control",
+    "main",
+    "runner/3-a-control-plane",
+    "runner/3-b-guarded-controls",
+    "runner/3-c-consolidation",
+    "runner/3-d-infrastructure-view",
+    "runner/3-e-runtime-closeout",
+    "shared-repair-reconciler",
+    "status/field-runner-authority-20260929",
+    "test/relay-smoke"
+  ],
+  "queue": [],
+  "claims": []
+}

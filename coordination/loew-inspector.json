@@ -1,0 +1,29 @@
+{
+  "schema": 1,
+  "project": "loew-inspector",
+  "updated_at": "2026-09-30T08:58:00.000Z",
+  "legacy_branches": [
+    "fix/browser-ci-capacity",
+    "fix/chatgpt-inspector-oauth-20260929",
+    "fix/public-field-qa-verifier",
+    "fix/real-project-preview-qa",
+    "gen2-1/evidence-controller",
+    "gen2-1/evidence-hotfix",
+    "gen2-1/evidence-ingest-hardening",
+    "gen2-1/layout-recipe-hotfix",
+    "gen2-1/qa-runs",
+    "gen2-1/recipe-system",
+    "gen2/browser-runtime",
+    "gen2/capture-workflow-fix",
+    "gen2/controlled-interaction",
+    "gen2/deployment-context",
+    "gen2/visual-evidence",
+    "gen2/visual-qa",
+    "main",
+    "research/revyme-memory-baseline",
+    "runner/universal-authority",
+    "shared-repair-baseline-gate"
+  ],
+  "queue": [],
+  "claims": []
+}

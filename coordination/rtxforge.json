@@ -1,0 +1,15 @@
+{
+  "schema": 1,
+  "project": "rtxforge",
+  "updated_at": "2026-09-30T08:58:00.000Z",
+  "legacy_branches": [
+    "backup/github-main-before-0.5.8",
+    "backup/main-0.5.8-ada",
+    "docs/move-to-runner",
+    "integrate/0.5.8.1-ada",
+    "main",
+    "runner/universal-authority"
+  ],
+  "queue": [],
+  "claims": []
+}

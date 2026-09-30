@@ -1,0 +1,13 @@
+{
+  "schema": 1,
+  "project": "loewtorials",
+  "updated_at": "2026-09-30T08:58:00.000Z",
+  "legacy_branches": [
+    "codex/llm-help-integration",
+    "docs/move-to-runner",
+    "main",
+    "runner/universal-authority"
+  ],
+  "queue": [],
+  "claims": []
+}
