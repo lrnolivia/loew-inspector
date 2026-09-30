@@ -73,3 +73,7 @@ If the user asks to pick up Runner 3.0, the project-management dashboard, assign
 4. current Runner/Inspector infrastructure ownership before changing capacity/execution logic
 
 Runner 3.0 core workflows must not depend on paid model inference. Preserve existing visual evidence and scheduler controls while migrating to the project-first UI.
+
+## Concurrent work admission
+
+Before opening a new implementation branch or changing a managed project's code, follow Bible section 20 and `docs/WORK_COORDINATION.md`. Read the live project coordination record, acquire or renew its atomic claim, and run preflight. Continue on the same assignment/branch across chats. Queue overlapping work or work beyond the active branch budget. Use relay/source tools or the deterministic coordination workflow; no AI credit is required. Never infer that an expired lease frees another owner's work.

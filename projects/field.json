@@ -118,5 +118,21 @@
       ],
       "keep_current_field_prefix_until_workflow_compatibility_verified": true
     }
+  },
+  "coordination": {
+    "contract": "docs/WORK_COORDINATION.md",
+    "record": "coordination/field.json",
+    "max_active_branches": 4,
+    "lease_hours": 12,
+    "one_active_branch_per_owner": true,
+    "resume_existing_assignment": true,
+    "atomic_claim_required": true,
+    "expired_claim_retains_ownership": true,
+    "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
+    "audit_workflow": "coordination.yml",
+    "cleanup": "merged-managed-branches-only",
+    "status": "enabled",
+    "admission_workflow": "lrnolivia/field:.github/workflows/runner-coordination.yml",
+    "cleanup_workflow": "lrnolivia/field:.github/workflows/runner-coordination.yml"
   }
 }

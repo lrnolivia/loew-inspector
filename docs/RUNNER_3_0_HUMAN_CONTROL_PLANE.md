@@ -1027,3 +1027,9 @@ Runner 3.0 is complete when a user can, from the dashboard alone:
 - replacing GitHub as code/history truth
 - replacing Inspector as evidence executor
 - impersonating first-class project agents
+
+## Required coordination integration (2026-09-30)
+
+Bible section 20, `docs/WORK_COORDINATION.md`, project `coordination` policy and `coordination/<project>.json` now define admission/lifecycle. The deterministic engine is `src/coordination.mjs`; `scripts/coordinate.mjs` supplies atomic GitHub transactions, preflight, inventory audit and managed cleanup. The scheduled/manual workflow is `coordination.yml`.
+
+The 3.0 dashboard must consume these same records and rules, including the active branch cap, queued tasks without branches, expired reservations, scope drift and legacy recovery inventory. Do not build a second ownership registry or lock engine. Relay and local chats use the same SHA compare-and-swap protocol. Integrating UI or API endpoints is follow-up infrastructure-owner work; the existing CLI/workflow operates independently of that upgrade and of paid inference.

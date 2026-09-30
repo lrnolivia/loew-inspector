@@ -1,6 +1,6 @@
 # loew chat bible
 
-Version: `2026-09-30.2`  
+Version: `2026-09-30.3`
 Canonical authority: `lrnolivia/loew-runner@main`
 
 This is the single universal operating contract for loew.fi ChatGPT, Codex, Work, Contract Worker, Night Shift, PJM, Master, Worker, and other project-execution chats.
@@ -551,3 +551,22 @@ Do not search for, clone, resume, or mutate `revyme-loewfi`, `revyme-loew`, `rev
 Revyme-prefixed identifiers inside `lrnolivia/field` may remain when they are real compatibility, protocol, dependency, storage, or attribution contracts.
 
 For field-specific stale sources that cannot yet be edited through repository authority, see `docs/FIELD_GUIDANCE_CLEANUP_MANIFEST.md`. Those sources are non-authoritative for current repository identity, execution process, and QA law until cleaned up.
+
+## 20. Concurrent work and branch lifecycle law
+
+Before implementation on a project with a `coordination` record, read `docs/WORK_COORDINATION.md`, the project's registration and live coordination record. This law applies to Codex, Claude, ChatGPT/relay, Workers, Masters and scheduled work alike.
+
+1. Acquire a durable atomic claim in Runner BEFORE creating an implementation branch, worktree or editing product files. A claim names the stable assignment, owner, exact paths, shared semantic resources, acceptance and next action. A local note or chat promise is not a claim.
+2. Resume the existing assignment and branch across chat handoffs, model changes, restarts and pauses. Never create a continuation, retry, version or per-chat branch. New independent work requires a new admitted assignment.
+3. Respect the project active branch budget and one active implementation per owner. When full or overlapping, queue the task in Runner and do useful read-only preparation. Never evade the budget with an unpushed branch, a second PR, or a differently named owner.
+4. Give concurrent writers separate checkouts/worktrees. Never switch branches or change files in another chat's working checkout. Scope ownership covers files AND semantic resources; coordinate shared models, input routing, persistence and shell hosts even when filenames differ.
+5. Run the coordination preflight at resume, before each substantial edit batch, and before push/PR/merge. Renew at these checkpoints and persist the next action. Expired or held ownership remains reserved; elapsed time never authorizes takeover.
+6. Overlap requires a narrower non-overlapping claim or a recorded handoff from the current owner. Scope changes require re-admission, not silently expanding the diff. Explicit user authority can resolve a conflict; record its concrete scope and evidence.
+7. Finish coherent batches promptly through existing checks and exact-SHA QA. After merge, record disposition of code, acceptance and remaining QA, complete the claim, and let Runner remove eligible task branches. Do not accumulate permanent domain branches or use branches as the task backlog.
+8. Runner's deterministic audit flags unregistered branches, scope drift, expired claims and ownership overlap without model inference. Fix coordination violations before further publication. A stopped scheduler or missing API credit does not waive the gate.
+9. Legacy branches remain in an immutable recovery inventory and are excluded from automatic cleanup. They do not create new branch slots and cannot be repurposed. Existing active legacy owners must be imported/adopted before continuing; preserve their work and reconcile real ownership.
+10. Relay is the common human-facing route to these records and gates. Its connected source tools may make the same compare-and-swap updates, or dispatch the deterministic workflow. Do not claim the relay MCP has a lock/admission tool unless that tool exists. If coordination transport is unavailable, pause conflicting implementation and continue safe preparation.
+
+Runner permits narrow direct control-record updates ONLY to `coordination/<project>.json` via its SHA-checked claim/heartbeat/handoff/completion protocol. These are coordination transactions, not product writes or permission for general direct-main changes. Normal code, contract and policy changes use reviewed branches/PRs. A failed compare-and-swap requires a fresh read and re-evaluation; never overwrite another owner's claim.
+
+Admission is enforceable for cooperating clients; the audit detects external bypass. GitHub protection and required status checks remain separate enforcement boundaries. Do not describe an advisory audit as a required merge gate.

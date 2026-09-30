@@ -60,5 +60,12 @@
   "target_resolution": {
     "runner_project_registry_first": true,
     "historical_repository_names_are_non_authoritative": true
+  },
+  "coordination": {
+    "contract": "docs/WORK_COORDINATION.md",
+    "bible_section": "20",
+    "atomic_claim_required_for_registered_projects": true,
+    "new_task_branches_require_admission": true,
+    "relay_uses_same_registry": true
   }
 }
