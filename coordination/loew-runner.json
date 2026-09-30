@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T12:07:53.611Z",
+  "updated_at": "2026-09-30T12:12:03.688Z",
   "legacy_branches": [
     "control",
     "main",
@@ -233,10 +233,16 @@
       "acceptance": "Universal QA law requires screenshot/video evidence to be registered in Runner Visuals; producers may continue once a durable queued/uploading receipt exists; metadata persists after blob expiry; configurable storage quotas/retention, deduplication, pinning, and failure retry rules prevent unbounded growth; work_accounted references the Visuals receipt when visual evidence exists.",
       "next_action": "Publish the universal Visuals evidence policy in a dedicated Runner policy doc and wire coordination completion law to it. Queue implementation behind the active human-QA Visuals branch.",
       "base_sha": "fd6fc8015f37cdce5764bf93131e6e3013dbad9e",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T12:06:09.505Z",
-      "updated_at": "2026-09-30T12:07:53.611Z",
-      "lease_until": "2026-10-01T00:07:53.611Z"
+      "updated_at": "2026-09-30T12:12:03.688Z",
+      "lease_until": "2026-10-01T00:12:03.688Z",
+      "pr": 40,
+      "merged_head_sha": "b1e26d91cd4e65f21d1f47f1f785668d7bfc3236",
+      "merge_commit_sha": "ee0475e39a54d78491f101e86d25c8c3e920c2e6",
+      "evidence": "https://github.com/lrnolivia/loew-runner/pull/40 — Runner Visuals policy merged with screenshot/video registration, async queued/uploading handoff, bounded storage, and post-main archive-before-purge rules.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T12:12:03.688Z"
     }
   ]
 }
