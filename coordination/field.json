@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T10:20:23.102Z",
+  "updated_at": "2026-09-30T10:21:02.409Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -369,6 +369,43 @@
       "created_at": "2026-09-30T05:06:12.798659Z",
       "updated_at": "2026-09-30T10:20:23.102Z",
       "lease_until": "2026-09-30T22:20:23.102Z"
+    },
+    {
+      "id": "field-consolidation-workspace-20260930",
+      "owner": "01a0f1bf-3464-7b61-a3ac-f5d494bf7ef3",
+      "branch": "field/consolidation-workspace-20260930",
+      "paths": [
+        "src/Dashboard.tsx",
+        "src/dashboard/DashboardCollectionSemantics.test.tsx",
+        "src/dashboard/DashboardHeader.tsx",
+        "src/dashboard/DashboardLoadingGrid.tsx",
+        "src/dashboard/DashboardSidebar.test.tsx",
+        "src/dashboard/DashboardSidebar.tsx",
+        "src/dashboard/DeleteProjectDialog.test.tsx",
+        "src/dashboard/DeleteProjectDialog.tsx",
+        "src/dashboard/EmptyState.test.tsx",
+        "src/dashboard/EmptyState.tsx",
+        "src/dashboard/NewProjectWizard.test.tsx",
+        "src/dashboard/NewProjectWizard.tsx",
+        "src/dashboard/ProjectCard.tsx",
+        "src/dashboard/ProjectCardMenu.test.tsx",
+        "src/dashboard/ProjectCardMenu.tsx",
+        "src/dashboard/ProjectGrid.tsx",
+        "src/dashboard/RenameProjectDialog.test.tsx",
+        "src/dashboard/RenameProjectDialog.tsx",
+        "src/styles/dashboard.css"
+      ],
+      "resources": [
+        "dashboard-project-actions"
+      ],
+      "goal": "Recover preserved Dashboard collection, rename, delete confirmation and accessibility work onto current main",
+      "acceptance": "Existing create/refresh/thumbnail behavior preserved; focused tests and registry pass; authenticated persistence and exact Preview QA accounted before promotion; originals retained",
+      "next_action": "Serial continuation after Canvas #135: preserve dirty recovery worktree, reconcile complete patch onto current main, run focused Dashboard checks, publish a draft only after admitted scope checks. Authenticated persistence and exact-head Dashboard runtime QA remain gates.",
+      "base_sha": "854038a3e84f41cd590a4ad18b24fcd4127e2fba",
+      "state": "active",
+      "created_at": "2026-09-30T10:21:02.409Z",
+      "updated_at": "2026-09-30T10:21:02.409Z",
+      "lease_until": "2026-09-30T22:21:02.409Z"
     }
   ]
 }
