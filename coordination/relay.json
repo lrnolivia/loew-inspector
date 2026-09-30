@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T16:37:54.711Z",
+  "updated_at": "2026-09-30T16:39:17.366Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -828,10 +828,16 @@
       "acceptance": "Canonical Relay only; exact-head checks and production readback; recoverable original repository retained as archive.",
       "next_action": "Present existing blocked automatic state truthfully and explain unavailable model credits in plain language; finish exact-head retirement.",
       "base_sha": "04d806fbdb08143f9b751fb091eadfcf695b7910",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T16:19:25.311Z",
-      "updated_at": "2026-09-30T16:29:47.831Z",
-      "lease_until": "2026-10-01T04:29:47.831Z"
+      "updated_at": "2026-09-30T16:39:17.366Z",
+      "lease_until": "2026-10-01T04:39:17.366Z",
+      "pr": 46,
+      "merged_head_sha": "0cfbf1dd012cb6b2757d07ab390ecc4929b64e1a",
+      "merge_commit_sha": "1c77c7dd303804b2f8cf70809cfafd0577215276",
+      "evidence": "PR46 exact head0cfbf1dd012cb6b2757d07ab390ecc4929b64e1a passed workspace CI, browser checks and Runner admission; ready and merge through Relay, squash1c77c7dd303804b2f8cf70809cfafd0577215276. Native Relay upload/deploy versiond083b75f-9fed-45a3-a9ca-5d240024b81f, deploymentde24e5cb-0ee7-4c37-8a00-f5cfd99c8193 at100%. Authenticated exact-source production passed before retirement run36744930723 and after retirement run36745549674. Legacy runner/inspector/relay-inspector domains and DNS absent, routes empty, old Access apps removed and Field/Relay audiences/policies retained. Legacy Runner Worker absent; Relay workers.dev and preview ingress disabled. loew-runner archived after exact12branch/8PR inventory and frozen3972446 ancestor proof. Canonical guarded Night Shift run36745545426 success; model execution parked without OPENAIKEY, all state retained. CAS ledger7d57cd145e7ee9cf921b395d600e5500225bca86 superseded standaloneInspector queue, reconciled completedbatchqueues and preserved allowners. SharedR2/Browser/secrets/OAuth retained; onlycanonicalRelay active.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T16:39:17.366Z"
     }
   ],
   "migrated_from": "loew-inspector"
