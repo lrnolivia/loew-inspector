@@ -12,6 +12,12 @@ test("Relay extension publishes source inventory and exact-head PR action", () =
     annotations: {},
     securitySchemes: [{ type: "oauth2", scopes: [] }],
     _meta: { existing: true }
+  }, {
+    name: "relay_source_update_file",
+    description: "legacy token text",
+    inputSchema: { type: "object" },
+    annotations: {},
+    securitySchemes: [{ type: "oauth2", scopes: [] }]
   }]);
   const names = tools.map(tool => tool.name);
   assert.ok(names.includes("relay_source_inventory"));
