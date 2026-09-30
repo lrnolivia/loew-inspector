@@ -1,4 +1,4 @@
-name: loew inspector work coordination
+name: relay work coordination
 
 on:
   pull_request:
@@ -35,20 +35,8 @@ jobs:
           GH_TOKEN: ${{ github.token }}
           TASK_PR: ${{ github.event.pull_request.number }}
         run: |
-          if [ -f projects/relay.json ]; then
-            project=relay
-            engine=scripts/coordinate.mjs
-          else
-            gh api repos/lrnolivia/loew-runner/contents/scripts/coordinate.mjs?ref=main --jq .content | base64 -d > "$RUNNER_TEMP/coordinate.mjs"
-            gh api repos/lrnolivia/loew-runner/contents/src/coordination.mjs?ref=main --jq .content | base64 -d > "$RUNNER_TEMP/coordination.mjs"
-            sed 's@../src/coordination.mjs@./coordination.mjs@' "$RUNNER_TEMP/coordinate.mjs" > "$RUNNER_TEMP/admit.mjs"
-            project=loew-inspector
-            engine="$RUNNER_TEMP/admit.mjs"
-          fi
-          # Admission is read-only; the migration freeze blocks writes, not inspection.
-          if [ "$project" = loew-inspector ]; then
-            sed -i "s/if (read(recordPath).value.migration_frozen)/if (action !== 'pr-gate' \&\& read(recordPath).value.migration_frozen)/" "$engine"
-          fi
+          project=relay
+          engine=scripts/coordinate.mjs
           node -e 'require("fs").writeFileSync(process.env.RUNNER_TEMP + "/request.json", JSON.stringify({pr: Number(process.env.TASK_PR)}))'
           node "$engine" pr-gate "$project" "$RUNNER_TEMP/request.json"
 
@@ -60,7 +48,7 @@ jobs:
       contents: write
       pull-requests: read
     concurrency:
-      group: loew-inspector-managed-branch-cleanup
+      group: relay-managed-branch-cleanup
       cancel-in-progress: false
     steps:
       - uses: actions/checkout@v6
@@ -79,7 +67,7 @@ jobs:
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: loew-inspector-coordination-receipt
+          name: relay-coordination-receipt
           path: ${{ runner.temp }}/coordination-result.json
       - name: Show coordination findings
         if: always()

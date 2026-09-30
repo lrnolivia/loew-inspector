@@ -1,8 +1,8 @@
 {
   "id": "loew-inspector",
-  "name": "loew inspector",
+  "name": "relay compatibility alias",
   "repository": "lrnolivia/relay",
-  "managed": true,
+  "managed": false,
   "default_branch": "main",
   "implementation": {
     "branch_prefixes": [
@@ -72,5 +72,10 @@
   },
   "migrated_repository_from": "lrnolivia/loew-inspector",
   "alias_of": "relay",
-  "migration_status": "compatibility-snapshot"
+  "migration_status": "compatibility-snapshot",
+  "retirement": {
+    "status": "recovery-only",
+    "canonical_project": "relay",
+    "record_is_historical": true
+  }
 }

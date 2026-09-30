@@ -1,6 +1,6 @@
 name: inspect loew browser
 
-run-name: "loew-inspector browser / ${{ inputs.request_id }}"
+run-name: "relay browser / ${{ inputs.request_id }}"
 
 on:
   workflow_dispatch:

@@ -14,7 +14,7 @@ permissions:
   contents: write
 
 concurrency:
-  group: loew-runner
+  group: relay-night-shift
   cancel-in-progress: false
 
 jobs:
@@ -29,9 +29,13 @@ jobs:
       - name: Run due workers or requested worker
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAIKEY }}
-          RUNNER_GITHUB_TOKEN: ${{ secrets.RUNNER_GITHUB_TOKEN }}
+          RUNNER_GITHUB_TOKEN: ${{ github.token }}
           REQUESTED_WORKER: ${{ inputs.worker_id }}
         run: |
+          if [ -z "$OPENAI_API_KEY" ]; then
+            echo "Night Shift model execution is parked: OPENAIKEY is not configured. Canonical state is preserved; deterministic UI/coordination remains available." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
           if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "$REQUESTED_WORKER" ]; then
             npm run run -- "$REQUESTED_WORKER"
           else
@@ -44,7 +48,7 @@ jobs:
             echo "No state changes."
             exit 0
           fi
-          git config user.name "loew-runner"
+          git config user.name "relay"
           git config user.email "actions@users.noreply.github.com"
           git add state reports
           git commit -m "runner: persist worker state"

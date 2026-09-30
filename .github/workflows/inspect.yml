@@ -1,6 +1,6 @@
 name: inspect loew url
 
-run-name: "loew-inspector / ${{ inputs.request_id }}"
+run-name: "relay / ${{ inputs.request_id }}"
 
 on:
   workflow_dispatch:
@@ -55,7 +55,7 @@ jobs:
           const host = u.hostname.toLowerCase();
           const okHost = host === "loew.fi" || host.endsWith(".loew.fi");
           if (u.protocol !== "https:" || !okHost || u.username || u.password || u.port) {
-            console.error("invalid loew-inspector target");
+            console.error("invalid relay target");
             process.exit(2);
           }
           NODE

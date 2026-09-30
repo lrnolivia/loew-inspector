@@ -54,7 +54,7 @@ When the remaining criterion needs human judgment, populate Runner's QA helper a
 
 ## Relay and remote chats
 
-Relay clients bootstrap from current Runner authority and discover their connected source tools. They may dispatch `lrnolivia/loew-runner` workflow `coordination.yml` on main with `action`, `project`, and JSON `request`, then wait for that exact run and read its receipt. Dispatch acceptance alone is not admission. Refresh `coordination/<project>.json` to verify the actual resulting owner/state before editing.
+Relay clients bootstrap from current Runner authority and discover their connected source tools. They may dispatch `lrnolivia/relay` workflow `coordination.yml` on main with `action`, `project`, and JSON `request`, then wait for that exact run and read its receipt. Dispatch acceptance alone is not admission. Refresh `coordination/<project>.json` to verify the actual resulting owner/state before editing.
 
 If connected GitHub tools support Contents reads/updates, a relay client may perform the same protocol: read the live record and SHA, evaluate the complete policy against every active claim, PUT only this record with the expected SHA, refresh after conflict, and verify the result. Prefer workflow dispatch because it runs the shared rule engine instead of relying on a client's reproduction. No lock endpoint has been added to the relay MCP. Local CLI and relay share one registry.
 

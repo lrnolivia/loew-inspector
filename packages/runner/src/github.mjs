@@ -4,7 +4,7 @@ function headers() {
   const result = {
     Accept: "application/vnd.github+json",
     "X-GitHub-Api-Version": "2022-11-28",
-    "User-Agent": "loew-runner"
+    "User-Agent": "relay"
   };
   if (process.env.RUNNER_GITHUB_TOKEN) {
     result.Authorization = `Bearer ${process.env.RUNNER_GITHUB_TOKEN}`;

@@ -47,7 +47,7 @@ function githubHeaders(env, extra = {}) {
     Accept: "application/vnd.github+json",
     Authorization: `Bearer ${env.RUNNER_GITHUB_TOKEN}`,
     "X-GitHub-Api-Version": API_VERSION,
-    "User-Agent": "loew-runner-cloudflare",
+    "User-Agent": "relay-cloudflare",
     ...extra
   };
 }

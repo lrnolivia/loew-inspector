@@ -1,3 +1,7 @@
+# Historical pre-consolidation record
+
+This document retains historical evidence. Current authority is `lrnolivia/relay@main`, project `relay`, Worker `relay`, web `https://relay.loew.fi`, MCP `https://relay.loew.fi/mcp`. Runtime and retirement truth: [Relay retirement](relay/LEGACY_RETIREMENT.md). Historical hostnames and repository instructions below must not be used for current execution.
+
 # runner architecture
 
 Universal chat/execution law lives in `LOEW_CHAT_BIBLE.md` and its versioned `contracts/manifest.json`. Managed project repositories should point to that authority rather than carrying forked copies of generic execution rules.
