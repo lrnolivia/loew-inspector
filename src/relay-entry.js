@@ -6,7 +6,7 @@ import { cloudUploadTool, callCloudUpload, validateCloudUploadArguments } from "
 import { QA_SKILL_URI, qaSkillCatalogEntry, qaSkillResourceDescriptor, qaSkillResource } from "./qa-skill.js";
 import { LOEW_NAMING_SKILL_URI, loewNamingSkillCatalogEntry, loewNamingSkillResourceDescriptor, loewNamingSkillResource } from "./loew-naming-skill.js";
 
-export const RELAY_EXTENSION_VERSION = "1.7.0";
+export const RELAY_EXTENSION_VERSION = "1.7.5";
 
 const createBranch = {
   name: "relay_source_create_branch",
@@ -75,7 +75,13 @@ export function augmentToolList(tools) {
   };
   const extensionTools = [...lifecycle, runnerCleanupTool, cloudUploadTool, uiApiTool];
   const names = new Set(extensionTools.map(tool => tool.name));
-  const kept = list.filter(tool => tool.name !== createBranch.name && !names.has(tool.name));
+  const sourceDescriptions = {
+    relay_source_update_file: "Create or replace one UTF-8 file on a non-default branch through relay.SOURCE using configured GitHub source auth (GitHub App preferred). Direct default-branch writes are intentionally blocked; coordination control state must use relay.RUNNER.",
+    relay_source_open_pull_request: "Open a pull request through relay.SOURCE using configured GitHub source auth (GitHub App preferred)."
+  };
+  const kept = list
+    .filter(tool => tool.name !== createBranch.name && !names.has(tool.name))
+    .map(tool => sourceDescriptions[tool.name] ? { ...tool, description: sourceDescriptions[tool.name] } : tool);
   return [
     ...kept,
     replacement,
