@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T23:32:21.826Z",
+  "updated_at": "2026-09-30T23:34:11.812Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -591,6 +591,34 @@
         }
       ],
       "updated_at": "2026-09-30T23:30:52.618Z"
+    },
+    {
+      "id": "relay-1.9.2-source-scale-20260930",
+      "owner": "relay-1.9.2-source-scale-20260930",
+      "goal": "Ship Relay 1.9.2 as the scalable SOURCE mutation release so file, document, context and request-size ceilings change transport strategy instead of blocking canonical work.",
+      "acceptance": "Add bounded exact-SHA/CAS source mutation primitives for precise patch/edit plus safe append/chunk workflows where appropriate; validate path containment, expected blob/head identity, bounded operation counts and deterministic readback; make failures explain recovery without encouraging alternate writers; preserve default-branch protections and existing SOURCE semantics. Add focused tests for stale SHA, ambiguous patch, oversized logical work split into bounded operations, append conflicts and readback. Release, exact-head admission, merge, deploy, runtime verify and client refresh must pass.",
+      "next_action": "Claim after one branch-budget slot is freed, implement the smallest safe patch/edit primitive first, then append/chunk composition and release as 1.9.2.",
+      "paths": [
+        "src/source.js",
+        "src/source.test.js",
+        "src/source-lifecycle.js",
+        "src/source-lifecycle.test.js",
+        "src/relay-entry.js",
+        "src/relay-entry.test.js",
+        "docs/relay/RELAY_1_9_2_RELEASE.md"
+      ],
+      "resources": [
+        "relay-1.9.2-release",
+        "relay-source-scalable-mutations"
+      ],
+      "task_class": "architecture",
+      "ledger_refs": [
+        "RFS-013",
+        "RFS-021",
+        "RFS-022"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T23:34:11.812Z"
     }
   ],
   "claims": [
