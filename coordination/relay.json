@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T20:38:22.783Z",
+  "updated_at": "2026-09-30T20:38:43.618Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -863,32 +863,6 @@
       "lease_until": "2026-10-01T08:36:13.719Z"
     },
     {
-      "id": "relay-brand-glyphs-20260930",
-      "owner": "codex-relay-brand-glyphs-20260930",
-      "branch": "relay/brand-glyphs-20260930",
-      "paths": [
-        "apps/web/",
-        "apps/mcp/production-smoke.mjs",
-        "packages/shared-ui/",
-        "features/night-shift/",
-        "docs/relay/",
-        "packages/runner/src/",
-        ".superdesign/"
-      ],
-      "resources": [
-        "relay-shared-interface-brand",
-        "relay-project-icon-discovery"
-      ],
-      "goal": "Add supplied official Relay icon and thick animated interface glyphs, with Runner/Inspector marks used only for internal subsystem context.",
-      "acceptance": "Shared web/MCP carries exact provided assets, coherent rounded animated glyphs, accessible labels and reduced-motion support; focused browser/build and exact-head admission pass.",
-      "next_action": "Finish approved GPT-5.6 Terra Prime direction with straight sidebar, unframed official/project icons, top accent strip and soft shadows. Extend authenticated production smoke to verify genuine icon blob provenance on web/MCP; exact-head tests/admission then native deployment/readback.",
-      "base_sha": "c9f6af7e51e478d25c1cb58f89f782063246ae20",
-      "state": "active",
-      "created_at": "2026-09-30T20:02:57.628Z",
-      "updated_at": "2026-09-30T20:36:45.214Z",
-      "lease_until": "2026-10-01T08:36:45.214Z"
-    },
-    {
       "id": "field-consolidation-live-receipt-20260930",
       "owner": "01a0f0ae-4e8c-7e62-ae7a-3b02faa398f5",
       "branch": "relay/field-consolidation-live-receipt-20260930",
@@ -907,6 +881,33 @@
       "created_at": "2026-09-30T20:38:22.783Z",
       "updated_at": "2026-09-30T20:38:22.783Z",
       "lease_until": "2026-10-01T08:38:22.783Z"
+    },
+    {
+      "id": "relay-brand-glyphs-20260930",
+      "owner": "codex-relay-brand-glyphs-20260930",
+      "branch": "relay/brand-glyphs-20260930",
+      "paths": [
+        "apps/web/",
+        "apps/mcp/production-smoke.mjs",
+        "packages/shared-ui/",
+        "features/night-shift/",
+        "docs/relay/",
+        "packages/runner/src/",
+        ".superdesign/",
+        ".github/workflows/relay-production-smoke.yml"
+      ],
+      "resources": [
+        "relay-shared-interface-brand",
+        "relay-project-icon-discovery"
+      ],
+      "goal": "Add supplied official Relay icon and thick animated interface glyphs, with Runner/Inspector marks used only for internal subsystem context.",
+      "acceptance": "Shared web/MCP carries exact provided assets, coherent rounded animated glyphs, accessible labels and reduced-motion support; focused browser/build and exact-head admission pass.",
+      "next_action": "Run final exact-head workspace/admission checks, ship shared responsive UI, verify authenticated repository icons and register exact-source desktop/mobile production captures in existing Runner Visuals.",
+      "base_sha": "c9f6af7e51e478d25c1cb58f89f782063246ae20",
+      "state": "active",
+      "created_at": "2026-09-30T20:02:57.628Z",
+      "updated_at": "2026-09-30T20:38:43.618Z",
+      "lease_until": "2026-10-01T08:38:43.618Z"
     }
   ],
   "migrated_from": "loew-inspector"
