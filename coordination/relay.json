@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T16:00:15.919Z",
+  "updated_at": "2026-09-30T16:00:18.302Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -238,7 +238,7 @@
         "relay-access",
         "relay-release-orchestration"
       ],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-09-30T14:07:17.597Z"
     },
     {
@@ -738,6 +738,33 @@
       "evidence": "PR44 exacthead c31e014f22a0b16c801098fbe72f37100a107c78; 77 Inspector,45Runner,3layout,8contracts,4web tests and generated build check passed; required CI/Runner admission green. Shared HTTP/MCP browser navigation, artifact review save/readback, deep links, mobile light/dark desktop verified. Merge 633612837f1b4f5312320d64852683d3aed8611f. Production rollout belongs to B5.",
       "work_accounted": true,
       "completed_at": "2026-09-30T16:00:15.919Z"
+    },
+    {
+      "id": "relay-consolidation-b5-cloudflare-cutover-20260930",
+      "owner": "relay-consolidation-b5-cloudflare-cutover-20260930",
+      "branch": "relay/consolidation-b5-cloudflare-cutover",
+      "paths": [
+        "wrangler.jsonc",
+        "apps/mcp/",
+        "apps/web/",
+        "src/",
+        "test/",
+        "docs/relay/"
+      ],
+      "resources": [
+        "relay-cloudflare-runtime",
+        "relay-mcp-production",
+        "relay-access",
+        "relay-release-orchestration"
+      ],
+      "goal": "Rename existing Worker in place to relay and deploy exact merged Relay source, preserving secrets, Browser, R2 and Access/OAuth continuity.",
+      "acceptance": "relay.loew.fi unifiedweb/MCP verified, sameWorkerID and secret/bindingidentities preserved; exact upload/deployment/readback; olddomains remain until B6.",
+      "next_action": "Align source runtime identity and deployed allowlist, reuse WorkerID734382bfc38a43cfb8cf9115116ed688; verify UI/MCP/QA/source/cloud before legacy removal.",
+      "base_sha": "ffeee7eb486583e517a54a8940c25556532b21fa",
+      "state": "active",
+      "created_at": "2026-09-30T16:00:18.302Z",
+      "updated_at": "2026-09-30T16:00:18.302Z",
+      "lease_until": "2026-10-01T04:00:18.302Z"
     }
   ],
   "migrated_from": "loew-inspector"
