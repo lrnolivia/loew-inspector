@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T10:21:02.409Z",
+  "updated_at": "2026-09-30T10:37:40.359Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -400,12 +400,12 @@
       ],
       "goal": "Recover preserved Dashboard collection, rename, delete confirmation and accessibility work onto current main",
       "acceptance": "Existing create/refresh/thumbnail behavior preserved; focused tests and registry pass; authenticated persistence and exact Preview QA accounted before promotion; originals retained",
-      "next_action": "Serial continuation after Canvas #135: preserve dirty recovery worktree, reconcile complete patch onto current main, run focused Dashboard checks, publish a draft only after admitted scope checks. Authenticated persistence and exact-head Dashboard runtime QA remain gates.",
+      "next_action": "Dashboard draft #136 head 9fd1357d54841e255efb0596b2be4162958fc879 published: recovered 19 paths; retryable rename/delete errors, modal focus containment and project menu keyboard navigation complete. Focused 25 tests and lint pass. Older-head Registry 36702480952 is pending and cannot validate current head. User directs implementation over Preview troubleshooting. Preserve current claim and originals; authenticated persistence QA remains unproven. Controls #83 review finds current main already advances effects, while historical Fill shell assertions conflict with canonical PaintPicker; do not transplant blindly. Next finish Dashboard publication gates in background, then ordered Controls/Assets recovery; connected panels deferred, Mobile protected.",
       "base_sha": "854038a3e84f41cd590a4ad18b24fcd4127e2fba",
       "state": "active",
       "created_at": "2026-09-30T10:21:02.409Z",
-      "updated_at": "2026-09-30T10:21:02.409Z",
-      "lease_until": "2026-09-30T22:21:02.409Z"
+      "updated_at": "2026-09-30T10:37:40.359Z",
+      "lease_until": "2026-09-30T22:37:40.359Z"
     }
   ]
 }
