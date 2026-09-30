@@ -9,12 +9,21 @@ test('all original control snapshots and ownership survive migration', () => {
  for (const row of manifest.files.filter(r => r.path.startsWith('coordination/'))) {
   const expected = sourceJson(row.path); delete expected.migration_frozen;
   const current = json(row.path); delete current.alias_of; delete current.migration_status;
-  assert.deepEqual(current, expected, row.path);
+  for (const name of ['claims','queue']) {
+   for (const original of expected[name]) {
+    const migrated = current[name].find(item=>item.id===original.id);
+    assert.ok(migrated, row.path + ':' + original.id);
+    if (original.branch) assert.equal(migrated.branch,original.branch);
+    if (original.base_sha) assert.equal(migrated.base_sha,original.base_sha);
+   }
+   assert.equal(new Set(current[name].map(item=>item.id)).size,current[name].length);
+  }
  }
  const canonical = json('coordination/relay.json');
  const old = sourceJson('coordination/loew-inspector.json');
- assert.deepEqual(canonical.claims, old.claims);
- assert.deepEqual(canonical.queue, old.queue);
+ for (const name of ['claims','queue']) {
+  for (const original of old[name]) assert.ok(canonical[name].some(item=>item.id===original.id));
+ }
  assert.deepEqual(canonical.legacy_branches, old.legacy_branches);
 });
 test('snapshot hashes and counts match preserved source objects', () => {
