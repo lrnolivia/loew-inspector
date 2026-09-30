@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T23:32:05.259Z",
+  "updated_at": "2026-09-30T23:32:21.826Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -520,7 +520,7 @@
         "relay-night-shift-icon",
         "relay-illustration-refresh"
       ],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-09-30T22:51:57.497Z",
       "task_class": "design",
       "amendment_count": 1,
@@ -1507,6 +1507,47 @@
           }
         }
       ]
+    },
+    {
+      "id": "relay-1.8.1-icon-hotfix-20260930",
+      "owner": "relay-1.8.1-icon-hotfix-20260930",
+      "branch": "relay/1.8.1-design-repair-20260930",
+      "paths": [
+        "apps/web/public/index.html",
+        "apps/web/public/operator.js",
+        "apps/web/public/operator-today.js",
+        "apps/web/public/operator-projects.js",
+        "apps/web/public/operator-review.js",
+        "apps/web/public/operator.css",
+        "apps/web/public/operator-1.8.css",
+        "apps/web/public/qa.css",
+        "apps/web/build.mjs",
+        "apps/web/generated.js",
+        "apps/web/test/browser.test.mjs",
+        "features/night-shift/view.js",
+        "packages/shared-ui/",
+        "docs/relay/RELAY_1_8_1_ICON_HOTFIX.md"
+      ],
+      "resources": [
+        "relay-design",
+        "relay-ui-repair",
+        "relay-project-tabs",
+        "relay-dashboard-simplification",
+        "relay-control-affordances",
+        "relay-responsive-layout",
+        "relay-today-icon",
+        "relay-night-shift-icon",
+        "relay-illustration-refresh"
+      ],
+      "goal": "Ship the immediate post-1.8 design repair on top of current Relay main. Fix the visible 1.8 UI regressions without reopening observed-progress/control-plane architecture: remove fake underline/depth treatments, rebuild the ChatGPT app-settings affordance, repair broken action-card/endcap geometry, replace the nested project sidebar with a shared horizontal scrollable project-tab rail across Today/Runner/Inspector/night shift, and simplify the dashboard into useful flat Terra Prime information surfaces with no gradients.",
+      "acceptance": "Task class design. Build from then-current Relay main and preserve all newer 1.9.x architecture/contracts. No gradients. Clickable surfaces must not use underline-like bottom borders or fake inset endcaps. Buttons should read as intentional controls through shape, spacing, weight, hover/press motion and restrained tonal fill—not card-like blocks. The ChatGPT app-settings control must feel native to the sidebar/utility area and visually subordinate to primary navigation. Eliminate the nested vertical project sidebar; use one horizontally scrollable project-tab rail with clear selected state, keyboard/focus support and graceful overflow, and make that project context available on Today, Runner, Inspector and lowercase night shift. Runner content should use the full panel width beneath the project rail. The top dashboard/overview panel must be simplified into compact useful status/metrics with flat Terra Prime surfaces, no gradients and no decorative filler. Repair attention/action cards so controls remain inside the card geometry at all widths; no detached right-side caps. Preserve approved Relay/Runner/Inspector marks and all observed-progress data semantics. Responsive desktop/mobile and reduced-motion behavior must remain sound. Do not touch PR #47-owned MCP identity files or 1.9 architecture/skills files. Regenerate checked-in web bundle, pass browser/workspace tests, verify responsive screenshots against the supplied bug screenshots, merge/deploy exact source if runtime assets changed, and close the assignment.",
+      "next_action": "Claim from current post-1.9.1 main. First replace the nested project sidebar with a horizontal shared project-tab rail and flatten page-overview/dashboard styling. Then remove underline/bottom-border button styling, redesign ChatGPT app settings as a quiet native utility action, and repair attention/action-card geometry so buttons stay inside cards. Keep all progress/state data unchanged. Regenerate bundle, run exact-head tests and responsive visual verification, then merge/deploy and close.",
+      "task_class": "design",
+      "base_sha": "2e4b052af4a4f37540b7a79419068b02b0c87b57",
+      "state": "active",
+      "created_at": "2026-09-30T23:32:21.826Z",
+      "updated_at": "2026-09-30T23:32:21.826Z",
+      "lease_until": "2026-10-01T11:32:21.826Z"
     }
   ],
   "migrated_from": "loew-inspector"
