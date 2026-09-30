@@ -54,7 +54,7 @@ const lifecycle = [
       required: ["repo", "number", "action", "expected_head_sha"],
       additionalProperties: false
     },
-    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: true, openWorldHint: true }
+    annotations: { readOnlyHint: false, destructiveHint: true, idempotentHint: false, openWorldHint: true }
   }
 ];
 
