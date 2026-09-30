@@ -237,8 +237,8 @@
     "open_prs": 19,
     "ledger": "docs/field/reorganization/2026-09-30-inventory.json",
     "handoff": "docs/field/reorganization/MAIN_FIELD_WORKER_CONSOLIDATION.md",
-    "phase": "Dashboard recovery published in draft #136; product interaction fixes complete, promotion gates pending",
-    "user_direction": "Retain branches until code, unfinished intent and QA have durable destinations. Existing main field worker consolidates; no new workers.",
+    "phase": "User-authorized serial hotfix #137 then preserved Dashboard/Mobile #136; final consolidation incomplete",
+    "user_direction": "User explicitly assigns #136, hotfix and all consolidation to existing chat 01a0f0ae-4e8c-7e62-ae7a-3b02faa398f5. No new workers. Connected landscape panel geometry remains deferred.",
     "mutations_in_field": [
       {
         "pr": 133,
@@ -259,7 +259,7 @@
         "state": "Draft: recovered 19 Dashboard paths plus retryable errors and keyboard focus/navigation fixes. Current focused tests pass; prior full Dashboard suite had one unchanged main assertion failure. Build passed at b84ce2d. Current-head Registry and authenticated persistence remain pending."
       }
     ],
-    "next_action": "Finish Dashboard #136 gates in background while preserving originals. Review Controls #83 against current effects and canonical PaintPicker; do not restore stale Fill shell assertions. Connected panels deferred and Mobile protected.",
+    "next_action": "Finish #137 exact-head Registry/Preview, merge and complete claim; atomically return held #136 to current consolidation chat and finish preserved work; then ordered semantic history accounting.",
     "deferred_panel_requirements": "docs/field/reorganization/DEFERRED_CONNECTED_PANEL_REQUIREMENTS_20260930.md",
     "panel_implementation": "deferred by user on 2026-09-30; instructions only; uncommitted experiments withdrawn",
     "implementation_checkpoint": "docs/field/reorganization/EXECUTION_CHECKPOINT_20260930.md",
@@ -292,6 +292,7 @@
       "production_deployment_id": "2ae1aa2f-dbc1-4aed-b883-0951c9da32af",
       "promotion_receipt": "docs/field/reorganization/CANVAS_PROMOTION_RECEIPT_20260930.md"
     },
-    "dashboard_checkpoint": "docs/field/reorganization/DASHBOARD_PRODUCT_CHECKPOINT_20260930.md"
+    "dashboard_checkpoint": "docs/field/reorganization/DASHBOARD_PRODUCT_CHECKPOINT_20260930.md",
+    "live_ownership_receipt": "docs/field/reorganization/LIVE_OWNERSHIP_RECEIPT_20260930.md"
   }
 }
