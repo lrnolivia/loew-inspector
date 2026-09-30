@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T12:47:11.687Z",
+  "updated_at": "2026-09-30T12:47:51.587Z",
   "legacy_branches": [
     "control",
     "main",
@@ -36,6 +36,28 @@
       ],
       "state": "queued",
       "created_at": "2026-09-30T12:12:42.107Z"
+    },
+    {
+      "id": "runner-qa-publication-receipts-20260930",
+      "owner": "normal-chat-relay-qa-integration-20260930",
+      "goal": "Wire Relay publication/operation receipts into the existing Runner human QA shell so review, evidence, verdicts and publication state share one UI and one durable identity.",
+      "acceptance": "qa-shell reads the same durable operation/publication receipt contract used by Relay chat; each QA packet binds project + exact source/head/PR/check state + Visuals evidence/run IDs + merge/version/deployment/runtime identities + recovery/rollback state; targeted questions, notes and looks-good/needs-work/not-sure verdicts attach to that exact receipt/artifact rather than a separate UI record; stale head/evidence invalidates the relevant review state; publication progress and recovery are visible in the floating QA panel; no second review dashboard/store/approval registry is introduced; all existing Runner/Relay safety gates remain authoritative.",
+      "next_action": "Wait for runner-human-qa-shell-20260930 and runner-visuals-media-lifecycle-20260930 to release the overlapping QA/Visuals surface, then claim this integration task against the stable Relay receipt contract without replacing qa-shell.",
+      "paths": [
+        "src/cloudflare-worker.mjs",
+        "src/human-qa.mjs",
+        "dashboard/qa.js",
+        "dashboard/qa-panel.js",
+        "dashboard/friendly.js",
+        "test/human-qa.test.mjs"
+      ],
+      "resources": [
+        "runner-human-qa",
+        "runner-visual-evidence",
+        "relay-publication-receipts"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T12:47:51.587Z"
     }
   ],
   "claims": [
