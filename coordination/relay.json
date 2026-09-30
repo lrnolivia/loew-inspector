@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T15:40:56.288Z",
+  "updated_at": "2026-09-30T15:47:15.749Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -714,7 +714,8 @@
         "package-lock.json",
         ".github/workflows/",
         "docs/UNIFIED_UI.md",
-        "src/index.js"
+        "src/index.js",
+        "src/relay-ui.test.js"
       ],
       "resources": [
         "relay-mcp-app-ui",
@@ -725,12 +726,12 @@
       ],
       "goal": "Ship one Relay web and in-chat experience from shared existing operator/QA state and views.",
       "acceptance": "Today, Projects, Review and Night Shift share canonical state and QA identity; web and MCP app use existing operator/QA components; mobile and fullscreen QA work; no second approval/evidence store.",
-      "next_action": "Unify existing MCP worker/control-center calls with the same internal Runner API; reuse approved operator/QA UI and canonical records.",
+      "next_action": "Apply provided Terra Prime foundations without illustrations; validate shared web/MCP views and artifact-bound review.",
       "base_sha": "fe40a797ed7db1c43ca3e2d088db4c0f1ca844df",
       "state": "active",
       "created_at": "2026-09-30T15:30:52.208Z",
-      "updated_at": "2026-09-30T15:40:56.288Z",
-      "lease_until": "2026-10-01T03:40:56.288Z"
+      "updated_at": "2026-09-30T15:47:15.749Z",
+      "lease_until": "2026-10-01T03:47:15.749Z"
     }
   ],
   "migrated_from": "loew-inspector"
