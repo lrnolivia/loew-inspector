@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T12:06:09.505Z",
+  "updated_at": "2026-09-30T12:07:53.611Z",
   "legacy_branches": [
     "control",
     "main",
@@ -223,20 +223,20 @@
       "owner": "normal-chat-runner-visuals-rule-20260930",
       "branch": "loew-runner/visuals-evidence-rule",
       "paths": [
-        "LOEW_CHAT_BIBLE.md",
-        "docs/WORK_COORDINATION.md"
+        "docs/WORK_COORDINATION.md",
+        "docs/VISUAL_EVIDENCE_POLICY.md"
       ],
       "resources": [
         "runner-visuals-policy"
       ],
       "goal": "Make Runner Visuals the durable home for screenshot and video QA evidence, with bounded storage and asynchronous upload accounting.",
       "acceptance": "Universal QA law requires screenshot/video evidence to be registered in Runner Visuals; producers may continue once a durable queued/uploading receipt exists; metadata persists after blob expiry; configurable storage quotas/retention, deduplication, pinning, and failure retry rules prevent unbounded growth; work_accounted references the Visuals receipt when visual evidence exists.",
-      "next_action": "Add the universal Visuals evidence/storage/async-upload rule to Runner QA law and completion coordination docs, then open a reviewed policy PR.",
+      "next_action": "Publish the universal Visuals evidence policy in a dedicated Runner policy doc and wire coordination completion law to it. Queue implementation behind the active human-QA Visuals branch.",
       "base_sha": "fd6fc8015f37cdce5764bf93131e6e3013dbad9e",
       "state": "active",
       "created_at": "2026-09-30T12:06:09.505Z",
-      "updated_at": "2026-09-30T12:06:09.505Z",
-      "lease_until": "2026-10-01T00:06:09.505Z"
+      "updated_at": "2026-09-30T12:07:53.611Z",
+      "lease_until": "2026-10-01T00:07:53.611Z"
     }
   ]
 }
