@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T12:09:15.583Z",
+  "updated_at": "2026-09-30T20:06:54.523Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -370,7 +370,7 @@
     },
     {
       "id": "field-consolidation-workspace-20260930",
-      "owner": "01a0f1bf-3464-7b61-a3ac-f5d494bf7ef3",
+      "owner": "01a0f0ae-4e8c-7e62-ae7a-3b02faa398f5",
       "branch": "field/consolidation-workspace-20260930",
       "paths": [
         "src/Dashboard.tsx",
@@ -426,12 +426,12 @@
       ],
       "goal": "Consolidate Dashboard and explicitly user-authorized Mobile recovery onto current main",
       "acceptance": "Existing Dashboard/create/refresh behavior and current-main Canvas semantics preserved; touch/mobile focused checks and runtime arbitration verified; current user removes Mobile protection, connected-panel follow-up remains deferred; original branches retained",
-      "next_action": "HELD at explicit user stop on 2026-09-30. BottomToolbar has been intentionally released to the separate user-requested UI hotfix lane. Keep all remaining consolidation scope stopped; do not run tests, publish, or resume implementation until the user explicitly resumes this assignment.",
+      "next_action": "User explicitly resumes consolidation while sleeping and assigns this chat ownership of #136. Preserve inherited staged/unstaged Mobile work, exclude separately owned BottomToolbar, finish focused touch/Dashboard behavior, exact-head registry/runtime gates and safe promotion.",
       "base_sha": "854038a3e84f41cd590a4ad18b24fcd4127e2fba",
       "state": "held",
       "created_at": "2026-09-30T10:21:02.409Z",
-      "updated_at": "2026-09-30T11:39:37.843Z",
-      "lease_until": "2026-09-30T23:39:37.843Z"
+      "updated_at": "2026-09-30T20:06:54.523Z",
+      "lease_until": "2026-10-01T08:06:54.523Z"
     },
     {
       "id": "field-ui-hotfix-20260930",
