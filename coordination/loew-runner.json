@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T10:34:08.012Z",
+  "updated_at": "2026-09-30T10:37:44.011Z",
   "legacy_branches": [
     "control",
     "main",
@@ -120,6 +120,26 @@
       "evidence": "https://github.com/lrnolivia/loew-runner/pull/36",
       "work_accounted": true,
       "completed_at": "2026-09-30T10:34:08.012Z"
+    },
+    {
+      "id": "field-dashboard-product-checkpoint-20260930",
+      "owner": "01a0f1bf-3464-7b61-a3ac-f5d494bf7ef3",
+      "branch": "loew-runner/field-dashboard-product-checkpoint-20260930",
+      "paths": [
+        "assignments/field-repo-cleanup-reorg.json",
+        "docs/field/reorganization/DASHBOARD_PRODUCT_CHECKPOINT_20260930.md"
+      ],
+      "resources": [
+        "field-reorganization-records"
+      ],
+      "goal": "Persist published Dashboard recovery and remaining Controls dispositions",
+      "acceptance": "Exact current source and honest validation limits recorded; protect Mobile and deferred panels",
+      "next_action": "Record Dashboard #136 current head, tested behavior, pending gates and Controls #83 comparison without production infrastructure changes.",
+      "base_sha": "081365251ca3674161eb040f3ab832ba6faf343c",
+      "state": "active",
+      "created_at": "2026-09-30T10:37:44.011Z",
+      "updated_at": "2026-09-30T10:37:44.011Z",
+      "lease_until": "2026-09-30T22:37:44.011Z"
     }
   ]
 }
