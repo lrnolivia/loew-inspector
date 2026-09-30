@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T13:27:14.001Z",
+  "updated_at": "2026-09-30T13:37:08.427Z",
   "legacy_branches": [
     "control",
     "main",
@@ -396,6 +396,33 @@
       "created_at": "2026-09-30T13:04:26.421Z",
       "updated_at": "2026-09-30T13:15:00.049Z",
       "lease_until": "2026-10-01T01:15:00.049Z"
+    },
+    {
+      "id": "night-shift-product-rebrand-20260930",
+      "owner": "normal-chat-night-shift-rebrand-20260930",
+      "branch": "loew-runner/night-shift-rebrand",
+      "paths": [
+        "projects/loew-runner.json",
+        "package.json",
+        "wrangler.jsonc",
+        "README.md",
+        "AGENTS.md",
+        "docs/NIGHT_SHIFT_PRODUCT.md",
+        "contracts/manifest.json",
+        "test/contracts.test.mjs"
+      ],
+      "resources": [
+        "night-shift-product-identity",
+        "suite-product-architecture"
+      ],
+      "goal": "Rebrand the human-facing loew runner product to lowercase `night shift` while preserving durable technical ids/repository/coordination compatibility and positioning it inside lowercase `dash`.",
+      "acceptance": "User-facing product identity is `night shift`; project registry display name is updated; README/bootstrap/package metadata explain `night shift` and `dash`; durable ids such as loew-runner repo/project/coordination record remain stable unless a separate migration is proven safe; Cloudflare config adds/uses the new night shift web identity without removing compatibility paths; existing current UI work is not overwritten; contract tests cover the identity migration; all names are lowercase in product copy.",
+      "next_action": "Create the exact-main branch, update non-UI identity/config/docs/tests, open a draft PR and validate. Keep operator-redesign files untouched.",
+      "base_sha": "9d488cb5ddbff8b4649892d4c39ad334b322a8ad",
+      "state": "active",
+      "created_at": "2026-09-30T13:37:08.427Z",
+      "updated_at": "2026-09-30T13:37:08.427Z",
+      "lease_until": "2026-10-01T01:37:08.427Z"
     }
   ]
 }
