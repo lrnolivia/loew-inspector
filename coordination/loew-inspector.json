@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T14:17:09.439Z",
+  "updated_at": "2026-09-30T14:26:06.626Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -611,7 +611,8 @@
         "src/runner-cleanup.js",
         "src/runner-cleanup.test.js",
         "src/cloud.js",
-        "src/cloud.test.js"
+        "src/cloud.test.js",
+        "src/runner-control-core.js"
       ],
       "resources": [
         "relay-product-identity",
@@ -620,12 +621,12 @@
       ],
       "goal": "Batch 1: remove hard dependencies on the old loew-inspector/loew-runner identities and make Relay source/MCP control ready for a canonical relay repo/project/runtime without changing production routing yet.",
       "acceptance": "Canonical source repository references resolve lrnolivia/relay directly with no reliance on GitHub rename redirects; MCP source annotations, upload/source lifecycle logic and repository allowlists understand relay; Runner-control repository/project identity is configurable or migration-aware rather than permanently hardcoded to loew-runner; the existing live MCP remains usable throughout this batch; tests cover identity/config migration and fail closed on ambiguous control authority; no old production hostname/script is deleted or switched in this batch.",
-      "next_action": "Complete the non-destructive identity bridge across runner control, cleanup, source lifecycle and Cloudflare write policy; prove relay repo/script support while preserving the currently deployed loew-inspector runtime until cutover.",
+      "next_action": "Split Runner control into a small public tool/schema wrapper plus a configurable authority core module, then finish the Relay identity bridge tests and config without production cutover.",
       "base_sha": "907de20f18209d6fee400c9d74cfde16f8623cba",
       "state": "active",
       "created_at": "2026-09-30T14:13:54.913Z",
-      "updated_at": "2026-09-30T14:17:09.439Z",
-      "lease_until": "2026-10-01T02:17:09.439Z"
+      "updated_at": "2026-09-30T14:26:06.626Z",
+      "lease_until": "2026-10-01T02:26:06.626Z"
     }
   ]
 }
