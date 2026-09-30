@@ -18,11 +18,12 @@ test("shared interface works on web and MCP host transport, including mobile, de
   const progress = {
     contract_version: "1.7.5", observed_progress: true, project: "relay",
     progress: [{
-      assignment: "Complete consolidation", observed: true, state: "working", stage: "implementation",
+      assignment: "Complete consolidation", observed: true, state: "waiting-for-human", stage: "review",
       worker: { heartbeat_at: "2026-09-30T15:00:00Z", freshness: "fresh" },
       external: { active: false, system: null, detail: null },
       last_meaningful_progress_at: "2026-09-30T15:00:00Z",
       latest_event: { type: "source-commit", at: "2026-09-30T15:00:00Z" },
+      waiting_reason: "Review the exact current result.",
       identities: { branch: "relay/test", head_sha: "c".repeat(40) },
       next_action: "Keep implementing"
     }],
@@ -83,7 +84,23 @@ test("shared interface works on web and MCP host transport, including mobile, de
         view = page.frameLocator("#app");
       }
       await view.locator("#operator-connection").filter({ hasText: "Connected" }).waitFor();
+      assert.equal(await view.locator(".page-statusline").first().evaluate(node => getComputedStyle(node).backgroundImage), "none");
+      assert.equal(await view.locator("#app-settings").evaluate(node => getComputedStyle(node).borderBottomWidth), "0px");
+      assert.equal(await view.locator("#app-settings").evaluate(node => getComputedStyle(node).backgroundColor), "rgba(0, 0, 0, 0)");
+      const attention = view.locator(".attention-card").first();
+      await attention.waitFor();
+      const geometry = await attention.evaluate(node => {
+        const card = node.getBoundingClientRect();
+        const button = node.querySelector("button")?.getBoundingClientRect();
+        return button ? {
+          contained: button.left >= card.left && button.right <= card.right && button.top >= card.top && button.bottom <= card.bottom,
+          cardWidth: card.width,
+          buttonWidth: button.width
+        } : { contained: false };
+      });
+      assert.equal(geometry.contained, true, mode + " attention action must stay inside its card");
       await view.getByRole("button", { name: "Runner", exact: true }).click();
+      assert.equal(await view.getByRole("button", { name: "Runner", exact: true }).evaluate(node => getComputedStyle(node).borderBottomWidth), "0px");
       await view.getByRole("tab", { name: "relay", exact: true }).click();
       await view.locator("#project-detail").filter({ hasText: "Complete consolidation" }).waitFor();
       await view.locator('#project-tabs [data-project-id="relay"] [data-repo-icon="relay"][data-icon-sha="' + "b".repeat(40) + '"] img').waitFor();
