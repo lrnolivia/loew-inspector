@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T05:31:47.089Z",
+  "updated_at": "2026-09-30T05:33:32.477Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -248,19 +248,20 @@
         "src/canvas/drag/CanvasDragOrchestrator.test.ts",
         "src/canvas/drag/strategies/AbsoluteInFrameStrategy.ts",
         "src/code/groups/",
-        "src/editor/figui3-toolbar-shortcuts.test.ts"
+        "src/editor/figui3-toolbar-shortcuts.test.ts",
+        "src/canvas/drag/strategies/AbsoluteInFrameStrategy.test.ts"
       ],
       "resources": [
         "canvas-group-frame-parity"
       ],
       "goal": "Recover stranded Frame/Group parity into current main, preserving existing Mobile ownership.",
       "acceptance": "100x100 click Frames, Space parenting bypass, primary Alt G Frame Selection; browser encapsulation, wrapping and native Group world geometry pass; original branches retained until acceptance and QA accounted.",
-      "next_action": "Adopt preserved unpublished Canvas recovery, rebase product-only delta onto live main, trace remaining native Group child-motion regression.",
+      "next_action": "Correct native Group child auto-pin conversion; regression evidence proves percent writes prevent derived bounds refit.",
       "base_sha": "760774a6bd628827f93190fb0abaf7a6e26acbea",
       "state": "active",
       "created_at": "2026-09-30T05:31:47.089Z",
-      "updated_at": "2026-09-30T05:31:47.089Z",
-      "lease_until": "2026-09-30T17:31:47.089Z"
+      "updated_at": "2026-09-30T05:33:32.477Z",
+      "lease_until": "2026-09-30T17:33:32.477Z"
     }
   ]
 }
