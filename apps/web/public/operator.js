@@ -12,27 +12,27 @@ const pages = [...document.querySelectorAll("[data-page]")];
 const nav = [...document.querySelectorAll("[data-nav]")];
 const connection = document.querySelector("#operator-connection");
 const toast = document.querySelector("#operator-toast");
-const projectList = document.querySelector("#project-list");
+const projectTabs = document.querySelector("#project-tabs");
 const projectDetail = document.querySelector("#project-detail");
-const projectContext = document.querySelector("#project-context");
-const projectSearch = document.querySelector("#project-search");
 const appSettings = document.querySelector("#app-settings");
 
 let toastTimer = null;
 let projectIds = [];
 let selectedProject = null;
 const projectCache = new Map();
+
 const navigation = {
   today: ["Today", "Current focus", "today"],
   projects: ["Runner", "Projects & coordination", "projects"],
   review: ["Inspector", "Review & evidence", "review"],
   "night-shift": ["night shift", "Unattended activity", "moon"]
 };
+
 const overview = {
-  today: ["relay", "What is actually moving now", "Observed work, decisions and automatic checks"],
-  projects: ["runner", "Coordination & execution", "Observed from Runner, GitHub and Cloud"],
-  review: ["inspector", "Review, evidence & QA", "Project-scoped visual evidence"],
-  "night-shift": ["night shift", "Unattended activity", "Automatic work and its latest result"]
+  today: ["relay", "live workspace", "Observed work, decisions and automatic checks"],
+  projects: ["runner", "observed execution", "Runner, GitHub and Cloud evidence"],
+  review: ["inspector", "evidence queue", "Project-scoped visual review and QA"],
+  "night-shift": ["night shift", "unattended activity", "Automatic work and its latest result"]
 };
 
 nav.forEach(button => {
@@ -47,24 +47,25 @@ pages.forEach(page => {
   const key = page.dataset.page;
   const [kicker, title, detail] = overview[key];
   const system = key === "review" ? "inspector" : key === "projects" ? "runner" : null;
-  const band = document.createElement("div");
-  band.className = "page-overview";
-  band.setAttribute("aria-label", "Current view");
-  band.innerHTML = '<div class="page-overview-copy">' +
-    (system ? '<span class="subsystem-context"><img src="' + brand[system] + '" alt=""><span>' + kicker + '</span></span>' : '<small>' + kicker + '</small>') +
+  const line = document.createElement("div");
+  line.className = "page-statusline";
+  line.setAttribute("aria-label", "Current view");
+  line.innerHTML = '<div class="page-statusline-copy">' +
+    (system ? '<span class="subsystem-context"><img src="' + brand[system] + '" alt=""><span>' + kicker + '</span></span>' : '<span class="page-status-kicker">' + kicker + '</span>') +
     '<strong data-flow-label>' + title + '</strong></div><span class="page-overview-detail">' + detail + '</span>';
-  heading.after(band);
+  heading.after(line);
 });
 
 function setFlow(phase, label) {
   const page = pages.find(item => !item.hidden);
   if (!page) return;
-  const band = page.querySelector(".page-overview");
-  if (!band) return;
-  band.dataset.phase = phase;
-  const target = band.querySelector("[data-flow-label]");
+  const line = page.querySelector(".page-statusline");
+  if (!line) return;
+  line.dataset.phase = phase;
+  const target = line.querySelector("[data-flow-label]");
   if (target && label) target.textContent = label;
 }
+
 function setOverviewDetail(label) {
   const page = pages.find(item => !item.hidden);
   const detail = page?.querySelector(".page-overview-detail");
@@ -93,42 +94,53 @@ function notify(message, tone = "good") {
 
 async function ensureProjects() {
   if (!projectIds.length) projectIds = await loadProjectIndex();
-  if (projectContext && projectContext.options.length <= 1) {
-    projectIds.forEach(id => projectContext.add(new Option(projectName(id), id)));
-  }
+  renderProjectTabs();
   return projectIds;
 }
 
 function contextProject() {
-  return projectContext?.value || "";
+  return selectedProject || "";
 }
 
-function syncContext(id) {
-  if (!projectContext) return;
-  projectContext.value = id && projectIds.includes(id) ? id : "";
-}
-
-function renderProjectList() {
-  const query = (projectSearch?.value || "").trim().toLowerCase();
-  const visible = projectIds.filter(id => !query || projectName(id).toLowerCase().includes(query) || id.toLowerCase().includes(query));
-  projectList.innerHTML = visible.length ? visible.map(id => `
-    <button class="project-list-item ${id === selectedProject ? "active" : ""}" type="button" data-project-id="${esc(id)}">
-      ${iconSlot(id)}<strong>${esc(projectName(id))}</strong>
-      <span class="nav-chevron">${glyph("next")}</span>
-    </button>
-  `).join("") : '<div class="operator-empty">No projects match that search.</div>';
-  projectList.querySelectorAll("[data-project-id]").forEach(button => {
-    button.addEventListener("click", () => selectProject(button.dataset.projectId));
+function renderProjectTabs() {
+  if (!projectTabs) return;
+  const items = [{ id: "", label: "all projects" }, ...projectIds.map(id => ({ id, label: projectName(id) }))];
+  projectTabs.innerHTML = items.map(item => {
+    const active = (selectedProject || "") === item.id;
+    const identity = item.id ? iconSlot(item.id) : '<span class="project-tab-all">' + glyph("projects") + '</span>';
+    return '<button class="project-tab' + (active ? " active" : "") + '" type="button" role="tab" aria-selected="' + (active ? "true" : "false") + '" data-project-id="' + esc(item.id) + '">' + identity + '<span>' + esc(item.label) + '</span></button>';
+  }).join("");
+  projectTabs.querySelectorAll("[data-project-id]").forEach(button => {
+    button.addEventListener("click", () => chooseProject(button.dataset.projectId));
   });
-  hydrateProjectIcons(projectList);
+  hydrateProjectIcons(projectTabs);
+  const active = projectTabs.querySelector(".project-tab.active");
+  active?.scrollIntoView({ block: "nearest", inline: "nearest", behavior: "smooth" });
 }
 
-async function selectProject(id, { sync = true } = {}) {
-  selectedProject = id;
-  if (sync) syncContext(id);
-  renderProjectList();
+async function chooseProject(id) {
+  selectedProject = id || null;
+  projectCache.clear();
+  renderProjectTabs();
+  if (route() === "projects") {
+    if (id) {
+      const next = "#projects?project=" + encodeURIComponent(id);
+      if (location.hash !== next) location.hash = next;
+      else await selectProject(id);
+    } else {
+      if (location.hash !== "#projects") location.hash = "projects";
+      else await selectProject(null);
+    }
+    return;
+  }
+  await showPage(route());
+}
+
+async function selectProject(id) {
+  selectedProject = id || null;
+  renderProjectTabs();
   if (!id) {
-    projectDetail.innerHTML = '<div class="operator-empty">Choose a project to inspect.</div>';
+    projectDetail.innerHTML = '<div class="project-empty-state"><strong>Choose a project</strong><span>The project tabs above control Runner, Inspector, Today and night shift.</span></div>';
     return;
   }
   projectDetail.innerHTML = '<div class="operator-loading">Opening ' + esc(projectName(id)) + "…</div>";
@@ -145,18 +157,14 @@ async function loadProjects() {
   await ensureProjects();
   projectCache.clear();
   if (linked && projectIds.includes(linked)) selectedProject = linked;
-  else if (contextProject() && projectIds.includes(contextProject())) selectedProject = contextProject();
-  else if (!selectedProject || !projectIds.includes(selectedProject)) selectedProject = projectIds[0] || null;
-  syncContext(selectedProject);
-  renderProjectList();
-  await selectProject(selectedProject, { sync: false });
+  renderProjectTabs();
+  await selectProject(selectedProject);
 }
 
 function openProject(id) {
   selectedProject = id;
-  syncContext(id);
-  if (route() === "projects") loadProjects();
-  else location.hash = "projects?project=" + encodeURIComponent(id);
+  renderProjectTabs();
+  location.hash = "projects?project=" + encodeURIComponent(id);
 }
 
 async function openSettings() {
@@ -183,22 +191,22 @@ async function showPage(name) {
   document.querySelector("#workspace-page").textContent = navigation[name][0];
 
   if (name === "today") {
-    setFlow("orient", "What is actually moving now");
+    setFlow("orient", "live workspace");
     await loadToday(ui, contextProject());
   }
   if (name === "projects") {
-    setFlow("orient", "Coordination & execution");
+    setFlow("orient", "observed execution");
     setConnection("Connected", "good");
     await loadProjects();
   }
   if (name === "review") {
-    setFlow("orient", "Review, evidence & QA");
+    setFlow("orient", "evidence queue");
     await loadReview(ui, contextProject());
     const evidence = new URLSearchParams(location.hash.split("?")[1] || "").get("evidence");
     if (evidence && /^vis_[a-zA-Z0-9-]{8,128}$/.test(evidence)) await openQa(evidence);
   }
   if (name === "night-shift") {
-    setFlow("orient", "Unattended activity");
+    setFlow("orient", "unattended activity");
     await loadNightShift(ui, contextProject());
   }
 }
@@ -208,12 +216,7 @@ nav.forEach(button => button.addEventListener("click", () => {
   if (location.hash === "#" + next) showPage(next);
   else location.hash = next;
 }));
-projectContext?.addEventListener("change", () => {
-  selectedProject = contextProject() || selectedProject;
-  projectCache.clear();
-  showPage(route()).catch(error => notify(error.message, "bad"));
-});
-projectSearch?.addEventListener("input", renderProjectList);
+
 appSettings?.addEventListener("click", openSettings);
 window.addEventListener("hashchange", () => showPage(route()));
 bindReviewFilters();
