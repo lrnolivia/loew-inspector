@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T13:57:50.279Z",
+  "updated_at": "2026-09-30T14:05:12.006Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -431,40 +431,19 @@
       "owner": "normal-chat-relay-consolidation-20260930",
       "branch": "loew-inspector/relay-consolidation",
       "paths": [
-        "package.json",
-        "wrangler.jsonc",
-        "README.md",
-        "AGENTS.md",
-        "src/",
-        "test/",
-        "apps/",
-        "packages/",
-        "features/",
-        "web/",
-        ".github/workflows/",
-        "docs/"
+        "docs/CONSOLIDATION_PROGRAM.md"
       ],
       "resources": [
-        "relay-product-identity",
-        "relay-monorepo",
-        "relay-mcp-app-ui",
-        "relay-web-dashboard",
-        "relay-operation-framework",
-        "relay-publication-receipts",
-        "relay-release-orchestration",
-        "runner-human-qa",
-        "runner-visual-evidence",
-        "suite-shared-shell",
-        "inspector-web-dashboard"
+        "relay-consolidation-program"
       ],
       "goal": "Consolidate Relay, Runner and Inspector into one canonical lowercase `relay` product, repository, MCP app and web app. Runner and Inspector become internal subsystems/packages; night shift becomes a Relay feature/view; separate product subdomains and duplicated dashboards are retired.",
       "acceptance": "Canonical repository is lrnolivia/relay; existing loew-inspector history is preserved by rename and loew-runner history/code is imported into the Relay monorepo without losing provenance; Relay has one shared state/receipt model, one MCP app and one web app; runner becomes the coordination/automation package, inspector becomes verification/evidence/visual-review package, and night shift is a feature/view; old runner/inspector web subdomains are removed or redirect to Relay deep links; existing open PRs/branches remain reachable through GitHub rename redirects and are explicitly reconciled; Runner coordination/project registration is migrated to canonical project id relay; Cloudflare production runs from Relay with old endpoints retained only as bounded compatibility redirects during cutover; tests and live verification pass before old runtime identities are retired.",
-      "next_action": "Create the consolidation branch from exact main, rename loew-inspector repository to relay, update Runner registration/control references, then import loew-runner as internal packages while preserving history before collapsing web/MCP/runtime routing.",
+      "next_action": "Program owner only. Execute consolidation batches 1-6 in order with exact-head tests/readback at every gate. No old hostname/script/project/repo identity may be retired until its Relay replacement is verified; final state is one repo/product/web+MCP hostname: relay.",
       "base_sha": "907de20f18209d6fee400c9d74cfde16f8623cba",
       "state": "active",
       "created_at": "2026-09-30T13:57:50.279Z",
-      "updated_at": "2026-09-30T13:57:50.279Z",
-      "lease_until": "2026-10-01T01:57:50.279Z"
+      "updated_at": "2026-09-30T14:05:12.006Z",
+      "lease_until": "2026-10-01T02:05:12.006Z"
     }
   ]
 }
