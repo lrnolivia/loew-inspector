@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T21:59:06.088Z",
+  "updated_at": "2026-09-30T21:59:29.730Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -377,7 +377,7 @@
         "relay-stale-work-alerts",
         "relay-publication-receipts"
       ],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-09-30T21:54:52.130Z"
     }
   ],
@@ -1095,6 +1095,55 @@
       "created_at": "2026-09-30T21:32:04.707Z",
       "updated_at": "2026-09-30T21:53:59.556Z",
       "lease_until": "2026-10-01T09:53:59.556Z"
+    },
+    {
+      "id": "relay-1.7.5-observed-progress-pipeline-20260930",
+      "owner": "relay-1.7.5-observed-progress-pipeline-20260930",
+      "branch": "relay/1.7.5-observed-progress-pipeline-20260930",
+      "paths": [
+        "src/index.js",
+        "src/relay-entry.js",
+        "src/runner-control.js",
+        "src/runner-control-core.js",
+        "src/source-lifecycle.js",
+        "src/operations.js",
+        "src/operation-receipts.js",
+        "src/operation-events.js",
+        "src/progress-observation.js",
+        "src/progress-reconciliation.js",
+        "src/progress-api.js",
+        "src/relay-entry.test.js",
+        "src/operations.test.js",
+        "src/operation-receipts.test.js",
+        "src/operation-events.test.js",
+        "src/progress-observation.test.js",
+        "src/progress-reconciliation.test.js",
+        "src/progress-api.test.js",
+        "src/cloudflare.js",
+        "src/cloud-upload.js",
+        "projects/",
+        "docs/relay/RELAY_1_7_5_RELEASE.md"
+      ],
+      "resources": [
+        "relay-1.7.5-release",
+        "relay-operation-framework",
+        "relay-observed-progress-pipeline",
+        "relay-progress-reconciliation",
+        "relay-progress-heartbeats",
+        "relay-stale-work-alerts",
+        "relay-publication-receipts",
+        "relay-runner-contract-clarity",
+        "relay-project-cloud-authority",
+        "relay-cloud-write-policy"
+      ],
+      "goal": "Ship Relay 1.7.5 as an independently deployable observed-progress backend release that gives Relay one canonical, evidence-backed answer to what is actually happening right now before the 1.8 UI lands. Also make the GitHub/Runner control-plane contract self-explanatory and move Cloud write authority toward canonical project registration so deployment permission is explicit, bounded and discoverable.",
+      "acceptance": "Release-facing metadata identifies Relay 1.7.5 and it can merge/deploy independently while 1.8 continues on its UI-only scope. Add a canonical observed-progress model/event receipt stream reconciled from Runner + GitHub + Cloudflare evidence, not claim state/next_action/leases. Expose canonical stage, latest concrete event, last meaningful progress timestamp, worker heartbeat separately from external-system activity, exact source/base/head/branch/PR/check/merge/version/deployment/runtime identities, waiting/blocker reason and recovery action. Distinguish reserved-but-idle, working, waiting-on-external-system, waiting-for-human, blocked, possibly-stale, officially-stale/unresponsive, failed, rolled-back and complete. Implement 5m heartbeat target, 10m possibly-stale evaluation and 20m official-stale default, deduping unchanged observations. Classify coordination drift including absorbed/superseded intent, held/umbrella reservations, and orphan/unregistered branches without presenting them as active execution. Expose a stable backwards-compatible MCP/API consumer contract for 1.8. Runner claim semantics must explicitly document/test that base_sha is resolved server-side from live default-branch state and is not caller input; generic relay.SOURCE direct-default-branch writes remain forbidden with errors directing coordination writes through relay.RUNNER; GitHub-App-only coordination writes must work without RELAY_GITHUB_TOKEN. Cloud control must preserve explicit safety while adding canonical project-registration mapping for Cloudflare Worker identity/write authority. Preserve current live write allowance for relay, field, loewfi, loewtorials and thetake as compatibility/fail-closed migration behavior; do not use wildcard authority or widen credentials. Non-Worker projects such as gamebridge, loew-shell and rtxforge must not become deployable merely by being registered. No 1.8 UI files may be changed. Tests cover observed progress, external waits, heartbeat/stale transitions, deduping, exact identity propagation, drift classification, consumer contract, server-derived base_sha, GitHub-App-only coordination writes and project-scoped Cloud authorization. Required install/tests, exact-head admission, merge, exact-source deployment, runtime readback and durable completion receipt must pass.",
+      "next_action": "Implement the canonical progress schema/events first, then Runner/GitHub/Cloudflare evidence reconciliation and stable consumer API. Preserve server-derived base_sha and SOURCE main-write guard; improve tool/error text and tests. Add project-registry Cloud metadata/validation while keeping the current explicit Worker allowlist as compatibility/fail-closed fallback. Leave precise 1.8 consumer handoff in docs/relay/RELAY_1_7_5_RELEASE.md. Do not touch 1.8 UI files.",
+      "base_sha": "5eba775bedfb13673bb3082f130cb30980a31c02",
+      "state": "active",
+      "created_at": "2026-09-30T21:59:29.730Z",
+      "updated_at": "2026-09-30T21:59:29.730Z",
+      "lease_until": "2026-10-01T09:59:29.730Z"
     }
   ],
   "migrated_from": "loew-inspector"
