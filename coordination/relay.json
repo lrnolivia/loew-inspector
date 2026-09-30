@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T15:30:52.208Z",
+  "updated_at": "2026-09-30T15:37:24.285Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -684,10 +684,16 @@
       "acceptance": "All live records retained, canonical project relay, shared deterministic engine and exact-head CAS preserved; no runtime rename or retirement; before/after readback proven.",
       "next_action": "B3 state migration merged/deployed/verified; only bounded uploader harness repair PR #43 remains, tests green and Runner admission waiting for Actions capacity. User directs progress on B4/B5 meanwhile.",
       "base_sha": "fc3eb586931d33c887d5e2b58c63a8e002fecf33",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T14:57:47.568Z",
-      "updated_at": "2026-09-30T15:30:48.923Z",
-      "lease_until": "2026-10-01T03:30:48.923Z"
+      "updated_at": "2026-09-30T15:37:24.285Z",
+      "lease_until": "2026-10-01T03:37:24.285Z",
+      "pr": 43,
+      "merged_head_sha": "8102d6efd6e6c720bcca2ef54b25c57fcc4479bc",
+      "merge_commit_sha": "3aa487b9e86371f38fb3bf483f995a2885105e91",
+      "evidence": "B3 core PR42 merged e4998b36f9dac8b484c05cfa4b7fbdc37f83ee63, deployed version b530853e-ede3-4bf6-88c3-2314ca8b5b2c, canonical Relay project/record/engine reads and preflight verified. Frozen Runner source 3972446e667b956961f21eaeeb98d29a99f6b8fb and records preserved. Uploader regression PR43 exact head8102d6efd6e6c720bcca2ef54b25c57fcc4479bc passed tests/admission; merge3aa487b9e86371f38fb3bf483f995a2885105e91. Fix will be included in B5 exact-source deployment.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T15:37:24.285Z"
     },
     {
       "id": "relay-consolidation-b4-unified-ui-20260930",
