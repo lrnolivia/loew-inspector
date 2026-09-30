@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T10:59:17.501Z",
+  "updated_at": "2026-09-30T11:39:27.759Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -380,7 +380,6 @@
         "src/canvas/transform/InputHandler.touch.test.ts",
         "src/canvas/transform/InputHandler.ts",
         "src/code/stores/workspace-panels-store.ts",
-        "src/editor/BottomToolbar.tsx",
         "src/editor/ChromeIslands.tsx",
         "src/editor/FloatingLeftPanelHost.tsx",
         "src/editor/MobileFocusCoordinator.tsx",
@@ -401,12 +400,12 @@
       ],
       "goal": "Consolidate Dashboard and explicitly user-authorized Mobile recovery onto current main",
       "acceptance": "Existing Dashboard/create/refresh behavior and current-main Canvas semantics preserved; touch/mobile focused checks and runtime arbitration verified; current user removes Mobile protection, connected-panel follow-up remains deferred; original branches retained",
-      "next_action": "HELD at explicit user stop on 2026-09-30. Stop all tests; no further implementation, builds, workflow dispatch, publication or merge until user resumes. Published Dashboard #136 remains 9fd1357. Local dirty Mobile consolidation (27 paths) in /private/tmp/field-consolidation-dashboard-20260930 is uncommitted/unpublished and experimental; two-finger pan still fails at 0px after header cancellation/pointer-camera changes. Preserve full HEAD patch and exact status in Runner docs/field/reorganization/STOP_CHECKPOINT_20260930.md and recovery/20260930-mobile-stopped.patch. Mobile protection revoked explicitly by user; original #123 preserved as provenance. Connected-panel follow-up remains deferred. Resume by reading stop checkpoint and actual dirty worktree, not by repeating tests automatically.",
+      "next_action": "HELD at explicit user stop on 2026-09-30. Stop all tests; no further implementation, builds, workflow dispatch, publication or merge until user resumes. Published Dashboard #136 remains 9fd1357. Local dirty Mobile consolidation (27 paths) in /private/tmp/field-consolidation-dashboard-20260930 is uncommitted/unpublished and experimental; two-finger pan still fails at 0px after header cancellation/pointer-camera changes. Preserve full HEAD patch and exact status in Runner docs/field/reorganization/STOP_CHECKPOINT_20260930.md and recovery/20260930-mobile-stopped.patch. Mobile protection revoked explicitly by user; original #123 preserved as provenance. Connected-panel follow-up remains deferred. Resume by reading stop checkpoint and actual dirty worktree, not by repeating tests automatically. BottomToolbar ownership released for the user-requested UI hotfix lane; keep all remaining held scope stopped.",
       "base_sha": "854038a3e84f41cd590a4ad18b24fcd4127e2fba",
-      "state": "held",
+      "state": "active",
       "created_at": "2026-09-30T10:21:02.409Z",
-      "updated_at": "2026-09-30T10:59:17.501Z",
-      "lease_until": "2026-09-30T22:59:17.501Z"
+      "updated_at": "2026-09-30T11:39:27.759Z",
+      "lease_until": "2026-09-30T23:39:27.759Z"
     }
   ]
 }
