@@ -237,7 +237,7 @@
     "open_prs": 19,
     "ledger": "docs/field/reorganization/2026-09-30-inventory.json",
     "handoff": "docs/field/reorganization/MAIN_FIELD_WORKER_CONSOLIDATION.md",
-    "phase": "Canvas PR #135 merged and production identity verified; serial Workspace/Dashboard recovery next",
+    "phase": "Dashboard recovery published in draft #136; product interaction fixes complete, promotion gates pending",
     "user_direction": "Retain branches until code, unfinished intent and QA have durable destinations. Existing main field worker consolidates; no new workers.",
     "mutations_in_field": [
       {
@@ -251,9 +251,15 @@
         "branch": "field/consolidation-canvas-20260930",
         "head": "57f4765b591286c6c456439ba217d8de282c38c9",
         "state": "Merged at 2026-09-30T10:14:32Z as 854038a3e84f41cd590a4ad18b24fcd4127e2fba after Registry 36697728462 and exact-head Preview QA 36700859927 / 36700862882 passed."
+      },
+      {
+        "pr": 136,
+        "branch": "field/consolidation-workspace-20260930",
+        "head": "9fd1357d54841e255efb0596b2be4162958fc879",
+        "state": "Draft: recovered 19 Dashboard paths plus retryable errors and keyboard focus/navigation fixes. Current focused tests pass; prior full Dashboard suite had one unchanged main assertion failure. Build passed at b84ce2d. Current-head Registry and authenticated persistence remain pending."
       }
     ],
-    "next_action": "Complete Canvas claim and return shared-file scope to Mobile, then serially admit preserved Dashboard recovery against fresh main. Original branches retained; connected panels deferred.",
+    "next_action": "Finish Dashboard #136 gates in background while preserving originals. Review Controls #83 against current effects and canonical PaintPicker; do not restore stale Fill shell assertions. Connected panels deferred and Mobile protected.",
     "deferred_panel_requirements": "docs/field/reorganization/DEFERRED_CONNECTED_PANEL_REQUIREMENTS_20260930.md",
     "panel_implementation": "deferred by user on 2026-09-30; instructions only; uncommitted experiments withdrawn",
     "implementation_checkpoint": "docs/field/reorganization/EXECUTION_CHECKPOINT_20260930.md",
@@ -285,6 +291,7 @@
       "merge_commit": "854038a3e84f41cd590a4ad18b24fcd4127e2fba",
       "production_deployment_id": "2ae1aa2f-dbc1-4aed-b883-0951c9da32af",
       "promotion_receipt": "docs/field/reorganization/CANVAS_PROMOTION_RECEIPT_20260930.md"
-    }
+    },
+    "dashboard_checkpoint": "docs/field/reorganization/DASHBOARD_PRODUCT_CHECKPOINT_20260930.md"
   }
 }
