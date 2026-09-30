@@ -24,6 +24,7 @@ const EVIDENCE_CONTEXT_SCHEMA = {
 const ACCESS_ISSUER = "https://loewfi.cloudflareaccess.com";
 const ACCESS_AUD = "6d19d2ef9eea644a9f55a049699a31110150fefebb1bca8c89632b9dd149ccd6";
 const BRIDGE_ACCESS_AUD = "042e98668017c064913a05705dd5e26de48153116ecb9bd574ec1128a559fd23";
+const RELAY_ACCESS_AUD = "7d90e5b24c6c74b4bd0fb36699e0a65a3aa25057763986ca1b8ce1a52d528819";
 const MAX_BODY_BYTES = 262144;
 const MAX_REDIRECTS = 5;
 const TARGET_TIMEOUT_MS = 10000;
@@ -97,7 +98,7 @@ async function verifyAccessJwt(request) {
       header.alg !== "RS256" ||
       typeof header.kid !== "string" ||
       claims.iss !== ACCESS_ISSUER ||
-      (!aud.includes(ACCESS_AUD) && !aud.includes(BRIDGE_ACCESS_AUD)) ||
+      (!aud.includes(ACCESS_AUD) && !aud.includes(BRIDGE_ACCESS_AUD) && !aud.includes(RELAY_ACCESS_AUD)) ||
       typeof claims.exp !== "number" || claims.exp <= now ||
       (typeof claims.nbf === "number" && claims.nbf > now)
     ) return null;
@@ -701,7 +702,7 @@ export default {
         { error: "invalid_token", error_description: "Authentication required" },
         401,
         {
-          "WWW-Authenticate": 'Bearer resource_metadata="https://inspector.loew.fi/.well-known/oauth-protected-resource/mcp", error="invalid_token", error_description="Authentication required"'
+          "WWW-Authenticate": 'Bearer resource_metadata="https://relay.loew.fi/.well-known/oauth-protected-resource/mcp", error="invalid_token", error_description="Authentication required"'
         }
       );
     }
