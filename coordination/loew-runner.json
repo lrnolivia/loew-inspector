@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T14:02:38.410Z",
+  "updated_at": "2026-09-30T14:33:27.818Z",
   "legacy_branches": [
     "control",
     "main",
@@ -421,6 +421,25 @@
       "created_at": "2026-09-30T13:37:08.427Z",
       "updated_at": "2026-09-30T14:02:38.410Z",
       "lease_until": "2026-10-01T02:02:38.410Z"
+    },
+    {
+      "id": "relay-repo-registration-bridge-20260930",
+      "owner": "relay-repo-registration-bridge-20260930",
+      "branch": "loew-runner/relay-repo-registration-bridge",
+      "paths": [
+        "projects/loew-inspector.json"
+      ],
+      "resources": [
+        "relay-source-identity"
+      ],
+      "goal": "Bridge Runner's existing loew-inspector project registration to the renamed canonical repository lrnolivia/relay so exact PR admission works during consolidation.",
+      "acceptance": "Only the registered repository identity changes from lrnolivia/loew-inspector to lrnolivia/relay; project id, coordination record, branch policy, QA authority and durable state remain unchanged; exact-head checks and Runner admission pass after the bridge.",
+      "next_action": "Create the exact-main branch, update the repository field only, open a draft PR, verify, merge, then rerun Relay Batch 1 admission.",
+      "base_sha": "49fc1ffeb990e59fbf808f45e36c9f613e6804bf",
+      "state": "active",
+      "created_at": "2026-09-30T14:33:27.818Z",
+      "updated_at": "2026-09-30T14:33:27.818Z",
+      "lease_until": "2026-10-01T02:33:27.818Z"
     }
   ]
 }
