@@ -135,12 +135,29 @@ Prefer separate assignments when work crosses classes. A design task should not 
 **Impact:** unrelated workers block each other or accidentally absorb work outside their intent.  
 **Suggestion:** add a primary task-class field or equivalent canonical metadata: `design`, `architecture`, or `maintenance`. Use class-aware ownership/resources and show class on dashboard cards. Cross-class changes should require explicit rescope or a linked assignment rather than silently expanding scope.
 
+
+### RFS-018 — queued assignments cannot be amended canonically
+**Status:** adopted by Relay 1.9 `relay-1.9-skills-runtime-creative-20260930`  
+**Class:** architecture  
+**Observed:** while updating the queued Relay 1.9 assignment, `queue` correctly rejected the duplicate id and `rescope` correctly rejected `acceptance` because it only operates on claimed work. There is no canonical transaction for changing queued intent without deleting/recreating it or bypassing Runner.  
+**Impact:** requirements discovered after queueing cannot be incorporated safely; agents are tempted to create addendum assignments, leave important context only in chat, or hand-edit coordination state.  
+**Suggestion:** add a first-class `amend` transaction for queued and claimed assignments. Preserve stable id/ownership, use expected-record CAS + readback, keep immutable branch/base identity after claim, conflict-check path/resource expansion, and retain an auditable amendment history including who/when/what/why. Support goal, acceptance, next action, paths/resources and future task-class / ledger linkage fields.
+
+### RFS-019 — the findings ledger should route work, not merely collect it
+**Status:** adopted by Relay 1.9 `relay-1.9-skills-runtime-creative-20260930`  
+**Class:** architecture  
+**Observed:** findings can be recorded correctly yet still require a human or agent to notice that an existing planned release is the natural owner.  
+**Impact:** useful discoveries can sit inert, get duplicated into new assignments, or be rediscovered later even when an existing assignment could absorb them cleanly.  
+**Suggestion:** make ledger review part of Relay's planning/coordination skill. For relevant open findings, classify `adopt`, `defer`, `reject`, or `supersede`; route adopted findings into the best existing assignment through canonical `amend` when safe, otherwise deliberately create/link a successor. Update the RFS entry with assignment linkage/status. The ledger is a planning input, not an automatic backlog.
+
 ## How to use this file
 
-When a new build starts:
+When a new build starts or an existing assignment materially evolves:
 
 1. scan open/proposed entries relevant to its scope;
-2. adopt only the ones that fit the release goal;
-3. reference the RFS id in the assignment or release handoff;
-4. update the entry status when work lands;
-5. append newly discovered publishing/coordination wrinkles rather than burying them in chat history.
+2. classify relevant findings as adopt, defer, reject, or supersede;
+3. when an adopted finding belongs in an existing assignment, use the canonical assignment-amendment flow rather than creating an addendum or hand-editing coordination state;
+4. otherwise create/link a deliberately classified successor only when the work truly needs independent ownership;
+5. reference the RFS id in the owning assignment/release handoff and update the ledger with that linkage/status;
+6. when work lands, update the entry status;
+7. append newly discovered publishing/coordination wrinkles rather than burying them in chat history.
