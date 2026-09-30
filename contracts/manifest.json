@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "version": "2026-09-30.1",
+  "version": "2026-09-30.2",
   "authority": "lrnolivia/loew-runner@main",
   "contract": "LOEW_CHAT_BIBLE.md",
   "single_bible": true,
@@ -29,7 +29,8 @@
     "<target-repo>/AGENTS.md",
     "applicable role contract",
     "current assignment/control/QA state",
-    "fresh Git/runtime truth"
+    "fresh Git/runtime truth",
+    "contracts/human-qa-helper.json when human QA, Visuals review questions, or checklists are involved"
   ],
   "watchdog": {
     "identical_failure_attempts": 2,
@@ -55,7 +56,13 @@
     "contract": "LOEW_CHAT_BIBLE.md",
     "section": "11",
     "runner_first": true,
-    "project_qa_is_overlay": true
+    "project_qa_is_overlay": true,
+    "helper_contract": "contracts/human-qa-helper.json",
+    "helper_docs": "docs/HUMAN_QA_HELPER.md",
+    "visual_policy": "docs/VISUAL_EVIDENCE_POLICY.md",
+    "agents_populate_questions_and_checklists": true,
+    "deterministic_checks_remain_agent_owned": true,
+    "helper_questions_bind_exact_artifact_and_evidence": true
   },
   "target_resolution": {
     "runner_project_registry_first": true,

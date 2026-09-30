@@ -23,6 +23,19 @@ Each registration must preserve enough metadata to reconstruct the evidence unit
 
 The metadata receipt is durable even if the binary object is later expired by retention policy.
 
+
+## Human QA helper population
+
+When visual evidence is intended for human review, agents must follow the canonical [Human QA Helper contract](../contracts/human-qa-helper.json) and [population guide](HUMAN_QA_HELPER.md).
+
+Before asking the user to review, the agent must populate a helper packet tied to the exact artifact and Visuals evidence identity. The packet should contain targeted questions and, when useful, a short observable checklist derived from the assignment acceptance criteria, current QA overlay, known uncertainty, and exact preview/evidence state.
+
+Agents own deterministic verification. Do not turn tests, source/deployment identity, logs, required checks, HTTP assertions, or other machine-verifiable facts into user checklist work.
+
+Questions should ask for specific human judgment such as hierarchy, spacing, wording, interaction feel, visual comparison, or product direction. Avoid generic prompts such as "does this look good?" when a criterion-specific question can be asked. Checklists are for things the user can quickly observe or try while the preview is visible.
+
+A human-QA request should not be manufactured when deterministic evidence already resolves the criterion. If the exact head, deployment, evidence set, route, or acceptance criterion changes materially, preserve the old review as history but treat it as stale for the new artifact.
+
 ## Non-blocking upload lifecycle
 
 Visual evidence transfer is asynchronous. The producer does **not** wait for the media bytes to finish uploading.
