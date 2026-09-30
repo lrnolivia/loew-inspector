@@ -11,10 +11,8 @@ test("Relay control center is an MCP Apps HTML resource", () => {
   assert.match(resource.text, /ui\/initialize/);
   assert.match(resource.text, /ui\/notifications\/initialized/);
   assert.match(resource.text, /tools\/call/);
-  assert.match(resource.text, /relay_runner_action/);
-  assert.match(resource.text, /relay\.CONTROL/);
-  assert.match(resource.text, /relay\.RUNNER/);
-  assert.match(resource.text, /relay\.SOURCE/);
-  assert.match(resource.text, /relay\.CLOUD/);
-  assert.match(resource.text, /relay\.VERIFY/);
+  assert.match(resource.text, /relay_ui_request/);
+  for (const name of ["today", "projects", "review", "night-shift"]) assert.ok(resource.text.includes('data-page="' + name + '"'));
+  assert.match(resource.text, /\/api\/visual/);
+  assert.match(resource.text, /Inter/);
 });

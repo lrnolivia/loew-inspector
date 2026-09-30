@@ -1,3 +1,4 @@
+import { handleApi as runnerApi } from "../packages/runner/src/cloudflare-worker.mjs";
 import { browserRequestOptions, runQuickAction } from "./browser.js";
 import { storeEvidence, decodeBase64Bytes, summarizeSnapshot, normalizeEvidenceContext } from "./evidence.js";
 import { openBrowserSession, interactBrowserSession, captureBrowserSession, closeBrowserSession } from "./session.js";
@@ -124,27 +125,13 @@ async function githubApiRequest(env, path, options = {}) {
   return sourceGithubApiRequest(env, path, options);
 }
 
-async function runnerApiRequest(accessJwt, path, options = {}) {
+async function runnerApiRequest(accessJwt, path, options = {}, env) {
   const method = options.method || "GET";
-  if (typeof path !== "string" || !path.startsWith("/api/") || path.includes("://")) {
-    throw new Error("Invalid Runner API path");
-  }
-  const target = new URL(path, RUNNER_ORIGIN);
-  if (target.origin !== RUNNER_ORIGIN) throw new Error("Invalid Runner target");
-
-  const headers = {
-    "Cf-Access-Token": accessJwt,
-    Accept: "application/json"
-  };
-  if (options.body !== undefined) headers["Content-Type"] = "application/json";
-
-  const response = await fetch(target.toString(), {
-    method,
-    redirect: "manual",
-    headers,
-    body: options.body === undefined ? undefined : JSON.stringify(options.body),
-    signal: AbortSignal.timeout(TARGET_TIMEOUT_MS)
-  });
+  if (typeof path !== "string" || !path.startsWith("/api/") || path.includes("://")) throw new Error("Invalid Runner API path");
+  const response = await runnerApi(new Request("https://relay.loew.fi" + path, {
+    method, headers: { "Content-Type": "application/json" },
+    body: options.body === undefined ? undefined : JSON.stringify(options.body)
+  }), env, { authenticatedMcp: true });
   const text = await response.text();
   let body = null;
   if (text) {
@@ -945,7 +932,7 @@ async function mcp(request, access, env) {
       }
 
       if (name === "relay_ui_control_center") {
-        const workers = await runnerApiRequest(access.token, "/api/workers");
+        const workers = await runnerApiRequest(access.token, "/api/workers", {}, env);
         const capabilities = {
           runner_read: true,
           runner_write: true,
@@ -1011,7 +998,7 @@ async function mcp(request, access, env) {
       if (name === "relay_runner_workers") {
         return relayResult(id, {
           ok: true,
-          workers: await runnerApiRequest(access.token, "/api/workers")
+          workers: await runnerApiRequest(access.token, "/api/workers", {}, env)
         });
       }
 
@@ -1022,7 +1009,7 @@ async function mcp(request, access, env) {
         const result = await runnerApiRequest(
           access.token,
           `/api/workers/${encodeURIComponent(workerId)}/${action}`,
-          { method: "POST", body: args.payload || {} }
+          { method: "POST", body: args.payload || {} }, env
         );
         return relayResult(id, { ok: true, worker_id: workerId, action, result });
       }
