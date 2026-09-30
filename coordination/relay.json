@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T23:41:15.915Z",
+  "updated_at": "2026-09-30T23:46:45.728Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -1852,12 +1852,12 @@
       ],
       "goal": "Ship Relay 1.9.2 with scalable bounded SOURCE text mutation.",
       "acceptance": "Add exact-SHA bounded edit and append operations with deterministic readback, stale-state rejection, default-branch protection, and focused tests. Ship through normal admission, merge, deploy, runtime verification, and client refresh.",
-      "next_action": "Bootstrap under the existing payload ceiling: implement scalable SOURCE mutation in isolated source-text-mutation module + focused tests, make only small relay-entry/version registration edits, then ship 1.9.2. After refresh, use the new edit/append primitives for subsequent large-file work.",
+      "next_action": "Relay 1.9.2 is merged and deployed from PR #58 exact merge 6c2aae6e0324aa1164f059f94d40ab5309f3667a as Worker v50 version 654b42f4-9fe8-4320-984a-959e8a70c57c at 100% via deployment df4d9438-426a-4d95-a947-e447fbe8a856. Current ChatGPT session still lacks relay_source_edit_text and relay_source_append_text in discovered MCP schema. Refresh Relay tools and reopen/refresh ChatGPT. First refreshed-session action: verify both tools are visible and run one bounded safe mutation on a non-default branch using exact expected head/blob SHAs. If readback succeeds, complete 1.9.2 with PR/deployment/client evidence, then begin 1.9.3 resume checkpoints.",
       "base_sha": "5dc5242da630a1c0bed534423b408418394fb757",
       "state": "active",
       "created_at": "2026-09-30T23:37:56.654Z",
-      "updated_at": "2026-09-30T23:41:15.915Z",
-      "lease_until": "2026-10-01T11:41:15.915Z"
+      "updated_at": "2026-09-30T23:46:45.728Z",
+      "lease_until": "2026-10-01T11:46:45.728Z"
     }
   ],
   "migrated_from": "loew-inspector"
