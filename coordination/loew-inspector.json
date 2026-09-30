@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T09:12:56.538Z",
+  "updated_at": "2026-09-30T09:22:52.858Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -50,6 +50,25 @@
       "evidence": "https://github.com/lrnolivia/loew-inspector/pull/27",
       "work_accounted": true,
       "completed_at": "2026-09-30T09:12:56.538Z"
+    },
+    {
+      "id": "loew-inspector-wrangler-runtime-vars-20260930",
+      "owner": "normal-chat-relay-wrangler-sync-20260930",
+      "branch": "loew-inspector/wrangler-runtime-vars",
+      "paths": [
+        "wrangler.jsonc"
+      ],
+      "resources": [
+        "relay-runtime-config"
+      ],
+      "goal": "Sync the non-secret Relay production runtime variables into wrangler.jsonc.",
+      "acceptance": "wrangler.jsonc contains CLOUDFLARE_ACCOUNT_ID, RELAY_CLOUDFLARE_WRITE_SCRIPTS, and RELAY_GITHUB_APP_ID; RELAY_GITHUB_APP_PRIVATE_KEY remains Cloudflare Secret only; required checks pass.",
+      "next_action": "Create the claimed branch from live main, apply the safe Wrangler vars, open a draft PR, and verify admission.",
+      "base_sha": "746f2eb5b1fcf40bfee29c24b69b5c4027967d61",
+      "state": "active",
+      "created_at": "2026-09-30T09:22:52.858Z",
+      "updated_at": "2026-09-30T09:22:52.858Z",
+      "lease_until": "2026-09-30T21:22:52.858Z"
     }
   ]
 }
