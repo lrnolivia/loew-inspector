@@ -232,12 +232,12 @@
   ],
   "execution": {
     "started_at": "2026-09-30T04:50:00Z",
-    "reviewed_main": "0ea02501704e61d5133477d69fe677ad53295a56",
+    "reviewed_main": "760774a6bd628827f93190fb0abaf7a6e26acbea",
     "inventory_branches": 132,
     "open_prs": 19,
     "ledger": "docs/field/reorganization/2026-09-30-inventory.json",
     "handoff": "docs/field/reorganization/MAIN_FIELD_WORKER_CONSOLIDATION.md",
-    "phase": "inventory and main-worker direction prepared; implementation consolidation remains",
+    "phase": "preserved source drafts published; validation and semantic closeout remain",
     "user_direction": "Retain branches until code, unfinished intent and QA have durable destinations. Existing main field worker consolidates; no new workers.",
     "mutations_in_field": [
       {
@@ -245,11 +245,18 @@
         "branch": "field/consolidation-validation-baseline-20260930",
         "head": "cc38e107fedd1b33088bf64dd6534f6d3d97965f",
         "state": "draft; install/build and Media CI pass; full tests/lint not cleared"
+      },
+      {
+        "pr": 135,
+        "branch": "field/consolidation-canvas-20260930",
+        "head": "77e81482897d6530989882c6df18669d5e4cfde4",
+        "state": "draft; build and 10 desktop browser tests pass; clean install, full tests, lint and exact Preview block merge"
       }
     ],
-    "next_action": "Existing main field worker refreshes live ownership and executes the ordered consolidation handoff; branch retirement follows semantic completion accounting.",
+    "next_action": "Serial ownership reconciliation for lockfile/five reserved lint fixes; classify and repair 57 remaining failures; exact-head Preview QA before source merge; then Dashboard and remaining semantic ledger closeout.",
     "deferred_panel_requirements": "docs/field/reorganization/DEFERRED_CONNECTED_PANEL_REQUIREMENTS_20260930.md",
     "panel_implementation": "deferred by user on 2026-09-30; instructions only; uncommitted experiments withdrawn",
-    "implementation_checkpoint": "docs/field/reorganization/EXECUTION_CHECKPOINT_20260930.md"
+    "implementation_checkpoint": "docs/field/reorganization/EXECUTION_CHECKPOINT_20260930.md",
+    "publication_handoff": "docs/field/reorganization/PUBLICATION_HANDOFF_20260930.md"
   }
 }

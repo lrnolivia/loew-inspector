@@ -1,6 +1,8 @@
 # field consolidation — direction for the existing main field worker
 
-Status: READY FOR EXISTING MAIN WORKER. Reorganization is NOT complete.
+Status: PARTIALLY EXECUTED; source drafts preserved, required gates remain. Reorganization is NOT complete.
+
+Read the latest [publication handoff](PUBLICATION_HANDOFF_20260930.md) and [execution checkpoint](EXECUTION_CHECKPOINT_20260930.md) first. Inventory figures and original observations below are historical; refresh live state before mutation.
 User direction (2026-09-30): review the branches, preserve unfinished work, and culminate in direct instructions for the main field worker to consolidate it. Do not create additional workers. Do not delete branches merely because their code is already on main.
 
 ## Objective
