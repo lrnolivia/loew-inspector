@@ -1,22 +1,11 @@
 {
   "schema": 1,
   "assignment": "field-repo-cleanup-reorg-20260929",
-  "captured_at": "2026-09-30T04:50:00Z",
-  "method": "full git clone; all remote heads; rev-list ahead/behind; git cherry patch equivalence; all open PRs paginated",
+  "captured_at": "2026-09-30T04:53:00Z",
+  "method": "132 actual remote heads; symbolic origin/HEAD excluded; rev-list ahead/behind; git cherry patch equivalence; patch-equivalent candidates have zero unmerged merge commits; 19 open PRs paginated",
   "main": "0ea02501704e61d5133477d69fe677ad53295a56",
   "status": "in_progress",
   "branches": [
-    {
-      "branch": "",
-      "sha": "0ea02501704e61d5133477d69fe677ad53295a56",
-      "ahead": 0,
-      "behind": 0,
-      "unique": [],
-      "equivalent": [],
-      "prs": [],
-      "disposition": "DELETE AFTER VERIFIED",
-      "reason": "Branch head reachable from current main."
-    },
     {
       "branch": "codex/field-chrome-batch-1",
       "sha": "9c425f45e6fe177928c2f8405428e642095e969a",
