@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T11:52:33.597Z",
+  "updated_at": "2026-09-30T12:00:38.741Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -264,10 +264,16 @@
       "acceptance": "Upload accepts an exact source commit and allowlisted Worker only; derives entrypoint/compatibility from committed Wrangler config; includes only bounded relative JS modules from that commit; inherits existing binding identities in strict mode; never deploys implicitly; reconciles duplicate or timed-out writes by exact commit annotation/version readback; tests and Runner admission pass.",
       "next_action": "Implement the isolated cloud upload adapter and Relay extension registration, then open a draft PR and validate exact-head tests/admission.",
       "base_sha": "df2223abab501d1134f70dc7c6ae7921edc74ece",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T11:52:33.597Z",
-      "updated_at": "2026-09-30T11:52:33.597Z",
-      "lease_until": "2026-09-30T23:52:33.597Z"
+      "updated_at": "2026-09-30T12:00:38.741Z",
+      "lease_until": "2026-10-01T00:00:38.741Z",
+      "pr": 37,
+      "merged_head_sha": "fc042aa2d648cc79dc8b267a00d43a674034f648",
+      "merge_commit_sha": "5edb12474f3ac86bc265b8a197bcdecb17b70d62",
+      "evidence": "https://github.com/lrnolivia/loew-inspector/pull/37 — exact-head tests and Runner admission passed; Relay native ready/merge succeeded.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T12:00:38.741Z"
     }
   ]
 }
