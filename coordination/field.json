@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T07:25:15.831Z",
+  "updated_at": "2026-09-30T07:26:47.797050Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -353,12 +353,12 @@
       ],
       "goal": "Recover stranded Frame/Group parity into current main, preserving existing Mobile ownership.",
       "acceptance": "100x100 click Frames, Space parenting bypass, primary Alt G Frame Selection; browser encapsulation, wrapping and native Group world geometry pass; original branches retained until acceptance and QA accounted.",
-      "next_action": "Serial Mobile-shared validation window: own package-lock.json plus the two lint-only camera files solely to apply the preserved SWC lock entry and no-behavior lint fixes, then classify remaining failures and clear gates. Deferred connected panels remain out of scope.",
+      "next_action": "Serial Mobile yield is active. Integrate the missing nested SWC lock entry and reserved lint-only fixes on the consolidation branch, then classify/repair remaining failures, run required gates and exact /qa/work Preview QA; do not resume deferred connected-panel work.",
       "base_sha": "760774a6bd628827f93190fb0abaf7a6e26acbea",
       "state": "active",
       "created_at": "2026-09-30T05:31:47.089Z",
-      "updated_at": "2026-09-30T07:25:15.831Z",
-      "lease_until": "2026-09-30T19:25:15.831Z"
+      "updated_at": "2026-09-30T07:26:47.797050Z",
+      "lease_until": "2026-09-30T19:26:47.797050Z"
     }
   ]
 }
