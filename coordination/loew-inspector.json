@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T09:54:56.983Z",
+  "updated_at": "2026-09-30T10:13:10.908Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -89,12 +89,18 @@
       ],
       "goal": "Use the dedicated user-scoped Cloudflare token only for Workers Builds API calls while preserving the account-scoped token for all other relay.CLOUD operations.",
       "acceptance": "relay_cloud_builds authenticates with CLOUDFLARE_BUILDS_API_TOKEN, existing relay.CLOUD reads/writes continue using CLOUDFLARE_API_TOKEN, status reports Builds-token readiness, and tests pass.",
-      "next_action": "Patch cloud auth token selection and tests, then open a draft PR and verify Runner admission.",
+      "next_action": "Completed: merged PR #30; test and admission passed; deployed version 33; live Builds returned ok:true/builds:[]; primary Cloud auth verified.",
       "base_sha": "52204b6ad15610f19b3c1fee99bfd692704aa9cd",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T09:54:56.983Z",
-      "updated_at": "2026-09-30T09:54:56.983Z",
-      "lease_until": "2026-09-30T21:54:56.983Z"
+      "updated_at": "2026-09-30T10:13:10.908Z",
+      "lease_until": "2026-09-30T21:54:56.983Z",
+      "pr": 30,
+      "merged_head_sha": "3e198bbd63da625910346a18d14fe6c6c393bf95",
+      "merge_commit_sha": "53c0bf0556d881969c2701be28de4021f9fcbde9",
+      "evidence": "https://github.com/lrnolivia/loew-inspector/pull/30",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T10:13:10.908Z"
     }
   ]
 }
