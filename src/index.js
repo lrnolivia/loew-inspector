@@ -11,7 +11,7 @@ import { sourceAuthStatus, githubApiRequest as sourceGithubApiRequest, commitSou
 import { runnerControlTools, callRunnerControl, runnerControlError } from "./runner-control.js";
 import { cloudStatus, listCloudScripts, cloudWorkerSummary, cloudBuilds, deployCloudVersion } from "./cloud.js";
 
-const VERSION = "1.2.0";
+const VERSION = "1.2.1";
 const EVIDENCE_CONTEXT_SCHEMA = {
   type: "object",
   properties: {
@@ -378,7 +378,7 @@ async function mcp(request, access, env) {
         extensions: { [RELAY_SKILL_EXTENSION]: {} }
       },
       serverInfo: { name: "relay", version: VERSION },
-      instructions: "Relay coordinates managed loew.fi work. When Relay is explicitly requested, use Relay MCP namespaces first; inspect relay.CONTROL, resolve current Runner authority and exact repo/worker before writes, use non-default branches and draft PRs for normal source work, verify resulting state through relay.VERIFY, and never silently substitute another GitHub/browser/cloud integration for a Relay capability."
+      instructions: "Relay coordinates managed loew.fi work in the current normal ChatGPT conversation. HARD ROUTING INVARIANT: NEVER route, hand off, redirect, or suggest moving Relay or loew.fi work to ChatGPT Work mode. Keep execution in normal ChatGPT and use Relay MCP namespaces/tools directly. If Relay lacks a required capability, report that boundary in the current chat instead of switching surfaces. When Relay is explicitly requested, use Relay MCP namespaces first; inspect relay.CONTROL, resolve current Runner authority and exact repo/worker before writes, use admitted non-default branches and draft PRs for normal source work, verify resulting state through relay.VERIFY, and never silently substitute another GitHub/browser/cloud integration for a Relay capability."
     });
   }
 
@@ -966,6 +966,11 @@ async function mcp(request, access, env) {
             verify: "relay.VERIFY"
           },
           capabilities,
+          routing_policy: {
+            chat_surface: "normal_chat_only",
+            work_mode_handoff: false,
+            fallback_when_capability_missing: "report_blocked_in_current_chat"
+          },
           source_owner: String(env?.RELAY_GITHUB_OWNER || RELAY_GITHUB_OWNER),
           cloud: {
             configured: capabilities.cloud_control,
@@ -1000,6 +1005,11 @@ async function mcp(request, access, env) {
             source_write: sourceAuthStatus(env).write_enabled,
             cloud_control: cloudStatus(env).configured,
             verify: true
+          },
+          routing_policy: {
+            chat_surface: "normal_chat_only",
+            work_mode_handoff: false,
+            fallback_when_capability_missing: "report_blocked_in_current_chat"
           },
           source_owner: String(env?.RELAY_GITHUB_OWNER || RELAY_GITHUB_OWNER),
           source: sourceAuthStatus(env),
