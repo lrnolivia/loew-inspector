@@ -48,12 +48,7 @@ body.qa-open { overflow: hidden; }
 .qa-preview iframe { background: white; }
 .qa-preview img {
   object-fit: contain;
-  background:
-    linear-gradient(45deg, rgba(255,255,255,.018) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.018) 75%),
-    linear-gradient(45deg, rgba(255,255,255,.018) 25%, transparent 25%, transparent 75%, rgba(255,255,255,.018) 75%),
-    var(--color-canvas);
-  background-position: 0 0, 8px 8px;
-  background-size: 16px 16px;
+  background: var(--color-canvas);
 }
 .qa-preview-message {
   position: absolute;
