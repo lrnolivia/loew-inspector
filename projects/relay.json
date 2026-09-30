@@ -71,5 +71,10 @@
     "admission_workflow": "lrnolivia/relay:.github/workflows/runner-coordination.yml",
     "cleanup_workflow": "lrnolivia/relay:.github/workflows/runner-coordination.yml"
   },
-  "migrated_repository_from": "lrnolivia/loew-inspector"
+  "migrated_repository_from": "lrnolivia/loew-inspector",
+  "cloud": {
+    "provider": "cloudflare",
+    "worker": "relay",
+    "write": true
+  }
 }
