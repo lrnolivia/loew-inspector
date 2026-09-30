@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T22:19:08.436Z",
+  "updated_at": "2026-09-30T22:20:03.641Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -428,6 +428,23 @@
       ],
       "state": "queued",
       "created_at": "2026-09-30T22:12:36.691Z"
+    },
+    {
+      "id": "relay-findings-suggestions-20260930",
+      "owner": "relay-findings-suggestions-20260930",
+      "goal": "Create a durable running Relay findings/suggestions ledger for publishing, coordination and workflow wrinkles discovered during real releases, so future builds can selectively pick up useful improvements without reopening old release work.",
+      "acceptance": "Add docs/relay/findings/suggestions.md as a running list with dated findings, impact, suggested remedy, status and recommended task class. Seed it with concrete issues observed through Relay 1.7/1.7.5 publishing and coordination, including queue lifecycle residue, stale/held reservations, exact-source config drift risk, MCP payload-size limits, source-auth/tool-authority ambiguity, server-derived base_sha clarity, Cloud authorization layering, product-source-vs-coordination-main identity, external wait visibility, umbrella/absorbed work reconciliation, verification anomalies, and separating design vs architecture vs maintenance work to reduce collisions. This is docs-only maintenance; no product/runtime code changes.",
+      "next_action": "Claim a docs-only maintenance branch from current main, write the initial running findings/suggestions ledger, merge it through Relay, then complete the assignment. Do not deploy a Worker for this docs-only follow-up.",
+      "paths": [
+        "docs/relay/findings/suggestions.md"
+      ],
+      "resources": [
+        "relay-maintenance",
+        "relay-publishing-findings",
+        "relay-work-classification"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T22:20:03.641Z"
     }
   ],
   "claims": [
