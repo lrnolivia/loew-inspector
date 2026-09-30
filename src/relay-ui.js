@@ -1,6 +1,6 @@
 export const RELAY_CONTROL_CENTER_URI = "ui://relay/control-center/v1.html";
 
-const RELAY_CONTROL_CENTER_HTML = String.raw\`<!doctype html>
+const RELAY_CONTROL_CENTER_HTML = String.raw`<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
@@ -567,7 +567,7 @@ const RELAY_CONTROL_CENTER_HTML = String.raw\`<!doctype html>
 })();
 </script>
 </body>
-</html>\`;
+</html>`;
 
 export function relayControlCenterResource() {
   return {
