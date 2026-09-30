@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { RELAY_EXTENSION_VERSION, augmentToolList, validateLifecycleArguments } from "./relay-entry.js";
+import { RELAY_EXTENSION_VERSION, augmentToolList, augmentResourceList, augmentSkillList, validateLifecycleArguments } from "./relay-entry.js";
+import { QA_SKILL_URI } from "./qa-skill.js";
 
 test("Relay extension publishes source inventory and exact-head PR action", () => {
   const tools = augmentToolList([{
@@ -19,7 +20,7 @@ test("Relay extension publishes source inventory and exact-head PR action", () =
   assert.equal(branch._meta.existing, true);
   assert.ok(names.includes("relay_runner_cleanup"));
   assert.ok(names.includes("relay_cloud_upload_version"));
-  assert.equal(RELAY_EXTENSION_VERSION, "1.5.0");
+  assert.equal(RELAY_EXTENSION_VERSION, "1.6.0");
 });
 
 test("server validation rejects unsupported and cross-action PR fields", () => {
@@ -50,4 +51,17 @@ test("server validation accepts exact-head merge input", () => {
     merge_method: "squash"
   };
   assert.equal(validateLifecycleArguments("relay_source_pull_request_action", args), args);
+});
+
+
+test("Relay extension appends human QA skill to native discovery", () => {
+  const resources = augmentResourceList([{ uri: "skill://relay/existing/SKILL.md" }]);
+  const skills = augmentSkillList([{ uri: "skill://relay/existing/SKILL.md" }]);
+  assert.equal(resources.filter(item => item.uri === QA_SKILL_URI).length, 1);
+  assert.equal(skills.filter(item => item.uri === QA_SKILL_URI).length, 1);
+
+  const resourcesAgain = augmentResourceList(resources);
+  const skillsAgain = augmentSkillList(skills);
+  assert.equal(resourcesAgain.filter(item => item.uri === QA_SKILL_URI).length, 1);
+  assert.equal(skillsAgain.filter(item => item.uri === QA_SKILL_URI).length, 1);
 });
