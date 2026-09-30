@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T20:36:45.214Z",
+  "updated_at": "2026-09-30T20:38:22.783Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -887,6 +887,26 @@
       "created_at": "2026-09-30T20:02:57.628Z",
       "updated_at": "2026-09-30T20:36:45.214Z",
       "lease_until": "2026-10-01T08:36:45.214Z"
+    },
+    {
+      "id": "field-consolidation-live-receipt-20260930",
+      "owner": "01a0f0ae-4e8c-7e62-ae7a-3b02faa398f5",
+      "branch": "relay/field-consolidation-live-receipt-20260930",
+      "paths": [
+        "assignments/field-repo-cleanup-reorg.json",
+        "docs/field/reorganization/"
+      ],
+      "resources": [
+        "field-consolidation-handoff-docs"
+      ],
+      "goal": "Publish durable Field consolidation takeover and preserved Mobile recovery.",
+      "acceptance": "Record current user-authorized owner, serial hotfix/Workspace state, exact validation, preserved toolbar patch and safe next action. Documentation only.",
+      "next_action": "Admit corrected Relay-prefix documentation publication, close unadmitted bootstrap PR48 with exact replacement pointer; merge current docs after gate.",
+      "base_sha": "6f6d3c72c58224aaae6973b48a0149b6e97499cc",
+      "state": "active",
+      "created_at": "2026-09-30T20:38:22.783Z",
+      "updated_at": "2026-09-30T20:38:22.783Z",
+      "lease_until": "2026-10-01T08:38:22.783Z"
     }
   ],
   "migrated_from": "loew-inspector"
