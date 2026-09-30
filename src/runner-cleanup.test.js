@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { callRunnerCleanup, validateRunnerCleanupArguments } from "./runner-cleanup.js";
 import { RUNNER_ENGINE_SHA } from "./runner-control.js";
+import { augmentToolList, RELAY_EXTENSION_VERSION } from "./relay-entry.js";
 
 const head = "a".repeat(40);
 const merge = "b".repeat(40);
@@ -200,4 +201,20 @@ test("Runner engine drift fails closed", async () => {
     /Runner engine changed/
   );
   assert.deepEqual(f.deletes, []);
+});
+
+
+test("Relay extension publishes cleanup as a destructive bounded tool", () => {
+  const tools = augmentToolList([{
+    name: "relay_runner_audit",
+    inputSchema: { type: "object" },
+    annotations: { readOnlyHint: true },
+    securitySchemes: [{ type: "oauth2", scopes: [] }],
+    _meta: {}
+  }]);
+  const cleanup = tools.find(tool => tool.name === "relay_runner_cleanup");
+  assert.ok(cleanup);
+  assert.equal(cleanup.annotations.destructiveHint, true);
+  assert.deepEqual(cleanup.inputSchema.required, ["project", "mode"]);
+  assert.equal(RELAY_EXTENSION_VERSION, "1.4.0");
 });
