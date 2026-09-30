@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T10:02:35.107Z",
+  "updated_at": "2026-09-30T10:13:56.943Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -354,12 +354,12 @@
       ],
       "goal": "Recover stranded Frame/Group parity into current main, preserving existing Mobile ownership.",
       "acceptance": "100x100 click Frames, Space parenting bypass, primary Alt G Frame Selection; browser encapsulation, wrapping and native Group world geometry pass; original branches retained until acceptance and QA accounted.",
-      "next_action": "User authorized this successor to resume via handoff and go work. Preserve PR #135 head 57f4765b591286c6c456439ba217d8de282c38c9; resolve Registry rerun and diagnose exact-head Preview routing before promotion. Mobile and deferred panel boundaries preserved.",
+      "next_action": "All promotion gates clear on PR #135 head 57f4765b591286c6c456439ba217d8de282c38c9. Registry 36697728462 green (57 vs 61; zero branch-only, four baseline-only); deployed QA 36700859927 and 36700862882 green on 6255045b-1ed2-4cea-81b4-d44d353923c9; ten local Frame/Group Chromium tests pass with no retries. Publish verified receipt and squash merge exact head; preserve original branches and Mobile reservation; then reconcile shared-file return and ordered Dashboard work.",
       "base_sha": "760774a6bd628827f93190fb0abaf7a6e26acbea",
       "state": "active",
       "created_at": "2026-09-30T05:31:47.089Z",
-      "updated_at": "2026-09-30T10:02:35.107Z",
-      "lease_until": "2026-09-30T22:02:35.107Z"
+      "updated_at": "2026-09-30T10:13:56.943Z",
+      "lease_until": "2026-09-30T22:13:56.943Z"
     }
   ]
 }
