@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T23:51:08.420Z",
+  "updated_at": "2026-09-30T23:51:28.150Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -1901,10 +1901,16 @@
       "next_action": "Claim from current post-1.9.1 main. First replace the nested project sidebar with a horizontal shared project-tab rail and flatten page-overview/dashboard styling. Then remove underline/bottom-border button styling, redesign ChatGPT app settings as a quiet native utility action, and repair attention/action-card geometry so buttons stay inside cards. Keep all progress/state data unchanged. Regenerate bundle, run exact-head tests and responsive visual verification, then merge/deploy and close.",
       "task_class": "design",
       "base_sha": "2e4b052af4a4f37540b7a79419068b02b0c87b57",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T23:32:21.826Z",
-      "updated_at": "2026-09-30T23:32:21.826Z",
-      "lease_until": "2026-10-01T11:32:21.826Z"
+      "updated_at": "2026-09-30T23:51:28.150Z",
+      "lease_until": "2026-10-01T11:51:28.150Z",
+      "pr": 59,
+      "merged_head_sha": "f1c70bd5593ff082e324fdd22ecc7bd24c353255",
+      "merge_commit_sha": "10c353570fef74d6fa0397c1eebe23db321a18c7",
+      "evidence": "Design repair completed on amended design-class assignment. Impeccable UI Audit skill was loaded and used to guide the targeted structural repair; Superdesign CLI v0.14.0 was invoked on the exact branch but was unauthenticated and its noninteractive login timed out, so no Superdesign canvas output is claimed. User-reported 1.8 defects were repaired: nested Runner project sidebar replaced by one horizontal scrollable project-tab rail shared across Today/Runner/Inspector/night shift; Runner now uses full content width; heavy page-overview/dashboard slab removed in favor of flat status line; ChatGPT settings reduced to quiet transparent sidebar utility; fake 3px bottom-border/depth treatments removed; Today attention actions integrated inside card geometry; all gradient declarations removed from shipped UI sources. Browser contract permanently asserts no page-overview slab, one shared project rail, selected deep-link tab state, zero bottom border on settings/active nav, settings transparent at rest, and attention button bounds contained inside its card; desktop/MCP/mobile browser tests pass. Full npm test passed after fetching full Git history. Exact PR head f1c70bd5593ff082e324fdd22ecc7bd24c353255 passed Runner admission and repository CI and PR #59 squash-merged as 10c353570fef74d6fa0397c1eebe23db321a18c7. Exact merged source uploaded as Cloudflare Worker v51 version ef4fde2d-b8c9-458f-aae1-67efc986c18f and deployed 100% via 1f2c0e7d-8f6a-43bf-8391-90c5c64d3bb9. Runtime readback preserves Relay 1.9.2. Production evidence captured at desktop vis_53e7fe98-3acf-46b8-b478-7fa064703b16 and mobile vis_df7a0a9f-c36d-4b79-af36-4e3f2a4b5e64; historical root transport anomaly remains HTTP 522 while Browser Run renders title relay/full DOM. Main advanced one coordination-only commit beyond deployed product source; compare showed only coordination/relay.json changed.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T23:51:28.150Z"
     },
     {
       "id": "relay-1.9-skills-runtime-creative-20260930",
