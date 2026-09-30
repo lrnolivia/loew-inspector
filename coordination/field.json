@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T20:06:54.523Z",
+  "updated_at": "2026-09-30T20:07:53.282Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -426,12 +426,12 @@
       ],
       "goal": "Consolidate Dashboard and explicitly user-authorized Mobile recovery onto current main",
       "acceptance": "Existing Dashboard/create/refresh behavior and current-main Canvas semantics preserved; touch/mobile focused checks and runtime arbitration verified; current user removes Mobile protection, connected-panel follow-up remains deferred; original branches retained",
-      "next_action": "User explicitly resumes consolidation while sleeping and assigns this chat ownership of #136. Preserve inherited staged/unstaged Mobile work, exclude separately owned BottomToolbar, finish focused touch/Dashboard behavior, exact-head registry/runtime gates and safe promotion.",
+      "next_action": "Resumed by explicit user instruction; own #136. Finish preserved Dashboard and Mobile recovery, excluding hotfix-owned BottomToolbar and deferred connected-panel fixes. Inspect/test inherited gestures then exact-head Registry and runtime QA.",
       "base_sha": "854038a3e84f41cd590a4ad18b24fcd4127e2fba",
-      "state": "held",
+      "state": "active",
       "created_at": "2026-09-30T10:21:02.409Z",
-      "updated_at": "2026-09-30T20:06:54.523Z",
-      "lease_until": "2026-10-01T08:06:54.523Z"
+      "updated_at": "2026-09-30T20:07:53.282Z",
+      "lease_until": "2026-10-01T08:07:53.282Z"
     },
     {
       "id": "field-ui-hotfix-20260930",
