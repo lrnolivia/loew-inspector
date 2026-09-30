@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T16:39:17.366Z",
+  "updated_at": "2026-09-30T16:39:20.445Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -273,8 +273,10 @@
         "relay-cloudflare-runtime",
         "relay-control-state"
       ],
-      "state": "claimed",
-      "created_at": "2026-09-30T14:07:23.167Z"
+      "state": "completed",
+      "created_at": "2026-09-30T14:07:23.167Z",
+      "merge_commit_sha": "1c77c7dd303804b2f8cf70809cfafd0577215276",
+      "completed_by": "relay-consolidation-b6-retirement-20260930"
     }
   ],
   "claims": [
