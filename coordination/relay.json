@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T16:00:18.302Z",
+  "updated_at": "2026-09-30T16:04:59.925Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -749,7 +749,8 @@
         "apps/web/",
         "src/",
         "test/",
-        "docs/relay/"
+        "docs/relay/",
+        ".github/workflows/relay-production-smoke.yml"
       ],
       "resources": [
         "relay-cloudflare-runtime",
@@ -759,12 +760,12 @@
       ],
       "goal": "Rename existing Worker in place to relay and deploy exact merged Relay source, preserving secrets, Browser, R2 and Access/OAuth continuity.",
       "acceptance": "relay.loew.fi unifiedweb/MCP verified, sameWorkerID and secret/bindingidentities preserved; exact upload/deployment/readback; olddomains remain until B6.",
-      "next_action": "Align source runtime identity and deployed allowlist, reuse WorkerID734382bfc38a43cfb8cf9115116ed688; verify UI/MCP/QA/source/cloud before legacy removal.",
+      "next_action": "Add exact-source authenticated production smoke; align canonical Worker name and safe committed runtime variables before bootstrap rename/upload.",
       "base_sha": "ffeee7eb486583e517a54a8940c25556532b21fa",
       "state": "active",
       "created_at": "2026-09-30T16:00:18.302Z",
-      "updated_at": "2026-09-30T16:00:18.302Z",
-      "lease_until": "2026-10-01T04:00:18.302Z"
+      "updated_at": "2026-09-30T16:04:59.925Z",
+      "lease_until": "2026-10-01T04:04:59.925Z"
     }
   ],
   "migrated_from": "loew-inspector"
