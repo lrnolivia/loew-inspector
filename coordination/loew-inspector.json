@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T11:28:26.400Z",
+  "updated_at": "2026-09-30T11:31:24.832Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -207,10 +207,16 @@
       "acceptance": "Relay can inspect branch/head inventory; create a managed branch from an exact SHA; update PR metadata/ready state and merge only when the expected head still matches, without bypassing required checks; tests and Runner admission pass.",
       "next_action": "Implement the source lifecycle as a small authenticated MCP extension wrapper, preserving index.js and changing only the Worker entrypoint.",
       "base_sha": "4d18720d757abb8d44d14173154ce74cc6ca6214",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T11:13:11.855Z",
-      "updated_at": "2026-09-30T11:20:33.166Z",
-      "lease_until": "2026-09-30T23:20:33.166Z"
+      "updated_at": "2026-09-30T11:31:24.832Z",
+      "lease_until": "2026-09-30T23:31:24.832Z",
+      "pr": 34,
+      "merged_head_sha": "7173c9ce47a15cb97ca7bdf492eef851f75a77c7",
+      "merge_commit_sha": "c0f4e93f60e3dca76676612f90e2fc782dec55e8",
+      "evidence": "https://github.com/lrnolivia/loew-inspector/pull/34 — tested/merged head 7173c9ce47a15cb97ca7bdf492eef851f75a77c7; test run 36708849678 passed; Runner admission run 36708849601 passed; squash merge c0f4e93f60e3dca76676612f90e2fc782dec55e8.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T11:31:24.832Z"
     }
   ]
 }
