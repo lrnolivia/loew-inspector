@@ -105,7 +105,7 @@ jobs:
             curl --silent --show-error \
               --output "$body_file" \
               --write-out '%{http_code}' \
-              -X POST "https://loew-inspector-gateway.lrnoliv.workers.dev/mcp" \
+              -X POST "https://relay.loew.fi/mcp" \
               -H "Authorization: $auth_header" \
               -H "CF-Access-Client-Id: $CF_ACCESS_CLIENT_ID" \
               -H "CF-Access-Client-Secret: $CF_ACCESS_CLIENT_SECRET" \

@@ -66,7 +66,7 @@ Canonical source and compatibility transport for the protected, read-only loew.f
 
 The canonical inspector protocol is the deployed MCP gateway at:
 
-`https://inspector.loew.fi/mcp`
+`https://relay.loew.fi/mcp`
 
 The gateway is protected by Cloudflare Access and exposes one read-only tool:
 
@@ -79,15 +79,14 @@ It may read only `https://loew.fi` and HTTPS subdomains ending in `.loew.fi`.
 The compatibility path for a normal ChatGPT conversation on the current Plus setup is:
 
 ```text
-normal ChatGPT
-  -> connected Composio GitHub action
-  -> GitHub workflow_dispatch (inspect.yml)
-  -> Access-protected workers.dev hostname
-  -> the same loew-inspector MCP Worker
+normal ChatGPT / relay
+  -> connected source-control action or GitHub workflow_dispatch
+  -> https://relay.loew.fi/mcp
+  -> inspector runtime/evidence backend
   -> protected loew.fi target
 ```
 
-GitHub Actions calls `https://loew-inspector-gateway.lrnoliv.workers.dev/mcp`. The separate Access app on that hostname accepts only the `loew-inspector-github-bridge` service token. The Worker validates that app's Access JWT before handling the MCP request. The broad loew.fi Access app accepts a linked-app token from this authenticated inspector app for downstream reads. The user-facing `https://inspector.loew.fi/mcp` OAuth route remains available.
+GitHub Actions calls `https://relay.loew.fi/mcp`. The relay Access app accepts the scoped GitHub bridge service token for workflow automation and Managed OAuth for human ChatGPT sessions. The same authenticated relay/inspector Worker uses linked-app trust for protected downstream reads. Legacy inspector hostnames remain compatibility surfaces only while migration cleanup is completed; current operational topology and rollback details live in loew-runner.
 
 The workflow accepts only HTTPS loew.fi URLs and GET/HEAD, and fails unless the target response is HTTP 200. It preserves the inspector's HTML, JSON, and other supported read results in `LOEW_INSPECTOR_RESULT=` for the caller to read from the run log. This bridge transports the same MCP tool; it is not another inspector implementation.
 
