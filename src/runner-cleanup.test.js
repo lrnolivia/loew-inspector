@@ -218,3 +218,15 @@ test("Relay extension publishes cleanup as a destructive bounded tool", () => {
   assert.deepEqual(cleanup.inputSchema.required, ["project", "mode"]);
   assert.match(RELAY_EXTENSION_VERSION, /^\d+\.\d+\.\d+$/);
 });
+
+
+test("cleanup reads policy and coordination from configured Relay control authority", async () => {
+  const f = fixture();
+  const result = await callRunnerCleanup(
+    { project: "loew-inspector", mode: "dry_run" },
+    { RELAY_RUNNER_CONTROL_REPOSITORY: "lrnolivia/relay" },
+    f.api
+  );
+  assert.equal(result.ok, true);
+  assert.ok(f.calls.some(call => call.path.startsWith("/repos/lrnolivia/relay/contents/projects/loew-inspector.json")));
+});
