@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T10:46:29.641Z",
+  "updated_at": "2026-09-30T10:48:40.724Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -141,19 +141,21 @@
         "src/runner-control.js",
         "src/runner-control.test.js",
         "src/coordination-engine.js",
-        "scripts/sync-coordination-engine.mjs"
+        "scripts/sync-coordination-engine.mjs",
+        ".github/workflows/relay-control-smoke.yml",
+        "scripts/control-smoke.mjs"
       ],
       "resources": [
         "relay-runner-coordination-adapter"
       ],
       "goal": "Expose native Relay project and atomic coordination operations using Runner canonical deterministic engine.",
       "acceptance": "Native registered-project reads and CAS coordination transitions preserve reservation, exact scopes and verified completion; meaningful adapter and shared-policy tests pass.",
-      "next_action": "Inventory capabilities; implement template-defined native Runner tools and shared engine adapter.",
+      "next_action": "Add bounded authenticated runtime smoke for native project/preflight and same-owner heartbeat, then merge and verify deployment.",
       "base_sha": "5648b9147c63f68d34517c31d903a0f8464c5670",
       "state": "active",
       "created_at": "2026-09-30T10:37:51.534Z",
-      "updated_at": "2026-09-30T10:46:29.641Z",
-      "lease_until": "2026-09-30T22:46:29.641Z"
+      "updated_at": "2026-09-30T10:48:40.724Z",
+      "lease_until": "2026-09-30T22:48:40.724Z"
     }
   ]
 }
