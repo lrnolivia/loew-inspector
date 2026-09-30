@@ -1,8 +1,23 @@
 # loew.fi access + control surfaces
 
 Updated: 2026-09-30  
-Status: backend cutover verified; policy cleanup complete; legacy retirement awaits normal ChatGPT OAuth tool-call evidence  
+Status: Relay SOURCE/CLOUD/Builds and direct authenticated Runner read verified; Worker renamed in place; legacy retirement is separate  
 Authority: Runner operational documentation; live Cloudflare/GitHub state outranks this snapshot if they diverge.
+
+## Relay credential and Worker rename closeout — 2026-09-30
+
+- Relay v1.1.0 is live at https://relay.loew.fi/mcp.
+- SOURCE uses GitHub App auth, app ID 5133504; authenticated repository reads succeed and SOURCE reports read/write.
+- [Inspector PR #30](https://github.com/lrnolivia/loew-inspector/pull/30), merge 53c0bf0556d881969c2701be28de4021f9fcbde9, routes only Workers Builds through CLOUDFLARE_BUILDS_API_TOKEN; other Cloud calls retain CLOUDFLARE_API_TOKEN. Tests and Runner admission passed. Its claim is completed.
+- [Inspector PR #31](https://github.com/lrnolivia/loew-inspector/pull/31), tested head 84639addf0e40ed67c77207c2dcc935b54a4a2f9, merge 5648b9147c63f68d34517c31d903a0f8464c5670, aligns Wrangler, cloud fallback/write allowlist, tests and CI triggers with loew-inspector. Tests and admission passed.
+- Cloudflare renamed loew-inspector-gateway **in place** to loew-inspector. Worker ID remains 734382bfc38a43cfb8cf9115116ed688. All nine bindings, including all five secret bindings, were retained; no secret contents were read or copied.
+- Exact merged source deployed at 2026-09-30T10:20:35.420697Z as version **34**, 7c35957d-2611-4cf6-a849-1fef7752eceb, deployment 22fcad2c-f36b-4411-b7d7-96098ba5dae7 at 100%.
+- Custom domains relay.loew.fi, relay-inspector.loew.fi and inspector.loew.fi retain their IDs and point to loew-inspector. Browser and private R2 bindings remain.
+- Live relay.CONTROL reports SOURCE github_app/read-write, CLOUD configured, Builds configured, no missing bindings, and write_scripts=[loew-inspector].
+- Live relay_cloud_worker(loew-inspector) succeeds; relay_cloud_builds(loew-inspector) returns {"ok":true,"builds":[]}. Empty history is a successful authenticated response.
+- Direct relay_verify_fetch_url on https://runner.loew.fi/api/workers succeeds with HTTP 200 and untruncated JSON. This run used direct authenticated Relay MCP tools, not GitHub Actions.
+- Historical compatibility/Access retirement below remains separate work; no Access applications, policies, tokens or compatibility domains were deleted in this closeout. The old workers.dev hostname is historical after the rename; current Worker URL is https://loew-inspector.lrnoliv.workers.dev. Do not infer that its old hostname-specific Access application migrated.
+- Last-known-good pre-rename version: 33, 641ca585-3aa0-4cf6-9158-d69232757390. Any rollback must align Worker name and write allowlist, not blindly deploy stale configuration.
 
 ## Purpose
 
@@ -108,13 +123,13 @@ The previous relay health redirect caveat is resolved: `loew.fi private` no long
 
 ## Worker custom domains
 
-Current `loew-inspector-gateway` Worker custom domains:
+Current `loew-inspector` Worker custom domains:
 
 - `relay.loew.fi` — canonical product-facing hostname
 - `relay-inspector.loew.fi` — compatibility hostname
 - `inspector.loew.fi` — legacy hostname
 
-The Worker name may remain implementation-specific. Product identity is determined by the public control surface, not the Worker script name.
+Worker name and Wrangler configuration are now `loew-inspector`; product ingress remains `relay.loew.fi`.
 
 Do not detach compatibility domains until clients and fallbacks have been verified idle.
 
@@ -302,7 +317,7 @@ After that succeeds, perform the already-authorized retirement:
 
 1. Remove private app policies `c9cffb9c-9b32-4faf-acf1-720af5cfdb68`, `eb0289df-8d22-4b09-aa21-3a656bd80fff`, and `925a7ba8-bf40-4b93-a0e4-7c6e1b81a4c7`. Keep Only Me and Allow relay.
 2. Re-run protected Runner and field reads.
-3. Disable workers.dev **and preview URLs** for loew-inspector-gateway, then delete old GitHub transport app `e03969b6-ecb4-40d5-b66d-c11ac91ce7a1`.
+3. Disable workers.dev **and preview URLs** for loew-inspector, then delete old GitHub transport app `e03969b6-ecb4-40d5-b66d-c11ac91ce7a1`.
 4. Remove the legacy inspector custom domain before deleting its Access app, so it is not briefly left public; delete old MCP app `c6f650d8-2f90-481f-bd1d-3ea1710c36de`. First verify remaining clients no longer use it.
 5. Delete token `af1bebf5-cdce-4ee0-9faa-7ab21a2c1d09` only after fresh reference checks. Keep `relay-github-bridge` token `fdb21fea-0b00-4672-9c63-40a07d4a6a62`.
 6. Remove relay-inspector alias only after clients are confirmed migrated. Update relay Access destinations and Worker source routes together.

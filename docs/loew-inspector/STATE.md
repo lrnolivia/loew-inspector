@@ -1,5 +1,22 @@
 # current state
 
+## Relay credential and Worker rename closeout — 2026-09-30
+
+- Relay v1.1.0 is live at https://relay.loew.fi/mcp.
+- SOURCE uses GitHub App auth, app ID 5133504; authenticated repository reads succeed and SOURCE reports read/write.
+- [Inspector PR #30](https://github.com/lrnolivia/loew-inspector/pull/30), merge 53c0bf0556d881969c2701be28de4021f9fcbde9, routes only Workers Builds through CLOUDFLARE_BUILDS_API_TOKEN; other Cloud calls retain CLOUDFLARE_API_TOKEN. Tests and Runner admission passed. Its claim is completed.
+- [Inspector PR #31](https://github.com/lrnolivia/loew-inspector/pull/31), tested head 84639addf0e40ed67c77207c2dcc935b54a4a2f9, merge 5648b9147c63f68d34517c31d903a0f8464c5670, aligns Wrangler, cloud fallback/write allowlist, tests and CI triggers with loew-inspector. Tests and admission passed.
+- Cloudflare renamed loew-inspector-gateway **in place** to loew-inspector. Worker ID remains 734382bfc38a43cfb8cf9115116ed688. All nine bindings, including all five secret bindings, were retained; no secret contents were read or copied.
+- Exact merged source deployed at 2026-09-30T10:20:35.420697Z as version **34**, 7c35957d-2611-4cf6-a849-1fef7752eceb, deployment 22fcad2c-f36b-4411-b7d7-96098ba5dae7 at 100%.
+- Custom domains relay.loew.fi, relay-inspector.loew.fi and inspector.loew.fi retain their IDs and point to loew-inspector. Browser and private R2 bindings remain.
+- Live relay.CONTROL reports SOURCE github_app/read-write, CLOUD configured, Builds configured, no missing bindings, and write_scripts=[loew-inspector].
+- Live relay_cloud_worker(loew-inspector) succeeds; relay_cloud_builds(loew-inspector) returns {"ok":true,"builds":[]}. Empty history is a successful authenticated response.
+- Direct relay_verify_fetch_url on https://runner.loew.fi/api/workers succeeds with HTTP 200 and untruncated JSON. This run used direct authenticated Relay MCP tools, not GitHub Actions.
+- Historical compatibility/Access retirement below remains separate work; no Access applications, policies, tokens or compatibility domains were deleted in this closeout. The old workers.dev hostname is historical after the rename; current Worker URL is https://loew-inspector.lrnoliv.workers.dev. Do not infer that its old hostname-specific Access application migrated.
+- Last-known-good pre-rename version: 33, 641ca585-3aa0-4cf6-9158-d69232757390. Any rollback must align Worker name and write allowlist, not blindly deploy stale configuration.
+
+
+
 ## GitHub browser bridge failure handling
 
 - `capture.yml` persists every result in `browser-result.json` and exposes `status` / `qa_passed` outputs.
