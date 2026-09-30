@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T10:20:20.264Z",
+  "updated_at": "2026-09-30T10:20:23.102Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -189,50 +189,6 @@
       "completed_at": "2026-09-30T05:21:36.629Z"
     },
     {
-      "id": "field-mobile-focus",
-      "owner": "existing-mobile-owner",
-      "branch": "field/mobile-focus-touch-camera-20260929",
-      "paths": [
-        ".github/workflows/mobile-focus-verify.yml",
-        "src/App.tsx",
-        "src/canvas/Canvas.tsx",
-        "src/canvas/hooks/useCanvasTouchInteraction.test.ts",
-        "src/canvas/hooks/useCanvasTouchInteraction.ts",
-        "src/canvas/hooks/useCanvasTransform.touch.test.ts",
-        "src/canvas/hooks/useCanvasTransform.ts",
-        "src/canvas/selection/ResizeHandles.tsx",
-        "src/canvas/selection/RotateHandle.tsx",
-        "src/canvas/selection/ScaleHandles.tsx",
-        "src/canvas/selection/SelectionBox.tsx",
-        "src/canvas/selection/useTouchHandleTargets.ts",
-        "src/canvas/transform/InputHandler.touch.test.ts",
-        "src/canvas/transform/InputHandler.ts",
-        "src/code/stores/workspace-panels-store.ts",
-        "src/editor/BottomToolbar.tsx",
-        "src/editor/ChromeIslands.tsx",
-        "src/editor/FloatingLeftPanelHost.tsx",
-        "src/editor/MobileFocusCoordinator.tsx",
-        "src/editor/ToolbarPanelHost.tsx",
-        "src/editor/e2e/mobile-focus.spec.ts",
-        "src/editor/mobile-focus-state.test.ts",
-        "src/editor/mobile-toolbar.test.ts",
-        "src/editor/mobile-workspace-presentation.test.ts",
-        "src/editor/mobile-workspace-presentation.ts"
-      ],
-      "resources": [
-        "canvas-touch-input",
-        "mobile-shell"
-      ],
-      "goal": "Continue protected Mobile Focus work with its existing owner.",
-      "acceptance": "Existing Mobile handoff and PR #123 acceptance criteria.",
-      "next_action": "User-authorized serial shared-file window: temporarily yield package-lock.json, CanvasMouseController.ts and CameraCommands.ts to the active consolidation claim. Preserve all remaining Mobile scope and owner; do not mutate yielded files until they are returned after consolidation merge/disposition.",
-      "base_sha": "64fa810a66fc54d73c2f46ed2e352a8c3a3e568d",
-      "state": "active",
-      "created_at": "2026-09-30T05:06:12.798659Z",
-      "updated_at": "2026-09-30T07:23:48.970Z",
-      "lease_until": "2026-09-30T19:23:48.970Z"
-    },
-    {
       "id": "field-consolidation-canvas-20260930",
       "owner": "01a0f1bf-3464-7b61-a3ac-f5d494bf7ef3",
       "branch": "field/consolidation-canvas-20260930",
@@ -366,6 +322,53 @@
       "evidence": "https://github.com/lrnolivia/loew-runner/pull/34; docs/field/reorganization/CANVAS_PROMOTION_RECEIPT_20260930.md. PR #135 merged; exact-head Registry, ten desktop Frame/Group tests, deployed real-project Canvas/Full/Focus/Float passed. Production build reports merge 854038a3e84f41cd590a4ad18b24fcd4127e2fba, deployment 2ae1aa2f-dbc1-4aed-b883-0951c9da32af. Original recovery branches/PRs retained; Mobile/device QA and deferred panels remain with existing Mobile lane; ordered Dashboard/Controls/Assets recovery remains in the reorganization assignment.",
       "work_accounted": true,
       "completed_at": "2026-09-30T10:20:20.264Z"
+    },
+    {
+      "id": "field-mobile-focus",
+      "owner": "existing-mobile-owner",
+      "branch": "field/mobile-focus-touch-camera-20260929",
+      "paths": [
+        ".github/workflows/mobile-focus-verify.yml",
+        "src/App.tsx",
+        "src/canvas/Canvas.tsx",
+        "src/canvas/hooks/useCanvasTouchInteraction.test.ts",
+        "src/canvas/hooks/useCanvasTouchInteraction.ts",
+        "src/canvas/hooks/useCanvasTransform.touch.test.ts",
+        "src/canvas/hooks/useCanvasTransform.ts",
+        "src/canvas/selection/ResizeHandles.tsx",
+        "src/canvas/selection/RotateHandle.tsx",
+        "src/canvas/selection/ScaleHandles.tsx",
+        "src/canvas/selection/SelectionBox.tsx",
+        "src/canvas/selection/useTouchHandleTargets.ts",
+        "src/canvas/transform/InputHandler.touch.test.ts",
+        "src/canvas/transform/InputHandler.ts",
+        "src/code/stores/workspace-panels-store.ts",
+        "src/editor/BottomToolbar.tsx",
+        "src/editor/ChromeIslands.tsx",
+        "src/editor/FloatingLeftPanelHost.tsx",
+        "src/editor/MobileFocusCoordinator.tsx",
+        "src/editor/ToolbarPanelHost.tsx",
+        "src/editor/e2e/mobile-focus.spec.ts",
+        "src/editor/mobile-focus-state.test.ts",
+        "src/editor/mobile-toolbar.test.ts",
+        "src/editor/mobile-workspace-presentation.test.ts",
+        "src/editor/mobile-workspace-presentation.ts",
+        "package-lock.json",
+        "src/canvas/mouse/CanvasMouseController.ts",
+        "src/canvas/transform/CameraCommands.ts"
+      ],
+      "resources": [
+        "canvas-touch-input",
+        "mobile-shell"
+      ],
+      "goal": "Continue protected Mobile Focus work with its existing owner.",
+      "acceptance": "Existing Mobile handoff and PR #123 acceptance criteria.",
+      "next_action": "Serial shared-file window closed: Canvas PR #135 merged as 854038a3e84f41cd590a4ad18b24fcd4127e2fba and claim completed. package-lock.json, CanvasMouseController.ts and CameraCommands.ts returned to existing Mobile owner. Reconcile Mobile against current main before touching them. Protected Mobile/device QA remains; connected-panel implementation stays deferred until explicit user resume.",
+      "base_sha": "64fa810a66fc54d73c2f46ed2e352a8c3a3e568d",
+      "state": "active",
+      "created_at": "2026-09-30T05:06:12.798659Z",
+      "updated_at": "2026-09-30T10:20:23.102Z",
+      "lease_until": "2026-09-30T22:20:23.102Z"
     }
   ]
 }
