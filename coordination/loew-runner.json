@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T12:12:03.688Z",
+  "updated_at": "2026-09-30T12:12:42.107Z",
   "legacy_branches": [
     "control",
     "main",
@@ -14,7 +14,30 @@
     "status/field-runner-authority-20260929",
     "test/relay-smoke"
   ],
-  "queue": [],
+  "queue": [
+    {
+      "id": "runner-visuals-media-lifecycle-20260930",
+      "owner": "normal-chat-runner-visuals-media-20260930",
+      "goal": "Implement the merged Runner Visuals policy: asynchronous screenshot/video ingestion, bounded storage, and post-main compact archival with working-blob purge.",
+      "acceptance": "Visuals accepts screenshots and MP4/WebM video; registration returns a durable evidence ID with queued/uploading state before byte completion; producer never has to poll for stored; background retry/reconciliation exposes failed state without silent loss; content hashing/dedup and configurable byte watermarks enforce storage bounds; exact merge-to-default-branch makes working blobs archive/purge eligible; compact archive bundles go to a dedicated configured visual evidence archive repository and preserve manifest, hashes, metadata, compressed review stills/keyframes, and only compact motion copies when justified; raw full-res media is not committed to Git; purge occurs only after archive commit/readback; dashboard renders upload/archive/expiry state and video playback; tests cover lifecycle, limits, merge eligibility, archive-before-delete, and failures.",
+      "next_action": "Wait for runner-human-qa-shell-20260930 to release the overlapping Visuals files, then claim this queued assignment without broadening scope.",
+      "paths": [
+        "src/visual-evidence.mjs",
+        "src/cloudflare-worker.mjs",
+        "dashboard/app.js",
+        "dashboard/index.html",
+        "dashboard/styles.css",
+        "test/cloudflare-worker.test.mjs"
+      ],
+      "resources": [
+        "runner-visual-evidence",
+        "runner-visual-media-ingest",
+        "runner-visual-archive"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T12:12:42.107Z"
+    }
+  ],
   "claims": [
     {
       "id": "loew-runner-coordination-bootstrap-20260930",
