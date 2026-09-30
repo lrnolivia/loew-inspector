@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T09:05:57.416Z",
+  "updated_at": "2026-09-30T09:13:07.329Z",
   "legacy_branches": [
     "control",
     "main",
@@ -30,10 +30,16 @@
       "acceptance": "Pull requests are gated by a live Runner claim; scheduled/manual audit and cleanup use the canonical loew-runner coordination engine; no product files are changed.",
       "next_action": "Create the claimed bootstrap branch, add the parameterized coordination workflow, open the draft PR, verify admission, then merge with squash.",
       "base_sha": "91fc982767e60afd7a86111a59d3fc57cdb37a0e",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T09:05:57.416Z",
-      "updated_at": "2026-09-30T09:05:57.416Z",
-      "lease_until": "2026-09-30T21:05:57.416Z"
+      "updated_at": "2026-09-30T09:13:07.329Z",
+      "lease_until": "2026-09-30T21:13:07.329Z",
+      "pr": 32,
+      "merged_head_sha": "a080dc5ad940dc01c43e84671750f811447b4394",
+      "merge_commit_sha": "0879fc6b0af942713b40781b7db7a92cec61da75",
+      "evidence": "https://github.com/lrnolivia/loew-runner/pull/32",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T09:13:07.329Z"
     }
   ]
 }
