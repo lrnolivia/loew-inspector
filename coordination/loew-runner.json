@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T12:46:45.545Z",
+  "updated_at": "2026-09-30T12:47:11.687Z",
   "legacy_branches": [
     "control",
     "main",
@@ -265,12 +265,12 @@
       ],
       "goal": "Turn Runner visual evidence into a human QA workspace with full-screen live preview and a floating Runner companion for targeted questions, notes, and verdicts.",
       "acceptance": "Live preview owns the screen when the captured environment is still reachable; Runner floats above it in a compact accessible panel with targeted QA questions, notes, looks-good/needs-work/not-sure responses, screenshot fallback when preview is dead, and technical evidence behind progressive disclosure. No existing Relay/Runner safety gates are weakened.",
-      "next_action": "Refine hierarchy: smaller secondary headings and restrained warm-light emphasis panels in Runner and the floating QA companion.",
+      "next_action": "Apply Runner-wide hierarchy correction: substantially reduce secondary/section title scale and introduce restrained warm-light emphasis panels/cards across the main dashboard and QA companion while preserving the native warm charcoal palette.",
       "base_sha": "5ce9f02fbdbe0004c3249934d0f642fb2ffa5bce",
       "state": "active",
       "created_at": "2026-09-30T11:52:04.751Z",
-      "updated_at": "2026-09-30T12:46:45.545Z",
-      "lease_until": "2026-10-01T00:46:45.545Z"
+      "updated_at": "2026-09-30T12:47:11.687Z",
+      "lease_until": "2026-10-01T00:47:11.687Z"
     }
   ]
 }
