@@ -128,12 +128,70 @@ async function listWorkerIds(env) {
     .sort();
 }
 
+export function buildProjectAuthority(config, projectFile, coordinationFile) {
+  const project = projectFile?.value;
+  if (!project || project.id !== config.id || project.managed !== true) return null;
+
+  const coordination = coordinationFile?.value;
+  const coordinationEnabled =
+    project.coordination?.status === "enabled" &&
+    project.coordination?.record &&
+    coordination?.project === project.id;
+
+  return {
+    kind: "managed_project",
+    source: `projects/${project.id}.json`,
+    project: project.id,
+    repository: project.repository,
+    default_branch: project.default_branch,
+    automation_target_role: "observation_only",
+    write_authority: {
+      mode: coordinationEnabled ? "managed_coordination" : "read_only",
+      enabled: Boolean(coordinationEnabled),
+      direct_default_branch_writes: false,
+      branch_prefixes: project.implementation?.branch_prefixes ?? [],
+      draft_pr_required: Boolean(project.implementation?.draft_pr_required)
+    },
+    coordination: coordinationEnabled
+      ? {
+          status: "enabled",
+          record: project.coordination.record,
+          record_sha: coordinationFile.sha,
+          max_active_branches: project.coordination.max_active_branches ?? null,
+          active_or_held_claims: Array.isArray(coordination.claims)
+            ? coordination.claims.filter((claim) => ["active", "held"].includes(claim.state)).length
+            : null,
+          queued_assignments: Array.isArray(coordination.queue) ? coordination.queue.length : null
+        }
+      : {
+          status: project.coordination?.status ?? "unavailable",
+          record: project.coordination?.record ?? null,
+          record_sha: null,
+          max_active_branches: project.coordination?.max_active_branches ?? null,
+          active_or_held_claims: null,
+          queued_assignments: null
+        }
+  };
+}
+
+async function projectAuthorityView(env, id, config) {
+  try {
+    const projectFile = await readJsonFile(env, `projects/${id}.json`);
+    const recordPath = projectFile.value?.coordination?.record;
+    const coordinationFile = recordPath ? await readJsonFile(env, recordPath) : null;
+    return buildProjectAuthority(config, projectFile, coordinationFile);
+  } catch {
+    return null;
+  }
+}
+
 async function workerView(env, id) {
   const [{ value: config }, { value: runtime }] = await Promise.all([
     readJsonFile(env, `workers/${id}.json`),
     readJsonFile(env, `state/${id}.json`)
   ]);
-  return { ...config, runtime };
+  const authority = await projectAuthorityView(env, id, config);
+  return { ...config, target_role: "automation_observation", authority, runtime };
 }
 
 async function workersView(env) {
