@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T16:23:06.256Z",
+  "updated_at": "2026-09-30T16:29:47.831Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -796,7 +796,8 @@
         "docs/WORK_COORDINATION.md",
         "docs/ACCESS_CONTROL.md",
         "docs/ARCHITECTURE.md",
-        "docs/STATE.md"
+        "docs/STATE.md",
+        "features/night-shift/"
       ],
       "resources": [
         "relay-legacy-retirement",
@@ -805,12 +806,12 @@
       ],
       "goal": "Retire legacy product/runtime identities while preserving Git provenance and recovery ownership.",
       "acceptance": "Canonical Relay only; exact-head checks and production readback; recoverable original repository retained as archive.",
-      "next_action": "Canonicalize active coordination/Access guidance; label previous architecture/state snapshots historical, preserve original recovery inventory and queue owners.",
+      "next_action": "Present existing blocked automatic state truthfully and explain unavailable model credits in plain language; finish exact-head retirement.",
       "base_sha": "04d806fbdb08143f9b751fb091eadfcf695b7910",
       "state": "active",
       "created_at": "2026-09-30T16:19:25.311Z",
-      "updated_at": "2026-09-30T16:23:06.256Z",
-      "lease_until": "2026-10-01T04:23:06.256Z"
+      "updated_at": "2026-09-30T16:29:47.831Z",
+      "lease_until": "2026-10-01T04:29:47.831Z"
     }
   ],
   "migrated_from": "loew-inspector"
