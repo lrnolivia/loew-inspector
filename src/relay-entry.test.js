@@ -21,7 +21,7 @@ test("Relay extension publishes source inventory and exact-head PR action", () =
   assert.equal(branch._meta.existing, true);
   assert.ok(names.includes("relay_runner_cleanup"));
   assert.ok(names.includes("relay_cloud_upload_version"));
-  assert.equal(RELAY_EXTENSION_VERSION, "1.6.0");
+  assert.equal(RELAY_EXTENSION_VERSION, "1.7.0");
 });
 
 test("server validation rejects unsupported and cross-action PR fields", () => {
