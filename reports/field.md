@@ -226,3 +226,32 @@ Stage 0 is explicitly **not complete**. Do not declare it complete from Inspecto
 4. run the full required validation suite before more Media implementation
 5. if validation passes, perform exact-head Runner QA for the toolbar-owned Media flow only as needed
 6. treat future Media provider/persistence/provenance work as separate follow-up tranches rather than silently broadening this closeout
+
+
+## 2026-09-29 — field mobile Focus editor
+
+- workstream: `field mobile Focus editor`; sole implementation worker, no delegated agents
+- PR: https://github.com/lrnolivia/field/pull/123 (draft)
+- branch: `field/mobile-focus-touch-camera-20260929`
+- exact head: `0a4c2cef6ce9a76dcc9011466956266bd00feb73`; base main `64fa810a66fc54d73c2f46ed2e352a8c3a3e568d`
+- implementation completion commit: `14c7a5e45498598bf234ddba15527833c537cbac`
+- immutable smoke editor: https://4e5857c1.field-preview.loew.fi/builder/noauth
+- matching Canvas: https://4e5857c1.canvas-preview.loew.fi/
+- deployment: `4e5857c1-7ecc-4e78-96d2-77274283a51c`
+
+### implemented
+
+Shared editor models support one-finger selection/object drag/empty pan, second-finger cancellation and two-finger camera pan/pinch, deliberate long-hold marquee/context menu, portrait compact toolbar/sheets, landscape overlays, larger coarse-pointer transform targets, keyboard-aware geometry and text Done action. Mobile Focus is an ephemeral override; saved desktop workspace preference survives rotation and returning to desktop. Existing source, undo, selection, commands and text editor remain canonical.
+
+### evidence and remaining gates
+
+- Exact-head mobile CI https://github.com/lrnolivia/field/actions/runs/36648927955: npm ci, 27 focused tests, all three builds PASS. Rotation/desktop preference Chromium test PASS. Native camera test FAIL: expected +30px Y, observed -83.12px. Initial camera settling is a possible harness cause, not established; do not weaken assertion or claim gesture runtime verified.
+- Exact Preview preflight https://github.com/lrnolivia/loew-inspector/actions/runs/36649066030 PASS: browser reaches /work/noauth and Canvas first paint succeeds against matching immutable origin; build endpoint reports exact head. HTTP smoke probe 404 and aborted asset requests are recorded in evidence, not concealed.
+- Existing Media CI and Workers build/deployment PASS. Local npm 10.9.8 installation PASS after adding only a missing optional peer lock entry.
+- Full tests/lint remain non-green; baseline lint has same 113 errors, and the text-focus-camera test failure also reproduces on untouched prior head. User confirms another worker owns shared checks; leave that repair scope to them.
+- User is taking physical-phone validation. Required manual coverage: selection/drag/second-finger arbitration, pan/pinch, resize/rotate, long-hold gestures, panel mutual dismissal, portrait/landscape rotation, iOS software keyboard/Done/visibility, undo/save/reopen/source/Preview alignment.
+- Keep PR draft until relevant runtime gates pass; do not mark all mobile validation complete. No deployment/routing/Access architecture changes were made.
+
+### resume
+
+Refresh main/branch/ownership first. Resume from the committed head above. Read updated PR for complete implementation scope. Investigate the failing native camera assertion before adding more product UI; separately record physical iOS results supplied by user. Preserve the exact-SHA/immutable-Preview evidence requirement and keep unrelated shared-check repair with its current owner.
