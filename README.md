@@ -138,3 +138,6 @@ Never commit their values.
 Canonical source repository: `lrnolivia/relay`.
 
 Batch 1 deliberately leaves the deployed Worker named `loew-inspector` and Runner control authority bound to `lrnolivia/loew-runner`. Those are temporary migration bindings, not canonical product/source identities. Later gated batches move state/runtime and retire the old identities.
+
+
+Runner admission now resolves this renamed repository directly through the updated control-plane registration.
