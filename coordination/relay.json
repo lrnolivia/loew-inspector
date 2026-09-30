@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T16:29:47.831Z",
+  "updated_at": "2026-09-30T16:37:54.711Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -115,8 +115,11 @@
         "runner-visual-evidence",
         "suite-shared-shell"
       ],
-      "state": "queued",
-      "created_at": "2026-09-30T13:26:02.774Z"
+      "state": "superseded",
+      "created_at": "2026-09-30T13:26:02.774Z",
+      "superseded_by": "relay-consolidation-b6-retirement-20260930",
+      "reason": "Shared Relay Review shipped in B4; standalone Inspector product retired in B6.",
+      "merge_commit_sha": "1c77c7dd303804b2f8cf70809cfafd0577215276"
     },
     {
       "id": "relay-consolidation-b1-identity-bridge-20260930",
@@ -140,8 +143,10 @@
         "relay-mcp-continuity",
         "relay-source-identity"
       ],
-      "state": "claimed",
-      "created_at": "2026-09-30T14:06:55.351Z"
+      "state": "completed",
+      "created_at": "2026-09-30T14:06:55.351Z",
+      "merge_commit_sha": "2ddc8fdbbda871ad91e563fc657bcc4c382fd236",
+      "completed_by": "relay-consolidation-b1-identity-bridge-20260930"
     },
     {
       "id": "relay-consolidation-b2-monorepo-import-20260930",
@@ -163,8 +168,10 @@
         "relay-runner-subsystem",
         "relay-inspector-subsystem"
       ],
-      "state": "claimed",
-      "created_at": "2026-09-30T14:07:00.575Z"
+      "state": "completed",
+      "created_at": "2026-09-30T14:07:00.575Z",
+      "merge_commit_sha": "fc3eb586931d33c887d5e2b58c63a8e002fecf33",
+      "completed_by": "codex-relay-consolidation-b2-20260930"
     },
     {
       "id": "relay-consolidation-b3-control-state-20260930",
@@ -190,8 +197,10 @@
         "runner-human-qa",
         "runner-visual-evidence"
       ],
-      "state": "claimed",
-      "created_at": "2026-09-30T14:07:05.927Z"
+      "state": "completed",
+      "created_at": "2026-09-30T14:07:05.927Z",
+      "merge_commit_sha": "3aa487b9e86371f38fb3bf483f995a2885105e91",
+      "completed_by": "relay-consolidation-b3-control-state-20260930"
     },
     {
       "id": "relay-consolidation-b4-unified-ui-20260930",
@@ -215,8 +224,10 @@
         "relay-night-shift-view",
         "suite-shared-shell"
       ],
-      "state": "claimed",
-      "created_at": "2026-09-30T14:07:11.227Z"
+      "state": "completed",
+      "created_at": "2026-09-30T14:07:11.227Z",
+      "merge_commit_sha": "633612837f1b4f5312320d64852683d3aed8611f",
+      "completed_by": "relay-consolidation-b4-unified-ui-20260930"
     },
     {
       "id": "relay-consolidation-b5-cloudflare-cutover-20260930",
@@ -238,8 +249,10 @@
         "relay-access",
         "relay-release-orchestration"
       ],
-      "state": "claimed",
-      "created_at": "2026-09-30T14:07:17.597Z"
+      "state": "completed",
+      "created_at": "2026-09-30T14:07:17.597Z",
+      "merge_commit_sha": "ea8fd9b7f63e9c132908e901f2949ba19fdb98b5",
+      "completed_by": "relay-consolidation-b5-cloudflare-cutover-20260930"
     },
     {
       "id": "relay-consolidation-b6-retirement-20260930",
@@ -588,7 +601,14 @@
       "state": "active",
       "created_at": "2026-09-30T13:57:50.279Z",
       "updated_at": "2026-09-30T14:11:12.570Z",
-      "lease_until": "2026-10-01T02:11:12.570Z"
+      "lease_until": "2026-10-01T02:11:12.570Z",
+      "delivery": {
+        "state": "delivered",
+        "assignment": "relay-consolidation-b6-retirement-20260930",
+        "pr": 46,
+        "merge_commit_sha": "1c77c7dd303804b2f8cf70809cfafd0577215276",
+        "note": "All six consolidation batches delivered; original ownership and branch retained."
+      }
     },
     {
       "id": "relay-consolidation-b1-identity-bridge-20260930",
