@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T11:39:55.123Z",
+  "updated_at": "2026-09-30T11:40:16.059Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -183,7 +183,7 @@
         "toolbar-media-card-parity",
         "inspector-shell-header"
       ],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-09-30T11:39:55.123Z"
     }
   ],
@@ -432,6 +432,36 @@
       "created_at": "2026-09-30T10:21:02.409Z",
       "updated_at": "2026-09-30T11:39:37.843Z",
       "lease_until": "2026-09-30T23:39:37.843Z"
+    },
+    {
+      "id": "field-ui-hotfix-20260930",
+      "owner": "chatgpt-field-hotfix-20260930",
+      "branch": "field/ui-hotfix-20260930",
+      "paths": [
+        "src/editor/ui/PaintPickerShell.tsx",
+        "src/editor/ui/ColorPicker.tsx",
+        "src/editor/controls/ColorInput.tsx",
+        "src/editor/ui/paint-picker-universal-contract.test.ts",
+        "src/editor/media/MediaActionCard.tsx",
+        "src/editor/media/MediaLauncher.tsx",
+        "src/editor/media/media-toolbar-launcher.test.ts",
+        "src/editor/BottomToolbar.tsx",
+        "src/editor/toolbar-mixed-menu.structure.test.ts",
+        "src/editor/header/RightHeader.tsx"
+      ],
+      "resources": [
+        "paint-picker-compactness",
+        "toolbar-media-card-parity",
+        "inspector-shell-header"
+      ],
+      "goal": "Hotfix the three user-verified UI regressions on current field main: make the universal PaintPicker genuinely compact while preserving working nested color launchers; make toolbar popout cards and Media creation cards use one exact shared card treatment with no descriptions; restore the Inspector avatar-to-Publish header bar as explicit shell chrome.",
+      "acceptance": "PaintPicker is materially smaller in width and vertical density and nested ColorInput launchers remain nested floating ToolPopups; toolbar mixed cards and Media creation cards render through the same shared component and Media descriptions are removed; RightHeader has an explicit bg-panel shell surface and separator so the avatar/zoom/theme/preview/publish bar is visibly part of the Inspector; contract tests assert all three; verify exact-head visual state through Relay before promotion.",
+      "next_action": "Create the branch at current main, apply only the three UI hotfixes, run targeted checks, and capture Relay visual QA evidence.",
+      "base_sha": "854038a3e84f41cd590a4ad18b24fcd4127e2fba",
+      "state": "active",
+      "created_at": "2026-09-30T11:40:16.059Z",
+      "updated_at": "2026-09-30T11:40:16.059Z",
+      "lease_until": "2026-09-30T23:40:16.059Z"
     }
   ]
 }
