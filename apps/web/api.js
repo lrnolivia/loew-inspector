@@ -23,7 +23,7 @@ export function validateUiRequest(args) {
   const path = args.path;
   if (typeof path !== "string" || path.length > 1024 || !path.startsWith("/api/") || /[\\#%]/.test(path) || path.includes("..")) throw new Error("Invalid UI path");
   const url = new URL(path, "https://relay.loew.fi");
-  const reads = /^\/api\/(?:health|progress\\/[a-zA-Z0-9._-]+|projects(?:\/[a-zA-Z0-9._-]+(?:\/icon)?)?|workers|visual(?:\/runs(?:\/run_[a-zA-Z0-9._-]{8,128}\/review)?|\/compare|\/vis_[a-zA-Z0-9-]{8,128}(?:\/(?:image|qa|live))?)?)$/;
+  const reads = /^\/api\/(?:health|progress\/[a-zA-Z0-9._-]+|projects(?:\/[a-zA-Z0-9._-]+(?:\/icon)?)?|workers|visual(?:\/runs(?:\/run_[a-zA-Z0-9._-]{8,128}\/review)?|\/compare|\/vis_[a-zA-Z0-9-]{8,128}(?:\/(?:image|qa|live))?)?)$/;
   const writes = /^\/api\/(?:workers\/[a-zA-Z0-9._-]+\/(?:toggle|settings|run|doctor|repair)|visual\/vis_[a-zA-Z0-9-]{8,128}\/qa)$/;
   if (method === "GET" ? !reads.test(url.pathname) : method !== "POST" || !writes.test(url.pathname)) throw new Error("UI route or method is not allowed");
   if (method === "GET" && args.body !== undefined) throw new Error("GET cannot contain a body");
