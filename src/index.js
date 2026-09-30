@@ -6,7 +6,7 @@ import { evidenceEngines, planEvidenceRequest, normalizeBrowserCapacityError } f
 import { ingestExternalEvidence, upsertEvidenceRun } from "./external-evidence.js";
 import { getRecipe, listRecipes, saveRecipeFromSession } from "./recipe-store.js";
 
-const VERSION = "0.7.0";
+const VERSION = "0.8.0";
 const EVIDENCE_CONTEXT_SCHEMA = {
   type: "object",
   properties: {
@@ -34,6 +34,166 @@ const SAFE_HEADERS = [
   "cross-origin-embedder-policy", "origin-agent-cluster"
 ];
 const TEXT_TYPES = /^(text\/|application\/(?:json|xml|javascript|xhtml\+xml|[^;]+\+(?:json|xml)))/i;
+
+
+const RELAY_GITHUB_API = "https://api.github.com";
+const RELAY_GITHUB_OWNER = "lrnolivia";
+const RUNNER_ORIGIN = "https://runner.loew.fi";
+const GITHUB_API_VERSION = "2022-11-28";
+const LEGACY_TOOL_ALIASES = Object.freeze({
+  fetch_loew_url: "relay_verify_fetch_url",
+  browser_screenshot: "relay_verify_browser_screenshot",
+  browser_snapshot: "relay_verify_browser_snapshot",
+  browser_open: "relay_verify_browser_open",
+  browser_interact: "relay_verify_browser_interact",
+  browser_capture: "relay_verify_browser_capture",
+  browser_recipe: "relay_verify_browser_recipe",
+  browser_recipes: "relay_verify_browser_recipes",
+  evidence_plan: "relay_verify_evidence_plan",
+  evidence_engines: "relay_verify_evidence_engines",
+  recipe_list: "relay_verify_recipe_list",
+  recipe_from_session: "relay_verify_recipe_from_session",
+  browser_close: "relay_verify_browser_close"
+});
+
+function relayToolName(name) {
+  return LEGACY_TOOL_ALIASES[name] || name;
+}
+
+function validateIdentifier(value, label, pattern = /^[A-Za-z0-9._-]+$/) {
+  if (typeof value !== "string" || value.length < 1 || value.length > 128 || !pattern.test(value)) {
+    throw new Error(`Invalid ${label}`);
+  }
+  return value;
+}
+
+function validateBranch(value, label = "branch") {
+  if (
+    typeof value !== "string" ||
+    value.length < 1 ||
+    value.length > 240 ||
+    !/^[A-Za-z0-9._\/-]+$/.test(value) ||
+    value.includes("..") ||
+    value.startsWith("/") ||
+    value.endsWith("/") ||
+    value.endsWith(".lock")
+  ) {
+    throw new Error(`Invalid ${label}`);
+  }
+  return value;
+}
+
+function encodeRepositoryPath(value) {
+  if (typeof value !== "string" || value.length < 1 || value.length > 1024) throw new Error("Invalid repository path");
+  const parts = value.split("/");
+  if (parts.some(part => !part || part === "." || part === "..")) throw new Error("Invalid repository path");
+  return parts.map(encodeURIComponent).join("/");
+}
+
+function encodeBase64Utf8(value) {
+  const bytes = new TextEncoder().encode(String(value));
+  let binary = "";
+  for (let offset = 0; offset < bytes.length; offset += 0x8000) {
+    binary += String.fromCharCode(...bytes.subarray(offset, offset + 0x8000));
+  }
+  return btoa(binary);
+}
+
+function decodeBase64Utf8(value) {
+  const binary = atob(String(value || "").replace(/\s+/g, ""));
+  const bytes = new Uint8Array(binary.length);
+  for (let index = 0; index < binary.length; index += 1) bytes[index] = binary.charCodeAt(index);
+  return new TextDecoder().decode(bytes);
+}
+
+function configuredSourceOwner(env, requested) {
+  const configured = String(env?.RELAY_GITHUB_OWNER || RELAY_GITHUB_OWNER);
+  validateIdentifier(configured, "configured GitHub owner");
+  if (requested && String(requested).toLowerCase() !== configured.toLowerCase()) {
+    throw new Error(`relay.SOURCE is restricted to GitHub owner ${configured}`);
+  }
+  return configured;
+}
+
+async function githubApiRequest(env, path, options = {}) {
+  const method = options.method || "GET";
+  const write = !["GET", "HEAD"].includes(method);
+  const token = env?.RELAY_GITHUB_TOKEN;
+  if (write && !token) {
+    throw new Error("relay.SOURCE writes are not configured: RELAY_GITHUB_TOKEN is missing");
+  }
+  if (typeof path !== "string" || !path.startsWith("/") || path.includes("://")) throw new Error("Invalid GitHub API path");
+
+  const headers = {
+    Accept: "application/vnd.github+json",
+    "X-GitHub-Api-Version": GITHUB_API_VERSION,
+    "User-Agent": "relay-by-loew-fi"
+  };
+  if (token) headers.Authorization = `Bearer ${token}`;
+  if (options.body !== undefined) headers["Content-Type"] = "application/json";
+
+  const response = await fetch(RELAY_GITHUB_API + path, {
+    method,
+    headers,
+    body: options.body === undefined ? undefined : JSON.stringify(options.body),
+    signal: AbortSignal.timeout(TARGET_TIMEOUT_MS)
+  });
+  const text = await response.text();
+  let body = null;
+  if (text) {
+    try { body = JSON.parse(text); }
+    catch { body = { message: text.slice(0, 1000) }; }
+  }
+  if (!response.ok) {
+    const error = new Error(body?.message || `GitHub request failed with ${response.status}`);
+    error.status = response.status;
+    throw error;
+  }
+  return body;
+}
+
+async function runnerApiRequest(accessJwt, path, options = {}) {
+  const method = options.method || "GET";
+  if (typeof path !== "string" || !path.startsWith("/api/") || path.includes("://")) {
+    throw new Error("Invalid Runner API path");
+  }
+  const target = new URL(path, RUNNER_ORIGIN);
+  if (target.origin !== RUNNER_ORIGIN) throw new Error("Invalid Runner target");
+
+  const headers = {
+    "Cf-Access-Token": accessJwt,
+    Accept: "application/json"
+  };
+  if (options.body !== undefined) headers["Content-Type"] = "application/json";
+
+  const response = await fetch(target.toString(), {
+    method,
+    redirect: "manual",
+    headers,
+    body: options.body === undefined ? undefined : JSON.stringify(options.body),
+    signal: AbortSignal.timeout(TARGET_TIMEOUT_MS)
+  });
+  const text = await response.text();
+  let body = null;
+  if (text) {
+    try { body = JSON.parse(text); }
+    catch { body = { message: text.slice(0, 1000) }; }
+  }
+  if (!response.ok) {
+    const error = new Error(body?.error || body?.message || `Runner request failed with ${response.status}`);
+    error.status = response.status;
+    throw error;
+  }
+  return body;
+}
+
+function relayResult(id, result) {
+  return rpc(id, {
+    content: [{ type: "text", text: JSON.stringify(result) }],
+    structuredContent: result
+  });
+}
+
 
 let jwksCache = { expires: 0, keys: [] };
 
@@ -241,7 +401,7 @@ async function mcp(request, access, env) {
     return rpc(id, {
       protocolVersion: "2025-03-26",
       capabilities: { tools: {} },
-      serverInfo: { name: "loew-inspector", version: VERSION }
+      serverInfo: { name: "relay", version: VERSION }
     });
   }
 
@@ -250,8 +410,167 @@ async function mcp(request, access, env) {
   if (message.method === "tools/list") {
     const securitySchemes = [{ type: "oauth2", scopes: [] }];
     const tools = [
+
         {
-          name: "fetch_loew_url",
+          name: "relay_control_status",
+          title: "Relay control-plane status",
+          description: "Describe relay.CONTROL namespaces, backend readiness, and the currently configured authenticated transports.",
+          inputSchema: { type: "object", properties: {}, additionalProperties: false },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
+        },
+        {
+          name: "relay_runner_workers",
+          title: "List Runner workers",
+          description: "Read the live Runner worker registry through relay.RUNNER.",
+          inputSchema: { type: "object", properties: {}, additionalProperties: false },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
+        },
+        {
+          name: "relay_runner_action",
+          title: "Run a bounded Runner action",
+          description: "Execute one supported Runner worker action through relay.RUNNER. Actions are limited to the deployed Runner API.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              worker_id: { type: "string", minLength: 1, maxLength: 128 },
+              action: { type: "string", enum: ["toggle", "settings", "run", "doctor", "repair"] },
+              payload: { type: "object" }
+            },
+            required: ["worker_id", "action"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: false, destructiveHint: true, openWorldHint: false }
+        },
+        {
+          name: "relay_source_repo",
+          title: "Read a GitHub repository",
+          description: "Read repository metadata through relay.SOURCE. The owner is restricted to the configured Relay GitHub owner.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              owner: { type: "string" },
+              repo: { type: "string" }
+            },
+            required: ["repo"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true }
+        },
+        {
+          name: "relay_source_file",
+          title: "Read a GitHub file",
+          description: "Read UTF-8 repository file content through relay.SOURCE.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              owner: { type: "string" },
+              repo: { type: "string" },
+              path: { type: "string" },
+              ref: { type: "string" }
+            },
+            required: ["repo", "path"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true }
+        },
+        {
+          name: "relay_source_pull_request",
+          title: "Read a GitHub pull request",
+          description: "Read one pull request through relay.SOURCE.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              owner: { type: "string" },
+              repo: { type: "string" },
+              number: { type: "integer", minimum: 1, maximum: 1000000 }
+            },
+            required: ["repo", "number"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true }
+        },
+        {
+          name: "relay_source_checks",
+          title: "Read GitHub checks",
+          description: "Read check runs for a GitHub commit or branch through relay.SOURCE.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              owner: { type: "string" },
+              repo: { type: "string" },
+              ref: { type: "string" }
+            },
+            required: ["repo", "ref"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: true }
+        },
+        {
+          name: "relay_source_create_branch",
+          title: "Create a GitHub branch",
+          description: "Create a branch through relay.SOURCE. Requires RELAY_GITHUB_TOKEN on the Relay Worker.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              owner: { type: "string" },
+              repo: { type: "string" },
+              branch: { type: "string" },
+              base: { type: "string", default: "main" }
+            },
+            required: ["repo", "branch"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true }
+        },
+        {
+          name: "relay_source_update_file",
+          title: "Create or update a GitHub file",
+          description: "Create or replace one UTF-8 file on a non-default branch through relay.SOURCE. Requires RELAY_GITHUB_TOKEN.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              owner: { type: "string" },
+              repo: { type: "string" },
+              path: { type: "string" },
+              branch: { type: "string" },
+              content: { type: "string" },
+              message: { type: "string" },
+              expected_sha: { type: "string" }
+            },
+            required: ["repo", "path", "branch", "content", "message"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: false, destructiveHint: true, openWorldHint: true }
+        },
+        {
+          name: "relay_source_open_pull_request",
+          title: "Open a GitHub pull request",
+          description: "Open a pull request through relay.SOURCE. Requires RELAY_GITHUB_TOKEN.",
+          inputSchema: {
+            type: "object",
+            properties: {
+              owner: { type: "string" },
+              repo: { type: "string" },
+              head: { type: "string" },
+              base: { type: "string", default: "main" },
+              title: { type: "string" },
+              body: { type: "string" },
+              draft: { type: "boolean", default: true }
+            },
+            required: ["repo", "head", "title"],
+            additionalProperties: false
+          },
+          annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: true }
+        },
+        {
+          name: "relay_cloud_status",
+          title: "Relay Cloud control status",
+          description: "Report whether relay.CLOUD has first-party Cloudflare credentials configured. No cloud mutation is exposed until credentials are present and bounded tools are implemented.",
+          inputSchema: { type: "object", properties: {}, additionalProperties: false },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
+        },
+        {
+          name: "relay_verify_fetch_url",
           title: "Fetch a protected loew.fi page",
           description: "Read an HTTPS page on loew.fi or a loew.fi subdomain through the authenticated inspector. Redirects are revalidated and text responses are bounded.",
           inputSchema: {
@@ -266,7 +585,7 @@ async function mcp(request, access, env) {
           annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
         },
         {
-          name: "browser_screenshot",
+          name: "relay_verify_browser_screenshot",
           title: "Capture loew.fi visual evidence",
           description: "Render an HTTPS loew.fi page in Cloudflare Browser Run, persist the PNG in inspector evidence storage, and return a compact evidence record.",
           inputSchema: {
@@ -293,7 +612,7 @@ async function mcp(request, access, env) {
           annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
         },
         {
-          name: "browser_snapshot",
+          name: "relay_verify_browser_snapshot",
           title: "Capture loew.fi browser snapshot",
           description: "Render an HTTPS loew.fi page and persist screenshot evidence while returning HTTP status plus rendered DOM and accessibility summaries.",
           inputSchema: {
@@ -319,7 +638,7 @@ async function mcp(request, access, env) {
           annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
         },
         {
-          name: "browser_open",
+          name: "relay_verify_browser_open",
           title: "Open a loew.fi browser session",
           description: "Open a persistent Browser Run session on an HTTPS loew.fi target and return opaque session and target ids for controlled follow-up interactions.",
           inputSchema: {
@@ -344,7 +663,7 @@ async function mcp(request, access, env) {
           annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false }
         },
         {
-          name: "browser_interact",
+          name: "relay_verify_browser_interact",
           title: "Interact with a loew.fi browser session",
           description: "Perform one bounded semantic action in an existing loew.fi Browser Run session. No arbitrary JavaScript is accepted.",
           inputSchema: {
@@ -375,7 +694,7 @@ async function mcp(request, access, env) {
           annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false }
         },
         {
-          name: "browser_capture",
+          name: "relay_verify_browser_capture",
           title: "Capture an interactive browser session",
           description: "Capture the current page in an existing Browser Run session and persist PNG evidence with the session interaction trace.",
           inputSchema: {
@@ -393,7 +712,7 @@ async function mcp(request, access, env) {
           annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
         },
         {
-          name: "browser_recipe",
+          name: "relay_verify_browser_recipe",
           title: "Run a field visual QA recipe",
           description: "Run a bounded named visual-QA recipe against the canonical real-project /qa/work/{projectId} route, persist evidence, then close the browser session.",
           inputSchema: {
@@ -410,14 +729,14 @@ async function mcp(request, access, env) {
           annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false }
         },
         {
-          name: "browser_recipes",
+          name: "relay_verify_browser_recipes",
           title: "List field visual QA recipes",
           description: "List the built-in bounded real-project field visual-QA recipes.",
           inputSchema: { type: "object", properties: {}, additionalProperties: false },
           annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
         },
         {
-          name: "evidence_plan",
+          name: "relay_verify_evidence_plan",
           title: "Plan a loew evidence check",
           description: "Choose the cheapest capable evidence engine deterministically. Known recipes route to GitHub Chromium; exploratory sessions reserve Browser Run.",
           inputSchema: {
@@ -433,21 +752,21 @@ async function mcp(request, access, env) {
           annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
         },
         {
-          name: "evidence_engines",
+          name: "relay_verify_evidence_engines",
           title: "List loew evidence engines",
           description: "List the evidence engines and their deterministic capabilities.",
           inputSchema: { type: "object", properties: {}, additionalProperties: false },
           annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
         },
         {
-          name: "recipe_list",
+          name: "relay_verify_recipe_list",
           title: "List loew visual QA recipes",
           description: "List versioned built-in and saved deterministic evidence recipes.",
           inputSchema: { type: "object", properties: {}, additionalProperties: false },
           annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false }
         },
         {
-          name: "recipe_from_session",
+          name: "relay_verify_recipe_from_session",
           title: "Save a browser trace as a deterministic QA recipe",
           description: "Compile replayable bounded interactions from an Inspector browser session into a versioned recipe stored in private evidence R2.",
           inputSchema: {
@@ -464,7 +783,7 @@ async function mcp(request, access, env) {
           annotations: { readOnlyHint: false, destructiveHint: false, openWorldHint: false }
         },
         {
-          name: "browser_close",
+          name: "relay_verify_browser_close",
           title: "Close a loew.fi browser session",
           description: "Close a Browser Run session and mark its persisted session record closed.",
           inputSchema: {
@@ -487,10 +806,183 @@ async function mcp(request, access, env) {
 
   if (message.method === "tools/call") {
     try {
-      const name = message.params?.name;
+      const rawName = message.params?.name;
+      const name = relayToolName(rawName);
       const args = message.params?.arguments || {};
 
-      if (name === "fetch_loew_url") {
+      if (name === "relay_control_status") {
+        return relayResult(id, {
+          ok: true,
+          service: "relay",
+          version: VERSION,
+          architecture: {
+            control: "relay.CONTROL",
+            runner: "relay.RUNNER",
+            source: "relay.SOURCE",
+            cloud: "relay.CLOUD",
+            verify: "relay.VERIFY"
+          },
+          capabilities: {
+            runner_read: true,
+            runner_write: true,
+            source_read: true,
+            source_write: Boolean(env?.RELAY_GITHUB_TOKEN),
+            cloud_control: Boolean(env?.CLOUDFLARE_API_TOKEN && env?.CLOUDFLARE_ACCOUNT_ID),
+            verify: true
+          },
+          source_owner: String(env?.RELAY_GITHUB_OWNER || RELAY_GITHUB_OWNER),
+          legacy_verify_aliases: Object.keys(LEGACY_TOOL_ALIASES).length
+        });
+      }
+
+      if (name === "relay_runner_workers") {
+        return relayResult(id, {
+          ok: true,
+          workers: await runnerApiRequest(access.token, "/api/workers")
+        });
+      }
+
+      if (name === "relay_runner_action") {
+        const workerId = validateIdentifier(args.worker_id, "Runner worker id");
+        const action = args.action;
+        if (!["toggle", "settings", "run", "doctor", "repair"].includes(action)) throw new Error("Unsupported Runner action");
+        const result = await runnerApiRequest(
+          access.token,
+          `/api/workers/${encodeURIComponent(workerId)}/${action}`,
+          { method: "POST", body: args.payload || {} }
+        );
+        return relayResult(id, { ok: true, worker_id: workerId, action, result });
+      }
+
+      if (name === "relay_source_repo") {
+        const owner = configuredSourceOwner(env, args.owner);
+        const repo = validateIdentifier(args.repo, "repository");
+        const result = await githubApiRequest(env, `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`);
+        return relayResult(id, { ok: true, repository: result });
+      }
+
+      if (name === "relay_source_file") {
+        const owner = configuredSourceOwner(env, args.owner);
+        const repo = validateIdentifier(args.repo, "repository");
+        const path = encodeRepositoryPath(args.path);
+        const ref = args.ref ? validateBranch(args.ref, "ref") : "main";
+        const result = await githubApiRequest(
+          env,
+          `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${path}?ref=${encodeURIComponent(ref)}`
+        );
+        if (!result || result.type !== "file" || typeof result.content !== "string") throw new Error("GitHub path is not a readable file");
+        return relayResult(id, {
+          ok: true,
+          repository: `${owner}/${repo}`,
+          path: result.path,
+          ref,
+          sha: result.sha,
+          size: result.size,
+          content: result.encoding === "base64" ? decodeBase64Utf8(result.content) : result.content
+        });
+      }
+
+      if (name === "relay_source_pull_request") {
+        const owner = configuredSourceOwner(env, args.owner);
+        const repo = validateIdentifier(args.repo, "repository");
+        const number = Number(args.number);
+        if (!Number.isInteger(number) || number < 1 || number > 1000000) throw new Error("Invalid pull request number");
+        const result = await githubApiRequest(
+          env,
+          `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/pulls/${number}`
+        );
+        return relayResult(id, { ok: true, pull_request: result });
+      }
+
+      if (name === "relay_source_checks") {
+        const owner = configuredSourceOwner(env, args.owner);
+        const repo = validateIdentifier(args.repo, "repository");
+        const ref = validateBranch(args.ref, "ref");
+        const result = await githubApiRequest(
+          env,
+          `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/commits/${encodeURIComponent(ref)}/check-runs`
+        );
+        return relayResult(id, { ok: true, checks: result });
+      }
+
+      if (name === "relay_source_create_branch") {
+        const owner = configuredSourceOwner(env, args.owner);
+        const repo = validateIdentifier(args.repo, "repository");
+        const branch = validateBranch(args.branch);
+        const base = validateBranch(args.base || "main", "base branch");
+        const baseRef = await githubApiRequest(
+          env,
+          `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/git/ref/heads/${base.split("/").map(encodeURIComponent).join("/")}`
+        );
+        const created = await githubApiRequest(
+          env,
+          `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/git/refs`,
+          { method: "POST", body: { ref: `refs/heads/${branch}`, sha: baseRef?.object?.sha } }
+        );
+        return relayResult(id, { ok: true, branch: created });
+      }
+
+      if (name === "relay_source_update_file") {
+        const owner = configuredSourceOwner(env, args.owner);
+        const repo = validateIdentifier(args.repo, "repository");
+        const path = encodeRepositoryPath(args.path);
+        const branch = validateBranch(args.branch);
+        const repository = await githubApiRequest(
+          env,
+          `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`
+        );
+        if (branch === repository?.default_branch) throw new Error("relay.SOURCE refuses direct default-branch file writes");
+        if (typeof args.content !== "string" || args.content.length > 500000) throw new Error("Invalid file content");
+        if (typeof args.message !== "string" || args.message.length < 1 || args.message.length > 500) throw new Error("Invalid commit message");
+        const body = {
+          message: args.message,
+          content: encodeBase64Utf8(args.content),
+          branch
+        };
+        if (args.expected_sha) body.sha = validateIdentifier(args.expected_sha, "expected blob sha", /^[a-f0-9]{40}$/i);
+        const result = await githubApiRequest(
+          env,
+          `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/contents/${path}`,
+          { method: "PUT", body }
+        );
+        return relayResult(id, { ok: true, result });
+      }
+
+      if (name === "relay_source_open_pull_request") {
+        const owner = configuredSourceOwner(env, args.owner);
+        const repo = validateIdentifier(args.repo, "repository");
+        const head = validateBranch(args.head, "head branch");
+        const base = validateBranch(args.base || "main", "base branch");
+        if (typeof args.title !== "string" || args.title.length < 1 || args.title.length > 256) throw new Error("Invalid pull request title");
+        const result = await githubApiRequest(
+          env,
+          `/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}/pulls`,
+          {
+            method: "POST",
+            body: {
+              head,
+              base,
+              title: args.title,
+              body: typeof args.body === "string" ? args.body : "",
+              draft: args.draft !== false
+            }
+          }
+        );
+        return relayResult(id, { ok: true, pull_request: result });
+      }
+
+      if (name === "relay_cloud_status") {
+        return relayResult(id, {
+          ok: true,
+          namespace: "relay.CLOUD",
+          configured: Boolean(env?.CLOUDFLARE_API_TOKEN && env?.CLOUDFLARE_ACCOUNT_ID),
+          account_configured: Boolean(env?.CLOUDFLARE_ACCOUNT_ID),
+          token_configured: Boolean(env?.CLOUDFLARE_API_TOKEN),
+          mutation_tools_exposed: false
+        });
+      }
+
+      if (name === "relay_verify_fetch_url") {
         const target = validateTarget(args.url);
         const method = args.method || "GET";
         const result = await fetchTarget(target.toString(), method, access.token);
@@ -500,7 +992,7 @@ async function mcp(request, access, env) {
         });
       }
 
-      if (name === "browser_screenshot") {
+      if (name === "relay_verify_browser_screenshot") {
         const target = validateTarget(args.url);
         const options = browserRequestOptions({
           url: target,
@@ -531,7 +1023,7 @@ async function mcp(request, access, env) {
         });
       }
 
-      if (name === "browser_snapshot") {
+      if (name === "relay_verify_browser_snapshot") {
         const target = validateTarget(args.url);
         const probe = await fetchTarget(target.toString(), "GET", access.token);
         const options = browserRequestOptions({
@@ -574,7 +1066,7 @@ async function mcp(request, access, env) {
         });
       }
 
-      if (name === "browser_open") {
+      if (name === "relay_verify_browser_open") {
         const target = validateTarget(args.url);
         const result = await openBrowserSession(env.BROWSER, env.EVIDENCE, {
           url: target,
@@ -586,7 +1078,7 @@ async function mcp(request, access, env) {
         return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
       }
 
-      if (name === "browser_interact") {
+      if (name === "relay_verify_browser_interact") {
         const result = await interactBrowserSession(env.BROWSER, env.EVIDENCE, {
           sessionId: args.session_id,
           targetId: args.target_id,
@@ -602,7 +1094,7 @@ async function mcp(request, access, env) {
         return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
       }
 
-      if (name === "browser_capture") {
+      if (name === "relay_verify_browser_capture") {
         const result = await captureBrowserSession(env.BROWSER, env.EVIDENCE, {
           sessionId: args.session_id,
           targetId: args.target_id,
@@ -614,7 +1106,7 @@ async function mcp(request, access, env) {
         return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
       }
 
-      if (name === "browser_recipe") {
+      if (name === "relay_verify_browser_recipe") {
         const target = validateTarget(args.url);
         const result = await runBrowserRecipe(env.BROWSER, env.EVIDENCE, {
           recipe: args.recipe,
@@ -626,27 +1118,27 @@ async function mcp(request, access, env) {
         return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
       }
 
-      if (name === "browser_recipes") {
+      if (name === "relay_verify_browser_recipes") {
         const result = { ok: true, recipes: listBrowserRecipes() };
         return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
       }
 
-      if (name === "evidence_plan") {
+      if (name === "relay_verify_evidence_plan") {
         const result = planEvidenceRequest(args);
         return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
       }
 
-      if (name === "evidence_engines") {
+      if (name === "relay_verify_evidence_engines") {
         const result = { ok: true, engines: evidenceEngines() };
         return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
       }
 
-      if (name === "recipe_list") {
+      if (name === "relay_verify_recipe_list") {
         const result = { ok: true, recipes: await listRecipes(env.EVIDENCE) };
         return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
       }
 
-      if (name === "recipe_from_session") {
+      if (name === "relay_verify_recipe_from_session") {
         const recipe = await saveRecipeFromSession(env.EVIDENCE, {
           sessionId: args.session_id,
           recipeId: args.recipe_id,
@@ -657,7 +1149,7 @@ async function mcp(request, access, env) {
         return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
       }
 
-      if (name === "browser_close") {
+      if (name === "relay_verify_browser_close") {
         const result = await closeBrowserSession(env.BROWSER, env.EVIDENCE, args.session_id);
         return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result });
       }
@@ -672,7 +1164,7 @@ async function mcp(request, access, env) {
         });
       }
       return rpc(id, {
-        content: [{ type: "text", text: error instanceof Error ? error.message : "Inspector action failed" }],
+        content: [{ type: "text", text: error instanceof Error ? error.message : "Relay action failed" }],
         isError: true
       });
     }
@@ -688,7 +1180,8 @@ export default {
     if (url.pathname === "/health" && request.method === "GET") {
       return json({
         ok: true,
-        service: "loew-inspector",
+        service: "relay",
+        runtime_verify: "loew-inspector",
         version: VERSION,
         auth: "cloudflare-managed-oauth",
         downstream_auth: "linked-app-token",
@@ -744,7 +1237,8 @@ export default {
     if (url.pathname === "/" && request.method === "GET") {
       return json({
         ok: true,
-        service: "loew-inspector",
+        service: "relay",
+        runtime_verify: "loew-inspector",
         version: VERSION,
         authenticated: true
       });
