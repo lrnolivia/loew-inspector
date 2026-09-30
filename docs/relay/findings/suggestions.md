@@ -150,6 +150,14 @@ Prefer separate assignments when work crosses classes. A design task should not 
 **Impact:** useful discoveries can sit inert, get duplicated into new assignments, or be rediscovered later even when an existing assignment could absorb them cleanly.  
 **Suggestion:** make ledger review part of Relay's planning/coordination skill. For relevant open findings, classify `adopt`, `defer`, `reject`, or `supersede`; route adopted findings into the best existing assignment through canonical `amend` when safe, otherwise deliberately create/link a successor. Update the RFS entry with assignment linkage/status. The ledger is a planning input, not an automatic backlog.
 
+
+### RFS-020 — active work needs low-overhead durable resume checkpoints
+**Status:** adopted by Relay 1.9 `relay-1.9-skills-runtime-creative-20260930`  
+**Class:** architecture  
+**Observed:** long-running Codex/Claude/ChatGPT workers can exhaust usage, disconnect, or lose chat continuity after making substantial progress. Existing heartbeats and source state prove pieces of activity but do not always provide one compact, recent handoff that another worker/chat can immediately resume from.  
+**Impact:** recovery depends too much on reconstructing intent from chat history, branch diffs, PR state, screenshots, or stale `next_action` prose; manual status-writing also slows the worker doing the actual work.  
+**Suggestion:** add a Relay-managed checkpoint/resume subsystem. Generate compact durable checkpoints passively from canonical evidence already available to Relay: assignment identity, branch/base/head, changed paths, recent commits, PR/check/deployment state, current stage, last successful action, blocker/wait state, next action, open QA/review context, relevant ledger links, and exact evidence/preview identities. Trigger checkpoints on meaningful state transitions and at a bounded active-work cadence, dedupe unchanged state, and avoid requiring the model to author long handoffs. Expose the latest valid checkpoint through a simple resume/read contract and contextual UI. Planning/coordination skills should use checkpoints first when resuming interrupted work.
+
 ## How to use this file
 
 When a new build starts or an existing assignment materially evolves:
