@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T11:16:56.777Z",
+  "updated_at": "2026-09-30T11:20:33.166Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -164,27 +164,6 @@
       "completed_at": "2026-09-30T10:55:48.593Z"
     },
     {
-      "id": "relay-source-lifecycle-20260930",
-      "owner": "normal-chat-relay-batch1c-20260930",
-      "branch": "loew-inspector/relay-source-lifecycle",
-      "paths": [
-        "src/index.js",
-        "src/source.js",
-        "src/source.test.js"
-      ],
-      "resources": [
-        "relay-source-lifecycle"
-      ],
-      "goal": "Add bounded source inventory and exact-head PR lifecycle primitives, including branch creation from an exact commit SHA.",
-      "acceptance": "Relay can inspect branch/head inventory; create a managed branch from an exact SHA; update PR metadata/ready state and merge only when the expected head still matches, without bypassing required checks; tests and Runner admission pass.",
-      "next_action": "Inspect the current source adapter and MCP routing, implement the smallest shared exact-head primitives, then open a draft PR and verify checks.",
-      "base_sha": "4d18720d757abb8d44d14173154ce74cc6ca6214",
-      "state": "active",
-      "created_at": "2026-09-30T11:13:11.855Z",
-      "updated_at": "2026-09-30T11:13:11.855Z",
-      "lease_until": "2026-09-30T23:13:11.855Z"
-    },
-    {
       "id": "relay-mcp-normal-chat-invariant-20260930",
       "owner": "normal-chat-relay-mcp-surface-20260930",
       "branch": "loew-inspector/mcp-normal-chat-invariant",
@@ -202,6 +181,30 @@
       "created_at": "2026-09-30T11:16:56.777Z",
       "updated_at": "2026-09-30T11:16:56.777Z",
       "lease_until": "2026-09-30T23:16:56.777Z"
+    },
+    {
+      "id": "relay-source-lifecycle-20260930",
+      "owner": "normal-chat-relay-batch1c-20260930",
+      "branch": "loew-inspector/relay-source-lifecycle",
+      "paths": [
+        "src/source.js",
+        "src/source-lifecycle.js",
+        "src/source-lifecycle.test.js",
+        "src/relay-entry.js",
+        "src/relay-entry.test.js",
+        "wrangler.jsonc"
+      ],
+      "resources": [
+        "relay-source-lifecycle"
+      ],
+      "goal": "Add bounded source inventory and exact-head PR lifecycle primitives, including branch creation from an exact commit SHA.",
+      "acceptance": "Relay can inspect branch/head inventory; create a managed branch from an exact SHA; update PR metadata/ready state and merge only when the expected head still matches, without bypassing required checks; tests and Runner admission pass.",
+      "next_action": "Implement the source lifecycle as a small authenticated MCP extension wrapper, preserving index.js and changing only the Worker entrypoint.",
+      "base_sha": "4d18720d757abb8d44d14173154ce74cc6ca6214",
+      "state": "active",
+      "created_at": "2026-09-30T11:13:11.855Z",
+      "updated_at": "2026-09-30T11:20:33.166Z",
+      "lease_until": "2026-09-30T23:20:33.166Z"
     }
   ]
 }
