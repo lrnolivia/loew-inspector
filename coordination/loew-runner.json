@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T13:41:26.690Z",
+  "updated_at": "2026-09-30T13:43:35.376Z",
   "legacy_branches": [
     "control",
     "main",
@@ -409,26 +409,49 @@
       "branch": "loew-runner/night-shift-rebrand",
       "paths": [
         "projects/loew-runner.json",
+        "projects/night-shift.json",
+        "coordination/loew-runner.json",
+        "coordination/night-shift.json",
         "package.json",
         "wrangler.jsonc",
         "README.md",
         "AGENTS.md",
-        "docs/NIGHT_SHIFT_PRODUCT.md",
+        "LOEW_CHAT_BIBLE.md",
         "contracts/manifest.json",
-        "test/contracts.test.mjs"
+        "night-shift/",
+        "dashboard/",
+        "src/",
+        "scripts/coordinate.mjs",
+        "scripts/deploy-cloudflare.sh",
+        ".github/workflows/coordination.yml",
+        ".github/workflows/runner-coordination.yml",
+        ".github/workflows/runner.yml",
+        "docs/NIGHT_SHIFT_PRODUCT.md",
+        "docs/ARCHITECTURE.md",
+        "docs/STATE.md",
+        "docs/WORK_COORDINATION.md",
+        "docs/RUNNER_3_0_HUMAN_CONTROL_PLANE.md",
+        "assignments/runner-3-human-control-plane.json",
+        "test/"
       ],
       "resources": [
         "night-shift-product-identity",
+        "night-shift-project-id",
+        "night-shift-control-repository",
+        "night-shift-runtime",
+        "runner-operator-ui",
+        "runner-project-overview",
+        "runner-human-qa",
         "suite-product-architecture"
       ],
       "goal": "Rebrand the human-facing loew runner product to lowercase `night shift` while preserving durable technical ids/repository/coordination compatibility and positioning it inside lowercase `dash`.",
       "acceptance": "User-facing product identity is `night shift`; project registry display name is updated; README/bootstrap/package metadata explain `night shift` and `dash`; durable ids such as loew-runner repo/project/coordination record remain stable unless a separate migration is proven safe; Cloudflare config adds/uses the new night shift web identity without removing compatibility paths; existing current UI work is not overwritten; contract tests cover the identity migration; all names are lowercase in product copy.",
-      "next_action": "Create the exact-main branch, update non-UI identity/config/docs/tests, open a draft PR and validate. Keep operator-redesign files untouched.",
+      "next_action": "User authorized full canonical migration: preserve the merged operator UI, implement compatibility bridge, then cut repository/project id/runtime from loew-runner to night-shift and verify Relay/Cloudflare before retiring old canonical names.",
       "base_sha": "9d488cb5ddbff8b4649892d4c39ad334b322a8ad",
       "state": "active",
       "created_at": "2026-09-30T13:37:08.427Z",
-      "updated_at": "2026-09-30T13:37:08.427Z",
-      "lease_until": "2026-10-01T01:37:08.427Z"
+      "updated_at": "2026-09-30T13:43:35.376Z",
+      "lease_until": "2026-10-01T01:43:35.376Z"
     }
   ]
 }
