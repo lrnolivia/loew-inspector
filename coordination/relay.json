@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T22:21:51.446Z",
+  "updated_at": "2026-09-30T22:22:34.180Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -1203,10 +1203,16 @@
       "acceptance": "Add docs/relay/findings/suggestions.md as a running list with dated findings, impact, suggested remedy, status and recommended task class. Seed it with concrete issues observed through Relay 1.7/1.7.5 publishing and coordination, including queue lifecycle residue, stale/held reservations, exact-source config drift risk, MCP payload-size limits, source-auth/tool-authority ambiguity, server-derived base_sha clarity, Cloud authorization layering, product-source-vs-coordination-main identity, external wait visibility, umbrella/absorbed work reconciliation, verification anomalies, and separating design vs architecture vs maintenance work to reduce collisions. This is docs-only maintenance; no product/runtime code changes.",
       "next_action": "Write and merge the docs-only findings ledger. Do not deploy a Worker for this follow-up.",
       "base_sha": "2f9cea031943d21eaa45b1e3c64a4786c3be584d",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T22:20:16.090Z",
-      "updated_at": "2026-09-30T22:20:16.090Z",
-      "lease_until": "2026-10-01T10:20:16.090Z"
+      "updated_at": "2026-09-30T22:22:34.180Z",
+      "lease_until": "2026-10-01T10:22:34.180Z",
+      "pr": 53,
+      "merged_head_sha": "82ee0d954fb1182423607dd1f191ac19ffaa380d",
+      "merge_commit_sha": "f51edc5767a007278025dba54fd139aa2dd207ce",
+      "evidence": "Docs-only maintenance follow-up completed. Exact branch head 82ee0d954fb1182423607dd1f191ac19ffaa380d passed Runner coordination admission; PR #53 squash-merged to f51edc5767a007278025dba54fd139aa2dd207ce. Added docs/relay/findings/suggestions.md with 17 seeded publishing/coordination findings, including lifecycle queue residue, held/superseded branch-budget pressure, umbrella/absorbed assignment reconciliation, exact-source config drift, observed-progress/external wait semantics, server-derived base_sha and SOURCE-vs-RUNNER authority clarity, project-scoped Cloud authorization, connector authority mismatch, MCP payload ceilings, product-vs-control SHA identity, verification anomalies, release closure audit, and design/architecture/maintenance task separation. No Worker deployment was performed because this follow-up is docs-only.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T22:22:34.180Z"
     },
     {
       "id": "relay-1.8-contextual-ui-20260930",
