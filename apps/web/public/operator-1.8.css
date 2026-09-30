@@ -92,3 +92,21 @@ button:hover .tool-mark,.project-list-item:hover .project-icon img { transform:t
   .operator-brand img { animation:none !important; }
   .progress-row,.tool-mark,.project-icon img,.utility-button { transition:none !important; transform:none !important; }
 }
+
+/* Final 1.8 control contrast: colorful controls are dark enough for white labels. */
+.operator-nav button.active,
+.project-list-item.active,
+.review-filters button.active {
+  background:color-mix(in srgb,var(--color-orient) 66%,#12353a 34%) !important;
+  color:#fff !important;
+}
+.operator-button.primary,
+.attention-action button,
+.qa-save-button {
+  background:color-mix(in srgb,var(--color-act) 72%,#3b241d 28%) !important;
+  color:#fff !important;
+}
+.operator-button.secondary {
+  background:color-mix(in srgb,var(--color-raised) 84%,var(--color-act) 16%);
+  color:var(--color-text-primary);
+}
