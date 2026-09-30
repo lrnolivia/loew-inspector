@@ -2,15 +2,17 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 
-const currentBible = fs.readFileSync(new URL("../LOEW_CHAT_BIBLE_CURRENT.md", import.meta.url), "utf8");
+const tombstone = fs.readFileSync(new URL("../LOEW_CHAT_BIBLE_CURRENT.md", import.meta.url), "utf8");
 const bible = fs.readFileSync(new URL("../LOEW_CHAT_BIBLE.md", import.meta.url), "utf8");
 const manifest = JSON.parse(fs.readFileSync(new URL("../contracts/manifest.json", import.meta.url), "utf8"));
 const nightShift = fs.readFileSync(new URL("../night-shift/CONTRACT.md", import.meta.url), "utf8");
 const blockers = fs.readFileSync(new URL("../night-shift/BLOCKER_POLICY.md", import.meta.url), "utf8");
 
-test("universal manifest points to the current Bible", () => {
-  assert.equal(manifest.contract, "LOEW_CHAT_BIBLE_CURRENT.md");
-  assert.equal(manifest.version, "2026-09-29.2");
+test("universal manifest points to the single Bible", () => {
+  assert.equal(manifest.contract, "LOEW_CHAT_BIBLE.md");
+  assert.equal(manifest.version, "2026-09-30.1");
+  assert.equal(manifest.single_bible, true);
+  assert.ok(manifest.retired_contracts.includes("LOEW_CHAT_BIBLE_CURRENT.md"));
   assert.equal(manifest.watchdog.identical_failure_attempts, 2);
   assert.equal(manifest.qa_authority.runner_first, true);
   assert.equal(manifest.qa_authority.project_qa_is_overlay, true);
@@ -48,10 +50,12 @@ test("Bible keeps QA loop escape and danger-zone law", () => {
     assert.ok(lower.includes(phrase), "missing QA invariant: " + phrase);
   }
   assert.ok(bible.includes("DANGER ZONE — HUMAN QA REQUIRED"));
-  assert.ok(currentBible.toLowerCase().includes("runner-first qa is law"));
-  assert.ok(currentBible.includes("lrnolivia/field"));
-  assert.ok(currentBible.includes("/qa/work/<projectId>"));
-  assert.ok(currentBible.includes("/builder/noauth"));
+  assert.ok(bible.toLowerCase().includes("project qa documents are overlays only"));
+  assert.ok(bible.includes("lrnolivia/field"));
+  assert.ok(bible.includes("/qa/work/<projectId>"));
+  assert.ok(bible.includes("/builder/noauth"));
+  assert.ok(tombstone.toLowerCase().includes("status: **tombstone**"));
+  assert.ok(tombstone.includes("LOEW_CHAT_BIBLE.md"));
 });
 
 test("Night Shift policies inherit the universal law", () => {
