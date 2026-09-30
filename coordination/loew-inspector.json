@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T14:39:45.880Z",
+  "updated_at": "2026-09-30T14:42:05.827Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -636,7 +636,7 @@
     },
     {
       "id": "relay-consolidation-b2-monorepo-import-20260930",
-      "owner": "relay-consolidation-b2-monorepo-import-20260930",
+      "owner": "codex-relay-consolidation-b2-20260930",
       "branch": "loew-inspector/relay-b2-monorepo-import",
       "paths": [
         "apps/",
@@ -656,12 +656,12 @@
       ],
       "goal": "Batch 2: import loew-runner code and history into lrnolivia/relay and establish the monorepo layout where runner and inspector are internal subsystems and night shift is a Relay feature.",
       "acceptance": "Relay contains an implementation-ready monorepo layout with MCP/web apps plus runner and inspector subsystem packages; loew-runner source and meaningful Git history/provenance are preserved in the consolidation rather than copied as anonymous files; existing Inspector/Relay history remains intact from the repository rename; package/workspace/test/build boundaries are explicit; night shift is represented as a Relay feature/view, not another product; no production routing or old repository deletion occurs yet; exact source and history import are independently verifiable before Batch 3.",
-      "next_action": "Create the exact-main Batch 2 branch; inventory loew-runner source and commit history; import runner/inspector subsystem packages plus provenance manifest; establish workspace/app boundaries without production routing changes.",
+      "next_action": "Codex owns Batch 2 from the clean exact-main branch loew-inspector/relay-b2-monorepo-import at 2ddc8fdbbda871ad91e563fc657bcc4c382fd236. Preserve loew-runner history/provenance during monorepo import, establish apps/packages/features workspace boundaries, do not move control state or production routing yet, and finish Batch 2 with exact-head tests/readback before Batch 3.",
       "base_sha": "2ddc8fdbbda871ad91e563fc657bcc4c382fd236",
       "state": "active",
       "created_at": "2026-09-30T14:39:45.880Z",
-      "updated_at": "2026-09-30T14:39:45.880Z",
-      "lease_until": "2026-10-01T02:39:45.880Z"
+      "updated_at": "2026-09-30T14:42:05.827Z",
+      "lease_until": "2026-10-01T02:42:05.827Z"
     }
   ]
 }
