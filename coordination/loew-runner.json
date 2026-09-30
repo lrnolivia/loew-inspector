@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T13:27:08.179Z",
+  "updated_at": "2026-09-30T13:27:14.001Z",
   "legacy_branches": [
     "control",
     "main",
@@ -76,6 +76,27 @@
       ],
       "state": "queued",
       "created_at": "2026-09-30T13:27:08.179Z"
+    },
+    {
+      "id": "suite-dashboard-shell-20260930",
+      "owner": "suite-dashboard-shell-20260930",
+      "goal": "Evolve Runner's web dashboard into the canonical shared suite shell so runner.loew.fi, relay.loew.fi and inspector.loew.fi behave like one integrated utility across subdomains.",
+      "acceptance": "The shared shell provides consistent brand chrome, navigation, project/context continuity, status affordances and deep-link conventions across Runner/Relay/Inspector while making the active product obvious; navigation between subdomains feels seamless and preserves project/operation/evidence context where possible; each product consumes its own authoritative state rather than duplicating stores; Runner remains focused on orchestration/project work, Relay on operations/control, Inspector on visual review/verification; once Inspector visual review is live, Runner's visual-review UI becomes a handoff/deep-link rather than a competing full review surface; the shell consumes the approved suite brand/IA contract and the current Runner operator redesign rather than replacing either with another dashboard concept.",
+      "next_action": "Wait for runner-operator-redesign-20260930 to land and for the suite brand/shell contract to be approved. Then implement the shared shell in Runner first and publish the integration contract consumed by Relay and Inspector web dashboards.",
+      "paths": [
+        "dashboard/index.html",
+        "dashboard/styles.css",
+        "dashboard/suite-shell/",
+        "src/cloudflare-worker.mjs",
+        "test/cloudflare-worker.test.mjs"
+      ],
+      "resources": [
+        "suite-shared-shell",
+        "runner-operator-ui",
+        "runner-project-overview"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T13:27:14.001Z"
     }
   ],
   "claims": [
