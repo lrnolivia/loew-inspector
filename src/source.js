@@ -128,6 +128,26 @@ export async function githubApiRequest(env, path, options = {}) {
   return requestGitHub(path, null, options);
 }
 
+export async function githubGraphqlRequest(env, owner, repo, query, variables = {}) {
+  let token = null;
+  if (appConfigured(env)) {
+    token = await installationToken(env, owner, repo);
+  } else if (legacyTokenConfigured(env)) {
+    token = env.RELAY_GITHUB_TOKEN;
+  } else {
+    throw new Error("relay.SOURCE writes require a Relay GitHub App installation");
+  }
+
+  const result = await requestGitHub("/graphql", token, {
+    method: "POST",
+    body: { query, variables }
+  });
+  if (Array.isArray(result?.errors) && result.errors.length) {
+    throw new Error(result.errors[0]?.message || "GitHub GraphQL request failed");
+  }
+  return result?.data || {};
+}
+
 export async function commitSourceFiles(env, { owner, repo, branch, files, message, expectedHeadSha }) {
   if (!Array.isArray(files) || files.length < 1 || files.length > 20) {
     throw new Error("relay.SOURCE commits require 1-20 files");
