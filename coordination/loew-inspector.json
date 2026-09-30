@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T10:54:10.394Z",
+  "updated_at": "2026-09-30T10:55:48.593Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -152,10 +152,16 @@
       "acceptance": "Native registered-project reads and CAS coordination transitions preserve reservation, exact scopes and verified completion; meaningful adapter and shared-policy tests pass.",
       "next_action": "Add bounded authenticated runtime smoke for native project/preflight and same-owner heartbeat, then merge and verify deployment.",
       "base_sha": "5648b9147c63f68d34517c31d903a0f8464c5670",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T10:37:51.534Z",
-      "updated_at": "2026-09-30T10:54:10.394Z",
-      "lease_until": "2026-09-30T22:54:10.394Z"
+      "updated_at": "2026-09-30T10:55:48.593Z",
+      "lease_until": "2026-09-30T22:55:48.593Z",
+      "pr": 32,
+      "merged_head_sha": "c6f898256f47ece27cfc5efba8deda551ae13852",
+      "merge_commit_sha": "4d18720d757abb8d44d14173154ce74cc6ca6214",
+      "evidence": "https://github.com/lrnolivia/loew-runner/blob/loew-runner/relay-batch-ledger/docs/loew-inspector/RELAY_BATCH_LEDGER.md; exact tested/merged/deployed identities and smoke run 36705197743 recorded. Remaining roadmap capabilities explicitly unclaimed.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T10:55:48.593Z"
     }
   ]
 }
