@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T13:56:21.616Z",
+  "updated_at": "2026-09-30T13:58:22.613Z",
   "legacy_branches": [
     "control",
     "main",
@@ -405,7 +405,7 @@
     },
     {
       "id": "night-shift-product-rebrand-20260930",
-      "owner": "normal-chat-night-shift-rebrand-20260930",
+      "owner": "normal-chat-relay-ui-rebrand-20260930",
       "branch": "loew-runner/night-shift-rebrand",
       "paths": [
         "projects/loew-runner.json",
@@ -446,12 +446,12 @@
       ],
       "goal": "Rebrand the human-facing loew runner product to lowercase `night shift` while preserving durable technical ids/repository/coordination compatibility and positioning it inside lowercase `dash`.",
       "acceptance": "User-facing product identity is `night shift`; project registry display name is updated; README/bootstrap/package metadata explain `night shift` and `dash`; durable ids such as loew-runner repo/project/coordination record remain stable unless a separate migration is proven safe; Cloudflare config adds/uses the new night shift web identity without removing compatibility paths; existing current UI work is not overwritten; contract tests cover the identity migration; all names are lowercase in product copy.",
-      "next_action": "Superseded by the user-approved Relay consolidation. Do not continue the standalone night shift product/repository/runtime rename. Preserve the branch as migration evidence only; night shift becomes a Relay feature/view. Canonical target is one Relay repo/web/MCP app containing runner and inspector subsystems.",
+      "next_action": "Standalone night shift branding is superseded. Successor should only rebrand the current human-facing dashboard as Relay, leave Runner and Inspector as subsystem/internal names, and avoid repository/runtime/domain migration work.",
       "base_sha": "9d488cb5ddbff8b4649892d4c39ad334b322a8ad",
       "state": "held",
       "created_at": "2026-09-30T13:37:08.427Z",
-      "updated_at": "2026-09-30T13:56:21.616Z",
-      "lease_until": "2026-10-01T01:56:21.616Z"
+      "updated_at": "2026-09-30T13:58:22.613Z",
+      "lease_until": "2026-10-01T01:58:22.613Z"
     }
   ]
 }
