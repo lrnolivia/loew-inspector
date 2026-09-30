@@ -3,9 +3,24 @@
   "name": "loew-inspector-gateway",
   "main": "src/index.js",
   "compatibility_date": "2026-09-29",
-  "compatibility_flags": ["nodejs_compat"],
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
   "workers_dev": true,
-  "routes": [{ "pattern": "inspector.loew.fi", "custom_domain": true }],
+  "routes": [
+    {
+      "pattern": "relay.loew.fi",
+      "custom_domain": true
+    },
+    {
+      "pattern": "relay-inspector.loew.fi",
+      "custom_domain": true
+    },
+    {
+      "pattern": "inspector.loew.fi",
+      "custom_domain": true
+    }
+  ],
   "browser": {
     "binding": "BROWSER",
     "remote": true
