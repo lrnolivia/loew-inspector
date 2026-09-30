@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T10:13:51.394Z",
+  "updated_at": "2026-09-30T10:23:43.618Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -119,12 +119,18 @@
       ],
       "goal": "Rename existing Cloudflare Worker to loew-inspector with source and runtime allowlist aligned; preserve credentials and custom domains.",
       "acceptance": "Same Worker identity and secrets retained; custom domains work; source config and allowlist use loew-inspector; tests and live SOURCE/CLOUD/Builds pass.",
-      "next_action": "Inspect all name references, update exact claimed configuration/default/test paths, verify checks before coordinated Cloudflare rename.",
+      "next_action": "Completed: Inspector PR #31 tests/admission passed and merged; same Worker renamed in place; version 34 exact merged source deployed; SOURCE/CLOUD/Builds and protected Runner JSON verified. Operational receipt is Runner PR #35.",
       "base_sha": "53c0bf0556d881969c2701be28de4021f9fcbde9",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T10:13:51.394Z",
-      "updated_at": "2026-09-30T10:13:51.394Z",
-      "lease_until": "2026-09-30T22:13:51.394Z"
+      "updated_at": "2026-09-30T10:23:43.618Z",
+      "lease_until": "2026-09-30T22:13:51.394Z",
+      "pr": 31,
+      "merged_head_sha": "84639addf0e40ed67c77207c2dcc935b54a4a2f9",
+      "merge_commit_sha": "5648b9147c63f68d34517c31d903a0f8464c5670",
+      "evidence": "https://github.com/lrnolivia/loew-runner/pull/35",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T10:23:43.618Z"
     }
   ]
 }
