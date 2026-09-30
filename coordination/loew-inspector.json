@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T13:04:56.038Z",
+  "updated_at": "2026-09-30T13:25:45.579Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -24,7 +24,33 @@
     "runner/universal-authority",
     "shared-repair-baseline-gate"
   ],
-  "queue": [],
+  "queue": [
+    {
+      "id": "relay-operation-framework-20260930",
+      "owner": "relay-operation-framework-20260930",
+      "goal": "Turn Relay's production primitives into a durable resumable operation framework so agents invoke policy-defined workflows instead of manually conducting every GitHub, Cloudflare, Runner and QA step.",
+      "acceptance": "Every substantial workflow can create a stable operation_id with persisted stage/state, exact source/head/PR/check/merge/version/deployment/runtime identities, timestamps, retry/reconciliation history, blocker/waiting-for-human state and recovery/rollback state; reconnecting agents can resume from the durable receipt without reconstructing chat history; server-side recipes cover at least ship-change, publish-worker, qa-then-merge and rollback-release; ambiguous mutations reconcile by readback before retry; event/webhook updates can advance operation state without chat polling; release policy supports bounded canary/verify/promote/rollback semantics without protection bypass; operation status/history is queryable for UI; tool-surface growth stays minimal by preferring recipes/resources/contracts over one tool per step.",
+      "next_action": "Define and test the operation/receipt schema and transition invariants first. Reuse existing Relay source/cloud/verify primitives; do not fork their auth or safety rules.",
+      "paths": [
+        "src/operations.js",
+        "src/operation-receipts.js",
+        "src/operation-recipes.js",
+        "src/operation-events.js",
+        "src/release-policy.js",
+        "src/relay-entry.js",
+        "src/operations.test.js",
+        "src/operation-receipts.test.js",
+        "src/operation-recipes.test.js"
+      ],
+      "resources": [
+        "relay-operation-framework",
+        "relay-publication-receipts",
+        "relay-release-orchestration"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T13:25:45.579Z"
+    }
+  ],
   "claims": [
     {
       "id": "loew-inspector-coordination-bootstrap-20260930",
