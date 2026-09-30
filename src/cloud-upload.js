@@ -92,7 +92,13 @@ function parseWrangler(content, script) {
   if (!Array.isArray(flags) || flags.some(flag => typeof flag !== "string" || flag.length > 100)) {
     throw new Error("Invalid Wrangler compatibility_flags");
   }
-  return { main, compatibility_date: config.compatibility_date, compatibility_flags: flags };
+  const vars = config.vars || {};
+  const allowed = new Set(["CLOUDFLARE_ACCOUNT_ID", "RELAY_CLOUDFLARE_WRITE_SCRIPTS", "RELAY_RUNNER_CONTROL_REPOSITORY", "RELAY_CANONICAL_REPOSITORY", "RELAY_GITHUB_APP_ID"]);
+  if (!vars || typeof vars !== "object" || Array.isArray(vars)) throw new Error("Invalid Wrangler vars");
+  for (const [name, value] of Object.entries(vars)) {
+    if (!allowed.has(name) || typeof value !== "string" || value.length > 2048) throw new Error("Unsupported non-secret Wrangler variable: " + name);
+  }
+  return { main, compatibility_date: config.compatibility_date, compatibility_flags: flags, vars };
 }
 
 function decodeFile(file, path) {
@@ -247,12 +253,19 @@ export async function uploadCloudSourceVersion(args, env, deps = {}) {
   }
 
   const settings = await cloud(`/accounts/${account}/workers/scripts/${encodeURIComponent(args.script)}/settings`);
+  for (const name of Object.keys(wrangler.vars)) {
+    const existing = settings.bindings?.find(binding => binding.name === name);
+    if (existing && existing.type !== "plain_text") throw new Error("Committed variable conflicts with protected binding: " + name);
+  }
   const metadata = {
     main_module: wrangler.main,
     compatibility_date: wrangler.compatibility_date,
     compatibility_flags: wrangler.compatibility_flags,
     usage_model: "standard",
-    bindings: bindingNames(settings).map(name => ({ name, type: "inherit" })),
+    bindings: [
+      ...bindingNames(settings).filter(name => !(name in wrangler.vars)).map(name => ({ name, type: "inherit" })),
+      ...Object.entries(wrangler.vars).map(([name, text]) => ({ name, type: "plain_text", text }))
+    ],
     annotations: {
       "workers/commit_sha": args.commit_sha,
       "workers/message": (args.message || `Relay exact source upload ${args.commit_sha.slice(0, 12)}`).slice(0, 1000),

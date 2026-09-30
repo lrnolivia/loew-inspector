@@ -27,7 +27,8 @@ function fixture(options = {}) {
       name: options.wranglerName || script,
       main: "src/relay-entry.js",
       compatibility_date: "2026-09-29",
-      compatibility_flags: ["nodejs_compat"]
+      compatibility_flags: ["nodejs_compat"],
+      vars: options.vars || {}
     }),
     "src/relay-entry.js": options.entry || 'import { value } from "./dep.js";\nexport default { value };\n',
     "src/dep.js": options.dep || 'import { createHash } from "node:crypto";\nexport const value = createHash("sha1").update("x").digest("hex");\n'
@@ -213,4 +214,21 @@ test('upload includes multiline named imports and reexports', async () => {
  const g = fixture({entry: 'import {\n value\n} from "./dep.js";\nexport default {value};\n'});
  const imported = await uploadCloudSourceVersion(args,g.env,{github:g.github,cloud:g.cloud,rawUpload:g.rawUpload});
  assert.ok(imported.modules.includes('src/dep.js'));
+});
+
+ test("committed non-secret runtime identities update while resource and secret identities are inherited", async () => {
+  const f = fixture({ vars: { RELAY_RUNNER_CONTROL_REPOSITORY: "lrnolivia/relay", RELAY_CLOUDFLARE_WRITE_SCRIPTS: "relay" } });
+  await uploadCloudSourceVersion(args, f.env, f);
+  assert.ok(f.uploads[0].metadata.bindings.some(binding => binding.name === "RELAY_RUNNER_CONTROL_REPOSITORY" && binding.text === "lrnolivia/relay"));
+  assert.deepEqual(f.uploads[0].metadata.bindings.find(binding => binding.name === "CLOUDFLARE_API_TOKEN"), { name: "CLOUDFLARE_API_TOKEN", type: "inherit" });
+});
+
+test("source vars cannot replace secrets or arbitrary bindings", async () => {
+  const f = fixture({ vars: { CLOUDFLARE_API_TOKEN: "not-allowed" } });
+  await assert.rejects(uploadCloudSourceVersion(args, f.env, f), /Unsupported non-secret/);
+  assert.equal(f.uploads.length, 0);
+  const g = fixture({ vars: { RELAY_GITHUB_APP_ID: "5133504" } });
+  const cloud = async path => path.endsWith("/settings") ? { bindings: [{ name: "RELAY_GITHUB_APP_ID", type: "secret_text" }] } : g.cloud(path);
+  await assert.rejects(uploadCloudSourceVersion(args, g.env, { ...g, cloud }), /protected binding/);
+  assert.equal(g.uploads.length, 0);
 });
