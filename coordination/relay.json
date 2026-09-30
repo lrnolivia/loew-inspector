@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T23:36:07.836Z",
+  "updated_at": "2026-09-30T23:36:36.300Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -384,8 +384,8 @@
       "id": "relay-1.9-skills-runtime-creative-20260930",
       "owner": "relay-1.9-skills-runtime-creative-20260930",
       "goal": "Ship Relay 1.9 as the skills-runtime and creative-intelligence release: add a first-class relay.SKILLS system that discovers, validates, versions, resolves and loads portable expertise on demand, then use it to make Relay substantially stronger at aesthetic direction, interaction/flow, motion, platform-native UI craft and performance across web, macOS, Windows, Android and Linux/GNOME while expanding its engineering, GitHub and Cloudflare expertise without bloating the permanent MCP/tool surface.",
-      "acceptance": "Relay 1.9 is complete when its patch train ships:\n\n- relay.SKILLS: deterministic JIT resolution, bounded context, provenance/license/integrity metadata, capability gating, project-private overlays, safe upstream audit/update behavior, and composable creative/platform/performance/GitHub/Cloudflare packs. Creative coverage includes aesthetic direction, flow/IA, motion, visual QA, optimization, web, macOS, Windows, Android and GNOME. Figma-bound skills use the real dependency when present.\n- worker communication / coordination skill: workers learn how to inspect sibling assignment state before communicating, distinguish FYI/request/blocker/decision/handoff/scope-change messages, name the exact project/assignment/branch/PR/evidence identities they are talking about, communicate concise context + why it matters + requested action, and leave durable context when another worker must resume or act. Messages may propose work or scope changes but must never silently mutate canonical ownership/scope; assignment changes still go through Runner amend/rescope/handoff. The skill must prefer canonical Runner/GitHub/Cloud evidence over inferred chat state, avoid duplicate/no-op chatter, preserve task-class boundaries, and teach receivers to reconcile a message against current state before acting.\n- canonical assignment amendments for queued/claimed work with stable identity/ownership, immutable claimed branch/base identity, CAS/readback, conflict-safe scope changes and bounded who/when/what/why history. Planning skills use amend rather than hand-editing state.\n- findings-ledger routing: classify adopt/defer/reject/supersede, route adopted findings into the best existing assignment when safe, otherwise create a deliberate successor, and keep RFS linkage/status current. The ledger is planning input, not automatic backlog.\n- low-overhead durable resume checkpoints derived from canonical evidence: assignment/branch/base/head, changed paths, commits, PR/check/deploy stage, last successful action, blocker/wait state, next action, QA context, ledger refs and exact evidence identities. Dedupe unchanged state and expose a latest-valid resume contract.\n- universal meaningful x.x.# patch cadence: test/admit exact source, merge, deploy if applicable, verify runtime/readback, refresh affected integrations, refresh consuming client when needed, verify the new surface, then continue from canonical state.\n- file/document/context/request-size ceilings never block valid work. Automatically switch to patch/edit, append, bounded chunks, indexed/sharded logical documents and deterministic reassembly while preserving ownership, provenance and exact-SHA/CAS safety.\n- Relay 1.8 UI compatibility: human headline + short description, technical detail subordinate, specific QA requests, and live previews preferred when viable with exact identity.\n\nTests cover amendment safety/history/conflicts, ledger routing, checkpoints/resume, size-safe transport, skill provenance/resolution/tool gating, communication message classification and canonical-state reconciliation, handoff behavior, task-boundary preservation, composition and UI/QA contracts. No parallel state store, giant permanent prompt dump, one-tool-per-skill explosion or new standing credentials.",
-      "next_action": "Verify this communication-skill amendment via readback/history and queue reconciliation. Keep 1.9.2 focused on scalable SOURCE patch/edit/append/chunk transport; after that ships and tools refresh, implement resume checkpoints and the coordination/communication + planning skill slices before the broader creative/platform packs.",
+      "acceptance": "Relay 1.9 ships as a patch train with these canonical capabilities:\n\n- relay.SKILLS: deterministic JIT resolution, bounded context, provenance/license/integrity metadata, capability gating, project-private overlays, safe upstream audit/update, and composable creative/platform/performance/GitHub/Cloudflare skills. Creative coverage includes aesthetic direction, IA/flow, motion, visual QA, optimization, web, macOS, Windows, Android and GNOME; Figma-bound skills use the real dependency when available.\n- worker communication: inspect sibling live state first; classify FYI/request/blocker/decision/handoff/scope-change; cite exact project/assignment/branch/PR/evidence identity; communicate context, impact and requested action; reconcile received messages against canonical state before acting; avoid duplicate/no-op chatter. Messages never silently change ownership/scope: Runner amend/rescope/handoff remains authoritative.\n- assignment taxonomy: durable amendable category, labels, tags and designated role metadata. Controlled categories include architecture, design, implementation, research, QA/verification, maintenance, release and coordination. Labels are structured cross-cutting metadata; tags are bounded freeform discovery/context metadata. One primary role plus optional supporting roles may drive skill selection/communication posture but never authorization. Human role names include The Architect, The Art Director, The Builder, The Researcher, The Verifier, The Caretaker, The Release Captain and The Coordinator. Expose taxonomy/roles to routing, filtering, UI and resume checkpoints.\n- safe assignment amendments: stable identity/ownership, immutable claimed branch/base, CAS/readback, conflict-safe scope changes, bounded who/when/what/why history. Planning skills amend canonical state rather than hand-edit it.\n- findings-ledger routing: classify adopt/defer/reject/supersede; route adopted findings into the safest existing assignment or deliberate successor; maintain RFS linkage/status. Ledger is planning input, not automatic backlog.\n- low-overhead resume checkpoints from canonical evidence: assignment/branch/base/head, changed paths, commits, PR/check/deploy stage, last successful action, blockers/waits, next action, QA context, ledger refs and exact evidence identities; dedupe unchanged state and expose latest-valid resume.\n- universal meaningful x.x.# cadence: test/admit exact source; merge; deploy if applicable; verify runtime/readback; refresh integrations/consumer when needed; verify the new surface; continue from canonical state.\n- valid work must not be blocked by file/document/context/request-size ceilings: switch automatically to patch/edit, append, bounded chunks, indexed/sharded logical docs and deterministic reassembly while preserving ownership/provenance/CAS safety.\n- preserve Relay 1.8 UI contracts: human headline + short description, subordinate technical detail, specific QA asks, live previews when viable with exact identity.\n\nTests cover taxonomy validation/filtering, roles and skill selection, role/category/label/tag amendment history, communication classification/reconciliation/handoffs, amendment conflicts, ledger routing, checkpoints/resume, size-safe transport, skill provenance/tool gating, task-boundary preservation and UI/QA contracts. No parallel state store, giant permanent prompt dump, one-tool-per-skill explosion or new standing credentials.",
+      "next_action": "Keep 1.9.2 focused on scalable SOURCE transport. In subsequent skills/coordination slices, implement canonical assignment category/labels/tags and designated roles alongside communication/resume behavior, then expose them to routing, filtering, skill resolution, UI and checkpoints without changing authorization semantics.",
       "paths": [
         "packages/skills/",
         "skills/",
@@ -420,7 +420,11 @@
         "relay-passive-snapshots",
         "relay-worker-resumability",
         "loew-patch-release-cadence",
-        "relay-tool-refresh-cycle"
+        "relay-tool-refresh-cycle",
+        "relay-assignment-taxonomy",
+        "relay-assignment-labels-tags",
+        "relay-worker-roles",
+        "relay-role-skill-resolution"
       ],
       "state": "claimed",
       "created_at": "2026-09-30T22:12:36.691Z",
@@ -432,8 +436,8 @@
         "RFS-021",
         "RFS-022"
       ],
-      "updated_at": "2026-09-30T23:35:15.207Z",
-      "amendment_count": 2,
+      "updated_at": "2026-09-30T23:36:36.300Z",
+      "amendment_count": 3,
       "amendments": [
         {
           "at": "2026-09-30T23:32:05.259Z",
@@ -516,6 +520,67 @@
               "relay-worker-resumability",
               "loew-patch-release-cadence",
               "relay-tool-refresh-cycle"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T23:36:36.300Z",
+          "by": "relay-1.9-skills-runtime-creative-20260930",
+          "reason": "Add canonical assignment categories, labels, tags and designated worker roles/names so Relay can route work intelligently and workers have a clear, useful identity appropriate to the task.",
+          "fields": [
+            "acceptance",
+            "next_action",
+            "resources"
+          ],
+          "before": {
+            "acceptance": "Relay 1.9 is complete when its patch train ships:\n\n- relay.SKILLS: deterministic JIT resolution, bounded context, provenance/license/integrity metadata, capability gating, project-private overlays, safe upstream audit/update behavior, and composable creative/platform/performance/GitHub/Cloudflare packs. Creative coverage includes aesthetic direction, flow/IA, motion, visual QA, optimization, web, macOS, Windows, Android and GNOME. Figma-bound skills use the real dependency when present.\n- worker communication / coordination skill: workers learn how to inspect sibling assignment state before...",
+            "next_action": "Verify this communication-skill amendment via readback/history and queue reconciliation. Keep 1.9.2 focused on scalable SOURCE patch/edit/append/chunk transport; after that ships and tools refresh, implement resume checkpoints and the coordination/communication + planning skill slices before the broader creative/platform packs.",
+            "resources": [
+              "relay-1.9-release",
+              "relay-skills-runtime",
+              "relay-skill-registry",
+              "relay-skill-provenance",
+              "relay-jit-skill-loading",
+              "relay-creative-intelligence",
+              "relay-performance-optimization",
+              "relay-assignment-amendment",
+              "relay-ledger-routing",
+              "relay-planning-skill",
+              "relay-worker-communication-skill",
+              "relay-interworker-handoffs",
+              "relay-canonical-state-reconciliation",
+              "relay-resume-checkpoints",
+              "relay-passive-snapshots",
+              "relay-worker-resumability",
+              "loew-patch-release-cadence",
+              "relay-tool-refresh-cycle"
+            ]
+          },
+          "after": {
+            "acceptance": "Relay 1.9 ships as a patch train with these canonical capabilities:\n\n- relay.SKILLS: deterministic JIT resolution, bounded context, provenance/license/integrity metadata, capability gating, project-private overlays, safe upstream audit/update, and composable creative/platform/performance/GitHub/Cloudflare skills. Creative coverage includes aesthetic direction, IA/flow, motion, visual QA, optimization, web, macOS, Windows, Android and GNOME; Figma-bound skills use the real dependency when available.\n- worker communication: inspect sibling live state first; classify FYI/request/blocker/decisi...",
+            "next_action": "Keep 1.9.2 focused on scalable SOURCE transport. In subsequent skills/coordination slices, implement canonical assignment category/labels/tags and designated roles alongside communication/resume behavior, then expose them to routing, filtering, skill resolution, UI and checkpoints without changing authorization semantics.",
+            "resources": [
+              "relay-1.9-release",
+              "relay-skills-runtime",
+              "relay-skill-registry",
+              "relay-skill-provenance",
+              "relay-jit-skill-loading",
+              "relay-creative-intelligence",
+              "relay-performance-optimization",
+              "relay-assignment-amendment",
+              "relay-ledger-routing",
+              "relay-planning-skill",
+              "relay-worker-communication-skill",
+              "relay-interworker-handoffs",
+              "relay-canonical-state-reconciliation",
+              "relay-resume-checkpoints",
+              "relay-passive-snapshots",
+              "relay-worker-resumability",
+              "loew-patch-release-cadence",
+              "relay-tool-refresh-cycle",
+              "relay-assignment-taxonomy",
+              "relay-assignment-labels-tags",
+              "... +2 more"
             ]
           }
         }
@@ -1666,16 +1731,20 @@
         "relay-passive-snapshots",
         "relay-worker-resumability",
         "loew-patch-release-cadence",
-        "relay-tool-refresh-cycle"
+        "relay-tool-refresh-cycle",
+        "relay-assignment-taxonomy",
+        "relay-assignment-labels-tags",
+        "relay-worker-roles",
+        "relay-role-skill-resolution"
       ],
       "goal": "Ship Relay 1.9 as the skills-runtime and creative-intelligence release, including a first-class assignment-amendment workflow and planning skills that use the findings ledger to route worthwhile discoveries into the right existing or future assignment instead of leaving them as inert notes or spawning unnecessary parallel work.",
-      "acceptance": "Relay 1.9 is complete when its patch train ships:\n\n- relay.SKILLS: deterministic JIT resolution, bounded context, provenance/license/integrity metadata, capability gating, project-private overlays, safe upstream audit/update behavior, and composable creative/platform/performance/GitHub/Cloudflare packs. Creative coverage includes aesthetic direction, flow/IA, motion, visual QA, optimization, web, macOS, Windows, Android and GNOME. Figma-bound skills use the real dependency when present.\n- worker communication / coordination skill: workers learn how to inspect sibling assignment state before communicating, distinguish FYI/request/blocker/decision/handoff/scope-change messages, name the exact project/assignment/branch/PR/evidence identities they are talking about, communicate concise context + why it matters + requested action, and leave durable context when another worker must resume or act. Messages may propose work or scope changes but must never silently mutate canonical ownership/scope; assignment changes still go through Runner amend/rescope/handoff. The skill must prefer canonical Runner/GitHub/Cloud evidence over inferred chat state, avoid duplicate/no-op chatter, preserve task-class boundaries, and teach receivers to reconcile a message against current state before acting.\n- canonical assignment amendments for queued/claimed work with stable identity/ownership, immutable claimed branch/base identity, CAS/readback, conflict-safe scope changes and bounded who/when/what/why history. Planning skills use amend rather than hand-editing state.\n- findings-ledger routing: classify adopt/defer/reject/supersede, route adopted findings into the best existing assignment when safe, otherwise create a deliberate successor, and keep RFS linkage/status current. The ledger is planning input, not automatic backlog.\n- low-overhead durable resume checkpoints derived from canonical evidence: assignment/branch/base/head, changed paths, commits, PR/check/deploy stage, last successful action, blocker/wait state, next action, QA context, ledger refs and exact evidence identities. Dedupe unchanged state and expose a latest-valid resume contract.\n- universal meaningful x.x.# patch cadence: test/admit exact source, merge, deploy if applicable, verify runtime/readback, refresh affected integrations, refresh consuming client when needed, verify the new surface, then continue from canonical state.\n- file/document/context/request-size ceilings never block valid work. Automatically switch to patch/edit, append, bounded chunks, indexed/sharded logical documents and deterministic reassembly while preserving ownership, provenance and exact-SHA/CAS safety.\n- Relay 1.8 UI compatibility: human headline + short description, technical detail subordinate, specific QA requests, and live previews preferred when viable with exact identity.\n\nTests cover amendment safety/history/conflicts, ledger routing, checkpoints/resume, size-safe transport, skill provenance/resolution/tool gating, communication message classification and canonical-state reconciliation, handoff behavior, task-boundary preservation, composition and UI/QA contracts. No parallel state store, giant permanent prompt dump, one-tool-per-skill explosion or new standing credentials.",
-      "next_action": "Verify this communication-skill amendment via readback/history and queue reconciliation. Keep 1.9.2 focused on scalable SOURCE patch/edit/append/chunk transport; after that ships and tools refresh, implement resume checkpoints and the coordination/communication + planning skill slices before the broader creative/platform packs.",
+      "acceptance": "Relay 1.9 ships as a patch train with these canonical capabilities:\n\n- relay.SKILLS: deterministic JIT resolution, bounded context, provenance/license/integrity metadata, capability gating, project-private overlays, safe upstream audit/update, and composable creative/platform/performance/GitHub/Cloudflare skills. Creative coverage includes aesthetic direction, IA/flow, motion, visual QA, optimization, web, macOS, Windows, Android and GNOME; Figma-bound skills use the real dependency when available.\n- worker communication: inspect sibling live state first; classify FYI/request/blocker/decision/handoff/scope-change; cite exact project/assignment/branch/PR/evidence identity; communicate context, impact and requested action; reconcile received messages against canonical state before acting; avoid duplicate/no-op chatter. Messages never silently change ownership/scope: Runner amend/rescope/handoff remains authoritative.\n- assignment taxonomy: durable amendable category, labels, tags and designated role metadata. Controlled categories include architecture, design, implementation, research, QA/verification, maintenance, release and coordination. Labels are structured cross-cutting metadata; tags are bounded freeform discovery/context metadata. One primary role plus optional supporting roles may drive skill selection/communication posture but never authorization. Human role names include The Architect, The Art Director, The Builder, The Researcher, The Verifier, The Caretaker, The Release Captain and The Coordinator. Expose taxonomy/roles to routing, filtering, UI and resume checkpoints.\n- safe assignment amendments: stable identity/ownership, immutable claimed branch/base, CAS/readback, conflict-safe scope changes, bounded who/when/what/why history. Planning skills amend canonical state rather than hand-edit it.\n- findings-ledger routing: classify adopt/defer/reject/supersede; route adopted findings into the safest existing assignment or deliberate successor; maintain RFS linkage/status. Ledger is planning input, not automatic backlog.\n- low-overhead resume checkpoints from canonical evidence: assignment/branch/base/head, changed paths, commits, PR/check/deploy stage, last successful action, blockers/waits, next action, QA context, ledger refs and exact evidence identities; dedupe unchanged state and expose latest-valid resume.\n- universal meaningful x.x.# cadence: test/admit exact source; merge; deploy if applicable; verify runtime/readback; refresh integrations/consumer when needed; verify the new surface; continue from canonical state.\n- valid work must not be blocked by file/document/context/request-size ceilings: switch automatically to patch/edit, append, bounded chunks, indexed/sharded logical docs and deterministic reassembly while preserving ownership/provenance/CAS safety.\n- preserve Relay 1.8 UI contracts: human headline + short description, subordinate technical detail, specific QA asks, live previews when viable with exact identity.\n\nTests cover taxonomy validation/filtering, roles and skill selection, role/category/label/tag amendment history, communication classification/reconciliation/handoffs, amendment conflicts, ledger routing, checkpoints/resume, size-safe transport, skill provenance/tool gating, task-boundary preservation and UI/QA contracts. No parallel state store, giant permanent prompt dump, one-tool-per-skill explosion or new standing credentials.",
+      "next_action": "Keep 1.9.2 focused on scalable SOURCE transport. In subsequent skills/coordination slices, implement canonical assignment category/labels/tags and designated roles alongside communication/resume behavior, then expose them to routing, filtering, skill resolution, UI and checkpoints without changing authorization semantics.",
       "base_sha": "47fb7b4f73afc3407977503fb706c4935711aee5",
       "state": "active",
       "created_at": "2026-09-30T22:49:27.571Z",
-      "updated_at": "2026-09-30T23:35:15.207Z",
-      "lease_until": "2026-10-01T11:35:15.207Z",
+      "updated_at": "2026-09-30T23:36:36.300Z",
+      "lease_until": "2026-10-01T11:36:36.300Z",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-018",
@@ -1684,7 +1753,7 @@
         "RFS-021",
         "RFS-022"
       ],
-      "amendment_count": 2,
+      "amendment_count": 3,
       "amendments": [
         {
           "at": "2026-09-30T23:32:05.259Z",
@@ -1767,6 +1836,67 @@
               "relay-worker-resumability",
               "loew-patch-release-cadence",
               "relay-tool-refresh-cycle"
+            ]
+          }
+        },
+        {
+          "at": "2026-09-30T23:36:36.300Z",
+          "by": "relay-1.9-skills-runtime-creative-20260930",
+          "reason": "Add canonical assignment categories, labels, tags and designated worker roles/names so Relay can route work intelligently and workers have a clear, useful identity appropriate to the task.",
+          "fields": [
+            "acceptance",
+            "next_action",
+            "resources"
+          ],
+          "before": {
+            "acceptance": "Relay 1.9 is complete when its patch train ships:\n\n- relay.SKILLS: deterministic JIT resolution, bounded context, provenance/license/integrity metadata, capability gating, project-private overlays, safe upstream audit/update behavior, and composable creative/platform/performance/GitHub/Cloudflare packs. Creative coverage includes aesthetic direction, flow/IA, motion, visual QA, optimization, web, macOS, Windows, Android and GNOME. Figma-bound skills use the real dependency when present.\n- worker communication / coordination skill: workers learn how to inspect sibling assignment state before...",
+            "next_action": "Verify this communication-skill amendment via readback/history and queue reconciliation. Keep 1.9.2 focused on scalable SOURCE patch/edit/append/chunk transport; after that ships and tools refresh, implement resume checkpoints and the coordination/communication + planning skill slices before the broader creative/platform packs.",
+            "resources": [
+              "relay-1.9-release",
+              "relay-skills-runtime",
+              "relay-skill-registry",
+              "relay-skill-provenance",
+              "relay-jit-skill-loading",
+              "relay-creative-intelligence",
+              "relay-performance-optimization",
+              "relay-assignment-amendment",
+              "relay-ledger-routing",
+              "relay-planning-skill",
+              "relay-worker-communication-skill",
+              "relay-interworker-handoffs",
+              "relay-canonical-state-reconciliation",
+              "relay-resume-checkpoints",
+              "relay-passive-snapshots",
+              "relay-worker-resumability",
+              "loew-patch-release-cadence",
+              "relay-tool-refresh-cycle"
+            ]
+          },
+          "after": {
+            "acceptance": "Relay 1.9 ships as a patch train with these canonical capabilities:\n\n- relay.SKILLS: deterministic JIT resolution, bounded context, provenance/license/integrity metadata, capability gating, project-private overlays, safe upstream audit/update, and composable creative/platform/performance/GitHub/Cloudflare skills. Creative coverage includes aesthetic direction, IA/flow, motion, visual QA, optimization, web, macOS, Windows, Android and GNOME; Figma-bound skills use the real dependency when available.\n- worker communication: inspect sibling live state first; classify FYI/request/blocker/decisi...",
+            "next_action": "Keep 1.9.2 focused on scalable SOURCE transport. In subsequent skills/coordination slices, implement canonical assignment category/labels/tags and designated roles alongside communication/resume behavior, then expose them to routing, filtering, skill resolution, UI and checkpoints without changing authorization semantics.",
+            "resources": [
+              "relay-1.9-release",
+              "relay-skills-runtime",
+              "relay-skill-registry",
+              "relay-skill-provenance",
+              "relay-jit-skill-loading",
+              "relay-creative-intelligence",
+              "relay-performance-optimization",
+              "relay-assignment-amendment",
+              "relay-ledger-routing",
+              "relay-planning-skill",
+              "relay-worker-communication-skill",
+              "relay-interworker-handoffs",
+              "relay-canonical-state-reconciliation",
+              "relay-resume-checkpoints",
+              "relay-passive-snapshots",
+              "relay-worker-resumability",
+              "loew-patch-release-cadence",
+              "relay-tool-refresh-cycle",
+              "relay-assignment-taxonomy",
+              "relay-assignment-labels-tags",
+              "... +2 more"
             ]
           }
         }
