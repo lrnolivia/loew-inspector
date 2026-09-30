@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T20:39:53.526Z",
+  "updated_at": "2026-09-30T20:40:37.664Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -908,12 +908,12 @@
       ],
       "goal": "Add supplied official Relay icon and thick animated interface glyphs, with Runner/Inspector marks used only for internal subsystem context.",
       "acceptance": "Shared web/MCP carries exact provided assets, coherent rounded animated glyphs, accessible labels and reduced-motion support; focused browser/build and exact-head admission pass.",
-      "next_action": "Run final exact-head workspace/admission checks, ship shared responsive UI, verify authenticated repository icons and register exact-source desktop/mobile production captures in existing Runner Visuals.",
+      "next_action": "HOLD publication/merge/deploy. User superseded the product direction: Runner and Inspector must be named, visible Relay tools/features with their approved icons, not technical-context-only marks. Preserve the current branch and useful official icon/glyph work as source material for the Relay 1.7 successor assignment; do not ship the obsolete identity treatment.",
       "base_sha": "c9f6af7e51e478d25c1cb58f89f782063246ae20",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-09-30T20:02:57.628Z",
-      "updated_at": "2026-09-30T20:38:43.618Z",
-      "lease_until": "2026-10-01T08:38:43.618Z"
+      "updated_at": "2026-09-30T20:40:37.664Z",
+      "lease_until": "2026-10-01T08:40:37.664Z"
     }
   ],
   "migrated_from": "loew-inspector"
