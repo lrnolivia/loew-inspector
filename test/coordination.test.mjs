@@ -80,3 +80,7 @@ test('audit distinguishes frozen legacy from unregistered new work and scope dri
   assert.deepEqual(findings.map((f) => f.type), ['expired', 'unregistered_branch', 'scope_drift']);
   assert.equal(findings[1].branch, 'field/new');
 });
+
+ test('migration freeze rejects stale-authority mutations', () => {
+ assert.throws(() => transition({migration_frozen:{canonical_repository:'lrnolivia/relay'}}, {action:'heartbeat',id:'task',owner:'owner'}, {}), /Control authority migrated/);
+ });

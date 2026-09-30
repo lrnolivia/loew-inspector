@@ -299,7 +299,7 @@
       "pr": 40,
       "merged_head_sha": "b1e26d91cd4e65f21d1f47f1f785668d7bfc3236",
       "merge_commit_sha": "ee0475e39a54d78491f101e86d25c8c3e920c2e6",
-      "evidence": "https://github.com/lrnolivia/loew-runner/pull/40 — Runner Visuals policy merged with screenshot/video registration, async queued/uploading handoff, bounded storage, and post-main archive-before-purge rules.",
+      "evidence": "https://github.com/lrnolivia/loew-runner/pull/40 \u2014 Runner Visuals policy merged with screenshot/video registration, async queued/uploading handoff, bounded storage, and post-main archive-before-purge rules.",
       "work_accounted": true,
       "completed_at": "2026-09-30T12:12:03.688Z"
     },
@@ -366,7 +366,7 @@
       "pr": 42,
       "merged_head_sha": "38d79b43456d4a16cae8b0181c13c0febe21b76f",
       "merge_commit_sha": "0ef502ff6fac26ef727a8f24d3ce6c20a682f1e7",
-      "evidence": "https://github.com/lrnolivia/loew-runner/pull/42 — human QA helper contract/docs merged after exact-head tests, Runner admission, and Worker preview build passed.",
+      "evidence": "https://github.com/lrnolivia/loew-runner/pull/42 \u2014 human QA helper contract/docs merged after exact-head tests, Runner admission, and Worker preview build passed.",
       "work_accounted": true,
       "completed_at": "2026-09-30T13:06:10.165Z"
     },
@@ -399,7 +399,7 @@
       "pr": 43,
       "merged_head_sha": "faacdfdb1a8355b3008326e320041809fc3863c4",
       "merge_commit_sha": "4e581179bb6dcab519c73dfdab4cfb6e34f44e6d",
-      "evidence": "https://github.com/lrnolivia/loew-runner/pull/43 — exact-head tests, Runner admission and Worker build passed; operator redesign merged intact before night shift identity migration.",
+      "evidence": "https://github.com/lrnolivia/loew-runner/pull/43 \u2014 exact-head tests, Runner admission and Worker build passed; operator redesign merged intact before night shift identity migration.",
       "work_accounted": true,
       "completed_at": "2026-09-30T13:41:26.690Z"
     },
@@ -443,7 +443,7 @@
       "pr": 44,
       "merged_head_sha": "0a40f08cb74fa7ab61aa0db1932fa5350089d6c3",
       "merge_commit_sha": "66b9ea1745bdf382e38be5ea541335cbb2306dc2",
-      "evidence": "https://github.com/lrnolivia/loew-runner/pull/44 — project registration now points to lrnolivia/relay; exact-head tests and Runner admission passed; squash merge 66b9ea1745bdf382e38be5ea541335cbb2306dc2.",
+      "evidence": "https://github.com/lrnolivia/loew-runner/pull/44 \u2014 project registration now points to lrnolivia/relay; exact-head tests and Runner admission passed; squash merge 66b9ea1745bdf382e38be5ea541335cbb2306dc2.",
       "work_accounted": true,
       "completed_at": "2026-09-30T14:35:37.292Z"
     },
@@ -469,5 +469,10 @@
       "updated_at": "2026-09-30T15:09:26.883Z",
       "lease_until": "2026-10-01T03:09:26.883Z"
     }
-  ]
+  ],
+  "migration_frozen": {
+    "canonical_repository": "lrnolivia/relay",
+    "source_sha": "032176c83d1a61f81a4859f6b3d408aaeaea38ff",
+    "reason": "Reviewed Relay authority migration; original owner reservations are preserved."
+  }
 }

@@ -17,6 +17,7 @@ export function covered(file, scopes) {
 }
 
 export function transition(record, request, policy, now = new Date()) {
+  if (record.migration_frozen) throw new Error("Control authority migrated to " + record.migration_frozen.canonical_repository + "; refresh canonical Relay state before writing.");
   const next = structuredClone(record);
   const claims = next.claims;
   const current = claims.find((c) => c.id === request.id);

@@ -46,6 +46,7 @@ function mergedProof(claim, number) {
 if (['queue', 'claim', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete'].includes(action)) {
   if (!inputFile) throw new Error('A JSON request file is required.');
   const request = JSON.parse(await fs.readFile(inputFile, 'utf8'));
+  if (read(recordPath).value.migration_frozen) throw new Error('Control record frozen for Relay migration; use canonical authority.');
   request.action = action;
   if (action === 'claim') {
     request.base_sha = api(`repos/${policy.repository}/git/ref/heads/${registration.default_branch}`).object.sha;
@@ -79,6 +80,7 @@ if (['queue', 'claim', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete'].in
   }
 } else if (action === 'pr-gate') {
   const request = JSON.parse(await fs.readFile(inputFile, 'utf8'));
+  if (read(recordPath).value.migration_frozen) throw new Error('Control record frozen for Relay migration; use canonical authority.');
   if (!Number.isInteger(request.pr) || request.pr < 1) throw new Error('PR number is required.');
   const pr = api(`repos/${policy.repository}/pulls/${request.pr}`);
   const record = read(recordPath).value;
@@ -105,6 +107,7 @@ if (['queue', 'claim', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete'].in
   if (action === 'preflight') {
     if (!inputFile) throw new Error('Preflight requires a request with id, owner and current changed paths.');
     const request = JSON.parse(await fs.readFile(inputFile, 'utf8'));
+  if (read(recordPath).value.migration_frozen) throw new Error('Control record frozen for Relay migration; use canonical authority.');
     const claim = snapshot.value.claims.find((c) => c.id === request.id && c.owner === request.owner && occupying(c));
     if (!claim || claim.state !== 'active' || new Date(claim.lease_until) <= new Date()) throw new Error('A live active claim is required before edits or publication.');
     if (!Array.isArray(request.paths) || !request.paths.length || request.paths.some((p) => !claim.paths.some((s) => p === s || (s.endsWith('/') && p.startsWith(s))))) throw new Error('Changed paths must be supplied and fit the claim.');

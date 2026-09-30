@@ -30,5 +30,10 @@
       "updated_at": "2026-09-30T09:06:49.009Z",
       "lease_until": "2026-09-30T21:06:49.009Z"
     }
-  ]
+  ],
+  "migration_frozen": {
+    "canonical_repository": "lrnolivia/relay",
+    "source_sha": "032176c83d1a61f81a4859f6b3d408aaeaea38ff",
+    "reason": "Reviewed Relay authority migration; original owner reservations are preserved."
+  }
 }
