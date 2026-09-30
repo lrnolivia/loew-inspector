@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T14:35:37.292Z",
+  "updated_at": "2026-09-30T15:04:34.468Z",
   "legacy_branches": [
     "control",
     "main",
@@ -446,6 +446,27 @@
       "evidence": "https://github.com/lrnolivia/loew-runner/pull/44 — project registration now points to lrnolivia/relay; exact-head tests and Runner admission passed; squash merge 66b9ea1745bdf382e38be5ea541335cbb2306dc2.",
       "work_accounted": true,
       "completed_at": "2026-09-30T14:35:37.292Z"
+    },
+    {
+      "id": "relay-control-migration-freeze-20260930",
+      "owner": "relay-control-migration-freeze-20260930",
+      "branch": "loew-runner/relay-control-migration-freeze",
+      "paths": [
+        "src/coordination.mjs",
+        "scripts/coordinate.mjs",
+        "test/coordination.test.mjs"
+      ],
+      "resources": [
+        "control-migration-freeze"
+      ],
+      "goal": "Add an enforced migration freeze so old coordination records cannot accept stranded writes after Relay authority switch.",
+      "acceptance": "Normal coordination unchanged; records with a migration_frozen marker reject mutations; CLI fails closed when marker present; tests pass.",
+      "next_action": "Add bounded freeze checks, verify exact head and merge before setting any freeze markers.",
+      "base_sha": "4e74c707282c1eaac8fba63289a8bd295897d38c",
+      "state": "active",
+      "created_at": "2026-09-30T15:04:34.468Z",
+      "updated_at": "2026-09-30T15:04:34.468Z",
+      "lease_until": "2026-10-01T03:04:34.468Z"
     }
   ]
 }
