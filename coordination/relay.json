@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T20:32:25.239Z",
+  "updated_at": "2026-09-30T20:36:13.719Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -881,12 +881,12 @@
       ],
       "goal": "Advertise supplied Relay Loop PNG and concise description through MCP server identity metadata.",
       "acceptance": "Initialize returns exact supplied PNG as serverInfo.icons without changing auth, protocol negotiation, tools or capabilities; focused checks pass; ChatGPT existing app icon remains explicitly unverified until refreshed.",
-      "next_action": "Add isolated branding wrapper and exact-image metadata check, open draft PR, verify checks. Scope excludes active brand worker web/shared-ui and documentation paths.",
+      "next_action": "PR47 exact head f7479a88b9c9dad88c7201473f2cf68b2b7b25f1 contains exact PNG metadata; npm ci/test/check and remote source readback pass. Await required CI and reconcile preflight's unrelated unregistered routing branches before merge/deploy; after deployment verify authenticated initialize and ChatGPT app icon refresh. Existing app description already saved via settings.",
       "base_sha": "4bfecdab5e16df1b1298ac01c36e355840cc779b",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-09-30T20:32:25.239Z",
-      "updated_at": "2026-09-30T20:32:25.239Z",
-      "lease_until": "2026-10-01T08:32:25.239Z"
+      "updated_at": "2026-09-30T20:36:13.719Z",
+      "lease_until": "2026-10-01T08:36:13.719Z"
     }
   ],
   "migrated_from": "loew-inspector"
