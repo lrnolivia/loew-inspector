@@ -2,6 +2,12 @@ name: field dependency doctor
 
 on:
   workflow_dispatch:
+    inputs:
+      field_ref:
+        description: Field branch, tag, or SHA to verify
+        required: false
+        default: main
+        type: string
   schedule:
     - cron: "23 10 * * 1"
 
@@ -26,8 +32,14 @@ jobs:
         uses: actions/checkout@v6
         with:
           repository: lrnolivia/field
-          ref: main
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.field_ref || 'main' }}
           path: target
+
+      - name: Record target Field revision
+        working-directory: target
+        run: |
+          echo "field_ref=${{ github.event_name == 'workflow_dispatch' && inputs.field_ref || 'main' }}"
+          echo "field_sha=$(git rev-parse HEAD)"
 
       - uses: actions/setup-node@v7
         with:
@@ -138,7 +150,7 @@ jobs:
         run: npm run lint
 
       - name: Persist dashboard diagnosis
-        if: always()
+        if: always() && (github.event_name == 'schedule' || inputs.field_ref == 'main')
         working-directory: runner
         env:
           INSTALL_OUTCOME: ${{ steps.install.outcome }}
@@ -153,7 +165,7 @@ jobs:
         run: node scripts/persist-dependency-state.mjs field ../doctor/npm-ci.log ../doctor/test-isolation.log
 
       - name: Commit dashboard state
-        if: always()
+        if: always() && (github.event_name == 'schedule' || inputs.field_ref == 'main')
         working-directory: runner
         run: |
           if git diff --quiet -- state/field.json; then
