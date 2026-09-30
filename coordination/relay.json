@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T22:22:34.180Z",
+  "updated_at": "2026-09-30T22:29:56.499Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -1233,7 +1233,11 @@
         "features/night-shift/",
         "docs/relay/RELAY_1_8_RELEASE.md",
         "docs/relay/RELAY_1_8_ICON_HOTFIX_HANDOFF.md",
-        ".github/workflows/relay-production-smoke.yml"
+        ".github/workflows/relay-production-smoke.yml",
+        "src/relay-entry.js",
+        "src/relay-entry.test.js",
+        "apps/web/api.js",
+        "packages/runner/src/cloudflare-worker.mjs"
       ],
       "resources": [
         "relay-1.8-release",
@@ -1247,12 +1251,12 @@
       ],
       "goal": "Ship Relay 1.8 as the contextual MCP-card, liveness, dashboard-structure and motion release. Cards come first; the shared dashboard/web panel then consumes the same state/component contracts. Relay must never silently look frozen. Runner, Inspector and night shift share one project-by-project model with distinct task-specific overview dashboards. New Today/night shift icon artwork is outside the 1.8 release gate.",
       "acceptance": "Release as Relay 1.8.0. Required order: (1) durable operation/receipt/liveness model + contextual MCP cards, (2) dashboard/web panel reusing those contracts, (3) broad motion/polish. Card work must encode project context/filter hooks, ordering, overview-state, button and motion primitives so dashboard findings flow back into shared cards instead of diverging. Cards cover Runner project/assignment/preflight, Source PR/check/merge, Cloud release/deploy, Inspector evidence/review/human-QA and multi-step operations; preserve exact identities, refresh where supported, and expand into the shared Relay app. Liveness: meaningful heartbeat/current stage/next action every 5 minutes while progressing; at 10 minutes without meaningful progress surface one possibly-stale warning/check and determine whether an external dependency is still running; at 20 minutes without meaningful progress mark officially stale/unresponsive unless current evidence proves the underlying external job is still active. Blocked, failed, official-stale, waiting-for-human and complete transitions emit one durable attention event; unchanged healthy progress does not spam. Show external waits honestly; quota/rate/auth/tool/dead-heartbeat failures must show last good stage + recovery. Redesign project picker/sidebar to be compact/useful, use available height, avoid an artificially short list, and add practical filtering/search/grouping while keeping project identity legible. Now / Up Next / Finished need stronger hierarchy and newest/recently changed first. Runner, Inspector and `night shift` use identical project-by-project navigation/context mechanics, with distinct compact top overviews: Runner=coordination/execution, Inspector=review/evidence/QA, night shift=unattended activity. Fold Orient → Act → Resolve into that compact page overview where useful instead of a detached strip. Human-facing copy is exactly lowercase `night shift`; never ship `Night Shift`. Buttons must remain obvious buttons: avoid flat highlight fills that read as cards; use depth/press states, stronger text, soft pastel color-matched surfaces, and white text on sufficiently colorful/dark surfaces. Preserve Terra Prime restraint. After structure stabilizes, add ambient system motion, bouncy Field-like glyph motion, tactile transitions/state-change animation and reduced-motion fallbacks. Existing headless clients remain compatible; web/MCP share one state model. New Today/night shift icons + Relay illustrations are NOT a 1.8 blocker. Before completion create an immediate post-release icon-hotfix handoff/assignment; approved assets may land mid-build only if they do not become a dependency. Required tests, exact-head admission, MCP/web rendering checks and authenticated production readback must pass.",
-      "next_action": "UI contract update: 1.8 owns presentation/interaction only and must consume the canonical progress/operation piping delivered by Relay 1.7.5. The dashboard and contextual cards must display observed execution progress, never infer progress from claim state, next_action prose, leases, or reservations. For active work show the latest concrete event, canonical stage, last meaningful progress time/freshness, worker heartbeat separately from external-system activity, exact source/branch/PR/check/merge/version/deployment identities when known, waiting/blocker reason, and recovery action. Distinguish reserved-but-idle, genuinely working, waiting on GitHub/Cloudflare, waiting for human, possibly stale, officially stale, failed, rolled back, and complete. Now/Up Next/Finished ordering must be driven by canonical progress events/receipts and recency, not declaration time. Also add an easily accessible Tools/App management action in the Relay dashboard. Preferred behavior: if the ChatGPT host exposes a supported mechanism to rescan/refresh this MCP app's tools/actions from inside the app, surface a clear `refresh tools` button and use that host-supported mechanism. Do not simulate private ChatGPT settings APIs or browser automation. Fallback/always-available behavior: surface a clear `open app settings` action linking to the known ChatGPT Relay app settings page `https://chatgpt.com/settings/plugins-settings/plugin_asdk_app_6abcbc2be3c081919a9a9ce9c3d2d141` so the user can reach the host refresh/manage controls in one click. Keep this utility visible but unobtrusive in the dashboard/settings/utility area, reuse 1.8 button styling/motion, and verify the external link behaves safely in supported web/MCP-app clients. Keep the existing 1.8 contextual-card/dashboard/motion requirements, but do not rebuild backend operation/reconciliation state in UI code. Develop against the 1.7.5 contract and integrate its endpoints/events after that release lands.",
+      "next_action": "Implement Relay 1.8 presentation against shipped 1.7.5 observed-progress truth. Add only minimal integration bridges: authenticated Runner /api/progress/:project, relay_ui_request allowance, contextual MCP card resource/metadata, version 1.8.0, dashboard/project/review/night shift presentation, ChatGPT app-settings link, motion and tests. Do not touch apps/mcp/index.js because PR #47 owns it, and do not fork the 1.7.5 state machine. Use observed progress for Now/Up Next/Finished and liveness; keep next_action contextual only. Human-facing night shift must be lowercase. After green tests/rendering, create required immediate post-release icon-hotfix handoff, merge/deploy exact source, runtime readback, then complete and verify reserved:false.",
       "base_sha": "e30c58966f7e2b172ed88299c8c57d62bc9cf1c2",
       "state": "active",
       "created_at": "2026-09-30T21:32:04.707Z",
-      "updated_at": "2026-09-30T22:21:51.446Z",
-      "lease_until": "2026-10-01T10:21:51.446Z"
+      "updated_at": "2026-09-30T22:29:56.499Z",
+      "lease_until": "2026-10-01T10:29:56.499Z"
     }
   ],
   "migrated_from": "loew-inspector"
