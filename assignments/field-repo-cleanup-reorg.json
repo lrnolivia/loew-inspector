@@ -237,7 +237,7 @@
     "open_prs": 19,
     "ledger": "docs/field/reorganization/2026-09-30-inventory.json",
     "handoff": "docs/field/reorganization/MAIN_FIELD_WORKER_CONSOLIDATION.md",
-    "phase": "preserved source drafts published; validation and semantic closeout remain",
+    "phase": "canvas consolidation is regression-free against exact main; current Registry rerun and Preview-routing closeout remain",
     "user_direction": "Retain branches until code, unfinished intent and QA have durable destinations. Existing main field worker consolidates; no new workers.",
     "mutations_in_field": [
       {
@@ -249,14 +249,34 @@
       {
         "pr": 135,
         "branch": "field/consolidation-canvas-20260930",
-        "head": "77e81482897d6530989882c6df18669d5e4cfde4",
-        "state": "draft; build and 10 desktop browser tests pass; clean install, full tests, lint and exact Preview block merge"
+        "head": "57f4765b591286c6c456439ba217d8de282c38c9",
+        "state": "draft; clean install/build/lint and Media/Workers/admission are green on the current validation lane. Diagnostic Registry run 36694828578 / job 109820178700 compared the branch to exact main 760774a6bd628827f93190fb0abaf7a6e26acbea: 57 branch failures vs 61 baseline failures, zero branch-only failures, and four baseline-only failures. Current head 57f4765b591286c6c456439ba217d8de282c38c9 updates the Registry gate to reject branch regressions while allowing baseline-only improvements; rerun 36697728462 / job 109829617442 is in progress. Exact loew Preview custom hosts remain blocked by Cloudflare 1053."
       }
     ],
-    "next_action": "Serial ownership reconciliation for lockfile/five reserved lint fixes; classify and repair 57 remaining failures; exact-head Preview QA before source merge; then Dashboard and remaining semantic ledger closeout.",
+    "next_action": "Wait for Registry rerun 36697728462 / job 109829617442 on exact head 57f4765b591286c6c456439ba217d8de282c38c9. Do not repair the four exact-main-only failures as #135 regressions. If the rerun is green, preserve this source candidate and proceed to exact-head deployed Preview QA. Preview custom hosts are a separate Cloudflare 1053 routing blocker; production Group QA and the exact workers.dev fallback have rendered successfully. Do not merge until the required Registry gate and exact-head Preview QA are both cleared.",
     "deferred_panel_requirements": "docs/field/reorganization/DEFERRED_CONNECTED_PANEL_REQUIREMENTS_20260930.md",
     "panel_implementation": "deferred by user on 2026-09-30; instructions only; uncommitted experiments withdrawn",
     "implementation_checkpoint": "docs/field/reorganization/EXECUTION_CHECKPOINT_20260930.md",
-    "publication_handoff": "docs/field/reorganization/PUBLICATION_HANDOFF_20260930.md"
+    "publication_handoff": "docs/field/reorganization/PUBLICATION_HANDOFF_20260930.md",
+    "validation_evidence": {
+      "current_head": "57f4765b591286c6c456439ba217d8de282c38c9",
+      "diagnostic_head": "eff4047b82a8185ba67530fd25f2572da36e1096",
+      "diagnostic_registry_run": 36694828578,
+      "diagnostic_registry_job": 109820178700,
+      "branch_failures": 57,
+      "exact_main_failures": 61,
+      "branch_only_failures": [],
+      "baseline_only_failures": [
+        "src/canvas/gallery/crop-math.test.ts :: gallery crop math computes the actual cover overflow instead of using frame dimensions",
+        "src/canvas/transform/CameraAnimator.test.ts :: CameraAnimator reduced motion detects the OS reduced-motion preference",
+        "src/canvas/transform/CameraAnimator.test.ts :: CameraAnimator reduced motion snaps focus motion directly to the exact target under reduced motion",
+        "src/editor/workspace-layout.test.ts :: floating Inspector drag contract treats the viewport padding as a hard margin instead of an edge-dock trigger"
+      ],
+      "current_registry_run": 36697728462,
+      "current_registry_job": 109829617442,
+      "preview_blocker": "loew preview custom hosts return Cloudflare 1053; treat as preview-routing infrastructure until disproven",
+      "relay_preview_failure_evidence": "vis_ec1567cf-2eab-4779-997c-ee641fb2ef9d",
+      "relay_production_control_evidence": "vis_5f651b2a-7b7a-4016-8f35-c89d4a83bbb0"
+    }
   }
 }

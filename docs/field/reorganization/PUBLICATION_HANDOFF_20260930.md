@@ -1,5 +1,21 @@
 # Consolidation publication handoff — 2026-09-30
 
+## Live continuation update — 2026-09-30 09:44 UTC
+
+This section supersedes the older head/validation statements below while preserving them as historical publication context.
+
+- Field PR #135 remains a draft on `field/consolidation-canvas-20260930`; current head is `57f4765b591286c6c456439ba217d8de282c38c9`, base remains `760774a6bd628827f93190fb0abaf7a6e26acbea`, and GitHub reports it mergeable/clean.
+- Diagnostic head `eff4047b82a8185ba67530fd25f2572da36e1096` added logging only to expose the Registry baseline delta. Registry run `36694828578`, job `109820178700`, completed with 57 branch failures versus 61 exact-main failures. **Branch-only failures: none.** The four baseline-only failures are:
+  - `src/canvas/gallery/crop-math.test.ts` — actual cover overflow calculation.
+  - `src/canvas/transform/CameraAnimator.test.ts` — OS reduced-motion preference detection.
+  - `src/canvas/transform/CameraAnimator.test.ts` — reduced-motion focus snaps to the exact target.
+  - `src/editor/workspace-layout.test.ts` — viewport padding remains a hard drag margin instead of an edge-dock trigger.
+- Because #135 introduces no branch-only failures and improves four exact-main failures, head `57f4765b591286c6c456439ba217d8de282c38c9` changes the Registry comparator to reject **branch regressions** while allowing baseline-only improvements. It does not weaken product assertions or excuse new failures.
+- On current head, Runner admission, Media/editor verification and Cloudflare Workers build are green. Registry rerun `36697728462`, job `109829617442`, is the current decision gate and was still in progress when this handoff was written.
+- Exact loew Preview custom hosts remain a separate infrastructure blocker: Relay captured the exact Preview failure as `vis_ec1567cf-2eab-4779-997c-ee641fb2ef9d` (Cloudflare 1053/Page not found), while the same saved Group QA project rendered through production control evidence `vis_5f651b2a-7b7a-4016-8f35-c89d4a83bbb0`; the exact `workers.dev` deployment also rendered read-only Group QA. Do not classify the custom-host failure as a Field product regression without contrary evidence.
+- Next action: let the current Registry rerun resolve. If green, keep #135 as the source candidate and proceed to exact-head deployed Preview QA once the Preview host path is usable. Do not repair the four baseline-only failures as #135 regressions, and do not merge until the required Registry gate plus exact-head Preview QA are both clear.
+
+
 Latest user direction: “push and merge what's safe and make sure the next chats know what is coming.” This authorizes publication of preserved drafts and safe coordination records. It does not resume the deferred connected-panel implementation. Consolidation remains unfinished; no original branch was deleted or original PR retired.
 
 ## Published source and merge boundary
