@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T14:05:12.006Z",
+  "updated_at": "2026-09-30T14:06:55.351Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -117,6 +117,31 @@
       ],
       "state": "queued",
       "created_at": "2026-09-30T13:26:02.774Z"
+    },
+    {
+      "id": "relay-consolidation-b1-identity-bridge-20260930",
+      "owner": "relay-consolidation-b1-identity-bridge-20260930",
+      "goal": "Batch 1: remove hard dependencies on the old loew-inspector/loew-runner identities and make Relay source/MCP control ready for a canonical relay repo/project/runtime without changing production routing yet.",
+      "acceptance": "Canonical source repository references resolve lrnolivia/relay directly with no reliance on GitHub rename redirects; MCP source annotations, upload/source lifecycle logic and repository allowlists understand relay; Runner-control repository/project identity is configurable or migration-aware rather than permanently hardcoded to loew-runner; the existing live MCP remains usable throughout this batch; tests cover identity/config migration and fail closed on ambiguous control authority; no old production hostname/script is deleted or switched in this batch.",
+      "next_action": "Claim only after program preflight. Implement the non-destructive identity bridge and prove MCP tool/resource discovery still works before Batch 2.",
+      "paths": [
+        "src/runner-control.js",
+        "src/relay-entry.js",
+        "src/source-lifecycle.js",
+        "src/cloud-upload.js",
+        "wrangler.jsonc",
+        "package.json",
+        "README.md",
+        "AGENTS.md",
+        "test/"
+      ],
+      "resources": [
+        "relay-product-identity",
+        "relay-mcp-continuity",
+        "relay-source-identity"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T14:06:55.351Z"
     }
   ],
   "claims": [
