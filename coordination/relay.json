@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T23:37:56.654Z",
+  "updated_at": "2026-09-30T23:41:15.915Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -1842,7 +1842,9 @@
         "src/source-lifecycle.test.js",
         "src/relay-entry.js",
         "src/relay-entry.test.js",
-        "docs/relay/RELAY_1_9_2_RELEASE.md"
+        "docs/relay/RELAY_1_9_2_RELEASE.md",
+        "src/source-text-mutation.js",
+        "src/source-text-mutation.test.js"
       ],
       "resources": [
         "relay-1.9.2-release",
@@ -1850,12 +1852,12 @@
       ],
       "goal": "Ship Relay 1.9.2 with scalable bounded SOURCE text mutation.",
       "acceptance": "Add exact-SHA bounded edit and append operations with deterministic readback, stale-state rejection, default-branch protection, and focused tests. Ship through normal admission, merge, deploy, runtime verification, and client refresh.",
-      "next_action": "Implement exact-SHA text edit first, then append support and tests.",
+      "next_action": "Bootstrap under the existing payload ceiling: implement scalable SOURCE mutation in isolated source-text-mutation module + focused tests, make only small relay-entry/version registration edits, then ship 1.9.2. After refresh, use the new edit/append primitives for subsequent large-file work.",
       "base_sha": "5dc5242da630a1c0bed534423b408418394fb757",
       "state": "active",
       "created_at": "2026-09-30T23:37:56.654Z",
-      "updated_at": "2026-09-30T23:37:56.654Z",
-      "lease_until": "2026-10-01T11:37:56.654Z"
+      "updated_at": "2026-09-30T23:41:15.915Z",
+      "lease_until": "2026-10-01T11:41:15.915Z"
     }
   ],
   "migrated_from": "loew-inspector"
