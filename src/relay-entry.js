@@ -1,7 +1,8 @@
 import legacy from "./index.js";
 import { callSourceLifecycleTool } from "./source-lifecycle.js";
+import { runnerCleanupTool, callRunnerCleanup, validateRunnerCleanupArguments } from "./runner-cleanup.js";
 
-export const RELAY_EXTENSION_VERSION = "1.3.0";
+export const RELAY_EXTENSION_VERSION = "1.4.0";
 
 const createBranch = {
   name: "relay_source_create_branch",
@@ -68,12 +69,13 @@ export function augmentToolList(tools) {
     securitySchemes: schemes,
     _meta: { ...(old?._meta || {}), securitySchemes: schemes }
   };
-  const names = new Set(lifecycle.map(tool => tool.name));
+  const extensionTools = [...lifecycle, runnerCleanupTool];
+  const names = new Set(extensionTools.map(tool => tool.name));
   const kept = list.filter(tool => tool.name !== createBranch.name && !names.has(tool.name));
   return [
     ...kept,
     replacement,
-    ...lifecycle.map(tool => ({
+    ...extensionTools.map(tool => ({
       ...tool,
       securitySchemes: schemes,
       _meta: { securitySchemes: schemes }
@@ -140,8 +142,8 @@ function patchVersion(payload) {
   }
 }
 
-function isLifecycleTool(name) {
-  return name === createBranch.name || lifecycle.some(tool => tool.name === name);
+function isExtensionTool(name) {
+  return name === createBranch.name || lifecycle.some(tool => tool.name === name) || name === runnerCleanupTool.name;
 }
 async function authProbe(request, message, env) {
   const headers = new Headers(request.headers);
@@ -180,7 +182,7 @@ function toolError(id, error) {
     jsonrpc: "2.0",
     id,
     result: {
-      content: [{ type: "text", text: error instanceof Error ? error.message : "Relay source lifecycle action failed" }],
+      content: [{ type: "text", text: error instanceof Error ? error.message : "Relay extension action failed" }],
       isError: true
     }
   });
@@ -191,13 +193,19 @@ export default {
     const url = new URL(request.url);
     const message = await readMcp(request);
 
-    if (message?.method === "tools/call" && isLifecycleTool(message.params?.name)) {
+    if (message?.method === "tools/call" && isExtensionTool(message.params?.name)) {
       const auth = await authProbe(request, message, env);
       if (auth.status !== 200) return auth;
       try {
         const name = message.params.name;
-        const args = validateLifecycleArguments(name, message.params?.arguments || {});
-        const result = await callSourceLifecycleTool(name, args, env);
+        let result;
+        if (name === runnerCleanupTool.name) {
+          const args = validateRunnerCleanupArguments(message.params?.arguments || {});
+          result = await callRunnerCleanup(args, env);
+        } else {
+          const args = validateLifecycleArguments(name, message.params?.arguments || {});
+          result = await callSourceLifecycleTool(name, args, env);
+        }
         return toolResult(message.id ?? null, result);
       } catch (error) {
         return toolError(message.id ?? null, error);
