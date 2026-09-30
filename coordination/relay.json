@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T23:50:14.151Z",
+  "updated_at": "2026-09-30T23:51:08.420Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -800,8 +800,8 @@
       "id": "relay-1.9.5-planning-ledger-skill-20260930",
       "owner": "relay-1.9.5-planning-ledger-skill-20260930",
       "goal": "Ship Relay 1.9.5 as the planning/coordination intelligence release: ledger routing, worker communication, assignment taxonomy/labels/tags, and designated task roles that drive routing and skill posture without becoming authorization.",
-      "acceptance": "Planning/coordination skills scan relevant findings and latest resume state before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff over hidden state; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and human role names such as The Architect, The Art Director, The Builder, The Researcher, The Verifier, The Caretaker, The Release Captain and The Coordinator. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/branch/PR/evidence identity, state impact and requested action, and reconcile against canonical state before acting. Messages never silently change ownership/scope. Expose taxonomy/roles to routing, filtering, checkpoints and skill resolution; roles never grant authority. Tests cover validation, amendment history, duplicate avoidance, message classification/reconciliation and role-driven skill selection. Add a canonical staff registry alongside assignment taxonomy: approved names have status active/reserve/retired, role affinities, subsystem/subnet memberships and optional worker bindings; names are identity/presentation metadata only and never authorization. Initial active hires: Julian (central lead/coordination), Valentina (creative direction), Vivienne (product/interaction), Naomi (research/strategy), Ellis (systems architecture), Luca (release/deploy), Nico (implementation), Margot (design review/polish), Roman (verification/evidence), Imani (planning/skills/knowledge), Rafael (SOURCE/integration/rescue), Adrian (Runner/infrastructure/maintenance), Gabriel (Cloud/reliability), Sabine (motion/visual systems). Approved reserve: Mateo (integrations/connectors), Bianca (product/brand/launch), Dominique (program strategy/operations). Staff may belong to multiple subnets and may be bound to concrete workers/assignments without changing underlying owner ids.",
-      "next_action": "After 1.9.4, implement assignment taxonomy plus the canonical staff registry together: active/reserve/retired names, role affinities, subnet/subsystem membership, worker bindings, routing/filtering and skill posture. Preserve canonical owner/authorization ids underneath the human-facing staff identity.",
+      "acceptance": "Planning/coordination skills scan relevant findings and latest resume state before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff over hidden state; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and human role names such as The Architect, The Art Director, The Builder, The Researcher, The Verifier, The Caretaker, The Release Captain and The Coordinator. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/branch/PR/evidence identity, state impact and requested action, and reconcile against canonical state before acting. Messages never silently change ownership/scope. Expose taxonomy/roles to routing, filtering, checkpoints and skill resolution; roles never grant authority. Tests cover validation, amendment history, duplicate avoidance, message classification/reconciliation and role-driven skill selection. Add a canonical staff registry alongside assignment taxonomy: approved names have status active/reserve/retired, role affinities, subsystem/subnet memberships and optional worker bindings; names are identity/presentation metadata only and never authorization. Initial active hires: Julian (central lead/coordination), Valentina (creative direction), Vivienne (product/interaction), Naomi (research/strategy), Ellis (systems architecture), Luca (release/deploy), Nico (implementation), Margot (design review/polish), Roman (verification/evidence), Imani (planning/skills/knowledge), Rafael (SOURCE/integration/rescue), Adrian (Runner/infrastructure/maintenance), Gabriel (Cloud/reliability), Sabine (motion/visual systems). Approved reserve: Mateo (integrations/connectors), Bianca (product/brand/launch), Dominique (program strategy/operations). Staff may belong to multiple subnets and may be bound to concrete workers/assignments without changing underlying owner ids. Staff identity is sticky: once a name is approved/active, the same person name follows that staff identity across assignments, subnets, workers, resumes and UI unless explicitly retired/renamed by canonical amendment; never auto-regenerate or silently substitute names. Each active person has a compact durable personality profile (voice, temperament, collaboration style, humor tolerance, strengths/quirks) used only to shape presentation and communication, not technical truth or authority. Humor is generated contextually by Julian/the lead conversational layer from those profiles; do not store canned jokes, catchphrases or joke banks in worker state. Workers may surface dry/personality-consistent asides sparingly, but the lead owns levity and can suppress it for incidents, blockers, security, destructive operations or other serious states.",
+      "next_action": "Implement 1.9.5 staff identity as durable canonical records: sticky approved names, lifecycle/history, subsystem and worker bindings, compact personality profiles, and lead-owned contextual levity. Never generate replacement names automatically and never persist canned jokes.",
       "paths": [
         "skills/planning/",
         "skills/coordination/",
@@ -830,7 +830,10 @@
         "relay-role-skill-resolution",
         "relay-staff-registry",
         "relay-subnet-membership",
-        "relay-worker-personas"
+        "relay-worker-personas",
+        "relay-sticky-staff-identity",
+        "relay-staff-personality-profiles",
+        "relay-contextual-levity"
       ],
       "task_class": "architecture",
       "ledger_refs": [
@@ -846,7 +849,7 @@
       ],
       "state": "queued",
       "created_at": "2026-09-30T23:34:25.953Z",
-      "amendment_count": 2,
+      "amendment_count": 3,
       "amendments": [
         {
           "at": "2026-09-30T23:37:17.898Z",
@@ -951,9 +954,60 @@
               "relay-worker-personas"
             ]
           }
+        },
+        {
+          "at": "2026-09-30T23:51:08.420Z",
+          "by": "relay-1.9.5-planning-ledger-skill-20260930",
+          "reason": "Make Relay staff names genuinely persistent for cross-worker communication, add durable personality cues, and centralize contextual humor in Julian/the lead conversational layer instead of banking canned jokes.",
+          "fields": [
+            "acceptance",
+            "next_action",
+            "resources"
+          ],
+          "before": {
+            "acceptance": "Planning/coordination skills scan relevant findings and latest resume state before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff over hidden state; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and human role names such as The Architect, The Art Director, The Builder, The Researcher, The Verifier, The Caretaker, The Release Captain and The Coordinator. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/bra...",
+            "next_action": "After 1.9.4, implement assignment taxonomy plus the canonical staff registry together: active/reserve/retired names, role affinities, subnet/subsystem membership, worker bindings, routing/filtering and skill posture. Preserve canonical owner/authorization ids underneath the human-facing staff identity.",
+            "resources": [
+              "relay-1.9.5-release",
+              "relay-ledger-routing",
+              "relay-planning-skill",
+              "relay-worker-communication-skill",
+              "relay-interworker-handoffs",
+              "relay-canonical-state-reconciliation",
+              "relay-assignment-taxonomy",
+              "relay-assignment-labels-tags",
+              "relay-worker-roles",
+              "relay-role-skill-resolution",
+              "relay-staff-registry",
+              "relay-subnet-membership",
+              "relay-worker-personas"
+            ]
+          },
+          "after": {
+            "acceptance": "Planning/coordination skills scan relevant findings and latest resume state before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff over hidden state; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and human role names such as The Architect, The Art Director, The Builder, The Researcher, The Verifier, The Caretaker, The Release Captain and The Coordinator. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/bra...",
+            "next_action": "Implement 1.9.5 staff identity as durable canonical records: sticky approved names, lifecycle/history, subsystem and worker bindings, compact personality profiles, and lead-owned contextual levity. Never generate replacement names automatically and never persist canned jokes.",
+            "resources": [
+              "relay-1.9.5-release",
+              "relay-ledger-routing",
+              "relay-planning-skill",
+              "relay-worker-communication-skill",
+              "relay-interworker-handoffs",
+              "relay-canonical-state-reconciliation",
+              "relay-assignment-taxonomy",
+              "relay-assignment-labels-tags",
+              "relay-worker-roles",
+              "relay-role-skill-resolution",
+              "relay-staff-registry",
+              "relay-subnet-membership",
+              "relay-worker-personas",
+              "relay-sticky-staff-identity",
+              "relay-staff-personality-profiles",
+              "relay-contextual-levity"
+            ]
+          }
         }
       ],
-      "updated_at": "2026-09-30T23:50:14.151Z"
+      "updated_at": "2026-09-30T23:51:08.420Z"
     },
     {
       "id": "relay-1.9.6-creative-platform-packs-20260930",
