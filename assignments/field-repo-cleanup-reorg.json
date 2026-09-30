@@ -239,7 +239,17 @@
     "handoff": "docs/field/reorganization/MAIN_FIELD_WORKER_CONSOLIDATION.md",
     "phase": "inventory and main-worker direction prepared; implementation consolidation remains",
     "user_direction": "Retain branches until code, unfinished intent and QA have durable destinations. Existing main field worker consolidates; no new workers.",
-    "mutations_in_field": [],
-    "next_action": "Existing main field worker refreshes live ownership and executes the ordered consolidation handoff; branch retirement follows semantic completion accounting."
+    "mutations_in_field": [
+      {
+        "pr": 133,
+        "branch": "field/consolidation-validation-baseline-20260930",
+        "head": "cc38e107fedd1b33088bf64dd6534f6d3d97965f",
+        "state": "draft; install/build and Media CI pass; full tests/lint not cleared"
+      }
+    ],
+    "next_action": "Existing main field worker refreshes live ownership and executes the ordered consolidation handoff; branch retirement follows semantic completion accounting.",
+    "deferred_panel_requirements": "docs/field/reorganization/DEFERRED_CONNECTED_PANEL_REQUIREMENTS_20260930.md",
+    "panel_implementation": "deferred by user on 2026-09-30; instructions only; uncommitted experiments withdrawn",
+    "implementation_checkpoint": "docs/field/reorganization/EXECUTION_CHECKPOINT_20260930.md"
   }
 }

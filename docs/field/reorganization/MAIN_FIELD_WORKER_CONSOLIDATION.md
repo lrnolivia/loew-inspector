@@ -20,6 +20,10 @@ Preserve Design / Content / Code / Preview, source-first behavior, Figma semanti
 All new operational records go in Runner under `docs/field/`. Product specs remain authoritative in field and get Runner mirrors.
 Historical `field/control` assignments contain unfinished scope and acceptance criteria; inspect them as evidence, never restore their old execution law.
 
+## Deferred panel requirements added during execution
+
+User direction on 2026-09-30: add instructions now; defer panel implementation. Read [Deferred connected panel requirements](DEFERRED_CONNECTED_PANEL_REQUIREMENTS_20260930.md) before Mobile/Workspace closeout. Landscape uses the connected desktop-style floating shell, portrait keeps sheets, the Inspector chrome includes its topmost controls, and Insert detail panels share their host's top/bottom/height. The existing Mobile owner retains the lane; this addendum does not launch work or authorize a new worker.
+
 ## Protected boundaries
 
 - Mobile #123 / `field/mobile-focus-touch-camera-20260929` remains with its existing owner. Do not rename, close, rewrite, merge, or absorb it.
