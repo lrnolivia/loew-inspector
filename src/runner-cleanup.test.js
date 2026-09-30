@@ -216,5 +216,5 @@ test("Relay extension publishes cleanup as a destructive bounded tool", () => {
   assert.ok(cleanup);
   assert.equal(cleanup.annotations.destructiveHint, true);
   assert.deepEqual(cleanup.inputSchema.required, ["project", "mode"]);
-  assert.equal(RELAY_EXTENSION_VERSION, "1.4.0");
+  assert.match(RELAY_EXTENSION_VERSION, /^\d+\.\d+\.\d+$/);
 });
