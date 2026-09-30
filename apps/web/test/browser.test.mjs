@@ -69,7 +69,7 @@ test("shared interface works on web and MCP host transport, including mobile, de
         view = page.frameLocator("#app");
       }
       await view.locator("#operator-connection").filter({ hasText: "Connected" }).waitFor();
-      await view.getByRole("button", { name: "Projects", exact: true }).click();
+      await view.getByRole("button", { name: "Runner", exact: true }).click();
       await view.locator("#project-detail").filter({ hasText: "Complete consolidation" }).waitFor();
       await view.locator('#project-list [data-repo-icon="relay"][data-icon-sha="' + "b".repeat(40) + '"] img').waitFor();
       assert.equal(await view.locator('#project-list [data-repo-icon="relay"]').evaluate(node => getComputedStyle(node).backgroundColor), "rgba(0, 0, 0, 0)");
@@ -82,7 +82,7 @@ test("shared interface works on web and MCP host transport, including mobile, de
       await page.emulateMedia({ reducedMotion: "no-preference" });
       await view.getByRole("button", { name: "Night Shift", exact: true }).click();
       await view.locator("#night-shift-work").filter({ hasText: "Latest canonical run" }).waitFor();
-      await view.getByRole("button", { name: "Review", exact: true }).click();
+      await view.getByRole("button", { name: "Inspector", exact: true }).click();
       if (mode === "mcp") await view.getByRole("button", { name: "All", exact: true }).click();
       await view.locator("[data-review-id]").click();
       await view.getByRole("button", { name: "Yes", exact: true }).click();
