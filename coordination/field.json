@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T12:05:10.188Z",
+  "updated_at": "2026-09-30T12:09:15.583Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -445,7 +445,11 @@
         "src/editor/toolbar-mixed-menu.structure.test.ts",
         "src/editor/bottom-toolbar-glyphs.css",
         "src/editor/ui-hotfix-qa-contract.test.ts",
-        "src/editor/BottomToolbar.tsx"
+        "src/editor/BottomToolbar.tsx",
+        "src/editor/ui/ColorPicker.tsx",
+        "src/editor/controls/ColorInput.tsx",
+        "src/editor/media/MediaActionCard.tsx",
+        "src/editor/header/RightHeader.tsx"
       ],
       "resources": [
         "paint-picker-compactness",
@@ -454,12 +458,12 @@
       ],
       "goal": "Hotfix the three user-verified UI regressions on current field main: make the universal PaintPicker genuinely compact while preserving working nested color launchers; make toolbar popout cards and Media creation cards use one exact shared card treatment with no descriptions; restore the Inspector avatar-to-Publish header bar as explicit shell chrome.",
       "acceptance": "PaintPicker is materially smaller in width and vertical density and nested ColorInput launchers remain nested floating ToolPopups; toolbar mixed cards and Media creation cards render through the same shared component and Media descriptions are removed; RightHeader has an explicit bg-panel shell surface and separator so the avatar/zoom/theme/preview/publish bar is visibly part of the Inspector; contract tests assert all three; verify exact-head visual state through Relay before promotion.",
-      "next_action": "Exact-head checks are green at 64eb9ea3be9f179f76809447e2d9ce44f5d0a197. All screenshot/runtime captures for this assignment must be persisted through Inspector evidence with project=field, pr=137 and exact commit/deployment context, then verified visible in Runner Visual before being cited. Current exact-head evidence vis_f440a8d4-065a-4ff9-9fc6-35c9bc69ce2c is confirmed present in Runner /api/visual. Continue specific UI-state QA; do not promote until the remaining user-visible criteria are proven or explicitly handed to danger-zone human QA.",
+      "next_action": "Replace the emergency CSS approximations with direct product-source fixes: compact ColorInput/ColorPicker geometry, one shared MediaActionCard used by Media and toolbar popouts, and explicit RightHeader Inspector chrome. Then rerun exact-head CI and runtime QA.",
       "base_sha": "854038a3e84f41cd590a4ad18b24fcd4127e2fba",
       "state": "active",
       "created_at": "2026-09-30T11:40:16.059Z",
-      "updated_at": "2026-09-30T12:05:10.188Z",
-      "lease_until": "2026-10-01T00:05:10.188Z"
+      "updated_at": "2026-09-30T12:09:15.583Z",
+      "lease_until": "2026-10-01T00:09:15.583Z"
     }
   ]
 }
