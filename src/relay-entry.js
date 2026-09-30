@@ -1,8 +1,9 @@
 import legacy from "./index.js";
 import { callSourceLifecycleTool } from "./source-lifecycle.js";
 import { runnerCleanupTool, callRunnerCleanup, validateRunnerCleanupArguments } from "./runner-cleanup.js";
+import { cloudUploadTool, callCloudUpload, validateCloudUploadArguments } from "./cloud-upload.js";
 
-export const RELAY_EXTENSION_VERSION = "1.4.0";
+export const RELAY_EXTENSION_VERSION = "1.5.0";
 
 const createBranch = {
   name: "relay_source_create_branch",
@@ -69,7 +70,7 @@ export function augmentToolList(tools) {
     securitySchemes: schemes,
     _meta: { ...(old?._meta || {}), securitySchemes: schemes }
   };
-  const extensionTools = [...lifecycle, runnerCleanupTool];
+  const extensionTools = [...lifecycle, runnerCleanupTool, cloudUploadTool];
   const names = new Set(extensionTools.map(tool => tool.name));
   const kept = list.filter(tool => tool.name !== createBranch.name && !names.has(tool.name));
   return [
@@ -143,7 +144,7 @@ function patchVersion(payload) {
 }
 
 function isExtensionTool(name) {
-  return name === createBranch.name || lifecycle.some(tool => tool.name === name) || name === runnerCleanupTool.name;
+  return name === createBranch.name || lifecycle.some(tool => tool.name === name) || name === runnerCleanupTool.name || name === cloudUploadTool.name;
 }
 async function authProbe(request, message, env) {
   const headers = new Headers(request.headers);
@@ -202,6 +203,9 @@ export default {
         if (name === runnerCleanupTool.name) {
           const args = validateRunnerCleanupArguments(message.params?.arguments || {});
           result = await callRunnerCleanup(args, env);
+        } else if (name === cloudUploadTool.name) {
+          const args = validateCloudUploadArguments(message.params?.arguments || {});
+          result = await callCloudUpload(args, env);
         } else {
           const args = validateLifecycleArguments(name, message.params?.arguments || {});
           result = await callSourceLifecycleTool(name, args, env);
