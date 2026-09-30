@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T12:58:38.307Z",
+  "updated_at": "2026-09-30T13:04:56.038Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -292,10 +292,16 @@
       "acceptance": "MCP skills/list and resources/list expose a human-qa skill; skills/get and resources/read return its guidance; the skill points agents to Runner's human QA helper contract/docs, requires criterion-specific questions/checklists, keeps deterministic checks agent-owned, binds answers to exact artifact/evidence identity, and does not alter qa-shell design/runtime files; tests and Runner admission pass.",
       "next_action": "Create the branch from exact main, add the small QA skill module, extend Relay's wrapper discovery/read paths, update extension tests, then open a draft PR and verify exact-head checks.",
       "base_sha": "5edb12474f3ac86bc265b8a197bcdecb17b70d62",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T12:58:38.307Z",
-      "updated_at": "2026-09-30T12:58:38.307Z",
-      "lease_until": "2026-10-01T00:58:38.307Z"
+      "updated_at": "2026-09-30T13:04:56.038Z",
+      "lease_until": "2026-10-01T01:04:56.038Z",
+      "pr": 38,
+      "merged_head_sha": "dfa75d2a1944b42f4084381a737ab4789fb2e164",
+      "merge_commit_sha": "57378a504025ff5816959c423f34fe0824b82f2d",
+      "evidence": "https://github.com/lrnolivia/loew-inspector/pull/38 — exact-head tests and Runner admission passed; human-qa skill published through native MCP Skills/Resources discovery.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T13:04:56.038Z"
     }
   ]
 }
