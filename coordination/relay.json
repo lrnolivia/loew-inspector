@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T22:12:36.691Z",
+  "updated_at": "2026-09-30T22:13:04.211Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -1178,7 +1178,9 @@
         "src/cloud-upload.test.js",
         "src/runner-control.test.js",
         "src/source.test.js",
-        "wrangler.jsonc"
+        "wrangler.jsonc",
+        "src/source.js",
+        "src/cloud.js"
       ],
       "resources": [
         "relay-1.7.5-release",
@@ -1198,8 +1200,8 @@
       "base_sha": "5eba775bedfb13673bb3082f130cb30980a31c02",
       "state": "active",
       "created_at": "2026-09-30T21:59:29.730Z",
-      "updated_at": "2026-09-30T22:11:51.809Z",
-      "lease_until": "2026-10-01T10:11:51.809Z"
+      "updated_at": "2026-09-30T22:13:04.211Z",
+      "lease_until": "2026-10-01T10:13:04.211Z"
     }
   ],
   "migrated_from": "loew-inspector"
