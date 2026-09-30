@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loewtorials",
-  "updated_at": "2026-09-30T08:58:00.000Z",
+  "updated_at": "2026-09-30T09:06:02.353Z",
   "legacy_branches": [
     "codex/llm-help-integration",
     "docs/move-to-runner",
@@ -9,5 +9,25 @@
     "runner/universal-authority"
   ],
   "queue": [],
-  "claims": []
+  "claims": [
+    {
+      "id": "loewtorials-coordination-bootstrap-20260930",
+      "owner": "normal-chat-project-registry-20260930",
+      "branch": "loewtorials/coordination-bootstrap",
+      "paths": [
+        ".github/workflows/runner-coordination.yml"
+      ],
+      "resources": [
+        "runner-work-admission"
+      ],
+      "goal": "Install Field-style Runner coordination admission and managed branch hygiene for lrnolivia/loewtorials.",
+      "acceptance": "Pull requests are gated by a live Runner claim; scheduled/manual audit and cleanup use the canonical loew-runner coordination engine; no product files are changed.",
+      "next_action": "Create the claimed bootstrap branch, add the parameterized coordination workflow, open the draft PR, verify admission, then merge with squash.",
+      "base_sha": "1c7b0a891c5b25de9e2194ba986ac4bab6297be7",
+      "state": "active",
+      "created_at": "2026-09-30T09:06:02.353Z",
+      "updated_at": "2026-09-30T09:06:02.353Z",
+      "lease_until": "2026-09-30T21:06:02.353Z"
+    }
+  ]
 }
