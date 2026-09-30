@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T10:38:25.615Z",
+  "updated_at": "2026-09-30T10:41:00.952Z",
   "legacy_branches": [
     "control",
     "main",
@@ -136,10 +136,16 @@
       "acceptance": "Exact current source and honest validation limits recorded; protect Mobile and deferred panels",
       "next_action": "Record Dashboard #136 current head, tested behavior, pending gates and Controls #83 comparison without production infrastructure changes.",
       "base_sha": "081365251ca3674161eb040f3ab832ba6faf343c",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T10:37:44.011Z",
-      "updated_at": "2026-09-30T10:37:44.011Z",
-      "lease_until": "2026-09-30T22:37:44.011Z"
+      "updated_at": "2026-09-30T10:41:00.952Z",
+      "lease_until": "2026-09-30T22:41:00.952Z",
+      "pr": 37,
+      "merged_head_sha": "77e8a2c6e2fe855a1ee20aedd6e5b70263fe6bfb",
+      "merge_commit_sha": "1c0099385c76a1e7085bd06b1fda08c39b69144d",
+      "evidence": "Runner #37: Dashboard product checkpoint and assignment record published; exact Field head 9fd1357, 57/58 Dashboard checks with unchanged baseline failure, current-head Registry 36703709649 pending, authenticated persistence unproven; Controls #83 disposition preserved.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T10:41:00.952Z"
     },
     {
       "id": "relay-batch-ledger",
