@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-09-30T16:04:59.925Z",
+  "updated_at": "2026-09-30T16:18:32.231Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -762,10 +762,16 @@
       "acceptance": "relay.loew.fi unifiedweb/MCP verified, sameWorkerID and secret/bindingidentities preserved; exact upload/deployment/readback; olddomains remain until B6.",
       "next_action": "Add exact-source authenticated production smoke; align canonical Worker name and safe committed runtime variables before bootstrap rename/upload.",
       "base_sha": "ffeee7eb486583e517a54a8940c25556532b21fa",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T16:00:18.302Z",
-      "updated_at": "2026-09-30T16:04:59.925Z",
-      "lease_until": "2026-10-01T04:04:59.925Z"
+      "updated_at": "2026-09-30T16:18:32.231Z",
+      "lease_until": "2026-10-01T04:18:32.231Z",
+      "pr": 45,
+      "merged_head_sha": "2c293793a87d876325bff03acda427bfe7c31a0a",
+      "merge_commit_sha": "ea8fd9b7f63e9c132908e901f2949ba19fdb98b5",
+      "evidence": "PR45 exact head2c293793a87d876325bff03acda427bfe7c31a0a passed CI/admission; mergeea8fd9b7f63e9c132908e901f2949ba19fdb98b5 deployed same Worker734382bfc38a43cfb8cf9115116ed688 renamed relay, version21b95737-16d0-4ded-babb-1b77586bbe9e deploymentfd1098cc-8db5-4e04-91cb-c7422a54e755100%. Authenticated production smoke https://github.com/lrnolivia/relay/actions/runs/36742121446 passed exact-source web/MCP/API/module/binding verification. Native uploader readback reconciled30modules sameversion; live MCP app connected. Secrets Browser R2 OAuth preserved.",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T16:18:32.231Z"
     }
   ],
   "migrated_from": "loew-inspector"
