@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "rtxforge",
-  "updated_at": "2026-09-30T09:06:03.688Z",
+  "updated_at": "2026-09-30T09:12:55.001Z",
   "legacy_branches": [
     "backup/github-main-before-0.5.8",
     "backup/main-0.5.8-ada",
@@ -26,10 +26,16 @@
       "acceptance": "Pull requests are gated by a live Runner claim; scheduled/manual audit and cleanup use the canonical loew-runner coordination engine; no product files are changed.",
       "next_action": "Create the claimed bootstrap branch, add the parameterized coordination workflow, open the draft PR, verify admission, then merge with squash.",
       "base_sha": "2ec7fa374bc1854f173d3785ad4f089b9c9eca9a",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T09:06:03.688Z",
-      "updated_at": "2026-09-30T09:06:03.688Z",
-      "lease_until": "2026-09-30T21:06:03.688Z"
+      "updated_at": "2026-09-30T09:12:55.001Z",
+      "lease_until": "2026-09-30T21:12:55.001Z",
+      "pr": 4,
+      "merged_head_sha": "dfebd5ed611e9ff43b4de47c1dd47efc23c749ba",
+      "merge_commit_sha": "4156ec19515f10af519564699aaebe6adf75c850",
+      "evidence": "https://github.com/lrnolivia/rtxForge/pull/4",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T09:12:55.001Z"
     }
   ]
 }
