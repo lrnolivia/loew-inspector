@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-runner",
-  "updated_at": "2026-09-30T11:39:34.601Z",
+  "updated_at": "2026-09-30T11:52:04.751Z",
   "legacy_branches": [
     "control",
     "main",
@@ -192,6 +192,31 @@
       "evidence": "PR #39 merged exact green head d7127f3ca98c7b067c4ff336f06b404af323755a as cdb77b324a250da1bcd787eea0b8026e971462d3 after test, Runner coordination admission, and Workers Builds passed. Production runner.loew.fi /api/workers verified HTTP 200 through relay.VERIFY with target_role=automation_observation and authority.write_authority={mode:managed_coordination,enabled:true,direct_default_branch_writes:false,branch_prefixes:[field/],draft_pr_required:true}. relay.RUNNER worker query independently returned the same authority object and coordination record e9fff283a620c3845fe4fc447e55847e4a17c9af.",
       "work_accounted": true,
       "completed_at": "2026-09-30T11:34:18.518Z"
+    },
+    {
+      "id": "runner-human-qa-shell-20260930",
+      "owner": "normal-chat-runner-ux-20260930",
+      "branch": "loew-runner/human-qa-shell",
+      "paths": [
+        "dashboard/index.html",
+        "dashboard/styles.css",
+        "dashboard/app.js",
+        "src/cloudflare-worker.mjs",
+        "src/visual-evidence.mjs",
+        "test/cloudflare-worker.test.mjs"
+      ],
+      "resources": [
+        "runner-human-qa",
+        "runner-visual-evidence"
+      ],
+      "goal": "Turn Runner visual evidence into a human QA workspace with full-screen live preview and a floating Runner companion for targeted questions, notes, and verdicts.",
+      "acceptance": "Live preview owns the screen when the captured environment is still reachable; Runner floats above it in a compact accessible panel with targeted QA questions, notes, looks-good/needs-work/not-sure responses, screenshot fallback when preview is dead, and technical evidence behind progressive disclosure. No existing Relay/Runner safety gates are weakened.",
+      "next_action": "Inspect evidence persistence and dashboard structure, implement the smallest coherent human-QA slice on the claimed branch, then run check/test and visual verification.",
+      "base_sha": "5ce9f02fbdbe0004c3249934d0f642fb2ffa5bce",
+      "state": "active",
+      "created_at": "2026-09-30T11:52:04.751Z",
+      "updated_at": "2026-09-30T11:52:04.751Z",
+      "lease_until": "2026-09-30T23:52:04.751Z"
     }
   ]
 }
