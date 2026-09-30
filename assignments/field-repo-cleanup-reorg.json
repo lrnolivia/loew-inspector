@@ -232,10 +232,14 @@
   ],
   "execution": {
     "started_at": "2026-09-30T04:50:00Z",
-    "main": "0ea02501704e61d5133477d69fe677ad53295a56",
-    "inventory_branches": 133,
+    "reviewed_main": "0ea02501704e61d5133477d69fe677ad53295a56",
+    "inventory_branches": 132,
     "open_prs": 19,
     "ledger": "docs/field/reorganization/2026-09-30-inventory.json",
-    "next_action": "Retire 71 branch heads proven reachable or patch-equivalent; recover Canvas deltas; retain unresolved unique work and protected lanes."
+    "handoff": "docs/field/reorganization/MAIN_FIELD_WORKER_CONSOLIDATION.md",
+    "phase": "inventory and main-worker direction prepared; implementation consolidation remains",
+    "user_direction": "Retain branches until code, unfinished intent and QA have durable destinations. Existing main field worker consolidates; no new workers.",
+    "mutations_in_field": [],
+    "next_action": "Existing main field worker refreshes live ownership and executes the ordered consolidation handoff; branch retirement follows semantic completion accounting."
   }
 }
