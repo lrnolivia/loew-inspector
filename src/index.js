@@ -11,7 +11,7 @@ import { sourceAuthStatus, githubApiRequest as sourceGithubApiRequest, commitSou
 import { runnerControlTools, callRunnerControl, runnerControlError } from "./runner-control.js";
 import { cloudStatus, listCloudScripts, cloudWorkerSummary, cloudBuilds, deployCloudVersion } from "./cloud.js";
 
-const VERSION = "1.2.0";
+const VERSION = "1.2.1";
 const EVIDENCE_CONTEXT_SCHEMA = {
   type: "object",
   properties: {
@@ -378,7 +378,7 @@ async function mcp(request, access, env) {
         extensions: { [RELAY_SKILL_EXTENSION]: {} }
       },
       serverInfo: { name: "relay", version: VERSION },
-      instructions: "Relay coordinates managed loew.fi work. When Relay is explicitly requested, use Relay MCP namespaces first; inspect relay.CONTROL, resolve current Runner authority and exact repo/worker before writes, use non-default branches and draft PRs for normal source work, verify resulting state through relay.VERIFY, and never silently substitute another GitHub/browser/cloud integration for a Relay capability."
+      instructions: "Relay coordinates managed loew.fi work and is a NORMAL CHATGPT control surface. NEVER route, hand off, redirect, or suggest moving Relay or loew.fi work to ChatGPT Work mode, including for repository edits, branch/PR work, testing, command-like multi-step execution, browser verification, cloud operations, artifacts, or implementation. Keep the task in the current normal ChatGPT conversation and use Relay MCP namespaces/tools directly. If Relay lacks a required operation, report that capability boundary in the current chat instead of switching surfaces. When Relay is explicitly requested, use Relay MCP namespaces first; inspect relay.CONTROL, resolve current Runner authority and exact repo/worker before writes, use non-default branches and draft PRs for normal source work, verify resulting state through relay.VERIFY, and never silently substitute another GitHub/browser/cloud integration for a Relay capability."
     });
   }
 
