@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T20:10:41.167Z",
+  "updated_at": "2026-09-30T20:16:49.237Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -439,18 +439,21 @@
       "owner": "01a0f0ae-4e8c-7e62-ae7a-3b02faa398f5",
       "branch": "field/ui-hotfix-20260930",
       "paths": [
-        "src/editor/ui/PaintPickerShell.tsx",
-        "src/editor/ui/paint-picker-universal-contract.test.ts",
+        "src/editor/BottomToolbar.tsx",
+        "src/editor/bottom-toolbar-glyphs.css",
+        "src/editor/controls/ColorInput.tsx",
+        "src/editor/e2e/ui-hotfix.spec.ts",
+        "src/editor/header/RightHeader.tsx",
+        "src/editor/media/MediaActionCard.tsx",
         "src/editor/media/MediaLauncher.tsx",
         "src/editor/media/media-toolbar-launcher.test.ts",
         "src/editor/toolbar-mixed-menu.structure.test.ts",
-        "src/editor/bottom-toolbar-glyphs.css",
+        "src/editor/tools/StylesTool/atoms/FillControl.tsx",
+        "src/editor/tools/TextStyleTool/atoms/TextColorControl.tsx",
         "src/editor/ui-hotfix-qa-contract.test.ts",
-        "src/editor/BottomToolbar.tsx",
         "src/editor/ui/ColorPicker.tsx",
-        "src/editor/controls/ColorInput.tsx",
-        "src/editor/media/MediaActionCard.tsx",
-        "src/editor/header/RightHeader.tsx"
+        "src/editor/ui/PaintPickerShell.tsx",
+        "src/editor/ui/paint-picker-universal-contract.test.ts"
       ],
       "resources": [
         "paint-picker-compactness",
@@ -459,12 +462,12 @@
       ],
       "goal": "Hotfix the three user-verified UI regressions on current field main: make the universal PaintPicker genuinely compact while preserving working nested color launchers; make toolbar popout cards and Media creation cards use one exact shared card treatment with no descriptions; restore the Inspector avatar-to-Publish header bar as explicit shell chrome.",
       "acceptance": "PaintPicker is materially smaller in width and vertical density and nested ColorInput launchers remain nested floating ToolPopups; toolbar mixed cards and Media creation cards render through the same shared component and Media descriptions are removed; RightHeader has an explicit bg-panel shell surface and separator so the avatar/zoom/theme/preview/publish bar is visibly part of the Inspector; contract tests assert all three; verify exact-head visual state through Relay before promotion.",
-      "next_action": "User explicitly says own the hot fix too / you own everything / consolidate. This chat owns the serial hotfix publication; inspect and finish current #137, validate exact source before merge, then resume preserved #136 under same chat.",
+      "next_action": "Finish real compact Fill/Text/ColorInput launch geometry, shared toolbar/Media cards and Inspector surface with browser regression coverage; explicit user authorizes all consolidation.",
       "base_sha": "854038a3e84f41cd590a4ad18b24fcd4127e2fba",
       "state": "active",
       "created_at": "2026-09-30T11:40:16.059Z",
-      "updated_at": "2026-09-30T20:10:41.167Z",
-      "lease_until": "2026-10-01T08:10:41.167Z"
+      "updated_at": "2026-09-30T20:16:49.237Z",
+      "lease_until": "2026-10-01T08:16:49.237Z"
     }
   ]
 }
