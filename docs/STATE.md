@@ -1,6 +1,6 @@
 # runner — current state
 
-Updated: 2026-09-29. Baseline inspected: `1fec12ce7b7271afc3eeeb9fd8b73368a25f61db`.
+Updated: 2026-09-30. Baseline inspected: `1fec12ce7b7271afc3eeeb9fd8b73368a25f61db`.
 
 ## Verified implementation
 
@@ -10,6 +10,24 @@ Updated: 2026-09-29. Baseline inspected: `1fec12ce7b7271afc3eeeb9fd8b73368a25f61
 - Field reorganization is a separate assignment. Current `field/` branch enforcement remains until compatibility is proved.
 - Runner/Inspector infrastructure work is protected. The 3.0 worker owns dashboard/data-model integration, not provider scheduling or capacity policy.
 - No first-class Team registry exists yet. Historical reports do not prove current chat liveness.
+
+## Access/control migration snapshot
+
+Verified 2026-09-30:
+
+- `relay` plugin is at v0.4.1 with the Relay Loop mark packaged as `assets/relay.png` for both `composerIcon` and `logo`. The immutable backend/package name remains `relay-github`; the human-facing product name is `relay`.
+- Canonical OAuth/MCP ingress is `https://relay.loew.fi/mcp`. Cloudflare Managed OAuth discovery and ChatGPT authentication are verified. A post-auth inspector tool invocation through the new canonical hostname is still required before retiring the old inspector MCP path.
+- `relay.loew.fi`, `relay-inspector.loew.fi`, and `inspector.loew.fi` currently route to the same `loew-inspector-gateway` Worker. The latter two are compatibility/legacy hostnames, not the target product identity.
+- Access app `relay` keeps `Only Me` and Managed OAuth/DCR. It currently also retains `relay-inspector.loew.fi` as a compatibility destination.
+- Access app `loew.fi private` protects `loew.fi` and `*.loew.fi`. During migration it intentionally carries both new relay trust and old inspector/service-token trust. Do not delete old trust until authenticated relay access is proven against downstream protected resources and Access traffic shows the legacy path is idle.
+- `field-qa` remains the working public/bypass boundary for field QA routes. External probes after removing `field-access` still showed the field root protected while `/builder/noauth`, `canvas.field.loew.fi`, and `preview.field.loew.fi` remained publicly reachable as intended.
+- Redundant Runner Access apps `runner-access`, `loew-runner`, and `loew-runner - Cloudflare Workers` were removed after the broad private boundary was verified and the Runner-specific apps showed no recent Access traffic.
+- Redundant `field-access` was removed after the broad private boundary plus `field-qa` behavior was re-probed successfully.
+- Legacy `loew-inspector-mcp` and `loew-inspector GitHub transport` remain on purpose. The GitHub transport still had substantial recent traffic and is a live fallback.
+- Several reusable policies with zero app references remain cleanup candidates; they should be removed only after another reference-count check.
+- Observed caveat: `https://relay.loew.fi/health` still redirects through the broad `loew.fi private` boundary even though the relay app carries a public `/health` override. Do not assume a public override on one overlapping Access app bypasses a separate wildcard app.
+
+Detailed IDs, rollback data, and the migration checklist are in `docs/ACCESS_CONTROL.md`.
 
 ## Baseline repository cleanup ledger
 
@@ -31,7 +49,7 @@ Temporary local build checkpoints are separate from this remote baseline. `runne
 - README's mixed 0.1 pilot instructions, planned deployment and dependency snapshots are superseded as the entry point; exact original preserved at `docs/archive/README-0.6-baseline.md`.
 - This file owns current verified state and the cleanup ledger. README routes; architecture owns durable structure; 3.0 spec owns approved intent.
 - Existing `reports/` are provenance, not canonical implementation state or Team registration. They remain intact until structured supersession/reference proof exists.
-- Universal Bible/current authority and Night Shift contracts remain authoritative and unchanged.
+- Universal Bible/current authority and Night Shift contracts remain authoritative; this branch updates the Bible transport/control naming section and bumps its version.
 - No speculative first-class worker identities have been created.
 
 ## Next gates

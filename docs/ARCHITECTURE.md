@@ -41,6 +41,22 @@ PJM / Master / Contract Worker / Night Shift Manager
         field · rtxForge · GameBridge · ...
 ```
 
+## Control surfaces and naming
+
+The human-facing product/control vocabulary is intentionally small:
+
+- `relay` — ChatGPT-facing control product and canonical handoff surface
+- `runner` — execution, orchestration, durable state, scheduling, and project control backend
+- `inspector` — runtime verification, screenshots, browser evidence, and QA service
+- `loew.CONTROL` — underlying control architecture
+- `source.CONTROL`, `cloud.CONTROL`, and `runtime.VERIFY` — architectural subsystems where the dotted form is useful
+
+Human-facing product/service names stay lowercase. Dotted uppercase names describe architecture, not separate products.
+
+Cloudflare Access applications are authentication/trust boundaries, not a project registry. A new Runner-managed project does **not** automatically get its own Access application. Public or simpler products may need no dedicated Access application at all. This is why projects such as `loewtorials` and `thetake` can exist in Runner without appearing as dedicated Zero Trust applications.
+
+The canonical ChatGPT OAuth/MCP ingress is `https://relay.loew.fi/mcp`. The live endpoint is currently backed by the inspector gateway while relay continues to route source/cloud work through the appropriate connected providers. See `docs/ACCESS_CONTROL.md` for exact current topology, legacy compatibility paths, IDs, verification state, and the safe migration/rollback procedure.
+
 ## Three kinds of truth
 
 ### Product truth

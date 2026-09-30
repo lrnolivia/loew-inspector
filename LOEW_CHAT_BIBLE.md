@@ -1,6 +1,6 @@
 # loew chat bible
 
-Version: `2026-09-30.1`  
+Version: `2026-09-30.2`  
 Canonical authority: `lrnolivia/loew-runner@main`
 
 This is the single universal operating contract for loew.fi ChatGPT, Codex, Work, Contract Worker, Night Shift, PJM, Master, Worker, and other project-execution chats.
@@ -56,6 +56,12 @@ Scheduled chats may wake themselves. Runner may prepare state, queues, diagnosti
 ## 4. Transport law
 
 Composio is available as the universal remote GitHub/control-plane transport.
+
+The human-facing control product is `relay`; the underlying architecture is `loew.CONTROL`. Human-facing identities `relay`, `inspector`, and `runner` remain lowercase. Architectural subsystems may use `name.FUNCTION` forms such as `source.CONTROL`, `cloud.CONTROL`, and `runtime.VERIFY`.
+
+For normal ChatGPT control work, `relay` is the canonical control surface when it is available. The canonical OAuth/MCP ingress is `https://relay.loew.fi/mcp`. The current endpoint is still backed by the inspector gateway, so do not infer that one MCP endpoint already aggregates every relay capability; source/cloud actions may still use their connected providers while relay supplies the product-level routing and control surface.
+
+Current Access topology, migration state, compatibility paths, and rollback rules live in `docs/ACCESS_CONTROL.md`.
 
 If an authorized local clone is available, especially in Codex or Linux workflows, local inspection/edit/test/commit is allowed and often preferred for implementation work.
 
