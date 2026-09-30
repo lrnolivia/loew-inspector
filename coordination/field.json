@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T05:06:12.798659Z",
+  "updated_at": "2026-09-30T05:21:36.629Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -203,10 +203,16 @@
       "acceptance": "Live PR ownership gate passes; scheduled automation uses repository tokens and preserves legacy work",
       "next_action": "Land Runner contract, then verify and land Field setup",
       "base_sha": "0ea02501704e61d5133477d69fe677ad53295a56",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T05:18:36.941151Z",
-      "updated_at": "2026-09-30T05:18:36.941151Z",
-      "lease_until": "2026-09-30T17:18:36.941151Z"
+      "updated_at": "2026-09-30T05:21:36.629Z",
+      "lease_until": "2026-09-30T17:21:36.629Z",
+      "pr": 134,
+      "merged_head_sha": "f18bca11ee4d9317f7c5d619f5bc7004c8c1c956",
+      "merge_commit_sha": "760774a6bd628827f93190fb0abaf7a6e26acbea",
+      "evidence": "https://github.com/lrnolivia/field/pull/134 (paired with loew-runner#27; code and instructions merged, admission passed at exact setup head, no unfinished product work in this task)",
+      "work_accounted": true,
+      "completed_at": "2026-09-30T05:21:36.629Z"
     }
   ]
 }
