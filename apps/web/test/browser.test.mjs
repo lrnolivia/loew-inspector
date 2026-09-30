@@ -84,9 +84,10 @@ test("shared interface works on web and MCP host transport, including mobile, de
       }
       await view.locator("#operator-connection").filter({ hasText: "Connected" }).waitFor();
       await view.getByRole("button", { name: "Runner", exact: true }).click();
+      await view.getByRole("tab", { name: "relay", exact: true }).click();
       await view.locator("#project-detail").filter({ hasText: "Complete consolidation" }).waitFor();
-      await view.locator('#project-list [data-repo-icon="relay"][data-icon-sha="' + "b".repeat(40) + '"] img').waitFor();
-      assert.equal(await view.locator('#project-list [data-repo-icon="relay"]').evaluate(node => getComputedStyle(node).backgroundColor), "rgba(0, 0, 0, 0)");
+      await view.locator('#project-tabs [data-project-id="relay"] [data-repo-icon="relay"][data-icon-sha="' + "b".repeat(40) + '"] img').waitFor();
+      assert.equal(await view.locator('#project-tabs [data-project-id="relay"] [data-repo-icon="relay"]').evaluate(node => getComputedStyle(node).backgroundColor), "rgba(0, 0, 0, 0)");
       for (const width of [560, 900, 1360]) {
         await page.setViewportSize({ width, height: 1000 });
         assert.equal(await view.locator("body").evaluate(() => document.documentElement.scrollWidth > innerWidth), false, mode + " viewport " + width);
@@ -95,7 +96,9 @@ test("shared interface works on web and MCP host transport, including mobile, de
       assert.equal(await view.locator(".relay-glyph").first().evaluate(node => getComputedStyle(node).transitionDuration), "0s");
       await page.emulateMedia({ reducedMotion: "no-preference" });
       assert.equal(await view.locator(".flow-band").count(), 0);
-      assert.equal(await view.locator(".page-overview").count() > 0, true);
+      assert.equal(await view.locator(".page-overview").count(), 0);
+      assert.equal(await view.locator(".page-statusline").count() > 0, true);
+      assert.equal(await view.locator(".project-tabs").count(), 1);
       await view.getByRole("button", { name: "night shift", exact: true }).click();
       await view.locator("#night-shift-work").filter({ hasText: "Latest canonical run" }).waitFor();
       await view.getByRole("button", { name: "Inspector", exact: true }).click();
@@ -113,6 +116,7 @@ test("shared interface works on web and MCP host transport, including mobile, de
       if (mode === "web") {
         await page.goto(origin + "#projects?project=relay");
         await page.locator("#project-detail").filter({ hasText: "Complete consolidation" }).waitFor();
+        assert.equal(await page.getByRole("tab", { name: "relay", exact: true }).getAttribute("aria-selected"), "true");
         await page.screenshot({ path: "/tmp/relay-b4-dark.png" });
         await page.setViewportSize({ width: 390, height: 844 });
         await page.emulateMedia({ colorScheme: "light" });
