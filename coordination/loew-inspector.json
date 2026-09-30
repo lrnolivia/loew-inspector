@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T14:37:28.301Z",
+  "updated_at": "2026-09-30T14:39:45.880Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -163,7 +163,7 @@
         "relay-runner-subsystem",
         "relay-inspector-subsystem"
       ],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-09-30T14:07:00.575Z"
     },
     {
@@ -633,6 +633,35 @@
       "evidence": "https://github.com/lrnolivia/relay/pull/40 — Batch 1 identity bridge merged at exact tested head 9f94676a1f8c6e432e03851159917c682ef33940; tests and Runner admission passed after control-plane registration was bridged to lrnolivia/relay; squash merge 2ddc8fdbbda871ad91e563fc657bcc4c382fd236.",
       "work_accounted": true,
       "completed_at": "2026-09-30T14:37:28.301Z"
+    },
+    {
+      "id": "relay-consolidation-b2-monorepo-import-20260930",
+      "owner": "relay-consolidation-b2-monorepo-import-20260930",
+      "branch": "loew-inspector/relay-b2-monorepo-import",
+      "paths": [
+        "apps/",
+        "packages/",
+        "features/",
+        "package.json",
+        "package-lock.json",
+        "README.md",
+        ".github/workflows/",
+        "docs/MONOREPO_LAYOUT.md",
+        "docs/RUNNER_IMPORT_PROVENANCE.md"
+      ],
+      "resources": [
+        "relay-monorepo",
+        "relay-runner-subsystem",
+        "relay-inspector-subsystem"
+      ],
+      "goal": "Batch 2: import loew-runner code and history into lrnolivia/relay and establish the monorepo layout where runner and inspector are internal subsystems and night shift is a Relay feature.",
+      "acceptance": "Relay contains an implementation-ready monorepo layout with MCP/web apps plus runner and inspector subsystem packages; loew-runner source and meaningful Git history/provenance are preserved in the consolidation rather than copied as anonymous files; existing Inspector/Relay history remains intact from the repository rename; package/workspace/test/build boundaries are explicit; night shift is represented as a Relay feature/view, not another product; no production routing or old repository deletion occurs yet; exact source and history import are independently verifiable before Batch 3.",
+      "next_action": "Create the exact-main Batch 2 branch; inventory loew-runner source and commit history; import runner/inspector subsystem packages plus provenance manifest; establish workspace/app boundaries without production routing changes.",
+      "base_sha": "2ddc8fdbbda871ad91e563fc657bcc4c382fd236",
+      "state": "active",
+      "created_at": "2026-09-30T14:39:45.880Z",
+      "updated_at": "2026-09-30T14:39:45.880Z",
+      "lease_until": "2026-10-01T02:39:45.880Z"
     }
   ]
 }
