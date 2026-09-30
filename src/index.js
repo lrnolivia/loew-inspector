@@ -5,8 +5,9 @@ import { runBrowserRecipe, listBrowserRecipes } from "./recipes.js";
 import { evidenceEngines, planEvidenceRequest, normalizeBrowserCapacityError } from "./controller.js";
 import { ingestExternalEvidence, upsertEvidenceRun } from "./external-evidence.js";
 import { getRecipe, listRecipes, saveRecipeFromSession } from "./recipe-store.js";
+import { RELAY_CONTROL_CENTER_URI, relayControlCenterResource } from "./relay-ui.js";
 
-const VERSION = "0.8.0";
+const VERSION = "0.9.0";
 const EVIDENCE_CONTEXT_SCHEMA = {
   type: "object",
   properties: {
@@ -400,16 +401,58 @@ async function mcp(request, access, env) {
   if (message.method === "initialize") {
     return rpc(id, {
       protocolVersion: "2025-03-26",
-      capabilities: { tools: {} },
+      capabilities: { tools: {}, resources: {} },
       serverInfo: { name: "relay", version: VERSION }
     });
   }
 
   if (message.method === "ping") return rpc(id, {});
 
+
+  if (message.method === "resources/list") {
+    return rpc(id, {
+      resources: [
+        {
+          uri: RELAY_CONTROL_CENTER_URI,
+          name: "relay-control-center",
+          title: "Relay control center",
+          description: "Interactive control surface for relay.CONTROL, relay.RUNNER, relay.SOURCE, relay.CLOUD, and relay.VERIFY.",
+          mimeType: "text/html;profile=mcp-app"
+        }
+      ]
+    });
+  }
+
+  if (message.method === "resources/read") {
+    const uri = message.params?.uri;
+    if (uri !== RELAY_CONTROL_CENTER_URI) return rpcError(id, -32602, "Unknown resource");
+    return rpc(id, { contents: [relayControlCenterResource()] });
+  }
+
   if (message.method === "tools/list") {
     const securitySchemes = [{ type: "oauth2", scopes: [] }];
     const tools = [
+
+        {
+          name: "relay_ui_control_center",
+          title: "Open Relay control center",
+          description: "Render Relay's interactive control center for inspecting namespaces, Runner state, source/cloud readiness, and verification engines. Use this when a visual Relay overview or control surface would help.",
+          inputSchema: { type: "object", properties: {}, additionalProperties: false },
+          annotations: { readOnlyHint: true, destructiveHint: false, openWorldHint: false },
+          _meta: {
+            ui: {
+              resourceUri: RELAY_CONTROL_CENTER_URI,
+              visibility: ["model", "app"]
+            },
+            "openai/outputTemplate": RELAY_CONTROL_CENTER_URI,
+            "openai/widgetAccessible": true,
+            "openai/toolInvocation/invoking": "Opening Relay…",
+            "openai/toolInvocation/invoked": "Relay ready.",
+            "openai/ui": {
+              entrypoints: [{ type: "global" }]
+            }
+          }
+        },
 
         {
           name: "relay_control_status",
@@ -809,6 +852,44 @@ async function mcp(request, access, env) {
       const rawName = message.params?.name;
       const name = relayToolName(rawName);
       const args = message.params?.arguments || {};
+
+
+      if (name === "relay_ui_control_center") {
+        const workers = await runnerApiRequest(access.token, "/api/workers");
+        const capabilities = {
+          runner_read: true,
+          runner_write: true,
+          source_read: true,
+          source_write: Boolean(env?.RELAY_GITHUB_TOKEN),
+          cloud_control: Boolean(env?.CLOUDFLARE_API_TOKEN && env?.CLOUDFLARE_ACCOUNT_ID),
+          verify: true
+        };
+        const result = {
+          ok: true,
+          service: "relay",
+          version: VERSION,
+          architecture: {
+            control: "relay.CONTROL",
+            runner: "relay.RUNNER",
+            source: "relay.SOURCE",
+            cloud: "relay.CLOUD",
+            verify: "relay.VERIFY"
+          },
+          capabilities,
+          source_owner: String(env?.RELAY_GITHUB_OWNER || RELAY_GITHUB_OWNER),
+          cloud: {
+            configured: capabilities.cloud_control,
+            account_configured: Boolean(env?.CLOUDFLARE_ACCOUNT_ID),
+            token_configured: Boolean(env?.CLOUDFLARE_API_TOKEN)
+          },
+          verify: {
+            engines: evidenceEngines()
+          },
+          workers,
+          generated_at: new Date().toISOString()
+        };
+        return relayResult(id, result);
+      }
 
       if (name === "relay_control_status") {
         return relayResult(id, {
