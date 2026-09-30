@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "loew-inspector",
-  "updated_at": "2026-09-30T14:07:05.927Z",
+  "updated_at": "2026-09-30T14:07:11.227Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -192,6 +192,31 @@
       ],
       "state": "queued",
       "created_at": "2026-09-30T14:07:05.927Z"
+    },
+    {
+      "id": "relay-consolidation-b4-unified-ui-20260930",
+      "owner": "relay-consolidation-b4-unified-ui-20260930",
+      "goal": "Batch 4: ship one Relay experience across web and in-chat MCP UI, with runner and inspector exposed as capabilities rather than separate applications and night shift as the while-you-were-away view.",
+      "acceptance": "Relay web and in-chat MCP surfaces consume the same durable state/receipt model; web navigation centers on human jobs such as Today, Projects, Review, Automations/operations and Night Shift rather than subsystem branding; visual review, screenshots/video/live preview, QA questions/checklists/notes/verdicts live inside Relay; runner and inspector may appear in technical details but not as separate products users must navigate to; no separate Runner/Inspector dashboard is required; deep links preserve project/operation/review context; mobile/desktop and full-screen review are usable; deterministic checks remain agent-owned.",
+      "next_action": "Start after Batch 3 makes Relay the canonical state authority. Reuse the merged operator/QA work instead of redesigning from zero.",
+      "paths": [
+        "apps/web/",
+        "apps/mcp/",
+        "features/night-shift/",
+        "packages/runner/",
+        "packages/inspector/",
+        "packages/shared-ui/",
+        "test/"
+      ],
+      "resources": [
+        "relay-mcp-app-ui",
+        "relay-web-dashboard",
+        "relay-human-qa-ui",
+        "relay-night-shift-view",
+        "suite-shared-shell"
+      ],
+      "state": "queued",
+      "created_at": "2026-09-30T14:07:11.227Z"
     }
   ],
   "claims": [
