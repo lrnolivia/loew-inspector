@@ -2,11 +2,21 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test": "node --test src/*.test.js scripts/browser-call.test.mjs"
+    "test": "npm run test:inspector && npm run test:runner && npm run test:layout",
+    "test:inspector": "npm test --workspace @relay/inspector",
+    "test:runner": "npm test --workspace @relay/runner",
+    "test:layout": "node --test packages/runner/layout.test.mjs",
+    "check": "npm run check --workspaces --if-present",
+    "build": "npm run check"
   },
   "devDependencies": {
     "playwright": "1.60.0"
   },
   "name": "relay",
-  "description": "relay is the loew.fi control plane for source, runtime, verification, coordination, and deployment."
+  "description": "relay is the loew.fi control plane for source, runtime, verification, coordination, and deployment.",
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "features/*"
+  ]
 }

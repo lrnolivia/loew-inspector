@@ -3,6 +3,10 @@ name: Inspector workflow tests
 on:
   pull_request:
     paths:
+      - 'apps/**'
+      - 'packages/**'
+      - 'features/**'
+      - 'package-lock.json'
       - 'src/**'
       - 'scripts/**'
       - 'package.json'
@@ -11,6 +15,10 @@ on:
   push:
     branches: [main]
     paths:
+      - 'apps/**'
+      - 'packages/**'
+      - 'features/**'
+      - 'package-lock.json'
       - 'src/**'
       - 'scripts/**'
       - 'package.json'
@@ -27,11 +35,12 @@ concurrency:
 jobs:
   test:
     runs-on: ubuntu-latest
-    timeout-minutes: 3
+    timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
-      - name: Test Inspector and browser workflow handling
+      - run: npm ci
+      - name: Test Relay workspace boundaries and implementations
         run: npm test

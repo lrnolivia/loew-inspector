@@ -1,0 +1,54 @@
+:root {
+  --color-light-panel: #e8e0d6;
+  --color-light-panel-muted: #d8cec1;
+  --color-on-light: #1b1917;
+  --color-on-light-secondary: #625950;
+}
+
+/* Runner-wide hierarchy: primary display titles stay large; section titles step down. */
+.app-toolbar > strong {
+  font-size: 14px;
+}
+
+.worker-name {
+  font-size: 15px;
+}
+
+.visual-heading h2 {
+  margin-top: 6px;
+  font-size: clamp(28px, 3vw, 36px);
+  line-height: 1;
+  letter-spacing: -.025em;
+}
+
+.visual-heading p {
+  margin-top: 9px;
+  font-size: 12px;
+}
+
+/* Light surfaces are reserved for current/selected information. */
+.visual-run:hover {
+  background: color-mix(in srgb, var(--color-surface) 72%, transparent);
+}
+
+.visual-run.active {
+  background: var(--color-light-panel);
+  color: var(--color-on-light);
+  box-shadow: inset 3px 0 0 var(--color-design);
+}
+
+.visual-run.active .visual-run-main strong {
+  color: var(--color-on-light);
+}
+
+.visual-run.active .visual-run-main small,
+.visual-run.active .visual-run-progress,
+.visual-run.active .visual-run-time {
+  color: var(--color-on-light-secondary);
+}
+
+@media (max-width: 640px) {
+  .visual-heading h2 {
+    font-size: 28px;
+  }
+}
