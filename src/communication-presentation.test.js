@@ -51,3 +51,9 @@ test("communication eval fixtures stay plain-language staff-aware and preserve b
     assert.deepEqual(shaped.technical_evidence,item.technical_evidence,item.name+" lost technical evidence");
   }
 });
+
+test('canonical assignment team drives human narration above optional presentation hints',()=>{
+  const result=shapeToolResult({claim:{primary_staff:'julian',supporting_staff:['roman'],owner:'machine-worker'},head_sha:'a'.repeat(40)},{outcome:'the release can proceed',staff_id:'nico'});
+  assert.match(renderHumanFirst(result),/^Julian with Roman/);
+  assert.equal(result.technical_evidence.tool_result.claim.owner,'machine-worker');
+});

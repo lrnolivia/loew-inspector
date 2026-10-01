@@ -52,6 +52,8 @@ const requestProperties = {
   tags: tagsSchema,
   primary_role: roleSchema,
   supporting_roles: supportingRolesSchema,
+  primary_staff: { type: ["string", "null"], maxLength: 80 },
+  supporting_staff: { type: "array", maxItems: 8, uniqueItems: true, items: text(80) },
   successor: identity,
   pr: { type: 'integer', minimum: 1, maximum: 1000000 },
   work_accounted: { type: 'boolean' },
@@ -154,6 +156,10 @@ export const runnerControlTools = DEFINITIONS.map(({ mutation, ...definition }) 
 }));
 
 export function validateControlArguments(value, spec, path = 'arguments') {
+  if (Array.isArray(spec.type)) {
+    if (value === null && spec.type.includes('null')) return;
+    return validateControlArguments(value, { ...spec, type: spec.type.find(t => t !== 'null') }, path);
+  }
   if (spec.type === 'object') {
     if (!value || typeof value !== 'object' || Array.isArray(value)) {
       throw new ControlError('validation', `${path} must be an object`);
@@ -205,7 +211,15 @@ export async function callRunnerControl(name, args, env, apiOverride) {
   const definition = DEFINITIONS.find(item => item.name === name);
   if (!definition) return null;
   validateControlArguments(args, definition.inputSchema);
-  if (name === 'relay_runner_progress') return callProgress(args, env, apiOverride);
+  if (name === 'relay_runner_progress') {
+    const progress = await callProgress(args, env, apiOverride);
+    const canonical = await callRunnerControlCore('relay_runner_assignments', args, env, apiOverride);
+    const assignments = [...canonical.claims, ...canonical.queue];
+    return { ...progress, progress: (progress.progress || []).map(item => {
+      const assignment = assignments.find(a => a.id === item.assignment);
+      return { ...item, primary_staff: assignment?.primary_staff || null, supporting_staff: assignment?.supporting_staff || [], goal: assignment?.goal || null };
+    }) };
+  }
   if (name === 'relay_runner_resume') return callResume(args, env, apiOverride);
   if (name === 'relay_runner_updates') return callAssignmentUpdates(args, env, apiOverride);
   if (name === 'relay_cloud_project') return projectCloudStatus(env, args.project, apiOverride);

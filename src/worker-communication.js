@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import { getStaff } from "./staff-registry.js";
+import { assignmentStaffView, getStaff } from "./staff-registry.js";
 
 const KINDS=new Set(["fyi","request","blocker","decision","handoff","scope-change"]);
 const MACHINE_FIELDS=["project","assignment","owner","branch"];
@@ -33,7 +33,9 @@ export function createWorkerMessage(input={}){
   const requested_action=input.requested_action==null?null:requiredText(input.requested_action,"requested_action",500);
   const summary=requiredText(input.summary,"summary",800);
   const requires_runner_action=["handoff","scope-change"].includes(input.kind);
-  const identity={kind:input.kind,sender,recipient,collaborators,machine,impact,requested_action,summary};
+  if (input.assignment && (input.assignment.id !== machine.assignment || input.assignment.owner !== machine.owner || input.assignment.branch !== machine.branch)) throw new Error("Worker message assignment does not match canonical machine identity.");
+  const team=assignmentStaffView(input.assignment || {});
+  const identity={team,kind:input.kind,sender,recipient,collaborators,machine,impact,requested_action,summary};
   return Object.freeze({...identity,authoritative:false,requires_runner_action,fingerprint:fp(identity)});
 }
 export function dedupeWorkerMessages(messages=[]){
@@ -42,17 +44,21 @@ export function dedupeWorkerMessages(messages=[]){
   return out;
 }
 export function narrateWorkerMessage(message){
-  const who=message.sender.display_name;
+  const who=message.team?.primary_staff?.display_name || message.sender.display_name;
+  const support=(message.team?.supporting_staff||[]).map(p=>p.display_name);
+  const withTeam=support.length?" supported by "+support.join(", "):"";
   const to=message.recipient?(" with "+message.recipient.display_name):"";
   const validation=message.machine.evidence_ids.length?(" Validation: "+message.machine.evidence_ids.join(", ")+"."):"";
   const ask=message.requested_action?(" Next: "+message.requested_action):"";
-  return (who+to+": "+message.summary+" "+message.impact+"."+ask+validation).replace(/\s+/g," ").trim();
+  return (who+withTeam+to+": "+message.summary+" "+message.impact+"."+ask+validation).replace(/\s+/g," ").trim();
 }
 export function reconcileWorkerMessage(message,canonical={}){
   const conflicts=[];
   if(canonical.assignment&&canonical.assignment!==message.machine.assignment) conflicts.push("assignment");
   if(canonical.branch&&canonical.branch!==message.machine.branch) conflicts.push("branch");
   if(canonical.owner&&canonical.owner!==message.machine.owner) conflicts.push("owner");
+  if (canonical.primary_staff !== undefined && canonical.primary_staff !== (message.team?.primary_staff?.id || null)) conflicts.push("primary_staff");
+  if (canonical.supporting_staff && JSON.stringify(canonical.supporting_staff) !== JSON.stringify((message.team?.supporting_staff||[]).map(p=>p.id))) conflicts.push("supporting_staff");
   return Object.freeze({
     safe_to_apply:conflicts.length===0&&!message.requires_runner_action,
     requires_runner_action:message.requires_runner_action,
@@ -64,6 +70,7 @@ export function reconcileWorkerMessage(message,canonical={}){
 
 export function narrateExecutiveStatus({
   owner_staff_id=null,
+  assignment=null,
   outcome,
   health="healthy",
   next_action=null,
@@ -72,10 +79,11 @@ export function narrateExecutiveStatus({
   technical_detail=null,
   include_technical=false
 }={}){
-  const staff=owner_staff_id?getStaff(owner_staff_id):null;
+  const staff=assignment ? assignmentStaffView(assignment).primary_staff : owner_staff_id?getStaff(owner_staff_id):null;
   const owner=staff&&staff.status!=="retired"?staff.display_name:"Relay";
   const status=requiredText(outcome,"outcome",600);
-  const parts=[owner+" — "+status];
+  const team=assignment ? assignmentStaffView(assignment).supporting_staff.map(p=>p.display_name) : [];
+  const parts=[owner+(team.length?" with "+team.join(", "):"")+" — "+status];
   if(health&&health!=="healthy") parts.push("Status: "+health+".");
   if(blocker) parts.push("Blocker: "+requiredText(blocker,"blocker",500)+".");
   if(next_action) parts.push("Next: "+requiredText(next_action,"next_action",500));

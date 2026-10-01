@@ -1,3 +1,4 @@
+import { normalizeAssignmentStaff } from "./staff-registry.js";
 // Deterministic admission rules; expired leases retain ownership until reconciliation.
 export const occupying = (claim) => claim.state !== 'completed';
 
@@ -21,7 +22,7 @@ const CATEGORIES = new Set(['architecture', 'design', 'implementation', 'researc
 const ROLE_ID = /^[a-z][a-z0-9-]{0,63}$/;
 const TAG_ID = /^[a-z0-9][a-z0-9._-]{0,63}$/;
 const LABEL_KEY = /^[a-z][a-z0-9.-]{0,63}$/;
-const AMENDABLE_FIELDS = ['goal', 'acceptance', 'next_action', 'paths', 'resources', 'task_class', 'ledger_refs', 'category', 'labels', 'tags', 'primary_role', 'supporting_roles'];
+const AMENDABLE_FIELDS = ['goal', 'acceptance', 'next_action', 'paths', 'resources', 'task_class', 'ledger_refs', 'category', 'labels', 'tags', 'primary_role', 'supporting_roles', 'primary_staff', 'supporting_staff'];
 
 function normalizeResources(values) {
   if (!Array.isArray(values) || values.some((value) => typeof value !== 'string' || !value)) throw new Error('Resources must be a valid string array.');
@@ -115,6 +116,7 @@ export function transition(record, request, policy, now = new Date()) {
       ...(request.task_class ? { task_class: normalizeTaskClass(request.task_class) } : {}),
       ...(request.ledger_refs ? { ledger_refs: normalizeLedgerRefs(request.ledger_refs) } : {}),
       ...metadataFields(request),
+      ...normalizeAssignmentStaff(request),
       state: 'queued', created_at: now.toISOString() });
     next.updated_at = now.toISOString();
     return next;
@@ -137,7 +139,16 @@ export function transition(record, request, policy, now = new Date()) {
     if ('ledger_refs' in request) patch.ledger_refs = normalizeLedgerRefs(request.ledger_refs);
     Object.assign(patch, metadataFields(request));
     const before = Object.fromEntries(supplied.map((field) => [field, target[field]]));
-    const preview = { ...target, ...patch };
+    const staffPatch = Object.fromEntries(["primary_staff", "supporting_staff"].filter(key => key in request).map(key => [key, request[key]]));
+    const preview = { ...target, ...patch, ...staffPatch };
+    if (["category", "primary_role", "supporting_roles", "primary_staff", "supporting_staff"].some(key => key in request)) Object.assign(patch, normalizeAssignmentStaff(preview));
+    Object.assign(preview, patch);
+    if (!supplied.some(field => JSON.stringify(before[field]) !== JSON.stringify(preview[field]))) throw new Error("Amendment does not change assignment state.");
+    for (const field of ["primary_staff", "supporting_staff"]) {
+      if (!supplied.includes(field) && JSON.stringify(target[field]) !== JSON.stringify(preview[field])) {
+        supplied.push(field); before[field] = target[field];
+      }
+    }
     validateRoleMetadata(preview.primary_role, preview.supporting_roles);
     const changed = supplied.filter((field) => JSON.stringify(before[field]) !== JSON.stringify(preview[field]));
     if (!changed.length) throw new Error('Amendment does not change assignment state.');
@@ -190,9 +201,9 @@ export function transition(record, request, policy, now = new Date()) {
       goal: request.goal, acceptance: request.acceptance, next_action: request.next_action,
       ...(request.task_class ? { task_class: normalizeTaskClass(request.task_class) } : {}),
       ...(request.ledger_refs ? { ledger_refs: normalizeLedgerRefs(request.ledger_refs) } : {}),
-      ...metadataFields(request),
+      ...metadataFields({ ...queued, ...request }),
+      ...normalizeAssignmentStaff({ ...queued, ...request }),
       base_sha: request.base_sha, state: 'active', created_at: now.toISOString() });
-    const queued = next.queue.find((q) => q.id === request.id);
     if (queued && queued.owner !== request.owner) throw new Error('Queued assignment belongs to another owner.');
     if (queued) queued.state = 'claimed';
   } else {
