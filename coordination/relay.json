@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T21:32:46.056Z",
+  "updated_at": "2026-10-01T21:33:22.416Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -10715,6 +10715,35 @@
       "evidence": "Lifecycle prerequisite only delivered; full MCP rebuild remains ongoing. PR108 exact head fa955cf8e0578e1c3c8ada812b27f4a623b4b9e0 passed canonical admission36926243397 and quality305tests. Authorized squash merge cbce6e3fa117084272668e2751411f410de8de1c; post-merge quality36928799871 success; Workers Build446f3ce8-a580-4894-b941-647cef60438c success, active versiondb96dd04-e027-4eec-b594-1e273a255d4f at100%; live Runner engine00d3aa78fac5bbe38b101ca87e8f3c0b72dcef59. Buffer recovery7b869b8 separately verified. GitHub delete_branch_on_merge=true automatically removed merged branch; no manual deletion. Source/tests/cutover docs preserved in merged PR. No live obsoletework retirement; writer inventory pending. Next bounded stage must admit actual cross-client card proof preserving51capabilities; design requirements and source report retained task-locally.",
       "work_accounted": true,
       "completed_at": "2026-10-01T21:29:53.817Z"
+    },
+    {
+      "id": "relay-mcp-host-proof-20261001",
+      "owner": "01a0f914-aad0-71e4-8f0c-20c1bf0a2016",
+      "branch": "relay/mcp-host-proof-20261001",
+      "paths": [
+        "src/index.js",
+        "src/relay-host-probe.js",
+        "src/relay-host-probe.test.js",
+        "docs/relay/MCP_HOST_PROOF_20261001.md"
+      ],
+      "resources": [
+        "relay-mcp-host-proof",
+        "relay-mcp-discovery-envelope"
+      ],
+      "goal": "MCP rebuild stage 2: identify the first actual-host card rendering failure with one additive read-only diagnostic tool/resource before broader rewrite.",
+      "acceptance": "Preserve all 51 existing tools and original card controls. Unique self-contained resource and useful text fallback. Independently evidence static shell, script, initialization, tool result, dimensions and read-only action. Same-build actual desktop, browser and iPhone observations; no viewport substitute or unsupported host automation. Exact-head tests/review/checks; authorized serialized Git-native deployment after website release. No auth, credentials, DNS, paid-service or broad UI rewrite changes. Full MCP program remains open.",
+      "next_action": "Refresh ownership and perform admission/preflight; implement bounded additive proof, coordinate deployment after website release, route actual-user-device observations through Julian. Retire obsolete work only after separately verified writer quiescence.",
+      "task_class": "maintenance",
+      "category": "implementation",
+      "primary_team": "runner",
+      "supporting_teams": [],
+      "primary_staff": "ellis",
+      "supporting_staff": [],
+      "base_sha": "be058177e95d08db85719dcb20f402b6e4dd21db",
+      "state": "active",
+      "created_at": "2026-10-01T21:33:22.416Z",
+      "updated_at": "2026-10-01T21:33:22.416Z",
+      "lease_until": "2026-10-02T09:33:22.416Z"
     }
   ],
   "migrated_from": "loew-inspector"
