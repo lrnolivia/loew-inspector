@@ -1,5 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
+import http from "node:http";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 import { createServer } from "vite";
@@ -127,12 +128,18 @@ test("generated cutover serves React at root and mounts the same React control c
   assert.match(mcpHtml, /id="root"/);
   assert.match(mcpHtml, /<script type="module">/);
 
+  const server = http.createServer((req, res) => {
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    res.end('<iframe id="app" style="width:100%;height:860px;border:0"></iframe>');
+  });
+  await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
+  const origin = "http://127.0.0.1:" + server.address().port;
   const browser = await chromium.launch({ headless: true });
   try {
     const page = await browser.newPage({ viewport: { width: 1200, height: 900 }, colorScheme: "dark" });
     await page.route("https://fonts.googleapis.com/**", route => route.fulfill({ status: 200, contentType: "text/css", body: "" }));
     await page.route("https://fonts.gstatic.com/**", route => route.abort());
-    await page.setContent('<iframe id="app" style="width:100%;height:860px;border:0"></iframe>');
+    await page.goto(origin);
     await page.evaluate(({ html, progress, workers }) => {
       window.addEventListener("message", event => {
         const message = event.data;
@@ -159,5 +166,6 @@ test("generated cutover serves React at root and mounts the same React control c
     assert.equal(await frame.locator(".signal-card").count(), 4);
   } finally {
     await browser.close();
+    await new Promise(resolve => server.close(resolve));
   }
 });
