@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T16:48:50.368Z",
+  "updated_at": "2026-10-01T17:19:54.267Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6148,8 +6148,8 @@
       "id": "relay-card-v9-nonblocking-bootstrap-20261001",
       "owner": "relay-card-v9-nonblocking-bootstrap-20261001",
       "goal": "Resolve the post-v9 cross-client Relay card split proven by same-turn testing: iPhone mounts and paints but remains unhydrated in Connecting state; ChatGPT web mounts a blank MCP frame; native macOS desktop does not mount the card surface at all.",
-      "acceptance": "Treat the three clients as distinct gates. iPhone: canonical tool result hydrates the already-painted card so status leaves Connecting/current-state placeholder while preserving working globals handshake and size reporting. Web: the mounted MCP frame paints static card UI and then hydrates canonical result instead of remaining blank. Native macOS desktop: the tool invocation mounts a card surface again, matching the previously known-good desktop behavior. Preserve the approved card design; do not paper over failures with client-specific prose fallbacks. Add regression coverage for immediate paint, result hydration, resource delivery, and mount metadata. Use fresh resource identity for any resource-byte change. Verify the same ordinary-chat render on iPhone, web, and native macOS before completion.",
-      "next_action": "Start from the user-supplied same-turn evidence at 12:24 ET after merged v9: iPhone shows full card chrome plus 'Waiting for the Relay result…', 'Connecting', em dash current state, Open Relay, and diagnostic 'host check: globals yes · handshake ok 24ms · height 403'; web shows a large mounted gray MCP frame with only a tiny loading mark and no card paint; native macOS desktop shows Relay tool activity and assistant prose but no card surface. This proves v9 fixed iPhone bootstrap/size reporting but not result hydration, did not fix web document paint, and did not restore desktop mount. Reproduce each gate separately, inspect tool-result delivery/resource-read behavior for iPhone and web, then inspect tool outputTemplate/resource registration/mount metadata for desktop. Do not merge the next fix until all three clients are retested.",
+      "acceptance": "Treat iPhone, web, and native macOS as distinct consumer gates. iPhone must hydrate canonical tool results after the already-working immediate paint/size handshake; web must paint the mounted MCP frame and hydrate canonical results; native macOS must mount the card surface again. Preserve the approved card design and do not paper over failures with client-specific prose fallbacks. DESIGN CANON: the current Inspector chat-card preview gallery is the visual source of truth for Relay inline conversational cards. Do not redesign, reskin, restyle, or substitute dashboard composition while fixing MCP transport/mounting. Preserve the existing Terra Prime card language, current feature art/state mapping, dark surfaces, rounded geometry, Momo display typography, strong approximately 76px feature mark, feature name only modestly smaller, and removal of the redundant small 'relay' eyebrow. Remaining visual work is polish only: tighten card footprint and vertical density, improve use of available space, correct left-side spacing/alignment, maintain clear human-first hierarchy, and make responsive sizing feel intentional without changing the recognized composition. Inline cards are contextual conversation objects, not miniature dashboards: one purpose, one dominant state/headline, compact supporting telemetry/content, normally no more than two primary actions, no global/sidebar navigation, and expand/open Relay for deeper workflows. Inspector/dashboard signal cards may share tokens/components and visual DNA but are a separate persistent composition. UI interactions should feed selection/action context back into the conversation where supported. Add regression coverage for immediate paint, result hydration, resource delivery, and mount metadata; use a fresh resource identity for changed resource bytes; verify the same ordinary-chat render on iPhone, web, and native macOS before completion.",
+      "next_action": "Continue the three-client MCP host diagnosis from the 12:24 ET evidence without touching the canonical Inspector-preview visual composition. Fix hydration/resource/mount behavior first. Any CSS change must be limited to the recorded polish items (footprint/density/use of space/left alignment/responsiveness) and must be compared against the current Inspector preview gallery before merge. Do not import the Relay dashboard shell, navigation, or page composition into the inline card.",
       "paths": [
         "src/relay-chat-ui.js",
         "src/relay-chat-ui.test.js",
@@ -6184,7 +6184,7 @@
       ],
       "state": "queued",
       "created_at": "2026-10-01T09:57:55.276Z",
-      "amendment_count": 1,
+      "amendment_count": 2,
       "amendments": [
         {
           "at": "2026-10-01T16:26:20.409Z",
@@ -6205,9 +6205,26 @@
             "acceptance": "Treat the three clients as distinct gates. iPhone: canonical tool result hydrates the already-painted card so status leaves Connecting/current-state placeholder while preserving working globals handshake and size reporting. Web: the mounted MCP frame paints static card UI and then hydrates canonical result instead of remaining blank. Native macOS desktop: the tool invocation mounts a card surface again, matching the previously known-good desktop behavior. Preserve the approved card design; do not paper over failures with client-specific prose fallbacks. Add regression coverage for immediate...",
             "next_action": "Start from the user-supplied same-turn evidence at 12:24 ET after merged v9: iPhone shows full card chrome plus 'Waiting for the Relay result…', 'Connecting', em dash current state, Open Relay, and diagnostic 'host check: globals yes · handshake ok 24ms · height 403'; web shows a large mounted gray MCP frame with only a tiny loading mark and no card paint; native macOS desktop shows Relay tool activity and assistant prose but no card surface. This proves v9 fixed iPhone bootstrap/size reporting but not result hydration, did not fix web document paint, and did not restore desktop mount. Repr..."
           }
+        },
+        {
+          "at": "2026-10-01T17:19:54.267Z",
+          "by": "relay-card-v9-nonblocking-bootstrap-20261001",
+          "reason": "Owner clarified the existing Inspector chat-card preview gallery is the canonical visual design. Consolidate previously scattered polish notes and prevent MCP host debugging or 2.0 dashboard work from redesigning the approved cards.",
+          "fields": [
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "acceptance": "Treat the three clients as distinct gates. iPhone: canonical tool result hydrates the already-painted card so status leaves Connecting/current-state placeholder while preserving working globals handshake and size reporting. Web: the mounted MCP frame paints static card UI and then hydrates canonical result instead of remaining blank. Native macOS desktop: the tool invocation mounts a card surface again, matching the previously known-good desktop behavior. Preserve the approved card design; do not paper over failures with client-specific prose fallbacks. Add regression coverage for immediate...",
+            "next_action": "Start from the user-supplied same-turn evidence at 12:24 ET after merged v9: iPhone shows full card chrome plus 'Waiting for the Relay result…', 'Connecting', em dash current state, Open Relay, and diagnostic 'host check: globals yes · handshake ok 24ms · height 403'; web shows a large mounted gray MCP frame with only a tiny loading mark and no card paint; native macOS desktop shows Relay tool activity and assistant prose but no card surface. This proves v9 fixed iPhone bootstrap/size reporting but not result hydration, did not fix web document paint, and did not restore desktop mount. Repr..."
+          },
+          "after": {
+            "acceptance": "Treat iPhone, web, and native macOS as distinct consumer gates. iPhone must hydrate canonical tool results after the already-working immediate paint/size handshake; web must paint the mounted MCP frame and hydrate canonical results; native macOS must mount the card surface again. Preserve the approved card design and do not paper over failures with client-specific prose fallbacks. DESIGN CANON: the current Inspector chat-card preview gallery is the visual source of truth for Relay inline conversational cards. Do not redesign, reskin, restyle, or substitute dashboard composition while fixing...",
+            "next_action": "Continue the three-client MCP host diagnosis from the 12:24 ET evidence without touching the canonical Inspector-preview visual composition. Fix hydration/resource/mount behavior first. Any CSS change must be limited to the recorded polish items (footprint/density/use of space/left alignment/responsiveness) and must be compared against the current Inspector preview gallery before merge. Do not import the Relay dashboard shell, navigation, or page composition into the inline card."
+          }
         }
       ],
-      "updated_at": "2026-10-01T16:26:20.409Z"
+      "updated_at": "2026-10-01T17:19:54.267Z"
     },
     {
       "id": "relay-2.0-generated-split-20261001",
