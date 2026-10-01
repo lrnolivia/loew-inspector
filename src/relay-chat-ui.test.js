@@ -90,7 +90,10 @@ test('successful merge receipts tolerate numeric check counts without hiding the
 test('context card is host-transparent and avoids the old framed panel chrome', () => {
   const resource = relayContextCardResource();
   assert.match(resource.text, /html,body\{background:transparent!important\}/);
-  assert.match(resource.text, /\.card\{border:0;border-radius:0;padding:8px 2px;background:transparent!important;box-shadow:none\}/);
+  assert.match(resource.text, /\.card\{--accent:#b5471f;border:0;padding:8px 2px;background:transparent!important;box-shadow:none\}/);
+  assert.match(resource.text, /grid-template-columns:minmax\(0,1fr\) minmax\(230px,38%\)/);
+  assert.match(resource.text, /feature-mark/);
+  assert.match(resource.text, /status-light/);
   assert.doesNotMatch(resource.text, /\.card\{border:1px solid/);
 });
 
