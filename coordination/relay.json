@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T03:34:00.700Z",
+  "updated_at": "2026-10-01T03:34:12.704Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5932,7 +5932,7 @@
     },
     {
       "id": "relay-1.9.6.2-staff-routing-20261001",
-      "owner": "relay-1.9.6.2-staff-routing-20261001",
+      "owner": "relay-1.9-wrapup-20261001",
       "branch": "relay/1.9.7-team-foundation-20261001",
       "paths": [
         "contracts/assignments/",
@@ -5970,7 +5970,7 @@
       ],
       "goal": "Finish canonical feature-team routing required by 1.9.7 creative skill resolution",
       "acceptance": "Add canonical assignment-level `primary_staff` plus bounded `supporting_staff` identity fields and expose them through Runner reads/resume/status without changing authorization. Resolve bindings deterministically from explicit override first, then assignment primary/supporting roles, category, labels/tags, resources, subsystem/subnet fit and canonical staff role affinities. Use only active approved staff; never invent names, reuse retired identities, or silently rename people. Persist bindings canonically so the same assignment resolves to the same people across chats, workers, resumes and UI. Explicit canonical amendment may reassign staff; automatic routing must preserve sticky identity and record why a binding changed. Staff may support multiple assignments; capacity is context for routing, not a hidden productivity score or authorization gate. The staff directory should surface live assignment bindings derived from canonical Runner state rather than remaining an empty presentation registry. Human-facing communication should use these bindings by default while retaining assignment/worker IDs underneath. Tests cover deterministic routing, explicit override, affinity ties, missing-fit fallback, retired/reserve exclusion, reassignment history, cross-session stickiness, staff-directory readback, resume/status projection and no authorization change. Feature-team layer: add a canonical lowercase team registry and assignment-level `primary_team` plus bounded `supporting_teams`. Routing order becomes assignment -> feature team -> role -> named staff. Initial canonical team ids are `inspector`, `runner`, `night-shift`, `source`, `cloud`, `release`, and `skills`; all user-facing team labels remain lowercase. Staff gain one sticky `home_team` plus optional team memberships so temporary cross-team work does not rewrite organizational identity. Initial home-team map: inspector = valentina, vivienne, margot, sabine, roman; runner = ellis, nico, adrian; night-shift = julian, naomi; source = rafael; cloud = gabriel; release = luca; skills = imani. Cross-team memberships support release/verification/integration/planning work without changing home team. Team routing uses explicit override first, then assignment category/roles/resources/subsystems and team affinities; staff resolution happens inside the selected team(s). Team identity is routing/presentation context only, never authorization.",
-      "next_action": "User-authorized Relay 1.9 wrap-up takeover: claim the queued lineage then transfer atomically to relay-1.9-wrapup-20261001 before any implementation. Staff routing already shipped; remaining team/home-team/skill-routing integration is a real prerequisite, not a duplicate release.",
+      "next_action": "User-authorized wrap-up takeover after verified 1.9.6.2: implement the remaining lowercase feature-team registry and sticky home-team metadata as a separately testable 1.9.7 prerequisite, then integrate creative/platform/performance skills. Preserve shipped staff IDs, machine ownership and exact-head lifecycle.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-030",
@@ -6010,8 +6010,8 @@
       "base_sha": "fc80663333dd047facb3575af76b0c933e64dde1",
       "state": "active",
       "created_at": "2026-10-01T03:34:00.700Z",
-      "updated_at": "2026-10-01T03:34:00.700Z",
-      "lease_until": "2026-10-01T15:34:00.700Z"
+      "updated_at": "2026-10-01T03:34:12.704Z",
+      "lease_until": "2026-10-01T15:34:12.704Z"
     }
   ],
   "migrated_from": "loew-inspector"
