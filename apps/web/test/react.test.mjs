@@ -92,8 +92,8 @@ test("Relay 2.0 React shell renders human-first live surfaces responsively", asy
     const second = await page.locator(".signal-card").nth(1).boundingBox();
     assert.ok(track && first && second);
     const third = await page.locator(".signal-card").nth(2).boundingBox();
-    assert.ok(first.width > track.width * .28 && first.width < track.width * .36);
-    assert.ok(second.x > first.x && third && third.x > second.x, "desktop signal deck presents at least three cards side by side");
+    assert.ok(third && second.x > first.x && third.x > second.x, "desktop signal deck orders at least three cards side by side");
+    assert.ok(third.x + third.width <= track.x + track.width + 2, "the third summary card is visible without horizontal scrolling");
     assert.equal(await page.locator(".signal-card").first().getAttribute("tabindex"), "0");
 
     await page.getByRole("link", { name: "runner", exact: true }).click();
