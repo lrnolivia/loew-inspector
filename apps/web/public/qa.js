@@ -242,7 +242,8 @@ async function saveReview(snapshot = null) {
   const review = {
     answers: { ...(activeState.review.answers || {}) },
     notes: activeState.review.notes || "",
-    overall: deriveOverall(activeState.review, activeState.questions || [])
+    overall: deriveOverall(activeState.review, activeState.questions || []),
+    disposition: activeState.review.disposition || null
   };
   const message = stage?.querySelector("[data-qa-save-state]");
   if (message) message.textContent = "Saving…";
