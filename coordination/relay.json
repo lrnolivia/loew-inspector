@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T02:41:29.571Z",
+  "updated_at": "2026-10-01T02:44:49.224Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -4665,10 +4665,16 @@
         "RFS-029"
       ],
       "base_sha": "3b4659551bad0fdcf5310f4cb3c5ade7403409af",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T01:45:02.465Z",
-      "updated_at": "2026-10-01T02:23:17.511Z",
-      "lease_until": "2026-10-01T14:23:17.511Z"
+      "updated_at": "2026-10-01T02:44:49.224Z",
+      "lease_until": "2026-10-01T14:44:49.224Z",
+      "pr": 68,
+      "merged_head_sha": "7aa5c06d71f8e0ef06603d86ed79a7ee0943acd5",
+      "merge_commit_sha": "ddff93fdd3d4e6207ed5c4826d8d696e7e91f339",
+      "evidence": "Fresh-consumer verification complete. Refreshed Relay app exposes relay_runner_updates and Runner taxonomy fields category/labels/tags/primary_role/supporting_roles. relay_runner_updates returned a canonical no-change cursor response plus bounded caught-up recovery signal from the latest checkpoint. relay_staff_directory resolved Roman = The Verifier and Julian = The Coordinator with sticky identities. Product release evidence: exact tested PR #68 head 7aa5c06d71f8e0ef06603d86ed79a7ee0943acd5 passed Runner admission and full workspace/browser/MCP build; squash merge ddff93fdd3d4e6207ed5c4826d8d696e7e91f339 deployed as Worker v61 version d5977e16-a72d-4b82-a22c-7b9ae8b5c655 at 100% via deployment a7f04856-73af-4b64-960f-dbbe6972604e.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T02:44:49.224Z"
     },
     {
       "id": "relay-inspector-visual-polish-20260930",
