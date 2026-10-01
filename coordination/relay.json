@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T06:57:20.167Z",
+  "updated_at": "2026-10-01T06:57:47.754Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5687,7 +5687,7 @@
         "roman",
         "ellis"
       ],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-10-01T06:57:20.167Z"
     }
   ],
@@ -8579,6 +8579,67 @@
           }
         }
       ]
+    },
+    {
+      "id": "relay-inline-card-cleanroom-20261001",
+      "owner": "relay-inline-card-cleanroom-20261001",
+      "branch": "relay/inline-card-cleanroom-20261001",
+      "paths": [
+        "src/relay-chat-ui.js",
+        "src/relay-chat-ui.test.js",
+        "docs/relay/CHATGPT_INLINE_CARD_CLEANROOM.md"
+      ],
+      "resources": [
+        "openai-mcp-apps-current-contract",
+        "relay-inline-card-design-preservation",
+        "relay-standard-ui-bridge",
+        "relay-direct-normal-chat-consumer-gate"
+      ],
+      "goal": "Rebuild Relay's inline ChatGPT context-card integration from the current official MCP Apps contract while preserving the already-approved card design, feature art, state mapping and canonical Relay data semantics.",
+      "acceptance": "Replace the accumulated v6 card bootstrap/transport with a small standards-first MCP Apps bridge: the model-visible render tool points to one newly versioned text/html;profile=mcp-app resource; the widget always performs ui/initialize and ui/notifications/initialized regardless of whether window.openai exists; tool input/result arrive through standard UI notifications; widget helper calls use tools/call; window.openai is optional only for ChatGPT-specific enhancements. Preserve existing card visual CSS/art/state behavior and first-paint without depending on helper calls. Remove legacy openai:set_globals/toolOutput bootstrap and undocumented intrinsic-height dependency. Add a realistic iframe-host regression where window.openai exists but the host only sends tool-result after standard initialization, proving the prior blank-frame lifecycle cannot recur. Document that consumer acceptance requires a true direct Relay tool invocation in an ordinary ChatGPT chat; nested Code Mode/connector calls are not accepted as UI-mount proof. Pass exact-head tests/admission, merge/deploy, then run the direct consumer smoke.",
+      "next_action": "Rotate the card resource identity and replace only the transport/bootstrap with an always-initialize standards-first bridge; freeze visual CSS/art/state mapping; add the realistic current-host lifecycle regression.",
+      "task_class": "architecture",
+      "category": "implementation",
+      "labels": [
+        {
+          "key": "domain",
+          "value": "chatgpt-mcp-apps"
+        },
+        {
+          "key": "priority",
+          "value": "p0"
+        },
+        {
+          "key": "surface",
+          "value": "inline-card"
+        }
+      ],
+      "tags": [
+        "chatgpt",
+        "mcp-apps",
+        "inline-card",
+        "cleanroom",
+        "bridge"
+      ],
+      "primary_role": "builder",
+      "supporting_roles": [
+        "verifier",
+        "architect"
+      ],
+      "primary_team": "runner",
+      "supporting_teams": [
+        "inspector"
+      ],
+      "primary_staff": "nico",
+      "supporting_staff": [
+        "roman",
+        "ellis"
+      ],
+      "base_sha": "a35be01cfc64ae3940b441b6b5dd81fbabcd8df2",
+      "state": "active",
+      "created_at": "2026-10-01T06:57:47.754Z",
+      "updated_at": "2026-10-01T06:57:47.754Z",
+      "lease_until": "2026-10-01T18:57:47.754Z"
     }
   ],
   "migrated_from": "loew-inspector"
