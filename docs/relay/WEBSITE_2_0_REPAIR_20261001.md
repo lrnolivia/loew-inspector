@@ -16,6 +16,6 @@ Acceptance checklist:
 
 Legacy component tests use an explicitly isolated test fixture; they do not certify obsolete website navigation. New website tests exercise the real generated root and Inspector documents. CI retains screenshots for all four website pages at both widths.
 
-Local install, full build, TypeScript and website-entrypoint checks passed. Full Chromium runtime QA will run in canonical CI: the local browser download was unavailable. Production closure requires the Git-native build receipt, exact source/build header readback and actual authenticated website captures; a Worker deployment receipt alone is insufficient.
+Local install, full build, TypeScript and website-entrypoint checks passed. Canonical CI run 36907282368 passed full Chromium coverage and retained all eight website screenshots. Visual review found long Night Shift status words splitting in the numeric metric styling and a literal newline escape above Inspector; both are corrected in the final source. Final CI must verify that source. Production closure requires the Git-native build receipt, exact source/build header readback and actual authenticated website captures; a Worker deployment receipt alone is insufficient.
 
 Git-native release repair is owned by its separate lane and is preserved. No manual source upload or generated-file splitting is part of this repair.
