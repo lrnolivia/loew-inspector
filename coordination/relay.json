@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T01:13:22.857Z",
+  "updated_at": "2026-10-01T01:25:42.440Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -1035,7 +1035,7 @@
       "owner": "relay-1.9.5-planning-ledger-skill-20260930",
       "goal": "Ship Relay 1.9.6 as the planning/coordination intelligence release that consumes the 1.9.4 staff directory and 1.9.5 skills runtime.",
       "acceptance": "Planning/coordination skills consult latest resume state and relevant findings before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and expose them to routing, filtering, checkpoints and skill selection without changing authorization. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/branch/PR/evidence identity, state impact/requested action, and reconcile against canonical state before acting. Consume the canonical 1.9.4 staff identities instead of recreating names. Add Julian-managed relationship context per sticky staff identity from explicit feedback/repeated collaboration patterns; no autonomous relationship engine, hidden affinity scores, inferred sensitive traits or canned jokes. Staff workers emit bounded interaction signals; the lead curates durable notes. Tests cover taxonomy validation/amendment history, duplicate avoidance, communication classification/reconciliation, checkpoint-first resume, role-driven skill selection and relationship-context controls. Worker communication is staff-aware: resolve sender, recipient and referenced collaborators through the canonical sticky staff directory when a binding exists; render/use the approved human name in worker messages, handoffs, status surfaces and resume context while preserving canonical assignment/worker/branch/PR/evidence IDs underneath. Never invent a replacement name when no binding exists; fall back to the machine identity until Julian/lead assigns an approved staff identity. Cross-worker messages addressed to Margot, Roman, Imani, etc. must resolve to the same durable person across subnets and sessions. Human-facing narration is organization-first: default to people + ownership + outcome + validation, with machine evidence preserved underneath; low-level transport/tool/SHA detail is subordinate unless directly relevant. Live amendment delivery: active workers/chats maintain a monotonic amendment cursor and perform a bounded relevant-change check at synchronization points such as start/resume, before major source mutations or commit/PR/deploy transitions, after external waits, and on the normal heartbeat cadence. No-change checks add no model context. New amendments are classified informational, plan-adjusting, scope-changing or blocking; informational/plan-adjusting changes merge into the next safe step, while scope-changing/blocking changes force canonical reconciliation before further conflicting work. Never repeatedly replay full amendment history. Expose exact consumed revision so resumes and handoffs know what instructions the worker has seen. Stall recovery: add a caught-up/self-recovery skill plus Relay-side no-progress detection. Worker-side recovery detects repeated/no-op actions, stale heartbeat with no external wait, unchanged canonical progress across expected transition points, repeated identical tool failures, or circular replanning; it reconstructs from the latest valid resume checkpoint + canonical assignment/source/PR/deploy state, identifies the last successful action and precise stall point, emits a concise \"caught up here\" status, and resumes from the next safe action without user prompting. Relay-side detection records a bounded recovery signal/checkpoint when observed progress stalls so an active/resumed chat can consume it through live amendment/instruction sync. Do not self-recover through genuine external waits, unresolved authorization/tool-schema/client failures, destructive ambiguity, or scope conflicts; those surface as explicit blockers. Limit retries and prevent recovery loops.",
-      "next_action": "Implement staff-aware communication, live amendment sync, caught-up recovery, and recovery learning. When a stall reveals a better validated capability route, persist a bounded lesson (constraint, preferred route, fallback, authority boundary, evidence) and feed it through findings/planning so future workers choose the better path first. RFS-026 example: exact binary assets should prefer an available binary-capable GitHub blob/file transport for bytes while Relay remains canonical for admitted branch/scope, Runner ownership, PR/merge/deploy and verification; UTF-8 base64/chunk transport is fallback only. Evaluate RFS-023/024/025/026 together.",
+      "next_action": "Implement staff-aware communication, live amendment sync, caught-up recovery, recovery learning, and canonical large-asset intake. For large/binary assets such as images, ask Lauren to upload directly to the exact admitted GitHub repo/branch/folder instead of pushing bytes through chat when GitHub is the better transport; provide a direct upload/location link, then validate, hash, parse, rename/move and normalize the asset as needed within canonical scope. Preserve provenance and exact branch authority. Treat chat/base64/chunk transport as fallback when direct GitHub intake is unavailable. Evaluate RFS-023 through RFS-027 together.",
       "paths": [
         "skills/planning/",
         "skills/coordination/",
@@ -1076,7 +1076,10 @@
         "relay-recovery-signals",
         "relay-recovery-learning",
         "relay-capability-lessons",
-        "relay-transport-routing-guidance"
+        "relay-transport-routing-guidance",
+        "relay-large-asset-intake",
+        "relay-github-direct-upload-guidance",
+        "relay-asset-normalization"
       ],
       "task_class": "architecture",
       "ledger_refs": [
@@ -1092,11 +1095,12 @@
         "RFS-023",
         "RFS-024",
         "RFS-025",
-        "RFS-026"
+        "RFS-026",
+        "RFS-027"
       ],
       "state": "queued",
       "created_at": "2026-09-30T23:34:25.953Z",
-      "amendment_count": 11,
+      "amendment_count": 12,
       "amendments": [
         {
           "at": "2026-09-30T23:37:17.898Z",
@@ -1828,9 +1832,102 @@
               "RFS-026"
             ]
           }
+        },
+        {
+          "at": "2026-10-01T01:25:42.440Z",
+          "by": "relay-1.9.5-planning-ledger-skill-20260930",
+          "reason": "Canonicalize the user's preferred intake workflow for large binary assets: direct GitHub upload to the exact project location, followed by Relay-side normalization, rather than routing bulky files through chat.",
+          "fields": [
+            "next_action",
+            "resources",
+            "ledger_refs"
+          ],
+          "before": {
+            "next_action": "Implement staff-aware communication, live amendment sync, caught-up recovery, and recovery learning. When a stall reveals a better validated capability route, persist a bounded lesson (constraint, preferred route, fallback, authority boundary, evidence) and feed it through findings/planning so future workers choose the better path first. RFS-026 example: exact binary assets should prefer an available binary-capable GitHub blob/file transport for bytes while Relay remains canonical for admitted branch/scope, Runner ownership, PR/merge/deploy and verification; UTF-8 base64/chunk transport is ...",
+            "resources": [
+              "relay-1.9.6-release",
+              "relay-ledger-routing",
+              "relay-planning-skill",
+              "relay-worker-communication-skill",
+              "relay-interworker-handoffs",
+              "relay-canonical-state-reconciliation",
+              "relay-assignment-taxonomy",
+              "relay-assignment-labels-tags",
+              "relay-worker-roles",
+              "relay-role-skill-resolution",
+              "relay-contextual-levity",
+              "relay-staff-relationship-context",
+              "relay-lead-managed-adaptation",
+              "relay-staff-aware-worker-communication",
+              "relay-human-org-narration",
+              "relay-staff-attributed-status",
+              "relay-live-amendment-sync",
+              "relay-amendment-cursor",
+              "relay-worker-instruction-reconciliation",
+              "relay-stall-recovery-skill",
+              "... +6 more"
+            ],
+            "ledger_refs": [
+              "RFS-001",
+              "RFS-002",
+              "RFS-003",
+              "RFS-004",
+              "RFS-016",
+              "RFS-017",
+              "RFS-018",
+              "RFS-019",
+              "RFS-020",
+              "RFS-023",
+              "RFS-024",
+              "RFS-025",
+              "RFS-026"
+            ]
+          },
+          "after": {
+            "next_action": "Implement staff-aware communication, live amendment sync, caught-up recovery, recovery learning, and canonical large-asset intake. For large/binary assets such as images, ask Lauren to upload directly to the exact admitted GitHub repo/branch/folder instead of pushing bytes through chat when GitHub is the better transport; provide a direct upload/location link, then validate, hash, parse, rename/move and normalize the asset as needed within canonical scope. Preserve provenance and exact branch authority. Treat chat/base64/chunk transport as fallback when direct GitHub intake is unavailable. ...",
+            "resources": [
+              "relay-1.9.6-release",
+              "relay-ledger-routing",
+              "relay-planning-skill",
+              "relay-worker-communication-skill",
+              "relay-interworker-handoffs",
+              "relay-canonical-state-reconciliation",
+              "relay-assignment-taxonomy",
+              "relay-assignment-labels-tags",
+              "relay-worker-roles",
+              "relay-role-skill-resolution",
+              "relay-contextual-levity",
+              "relay-staff-relationship-context",
+              "relay-lead-managed-adaptation",
+              "relay-staff-aware-worker-communication",
+              "relay-human-org-narration",
+              "relay-staff-attributed-status",
+              "relay-live-amendment-sync",
+              "relay-amendment-cursor",
+              "relay-worker-instruction-reconciliation",
+              "relay-stall-recovery-skill",
+              "... +9 more"
+            ],
+            "ledger_refs": [
+              "RFS-001",
+              "RFS-002",
+              "RFS-003",
+              "RFS-004",
+              "RFS-016",
+              "RFS-017",
+              "RFS-018",
+              "RFS-019",
+              "RFS-020",
+              "RFS-023",
+              "RFS-024",
+              "RFS-025",
+              "RFS-026",
+              "RFS-027"
+            ]
+          }
         }
       ],
-      "updated_at": "2026-10-01T01:13:08.263Z"
+      "updated_at": "2026-10-01T01:25:42.440Z"
     },
     {
       "id": "relay-1.9.6-creative-platform-packs-20260930",
