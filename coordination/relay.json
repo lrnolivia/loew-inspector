@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T03:22:45.772Z",
+  "updated_at": "2026-10-01T03:29:24.202Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5913,10 +5913,16 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "43c0dde2d1be6eb71ef4c6832eceb653ba33a80f",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T03:21:45.211Z",
-      "updated_at": "2026-10-01T03:22:45.772Z",
-      "lease_until": "2026-10-01T15:22:45.772Z"
+      "updated_at": "2026-10-01T03:29:24.202Z",
+      "lease_until": "2026-10-01T15:29:24.202Z",
+      "pr": 74,
+      "merged_head_sha": "9ef8f31e4d388c20fc17d08f1267c46f20e8cc81",
+      "merge_commit_sha": "49acae750d604c18eec8097fb4dbc7845232d2f9",
+      "evidence": "PR https://github.com/lrnolivia/relay/pull/74; tested head 9ef8f31e4d388c20fc17d08f1267c46f20e8cc81; merge 49acae750d604c18eec8097fb4dbc7845232d2f9; version 1182e6a4-e8d0-4dc9-8797-89428e157ed2 at 100%, matching commit annotation verified. Full npm test, exact-head CI and admission passed. Browser checks on web/simulated MCP cover theme toggle, persisted override of system appearance, Inspector light palette, 28px card gutters, exact external refresh-details URL and 18px icon, mobile overflow and review saves. Refresh shortcut opens plugin details for user to select Refresh, per documented OpenAI flow; automatic tool refresh not claimed. Durable design and manual refresh limitation in docs/relay/INSPECTOR_VISUAL_POLISH_20260930.md. No production browser inspection claimed; prior HTTP522 harness was not retried. Checkout clean/pushed.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T03:29:24.202Z"
     }
   ],
   "migrated_from": "loew-inspector"
