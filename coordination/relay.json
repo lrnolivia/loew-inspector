@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T00:11:23.724Z",
+  "updated_at": "2026-10-01T00:21:08.588Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -2137,10 +2137,16 @@
       "next_action": "Implement the shared semantic status/motion presentation layer on current main. Use relay-operation-ui.js only for presentation metadata (tone + signal), not backend semantics. Update progress-ui plus Runner/Today/Inspector/night shift rendering so lowercase feature/page/section headers are consistent and statuses use semantic color + bounded ambient status lights. Keep no-gradient flat direction and reduced-motion behavior. Rebuild, test, merge/deploy exact source, close.",
       "task_class": "design",
       "base_sha": "fa3b543c3d54045a01f5b41328a0418c1c478af4",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T00:08:06.848Z",
-      "updated_at": "2026-10-01T00:09:17.684Z",
-      "lease_until": "2026-10-01T12:09:17.684Z"
+      "updated_at": "2026-10-01T00:21:08.588Z",
+      "lease_until": "2026-10-01T12:21:08.588Z",
+      "pr": 61,
+      "merged_head_sha": "8c8755dff48708d9ee0563b069bb2c680b7b44dd",
+      "merge_commit_sha": "2b5053977ccd7eea1b0e31f08fa0c894160c4140",
+      "evidence": "Design-only semantic status/motion UI completed on current Relay 1.9.3. Exact PR head 8c8755dff48708d9ee0563b069bb2c680b7b44dd passed Runner admission and repository CI; PR #61 squash-merged as 2b5053977ccd7eea1b0e31f08fa0c894160c4140. Human-facing feature identity is lowercase and aligned: today, runner, inspector, night shift; runner page no longer presents as Projects and inspector no longer presents as Review. Shared semantic status palette added for working/info, external wait, needs-human/action, warning/stale, failed/blocked, complete/healthy, and quiet. Runner overview metrics now stay neutral at zero and colorize/pulse when nonzero. Progress/Today/Inspector/night shift badges include visible status lights with bounded CSS liveness animation; failure is coral-red danger rather than flat gray. prefers-reduced-motion removes looping animation while preserving semantic color, label, and static indicator. No gradients remain in shipped Relay UI sources. Full npm test passed; web/MCP/mobile browser contract passed; compiled bundle includes relay-status-pulse and relay-status-danger keyframes. Exact merged source uploaded as Cloudflare Worker v53 version c8490ed2-9aa2-466f-aed8-1cd5afbac578 and deployed 100% via a920bd68-7a15-4279-a1f5-8a91e89eb1a2. Runtime readback reports Relay 1.9.3 and source main exactly 2b5053977ccd7eea1b0e31f08fa0c894160c4140 before completion receipt. Production desktop evidence vis_61ad87f5-4dc0-4983-affa-dd783c31e7e5 and mobile evidence vis_00c5067f-fe4a-4c63-856d-6bc69100db01 captured successfully. Historical root transport anomaly remains HTTP 522 while Browser Run renders full page/title relay; not introduced by this release.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T00:21:08.588Z"
     }
   ],
   "migrated_from": "loew-inspector"
