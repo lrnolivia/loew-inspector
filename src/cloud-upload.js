@@ -194,14 +194,15 @@ async function lookupVersion(cloud, path, commitSha) {
 
 export const cloudUploadTool = {
   name: "relay_cloud_upload_version",
-  title: "Upload exact-source Worker version",
-  description: "Upload an undeployed Cloudflare Worker version from an exact GitHub commit. Source, runtime metadata and existing binding identities are resolved server-side; deployment remains a separate Relay action.",
+  title: "Recovery upload exact-source Worker version",
+  description: "Recovery/diagnostic escape hatch for exact-source Cloudflare Worker uploads. Canonical Relay production releases use GitHub -> Cloudflare Workers Builds; relay/relay uploads require an explicit recovery or diagnostic purpose.",
   inputSchema: {
     type: "object",
     properties: {
       script: { type: "string", pattern: "^[A-Za-z0-9_][A-Za-z0-9_-]{0,127}$" },
       repo: { type: "string", pattern: "^[A-Za-z0-9_.-]+$" },
       commit_sha: { type: "string", pattern: "^[a-f0-9]{40}$" },
+      purpose: { type: "string", enum: ["recovery", "diagnostic"] },
       message: { type: "string", maxLength: 1000 }
     },
     required: ["script", "repo", "commit_sha"],
@@ -212,10 +213,11 @@ export const cloudUploadTool = {
 
 export function validateCloudUploadArguments(args) {
   if (!args || typeof args !== "object" || Array.isArray(args)) throw new Error("Tool arguments must be an object");
-  for (const key of Object.keys(args)) if (!["script", "repo", "commit_sha", "message"].includes(key)) throw new Error(`Unsupported argument: ${key}`);
+  for (const key of Object.keys(args)) if (!["script", "repo", "commit_sha", "purpose", "message"].includes(key)) throw new Error(`Unsupported argument: ${key}`);
   if (!SCRIPT.test(args.script || "")) throw new Error("Invalid Worker script");
   if (!REPO.test(args.repo || "")) throw new Error("Invalid GitHub repository");
   if (!SHA.test(args.commit_sha || "")) throw new Error("Invalid exact source commit SHA");
+  if (args.purpose !== undefined && !["recovery", "diagnostic"].includes(args.purpose)) throw new Error("Invalid manual upload purpose");
   if (args.message !== undefined && (typeof args.message !== "string" || args.message.length > 1000)) throw new Error("Invalid upload message");
   return args;
 }
@@ -223,6 +225,9 @@ export function validateCloudUploadArguments(args) {
 export async function uploadCloudSourceVersion(args, env, deps = {}) {
   validateCloudUploadArguments(args);
   if (!cloudWriteScripts(env).includes(args.script)) throw new Error("relay.CLOUD writes are not allowed for " + args.script);
+  if (args.script === "relay" && args.repo === "relay" && !["recovery", "diagnostic"].includes(args.purpose)) {
+    throw new Error("Canonical Relay production transport is Cloudflare Workers Builds; manual relay/relay upload requires explicit recovery or diagnostic purpose");
+  }
 
   const owner = sourceOwner(env);
   const github = deps.github || ((path, options) => githubApiRequest(env, path, options));
@@ -270,7 +275,7 @@ export async function uploadCloudSourceVersion(args, env, deps = {}) {
       "workers/commit_sha": args.commit_sha,
       "workers/message": (args.message || `Relay exact source upload ${args.commit_sha.slice(0, 12)}`).slice(0, 1000),
       "workers/repository_url": `https://github.com/${owner}/${args.repo}`,
-      "workers/tag": "relay-native-source-upload"
+      "workers/tag": args.purpose ? `relay-${args.purpose}-source-upload` : "relay-native-source-upload"
     }
   };
 
