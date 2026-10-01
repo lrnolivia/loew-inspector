@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T04:38:38.149Z",
+  "updated_at": "2026-10-01T04:41:39.731Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3586,8 +3586,8 @@
       "id": "relay-1.9.8-inline-card-design-system-20261001",
       "owner": "relay-1.9.8-inline-card-design-system-20261001",
       "goal": "Ship Relay 1.9.8 as the agentic-tool contract hardening release: audit and improve Relay's MCP/tool surface using the Arcade Agentic Tool Patterns as the normative review baseline for production-grade tool interface design, discovery, composition, execution, output shaping, context, resilience and security.",
-      "acceptance": "In addition to the existing 1.9.8 tool-contract hardening, publish a request-routing skill that Relay/ChatGPT can use before creating or amending work. The skill must infer canonical work territory from the user's meaning rather than requiring them to name internal teams. Explicit user team/staff/role instructions always win. It must map systems/plumbing/contracts/state/lifecycle/architecture work to Runner architecture with Ellis as the natural systems owner; distinguish maintenance/lifecycle hygiene that belongs to Adrian; map visual/art direction to Inspector/Valentina, product/interaction UX to Inspector/Vivienne, implementation/build execution to Runner, source/Git integration to Source/Rafael, cloud/runtime reliability to Cloud/Gabriel, release/publication to Release/Luca, knowledge/skill discovery to Skills/Imani, research/evidence to Night Shift/Naomi, and coordination/continuity to Night Shift/Julian. Mixed requests must identify one primary dependency and bounded supporting teams/staff. Consumer-vs-implementer language such as 'Runner implements on behalf of Inspector' must route the implementing plumbing to Runner while retaining Inspector as a supporting/verification context. The skill must instruct the model to emit/use canonical category, primary_role, supporting_roles, primary_team/supporting_teams when supported, primary_staff/supporting_staff only when the mapping is clear, plus concise routing rationale. Tests must cover plumbing, maintenance, design, UX, cloud, source, release, research, coordination, mixed consumer/implementer requests, and explicit overrides. Preserve machine owner IDs and authorization; semantic routing is presentation/planning metadata, not authority.",
-      "next_action": "Add and publish the semantic request-routing skill on the current 1.9.8 branch, wire it into Relay's MCP skill/resource catalog, add focused tests for plain-language classification examples and override rules, then repair the current PR #78 test failure and rerun exact-head checks before merge/deploy.",
+      "acceptance": "Preserve the existing 1.9.8 hardening and request-routing scope. Add a dedicated read-only Relay context-card render tool following the current MCP Apps decoupled pattern: data/control tools remain useful headlessly; the render tool alone owns `_meta.ui.resourceUri` for the compact context card and returns the canonical structured payload it is asked to present. Keep the existing contextual decoration as compatibility only where safe, but make the explicit render tool the canonical mount path and document its dependency/call order. Add tests proving the tool descriptor exposes `ui.resourceUri`, the resource is registered as `text/html;profile=mcp-app`, duplicate registration is avoided, and the render result preserves canonical state without inventing progress. Record that ChatGPT Code Mode/orchestration may not forward nested MCP UI metadata; visible render in the real consumer remains the final host-level gate and cannot be claimed from source tests alone.",
+      "next_action": "Implement the dedicated context-card render tool and catalog/resource wiring on PR #78, add tests and current Apps SDK contract notes, rerun exact-head CI, then deploy the merged source and re-test from a fresh ChatGPT tool refresh. If the direct launcher still cannot mount in this conversation, record the remaining host boundary as Code Mode nested-tool UI forwarding rather than continuing CSS changes.",
       "paths": [
         "docs/relay/TOOL_DESIGN_STANDARD.md",
         "docs/relay/RELAY_1_9_8_RELEASE.md",
@@ -3604,7 +3604,9 @@
         "test/tool-contract.test.mjs",
         "test/tool-evals.test.mjs",
         "src/request-routing-skill.js",
-        "src/request-routing-skill.test.js"
+        "src/request-routing-skill.test.js",
+        "src/relay-chat-ui.js",
+        "src/relay-chat-ui.test.js"
       ],
       "resources": [
         "relay-1.9.8-release",
@@ -3612,7 +3614,10 @@
         "relay-request-intent-routing",
         "relay-semantic-work-routing",
         "relay-explicit-routing-override",
-        "relay-plumbing-systems-routing"
+        "relay-plumbing-systems-routing",
+        "relay-context-card-render-tool",
+        "relay-mcp-app-launcher-contract",
+        "relay-code-mode-ui-boundary"
       ],
       "task_class": "architecture",
       "ledger_refs": [
@@ -3651,7 +3656,7 @@
       ],
       "state": "claimed",
       "created_at": "2026-10-01T02:56:35.886Z",
-      "amendment_count": 3,
+      "amendment_count": 4,
       "amendments": [
         {
           "at": "2026-10-01T02:58:34.331Z",
@@ -3911,9 +3916,85 @@
               "relay-plumbing-systems-routing"
             ]
           }
+        },
+        {
+          "at": "2026-10-01T04:41:39.731Z",
+          "by": "relay-1.9.8-inline-card-design-system-20261001",
+          "reason": "Fresh ChatGPT tool refresh still produced structuredContent-only results with no visible card. Add an explicit standards-first render launcher tool to isolate data work from UI mounting and make the host contract testable.",
+          "fields": [
+            "acceptance",
+            "next_action",
+            "paths",
+            "resources"
+          ],
+          "before": {
+            "acceptance": "In addition to the existing 1.9.8 tool-contract hardening, publish a request-routing skill that Relay/ChatGPT can use before creating or amending work. The skill must infer canonical work territory from the user's meaning rather than requiring them to name internal teams. Explicit user team/staff/role instructions always win. It must map systems/plumbing/contracts/state/lifecycle/architecture work to Runner architecture with Ellis as the natural systems owner; distinguish maintenance/lifecycle hygiene that belongs to Adrian; map visual/art direction to Inspector/Valentina, product/interacti...",
+            "next_action": "Add and publish the semantic request-routing skill on the current 1.9.8 branch, wire it into Relay's MCP skill/resource catalog, add focused tests for plain-language classification examples and override rules, then repair the current PR #78 test failure and rerun exact-head checks before merge/deploy.",
+            "paths": [
+              "docs/relay/TOOL_DESIGN_STANDARD.md",
+              "docs/relay/RELAY_1_9_8_RELEASE.md",
+              "contracts/tools/",
+              "src/relay-entry.js",
+              "src/runner-control.js",
+              "src/source-lifecycle.js",
+              "src/source-text-mutation.js",
+              "src/operations.js",
+              "src/operation-recipes.js",
+              "test/tools/",
+              "test/tool-evals/",
+              "src/relay-entry.test.js",
+              "test/tool-contract.test.mjs",
+              "test/tool-evals.test.mjs",
+              "src/request-routing-skill.js",
+              "src/request-routing-skill.test.js"
+            ],
+            "resources": [
+              "relay-1.9.8-release",
+              "relay-agentic-tool-contracts",
+              "relay-request-intent-routing",
+              "relay-semantic-work-routing",
+              "relay-explicit-routing-override",
+              "relay-plumbing-systems-routing"
+            ]
+          },
+          "after": {
+            "acceptance": "Preserve the existing 1.9.8 hardening and request-routing scope. Add a dedicated read-only Relay context-card render tool following the current MCP Apps decoupled pattern: data/control tools remain useful headlessly; the render tool alone owns `_meta.ui.resourceUri` for the compact context card and returns the canonical structured payload it is asked to present. Keep the existing contextual decoration as compatibility only where safe, but make the explicit render tool the canonical mount path and document its dependency/call order. Add tests proving the tool descriptor exposes `ui.resourceU...",
+            "next_action": "Implement the dedicated context-card render tool and catalog/resource wiring on PR #78, add tests and current Apps SDK contract notes, rerun exact-head CI, then deploy the merged source and re-test from a fresh ChatGPT tool refresh. If the direct launcher still cannot mount in this conversation, record the remaining host boundary as Code Mode nested-tool UI forwarding rather than continuing CSS changes.",
+            "paths": [
+              "docs/relay/TOOL_DESIGN_STANDARD.md",
+              "docs/relay/RELAY_1_9_8_RELEASE.md",
+              "contracts/tools/",
+              "src/relay-entry.js",
+              "src/runner-control.js",
+              "src/source-lifecycle.js",
+              "src/source-text-mutation.js",
+              "src/operations.js",
+              "src/operation-recipes.js",
+              "test/tools/",
+              "test/tool-evals/",
+              "src/relay-entry.test.js",
+              "test/tool-contract.test.mjs",
+              "test/tool-evals.test.mjs",
+              "src/request-routing-skill.js",
+              "src/request-routing-skill.test.js",
+              "src/relay-chat-ui.js",
+              "src/relay-chat-ui.test.js"
+            ],
+            "resources": [
+              "relay-1.9.8-release",
+              "relay-agentic-tool-contracts",
+              "relay-request-intent-routing",
+              "relay-semantic-work-routing",
+              "relay-explicit-routing-override",
+              "relay-plumbing-systems-routing",
+              "relay-context-card-render-tool",
+              "relay-mcp-app-launcher-contract",
+              "relay-code-mode-ui-boundary"
+            ]
+          }
         }
       ],
-      "updated_at": "2026-10-01T04:35:05.840Z"
+      "updated_at": "2026-10-01T04:41:39.731Z"
     },
     {
       "id": "relay-1.9.9-chatgpt-native-experience-20261001",
@@ -6614,7 +6695,9 @@
         "test/tool-contract.test.mjs",
         "test/tool-evals.test.mjs",
         "src/request-routing-skill.js",
-        "src/request-routing-skill.test.js"
+        "src/request-routing-skill.test.js",
+        "src/relay-chat-ui.js",
+        "src/relay-chat-ui.test.js"
       ],
       "resources": [
         "relay-1.9.8-release",
@@ -6622,11 +6705,14 @@
         "relay-request-intent-routing",
         "relay-semantic-work-routing",
         "relay-explicit-routing-override",
-        "relay-plumbing-systems-routing"
+        "relay-plumbing-systems-routing",
+        "relay-context-card-render-tool",
+        "relay-mcp-app-launcher-contract",
+        "relay-code-mode-ui-boundary"
       ],
       "goal": "Ship Relay 1.9.8 as the agentic-tool contract hardening release: audit and improve Relay's MCP/tool surface using the Arcade Agentic Tool Patterns as the normative review baseline for production-grade tool interface design, discovery, composition, execution, output shaping, context, resilience and security.",
-      "acceptance": "In addition to the existing 1.9.8 tool-contract hardening, publish a request-routing skill that Relay/ChatGPT can use before creating or amending work. The skill must infer canonical work territory from the user's meaning rather than requiring them to name internal teams. Explicit user team/staff/role instructions always win. It must map systems/plumbing/contracts/state/lifecycle/architecture work to Runner architecture with Ellis as the natural systems owner; distinguish maintenance/lifecycle hygiene that belongs to Adrian; map visual/art direction to Inspector/Valentina, product/interaction UX to Inspector/Vivienne, implementation/build execution to Runner, source/Git integration to Source/Rafael, cloud/runtime reliability to Cloud/Gabriel, release/publication to Release/Luca, knowledge/skill discovery to Skills/Imani, research/evidence to Night Shift/Naomi, and coordination/continuity to Night Shift/Julian. Mixed requests must identify one primary dependency and bounded supporting teams/staff. Consumer-vs-implementer language such as 'Runner implements on behalf of Inspector' must route the implementing plumbing to Runner while retaining Inspector as a supporting/verification context. The skill must instruct the model to emit/use canonical category, primary_role, supporting_roles, primary_team/supporting_teams when supported, primary_staff/supporting_staff only when the mapping is clear, plus concise routing rationale. Tests must cover plumbing, maintenance, design, UX, cloud, source, release, research, coordination, mixed consumer/implementer requests, and explicit overrides. Preserve machine owner IDs and authorization; semantic routing is presentation/planning metadata, not authority.",
-      "next_action": "Add and publish the semantic request-routing skill on the current 1.9.8 branch, wire it into Relay's MCP skill/resource catalog, add focused tests for plain-language classification examples and override rules, then repair the current PR #78 test failure and rerun exact-head checks before merge/deploy.",
+      "acceptance": "Preserve the existing 1.9.8 hardening and request-routing scope. Add a dedicated read-only Relay context-card render tool following the current MCP Apps decoupled pattern: data/control tools remain useful headlessly; the render tool alone owns `_meta.ui.resourceUri` for the compact context card and returns the canonical structured payload it is asked to present. Keep the existing contextual decoration as compatibility only where safe, but make the explicit render tool the canonical mount path and document its dependency/call order. Add tests proving the tool descriptor exposes `ui.resourceUri`, the resource is registered as `text/html;profile=mcp-app`, duplicate registration is avoided, and the render result preserves canonical state without inventing progress. Record that ChatGPT Code Mode/orchestration may not forward nested MCP UI metadata; visible render in the real consumer remains the final host-level gate and cannot be claimed from source tests alone.",
+      "next_action": "Implement the dedicated context-card render tool and catalog/resource wiring on PR #78, add tests and current Apps SDK contract notes, rerun exact-head CI, then deploy the merged source and re-test from a fresh ChatGPT tool refresh. If the direct launcher still cannot mount in this conversation, record the remaining host boundary as Code Mode nested-tool UI forwarding rather than continuing CSS changes.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-034"
@@ -6678,9 +6764,9 @@
       "base_sha": "8a49308c554a1269c8b3d1cf30ede3d7775bdb5c",
       "state": "active",
       "created_at": "2026-10-01T04:23:46.405Z",
-      "updated_at": "2026-10-01T04:35:05.840Z",
-      "lease_until": "2026-10-01T16:35:05.840Z",
-      "amendment_count": 1,
+      "updated_at": "2026-10-01T04:41:39.731Z",
+      "lease_until": "2026-10-01T16:41:39.731Z",
+      "amendment_count": 2,
       "amendments": [
         {
           "at": "2026-10-01T04:35:05.840Z",
@@ -6753,6 +6839,82 @@
               "relay-semantic-work-routing",
               "relay-explicit-routing-override",
               "relay-plumbing-systems-routing"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T04:41:39.731Z",
+          "by": "relay-1.9.8-inline-card-design-system-20261001",
+          "reason": "Fresh ChatGPT tool refresh still produced structuredContent-only results with no visible card. Add an explicit standards-first render launcher tool to isolate data work from UI mounting and make the host contract testable.",
+          "fields": [
+            "acceptance",
+            "next_action",
+            "paths",
+            "resources"
+          ],
+          "before": {
+            "acceptance": "In addition to the existing 1.9.8 tool-contract hardening, publish a request-routing skill that Relay/ChatGPT can use before creating or amending work. The skill must infer canonical work territory from the user's meaning rather than requiring them to name internal teams. Explicit user team/staff/role instructions always win. It must map systems/plumbing/contracts/state/lifecycle/architecture work to Runner architecture with Ellis as the natural systems owner; distinguish maintenance/lifecycle hygiene that belongs to Adrian; map visual/art direction to Inspector/Valentina, product/interacti...",
+            "next_action": "Add and publish the semantic request-routing skill on the current 1.9.8 branch, wire it into Relay's MCP skill/resource catalog, add focused tests for plain-language classification examples and override rules, then repair the current PR #78 test failure and rerun exact-head checks before merge/deploy.",
+            "paths": [
+              "docs/relay/TOOL_DESIGN_STANDARD.md",
+              "docs/relay/RELAY_1_9_8_RELEASE.md",
+              "contracts/tools/",
+              "src/relay-entry.js",
+              "src/runner-control.js",
+              "src/source-lifecycle.js",
+              "src/source-text-mutation.js",
+              "src/operations.js",
+              "src/operation-recipes.js",
+              "test/tools/",
+              "test/tool-evals/",
+              "src/relay-entry.test.js",
+              "test/tool-contract.test.mjs",
+              "test/tool-evals.test.mjs",
+              "src/request-routing-skill.js",
+              "src/request-routing-skill.test.js"
+            ],
+            "resources": [
+              "relay-1.9.8-release",
+              "relay-agentic-tool-contracts",
+              "relay-request-intent-routing",
+              "relay-semantic-work-routing",
+              "relay-explicit-routing-override",
+              "relay-plumbing-systems-routing"
+            ]
+          },
+          "after": {
+            "acceptance": "Preserve the existing 1.9.8 hardening and request-routing scope. Add a dedicated read-only Relay context-card render tool following the current MCP Apps decoupled pattern: data/control tools remain useful headlessly; the render tool alone owns `_meta.ui.resourceUri` for the compact context card and returns the canonical structured payload it is asked to present. Keep the existing contextual decoration as compatibility only where safe, but make the explicit render tool the canonical mount path and document its dependency/call order. Add tests proving the tool descriptor exposes `ui.resourceU...",
+            "next_action": "Implement the dedicated context-card render tool and catalog/resource wiring on PR #78, add tests and current Apps SDK contract notes, rerun exact-head CI, then deploy the merged source and re-test from a fresh ChatGPT tool refresh. If the direct launcher still cannot mount in this conversation, record the remaining host boundary as Code Mode nested-tool UI forwarding rather than continuing CSS changes.",
+            "paths": [
+              "docs/relay/TOOL_DESIGN_STANDARD.md",
+              "docs/relay/RELAY_1_9_8_RELEASE.md",
+              "contracts/tools/",
+              "src/relay-entry.js",
+              "src/runner-control.js",
+              "src/source-lifecycle.js",
+              "src/source-text-mutation.js",
+              "src/operations.js",
+              "src/operation-recipes.js",
+              "test/tools/",
+              "test/tool-evals/",
+              "src/relay-entry.test.js",
+              "test/tool-contract.test.mjs",
+              "test/tool-evals.test.mjs",
+              "src/request-routing-skill.js",
+              "src/request-routing-skill.test.js",
+              "src/relay-chat-ui.js",
+              "src/relay-chat-ui.test.js"
+            ],
+            "resources": [
+              "relay-1.9.8-release",
+              "relay-agentic-tool-contracts",
+              "relay-request-intent-routing",
+              "relay-semantic-work-routing",
+              "relay-explicit-routing-override",
+              "relay-plumbing-systems-routing",
+              "relay-context-card-render-tool",
+              "relay-mcp-app-launcher-contract",
+              "relay-code-mode-ui-boundary"
             ]
           }
         }
