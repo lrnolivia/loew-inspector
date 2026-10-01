@@ -139,12 +139,12 @@ test("fresh inline status card is listed and readable through the authenticated 
     assert.equal(String(url), "https://loewfi.cloudflareaccess.com/cdn-cgi/access/certs");
     return Response.json({ keys: [{ ...publicKey.export({ format: "jwk" }), kid }] });
   });
-  const rpc = async (method, params = {}) => {
+  const rpc = async (method, params = {}, env = {}) => {
     const response = await worker.fetch(new Request("https://relay.loew.fi/mcp", {
       method: "POST",
       headers: { "content-type": "application/json", "cf-access-jwt-assertion": token },
       body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params })
-    }), {});
+    }), env);
     assert.equal(response.status, 200);
     const body = await response.json();
     assert.equal(body.error, undefined);
@@ -184,4 +184,49 @@ test("fresh inline status card is listed and readable through the authenticated 
   const invalid = await rpc("tools/call", { name: "relay_show_legacy_bridge_card", arguments: { project: "../relay" } });
   assert.equal(invalid.isError, true);
   assert.match(invalid.content[0].text, /Invalid card project/);
+
+  await t.test('feedback tools enforce the existing authentication and preserve readable receipts', async () => {
+    const priorFetch = globalThis.fetch;
+    const file = value => Response.json({ type: 'file', sha: 'b'.repeat(40), encoding: 'base64', content: Buffer.from(JSON.stringify(value)).toString('base64') });
+    let head = 'a'.repeat(40), changeHeadOnWrite = false;
+    t.mock.method(globalThis, 'fetch', async (url, options) => {
+      const path = String(url);
+      if (path.includes('projects/fixture.json')) return file({ id: 'fixture', repository: 'lrnolivia/fixture', managed: true, default_branch: 'main',
+        implementation: { branch_prefixes: ['fixture/'], excluded_branches: ['main'] },
+        coordination: { status: 'enabled', record: 'coordination/fixture.json', max_active_branches: 4, lease_hours: 12 } });
+      if (path.includes('coordination/fixture.json')) return file({ project: 'fixture', claims: [{ id: 'task', owner: 'fixture-owner', branch: 'fixture/task', state: 'active' }], queue: [], legacy_branches: [] });
+      if (path.includes('/git/ref/heads/')) return Response.json({ object: { sha: head } });
+      return priorFetch(url, options);
+    });
+    let writes = 0;
+    const data = new Map();
+    const env = { EVIDENCE: {
+      async get(key) { return data.has(key) ? { etag: String(writes), json: async () => JSON.parse(data.get(key)) } : null; },
+      async put(key, value, options) {
+        if (options.onlyIf instanceof Headers && data.has(key)) return null;
+        data.set(key, value); writes++;
+        if (changeHeadOnWrite) head = 'c'.repeat(40);
+        return { etag: String(writes) };
+      }
+    } };
+    const args = { project: 'fixture', assignment: 'task', expected_owner: 'fixture-owner', expected_branch: 'fixture/task',
+      operation_id: 'entry-fixture', original_text: 'Synthetic entrypoint fixture.', artifact: { repository: 'lrnolivia/fixture', commit_sha: head } };
+    const params = { name: 'relay_runner_feedback_submit', arguments: args };
+    const denied = await worker.fetch(new Request('https://relay.loew.fi/mcp', { method: 'POST',
+      headers: { 'content-type': 'application/json' }, body: JSON.stringify({ jsonrpc: '2.0', id: 1, method: 'tools/call', params }) }), env);
+    assert.equal(denied.status, 401); assert.equal(writes, 0);
+    const saved = await rpc('tools/call', params, env);
+    assert.equal(saved.isError, undefined); assert.equal(saved.structuredContent.feedback.original_text, args.original_text);
+    assert.equal(saved.structuredContent.feedback.reporter, 'authenticated-mcp-caller-unattributed');
+    assert.equal(saved.structuredContent.feedback.status.delivered, null);
+    assert.ok(saved.content[0].text.includes(saved.structuredContent.feedback.report_id));
+    const retry = await rpc('tools/call', params, env);
+    assert.equal(retry.structuredContent.feedback.replayed, true); assert.equal(writes, 1);
+    const conflict = await rpc('tools/call', { ...params, arguments: { ...args, original_text: 'Different intent.' } }, env);
+    assert.equal(conflict.isError, true); assert.equal(conflict.structuredContent.error.class, 'conflict');
+    changeHeadOnWrite = true;
+    const raced = await rpc('tools/call', { ...params, arguments: { ...args, operation_id: 'raced-identity' } }, env);
+    assert.equal(raced.isError, true); assert.equal(raced.structuredContent.reconcile_required, true);
+    assert.ok(raced.structuredContent.report.report_id);
+  });
 });

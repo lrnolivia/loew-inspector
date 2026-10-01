@@ -1,5 +1,5 @@
 const SAFE_REQUEST_ID = /^[a-zA-Z0-9._-]{1,80}$/;
-const SAFE_CONTEXT_TEXT = /^[a-zA-Z0-9._:/-]{1,128}$/;
+const SAFE_CONTEXT_TEXT = /^[a-zA-Z0-9._:/-]{1,240}$/;
 const RETENTION_DAYS = 30;
 
 function safeRequestId(value) {
@@ -26,6 +26,9 @@ export function normalizeEvidenceContext(value = null) {
   if (prNumber != null && (!Number.isInteger(prNumber) || prNumber < 1 || prNumber > 1000000)) throw new Error("Invalid PR number");
   return {
     project: safeContextText(value.project, 80),
+    assignment: safeContextText(value.assignment, 100),
+    owner: safeContextText(value.owner, 100),
+    branch: safeContextText(value.branch, 240),
     project_id: safeContextText(value.project_id, 128),
     environment,
     surface: safeContextText(value.surface, 80),

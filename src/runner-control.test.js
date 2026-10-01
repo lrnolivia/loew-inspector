@@ -70,7 +70,7 @@ test('generated policy is byte-exact Runner source with correct Git blob provena
   assert.deepEqual(source, await readFile(new URL('./coordination.mjs', import.meta.url)));
 });
 test('definitions describe reads and bounded writes with strict server validation', async () => {
-  assert.equal(runnerControlTools.length, 11);
+  assert.equal(runnerControlTools.length, 15);
   assert.ok(runnerControlTools.some(tool => tool.name === 'relay_runner_resume'));
   assert.ok(runnerControlTools.some(tool => tool.name === 'relay_runner_updates'));
   const coordinateTool = runnerControlTools.find(tool => tool.name === 'relay_runner_coordinate');

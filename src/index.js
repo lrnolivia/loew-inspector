@@ -15,11 +15,16 @@ import { cloudStatus, listCloudScripts, cloudWorkerSummary, cloudBuilds, deployC
 import { HOST_PROBE_URI, HOST_PROBE_TOOL, hostProbeDescriptor, hostProbeResource, hostProbeTool, hostProbeResult } from "./relay-host-probe.js";
 import { ACTION_PROBE_URI, ACTION_PROBE_TOOL, ACTION_SAMPLE_TOOL, actionProbeDescriptor, actionProbeResource, actionProbeTools, actionProbeResult } from "./relay-host-action-probe.js";
 
+import { feedbackActor } from "./feedback-control.js";
+
 const VERSION = "1.2.0";
 const EVIDENCE_CONTEXT_SCHEMA = {
   type: "object",
   properties: {
     project: { type: "string", maxLength: 80 },
+    assignment: { type: "string", maxLength: 100 },
+    owner: { type: "string", maxLength: 100 },
+    branch: { type: "string", maxLength: 240 },
     project_id: { type: "string", maxLength: 128 },
     environment: { type: "string", enum: ["production","preview","qa","smoke","unknown"] },
     surface: { type: "string", maxLength: 80 },
@@ -943,7 +948,11 @@ async function mcp(request, access, env) {
 
 
       if (runnerControlTools.some(tool => tool.name === name)) {
-        try { return relayResult(id, await callRunnerControl(name, args, env)); }
+        try {
+          const result = await callRunnerControl(name, args, { ...env, RELAY_FEEDBACK_ACTOR: feedbackActor(access) });
+          return rpc(id, { content: [{ type: "text", text: JSON.stringify(result) }], structuredContent: result,
+            ...(result.ok === false ? { isError: true } : {}) });
+        }
         catch (error) {
           const failure = runnerControlError(error);
           return rpc(id, { content: [{ type: "text", text: JSON.stringify(failure) }], structuredContent: failure, isError: true });

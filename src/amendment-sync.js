@@ -1,7 +1,7 @@
 import { callRunnerControlCore } from "./runner-control-core.js";
 import { callResume } from "./resume-checkpoints.js";
 import { deriveRecoverySignal } from "./recovery-signals.js";
-import { consumeQaFeedback } from "../packages/runner/src/qa-feedback.mjs";
+import { readPendingFeedback } from "./feedback-control.js";
 
 const PRIORITY={informational:1,"plan-adjusting":2,"scope-changing":3,blocking:4};
 
@@ -40,13 +40,8 @@ export async function callAssignmentUpdates(args,env={},apiOverride){
     previous_checkpoint_id:args.checkpoint_id||null,
     recovery_attempts:args.recovery_attempts||0
   });
-  const feedback=await consumeQaFeedback(env.EVIDENCE,{
-    project:args.project,
-    assignment:assignment.id,
-    owner:assignment.owner,
-    branch:assignment.branch
-  });
-  const feedbackImpact=feedback.conflicts.length?"blocking":feedback.events.length?"plan-adjusting":"informational";
+  const feedback=await readPendingFeedback(args,env,apiOverride);
+  const feedbackImpact=!feedback.available||feedback.conflicts.length?"blocking":feedback.events.length?"plan-adjusting":"informational";
   const impact=PRIORITY[feedbackImpact]>PRIORITY[window.impact]?feedbackImpact:window.impact;
   return Object.freeze({
     ok:true,
@@ -63,13 +58,17 @@ export async function callAssignmentUpdates(args,env={},apiOverride){
     current_amendment_count:window.total,
     gap:window.gap,
     impact,
-    reconcile_required:window.reconcile_required||feedback.conflicts.length>0,
-    context_injection:window.updates.length>0||feedback.events.length>0||feedback.conflicts.length>0,
+    reconcile_required:window.reconcile_required||!feedback.available||feedback.conflicts.length>0,
+    context_injection:window.updates.length>0||!feedback.available||feedback.truncated||feedback.events.length>0||feedback.conflicts.length>0,
     updates:window.updates,
     feedback_available:feedback.available,
     feedback:feedback.events,
     feedback_conflicts:feedback.conflicts,
-    feedback_acknowledged:feedback.acknowledged,
+    feedback_acknowledged:[],
+    feedback_next_cursor:feedback.next_cursor,
+    feedback_truncated:feedback.truncated,
+    feedback_scan_complete:feedback.available&&!feedback.truncated,
+    feedback_unavailable_reason:feedback.reason||null,
     checkpoint_id:checkpoint?.checkpoint_id||null,
     recovery
   });

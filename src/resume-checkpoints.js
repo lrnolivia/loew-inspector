@@ -1,3 +1,4 @@
+import { readPendingFeedback } from "./feedback-control.js";
 import { retired } from "./coordination-engine.js";
 import { createHash } from "node:crypto";
 import { githubApiRequest } from "./source.js";
@@ -68,7 +69,7 @@ function qaContext(progress, assignment) {
   return { required: false };
 }
 
-function checkpointCore({ project, assignment, progress, changedPaths, changedPathsTruncated, recentCommits, recordSha, policySha }) {
+function checkpointCore({ project, assignment, progress, changedPaths, changedPathsTruncated, recentCommits, recordSha, policySha, pendingFeedback }) {
   const terminal = retired(assignment) || retired(progress);
   return {
     contract_version: RESUME_CONTRACT_VERSION,
@@ -117,6 +118,7 @@ function checkpointCore({ project, assignment, progress, changedPaths, changedPa
     },
     next_action: terminal ? null : progress?.next_action || assignment?.next_action || null,
     qa_context: qaContext(progress, assignment),
+    pending_feedback: pendingFeedback || { available: false, reason: "explicit-assignment-required" },
     canonical_record_sha: recordSha || null,
     policy_sha: policySha || null
   };
@@ -235,6 +237,7 @@ export async function callResume(args, env = {}, apiOverride, cloudOverride, now
   if (!repository) throw new Error("Resume checkpoint cannot resolve the registered repository");
   const repoBase = `/repos/${repository}`;
   const checkpoints = [];
+  const pendingFeedback = await readPendingFeedback(args, env, api);
 
   for (const claim of assignments.claims || []) {
     const progress = (observed.progress || []).find(item => item.assignment === claim.id) || null;
@@ -250,7 +253,8 @@ export async function callResume(args, env = {}, apiOverride, cloudOverride, now
       changedPathsTruncated: paths.truncated,
       recentCommits: commits,
       recordSha: assignments.record_sha,
-      policySha: assignments.policy_sha
+      policySha: assignments.policy_sha,
+      pendingFeedback
     }, now));
   }
 
