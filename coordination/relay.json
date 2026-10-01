@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T01:35:01.771Z",
+  "updated_at": "2026-10-01T01:35:23.045Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -2302,9 +2302,9 @@
     {
       "id": "relay-findings-rfs-023-20260930",
       "owner": "relay-findings-rfs-023-20260930",
-      "goal": "Document RFS-023 through RFS-027: contract propagation, live amendments, caught-up recovery, recovery learning, and canonical direct-GitHub intake for large binary assets.",
-      "acceptance": "Append RFS-023 and RFS-024 to the canonical findings ledger and link both to Relay 1.9 for consideration.\n\nRFS-023 documents manual release-contract propagation friction observed while promoting staff-aware narration from a child slice to the 1.9 umbrella: manual promotion hit the 4,000-character acceptance ceiling, then legitimate ownership overlap, requiring compaction/reframing. Suggest automatic parent/child contract propagation or reconciliation that preserves ownership boundaries, summarizes instead of duplicating long acceptance text, and routes changed release-level requirements without manual multi-step restatement.\n\nRFS-024 documents live amendment delivery: active chats/workers can continue from stale instructions after a canonical assignment is amended because amendment history is durable but not automatically consumed by already-running workers. Suggest cursor-based relevant-change sync rather than naive full-history polling: monotonic consumed revision; checks at start/resume, major mutation/commit/PR/deploy transitions, external-wait return and bounded heartbeat cadence; no-change checks inject no context; new amendments classify informational/plan-adjusting/scope-changing/blocking; only scope-changing/blocking updates interrupt and require reconciliation. Preserve exact consumed revision in resume/handoff state.\n\nRFS-025 documents recurring worker/chat stalls where forward progress stops without a true blocker and the user must manually interrupt with \"you got caught up\"; once interrupted, the worker can usually identify the exact stall point and resume. Suggest a bounded caught-up recovery skill plus Relay-side no-progress watchdog. Detect repeated/no-op actions, circular replanning, unchanged canonical progress across expected transitions, repeated identical tool failures, or stale heartbeat without a genuine external wait. Recover from latest valid checkpoint/canonical evidence, state the last successful action and stall point, then continue from the next safe action. Do not treat CI/external waits, auth/tool-schema/client failures, scope conflicts or destructive ambiguity as recoverable stalls. Bound retries and record recovery signals for resume/live-instruction sync.\n\nRFS-026 documents capability-route learning from recovery. During icon packaging, the worker first planned UTF-8/base64 chunk transport, then discovered an available low-level GitHub binary blob path that could commit exact PNG bytes while Relay still retained canonical control over admitted branch/scope, Runner ownership, PR/merge/deploy and verification. Suggest a bounded recovery-learning mechanism: when a validated stall workaround reveals a better safe capability route, record constraint, preferred route, fallback, authority boundary and evidence; promote it through findings/planning into the relevant skill/capability guidance so future workers try the proven route first. One-off guesses must not silently become policy.\n\nRFS-027 documents the canonical large-asset intake rule: when a task needs large/binary files such as images and GitHub is the better transport, ask the user to upload directly to the exact admitted repository/branch/folder and provide the direct GitHub upload/location link. After upload, Relay should discover and validate the assets, hash them, parse metadata, and rename/move/normalize them as needed within canonical scope. Preserve provenance and branch authority. Chat/base64/chunk transport is fallback only when direct GitHub intake is unavailable or inappropriate.",
-      "next_action": "When branch capacity opens, append RFS-023 through RFS-027 to suggestions.md in one docs-only maintenance change, merge, and complete. No Worker deployment.",
+      "goal": "Document RFS-023 through RFS-028: coordination propagation, live amendments, recovery/learning, direct large-asset intake, and workflow-time bottleneck telemetry.",
+      "acceptance": "Append RFS-023 through RFS-028 to the canonical findings ledger and link each to Relay 1.9 for consideration.\n\nRFS-023 — release-contract propagation friction: umbrella/child requirements currently need manual restatement and can hit acceptance-size/ownership-overlap limits. Consider summarized parent/child contract propagation or reconciliation without stealing ownership.\n\nRFS-024 — live amendment delivery: running chats can miss canonical amendments. Use monotonic consumed-revision cursors and bounded relevant-change checks at safe sync points; no-change injects nothing; scope-changing/blocking updates reconcile before conflicting work.\n\nRFS-025 — caught-up recovery: workers can stop making progress without a true blocker until the user interrupts. Detect no-op/repeated failures/circular replanning/stale progress, recover from canonical checkpoints, state stall point, resume with bounded retries; do not confuse real external waits/auth/client/scope/destructive ambiguity with recoverable stalls.\n\nRFS-026 — recovery learning: validated better capability routes discovered while unsticking work should become reusable guidance. Record constraint, preferred route, fallback, authority boundary and evidence; promote through findings/planning. Example: binary assets prefer binary-capable GitHub transport while Relay retains branch/Runner/PR/deploy/verification authority; UTF-8 base64/chunking is fallback.\n\nRFS-027 — large-asset intake: when GitHub is the better transport, ask the user to upload large/binary files directly to the exact admitted repo/branch/folder with a direct link. Then validate/hash/inspect/rename/move/normalize within scope. Chat transport is fallback.\n\nRFS-028 — workflow-time telemetry: current canonical timestamps support coarse claim→PR/check/merge/wait timing but not reliable active-vs-wait-vs-stall attribution. Add bounded phase/wait/recovery telemetry derived from canonical events/checkpoints. Aggregate by task class, capability/skill, tool family, failure/recovery reason and workflow phase. Staff identity may filter context but never become a productivity score/ranking. Surface recurring bottlenecks and feed validated improvements back into planning/recovery learning.",
+      "next_action": "When branch capacity opens, append RFS-023 through RFS-028 to suggestions.md in one docs-only maintenance change, merge, and complete. No Worker deployment.",
       "paths": [
         "docs/relay/findings/suggestions.md"
       ],
@@ -2318,11 +2318,12 @@
         "RFS-024",
         "RFS-025",
         "RFS-026",
-        "RFS-027"
+        "RFS-027",
+        "RFS-028"
       ],
       "state": "queued",
       "created_at": "2026-10-01T01:04:02.031Z",
-      "amendment_count": 4,
+      "amendment_count": 5,
       "amendments": [
         {
           "at": "2026-10-01T01:06:03.436Z",
@@ -2447,9 +2448,45 @@
               "RFS-027"
             ]
           }
+        },
+        {
+          "at": "2026-10-01T01:35:23.045Z",
+          "by": "relay-findings-rfs-023-20260930",
+          "reason": "Compact the queued findings assignment so all six canonical findings fit Runner limits while preserving the full intended ledger content.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action",
+            "ledger_refs"
+          ],
+          "before": {
+            "goal": "Document RFS-023 through RFS-027: contract propagation, live amendments, caught-up recovery, recovery learning, and canonical direct-GitHub intake for large binary assets.",
+            "acceptance": "Append RFS-023 and RFS-024 to the canonical findings ledger and link both to Relay 1.9 for consideration.\n\nRFS-023 documents manual release-contract propagation friction observed while promoting staff-aware narration from a child slice to the 1.9 umbrella: manual promotion hit the 4,000-character acceptance ceiling, then legitimate ownership overlap, requiring compaction/reframing. Suggest automatic parent/child contract propagation or reconciliation that preserves ownership boundaries, summarizes instead of duplicating long acceptance text, and routes changed release-level requirements wit...",
+            "next_action": "When branch capacity opens, append RFS-023 through RFS-027 to suggestions.md in one docs-only maintenance change, merge, and complete. No Worker deployment.",
+            "ledger_refs": [
+              "RFS-023",
+              "RFS-024",
+              "RFS-025",
+              "RFS-026",
+              "RFS-027"
+            ]
+          },
+          "after": {
+            "goal": "Document RFS-023 through RFS-028: coordination propagation, live amendments, recovery/learning, direct large-asset intake, and workflow-time bottleneck telemetry.",
+            "acceptance": "Append RFS-023 through RFS-028 to the canonical findings ledger and link each to Relay 1.9 for consideration.\n\nRFS-023 — release-contract propagation friction: umbrella/child requirements currently need manual restatement and can hit acceptance-size/ownership-overlap limits. Consider summarized parent/child contract propagation or reconciliation without stealing ownership.\n\nRFS-024 — live amendment delivery: running chats can miss canonical amendments. Use monotonic consumed-revision cursors and bounded relevant-change checks at safe sync points; no-change injects nothing; scope-changing/bl...",
+            "next_action": "When branch capacity opens, append RFS-023 through RFS-028 to suggestions.md in one docs-only maintenance change, merge, and complete. No Worker deployment.",
+            "ledger_refs": [
+              "RFS-023",
+              "RFS-024",
+              "RFS-025",
+              "RFS-026",
+              "RFS-027",
+              "RFS-028"
+            ]
+          }
         }
       ],
-      "updated_at": "2026-10-01T01:25:58.453Z"
+      "updated_at": "2026-10-01T01:35:23.045Z"
     }
   ],
   "claims": [
