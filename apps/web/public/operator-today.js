@@ -1,3 +1,4 @@
+import { showLoading } from "./loading.js";
 import { glyph } from "../../../packages/shared-ui/glyphs.js";
 import { progressStateMeta } from "../../../src/relay-operation-ui.js";
 import { iconSlot, hydrateProjectIcons } from "./project-icons.js";
@@ -126,7 +127,7 @@ function renderAutomations(ui) {
 
 async function loadProjectWork(ui) {
   const target = document.querySelector("#today-work");
-  target.innerHTML = '<div class="operator-loading">Checking observed project work…</div>';
+  showLoading(target, "rows", "Loading project work");
   try {
     if (!projectIds.length) projectIds = await loadProjectIndex();
     const ids = projectScope && projectIds.includes(projectScope) ? [projectScope] : projectIds;
@@ -168,7 +169,8 @@ async function loadProjectWork(ui) {
 
 export async function loadToday(ui, projectId = "") {
   projectScope = projectId || "";
-  ui.setConnection("checking…");
+  ui.setConnection("checking…", "loading");
+  ["today-attention", "today-work", "today-automations"].forEach(id => showLoading(document.getElementById(id), "rows", "Loading project activity"));
   try {
     workers = await api("/api/workers");
     projectAttention = [];
@@ -179,5 +181,6 @@ export async function loadToday(ui, projectId = "") {
     ui.setConnection(error.status === 403 ? "access needed" : "couldn’t connect", "bad");
     document.querySelector("#today-attention").innerHTML = '<div class="operator-empty">Relay could not load project status.</div>';
     document.querySelector("#today-automations").innerHTML = "";
+    document.querySelector("#today-work").innerHTML = '<div class="operator-empty">Project work could not be loaded right now.</div>';
   }
 }

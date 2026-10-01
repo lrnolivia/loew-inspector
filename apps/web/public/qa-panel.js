@@ -1,5 +1,8 @@
+import { loadingMarkup } from "./loading.js";
 import { glyph } from "../../../packages/shared-ui/glyphs.js";
 import { brand } from "./brand.js";
+import { iconSlot, hydrateProjectIcons } from "./project-icons.js";
+import { projectName } from "./operator-projects.js";
 
 export function qaEscape(value) {
   return String(value == null ? "" : value).replace(/[&<>"']/g, function (char) {
@@ -40,8 +43,17 @@ export function renderQaPreview(stage, state, requestedMode) {
     if (live.active && live.embeddable) message = "Exact captured evidence.";
     if (live.active && !live.embeddable) message = "The environment is still active, but it cannot be embedded here. Use Open preview to interact with it.";
     preview.innerHTML =
-      '<img src="' + qaEscape(evidence.screenshot_url) + '" alt="Exact captured QA evidence">' +
+      loadingMarkup("preview", "Loading captured image") + '<img class="qa-image-pending" src="' + qaEscape(evidence.screenshot_url) + '" alt="Exact captured QA evidence">' +
       '<div class="qa-preview-message">' + qaEscape(message) + "</div>";
+    const image = preview.querySelector("img");
+    const finish = () => {
+      preview.querySelector(".content-skeleton")?.remove();
+      image.classList.remove("qa-image-pending");
+      if (!image.naturalWidth) preview.querySelector(".qa-preview-message").textContent = "The captured image could not load. Close this review and try opening it again.";
+    };
+    image.addEventListener("load", finish, { once: true });
+    image.addEventListener("error", finish, { once: true });
+    if (image.complete) finish();
   }
   return mode;
 }
@@ -103,9 +115,11 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
 
   panel.innerHTML =
     '<div class="qa-panel-head">' +
-      '<div class="qa-panel-brand"><img src="' + brand.inspector + '" alt=""><div><strong>Inspector</strong><small>' +
-        qaEscape((context.project || evidence.title || "capture") + (evidence.step_label ? " · " + evidence.step_label : "")) +
-      "</small></div></div>" +
+      '<div class="qa-panel-identity">' +
+        '<span class="qa-tool-identity"><img src="' + brand.inspector + '" alt=""><span>inspector</span></span>' +
+        (context.project ? '<span class="qa-product-badge">' + iconSlot(context.project) +
+          '<strong>' + qaEscape(projectName(context.project)) + '</strong></span>' : "") +
+      '</div>' +
       '<div class="qa-panel-tools">' +
         '<button type="button" class="qa-icon-button" data-qa-side aria-label="Move review to the other side" title="Move panel">' + glyph("move") + '</button>' +
         '<button type="button" class="qa-icon-button" data-qa-minimize aria-label="Minimize review" title="Minimize">' + glyph("minimize") + '</button>' +
@@ -113,9 +127,10 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
       "</div>" +
     "</div>" +
     '<div class="qa-panel-body">' +
+      (evidence.step_label ? '<div class="qa-capture-title">' + qaEscape(evidence.step_label) + "</div>" : "") +
       '<div class="qa-status-line"><span>' + qaEscape(context.environment || "unknown") + "</span><span>" +
         qaEscape(live.active ? "preview active" : "capture only") + "</span></div>" +
-      '<span class="badge qa-flow-badge" data-tone="' + (state.saved && review.overall ? "resolve" : state.dirty ? "act" : "orient") + '">' + (state.saved && review.overall ? "Resolve · review recorded" : state.dirty ? "Act · record your decision" : "Orient · inspect this capture") + '</span>' +
+      '<span class="badge qa-flow-badge" data-tone="' + (state.saved && review.overall ? "resolve" : state.dirty ? "act" : "orient") + '">' + (state.saved && review.overall ? "Review saved" : state.dirty ? "Unsaved changes" : "Review capture") + '</span>' +
       questionHtml +
       '<label class="qa-notes"><span>Notes</span><textarea maxlength="6000" placeholder="Anything you notice, in your own words…">' +
         qaEscape(review.notes || "") + "</textarea></label>" +
@@ -125,9 +140,6 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
             '" data-qa-overall="' + value + '">' + verdictLabel(value) + "</button>";
         }).join("") +
       "</div></div>" +
-      '<div class="qa-save-row"><span class="qa-save-state" aria-live="polite">' +
-        qaEscape(review.updated_at ? "Saved " + new Date(review.updated_at).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Not saved yet") +
-        '</span><button type="button" class="qa-save-button" data-qa-save>' + glyph("save") + ' Save review</button></div>' +
       (state.saved && review.overall ? '<section class="qa-resolution"><span class="badge" data-tone="resolve">Recorded</span><strong>Your review is saved.</strong><p>' + qaEscape(verdictLabel(review.overall)) + ' · attached to this exact capture.</p></section>' : "") +
       '<details class="qa-details"><summary>Technical details</summary><dl>' +
         '<div><dt>capture</dt><dd>' + qaEscape(evidence.evidence_id || "—") + "</dd></div>" +
@@ -135,8 +147,12 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
         '<div><dt>revision</dt><dd>' + qaEscape(context.commit_sha ? String(context.commit_sha).slice(0, 12) : "—") + "</dd></div>" +
         '<div><dt>PR</dt><dd>' + qaEscape(context.pr_number || "—") + "</dd></div>" +
       "</dl></details>" +
-    "</div>";
+    "</div>" +
+      '<div class="qa-save-row"><span class="qa-save-state" aria-live="polite">' +
+        qaEscape(review.updated_at ? "Saved " + new Date(review.updated_at).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }) : "Not saved yet") +
+        '</span><button type="button" class="qa-save-button" data-qa-save>' + glyph("save") + ' Save review</button></div>';
 
+  void hydrateProjectIcons(panel);
   panel.querySelector("[data-qa-close]").addEventListener("click", handlers.close);
   panel.querySelector("[data-qa-minimize]").addEventListener("click", handlers.minimize);
   panel.querySelector("[data-qa-side]").addEventListener("click", handlers.move);
