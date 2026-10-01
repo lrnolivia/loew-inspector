@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "rtxforge",
-  "updated_at": "2026-10-01T21:59:59.674Z",
+  "updated_at": "2026-10-01T22:12:09.912Z",
   "legacy_branches": [
     "backup/github-main-before-0.5.8",
     "backup/main-0.5.8-ada",
@@ -50,7 +50,8 @@
         "tests/test_setup.py",
         "tests/test_package_download.py",
         "README.md",
-        "docs/INSTALLATION.md"
+        "docs/INSTALLATION.md",
+        ".github/workflows/linux-build.yml"
       ],
       "resources": [
         "bazzite-installation-package",
@@ -59,7 +60,7 @@
       ],
       "goal": "Deliver a reproducible Bazzite GNOME x86_64 RTX 4070 installation package using the existing rtxForge UI and pinned DLSS-Unlocked runtime options, local file writes and guarded GitHub sync.",
       "acceptance": "Verified AppImage and installer; read-only host checks; explicit selectable MFG/NR modes; preserve existing settings/backups; verified downloads and repeatable recovery tests. Actual NVIDIA/game/HDR behavior remains unverified until exercised on the user's PC.",
-      "next_action": "Implement and test installation bundle from local clone matching main 4156ec1; document cloud workspace versus unavailable Bazzite host.",
+      "next_action": "Add repeatable setup tests and bundle generation to the existing Fedora AppImage workflow; publish draft branch via authenticated Relay after local validation.",
       "category": "implementation",
       "primary_role": "implementation",
       "primary_team": "release",
@@ -69,8 +70,8 @@
       "base_sha": "4156ec19515f10af519564699aaebe6adf75c850",
       "state": "active",
       "created_at": "2026-10-01T21:59:59.674Z",
-      "updated_at": "2026-10-01T21:59:59.674Z",
-      "lease_until": "2026-10-02T09:59:59.674Z"
+      "updated_at": "2026-10-01T22:12:09.912Z",
+      "lease_until": "2026-10-02T10:12:09.912Z"
     }
   ]
 }
