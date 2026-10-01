@@ -209,17 +209,18 @@ test("canonical relay Worker rejects ordinary manual publication", async () => {
   assert.equal(f.uploads.length, 0);
 });
 
-test("canonical relay Worker preserves explicit recovery upload escape hatch", async () => {
+test("canonical relay Worker rejects manual upload even for recovery", async () => {
   const f = fixture({ wranglerName: "relay" });
-  const result = await uploadCloudSourceVersion(
-    { ...args, script: "relay", purpose: "recovery" },
-    f.env,
-    { github: f.github, cloud: f.cloud, rawUpload: f.rawUpload }
+  await assert.rejects(
+    uploadCloudSourceVersion(
+      { ...args, script: "relay", purpose: "recovery" },
+      f.env,
+      { github: f.github, cloud: f.cloud, rawUpload: f.rawUpload }
+    ),
+    /source upload is disabled/
   );
-  assert.equal(result.ok, true);
-  assert.equal(f.uploads.length, 1);
-  assert.equal(f.uploads[0].metadata.annotations["workers/repository_url"], "https://github.com/lrnolivia/relay");
-  assert.equal(f.uploads[0].metadata.annotations["workers/tag"], "relay-recovery-source-upload");
+  assert.equal(f.githubCalls.length, 0);
+  assert.equal(f.uploads.length, 0);
 });
 
 test('upload includes multiline named imports and reexports', async () => {
