@@ -292,7 +292,9 @@ export default {
         let result;
         if (name === RELAY_CONTEXT_CARD_TOOL) {
           const args = validateRelayContextCardArguments(message.params?.arguments || {});
-          result = await callRunnerControlCore("relay_runner_assignments", args, env);
+          const { evidence_id, show_qa, ...runnerArgs } = args;
+          result = await callRunnerControlCore("relay_runner_assignments", runnerArgs, env);
+          result = { ...result, ...(evidence_id ? { evidence_id } : {}), ...(show_qa === true ? { show_qa: true } : {}) };
         } else if (name === uiApiTool.name) {
           result = await callUiApi(message.params?.arguments || {}, env);
         } else if (name === runnerCleanupTool.name) {
