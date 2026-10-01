@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T02:08:47.438Z",
+  "updated_at": "2026-10-01T02:12:15.405Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -4304,10 +4304,10 @@
       "next_action": "Create the claimed branch from its pinned base. Remove the current semantic border/left-stripe CSS and replace it with borderless solid material surfaces: quiet states neutral, higher-salience states may get very light purposeful color-mix fills with no stroke. Add a small sidebar motion state hook and fast 180–260ms spring/blur transition around the existing 88px/340px layout. Keep status-light animation unchanged. Rebuild, test desktop/MCP/mobile/reduced-motion, merge/deploy exact source, close.",
       "task_class": "design",
       "base_sha": "8c2ffd935490bcbd439ed58feeaeac537fdaa5a0",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T01:57:46.142Z",
-      "updated_at": "2026-10-01T01:59:16.081Z",
-      "lease_until": "2026-10-01T13:59:16.081Z",
+      "updated_at": "2026-10-01T02:12:15.405Z",
+      "lease_until": "2026-10-01T14:12:15.405Z",
       "amendment_count": 1,
       "amendments": [
         {
@@ -4330,7 +4330,13 @@
             "next_action": "Create the claimed branch from its pinned base. Remove the current semantic border/left-stripe CSS and replace it with borderless solid material surfaces: quiet states neutral, higher-salience states may get very light purposeful color-mix fills with no stroke. Add a small sidebar motion state hook and fast 180–260ms spring/blur transition around the existing 88px/340px layout. Keep status-light animation unchanged. Rebuild, test desktop/MCP/mobile/reduced-motion, merge/deploy exact source, close."
           }
         }
-      ]
+      ],
+      "pr": 67,
+      "merged_head_sha": "12842e1a31265c8a75baaa49a644b8b8054eb402",
+      "merge_commit_sha": "ab96b5fa508759f5f5c81ce03516375ccfb7653c",
+      "evidence": "Design-only fast shell/material refinement completed. User clarification was canonically amended in-place: purposeful colorful card material is allowed; gradients, decorative outlines/strokes, semantic left stripes, and fake depth are not. State-bearing cards now have zero border/left-stripe and use neutral or restrained solid semantic tints only; status badges no longer use decorative outlines; active nav/project/action surfaces are fill-driven; status pulse ring is now a soft aura rather than a stroked circle. Desktop shell keeps the existing 88px collapsed / ~340px expanded geometry and centered max-1120px content, but transition timing is now fast: 220ms expand, 200ms collapse, with direction-aware JS motion state, one small overshoot, and brief blur during movement. Reduced-motion removes transition, blur, and overshoot. Browser tests assert zero card borders, distinct borderless state surfaces, <=260ms sidebar timing, expand/collapse motion hooks and keyframes, reduced-motion fallback, and existing web/MCP/mobile geometry. Full npm test passed; shared web/MCP build passed; no-gradient and no semantic card-stroke scans passed; compiled expand/collapse inertia keyframes verified. Exact PR head 12842e1a31265c8a75baaa49a644b8b8054eb402 passed Runner admission and repository CI; PR #67 squash-merged as ab96b5fa508759f5f5c81ce03516375ccfb7653c. Exact merged source uploaded as Cloudflare Worker v60 version 7c94cd37-6742-4dbe-87b8-15120eedb465 and deployed 100% via 11c3f8b9-207c-4ddf-9b91-8ce5a8931d89. Runtime readback reports Relay 1.9.5 and source main exactly ab96b5fa508759f5f5c81ce03516375ccfb7653c before completion receipt. Production desktop evidence vis_f7c53c38-4709-467c-80b2-ddf0b0aac392 and mobile evidence vis_d007d4bf-c014-4797-b52b-520fd00661f4 captured successfully. Historical root transport anomaly remains HTTP 522 while Browser Run renders full Relay page/title/DOM.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T02:12:15.405Z"
     },
     {
       "id": "relay-1.9.5-planning-ledger-skill-20260930",
