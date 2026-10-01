@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T05:10:43.073Z",
+  "updated_at": "2026-10-01T05:15:03.829Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -4001,7 +4001,7 @@
       "owner": "relay-1.9.9-chatgpt-native-experience-20261001",
       "goal": "Ship Relay 1.9.9 as the unified ChatGPT-native experience release: a polished family of contextual in-chat response cards plus a rich opened-Relay app with interactive chat/workspace behavior, all sharing one visual language, one canonical state model and one progressive-disclosure path.",
       "acceptance": "Relay 1.9.9 must still pass the existing consumer-visible MCP App card gate: a normal Relay tool call in an ordinary ChatGPT conversation must visibly mount the intended UI, not merely register resources/metadata or return structuredContent. Separately, the Inspector QA surface must implement the user-approved Figma node 59:115 review instrument as the visible card: ~450px default width, compact single-column composition, project pill, progress, one question/reason, binary answer surfaces, note field, and no persistent chrome (no inspector masthead, move/minimize/close buttons, preview/capture status rows, flow badge, previous/next row, separate Overall UI, technical details, save footer, or visible resize handle). The card must autosave, be draggable from non-interactive card regions, resize responsively through invisible edge/corner hit zones, remain clamped on viewport resize, and dock to any viewport edge leaving only a thin real card edge visible. A docked edge gives a restrained occasional idle wiggle plus one return wiggle after meaningful pointer inactivity; prefers-reduced-motion removes the wiggle. The docked edge adapts contrast to the content beneath it: soft off-white glow over dark content, near-black shadow over light content, and a conservative dual-contrast fallback when tone cannot be known. Captured image/video surfaces may sample luminance when safe; live cross-origin previews use an optional postMessage tone handshake and must degrade safely if unavailable. Inspector's review surface behaves like Field's canvas without importing Field's editor runtime: regular wheel/two-finger pan, Ctrl/Cmd+wheel or trackpad pinch zoom at the pointer, middle-mouse pan, Space+drag pan, initial fit-to-view, GPU transforms, and responsive reclamping. Live embeddable previews are the primary QA surface; video then image are fallbacks/evidence. The live page must receive pointer, keyboard, forms, scrolling and navigation normally, with Inspector camera gestures not stealing ordinary page interaction. Full-screen exit is owned by the viewport, not the review card: Escape, browser Back/history state, and a small viewport-only reveal affordance near the safe corner provide exit paths. Existing evidence identity, autosave persistence, deterministic QA gates and live-preview resolver/session contracts remain canonical; do not create a second evidence store.",
-      "next_action": "Direct-path fix is published. Relay source PR #80 exact head 4326301e7adce594135555c07149eb7d9fead3cb passed admission/tests, squash-merged as 7714827fc9a02287b9e35b5a6cd2a4de87ee8d9a, and deployed as Worker version ab6d8401-8cc7-48f7-a8a4-b8e1c7a775be (v71) via deployment e9ce7f8b-1cec-45a8-b839-2dffb7e983ab. Server initialize instructions now direct user-visible card requests to relay_render_context_card. The owned private ChatGPT plugin relay-loewfi is updated to 0.5.5 (release pluginrel_6abdeb38a1e081919bb1c2af88e928cf), includes a ChatGPT-native UI routing skill, and its .app.json now requires the current Relay MCP app asdk_app_6abdbca7c98c819187cc153d781b0faf instead of the stale Composio dependency. Next acceptance step: invoke the updated relay-loewfi plugin directly in ChatGPT and ask for a Relay status card; success requires a visible inline mount. If that direct plugin/app dependency path still returns structuredContent only, record it as a ChatGPT host bug/boundary with current OpenAI MCP Apps docs satisfied; do not rework card CSS.",
+      "next_action": "Canonical direction correction: `$relay` (ChatGPT MCP app asdk_app_6abdbca7c98c819187cc153d781b0faf) remains the only Relay product surface. The relay-loewfi private plugin experiment is noncanonical and must not become a dependency, user requirement, or release path. Do not route users through a second Relay package. The current fresh-consumer test proves the Relay render launcher/tool/resource contract is present and executable, while this conversation's Code Mode connector wrapper exposes only structuredContent and does not mount the MCP Apps iframe. Treat that as a ChatGPT host/invocation boundary, not a Relay CSS/resource bug. Preserve relay_render_context_card for supported direct MCP Apps hosts, continue 1.9.9 opened-app/live-preview work in `$relay`, and do not claim inline-card acceptance until ChatGPT provides a host path that forwards the UI descriptor.",
       "paths": [
         "src/relay-card-ui.js",
         "src/relay-card-view-model.js",
@@ -4122,7 +4122,7 @@
       ],
       "state": "claimed",
       "created_at": "2026-10-01T02:57:33.950Z",
-      "amendment_count": 11,
+      "amendment_count": 12,
       "amendments": [
         {
           "at": "2026-10-01T03:02:32.261Z",
@@ -4774,9 +4774,23 @@
               "... +41 more"
             ]
           }
+        },
+        {
+          "at": "2026-10-01T05:15:03.829Z",
+          "by": "relay-1.9.9-chatgpt-native-experience-20261001",
+          "reason": "Undo the confusing plugin detour in canonical planning. User confirmed Relay should remain the single `$relay` MCP app; plugin packaging is not part of the product architecture.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Direct-path fix is published. Relay source PR #80 exact head 4326301e7adce594135555c07149eb7d9fead3cb passed admission/tests, squash-merged as 7714827fc9a02287b9e35b5a6cd2a4de87ee8d9a, and deployed as Worker version ab6d8401-8cc7-48f7-a8a4-b8e1c7a775be (v71) via deployment e9ce7f8b-1cec-45a8-b839-2dffb7e983ab. Server initialize instructions now direct user-visible card requests to relay_render_context_card. The owned private ChatGPT plugin relay-loewfi is updated to 0.5.5 (release pluginrel_6abdeb38a1e081919bb1c2af88e928cf), includes a ChatGPT-native UI routing skill, and its .app.json now ..."
+          },
+          "after": {
+            "next_action": "Canonical direction correction: `$relay` (ChatGPT MCP app asdk_app_6abdbca7c98c819187cc153d781b0faf) remains the only Relay product surface. The relay-loewfi private plugin experiment is noncanonical and must not become a dependency, user requirement, or release path. Do not route users through a second Relay package. The current fresh-consumer test proves the Relay render launcher/tool/resource contract is present and executable, while this conversation's Code Mode connector wrapper exposes only structuredContent and does not mount the MCP Apps iframe. Treat that as a ChatGPT host/invocati..."
+          }
         }
       ],
-      "updated_at": "2026-10-01T05:10:43.073Z",
+      "updated_at": "2026-10-01T05:15:03.829Z",
       "primary_staff": "ellis",
       "supporting_staff": [
         "valentina",
@@ -7393,7 +7407,7 @@
       ],
       "goal": "Ship Relay 1.9.9 as the unified ChatGPT-native experience release: a polished family of contextual in-chat response cards plus a rich opened-Relay app with interactive chat/workspace behavior, all sharing one visual language, one canonical state model and one progressive-disclosure path.",
       "acceptance": "Relay 1.9.9 must still pass the existing consumer-visible MCP App card gate: a normal Relay tool call in an ordinary ChatGPT conversation must visibly mount the intended UI, not merely register resources/metadata or return structuredContent. Separately, the Inspector QA surface must implement the user-approved Figma node 59:115 review instrument as the visible card: ~450px default width, compact single-column composition, project pill, progress, one question/reason, binary answer surfaces, note field, and no persistent chrome (no inspector masthead, move/minimize/close buttons, preview/capture status rows, flow badge, previous/next row, separate Overall UI, technical details, save footer, or visible resize handle). The card must autosave, be draggable from non-interactive card regions, resize responsively through invisible edge/corner hit zones, remain clamped on viewport resize, and dock to any viewport edge leaving only a thin real card edge visible. A docked edge gives a restrained occasional idle wiggle plus one return wiggle after meaningful pointer inactivity; prefers-reduced-motion removes the wiggle. The docked edge adapts contrast to the content beneath it: soft off-white glow over dark content, near-black shadow over light content, and a conservative dual-contrast fallback when tone cannot be known. Captured image/video surfaces may sample luminance when safe; live cross-origin previews use an optional postMessage tone handshake and must degrade safely if unavailable. Inspector's review surface behaves like Field's canvas without importing Field's editor runtime: regular wheel/two-finger pan, Ctrl/Cmd+wheel or trackpad pinch zoom at the pointer, middle-mouse pan, Space+drag pan, initial fit-to-view, GPU transforms, and responsive reclamping. Live embeddable previews are the primary QA surface; video then image are fallbacks/evidence. The live page must receive pointer, keyboard, forms, scrolling and navigation normally, with Inspector camera gestures not stealing ordinary page interaction. Full-screen exit is owned by the viewport, not the review card: Escape, browser Back/history state, and a small viewport-only reveal affordance near the safe corner provide exit paths. Existing evidence identity, autosave persistence, deterministic QA gates and live-preview resolver/session contracts remain canonical; do not create a second evidence store.",
-      "next_action": "Direct-path fix is published. Relay source PR #80 exact head 4326301e7adce594135555c07149eb7d9fead3cb passed admission/tests, squash-merged as 7714827fc9a02287b9e35b5a6cd2a4de87ee8d9a, and deployed as Worker version ab6d8401-8cc7-48f7-a8a4-b8e1c7a775be (v71) via deployment e9ce7f8b-1cec-45a8-b839-2dffb7e983ab. Server initialize instructions now direct user-visible card requests to relay_render_context_card. The owned private ChatGPT plugin relay-loewfi is updated to 0.5.5 (release pluginrel_6abdeb38a1e081919bb1c2af88e928cf), includes a ChatGPT-native UI routing skill, and its .app.json now requires the current Relay MCP app asdk_app_6abdbca7c98c819187cc153d781b0faf instead of the stale Composio dependency. Next acceptance step: invoke the updated relay-loewfi plugin directly in ChatGPT and ask for a Relay status card; success requires a visible inline mount. If that direct plugin/app dependency path still returns structuredContent only, record it as a ChatGPT host bug/boundary with current OpenAI MCP Apps docs satisfied; do not rework card CSS.",
+      "next_action": "Canonical direction correction: `$relay` (ChatGPT MCP app asdk_app_6abdbca7c98c819187cc153d781b0faf) remains the only Relay product surface. The relay-loewfi private plugin experiment is noncanonical and must not become a dependency, user requirement, or release path. Do not route users through a second Relay package. The current fresh-consumer test proves the Relay render launcher/tool/resource contract is present and executable, while this conversation's Code Mode connector wrapper exposes only structuredContent and does not mount the MCP Apps iframe. Treat that as a ChatGPT host/invocation boundary, not a Relay CSS/resource bug. Preserve relay_render_context_card for supported direct MCP Apps hosts, continue 1.9.9 opened-app/live-preview work in `$relay`, and do not claim inline-card acceptance until ChatGPT provides a host path that forwards the UI descriptor.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-031",
@@ -7447,9 +7461,9 @@
       "base_sha": "544c5a358ce9fb6882e040cf9eff105c2333f72c",
       "state": "active",
       "created_at": "2026-10-01T04:43:37.777Z",
-      "updated_at": "2026-10-01T05:10:43.073Z",
-      "lease_until": "2026-10-01T17:10:43.073Z",
-      "amendment_count": 2,
+      "updated_at": "2026-10-01T05:15:03.829Z",
+      "lease_until": "2026-10-01T17:15:03.829Z",
+      "amendment_count": 3,
       "amendments": [
         {
           "at": "2026-10-01T05:10:24.336Z",
@@ -7550,6 +7564,20 @@
               "relay-operation-framework",
               "... +41 more"
             ]
+          }
+        },
+        {
+          "at": "2026-10-01T05:15:03.829Z",
+          "by": "relay-1.9.9-chatgpt-native-experience-20261001",
+          "reason": "Undo the confusing plugin detour in canonical planning. User confirmed Relay should remain the single `$relay` MCP app; plugin packaging is not part of the product architecture.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Direct-path fix is published. Relay source PR #80 exact head 4326301e7adce594135555c07149eb7d9fead3cb passed admission/tests, squash-merged as 7714827fc9a02287b9e35b5a6cd2a4de87ee8d9a, and deployed as Worker version ab6d8401-8cc7-48f7-a8a4-b8e1c7a775be (v71) via deployment e9ce7f8b-1cec-45a8-b839-2dffb7e983ab. Server initialize instructions now direct user-visible card requests to relay_render_context_card. The owned private ChatGPT plugin relay-loewfi is updated to 0.5.5 (release pluginrel_6abdeb38a1e081919bb1c2af88e928cf), includes a ChatGPT-native UI routing skill, and its .app.json now ..."
+          },
+          "after": {
+            "next_action": "Canonical direction correction: `$relay` (ChatGPT MCP app asdk_app_6abdbca7c98c819187cc153d781b0faf) remains the only Relay product surface. The relay-loewfi private plugin experiment is noncanonical and must not become a dependency, user requirement, or release path. Do not route users through a second Relay package. The current fresh-consumer test proves the Relay render launcher/tool/resource contract is present and executable, while this conversation's Code Mode connector wrapper exposes only structuredContent and does not mount the MCP Apps iframe. Treat that as a ChatGPT host/invocati..."
           }
         }
       ]
