@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T00:57:38.723Z",
+  "updated_at": "2026-10-01T01:00:05.207Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -950,8 +950,8 @@
       "id": "relay-1.9.5-planning-ledger-skill-20260930",
       "owner": "relay-1.9.5-planning-ledger-skill-20260930",
       "goal": "Ship Relay 1.9.6 as the planning/coordination intelligence release that consumes the 1.9.4 staff directory and 1.9.5 skills runtime.",
-      "acceptance": "Planning/coordination skills consult latest resume state and relevant findings before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and expose them to routing, filtering, checkpoints and skill selection without changing authorization. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/branch/PR/evidence identity, state impact/requested action, and reconcile against canonical state before acting. Consume the canonical 1.9.4 staff identities instead of recreating names. Add Julian-managed relationship context per sticky staff identity from explicit feedback/repeated collaboration patterns; no autonomous relationship engine, hidden affinity scores, inferred sensitive traits or canned jokes. Staff workers emit bounded interaction signals; the lead curates durable notes. Tests cover taxonomy validation/amendment history, duplicate avoidance, communication classification/reconciliation, checkpoint-first resume, role-driven skill selection and relationship-context controls. Worker communication is staff-aware: resolve sender, recipient and referenced collaborators through the canonical sticky staff directory when a binding exists; render/use the approved human name in worker messages, handoffs, status surfaces and resume context while preserving canonical assignment/worker/branch/PR/evidence IDs underneath. Never invent a replacement name when no binding exists; fall back to the machine identity until Julian/lead assigns an approved staff identity. Cross-worker messages addressed to Margot, Roman, Imani, etc. must resolve to the same durable person across subnets and sessions.",
-      "next_action": "Implement taxonomy and worker communication first. Wire communication directly to the canonical staff directory so sender/recipient/collaborator names resolve from sticky staff identities while machine IDs remain authoritative; then implement ledger routing, role-driven skill selection and Julian-managed relationship context.",
+      "acceptance": "Planning/coordination skills consult latest resume state and relevant findings before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and expose them to routing, filtering, checkpoints and skill selection without changing authorization. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/branch/PR/evidence identity, state impact/requested action, and reconcile against canonical state before acting. Consume the canonical 1.9.4 staff identities instead of recreating names. Add Julian-managed relationship context per sticky staff identity from explicit feedback/repeated collaboration patterns; no autonomous relationship engine, hidden affinity scores, inferred sensitive traits or canned jokes. Staff workers emit bounded interaction signals; the lead curates durable notes. Tests cover taxonomy validation/amendment history, duplicate avoidance, communication classification/reconciliation, checkpoint-first resume, role-driven skill selection and relationship-context controls. Worker communication is staff-aware: resolve sender, recipient and referenced collaborators through the canonical sticky staff directory when a binding exists; render/use the approved human name in worker messages, handoffs, status surfaces and resume context while preserving canonical assignment/worker/branch/PR/evidence IDs underneath. Never invent a replacement name when no binding exists; fall back to the machine identity until Julian/lead assigns an approved staff identity. Cross-worker messages addressed to Margot, Roman, Imani, etc. must resolve to the same durable person across subnets and sessions. Human-facing narration is organization-first: chat updates, status summaries and directional narration should default to people + ownership + outcome language, not low-level transport mechanics. Prefer forms like \"I'm working with Rafael to update the asset pipeline; that also validates Gabriel's team has the bounded file-mutation feature working correctly\" over \"I'm streaming base64 through the bounded append path.\" Technical mechanism, tool names, chunking, SHAs and transport details stay subordinate unless they are directly relevant to the user's question, a blocker, a failure, QA evidence or a requested implementation detail. When a feature belongs to a staff member/subteam, attribute validation and progress to that person/team in the human summary while preserving exact machine evidence underneath.",
+      "next_action": "Implement staff-aware communication plus organization-first narration: human-facing chat/status updates should describe who is working with whom, what they own, and what outcome or validation occurred; keep low-level transport/tool mechanics subordinate unless explicitly relevant, while preserving exact machine evidence underneath.",
       "paths": [
         "skills/planning/",
         "skills/coordination/",
@@ -981,7 +981,9 @@
         "relay-contextual-levity",
         "relay-staff-relationship-context",
         "relay-lead-managed-adaptation",
-        "relay-staff-aware-worker-communication"
+        "relay-staff-aware-worker-communication",
+        "relay-human-org-narration",
+        "relay-staff-attributed-status"
       ],
       "task_class": "architecture",
       "ledger_refs": [
@@ -997,7 +999,7 @@
       ],
       "state": "queued",
       "created_at": "2026-09-30T23:34:25.953Z",
-      "amendment_count": 6,
+      "amendment_count": 7,
       "amendments": [
         {
           "at": "2026-09-30T23:37:17.898Z",
@@ -1345,9 +1347,61 @@
               "relay-staff-aware-worker-communication"
             ]
           }
+        },
+        {
+          "at": "2026-10-01T01:00:05.207Z",
+          "by": "relay-1.9.5-planning-ledger-skill-20260930",
+          "reason": "Make Relay status and chat narration read like a real staff organization instead of exposing transport internals, while retaining technical traceability for QA and debugging.",
+          "fields": [
+            "acceptance",
+            "next_action",
+            "resources"
+          ],
+          "before": {
+            "acceptance": "Planning/coordination skills consult latest resume state and relevant findings before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and expose them to routing, filtering, checkpoints and skill selection without changing authorization. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/branch/PR/evidence identity, state impact/requested action, and reconcile ag...",
+            "next_action": "Implement taxonomy and worker communication first. Wire communication directly to the canonical staff directory so sender/recipient/collaborator names resolve from sticky staff identities while machine IDs remain authoritative; then implement ledger routing, role-driven skill selection and Julian-managed relationship context.",
+            "resources": [
+              "relay-1.9.6-release",
+              "relay-ledger-routing",
+              "relay-planning-skill",
+              "relay-worker-communication-skill",
+              "relay-interworker-handoffs",
+              "relay-canonical-state-reconciliation",
+              "relay-assignment-taxonomy",
+              "relay-assignment-labels-tags",
+              "relay-worker-roles",
+              "relay-role-skill-resolution",
+              "relay-contextual-levity",
+              "relay-staff-relationship-context",
+              "relay-lead-managed-adaptation",
+              "relay-staff-aware-worker-communication"
+            ]
+          },
+          "after": {
+            "acceptance": "Planning/coordination skills consult latest resume state and relevant findings before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and expose them to routing, filtering, checkpoints and skill selection without changing authorization. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/branch/PR/evidence identity, state impact/requested action, and reconcile ag...",
+            "next_action": "Implement staff-aware communication plus organization-first narration: human-facing chat/status updates should describe who is working with whom, what they own, and what outcome or validation occurred; keep low-level transport/tool mechanics subordinate unless explicitly relevant, while preserving exact machine evidence underneath.",
+            "resources": [
+              "relay-1.9.6-release",
+              "relay-ledger-routing",
+              "relay-planning-skill",
+              "relay-worker-communication-skill",
+              "relay-interworker-handoffs",
+              "relay-canonical-state-reconciliation",
+              "relay-assignment-taxonomy",
+              "relay-assignment-labels-tags",
+              "relay-worker-roles",
+              "relay-role-skill-resolution",
+              "relay-contextual-levity",
+              "relay-staff-relationship-context",
+              "relay-lead-managed-adaptation",
+              "relay-staff-aware-worker-communication",
+              "relay-human-org-narration",
+              "relay-staff-attributed-status"
+            ]
+          }
         }
       ],
-      "updated_at": "2026-10-01T00:57:38.723Z"
+      "updated_at": "2026-10-01T01:00:05.207Z"
     },
     {
       "id": "relay-1.9.6-creative-platform-packs-20260930",
