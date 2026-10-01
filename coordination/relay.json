@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T09:41:14.621Z",
+  "updated_at": "2026-10-01T09:41:30.796Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6042,6 +6042,42 @@
       "supporting_staff": [],
       "state": "claimed",
       "created_at": "2026-10-01T09:36:40.990Z"
+    },
+    {
+      "id": "relay-inline-card-v2-final-20261001",
+      "owner": "relay-inline-card-v2-final-20261001",
+      "goal": "Rebuild and ship the exact historical Relay v2 contextual card probe from current main so native macOS, web and iPhone can be compared without PR #92 merge conflicts.",
+      "acceptance": "Current main is the base. Historical v2 card from de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7 is restored faithfully under isolated symbols; relay_runner_progress alone carries v2 metadata; resource is served through the pre-#85 relay-entry list/read path; current v8 and v3 controls remain unchanged; embedded MCP icon matches canonical PNG; exact-head CI and Runner admission pass; merged source is deployed before consumer testing.",
+      "next_action": "Claim relay/inline-card-v2-final-20261001 from current main, replay only the final isolated v2 probe plus icon parity sync, open a fresh PR, pass CI/admission, merge and deploy.",
+      "paths": [
+        "src/relay-v2-probe.js",
+        "src/relay-entry.js",
+        "src/relay-entry.test.js",
+        "docs/relay/CHATGPT_INLINE_CARD_CLEANROOM.md",
+        "apps/mcp/relay-icon.js",
+        "test/mcp-branding.test.mjs"
+      ],
+      "resources": [
+        "relay-context-card-v2-probe",
+        "relay-extension-resource-path",
+        "relay-mcp-icon-parity"
+      ],
+      "task_class": "architecture",
+      "category": "implementation",
+      "tags": [
+        "chatgpt",
+        "mcp-apps",
+        "v2",
+        "inline-card",
+        "bisect"
+      ],
+      "primary_role": "builder",
+      "primary_team": "runner",
+      "supporting_teams": [],
+      "primary_staff": "nico",
+      "supporting_staff": [],
+      "state": "queued",
+      "created_at": "2026-10-01T09:41:30.796Z"
     }
   ],
   "claims": [
