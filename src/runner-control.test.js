@@ -50,6 +50,13 @@ test('definitions describe reads and bounded writes with strict server validatio
   assert.equal(runnerControlTools.length, 11);
   assert.ok(runnerControlTools.some(tool => tool.name === 'relay_runner_resume'));
   assert.ok(runnerControlTools.some(tool => tool.name === 'relay_runner_updates'));
+  const coordinateTool = runnerControlTools.find(tool => tool.name === 'relay_runner_coordinate');
+  const request = coordinateTool.inputSchema.properties.request.properties;
+  assert.ok(request.category);
+  assert.ok(request.labels);
+  assert.ok(request.tags);
+  assert.ok(request.primary_role);
+  assert.ok(request.supporting_roles);
   const f = fixture();
   await assert.rejects(coordinate(f, 'release'), /unsupported/);
   await assert.rejects(coordinate(f, 'claim', { ...defaultRequest, merged_head_sha: sha }), /unsupported/);
