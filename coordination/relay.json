@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T04:41:39.731Z",
+  "updated_at": "2026-10-01T04:42:56.171Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6762,10 +6762,10 @@
         "imani"
       ],
       "base_sha": "8a49308c554a1269c8b3d1cf30ede3d7775bdb5c",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T04:23:46.405Z",
-      "updated_at": "2026-10-01T04:41:39.731Z",
-      "lease_until": "2026-10-01T16:41:39.731Z",
+      "updated_at": "2026-10-01T04:42:56.171Z",
+      "lease_until": "2026-10-01T16:42:56.171Z",
       "amendment_count": 2,
       "amendments": [
         {
@@ -6918,7 +6918,13 @@
             ]
           }
         }
-      ]
+      ],
+      "pr": 78,
+      "merged_head_sha": "a9a9df9dc1f620ed48664195fdafe47257adc4d3",
+      "merge_commit_sha": "1e89f16296155db705675ce770aa4e2d5e233b28",
+      "evidence": "PR #78 merged at 2026-10-01T04:42:17Z. Exact PR head a9a9df9dc1f620ed48664195fdafe47257adc4d3 merged as 1e89f16296155db705675ce770aa4e2d5e233b28. The branch was cleaned up after merge. The newly requested context-card launcher repair was not in that merged head and is being split into a clean post-1.9.8 hotfix from current main rather than mutating historical completion.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T04:42:56.171Z"
     }
   ],
   "migrated_from": "loew-inspector"
