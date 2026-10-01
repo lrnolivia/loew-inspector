@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T04:43:37.777Z",
+  "updated_at": "2026-10-01T04:44:43.778Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -4003,7 +4003,6 @@
       "acceptance": "Relay 1.9.9 must not count any contextual card as shipped until a normal Relay tool call in an ordinary ChatGPT conversation visibly mounts the intended MCP App UI directly under that response in the user's real consumer. Source HTML existing, a ui:// resource being registered, `_meta.ui.resourceUri` / `openai/outputTemplate` being present server-side, or structuredContent being correct are necessary but insufficient. The host/mount path is P0: verify the installed ChatGPT app definition sees the current launcher-tool UI metadata, the resource is discoverable with `text/html;profile=mcp-app`, the consumer call is made through a path that preserves MCP Apps tool-descriptor metadata, and ChatGPT actually renders the component. If the ChatGPT connector/orchestration wrapper strips or fails to honor launcher metadata, record that as the blocker and either change the invocation/registration path or use a supported launcher surface; do not paper over it with more CSS. Visible fresh-consumer render evidence is required before card completion. The existing 1.9.9 live-preview QA, stable preview resolver, canonical progress identity, responsive/motion/accessibility, and visual-direction requirements remain in force.",
       "next_action": "Before further card styling, isolate the MCP App launch path end-to-end. Compare Relay's direct `/mcp` tool descriptor and resource registration against ChatGPT's installed/refreshed app definition and current Apps SDK contract; verify `_meta.ui.resourceUri` on the actual launcher tool seen by the host, resource MIME and URI versioning, and whether the current connector/orchestration invocation path preserves that metadata. Run a minimal contextual tool call such as relay_runner_progress as the smoke case. Success means the user visibly sees the card in this chat. If not, capture the exact layer that drops the mount contract and fix or route around that layer before continuing 1.9.9 card CSS.",
       "paths": [
-        "src/relay-chat-ui.js",
         "src/relay-card-ui.js",
         "src/relay-card-view-model.js",
         "src/relay-card-ui.test.js",
@@ -4012,7 +4011,6 @@
         "src/relay-release-ui.js",
         "src/relay-qa-ui.js",
         "src/relay-ui.js",
-        "src/relay-entry.js",
         "src/relay-app-ui.test.js",
         "apps/web/cards/",
         "apps/web/chat/",
@@ -4109,7 +4107,7 @@
       ],
       "state": "claimed",
       "created_at": "2026-10-01T02:57:33.950Z",
-      "amendment_count": 5,
+      "amendment_count": 6,
       "amendments": [
         {
           "at": "2026-10-01T03:02:32.261Z",
@@ -4475,9 +4473,57 @@
               "... +26 more"
             ]
           }
+        },
+        {
+          "at": "2026-10-01T04:44:43.778Z",
+          "by": "relay-1.9.9-chatgpt-native-experience-20261001",
+          "reason": "Temporarily split low-level MCP launcher plumbing from the active 1.9.9 design/product branch. `src/relay-chat-ui.js` and `src/relay-entry.js` move to the Ellis-owned 1.9.8.1 systems hotfix, then can return to 1.9.9 after that hotfix lands.",
+          "fields": [
+            "paths"
+          ],
+          "before": {
+            "paths": [
+              "src/relay-chat-ui.js",
+              "src/relay-card-ui.js",
+              "src/relay-card-view-model.js",
+              "src/relay-card-ui.test.js",
+              "src/relay-app-ui.js",
+              "src/relay-project-ui.js",
+              "src/relay-release-ui.js",
+              "src/relay-qa-ui.js",
+              "src/relay-ui.js",
+              "src/relay-entry.js",
+              "src/relay-app-ui.test.js",
+              "apps/web/cards/",
+              "apps/web/chat/",
+              "test/cards/",
+              "test/mcp-app/",
+              "docs/relay/RELAY_1_9_9_RELEASE.md",
+              "docs/relay/RELEASE_PLAN_1.9.9.md"
+            ]
+          },
+          "after": {
+            "paths": [
+              "src/relay-card-ui.js",
+              "src/relay-card-view-model.js",
+              "src/relay-card-ui.test.js",
+              "src/relay-app-ui.js",
+              "src/relay-project-ui.js",
+              "src/relay-release-ui.js",
+              "src/relay-qa-ui.js",
+              "src/relay-ui.js",
+              "src/relay-app-ui.test.js",
+              "apps/web/cards/",
+              "apps/web/chat/",
+              "test/cards/",
+              "test/mcp-app/",
+              "docs/relay/RELAY_1_9_9_RELEASE.md",
+              "docs/relay/RELEASE_PLAN_1.9.9.md"
+            ]
+          }
         }
       ],
-      "updated_at": "2026-10-01T04:38:38.149Z"
+      "updated_at": "2026-10-01T04:44:43.778Z"
     },
     {
       "id": "relay-1.9.6.2-operational-staff-routing-20261001",
@@ -6986,7 +7032,6 @@
       "owner": "relay-1.9.9-chatgpt-native-experience-20261001",
       "branch": "relay/1.9.9-chatgpt-native-experience-20261001",
       "paths": [
-        "src/relay-chat-ui.js",
         "src/relay-card-ui.js",
         "src/relay-card-view-model.js",
         "src/relay-card-ui.test.js",
@@ -6995,7 +7040,6 @@
         "src/relay-release-ui.js",
         "src/relay-qa-ui.js",
         "src/relay-ui.js",
-        "src/relay-entry.js",
         "src/relay-app-ui.test.js",
         "apps/web/cards/",
         "apps/web/chat/",
@@ -7108,8 +7152,59 @@
       "base_sha": "544c5a358ce9fb6882e040cf9eff105c2333f72c",
       "state": "active",
       "created_at": "2026-10-01T04:43:37.777Z",
-      "updated_at": "2026-10-01T04:43:37.777Z",
-      "lease_until": "2026-10-01T16:43:37.777Z"
+      "updated_at": "2026-10-01T04:44:43.778Z",
+      "lease_until": "2026-10-01T16:44:43.778Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T04:44:43.778Z",
+          "by": "relay-1.9.9-chatgpt-native-experience-20261001",
+          "reason": "Temporarily split low-level MCP launcher plumbing from the active 1.9.9 design/product branch. `src/relay-chat-ui.js` and `src/relay-entry.js` move to the Ellis-owned 1.9.8.1 systems hotfix, then can return to 1.9.9 after that hotfix lands.",
+          "fields": [
+            "paths"
+          ],
+          "before": {
+            "paths": [
+              "src/relay-chat-ui.js",
+              "src/relay-card-ui.js",
+              "src/relay-card-view-model.js",
+              "src/relay-card-ui.test.js",
+              "src/relay-app-ui.js",
+              "src/relay-project-ui.js",
+              "src/relay-release-ui.js",
+              "src/relay-qa-ui.js",
+              "src/relay-ui.js",
+              "src/relay-entry.js",
+              "src/relay-app-ui.test.js",
+              "apps/web/cards/",
+              "apps/web/chat/",
+              "test/cards/",
+              "test/mcp-app/",
+              "docs/relay/RELAY_1_9_9_RELEASE.md",
+              "docs/relay/RELEASE_PLAN_1.9.9.md"
+            ]
+          },
+          "after": {
+            "paths": [
+              "src/relay-card-ui.js",
+              "src/relay-card-view-model.js",
+              "src/relay-card-ui.test.js",
+              "src/relay-app-ui.js",
+              "src/relay-project-ui.js",
+              "src/relay-release-ui.js",
+              "src/relay-qa-ui.js",
+              "src/relay-ui.js",
+              "src/relay-app-ui.test.js",
+              "apps/web/cards/",
+              "apps/web/chat/",
+              "test/cards/",
+              "test/mcp-app/",
+              "docs/relay/RELAY_1_9_9_RELEASE.md",
+              "docs/relay/RELEASE_PLAN_1.9.9.md"
+            ]
+          }
+        }
+      ]
     }
   ],
   "migrated_from": "loew-inspector"
