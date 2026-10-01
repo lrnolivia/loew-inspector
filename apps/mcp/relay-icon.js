@@ -392,3 +392,5 @@ export const relayIconBase64 = [
   "PzzVXy4K/dn5gC4jAIAmtXAgKtlEKbIiHMhfyiMmIqpdAxN70T0AAMAGpFP8PFt42LKfpe//VImiwE9Ffu/SvCIfGgkAYAump89PxFLvRPUhBQVZERjkpeE8",
   "8uEsi6HI8+E8y2pBQfFZ9iQ0qP5cIQIA0OUeFe+N74rCvfpRVL/meSxmUfycrLJQST83FfaV4mvfdwuKe9i8fwcevYgxJiQ1oAAAAABJRU5ErkJggg=="
 ].join("");
+
+// Synced from apps/mcp/relay-icon.png; artwork unchanged.
