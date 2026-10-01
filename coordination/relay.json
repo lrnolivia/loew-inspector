@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T05:05:13.552Z",
+  "updated_at": "2026-10-01T05:09:54.965Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7200,7 +7200,16 @@
         "src/relay-chat-ui.test.js",
         "src/relay-entry.test.js",
         "test/tool-contract.test.mjs",
-        "src/index.js"
+        "src/index.js",
+        "apps/web/public/qa-panel.js",
+        "apps/web/public/qa.css",
+        "apps/web/public/qa.js",
+        "apps/web/public/qa-float.js",
+        "apps/web/public/qa-viewport.js",
+        "apps/web/public/qa-contrast.js",
+        "apps/web/test/browser.test.mjs",
+        "contracts/human-qa-helper.json",
+        "docs/HUMAN_QA_HELPER.md"
       ],
       "resources": [
         "relay-1.9.9-release",
@@ -7253,11 +7262,19 @@
         "relay-chatgpt-tool-snapshot-staleness",
         "relay-local-session-boundary",
         "relay-direct-plugin-invocation-path",
-        "relay-render-tool-selection-guidance"
+        "relay-render-tool-selection-guidance",
+        "inspector-floating-review-instrument",
+        "inspector-edge-docking",
+        "inspector-idle-wiggle",
+        "inspector-adaptive-edge-contrast",
+        "inspector-canvas-navigation",
+        "field-canvas-input-contract",
+        "inspector-live-surface-priority",
+        "inspector-fullscreen-exit-contract"
       ],
       "goal": "Ship Relay 1.9.9 as the unified ChatGPT-native experience release: a polished family of contextual in-chat response cards plus a rich opened-Relay app with interactive chat/workspace behavior, all sharing one visual language, one canonical state model and one progressive-disclosure path.",
       "acceptance": "Relay 1.9.9 must not count any contextual card as shipped until a normal Relay tool call in an ordinary ChatGPT conversation visibly mounts the intended MCP App UI directly under that response in the user's real consumer. Source HTML existing, a ui:// resource being registered, `_meta.ui.resourceUri` / `openai/outputTemplate` being present server-side, or structuredContent being correct are necessary but insufficient. The host/mount path is P0: verify the installed ChatGPT app definition sees the current launcher-tool UI metadata, the resource is discoverable with `text/html;profile=mcp-app`, the consumer call is made through a path that preserves MCP Apps tool-descriptor metadata, and ChatGPT actually renders the component. If the ChatGPT connector/orchestration wrapper strips or fails to honor launcher metadata, record that as the blocker and either change the invocation/registration path or use a supported launcher surface; do not paper over it with more CSS. Visible fresh-consumer render evidence is required before card completion. The existing 1.9.9 live-preview QA, stable preview resolver, canonical progress identity, responsive/motion/accessibility, and visual-direction requirements remain in force.",
-      "next_action": "Fix the inline-card host boundary by establishing a direct ChatGPT plugin invocation path that preserves Relay MCP tool descriptor UI metadata. Keep relay_render_context_card as the only canonical render launcher. Update Relay server instructions so card/visual requests explicitly select that render tool rather than expecting data-tool calls to mount UI. Update the owned private relay-loewfi ChatGPT plugin package to point at the current Relay MCP, remove any stale indirect-app dependency if safe, and teach its orchestration skill to invoke relay_render_context_card directly for user-visible card requests. Then refresh/select that plugin in ChatGPT and run a visible card smoke. Do not weaken security or move credentials into Relay.",
+      "next_action": "In parallel with the ChatGPT card host-boundary work, implement the user-approved Inspector QA slice on the existing 1.9.9 branch. Treat Figma node 59:115 as the exact visible review-instrument target: no header chrome, move/minimize/close controls, status rows, overall block, technical details, or save footer. Preserve autosave. Add invisible drag/resize hit regions; edge docking that leaves only a thin card edge visible; restrained idle/return wiggle with reduced-motion fallback; adaptive off-white glow on dark backgrounds / near-black shadow on light backgrounds with safe unknown-tone fallback; and a canvas-like review viewport using Field's input contract (wheel/two-finger pan, Ctrl/Cmd+wheel or pinch zoom at pointer, middle-mouse and Space+drag pan, fit-to-view). Live embeddable previews are primary; video/image are fallbacks. Live page input must pass through normally. Exit full-screen via Escape, browser Back/history, and a viewport-only reveal affordance, never controls on the card.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-031",
@@ -7307,8 +7324,8 @@
       "base_sha": "544c5a358ce9fb6882e040cf9eff105c2333f72c",
       "state": "active",
       "created_at": "2026-10-01T04:43:37.777Z",
-      "updated_at": "2026-10-01T05:05:13.552Z",
-      "lease_until": "2026-10-01T17:05:13.552Z"
+      "updated_at": "2026-10-01T05:09:54.965Z",
+      "lease_until": "2026-10-01T17:09:54.965Z"
     }
   ],
   "migrated_from": "loew-inspector"
