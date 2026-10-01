@@ -1,3 +1,4 @@
+import { brandInitializeResponse } from "./branding.js";
 import gateway from "../../packages/inspector/index.js";
 import runner from "../../packages/runner/src/cloudflare-worker.mjs";
 import { webAssets } from "../web/generated.js";
@@ -18,6 +19,8 @@ export default {
     if (asset && ["GET", "HEAD"].includes(request.method)) return new Response(request.method === "HEAD" ? null : asset.text, {
       headers: { "Content-Type": asset.type, "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" }
     });
-    return gateway.fetch(request, env);
+    const identityRequest = url.pathname === "/mcp" && request.method === "POST" ? request.clone() : null;
+    const response = await gateway.fetch(request, env);
+    return identityRequest ? brandInitializeResponse(identityRequest, response) : response;
   }
 };
