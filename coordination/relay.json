@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T02:25:26.503Z",
+  "updated_at": "2026-10-01T02:32:45.947Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -2861,6 +2861,29 @@
           }
         }
       ]
+    },
+    {
+      "id": "relay-1.9.6.1-mcp-ui-bootstrap-20261001",
+      "owner": "relay-1.9.6.1-mcp-ui-bootstrap-20261001",
+      "goal": "Fix Relay MCP inline control-center blank rendering before 1.9.7 by rotating the control-center UI resource cache key and making host-bridge failure visible instead of a silent blank.",
+      "acceptance": "Control-center tool/resource/context-card references all use a new UI resource URI; old v1 remains unused for the control center. Bridge initialization keeps the shell renderable and turns host initialization failure into a bounded explicit connection error rather than a silent 30s void. Tests prove resource URI linkage and bridge behavior. Ship as an exact-head 1.9.6.1 hotfix before 1.9.7.",
+      "next_action": "Claim from current main, patch resource URI + bridge resilience + regression tests, run Runner preflight/CI, merge/deploy exact source, refresh Relay app and verify inline control center renders.",
+      "paths": [
+        "src/relay-ui.js",
+        "src/relay-ui.test.js",
+        "src/relay-chat-ui.js",
+        "src/relay-chat-ui.test.js",
+        "apps/web/mcp-bridge.js",
+        "apps/web/test/",
+        "docs/relay/RELAY_1_9_6_1_RELEASE.md"
+      ],
+      "resources": [
+        "relay-mcp-ui-resource-cache-key",
+        "relay-mcp-app-bootstrap"
+      ],
+      "task_class": "architecture",
+      "state": "queued",
+      "created_at": "2026-10-01T02:32:45.947Z"
     }
   ],
   "claims": [
