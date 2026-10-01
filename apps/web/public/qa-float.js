@@ -196,12 +196,6 @@ export function createQaFloat(stage, { onDockChange } = {}) {
     lastWiggle = Date.now();
     panel.classList.remove("qa-edge-wiggle");
     void panel.offsetWidth;
-    const vector = {
-      left: ["4px", "0px"], right: ["-4px", "0px"],
-      top: ["0px", "4px"], bottom: ["0px", "-4px"]
-    }[dockEdge];
-    panel.style.setProperty("--qa-wiggle-x", vector[0]);
-    panel.style.setProperty("--qa-wiggle-y", vector[1]);
     panel.classList.add("qa-edge-wiggle");
     setTimeout(() => panel.classList.remove("qa-edge-wiggle"), 620);
   };
