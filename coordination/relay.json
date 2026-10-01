@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T01:57:46.142Z",
+  "updated_at": "2026-10-01T01:59:16.081Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -2528,9 +2528,9 @@
     {
       "id": "relay-fast-shell-motion-neutral-cards-20261001",
       "owner": "relay-fast-shell-motion-neutral-cards-20261001",
-      "goal": "Refine the current Relay feature shell by removing status-colored card borders/tints and making desktop sidebar/content movement feel fast, inertial, and springy without becoming floaty.",
-      "acceptance": "Task class design. Preserve Relay 1.9.5 architecture, final feature icons, feature accent mapping, semantic status labels/lights, project tabs, and current mobile/tablet layout. Remove all status-colored card borders, left-edge stripes, and large state-tinted card backgrounds from progress, Today, Inspector, night shift, attention, automation, and clear-state surfaces; cards must return to flat neutral Terra Prime surfaces with spacing rather than outline decoration. No gradients. Keep semantic color only in compact badges/status lights and small inline status elements. Desktop sidebar expansion/collapse must remain 88px↔340px and content must still shift/max-width center, but movement should be FAST: about 180–260ms, one small overshoot, quick settle, and a subtle directional blur visible only during movement. Avoid floaty easing, long delays, or looping page motion. Implement pointer + keyboard focus transitions; reduced-motion must switch instantly with no blur/overshoot. Mobile/tablet <=900px remain static and must not depend on hover. Browser tests must assert neutral card backgrounds/no semantic borders, existing sidebar geometry, fast transition duration, expansion/collapse motion state, blur keyframes present/active under normal motion, and reduced-motion disabling transition/animation. Rebuild generated.js, pass full repo/browser tests, merge/deploy exact source, capture production evidence, close assignment.",
-      "next_action": "Claim current main. Remove the semantic-card border/tint override from the feature-shell CSS. Add a small JS sidebar motion state hook for pointer/focus expand/collapse and fast CSS spring/blur animations around the existing 88px/340px layout transition. Keep status-light animation unchanged. Rebuild, test desktop/MCP/mobile and reduced-motion, merge/deploy exact source, close.",
+      "goal": "Refine the current Relay feature shell by removing ugly stroke/border treatments while preserving purposeful colorful card materials, and make desktop sidebar/content movement feel fast, inertial, springy, and briefly motion-blurred without becoming floaty.",
+      "acceptance": "Task class design. Preserve Relay 1.9.5 architecture, final feature icons, feature accent mapping, semantic status labels/lights, project tabs, and current mobile/tablet layout. Remove decorative card borders, outlines, left-edge stripes, and stroke-based state communication from progress, Today, Inspector, night shift, attention, automation, and clear-state surfaces. Do NOT force every card neutral: purposeful color is welcome when it communicates feature/state, but use solid or lightly tinted borderless surfaces, compact badges/lights, icons, typography, and restrained shadow/material contrast rather than gradients or strokes. No gradients. No decorative 1px card outlines. Semantic status color may appear in a card's subtle solid surface tint when useful, but avoid muddy full-card washes; neutral cards remain appropriate for low-salience/quiet states. Desktop sidebar expansion/collapse remains 88px↔340px and content still shifts/max-width centers, but movement must be FAST: roughly 180–260ms, one small overshoot, quick settle, and a subtle directional motion blur visible only during the transition. Avoid floaty easing, long delays, or looping page motion. Implement pointer + keyboard focus transitions. Reduced-motion switches instantly with no blur/overshoot. Mobile/tablet <=900px remain static and must not depend on hover. Browser tests must assert no decorative card borders/left stripes, intentional borderless colored/neutral surfaces, existing sidebar geometry, fast transition timing, overshoot/motion state hook, blur animation during normal motion, and reduced-motion disabling transition/blur. Rebuild generated.js, pass full repo/browser tests, merge/deploy exact source, capture production evidence, close assignment.",
+      "next_action": "Create the claimed branch from its pinned base. Remove the current semantic border/left-stripe CSS and replace it with borderless solid material surfaces: quiet states neutral, higher-salience states may get very light purposeful color-mix fills with no stroke. Add a small sidebar motion state hook and fast 180–260ms spring/blur transition around the existing 88px/340px layout. Keep status-light animation unchanged. Rebuild, test desktop/MCP/mobile/reduced-motion, merge/deploy exact source, close.",
       "paths": [
         "apps/web/public/operator.js",
         "apps/web/public/operator-1.8.css",
@@ -2545,7 +2545,31 @@
         "relay-responsive-layout"
       ],
       "state": "claimed",
-      "created_at": "2026-10-01T01:57:10.037Z"
+      "created_at": "2026-10-01T01:57:10.037Z",
+      "updated_at": "2026-10-01T01:59:16.081Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T01:59:16.081Z",
+          "by": "relay-fast-shell-motion-neutral-cards-20261001",
+          "reason": "User clarified that colorful cards are desirable; the objection is gradients, borders/strokes, and ugly outlined state cards—not color itself.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "goal": "Refine the current Relay feature shell by removing status-colored card borders/tints and making desktop sidebar/content movement feel fast, inertial, and springy without becoming floaty.",
+            "acceptance": "Task class design. Preserve Relay 1.9.5 architecture, final feature icons, feature accent mapping, semantic status labels/lights, project tabs, and current mobile/tablet layout. Remove all status-colored card borders, left-edge stripes, and large state-tinted card backgrounds from progress, Today, Inspector, night shift, attention, automation, and clear-state surfaces; cards must return to flat neutral Terra Prime surfaces with spacing rather than outline decoration. No gradients. Keep semantic color only in compact badges/status lights and small inline status elements. Desktop sidebar expa...",
+            "next_action": "Claim current main. Remove the semantic-card border/tint override from the feature-shell CSS. Add a small JS sidebar motion state hook for pointer/focus expand/collapse and fast CSS spring/blur animations around the existing 88px/340px layout transition. Keep status-light animation unchanged. Rebuild, test desktop/MCP/mobile and reduced-motion, merge/deploy exact source, close."
+          },
+          "after": {
+            "goal": "Refine the current Relay feature shell by removing ugly stroke/border treatments while preserving purposeful colorful card materials, and make desktop sidebar/content movement feel fast, inertial, springy, and briefly motion-blurred without becoming floaty.",
+            "acceptance": "Task class design. Preserve Relay 1.9.5 architecture, final feature icons, feature accent mapping, semantic status labels/lights, project tabs, and current mobile/tablet layout. Remove decorative card borders, outlines, left-edge stripes, and stroke-based state communication from progress, Today, Inspector, night shift, attention, automation, and clear-state surfaces. Do NOT force every card neutral: purposeful color is welcome when it communicates feature/state, but use solid or lightly tinted borderless surfaces, compact badges/lights, icons, typography, and restrained shadow/material con...",
+            "next_action": "Create the claimed branch from its pinned base. Remove the current semantic border/left-stripe CSS and replace it with borderless solid material surfaces: quiet states neutral, higher-salience states may get very light purposeful color-mix fills with no stroke. Add a small sidebar motion state hook and fast 180–260ms spring/blur transition around the existing 88px/340px layout. Keep status-light animation unchanged. Rebuild, test desktop/MCP/mobile/reduced-motion, merge/deploy exact source, close."
+          }
+        }
+      ]
     }
   ],
   "claims": [
@@ -4076,15 +4100,38 @@
         "relay-card-material",
         "relay-responsive-layout"
       ],
-      "goal": "Refine the current Relay feature shell by removing status-colored card borders/tints and making desktop sidebar/content movement feel fast, inertial, and springy without becoming floaty.",
-      "acceptance": "Task class design. Preserve Relay 1.9.5 architecture, final feature icons, feature accent mapping, semantic status labels/lights, project tabs, and current mobile/tablet layout. Remove all status-colored card borders, left-edge stripes, and large state-tinted card backgrounds from progress, Today, Inspector, night shift, attention, automation, and clear-state surfaces; cards must return to flat neutral Terra Prime surfaces with spacing rather than outline decoration. No gradients. Keep semantic color only in compact badges/status lights and small inline status elements. Desktop sidebar expansion/collapse must remain 88px↔340px and content must still shift/max-width center, but movement should be FAST: about 180–260ms, one small overshoot, quick settle, and a subtle directional blur visible only during movement. Avoid floaty easing, long delays, or looping page motion. Implement pointer + keyboard focus transitions; reduced-motion must switch instantly with no blur/overshoot. Mobile/tablet <=900px remain static and must not depend on hover. Browser tests must assert neutral card backgrounds/no semantic borders, existing sidebar geometry, fast transition duration, expansion/collapse motion state, blur keyframes present/active under normal motion, and reduced-motion disabling transition/animation. Rebuild generated.js, pass full repo/browser tests, merge/deploy exact source, capture production evidence, close assignment.",
-      "next_action": "Claim current main. Remove the semantic-card border/tint override from the feature-shell CSS. Add a small JS sidebar motion state hook for pointer/focus expand/collapse and fast CSS spring/blur animations around the existing 88px/340px layout transition. Keep status-light animation unchanged. Rebuild, test desktop/MCP/mobile and reduced-motion, merge/deploy exact source, close.",
+      "goal": "Refine the current Relay feature shell by removing ugly stroke/border treatments while preserving purposeful colorful card materials, and make desktop sidebar/content movement feel fast, inertial, springy, and briefly motion-blurred without becoming floaty.",
+      "acceptance": "Task class design. Preserve Relay 1.9.5 architecture, final feature icons, feature accent mapping, semantic status labels/lights, project tabs, and current mobile/tablet layout. Remove decorative card borders, outlines, left-edge stripes, and stroke-based state communication from progress, Today, Inspector, night shift, attention, automation, and clear-state surfaces. Do NOT force every card neutral: purposeful color is welcome when it communicates feature/state, but use solid or lightly tinted borderless surfaces, compact badges/lights, icons, typography, and restrained shadow/material contrast rather than gradients or strokes. No gradients. No decorative 1px card outlines. Semantic status color may appear in a card's subtle solid surface tint when useful, but avoid muddy full-card washes; neutral cards remain appropriate for low-salience/quiet states. Desktop sidebar expansion/collapse remains 88px↔340px and content still shifts/max-width centers, but movement must be FAST: roughly 180–260ms, one small overshoot, quick settle, and a subtle directional motion blur visible only during the transition. Avoid floaty easing, long delays, or looping page motion. Implement pointer + keyboard focus transitions. Reduced-motion switches instantly with no blur/overshoot. Mobile/tablet <=900px remain static and must not depend on hover. Browser tests must assert no decorative card borders/left stripes, intentional borderless colored/neutral surfaces, existing sidebar geometry, fast transition timing, overshoot/motion state hook, blur animation during normal motion, and reduced-motion disabling transition/blur. Rebuild generated.js, pass full repo/browser tests, merge/deploy exact source, capture production evidence, close assignment.",
+      "next_action": "Create the claimed branch from its pinned base. Remove the current semantic border/left-stripe CSS and replace it with borderless solid material surfaces: quiet states neutral, higher-salience states may get very light purposeful color-mix fills with no stroke. Add a small sidebar motion state hook and fast 180–260ms spring/blur transition around the existing 88px/340px layout. Keep status-light animation unchanged. Rebuild, test desktop/MCP/mobile/reduced-motion, merge/deploy exact source, close.",
       "task_class": "design",
       "base_sha": "8c2ffd935490bcbd439ed58feeaeac537fdaa5a0",
       "state": "active",
       "created_at": "2026-10-01T01:57:46.142Z",
-      "updated_at": "2026-10-01T01:57:46.142Z",
-      "lease_until": "2026-10-01T13:57:46.142Z"
+      "updated_at": "2026-10-01T01:59:16.081Z",
+      "lease_until": "2026-10-01T13:59:16.081Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T01:59:16.081Z",
+          "by": "relay-fast-shell-motion-neutral-cards-20261001",
+          "reason": "User clarified that colorful cards are desirable; the objection is gradients, borders/strokes, and ugly outlined state cards—not color itself.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "goal": "Refine the current Relay feature shell by removing status-colored card borders/tints and making desktop sidebar/content movement feel fast, inertial, and springy without becoming floaty.",
+            "acceptance": "Task class design. Preserve Relay 1.9.5 architecture, final feature icons, feature accent mapping, semantic status labels/lights, project tabs, and current mobile/tablet layout. Remove all status-colored card borders, left-edge stripes, and large state-tinted card backgrounds from progress, Today, Inspector, night shift, attention, automation, and clear-state surfaces; cards must return to flat neutral Terra Prime surfaces with spacing rather than outline decoration. No gradients. Keep semantic color only in compact badges/status lights and small inline status elements. Desktop sidebar expa...",
+            "next_action": "Claim current main. Remove the semantic-card border/tint override from the feature-shell CSS. Add a small JS sidebar motion state hook for pointer/focus expand/collapse and fast CSS spring/blur animations around the existing 88px/340px layout transition. Keep status-light animation unchanged. Rebuild, test desktop/MCP/mobile and reduced-motion, merge/deploy exact source, close."
+          },
+          "after": {
+            "goal": "Refine the current Relay feature shell by removing ugly stroke/border treatments while preserving purposeful colorful card materials, and make desktop sidebar/content movement feel fast, inertial, springy, and briefly motion-blurred without becoming floaty.",
+            "acceptance": "Task class design. Preserve Relay 1.9.5 architecture, final feature icons, feature accent mapping, semantic status labels/lights, project tabs, and current mobile/tablet layout. Remove decorative card borders, outlines, left-edge stripes, and stroke-based state communication from progress, Today, Inspector, night shift, attention, automation, and clear-state surfaces. Do NOT force every card neutral: purposeful color is welcome when it communicates feature/state, but use solid or lightly tinted borderless surfaces, compact badges/lights, icons, typography, and restrained shadow/material con...",
+            "next_action": "Create the claimed branch from its pinned base. Remove the current semantic border/left-stripe CSS and replace it with borderless solid material surfaces: quiet states neutral, higher-salience states may get very light purposeful color-mix fills with no stroke. Add a small sidebar motion state hook and fast 180–260ms spring/blur transition around the existing 88px/340px layout. Keep status-light animation unchanged. Rebuild, test desktop/MCP/mobile/reduced-motion, merge/deploy exact source, close."
+          }
+        }
+      ]
     }
   ],
   "migrated_from": "loew-inspector"
