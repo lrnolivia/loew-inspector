@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T09:57:55.276Z",
+  "updated_at": "2026-10-01T10:01:00.770Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -9328,21 +9328,19 @@
       "owner": "relay-inline-card-v2-final-20261001",
       "branch": "relay/inline-card-v2-final3-20261001",
       "paths": [
-        "src/relay-v2-probe.js",
-        "src/relay-entry.js",
+        "src/relay-chat-ui.js",
+        "src/relay-chat-ui.test.js",
         "src/relay-entry.test.js",
-        "docs/relay/CHATGPT_INLINE_CARD_CLEANROOM.md",
-        "apps/mcp/relay-icon.js",
-        "test/mcp-branding.test.mjs"
+        "docs/relay/CHATGPT_CARD_V9_BOOTSTRAP.md"
       ],
       "resources": [
-        "relay-context-card-v2-probe",
-        "relay-extension-resource-path",
-        "relay-mcp-icon-parity"
+        "relay-context-card-v9",
+        "relay-chatgpt-bootstrap",
+        "relay-card-size-reporting"
       ],
       "goal": "Rebuild and ship the exact historical Relay v2 contextual card probe from current main so native macOS, web and iPhone can be compared without PR #92 merge conflicts.",
       "acceptance": "Current main is the base. Historical v2 card from de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7 is restored faithfully under isolated symbols; relay_runner_progress alone carries v2 metadata; resource is served through the pre-#85 relay-entry list/read path; current v8 and v3 controls remain unchanged; embedded MCP icon matches canonical PNG; exact-head CI and Runner admission pass; merged source is deployed before consumer testing.",
-      "next_action": "Resume only after the owner-requested card v9 nonblocking bootstrap hotfix is resolved and the overlapping src/relay-entry.test.js path is free.",
+      "next_action": "Apply the owner-requested v9 nonblocking bootstrap handoff on this held card lane; preserve the legacy bridge control; update only the contextual card, its tests, relay-entry URI pins, and the v9 bootstrap doc; then run exact-head validation and open a draft PR.",
       "task_class": "architecture",
       "category": "implementation",
       "tags": [
@@ -9358,10 +9356,10 @@
       "primary_staff": "nico",
       "supporting_staff": [],
       "base_sha": "3b1e855e9486a3c034f59db3b53797f45314b2fe",
-      "state": "held",
+      "state": "active",
       "created_at": "2026-10-01T09:43:34.029Z",
-      "updated_at": "2026-10-01T09:57:18.450Z",
-      "lease_until": "2026-10-01T21:57:18.450Z"
+      "updated_at": "2026-10-01T10:01:00.770Z",
+      "lease_until": "2026-10-01T22:01:00.770Z"
     }
   ],
   "migrated_from": "loew-inspector"
