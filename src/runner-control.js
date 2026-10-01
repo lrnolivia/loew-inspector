@@ -8,6 +8,7 @@ import {
 } from './runner-control-core.js';
 import { callProgress } from './progress-api.js';
 import { callResume } from './resume-checkpoints.js';
+import { callAssignmentUpdates } from './amendment-sync.js';
 import { projectCloudStatus, deployProjectCloudVersion } from './project-cloud.js';
 
 const MUTATIONS = ['queue', 'claim', 'amend', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete'];
@@ -15,6 +16,7 @@ const text = (max = 500) => ({ type: 'string', minLength: 1, maxLength: max });
 const identity = { ...text(100), pattern: '^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$' };
 const projectSchema = { ...text(80), pattern: '^[a-z0-9-]+$' };
 const shaSchema = { type: 'string', pattern: '^[a-f0-9]{40}$' };
+const checkpointSchema = { type: 'string', pattern: '^[a-f0-9]{24}$' };
 const pathsSchema = { type: 'array', minItems: 1, maxItems: 200, items: text(500), uniqueItems: true };
 const resourcesSchema = { type: 'array', maxItems: 100, items: text(200), uniqueItems: true };
 const ledgerRefsSchema = { type: 'array', maxItems: 50, items: identity, uniqueItems: true };
@@ -68,6 +70,17 @@ const DEFINITIONS = [
     name: 'relay_runner_resume',
     description: 'Read compact deterministic resume checkpoints derived passively from canonical Runner, GitHub and Cloud evidence. Unchanged evidence reuses the same checkpoint id, so interrupted chats can resume without model-authored handoffs.',
     inputSchema: schema({ project: projectSchema, assignment: identity }, ['project'])
+  },
+  {
+    name: 'relay_runner_updates',
+    description: 'Read only assignment amendments newer than a monotonic cursor plus a bounded caught-up recovery signal derived from canonical resume evidence. No-change reads inject no amendment context; history gaps or scope changes require canonical reconciliation.',
+    inputSchema: schema({
+      project: projectSchema,
+      assignment: identity,
+      cursor: { type: 'integer', minimum: 0, maximum: 1000000 },
+      checkpoint_id: checkpointSchema,
+      recovery_attempts: { type: 'integer', minimum: 0, maximum: 2 }
+    }, ['project', 'assignment', 'cursor'])
   },
   {
     name: 'relay_cloud_project',
@@ -175,6 +188,7 @@ export async function callRunnerControl(name, args, env, apiOverride) {
   validateControlArguments(args, definition.inputSchema);
   if (name === 'relay_runner_progress') return callProgress(args, env, apiOverride);
   if (name === 'relay_runner_resume') return callResume(args, env, apiOverride);
+  if (name === 'relay_runner_updates') return callAssignmentUpdates(args, env, apiOverride);
   if (name === 'relay_cloud_project') return projectCloudStatus(env, args.project, apiOverride);
   if (name === 'relay_cloud_deploy_project_version') {
     return deployProjectCloudVersion(env, args.project, args.version_id, args.message, { github: apiOverride });
