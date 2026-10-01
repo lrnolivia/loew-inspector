@@ -17,17 +17,20 @@ export function LiveRelayProvider({ children }: { children: ReactNode }) {
   const [error, setError] = useState<string | null>(null);
   const lastSuccess = useRef(0);
   const busy = useRef(false);
+  const latestSnapshot = useRef<DashboardSnapshot | null>(null);
 
   async function refresh() {
     if (busy.current) return;
     busy.current = true;
     if (lastSuccess.current) setState("reconnecting");
     try {
-      const next = await loadDashboard();
-      lastSuccess.current = Date.now();
-      setSnapshot(next);
-      setError(null);
-      setState("live");
+      await loadDashboard(next => {
+        lastSuccess.current = Date.now();
+        latestSnapshot.current = next;
+        setSnapshot(next);
+        setError(null);
+        setState("live");
+      }, latestSnapshot.current);
     } catch (cause) {
       const message = cause instanceof Error ? cause.message : "Relay could not refresh.";
       setError(message);
@@ -39,9 +42,9 @@ export function LiveRelayProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     void refresh();
-    const timer = window.setInterval(() => void refresh(), 8_000);
+    const timer = window.setInterval(() => void refresh(), 60_000);
     const staleTimer = window.setInterval(() => {
-      if (lastSuccess.current && Date.now() - lastSuccess.current > 20_000) {
+      if (lastSuccess.current && Date.now() - lastSuccess.current > 90_000) {
         setState(current => current === "offline" ? current : "stale");
       }
     }, 2_000);

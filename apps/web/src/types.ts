@@ -78,4 +78,6 @@ export type DashboardSnapshot = {
   projects: ProjectRegistration[];
   progress: Record<string, ProgressPayload>;
   workers: RunnerWorker[];
+  loadingProgress?: string[];
+  failedProgress?: string[];
 };

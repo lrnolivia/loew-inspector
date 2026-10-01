@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { FeatureHeader } from "../components/FeatureHeader";
 import { SignalDeck } from "../components/SignalDeck";
+import { ProgressNotice } from "../components/ProgressNotice";
 import { StatusLight } from "../components/Telemetry";
 import { projectLabel } from "../api";
 import { useLiveRelay } from "../live";
@@ -26,17 +27,20 @@ export function TodayPage() {
   const moving = current.filter(({ item }) => item.state === "working");
   const workers = snapshot?.workers || [];
   const enabled = workers.filter(worker => worker.enabled);
+  const incomplete = !snapshot || Boolean(snapshot.loadingProgress?.length || snapshot.failedProgress?.length);
+  const count = (value: number) => incomplete ? value ? `${value}+` : "pending" : String(value);
 
   const cards = [
-    { id: "needs", label: "needs you", value: String(needs.length), detail: needs.length ? "A decision, review, or recovery step is waiting." : "Nothing is asking for your attention.", tone: needs.length ? "act" : "quiet" },
-    { id: "moving", label: "moving", value: String(moving.length), detail: moving.length ? "Observed work has fresh execution evidence." : "No work is currently evidenced as moving.", tone: moving.length ? "good" : "quiet" },
-    { id: "automatic", label: "automatic checks", value: String(enabled.length), detail: enabled.length ? "Projects currently enabled for unattended checks." : "No automatic checks are enabled.", tone: enabled.length ? "wait" : "quiet" },
+    { id: "needs", label: "needs you", value: count(needs.length), detail: incomplete ? "Available activity so far; some project reads are pending or unavailable." : needs.length ? "A decision, review, or recovery step is waiting." : "Nothing is asking for your attention.", tone: needs.length ? "act" : "quiet" },
+    { id: "moving", label: "moving", value: count(moving.length), detail: incomplete ? "Available activity so far; some project reads are pending or unavailable." : moving.length ? "Observed work has fresh execution evidence." : "No work is currently evidenced as moving.", tone: moving.length ? "good" : "quiet" },
+    { id: "automatic", label: "automatic checks", value: snapshot ? String(enabled.length) : "pending", detail: !snapshot ? "Waiting for Relay’s worker registry." : enabled.length ? "Projects currently enabled for unattended checks." : "No automatic checks are enabled.", tone: enabled.length ? "wait" : "quiet" },
     { id: "freshness", label: "information", value: state, detail: snapshot ? `last refreshed ${new Date(snapshot.fetchedAt).toLocaleTimeString()}` : "waiting for Relay", tone: state === "live" ? "good" : state === "stale" ? "warn" : "quiet" }
   ];
 
   return (
     <div className="page operator-page react-page">
       <FeatureHeader feature="today" title="today" subtitle="focus" />
+      <ProgressNotice />
       <SignalDeck cards={cards} feature="today" />
 
       <section className="operator-section">
@@ -51,7 +55,7 @@ export function TodayPage() {
               </div>
               <Link className="operator-button secondary" to={`/runner/${encodeURIComponent(project)}/${encodeURIComponent(item.assignment)}`}>review</Link>
             </article>
-          )) : <div className="clear-card"><strong>You’re clear.</strong><span>Nothing needs your attention right now.</span></div>}
+          )) : incomplete ? null : <div className="clear-card"><strong>You’re clear.</strong><span>Nothing needs your attention right now.</span></div>}
         </div>
       </section>
 
@@ -64,7 +68,7 @@ export function TodayPage() {
               <strong className="today-task-title">{item.goal || item.assignment.replace(/[-_]+/g, " ")}</strong>
               <span className="today-task-state"><StatusLight tone={tone(item.state)} label={(item.state || "recorded").replaceAll("-", " ")} /></span>
             </Link>
-          )) : <div className="clear-card"><strong>Quiet right now.</strong><span>No current work is moving.</span></div>}
+          )) : incomplete ? null : <div className="clear-card"><strong>Quiet right now.</strong><span>No current work is moving.</span></div>}
         </div>
       </section>
 
@@ -80,7 +84,7 @@ export function TodayPage() {
               </div>
               <span className="operator-state">{worker.runtime?.next_run_at ? `next ${new Date(worker.runtime.next_run_at).toLocaleString()}` : worker.enabled ? "schedule enabled" : "paused"}</span>
             </article>;
-          }) : <div className="clear-card"><strong>No automatic checks.</strong><span>Runner has no worker schedule to show.</span></div>}
+          }) : <div className="clear-card"><strong>{snapshot ? "No automatic checks." : "Checking automatic schedules."}</strong><span>{snapshot ? "Runner has no worker schedule to show." : "Waiting for Relay’s worker registry."}</span></div>}
         </div>
       </section>
     </div>
