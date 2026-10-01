@@ -198,7 +198,7 @@ export function createQaFloat(stage, { onDockChange } = {}) {
   // Catch those invisible edge/corner zones on the stage so resize still works
   // from the full rectangular card bounds without adding visible handles.
   const onStagePointerDown = event => {
-    if (action || dockEdge || panel.contains(event.target)) return;
+    if (action || dockEdge || panel.contains(event.target) || stage.querySelector('.qa-notes-popout[open]')) return;
     const rect = panel.getBoundingClientRect();
     const insideBounds =
       event.clientX >= rect.left && event.clientX <= rect.right &&
