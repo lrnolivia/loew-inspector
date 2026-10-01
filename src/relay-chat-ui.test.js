@@ -68,3 +68,11 @@ test('card actually initializes and receives results without browser-global elem
     }
   } finally {await browser.close()}
 });
+
+test('technical canonical notes remain exact evidence and never become the default human summary',async()=>{
+  const {contextCardModel,contextualPresentation}=await import('./relay-chat-ui.js');
+  const next='PR #72 merged a015761290cf86ada0c48e0537dbede1ce4e6cb2; deploy Worker version 14b11840-1c72-4402-a5da-e47d33e2ac4d then refresh ChatGPT';
+  const data={project:'relay',latest:{assignment:{primary_staff:'julian',supporting_staff:['roman']},identities:{merge_commit_sha:'a'.repeat(40)},next_action:next,state:'working'}};
+  const model=contextCardModel(data);assert.doesNotMatch(model.summary,/a015761|PR #72|Worker version/);assert.doesNotMatch(model.next_step,/a015761/);assert.equal(model.evidence.next_action,next);
+  assert.equal(contextualPresentation(data).human.staff,'Julian with Roman');
+});

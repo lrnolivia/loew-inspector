@@ -37,3 +37,9 @@ test('canonical teams survive connected messages and reject stale team context',
   assert.equal(reconcileWorkerMessage(message,{primary_staff:'nico'}).safe_to_apply,false);
   assert.throws(()=>createWorkerMessage({...input,assignment:{...input.assignment,owner:'other'}}),/canonical machine identity/);
 });
+
+test('worker message contract recognizes every emitted field including canonical team',async()=>{
+  const {readFile}=await import('node:fs/promises');const schema=JSON.parse(await readFile(new URL('../contracts/assignments/worker-message-v1.schema.json',import.meta.url),'utf8'));
+  const message=createWorkerMessage({kind:'fyi',sender:{machine_id:'worker'},machine:{project:'relay',assignment:'task',owner:'worker',branch:'relay/task'},impact:'No action required',summary:'Evidence is recorded'});
+  for(const key of Object.keys(message)) assert.ok(schema.properties[key],key+' is missing from the contract');
+});
