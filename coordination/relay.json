@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T01:04:02.031Z",
+  "updated_at": "2026-10-01T01:05:38.348Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -967,8 +967,8 @@
       "id": "relay-1.9.5-planning-ledger-skill-20260930",
       "owner": "relay-1.9.5-planning-ledger-skill-20260930",
       "goal": "Ship Relay 1.9.6 as the planning/coordination intelligence release that consumes the 1.9.4 staff directory and 1.9.5 skills runtime.",
-      "acceptance": "Planning/coordination skills consult latest resume state and relevant findings before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and expose them to routing, filtering, checkpoints and skill selection without changing authorization. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/branch/PR/evidence identity, state impact/requested action, and reconcile against canonical state before acting. Consume the canonical 1.9.4 staff identities instead of recreating names. Add Julian-managed relationship context per sticky staff identity from explicit feedback/repeated collaboration patterns; no autonomous relationship engine, hidden affinity scores, inferred sensitive traits or canned jokes. Staff workers emit bounded interaction signals; the lead curates durable notes. Tests cover taxonomy validation/amendment history, duplicate avoidance, communication classification/reconciliation, checkpoint-first resume, role-driven skill selection and relationship-context controls. Worker communication is staff-aware: resolve sender, recipient and referenced collaborators through the canonical sticky staff directory when a binding exists; render/use the approved human name in worker messages, handoffs, status surfaces and resume context while preserving canonical assignment/worker/branch/PR/evidence IDs underneath. Never invent a replacement name when no binding exists; fall back to the machine identity until Julian/lead assigns an approved staff identity. Cross-worker messages addressed to Margot, Roman, Imani, etc. must resolve to the same durable person across subnets and sessions. Human-facing narration is organization-first: chat updates, status summaries and directional narration should default to people + ownership + outcome language, not low-level transport mechanics. Prefer forms like \"I'm working with Rafael to update the asset pipeline; that also validates Gabriel's team has the bounded file-mutation feature working correctly\" over \"I'm streaming base64 through the bounded append path.\" Technical mechanism, tool names, chunking, SHAs and transport details stay subordinate unless they are directly relevant to the user's question, a blocker, a failure, QA evidence or a requested implementation detail. When a feature belongs to a staff member/subteam, attribute validation and progress to that person/team in the human summary while preserving exact machine evidence underneath.",
-      "next_action": "Implement staff-aware communication plus organization-first narration, and evaluate RFS-023 for automatic release-contract propagation/reconciliation so umbrella and child assignments do not require repeated manual restatement when requirements evolve.",
+      "acceptance": "Planning/coordination skills consult latest resume state and relevant findings before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and expose them to routing, filtering, checkpoints and skill selection without changing authorization. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/branch/PR/evidence identity, state impact/requested action, and reconcile against canonical state before acting. Consume the canonical 1.9.4 staff identities instead of recreating names. Add Julian-managed relationship context per sticky staff identity from explicit feedback/repeated collaboration patterns; no autonomous relationship engine, hidden affinity scores, inferred sensitive traits or canned jokes. Staff workers emit bounded interaction signals; the lead curates durable notes. Tests cover taxonomy validation/amendment history, duplicate avoidance, communication classification/reconciliation, checkpoint-first resume, role-driven skill selection and relationship-context controls. Worker communication is staff-aware: resolve sender, recipient and referenced collaborators through the canonical sticky staff directory when a binding exists; render/use the approved human name in worker messages, handoffs, status surfaces and resume context while preserving canonical assignment/worker/branch/PR/evidence IDs underneath. Never invent a replacement name when no binding exists; fall back to the machine identity until Julian/lead assigns an approved staff identity. Cross-worker messages addressed to Margot, Roman, Imani, etc. must resolve to the same durable person across subnets and sessions. Human-facing narration is organization-first: default to people + ownership + outcome + validation, with machine evidence preserved underneath; low-level transport/tool/SHA detail is subordinate unless directly relevant. Live amendment delivery: active workers/chats maintain a monotonic amendment cursor and perform a bounded relevant-change check at synchronization points such as start/resume, before major source mutations or commit/PR/deploy transitions, after external waits, and on the normal heartbeat cadence. No-change checks add no model context. New amendments are classified informational, plan-adjusting, scope-changing or blocking; informational/plan-adjusting changes merge into the next safe step, while scope-changing/blocking changes force canonical reconciliation before further conflicting work. Never repeatedly replay full amendment history. Expose exact consumed revision so resumes and handoffs know what instructions the worker has seen.",
+      "next_action": "Implement staff-aware communication and organization-first narration plus cursor-based live amendment sync: workers consume only new relevant amendments at safe synchronization points, classify their impact, and reconcile scope-changing/blocking updates before conflicting work continues. Evaluate RFS-023 and RFS-024 together for automatic contract propagation and live instruction delivery.",
       "paths": [
         "skills/planning/",
         "skills/coordination/",
@@ -999,7 +999,10 @@
         "relay-lead-managed-adaptation",
         "relay-staff-aware-worker-communication",
         "relay-human-org-narration",
-        "relay-staff-attributed-status"
+        "relay-staff-attributed-status",
+        "relay-live-amendment-sync",
+        "relay-amendment-cursor",
+        "relay-worker-instruction-reconciliation"
       ],
       "task_class": "architecture",
       "ledger_refs": [
@@ -1012,11 +1015,12 @@
         "RFS-018",
         "RFS-019",
         "RFS-020",
-        "RFS-023"
+        "RFS-023",
+        "RFS-024"
       ],
       "state": "queued",
       "created_at": "2026-09-30T23:34:25.953Z",
-      "amendment_count": 8,
+      "amendment_count": 9,
       "amendments": [
         {
           "at": "2026-09-30T23:37:17.898Z",
@@ -1484,9 +1488,92 @@
               "RFS-023"
             ]
           }
+        },
+        {
+          "at": "2026-10-01T01:05:38.348Z",
+          "by": "relay-1.9.5-planning-ledger-skill-20260930",
+          "reason": "Ensure working chats receive assignment amendments without repeatedly replaying history or destabilizing active execution.",
+          "fields": [
+            "acceptance",
+            "next_action",
+            "resources",
+            "ledger_refs"
+          ],
+          "before": {
+            "acceptance": "Planning/coordination skills consult latest resume state and relevant findings before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and expose them to routing, filtering, checkpoints and skill selection without changing authorization. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/branch/PR/evidence identity, state impact/requested action, and reconcile ag...",
+            "next_action": "Implement staff-aware communication plus organization-first narration, and evaluate RFS-023 for automatic release-contract propagation/reconciliation so umbrella and child assignments do not require repeated manual restatement when requirements evolve.",
+            "resources": [
+              "relay-1.9.6-release",
+              "relay-ledger-routing",
+              "relay-planning-skill",
+              "relay-worker-communication-skill",
+              "relay-interworker-handoffs",
+              "relay-canonical-state-reconciliation",
+              "relay-assignment-taxonomy",
+              "relay-assignment-labels-tags",
+              "relay-worker-roles",
+              "relay-role-skill-resolution",
+              "relay-contextual-levity",
+              "relay-staff-relationship-context",
+              "relay-lead-managed-adaptation",
+              "relay-staff-aware-worker-communication",
+              "relay-human-org-narration",
+              "relay-staff-attributed-status"
+            ],
+            "ledger_refs": [
+              "RFS-001",
+              "RFS-002",
+              "RFS-003",
+              "RFS-004",
+              "RFS-016",
+              "RFS-017",
+              "RFS-018",
+              "RFS-019",
+              "RFS-020",
+              "RFS-023"
+            ]
+          },
+          "after": {
+            "acceptance": "Planning/coordination skills consult latest resume state and relevant findings before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and expose them to routing, filtering, checkpoints and skill selection without changing authorization. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/branch/PR/evidence identity, state impact/requested action, and reconcile ag...",
+            "next_action": "Implement staff-aware communication and organization-first narration plus cursor-based live amendment sync: workers consume only new relevant amendments at safe synchronization points, classify their impact, and reconcile scope-changing/blocking updates before conflicting work continues. Evaluate RFS-023 and RFS-024 together for automatic contract propagation and live instruction delivery.",
+            "resources": [
+              "relay-1.9.6-release",
+              "relay-ledger-routing",
+              "relay-planning-skill",
+              "relay-worker-communication-skill",
+              "relay-interworker-handoffs",
+              "relay-canonical-state-reconciliation",
+              "relay-assignment-taxonomy",
+              "relay-assignment-labels-tags",
+              "relay-worker-roles",
+              "relay-role-skill-resolution",
+              "relay-contextual-levity",
+              "relay-staff-relationship-context",
+              "relay-lead-managed-adaptation",
+              "relay-staff-aware-worker-communication",
+              "relay-human-org-narration",
+              "relay-staff-attributed-status",
+              "relay-live-amendment-sync",
+              "relay-amendment-cursor",
+              "relay-worker-instruction-reconciliation"
+            ],
+            "ledger_refs": [
+              "RFS-001",
+              "RFS-002",
+              "RFS-003",
+              "RFS-004",
+              "RFS-016",
+              "RFS-017",
+              "RFS-018",
+              "RFS-019",
+              "RFS-020",
+              "RFS-023",
+              "RFS-024"
+            ]
+          }
         }
       ],
-      "updated_at": "2026-10-01T01:03:47.694Z"
+      "updated_at": "2026-10-01T01:05:38.348Z"
     },
     {
       "id": "relay-1.9.6-creative-platform-packs-20260930",
