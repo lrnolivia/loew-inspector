@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T07:38:44.253Z",
+  "updated_at": "2026-10-01T07:41:45.203Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -8670,10 +8670,16 @@
       "primary_staff": "nico",
       "supporting_staff": [],
       "base_sha": "f5cd793c1ce7945ed013382c0e0b1cfb3b07f200",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T07:35:20.085Z",
-      "updated_at": "2026-10-01T07:38:44.253Z",
-      "lease_until": "2026-10-01T19:38:44.253Z"
+      "updated_at": "2026-10-01T07:41:45.203Z",
+      "lease_until": "2026-10-01T19:41:45.203Z",
+      "pr": 87,
+      "merged_head_sha": "a177290b8daede14df12a60d7e7bb11968d79798",
+      "merge_commit_sha": "aaffd334912020a31ead9d7de4baf77b43be30b5",
+      "evidence": "Shipped fresh identity experiment: PR https://github.com/lrnolivia/relay/pull/87 exact head a177290b8daede14df12a60d7e7bb11968d79798 passed full local npm ci/test/build plus CI test run 36831485808 and Runner admission run 36831485742; squash merge aaffd334912020a31ead9d7de4baf77b43be30b5. Relay Worker v75 b4f49638-0da9-4f10-834f-456e9dbe8a5e deployed at 100% via a80561f9-f887-4c7c-a5bc-1288d701c8a7, verified by cloud readback and live control status. Authenticated native-control smoke run 36831743613 passes. Regression verifies fresh tool/resources/read/MIME/security/no-sidebar, byte-identical v7 HTML and old tool/resource retention. Consumer mount remains explicitly unverified; refresh Relay tools in ordinary ChatGPT and directly call relay_show_status_card(project=relay). Keep old relay_render_context_card until new tool visibly mounts. Durable experiment contract: docs/relay/STATUS_CARD_RESET.md. Self-host HTTP fetch probes root/health returned 522 while authenticated external native-control smoke succeeds; no consumer success claimed.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T07:41:45.203Z"
     },
     {
       "id": "relay-2.0-today-runner-react-slice-20261001",
