@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T02:51:08.664Z",
+  "updated_at": "2026-10-01T02:51:32.361Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -121,8 +121,8 @@
       "id": "relay-web-dashboard-20260930",
       "owner": "relay-web-dashboard-20260930",
       "goal": "Expose Relay's MCP App dashboard as a first-class authenticated web dashboard on relay.loew.fi with parity to the in-chat state model and controls.",
-      "acceptance": "relay.loew.fi presents the same projects, durable operations, publication receipts, QA handoffs, release state, recovery/rollback actions and history as the MCP App without duplicating state; shared components/data adapters are reused where practical; deep links can open a specific project/operation/release/QA item; auth and mutations use Relay's existing bounded control plane; web and in-chat surfaces remain behaviorally consistent; the dashboard consumes the future shared suite shell/navigation so Relay feels like one utility with Runner and Inspector rather than a separate website.",
-      "next_action": "Implement after the operation framework and core MCP App view-model/components are stable; do not create a second state or approval system for web.",
+      "acceptance": "relay.loew.fi presents the same projects, durable operations, publication receipts, QA handoffs, release state, recovery/rollback actions and history as the MCP App without duplicating state; shared components/data adapters are reused where practical; deep links can open a specific project/operation/release/QA item; auth and mutations use Relay's existing bounded control plane; web and in-chat surfaces remain behaviorally consistent; the dashboard consumes the future shared suite shell/navigation so Relay feels like one utility with Runner and Inspector rather than a separate website. Surface parity means canonical state, actions, receipts, identity and behavioral outcomes remain consistent across inline chat cards, the opened ChatGPT app workspace and relay.loew.fi; it does not require identical composition. The web dashboard owns the broadest persistent navigation/deep-link/history shell. The opened ChatGPT app may use a denser app-specific workspace optimized for the host container. Inline chat cards remain contextual and minimal. Shared components/view-models are encouraged only where they preserve each surface's distinct interaction job.",
+      "next_action": "Implement after the MCP App view-model is stable. Share canonical state/actions and reusable components, but let relay.loew.fi, the opened ChatGPT app workspace and inline response cards use different compositions appropriate to web workspace, app workspace and conversation respectively.",
       "paths": [
         "web/relay/",
         "src/relay-web.js",
@@ -133,10 +133,44 @@
       "resources": [
         "relay-web-dashboard",
         "relay-mcp-app-ui",
-        "suite-shared-shell"
+        "suite-shared-shell",
+        "relay-surface-parity-without-layout-parity"
       ],
       "state": "queued",
-      "created_at": "2026-09-30T13:25:57.685Z"
+      "created_at": "2026-09-30T13:25:57.685Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T02:51:32.361Z",
+          "by": "relay-web-dashboard-20260930",
+          "reason": "Prevent 'same experience' from being interpreted as identical layouts across Relay's three UI surfaces.",
+          "fields": [
+            "acceptance",
+            "next_action",
+            "resources"
+          ],
+          "before": {
+            "acceptance": "relay.loew.fi presents the same projects, durable operations, publication receipts, QA handoffs, release state, recovery/rollback actions and history as the MCP App without duplicating state; shared components/data adapters are reused where practical; deep links can open a specific project/operation/release/QA item; auth and mutations use Relay's existing bounded control plane; web and in-chat surfaces remain behaviorally consistent; the dashboard consumes the future shared suite shell/navigation so Relay feels like one utility with Runner and Inspector rather than a separate website.",
+            "next_action": "Implement after the operation framework and core MCP App view-model/components are stable; do not create a second state or approval system for web.",
+            "resources": [
+              "relay-web-dashboard",
+              "relay-mcp-app-ui",
+              "suite-shared-shell"
+            ]
+          },
+          "after": {
+            "acceptance": "relay.loew.fi presents the same projects, durable operations, publication receipts, QA handoffs, release state, recovery/rollback actions and history as the MCP App without duplicating state; shared components/data adapters are reused where practical; deep links can open a specific project/operation/release/QA item; auth and mutations use Relay's existing bounded control plane; web and in-chat surfaces remain behaviorally consistent; the dashboard consumes the future shared suite shell/navigation so Relay feels like one utility with Runner and Inspector rather than a separate website. Surfa...",
+            "next_action": "Implement after the MCP App view-model is stable. Share canonical state/actions and reusable components, but let relay.loew.fi, the opened ChatGPT app workspace and inline response cards use different compositions appropriate to web workspace, app workspace and conversation respectively.",
+            "resources": [
+              "relay-web-dashboard",
+              "relay-mcp-app-ui",
+              "suite-shared-shell",
+              "relay-surface-parity-without-layout-parity"
+            ]
+          }
+        }
+      ],
+      "updated_at": "2026-10-01T02:51:32.361Z"
     },
     {
       "id": "inspector-visual-review-web-20260930",
