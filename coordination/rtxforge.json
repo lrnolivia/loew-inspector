@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "rtxforge",
-  "updated_at": "2026-10-01T22:39:44.545Z",
+  "updated_at": "2026-10-01T22:40:46.533Z",
   "legacy_branches": [
     "backup/github-main-before-0.5.8",
     "backup/main-0.5.8-ada",
@@ -62,7 +62,7 @@
       ],
       "goal": "Deliver a reproducible Bazzite GNOME x86_64 RTX 4070 installation package using the existing rtxForge UI and pinned DLSS-Unlocked runtime options, local file writes and guarded GitHub sync.",
       "acceptance": "Verified AppImage and installer; read-only host checks; explicit selectable MFG/NR modes; preserve existing settings/backups; verified downloads and repeatable recovery tests. Actual NVIDIA/game/HDR behavior remains unverified until exercised on the user's PC.",
-      "next_action": "User explicitly authorized batch live deployment for four selected titles, NR on half. Keep Crimson/Cyberpunk MFG-only; deploy Outer Worlds 2/Avatar NR+MFG with NR enabled at startup for GameMode test. Preserve native DLLs, settings and launch flags; sequential transactions with recovery.",
+      "next_action": "User-authorized four-game batch deployed and verified at app head 4730041262ab031119668e1ff35176809f06c521. Crimson/Cyberpunk MFG-only; Outer Worlds 2/Avatar NR+MFG with NR on at startup. All managed hashes and launch sync pass; native NVIDIA/Streamline preserved; recovery baselines retained, no source/global prefs change. Superseding artifact-bound human QA packet and evidence in PR #5. Await user's GameMode results; gameplay/MFG/NR/HDR/VRR unverified.",
       "category": "implementation",
       "primary_role": "implementation",
       "primary_team": "release",
@@ -70,10 +70,10 @@
       "primary_staff": null,
       "supporting_staff": [],
       "base_sha": "4156ec19515f10af519564699aaebe6adf75c850",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-10-01T21:59:59.674Z",
-      "updated_at": "2026-10-01T22:39:44.545Z",
-      "lease_until": "2026-10-02T10:39:44.545Z"
+      "updated_at": "2026-10-01T22:40:46.533Z",
+      "lease_until": "2026-10-02T10:40:46.533Z"
     }
   ]
 }
