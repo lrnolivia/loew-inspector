@@ -56,12 +56,15 @@ try {
 
 async function capture(page, feature, viewport) {
   const surface = `${feature}-${viewport.width}`;
+  const canonicalUrl = new URL(page.url());
+  canonicalUrl.hash = "";
   const screenshot = await page.screenshot({ fullPage: true });
   await writeFile(`qa-evidence/production/${surface}.png`, screenshot);
   const metadata = {
-    kind: "production_website_verification", target_url: page.url(),
+    kind: "production_website_verification", target_url: canonicalUrl.toString(),
     context: { project: "relay", environment: "production", surface, commit_sha: expected },
-    engine: "github-chromium", step_label: `Actual website ${surface}`, viewport
+    engine: "github-chromium", step_label: `Actual website ${surface}`, viewport,
+    trace: [{ action: "verify_actual_website", url: page.url() }]
   };
   const form = new FormData();
   form.set("metadata", JSON.stringify(metadata));
