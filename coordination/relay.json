@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T09:28:02.070Z",
+  "updated_at": "2026-10-01T09:30:18.310Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -9071,10 +9071,16 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "3140175bd5442343b32fae63c8d3546f7edfa899",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T08:34:06.842Z",
-      "updated_at": "2026-10-01T09:16:55.652Z",
-      "lease_until": "2026-10-01T21:16:55.652Z"
+      "updated_at": "2026-10-01T09:30:18.310Z",
+      "lease_until": "2026-10-01T21:30:18.310Z",
+      "pr": 91,
+      "merged_head_sha": "269eb152176a3accc9a50e9246fc427bb4b63233",
+      "merge_commit_sha": "ccf62fe30a6b30fc52a4c47c68cf80f8a1734d53",
+      "evidence": "PR #91 merged after all 13 exact-head release checks passed on head 269eb152176a3accc9a50e9246fc427bb4b63233. Squash merge commit ccf62fe30a6b30fc52a4c47c68cf80f8a1734d53. Relay Cloud uploaded exact merged commit as Worker version 79, id c8cc7f6f-3076-4dc8-a072-0d0763761601, then deployed it at 100% traffic under deployment c9a4a622-3a1c-4824-a086-36263bbd93a2. Cloud readback confirms commit annotation and 100% version. Relay control plane remains healthy after deploy. Direct web verifier still returns the known Access-side HTTP 522 and is not used as rollback evidence.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T09:30:18.310Z"
     },
     {
       "id": "relay-inline-card-browser-remount-hotfix-20261001",
