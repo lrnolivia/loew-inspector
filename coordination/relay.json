@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T05:17:40.374Z",
+  "updated_at": "2026-10-01T05:25:50.523Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -4952,6 +4952,60 @@
       ],
       "state": "queued",
       "created_at": "2026-10-01T04:43:12.115Z"
+    },
+    {
+      "id": "relay-2.0-live-react-dashboard-20261001",
+      "owner": "relay-2.0-live-react-dashboard-20261001",
+      "goal": "Rebuild Relay 2.0's dashboard as a modern Vite + React application with live-updating canonical Runner/Relay state, replacing the current generated/static dashboard architecture without changing Relay's underlying authority model.",
+      "acceptance": "Relay 2.0 ships one modern React dashboard for Today, Runner, Inspector and night shift; canonical state updates appear live without manual page refresh; navigation and project context persist; live status/progress/evidence changes stream into the UI with explicit reconnecting/stale states; Inspector card previews and QA surfaces are first-class React components; the opened ChatGPT MCP app workspace reuses the same view-model/component system where appropriate; inline chat cards remain their own compact composition but share tokens/models; no duplicated business truth in the client; accessibility, responsive behavior, reduced motion and performance are release gates; no gradients unless explicitly introduced later; build/deploy is Vite-based and eliminates the giant generated.js source artifact as a hand-maintained release concern.",
+      "next_action": "Start only after Relay 1.9.9 is closed. First write the 2.0 frontend architecture: Vite + React app shell, routing/state boundaries, live transport contract (prefer server-sent events or another bounded server-push channel over blind polling where supported), reconnect/stale semantics, shared component/token package, MCP-app embedding boundary, and migration plan from current apps/web/public + generated.js. Then prototype Today + Runner live updates before migrating Inspector/night shift.",
+      "paths": [
+        "docs/relay/RELAY_2_0_FRONTEND_ARCHITECTURE.md"
+      ],
+      "resources": [
+        "relay-2.0",
+        "relay-vite-react-dashboard",
+        "relay-live-state-stream",
+        "relay-shared-ui-components",
+        "relay-mcp-app-workspace"
+      ],
+      "task_class": "architecture",
+      "category": "architecture",
+      "labels": [
+        {
+          "key": "release",
+          "value": "2.0"
+        },
+        {
+          "key": "domain",
+          "value": "frontend-platform"
+        }
+      ],
+      "tags": [
+        "react",
+        "vite",
+        "live-ui",
+        "dashboard",
+        "mcp-app"
+      ],
+      "primary_role": "architect",
+      "supporting_roles": [
+        "art-director",
+        "builder",
+        "verifier"
+      ],
+      "primary_team": "runner",
+      "supporting_teams": [
+        "inspector"
+      ],
+      "primary_staff": "ellis",
+      "supporting_staff": [
+        "valentina",
+        "nico",
+        "roman"
+      ],
+      "state": "queued",
+      "created_at": "2026-10-01T05:25:50.523Z"
     }
   ],
   "claims": [
