@@ -1,4 +1,6 @@
+import { projectHref } from "../../../../packages/shared-ui/project-context.js";
 import { Link } from "react-router-dom";
+import { ProjectSwitcher } from "../components/ProjectSwitcher";
 import { FeatureHeader } from "../components/FeatureHeader";
 import { SignalDeck } from "../components/SignalDeck";
 import { ProgressNotice } from "../components/ProgressNotice";
@@ -17,7 +19,7 @@ function tone(state?: string) {
 }
 
 export function TodayPage() {
-  const { snapshot, state } = useLiveRelay();
+  const { snapshot, state, project: contextProject } = useLiveRelay();
   const all: Array<{ project: string; item: ObservedProgress }> = [];
   for (const [project, payload] of Object.entries(snapshot?.progress || {})) {
     for (const item of payload.progress || []) all.push({ project, item });
@@ -40,6 +42,7 @@ export function TodayPage() {
   return (
     <div className="page operator-page react-page">
       <FeatureHeader feature="today" title="today" subtitle="focus" />
+      <ProjectSwitcher />
       <ProgressNotice />
       <SignalDeck cards={cards} feature="today" />
 
@@ -53,7 +56,7 @@ export function TodayPage() {
                 <strong>{item.goal || item.assignment.replace(/[-_]+/g, " ")}</strong>
                 <p>{item.waiting_reason || item.recovery_action || item.next_action || "Relay needs your attention."}</p>
               </div>
-              <Link className="operator-button secondary" to={`/runner/${encodeURIComponent(project)}/${encodeURIComponent(item.assignment)}`}>review</Link>
+              <Link className="operator-button secondary" to={projectHref(`/runner/${encodeURIComponent(project)}/${encodeURIComponent(item.assignment)}`, contextProject)}>review</Link>
             </article>
           )) : incomplete ? null : <div className="clear-card"><strong>You’re clear.</strong><span>Nothing needs your attention right now.</span></div>}
         </div>
@@ -63,7 +66,7 @@ export function TodayPage() {
         <div className="section-heading"><h2>work happening now</h2><span>across your projects</span></div>
         <div className="react-stack">
           {current.length ? current.slice(0, 10).map(({ project, item }) => (
-            <Link className="today-task" data-tone={tone(item.state)} to={`/runner/${encodeURIComponent(project)}/${encodeURIComponent(item.assignment)}`} key={`${project}:${item.assignment}`}>
+            <Link className="today-task" data-tone={tone(item.state)} to={projectHref(`/runner/${encodeURIComponent(project)}/${encodeURIComponent(item.assignment)}`, contextProject)} key={`${project}:${item.assignment}`}>
               <span className="today-task-project">{projectLabel(project)}</span>
               <strong className="today-task-title">{item.goal || item.assignment.replace(/[-_]+/g, " ")}</strong>
               <span className="today-task-state"><StatusLight tone={tone(item.state)} label={(item.state || "recorded").replaceAll("-", " ")} /></span>

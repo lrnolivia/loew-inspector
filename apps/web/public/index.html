@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#111110">
+  <meta name="theme-color" content="#151412">
   <title>relay</title>
   __RELAY_THEME_BOOTSTRAP__
   <link rel="icon" type="image/png" href="__RELAY_ICON__">
@@ -30,10 +30,7 @@
       <button type="button" data-nav="review">inspector</button>
       <button type="button" data-nav="night-shift">night shift</button>
     </nav>
-    <div class="operator-utility">
-      <button id="theme-toggle" class="utility-button" type="button" aria-label="Switch color theme"><span class="utility-icon" aria-hidden="true"></span><span class="utility-label">Color theme</span></button>
-      <button id="app-settings" class="utility-button" type="button" aria-label="Refresh tools in ChatGPT" title="Open Relay’s ChatGPT plugin settings, then select Refresh"><span class="utility-icon" aria-hidden="true"></span><span class="utility-label">Refresh tools</span><span class="utility-arrow" aria-hidden="true">↗</span></button>
-    </div>
+    <div class="operator-utility">__RELAY_PRESENTATION_MENU__</div>
   </header>
 
   <main class="operator-shell">
@@ -43,7 +40,6 @@
       </div>
       <div id="operator-connection" class="operator-connection" data-tone="quiet" aria-live="polite">Connecting…</div>
     </div>
-    <nav id="project-tabs" class="project-tabs" role="tablist" aria-label="Project context"></nav>
     <section class="operator-page" data-page="today">
       <header class="page-heading feature-heading" data-feature="today">
         <img class="feature-mark" data-feature-icon="today" alt="">
@@ -87,22 +83,28 @@
       <header class="page-heading feature-heading review-heading" data-feature="inspector">
         <img class="feature-mark" data-feature-icon="inspector" alt="">
         <div class="feature-heading-copy"><h1>inspector</h1><p>review</p></div>
-        <strong id="review-count"></strong>
       </header>
+
+      <div class="project-context"><span class="project-context-label">project</span><nav id="project-tabs" class="project-tabs" role="tablist" aria-label="Project context"></nav></div>
+
+      <div class="inspector-status"><strong id="review-count"></strong></div>
 
       <section class="signal-deck inspector-signal-deck" aria-label="inspector summary">
         <div class="signal-track">
-          <article class="signal-card" data-tone="act">
+          <article class="signal-card" data-tone="act" data-signal-id="needs-review">
+            <span class="signal-mark"></span>
             <span class="signal-label">needs review</span>
             <strong id="inspector-signal-needs">—</strong>
             <p>captures still waiting for a human disposition</p>
           </article>
-          <article class="signal-card" data-tone="good">
+          <article class="signal-card" data-tone="good" data-signal-id="visible-captures">
+            <span class="signal-mark"></span>
             <span class="signal-label">visible captures</span>
             <strong id="inspector-signal-visible">—</strong>
             <p>evidence cards in the current Inspector view</p>
           </article>
-          <article class="signal-card" data-tone="quiet">
+          <article class="signal-card" data-tone="quiet" data-signal-id="chat-previews">
+            <span class="signal-mark"></span>
             <span class="signal-label">chat card previews</span>
             <strong id="inspector-signal-previews">—</strong>
             <p>compact Relay response surfaces available to inspect</p>

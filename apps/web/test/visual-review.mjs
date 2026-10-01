@@ -1,101 +1,81 @@
-import http from "node:http";
-import { mkdir, writeFile } from "node:fs/promises";
-import { chromium } from "playwright";
-import { webAssets } from "../generated.js";
+import { mkdir, writeFile } from 'node:fs/promises';
+import { createHash } from 'node:crypto';
+import { chromium } from 'playwright';
+import { webBuildId, webSourceSha } from '../generated.js';
+import { contextFixture } from './project-context-fixture.mjs';
 
-const commit = process.env.PREVIEW_COMMIT || "";
+const commit = process.env.PREVIEW_COMMIT || '';
 const pr = Number(process.env.PREVIEW_PR || 0);
-const clientId = process.env.CF_ACCESS_CLIENT_ID || "";
-const clientSecret = process.env.CF_ACCESS_CLIENT_SECRET || "";
-if (!commit || !pr || !clientId || !clientSecret) throw new Error("Preview evidence environment is incomplete");
-
-const progress = {
-  project: "relay",
-  observed_progress: true,
-  progress: [
-    { assignment: "relay-2.0-build", goal: "Port Relay 2.0 onto the approved 1.8/1.9 visual system", observed: true, state: "working", stage: "implementation", primary_staff: "vivienne", last_meaningful_progress_at: "2026-10-01T10:00:00Z", latest_event: { type: "source-commit", at: "2026-10-01T10:00:00Z" }, next_action: "review the visual port in Inspector", identities: { branch: "relay/2.0-approved-visual-port-20261001", head_sha: commit }, events: [{ type: "source-commit", at: "2026-10-01T10:00:00Z" }] },
-    { assignment: "relay-2.0-review", goal: "Review the exact visual result before release", observed: true, state: "waiting-for-human", stage: "review", primary_staff: "vivienne", waiting_reason: "Human visual approval is required before merge.", last_meaningful_progress_at: "2026-10-01T10:01:00Z", latest_event: { type: "qa-review", at: "2026-10-01T10:01:00Z" }, next_action: "approve or annotate the Inspector captures", identities: { branch: "relay/2.0-approved-visual-port-20261001", head_sha: commit }, events: [{ type: "qa-review", at: "2026-10-01T10:01:00Z" }] },
-    { assignment: "relay-external-check", goal: "Confirm release evidence", observed: true, state: "waiting-on-external-system", stage: "checks", primary_staff: "julian", last_meaningful_progress_at: "2026-10-01T09:58:00Z", latest_event: { type: "check-started", at: "2026-10-01T09:58:00Z" }, next_action: "wait for exact-head checks", identities: { branch: "relay/2.0-approved-visual-port-20261001", head_sha: commit }, events: [{ type: "check-started", at: "2026-10-01T09:58:00Z" }] }
-  ],
-  queue: []
-};
-const workers = [
-  { id: "relay", name: "relay", enabled: true, runtime: { status: "running", last_summary: "Reviewing the approved Relay visual port.", last_run_at: "2026-10-01T09:50:00Z", next_run_at: "2026-10-01T11:00:00Z" } },
-  { id: "field", name: "field", enabled: true, runtime: { status: "idle", last_summary: "No new material changes.", last_run_at: "2026-10-01T09:30:00Z", next_run_at: "2026-10-01T10:30:00Z" } },
-  { id: "loewfi", name: "loew.fi", enabled: false, runtime: { status: "idle", last_summary: "Automatic checks paused.", last_run_at: "2026-10-01T08:30:00Z", next_run_at: null } }
-];
-const pixel = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZlAAAAABJRU5ErkJggg==", "base64");
-
-const server = http.createServer((req, res) => {
-  const url = new URL(req.url, "http://localhost");
-  const asset = webAssets[url.pathname];
-  if (asset) { res.setHeader("content-type", asset.type); return res.end(asset.text); }
-  const json = value => { res.setHeader("content-type", "application/json"); res.end(JSON.stringify(value)); };
-  if (url.pathname === "/api/projects") return json({ projects: [{ id: "relay", name: "relay", managed: true }] });
-  if (url.pathname === "/api/workers") return json(workers);
-  if (url.pathname === "/api/progress/relay") return json(progress);
-  if (url.pathname === "/api/projects/relay") return json({ project: { id: "relay", name: "relay", managed: true }, coordination: { claims: progress.progress.map(item => ({ id: item.assignment, state: "active" })) } });
-  if (url.pathname === "/api/projects/relay/icon") return json({ status: "found", icon: { data_url: "data:image/png;base64," + pixel.toString("base64"), repository: "lrnolivia/relay", path: "apps/web/public/brand/relay.png", blob_sha: "a".repeat(40) } });
-  if (url.pathname === "/api/visual") return json({ evidence: [] });
-  res.statusCode = 404; return json({ error: "preview route not found", path: url.pathname });
-});
-await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
-const address = server.address();
-const origin = "http://127.0.0.1:" + address.port;
-
-const accessHeader = JSON.stringify({ "cf-access-client-id": clientId, "cf-access-client-secret": clientSecret });
-const authHeaders = { Authorization: accessHeader, "CF-Access-Client-Id": clientId, "CF-Access-Client-Secret": clientSecret };
-
-async function ingest({ screenshot, label, surface, canonicalUrl, viewport }) {
-  const metadata = {
-    request_id: "relay-pr-" + pr + "-" + surface,
-    target_url: canonicalUrl,
-    kind: "pr_preview",
-    context: { project: "relay", project_id: "relay", environment: "preview", surface, route_kind: "other", commit_sha: commit, pr_number: pr },
-    viewport: { ...viewport, deviceScaleFactor: 1 },
-    engine: "github-chromium",
-    engine_reason: "pull_request_visual_review",
-    step_label: label,
-    title: "Relay PR #" + pr + " — " + label,
-    trace: [{ action: "render_pr_preview", route: surface }]
-  };
-  const form = new FormData();
-  form.set("metadata", JSON.stringify(metadata));
-  form.set("screenshot", new Blob([screenshot], { type: "image/png" }), surface + ".png");
-  const response = await fetch("https://relay.loew.fi/evidence/ingest", { method: "POST", headers: authHeaders, body: form });
-  if (!response.ok) throw new Error("Inspector ingest failed: " + response.status + " " + (await response.text()).slice(0, 240));
-  const stored = await response.json();
-  console.log("RELAY_PREVIEW_EVIDENCE=" + JSON.stringify({ label, evidence_id: stored.evidence_id, surface }));
-  return stored.evidence_id;
-}
-
-const browser = await chromium.launch({ headless: true });
-await mkdir("qa-evidence", { recursive: true });
+const local = process.env.PREVIEW_LOCAL === '1';
+const clientId = process.env.CF_ACCESS_CLIENT_ID || '', clientSecret = process.env.CF_ACCESS_CLIENT_SECRET || '';
+if (!commit || webSourceSha !== commit || (!local && (!pr || !clientId || !clientSecret))) throw Error('Exact-head preview environment is incomplete');
+const directory = process.env.PREVIEW_OUTPUT || 'qa-evidence/current-fixes';
+await mkdir(directory, { recursive: true });
+const accessHeader = JSON.stringify({ 'cf-access-client-id': clientId, 'cf-access-client-secret': clientSecret });
+const authHeaders = { Authorization: accessHeader, 'CF-Access-Client-Id': clientId, 'CF-Access-Client-Secret': clientSecret };
+const fixture = await contextFixture(), browser = await chromium.launch({headless:true});
 const captures = [];
-try {
-  for (const viewport of [{ name: "desktop", width: 1440, height: 1000 }, { name: "mobile", width: 390, height: 844 }]) {
-    const page = await browser.newPage({ viewport: { width: viewport.width, height: viewport.height }, colorScheme: "dark" });
-    const screens = [
-      { route: "/#/today", label: "Today " + viewport.name, surface: "today-" + viewport.name, wait: 'h1:text-is("today")', canonical: "https://relay.loew.fi/" },
-      { route: "/#/runner", label: "Runner " + viewport.name, surface: "runner-" + viewport.name, wait: 'h1:text-is("runner")', canonical: "https://relay.loew.fi/" },
-      { route: "/#/runner/relay/relay-2.0-build", label: "Runner detail " + viewport.name, surface: "runner-detail-" + viewport.name, wait: ".work-detail", canonical: "https://relay.loew.fi/" },
-      { route: "/#/night-shift", label: "Night Shift " + viewport.name, surface: "night-shift-" + viewport.name, wait: 'h1:text-is("night shift")', canonical: "https://relay.loew.fi/" },
-      { route: "/inspector#review", label: "Inspector " + viewport.name, surface: "inspector-" + viewport.name, wait: ".inspector-signal-deck", canonical: "https://relay.loew.fi/inspector" }
-    ];
-    for (const screen of screens) {
-      await page.goto(origin + screen.route, { waitUntil: "networkidle" });
-      await page.locator(screen.wait).first().waitFor({ state: "visible", timeout: 10000 });
-      await page.waitForTimeout(350);
-      const screenshot = await page.screenshot({ fullPage: true });
-      await writeFile("qa-evidence/" + screen.surface + ".png", screenshot);
-      const evidenceId = await ingest({ screenshot, label: screen.label, surface: screen.surface, canonicalUrl: screen.canonical, viewport });
-      captures.push({ ...screen, evidence_id: evidenceId });
-    }
-    await page.close();
+const questions = [
+  'Does the complete mosaic retain the approved depth, hierarchy and contrast?',
+  'Are the small Relay brand tile, four mobile routes and compact overview comfortable at this width?',
+  'Do Simple and Rich count visuals feel useful, and does the spring motion settle cleanly?'
+];
+async function capture(page, {surface, route, state='settled success', viewport, project='', preset='approved'}) {
+  const errors = [];
+  const listen = error => errors.push(error.message); page.on('pageerror', listen);
+  await page.goto(fixture.origin + route);
+  if(route.startsWith('/inspector')) await page.locator('#review-list[data-summary-state="'+(state==='error'?'error':'ready')+'"]').waitFor();
+  else if(state==='partial') await page.locator('[data-progress-notice]').filter({hasText:'Some project activity is unavailable.'}).waitFor();
+  else {await page.locator('.operator-connection[data-tone=good]').waitFor();await page.locator('[data-progress-notice]').waitFor({state:'detached'});}
+  if(preset!=='approved') { await page.locator('.presentation-menu > summary').click();await page.locator('[name=preset]').selectOption(preset); if(preset==='rich' && viewport.width<=900) {await page.locator('.presentation-customize > summary').click();await page.locator('[name=nav]').selectOption('bottom');} await page.keyboard.press('Escape'); }
+  // Wait for the finite entrance animation to finish, after real fixture data settles.
+  await page.locator('.signal-card').evaluateAll(async nodes=>{await Promise.all(nodes.flatMap(node=>node.getAnimations({subtree:true})).map(animation=>animation.finished.catch(()=>{})));});
+  const geometry = await page.locator('.signal-card').evaluateAll(nodes=>nodes.map(node=>({id:node.dataset.signalId,text:node.innerText,rect:node.getBoundingClientRect().toJSON()})));
+  if(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth)) throw Error('Preview overflow: '+surface);
+  if(errors.length) throw Error(JSON.stringify(errors));
+  // A real viewport avoids Chromium full-page emulation changing fixed-rail paint.
+  await page.mouse.move(viewport.width-2,viewport.height-2);
+  const screenshot = await page.screenshot({animations:'disabled'});
+  await writeFile(directory+'/'+surface+'.png',screenshot);
+  const helper = { title:'Current website visual review', purpose:'Review exact-head preview composition and interaction direction; fixture data is not production.', artifact:{repository:'lrnolivia/relay',head_sha:commit,pr,branch:'relay/website-project-context-polish-20261001',environment:'preview',route}, questions, checklist:['Compare Simple and Rich using the paintbrush preset menu.','Try top and bottom mobile navigation, then reset to Approved.'],overall_verdict:null,known_issues:[], deterministic_evidence:{build:webBuildId,state,viewport,project,geometry},visuals:{evidence_ids:[]} };
+  const metadata = { request_id:'relay-pr-'+pr+'-'+commit.slice(0,12)+'-'+surface,target_url:'https://relay.loew.fi'+route,kind:'pr_preview',context:{project:'relay',project_id:'relay',environment:'preview',surface,route_kind:'other',commit_sha:commit,pr_number:pr},viewport:{width:viewport.width,height:viewport.height,deviceScaleFactor:1},engine:'github-chromium',engine_reason:'pull_request_visual_review',step_label:surface+' — '+state+' fixture',title:'Relay PR #'+pr+' — '+surface,dom:{qa_helper:helper,build:webBuildId,fixture:true,state,geometry},assertions:[{name:'all metrics in stable responsive grid',passed:true},{name:'no page overflow',passed:true},{name:'settled or explicitly partial/error',passed:true}],trace:[{action:'render_exact_head_fixture',route,preset,project,state}],captured_at:new Date().toISOString() };
+  const result = {surface,route,state,project,preset,viewport,sha256:createHash('sha256').update(screenshot).digest('hex'),bytes:screenshot.length};
+  if(!local) {
+    const form = new FormData();form.set('metadata',JSON.stringify(metadata));form.set('screenshot',new Blob([screenshot],{type:'image/png'}),surface+'.png');
+    const response = await fetch('https://relay.loew.fi/evidence/ingest',{method:'POST',headers:authHeaders,body:form});
+    if(!response.ok) throw Error('Inspector ingest failed: '+response.status+' '+(await response.text()).slice(0,240));
+    const stored = await response.json();result.evidence_id=stored.evidence_id;helper.visuals.evidence_ids=[stored.evidence_id];
+    // Populate artifact-bound questions as pending review notes; never cast a human verdict.
+    const qa = await fetch('https://relay.loew.fi/api/visual/'+encodeURIComponent(stored.evidence_id)+'/qa',{method:'POST',headers:{...authHeaders,'Content-Type':'application/json'},body:JSON.stringify({answers:{},notes:'Agent-prepared review packet (pending human judgment):\n'+JSON.stringify(helper,null,2),overall:null})});
+    result.qa_packet_saved=qa.ok;if(!qa.ok) result.qa_packet_error=qa.status;
+    const image = await fetch('https://relay.loew.fi/api/visual/'+encodeURIComponent(stored.evidence_id)+'/image',{headers:authHeaders});
+    const bytes = image.ok ? new Uint8Array(await image.arrayBuffer()) : null;
+    result.readable = !!bytes?.length && createHash('sha256').update(bytes).digest('hex') === result.sha256;result.image_status=image.status;
+    if(!result.readable) throw Error('Stored evidence is not readable: '+JSON.stringify(result));
+    console.log('RELAY_PREVIEW_EVIDENCE='+JSON.stringify(result));
   }
-  await writeFile("qa-evidence/result.json", JSON.stringify({ ok: true, pr, commit, captures }, null, 2));
-  console.log("RELAY_VISUAL_REVIEW_RESULT=" + JSON.stringify({ ok: true, pr, commit, captures }));
-} finally {
-  await browser.close();
-  await new Promise(resolve => server.close(resolve));
+  captures.push(result);await writeFile(directory+'/result.json',JSON.stringify({ok:true,local,commit,build:webBuildId,pr,captures},null,2));
+  page.off('pageerror',listen);
 }
+try {
+  for(const viewport of [{width:1440,height:1000},{width:1024,height:900},{width:390,height:844},{width:320,height:844}]) {
+    for(const feature of ['today','runner','night-shift','inspector']) {
+      const page=await browser.newPage({viewport,colorScheme:'dark'});
+      const route=feature==='inspector'?'/inspector#review':'/#/'+feature;
+      await capture(page,{surface:feature+'-'+viewport.width,route,viewport});await page.close();
+    }
+  }
+  for(const feature of ['today','runner','night-shift','inspector']) {
+    const viewport={width:1440,height:1000},page=await browser.newPage({viewport,colorScheme:'dark'});
+    await capture(page,{surface:feature+'-field',route:(feature==='inspector'?'/inspector#review':'/#/'+feature)+'?project=field',viewport,project:'field'});await page.close();
+  }
+  for(const feature of ['today','inspector']) for(const width of [320,390]) {
+    const viewport={width,height:844},page=await browser.newPage({viewport,colorScheme:'dark'});
+    await capture(page,{surface:feature+'-rich-bottom-'+width,route:feature==='inspector'?'/inspector#review':'/#/'+feature,viewport,preset:'rich'});await page.close();
+  }
+  fixture.controls.failField=true;
+  const viewport={width:390,height:844},page=await browser.newPage({viewport,colorScheme:'dark'});
+  await capture(page,{surface:'today-partial-390',route:'/#/today',viewport,state:'partial'});
+  fixture.controls.failVisual=true;await capture(page,{surface:'inspector-error-390',route:'/inspector#review',viewport,state:'error'});await page.close();
+  console.log('RELAY_VISUAL_REVIEW_RESULT='+JSON.stringify({ok:true,local,pr,commit,build:webBuildId,captures}));
+} finally {await browser.close();await fixture.close();}

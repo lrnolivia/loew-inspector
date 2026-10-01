@@ -1,10 +1,12 @@
 /* Terra Prime HUI foundations: Figma 6hjtD0UcLwU44DPDDrAKht, node 4:4. */
 :root {
   color-scheme: dark;
-  --color-canvas: #121211;
-  --color-surface: #222220;
-  --color-raised: #30302d;
-  --color-floating: #272725;
+  --color-canvas: #151412;
+  --color-surface: #1C1B19;
+  --color-contrast: #211F1D;
+  --color-panel-cap: #514A45;
+  --color-raised: #292724;
+  --color-floating: var(--color-contrast);
   --color-text-primary: #f2f1ee;
   --color-text-secondary: #c2c1bb;
   --color-border: transparent;
@@ -39,6 +41,8 @@
     color-scheme: light;
     --color-canvas: #f3f3f0;
     --color-surface: #fafaf7;
+    --color-contrast: #f0efeb;
+    --color-panel-cap: #d5d1cb;
     --color-raised: #ffffff;
     --color-floating: #ffffff;
     --color-text-primary: #222220;

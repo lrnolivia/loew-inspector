@@ -256,6 +256,9 @@ function renderReview() {
   const bulk = document.querySelector('[data-review-bulk="clear-stale"]');
   const stats = reviewStats();
   const visible = visibleReviews();
+  target.dataset.summaryState = "ready";
+  target.dataset.summaryNeeds = String(stats.pending);
+  target.dataset.summaryVisible = String(Math.min(visible.length, 18));
 
   count.innerHTML = '<span class="status-light" aria-hidden="true"></span><span>' +
     (stats.pending ? stats.pending + " need" + (stats.pending === 1 ? "s" : "") + " you" : "all caught up") +
@@ -347,6 +350,7 @@ export async function loadReview(ui, projectId = "") {
   reviewUi = ui;
   const target = document.querySelector("#review-list");
   const count = document.querySelector("#review-count");
+  target.dataset.summaryState = "loading";
   showLoading(target, "review", "Loading captures");
 
   try {
@@ -382,6 +386,7 @@ export async function loadReview(ui, projectId = "") {
     updateReviewOverview();
     ui.setConnection("connected", "good");
   } catch (error) {
+    target.dataset.summaryState = "error";
     count.textContent = "";
     target.innerHTML = '<div class="operator-empty">Review items could not be loaded right now.</div>';
     ui.setConnection(error.status === 403 ? "access needed" : "couldn’t connect", "bad");

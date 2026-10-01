@@ -1,3 +1,5 @@
+import { projectHref } from "../../../../packages/shared-ui/project-context.js";
+import { useLiveRelay } from "../live";
 import { Link } from "react-router-dom";
 import { ActivitySparkline, ProgressRing, StatusLight } from "./Telemetry";
 import type { ObservedProgress } from "../types";
@@ -17,6 +19,7 @@ function stateLabel(state?: string) {
 }
 
 export function WorkCard({ project, item }: { project: string; item: ObservedProgress }) {
+  const { project: contextProject } = useLiveRelay();
   const title = item.goal || item.assignment.replace(/[-_]+/g, " ");
   const detail = item.waiting_reason || item.recovery_action || item.latest_event?.type?.replaceAll("-", " ") || "No newer execution evidence.";
   const percent = item.state === "complete" ? 100 : undefined;
@@ -34,7 +37,7 @@ export function WorkCard({ project, item }: { project: string; item: ObservedPro
           {item.next_action && <div className="next-step"><span>next</span><strong>{item.next_action}</strong></div>}
           <div className="work-card-bottom">
             <ActivitySparkline events={item.events} />
-            <Link className="text-action" to={`/runner/${encodeURIComponent(project)}/${encodeURIComponent(item.assignment)}`}>view live progress</Link>
+            <Link className="text-action" to={projectHref(`/runner/${encodeURIComponent(project)}/${encodeURIComponent(item.assignment)}`, contextProject)}>view live progress</Link>
           </div>
         </div>
         <ProgressRing percent={percent} label={phase} />

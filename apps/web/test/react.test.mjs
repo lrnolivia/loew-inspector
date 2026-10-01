@@ -94,11 +94,11 @@ test("Relay 2.0 React shell renders human-first live surfaces responsively", asy
     const second = await page.locator(".signal-card").nth(1).boundingBox();
     assert.ok(track && first && second);
     const third = await page.locator(".signal-card").nth(2).boundingBox();
-    assert.ok(third && second.x > first.x && third.x > second.x, "desktop signal deck preserves the summary order");
-    assert.ok(second.x + second.width <= track.x + track.width + 2, "two compact branded cards are visible together");
-    assert.ok(third.x >= track.x + track.width - 2, "remaining summaries are available by horizontal pan");
-    assert.equal(await page.locator(".signal-mark").count(), 4);
-    assert.equal(await page.locator(".signal-card").first().getAttribute("tabindex"), "0");
+    assert.ok(third && second.x > first.x && third.y > first.y, "mosaic preserves left-to-right then top-to-bottom summary order");
+    assert.ok(second.x + second.width <= track.x + track.width + 2);
+    assert.ok(third.x >= track.x && third.x + third.width <= track.x + track.width + 2, "all summaries fit the grid without horizontal navigation");
+    assert.equal(await page.locator(".signal-mark svg").count(), 4);
+    assert.equal(await page.locator(".signal-card").first().getAttribute("tabindex"), null);
 
     await page.getByRole("link", { name: /^runner/ }).click();
     await page.getByRole("heading", { name: "runner", level: 1 }).waitFor();

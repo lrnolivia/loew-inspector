@@ -1,11 +1,14 @@
+import { projectHref } from "../../../../packages/shared-ui/project-context.js";
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useLiveRelay } from "../live";
 import { loadAssignment } from "../api";
 import { SignalDeck } from "../components/SignalDeck";
 import { ActivitySparkline, ProgressRing, StatusLight } from "../components/Telemetry";
 import type { ObservedProgress } from "../types";
 
 export function RunnerWorkPage() {
+  const { project: contextProject } = useLiveRelay();
   const { project = "", assignment = "" } = useParams();
   const [item, setItem] = useState<ObservedProgress | null>(null);
   const [status, setStatus] = useState<"connecting" | "live" | "reconnecting" | "stale" | "offline">("connecting");
@@ -45,7 +48,7 @@ export function RunnerWorkPage() {
 
   return (
     <div className="page operator-page react-page work-detail">
-      <Link className="back-link" to="/runner">← runner</Link>
+      <Link className="back-link" to={projectHref("/runner", contextProject)}>← runner</Link>
       <SignalDeck cards={cards} />
       <div className="work-detail-head">
         <div>

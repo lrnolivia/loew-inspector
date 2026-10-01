@@ -1,3 +1,4 @@
+import { ProjectSwitcher } from "../components/ProjectSwitcher";
 import { FeatureHeader } from "../components/FeatureHeader";
 import { SignalDeck } from "../components/SignalDeck";
 import { ProgressNotice } from "../components/ProgressNotice";
@@ -26,6 +27,7 @@ export function RunnerPage() {
   return (
     <div className="page operator-page react-page">
       <FeatureHeader feature="runner" title="runner" subtitle="coordinate" />
+      <ProjectSwitcher />
       <ProgressNotice />
       <SignalDeck cards={cards} feature="runner" />
       <section className="operator-section">

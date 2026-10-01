@@ -1,3 +1,4 @@
+import { ProjectSwitcher } from "../components/ProjectSwitcher";
 import { FeatureHeader } from "../components/FeatureHeader";
 import { SignalDeck } from "../components/SignalDeck";
 import { StatusLight } from "../components/Telemetry";
@@ -25,15 +26,16 @@ export function NightShiftPage() {
 
   const answer = !snapshot ? "pending" : !enabled.length ? "nothing scheduled" : next ? relative(next) : "schedule enabled";
   const cards = [
-    { id: "next", label: "will anything happen?", value: answer, detail: !enabled.length ? "Automatic checks are paused or unavailable." : next ? `next reported check ${new Date(next).toLocaleString()}` : "Automatic work is enabled, but Relay has no next-run time to show.", tone: enabled.length ? "good" : "quiet" },
-    { id: "projects", label: "included projects", value: String(enabled.length), detail: enabled.length ? "Projects with automatic observation enabled." : "No project is currently scheduled.", tone: enabled.length ? "wait" : "quiet" },
-    { id: "attention", label: "needs attention", value: String(attention.length), detail: attention.length ? "An unattended check reported a blocker or error." : "No unattended check currently reports an error.", tone: attention.length ? "act" : "quiet" },
+    { id: "next", label: "will anything happen?", value: answer, detail: !snapshot ? "Waiting for Relay’s worker registry." : !enabled.length ? "Automatic checks are paused or unavailable." : next ? `next reported check ${new Date(next).toLocaleString()}` : "Automatic work is enabled, but Relay has no next-run time to show.", tone: enabled.length ? "good" : "quiet" },
+    { id: "projects", label: "included projects", value: snapshot ? String(enabled.length) : "pending", detail: !snapshot ? "Waiting for Relay’s worker registry." : enabled.length ? "Projects with automatic observation enabled." : "No project is currently scheduled.", tone: enabled.length ? "wait" : "quiet" },
+    { id: "attention", label: "needs attention", value: snapshot ? String(attention.length) : "pending", detail: !snapshot ? "Waiting for Relay’s worker registry." : attention.length ? "An unattended check reported a blocker or error." : "No unattended check currently reports an error.", tone: attention.length ? "act" : "quiet" },
     { id: "monitoring", label: "monitoring", value: state, detail: snapshot ? `dashboard refreshed ${new Date(snapshot.fetchedAt).toLocaleTimeString()}` : "waiting for Relay", tone: state === "live" ? "good" : state === "stale" ? "warn" : "quiet" }
   ];
 
   return (
     <div className="page operator-page react-page">
       <FeatureHeader feature="night-shift" title="night shift" subtitle="monitor" />
+      <ProjectSwitcher />
       <SignalDeck cards={cards} feature="night-shift" />
       <section className="operator-section">
         <div className="section-heading"><h2>while you were away</h2><span>{results.length} results on record</span></div>
@@ -45,7 +47,7 @@ export function NightShiftPage() {
               <p>{worker.runtime?.last_summary || worker.runtime?.last_error || "No result summary was recorded."}</p>
               <small>last run {relative(worker.runtime?.last_run_at)} · {worker.enabled ? `next ${relative(worker.runtime?.next_run_at)}` : "automatic checks paused"}</small>
             </article>;
-          }) : <div className="empty-card"><strong>No unattended results yet.</strong><p>Night shift will distinguish an empty history from a completed run with a problem.</p></div>}
+          }) : <div className="empty-card"><strong>{snapshot ? "No unattended results yet." : "Checking unattended results."}</strong><p>{snapshot ? "Night shift will distinguish an empty history from a completed run with a problem." : "Waiting for Relay’s worker registry."}</p></div>}
         </div>
       </section>
     </div>
