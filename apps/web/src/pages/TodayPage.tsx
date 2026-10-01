@@ -37,7 +37,7 @@ export function TodayPage() {
   return (
     <div className="page operator-page react-page">
       <FeatureHeader feature="today" title="today" subtitle="focus" />
-      <SignalDeck cards={cards} />
+      <SignalDeck cards={cards} feature="today" />
 
       <section className="operator-section">
         <h2>needs you</h2>
