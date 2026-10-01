@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T04:25:12.513Z",
+  "updated_at": "2026-10-01T04:35:05.840Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3586,8 +3586,8 @@
       "id": "relay-1.9.8-inline-card-design-system-20261001",
       "owner": "relay-1.9.8-inline-card-design-system-20261001",
       "goal": "Ship Relay 1.9.8 as the agentic-tool contract hardening release: audit and improve Relay's MCP/tool surface using the Arcade Agentic Tool Patterns as the normative review baseline for production-grade tool interface design, discovery, composition, execution, output shaping, context, resilience and security.",
-      "acceptance": "Use https://arcade.dev/patterns/llm.txt as the external tool-design review baseline, not as a blind checklist. For every Relay tool family and durable operation recipe, classify the applicable patterns and either satisfy them or record a concise deliberate deviation. Required baseline expectations include: LLM-optimized tool descriptions; clear query/command/discovery separation; constrained typed inputs with sensible defaults and human-friendly identifiers where safe; explicit dependency/call-order hints; layered discovery/capability matching/health checks; composable abstraction levels, task bundles/batching where they reduce agent loops, and explicit operation chains; idempotency/readback/transaction/timeout boundaries appropriate to mutation risk; token-efficient structured outputs with progressive detail and resource references instead of giant payloads; explicit context/identity boundaries; structured error classification with retryability, user/auth requirements and actionable recovery guidance; graceful degradation/fallback only when authority and truth are preserved; credentials injected server-side, permissions enforced in code, scopes declared, and auditable mutations. Preserve Relay's existing canonical authority model, exact-head/CAS safety, Runner ownership, SOURCE/CLOUD/VERIFY boundaries and no-standing-secret rules. Add a versioned Relay tool-design standard plus tests/evals that reject ambiguous descriptions, unconstrained dangerous inputs, raw opaque errors, hidden side effects, unauthorized fallback paths, oversized default responses and tools that duplicate an existing higher-level operation. Audit existing tools and operation recipes; fix high-value gaps without exploding the tool count. Arcade patterns are guidance: when two patterns are alternatives, choose the one appropriate to the tool's role and document why.",
-      "next_action": "Start after 1.9.7 creative/platform skills are stable and before 1.9.9 ChatGPT-native UI. First add the versioned Relay tool-design standard and an applicability matrix for every exposed MCP tool/tool family. Audit descriptions, schemas, discovery, errors, outputs, composition and security. Then patch the highest-impact gaps, add conformance tests/evals, and make the operation framework consume the same standard. Finish with a fresh-client tool-schema review proving agents can discover the right capability, recover from representative failures, and avoid unnecessary low-level tool chains.",
+      "acceptance": "In addition to the existing 1.9.8 tool-contract hardening, publish a request-routing skill that Relay/ChatGPT can use before creating or amending work. The skill must infer canonical work territory from the user's meaning rather than requiring them to name internal teams. Explicit user team/staff/role instructions always win. It must map systems/plumbing/contracts/state/lifecycle/architecture work to Runner architecture with Ellis as the natural systems owner; distinguish maintenance/lifecycle hygiene that belongs to Adrian; map visual/art direction to Inspector/Valentina, product/interaction UX to Inspector/Vivienne, implementation/build execution to Runner, source/Git integration to Source/Rafael, cloud/runtime reliability to Cloud/Gabriel, release/publication to Release/Luca, knowledge/skill discovery to Skills/Imani, research/evidence to Night Shift/Naomi, and coordination/continuity to Night Shift/Julian. Mixed requests must identify one primary dependency and bounded supporting teams/staff. Consumer-vs-implementer language such as 'Runner implements on behalf of Inspector' must route the implementing plumbing to Runner while retaining Inspector as a supporting/verification context. The skill must instruct the model to emit/use canonical category, primary_role, supporting_roles, primary_team/supporting_teams when supported, primary_staff/supporting_staff only when the mapping is clear, plus concise routing rationale. Tests must cover plumbing, maintenance, design, UX, cloud, source, release, research, coordination, mixed consumer/implementer requests, and explicit overrides. Preserve machine owner IDs and authorization; semantic routing is presentation/planning metadata, not authority.",
+      "next_action": "Add and publish the semantic request-routing skill on the current 1.9.8 branch, wire it into Relay's MCP skill/resource catalog, add focused tests for plain-language classification examples and override rules, then repair the current PR #78 test failure and rerun exact-head checks before merge/deploy.",
       "paths": [
         "docs/relay/TOOL_DESIGN_STANDARD.md",
         "docs/relay/RELAY_1_9_8_RELEASE.md",
@@ -3599,20 +3599,20 @@
         "src/operations.js",
         "src/operation-recipes.js",
         "test/tools/",
-        "test/tool-evals/"
+        "test/tool-evals/",
+        "src/relay-entry.test.js",
+        "test/tool-contract.test.mjs",
+        "test/tool-evals.test.mjs",
+        "src/request-routing-skill.js",
+        "src/request-routing-skill.test.js"
       ],
       "resources": [
         "relay-1.9.8-release",
-        "relay-agentic-tool-standard",
-        "arcade-agentic-tool-patterns",
-        "relay-tool-applicability-matrix",
-        "relay-tool-discovery",
-        "relay-tool-composition",
-        "relay-structured-errors",
-        "relay-recovery-guides",
-        "relay-token-efficient-results",
-        "relay-tool-security",
-        "relay-tool-conformance-evals"
+        "relay-agentic-tool-contracts",
+        "relay-request-intent-routing",
+        "relay-semantic-work-routing",
+        "relay-explicit-routing-override",
+        "relay-plumbing-systems-routing"
       ],
       "task_class": "architecture",
       "ledger_refs": [
@@ -3651,7 +3651,7 @@
       ],
       "state": "claimed",
       "created_at": "2026-10-01T02:56:35.886Z",
-      "amendment_count": 2,
+      "amendment_count": 3,
       "amendments": [
         {
           "at": "2026-10-01T02:58:34.331Z",
@@ -3837,9 +3837,83 @@
               "knowledge-planner"
             ]
           }
+        },
+        {
+          "at": "2026-10-01T04:35:05.840Z",
+          "by": "relay-1.9.8-inline-card-design-system-20261001",
+          "reason": "User requires Relay to infer work territory from natural-language requests so they do not have to manually label plumbing/systems/design/cloud/etc. Extend 1.9.8 agentic hardening with semantic request routing.",
+          "fields": [
+            "acceptance",
+            "next_action",
+            "paths",
+            "resources"
+          ],
+          "before": {
+            "acceptance": "Use https://arcade.dev/patterns/llm.txt as the external tool-design review baseline, not as a blind checklist. For every Relay tool family and durable operation recipe, classify the applicable patterns and either satisfy them or record a concise deliberate deviation. Required baseline expectations include: LLM-optimized tool descriptions; clear query/command/discovery separation; constrained typed inputs with sensible defaults and human-friendly identifiers where safe; explicit dependency/call-order hints; layered discovery/capability matching/health checks; composable abstraction levels, t...",
+            "next_action": "Implement the 1.9.8 versioned tool-design standard and applicability matrix, structured error envelope/recovery guidance, high-value tool-description/dependency-hint improvements, durable operation-recipe contracts, and executable conformance/eval coverage. Root test files are included because repository CI discovers test/*.test.mjs; update the relay-entry version assertion for the 1.9.8 runtime identity.",
+            "paths": [
+              "docs/relay/TOOL_DESIGN_STANDARD.md",
+              "docs/relay/RELAY_1_9_8_RELEASE.md",
+              "contracts/tools/",
+              "src/relay-entry.js",
+              "src/runner-control.js",
+              "src/source-lifecycle.js",
+              "src/source-text-mutation.js",
+              "src/operations.js",
+              "src/operation-recipes.js",
+              "test/tools/",
+              "test/tool-evals/",
+              "src/relay-entry.test.js",
+              "test/tool-contract.test.mjs",
+              "test/tool-evals.test.mjs"
+            ],
+            "resources": [
+              "relay-1.9.8-release",
+              "relay-agentic-tool-standard",
+              "arcade-agentic-tool-patterns",
+              "relay-tool-applicability-matrix",
+              "relay-tool-discovery",
+              "relay-tool-composition",
+              "relay-structured-errors",
+              "relay-recovery-guides",
+              "relay-token-efficient-results",
+              "relay-tool-security",
+              "relay-tool-conformance-evals"
+            ]
+          },
+          "after": {
+            "acceptance": "In addition to the existing 1.9.8 tool-contract hardening, publish a request-routing skill that Relay/ChatGPT can use before creating or amending work. The skill must infer canonical work territory from the user's meaning rather than requiring them to name internal teams. Explicit user team/staff/role instructions always win. It must map systems/plumbing/contracts/state/lifecycle/architecture work to Runner architecture with Ellis as the natural systems owner; distinguish maintenance/lifecycle hygiene that belongs to Adrian; map visual/art direction to Inspector/Valentina, product/interacti...",
+            "next_action": "Add and publish the semantic request-routing skill on the current 1.9.8 branch, wire it into Relay's MCP skill/resource catalog, add focused tests for plain-language classification examples and override rules, then repair the current PR #78 test failure and rerun exact-head checks before merge/deploy.",
+            "paths": [
+              "docs/relay/TOOL_DESIGN_STANDARD.md",
+              "docs/relay/RELAY_1_9_8_RELEASE.md",
+              "contracts/tools/",
+              "src/relay-entry.js",
+              "src/runner-control.js",
+              "src/source-lifecycle.js",
+              "src/source-text-mutation.js",
+              "src/operations.js",
+              "src/operation-recipes.js",
+              "test/tools/",
+              "test/tool-evals/",
+              "src/relay-entry.test.js",
+              "test/tool-contract.test.mjs",
+              "test/tool-evals.test.mjs",
+              "src/request-routing-skill.js",
+              "src/request-routing-skill.test.js"
+            ],
+            "resources": [
+              "relay-1.9.8-release",
+              "relay-agentic-tool-contracts",
+              "relay-request-intent-routing",
+              "relay-semantic-work-routing",
+              "relay-explicit-routing-override",
+              "relay-plumbing-systems-routing"
+            ]
+          }
         }
       ],
-      "updated_at": "2026-10-01T03:16:06.080Z"
+      "updated_at": "2026-10-01T04:35:05.840Z"
     },
     {
       "id": "relay-1.9.9-chatgpt-native-experience-20261001",
@@ -6470,24 +6544,21 @@
         "test/tool-evals/",
         "src/relay-entry.test.js",
         "test/tool-contract.test.mjs",
-        "test/tool-evals.test.mjs"
+        "test/tool-evals.test.mjs",
+        "src/request-routing-skill.js",
+        "src/request-routing-skill.test.js"
       ],
       "resources": [
         "relay-1.9.8-release",
-        "relay-agentic-tool-standard",
-        "arcade-agentic-tool-patterns",
-        "relay-tool-applicability-matrix",
-        "relay-tool-discovery",
-        "relay-tool-composition",
-        "relay-structured-errors",
-        "relay-recovery-guides",
-        "relay-token-efficient-results",
-        "relay-tool-security",
-        "relay-tool-conformance-evals"
+        "relay-agentic-tool-contracts",
+        "relay-request-intent-routing",
+        "relay-semantic-work-routing",
+        "relay-explicit-routing-override",
+        "relay-plumbing-systems-routing"
       ],
       "goal": "Ship Relay 1.9.8 as the agentic-tool contract hardening release: audit and improve Relay's MCP/tool surface using the Arcade Agentic Tool Patterns as the normative review baseline for production-grade tool interface design, discovery, composition, execution, output shaping, context, resilience and security.",
-      "acceptance": "Use https://arcade.dev/patterns/llm.txt as the external tool-design review baseline, not as a blind checklist. For every Relay tool family and durable operation recipe, classify the applicable patterns and either satisfy them or record a concise deliberate deviation. Required baseline expectations include: LLM-optimized tool descriptions; clear query/command/discovery separation; constrained typed inputs with sensible defaults and human-friendly identifiers where safe; explicit dependency/call-order hints; layered discovery/capability matching/health checks; composable abstraction levels, task bundles/batching where they reduce agent loops, and explicit operation chains; idempotency/readback/transaction/timeout boundaries appropriate to mutation risk; token-efficient structured outputs with progressive detail and resource references instead of giant payloads; explicit context/identity boundaries; structured error classification with retryability, user/auth requirements and actionable recovery guidance; graceful degradation/fallback only when authority and truth are preserved; credentials injected server-side, permissions enforced in code, scopes declared, and auditable mutations. Preserve Relay's existing canonical authority model, exact-head/CAS safety, Runner ownership, SOURCE/CLOUD/VERIFY boundaries and no-standing-secret rules. Add a versioned Relay tool-design standard plus tests/evals that reject ambiguous descriptions, unconstrained dangerous inputs, raw opaque errors, hidden side effects, unauthorized fallback paths, oversized default responses and tools that duplicate an existing higher-level operation. Audit existing tools and operation recipes; fix high-value gaps without exploding the tool count. Arcade patterns are guidance: when two patterns are alternatives, choose the one appropriate to the tool's role and document why.",
-      "next_action": "Implement the 1.9.8 versioned tool-design standard and applicability matrix, structured error envelope/recovery guidance, high-value tool-description/dependency-hint improvements, durable operation-recipe contracts, and executable conformance/eval coverage. Root test files are included because repository CI discovers test/*.test.mjs; update the relay-entry version assertion for the 1.9.8 runtime identity.",
+      "acceptance": "In addition to the existing 1.9.8 tool-contract hardening, publish a request-routing skill that Relay/ChatGPT can use before creating or amending work. The skill must infer canonical work territory from the user's meaning rather than requiring them to name internal teams. Explicit user team/staff/role instructions always win. It must map systems/plumbing/contracts/state/lifecycle/architecture work to Runner architecture with Ellis as the natural systems owner; distinguish maintenance/lifecycle hygiene that belongs to Adrian; map visual/art direction to Inspector/Valentina, product/interaction UX to Inspector/Vivienne, implementation/build execution to Runner, source/Git integration to Source/Rafael, cloud/runtime reliability to Cloud/Gabriel, release/publication to Release/Luca, knowledge/skill discovery to Skills/Imani, research/evidence to Night Shift/Naomi, and coordination/continuity to Night Shift/Julian. Mixed requests must identify one primary dependency and bounded supporting teams/staff. Consumer-vs-implementer language such as 'Runner implements on behalf of Inspector' must route the implementing plumbing to Runner while retaining Inspector as a supporting/verification context. The skill must instruct the model to emit/use canonical category, primary_role, supporting_roles, primary_team/supporting_teams when supported, primary_staff/supporting_staff only when the mapping is clear, plus concise routing rationale. Tests must cover plumbing, maintenance, design, UX, cloud, source, release, research, coordination, mixed consumer/implementer requests, and explicit overrides. Preserve machine owner IDs and authorization; semantic routing is presentation/planning metadata, not authority.",
+      "next_action": "Add and publish the semantic request-routing skill on the current 1.9.8 branch, wire it into Relay's MCP skill/resource catalog, add focused tests for plain-language classification examples and override rules, then repair the current PR #78 test failure and rerun exact-head checks before merge/deploy.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-034"
@@ -6539,8 +6610,85 @@
       "base_sha": "8a49308c554a1269c8b3d1cf30ede3d7775bdb5c",
       "state": "active",
       "created_at": "2026-10-01T04:23:46.405Z",
-      "updated_at": "2026-10-01T04:25:12.513Z",
-      "lease_until": "2026-10-01T16:25:12.513Z"
+      "updated_at": "2026-10-01T04:35:05.840Z",
+      "lease_until": "2026-10-01T16:35:05.840Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T04:35:05.840Z",
+          "by": "relay-1.9.8-inline-card-design-system-20261001",
+          "reason": "User requires Relay to infer work territory from natural-language requests so they do not have to manually label plumbing/systems/design/cloud/etc. Extend 1.9.8 agentic hardening with semantic request routing.",
+          "fields": [
+            "acceptance",
+            "next_action",
+            "paths",
+            "resources"
+          ],
+          "before": {
+            "acceptance": "Use https://arcade.dev/patterns/llm.txt as the external tool-design review baseline, not as a blind checklist. For every Relay tool family and durable operation recipe, classify the applicable patterns and either satisfy them or record a concise deliberate deviation. Required baseline expectations include: LLM-optimized tool descriptions; clear query/command/discovery separation; constrained typed inputs with sensible defaults and human-friendly identifiers where safe; explicit dependency/call-order hints; layered discovery/capability matching/health checks; composable abstraction levels, t...",
+            "next_action": "Implement the 1.9.8 versioned tool-design standard and applicability matrix, structured error envelope/recovery guidance, high-value tool-description/dependency-hint improvements, durable operation-recipe contracts, and executable conformance/eval coverage. Root test files are included because repository CI discovers test/*.test.mjs; update the relay-entry version assertion for the 1.9.8 runtime identity.",
+            "paths": [
+              "docs/relay/TOOL_DESIGN_STANDARD.md",
+              "docs/relay/RELAY_1_9_8_RELEASE.md",
+              "contracts/tools/",
+              "src/relay-entry.js",
+              "src/runner-control.js",
+              "src/source-lifecycle.js",
+              "src/source-text-mutation.js",
+              "src/operations.js",
+              "src/operation-recipes.js",
+              "test/tools/",
+              "test/tool-evals/",
+              "src/relay-entry.test.js",
+              "test/tool-contract.test.mjs",
+              "test/tool-evals.test.mjs"
+            ],
+            "resources": [
+              "relay-1.9.8-release",
+              "relay-agentic-tool-standard",
+              "arcade-agentic-tool-patterns",
+              "relay-tool-applicability-matrix",
+              "relay-tool-discovery",
+              "relay-tool-composition",
+              "relay-structured-errors",
+              "relay-recovery-guides",
+              "relay-token-efficient-results",
+              "relay-tool-security",
+              "relay-tool-conformance-evals"
+            ]
+          },
+          "after": {
+            "acceptance": "In addition to the existing 1.9.8 tool-contract hardening, publish a request-routing skill that Relay/ChatGPT can use before creating or amending work. The skill must infer canonical work territory from the user's meaning rather than requiring them to name internal teams. Explicit user team/staff/role instructions always win. It must map systems/plumbing/contracts/state/lifecycle/architecture work to Runner architecture with Ellis as the natural systems owner; distinguish maintenance/lifecycle hygiene that belongs to Adrian; map visual/art direction to Inspector/Valentina, product/interacti...",
+            "next_action": "Add and publish the semantic request-routing skill on the current 1.9.8 branch, wire it into Relay's MCP skill/resource catalog, add focused tests for plain-language classification examples and override rules, then repair the current PR #78 test failure and rerun exact-head checks before merge/deploy.",
+            "paths": [
+              "docs/relay/TOOL_DESIGN_STANDARD.md",
+              "docs/relay/RELAY_1_9_8_RELEASE.md",
+              "contracts/tools/",
+              "src/relay-entry.js",
+              "src/runner-control.js",
+              "src/source-lifecycle.js",
+              "src/source-text-mutation.js",
+              "src/operations.js",
+              "src/operation-recipes.js",
+              "test/tools/",
+              "test/tool-evals/",
+              "src/relay-entry.test.js",
+              "test/tool-contract.test.mjs",
+              "test/tool-evals.test.mjs",
+              "src/request-routing-skill.js",
+              "src/request-routing-skill.test.js"
+            ],
+            "resources": [
+              "relay-1.9.8-release",
+              "relay-agentic-tool-contracts",
+              "relay-request-intent-routing",
+              "relay-semantic-work-routing",
+              "relay-explicit-routing-override",
+              "relay-plumbing-systems-routing"
+            ]
+          }
+        }
+      ]
     }
   ],
   "migrated_from": "loew-inspector"
