@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T02:58:34.331Z",
+  "updated_at": "2026-10-01T02:58:41.388Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -53,28 +53,18 @@
     {
       "id": "relay-mcp-app-ui-20260930",
       "owner": "relay-mcp-app-ui-20260930",
-      "goal": "Build Relay's persistent ChatGPT app workspace as a rich control-center experience distinct from inline conversational response cards.",
-      "acceptance": "When Relay is opened as an app inside ChatGPT, it provides a persistent workspace/control-center experience with cross-project navigation, Today, operations, release/deployment state, history, QA/review flows, and sustained interaction. It consumes canonical Runner/Source/Cloud/Verify state and durable receipts without creating parallel state. Human-QA uses the canonical QA-helper/Visuals contracts and may expand into focused review surfaces. The opened-app workspace is optimized for the ChatGPT app container and may reuse shared Relay components/view-models, but it does not own the inline conversational card visual system. Inline cards are delegated to the dedicated 1.9.8 card-system release. Mobile/desktop remain useful; exact artifact identity and stale-state invalidation are preserved.",
-      "next_action": "Begin after the durable operation framework is stable enough to consume. Focus on the opened Relay app workspace/control-center shell and sustained workflows; consume the 1.9.8 inline card system rather than designing or owning inline conversational cards here.",
+      "goal": "Historical lineage only: the standalone opened-Relay MCP App workspace track was absorbed into Relay 1.9.9 so the opened app's interactive chat/workspace and inline response cards are designed and shipped together.",
+      "acceptance": "No independent implementation should start from this assignment. Its persistent ChatGPT app workspace, QA/review, cross-project navigation, sustained interaction and operation-receipt intent are owned by successor assignment relay-1.9.9-chatgpt-native-experience-20261001.",
+      "next_action": "Do not claim independently. Continue the opened Relay app workspace and interactive in-app chat under relay-1.9.9-chatgpt-native-experience-20261001.",
       "paths": [
-        "src/relay-app-ui.js",
-        "src/relay-project-ui.js",
-        "src/relay-release-ui.js",
-        "src/relay-qa-ui.js",
-        "src/relay-ui.js",
-        "src/relay-entry.js",
-        "src/relay-app-ui.test.js"
+        "docs/relay/RELAY_MCP_APP_UI_LINEAGE.md"
       ],
       "resources": [
-        "relay-opened-app-workspace",
-        "relay-operation-framework",
-        "runner-human-qa",
-        "relay-publication-receipts",
-        "relay-three-surface-ui-contract"
+        "relay-superseded-lineage"
       ],
       "state": "queued",
       "created_at": "2026-09-30T13:25:51.183Z",
-      "amendment_count": 2,
+      "amendment_count": 3,
       "amendments": [
         {
           "at": "2026-10-01T02:51:08.664Z",
@@ -167,9 +157,53 @@
               "relay-three-surface-ui-contract"
             ]
           }
+        },
+        {
+          "at": "2026-10-01T02:58:41.388Z",
+          "by": "relay-mcp-app-ui-20260930",
+          "reason": "Absorb the separate opened-app track into the user's unified 1.9.9 ChatGPT-native experience release.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action",
+            "paths",
+            "resources"
+          ],
+          "before": {
+            "goal": "Build Relay's persistent ChatGPT app workspace as a rich control-center experience distinct from inline conversational response cards.",
+            "acceptance": "When Relay is opened as an app inside ChatGPT, it provides a persistent workspace/control-center experience with cross-project navigation, Today, operations, release/deployment state, history, QA/review flows, and sustained interaction. It consumes canonical Runner/Source/Cloud/Verify state and durable receipts without creating parallel state. Human-QA uses the canonical QA-helper/Visuals contracts and may expand into focused review surfaces. The opened-app workspace is optimized for the ChatGPT app container and may reuse shared Relay components/view-models, but it does not own the inline ...",
+            "next_action": "Begin after the durable operation framework is stable enough to consume. Focus on the opened Relay app workspace/control-center shell and sustained workflows; consume the 1.9.8 inline card system rather than designing or owning inline conversational cards here.",
+            "paths": [
+              "src/relay-app-ui.js",
+              "src/relay-project-ui.js",
+              "src/relay-release-ui.js",
+              "src/relay-qa-ui.js",
+              "src/relay-ui.js",
+              "src/relay-entry.js",
+              "src/relay-app-ui.test.js"
+            ],
+            "resources": [
+              "relay-opened-app-workspace",
+              "relay-operation-framework",
+              "runner-human-qa",
+              "relay-publication-receipts",
+              "relay-three-surface-ui-contract"
+            ]
+          },
+          "after": {
+            "goal": "Historical lineage only: the standalone opened-Relay MCP App workspace track was absorbed into Relay 1.9.9 so the opened app's interactive chat/workspace and inline response cards are designed and shipped together.",
+            "acceptance": "No independent implementation should start from this assignment. Its persistent ChatGPT app workspace, QA/review, cross-project navigation, sustained interaction and operation-receipt intent are owned by successor assignment relay-1.9.9-chatgpt-native-experience-20261001.",
+            "next_action": "Do not claim independently. Continue the opened Relay app workspace and interactive in-app chat under relay-1.9.9-chatgpt-native-experience-20261001.",
+            "paths": [
+              "docs/relay/RELAY_MCP_APP_UI_LINEAGE.md"
+            ],
+            "resources": [
+              "relay-superseded-lineage"
+            ]
+          }
         }
       ],
-      "updated_at": "2026-10-01T02:55:59.313Z"
+      "updated_at": "2026-10-01T02:58:41.388Z"
     },
     {
       "id": "relay-web-dashboard-20260930",
