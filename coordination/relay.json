@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T03:16:27.124Z",
+  "updated_at": "2026-10-01T03:19:08.397Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3948,7 +3948,7 @@
       "owner": "relay-1.9-wrapup-20261001",
       "goal": "Ship Relay 1.9.6.2 as operational staff routing plus the conversational contextual-card repair, then continue as the wrap-up worker for the remaining Relay 1.9 patch train through 1.9.9 under the umbrella mandate.",
       "acceptance": "Add durable assignment-level primary_staff and supporting_staff metadata resolved from the canonical sticky staff registry while preserving machine owner IDs and authorization underneath. Validate active/reserve/retired rules, duplicates, amend history, role/staff compatibility where appropriate, and deterministic fallback. Carry named teams through queue/claim/amend, resume/updates, worker communication, executive status and human-first presentation. Repair the normal in-chat MCP visual path: contextual Relay tools must attach and render the compact context-card surface from src/relay-chat-ui.js / ui://relay/context-card/...; do not substitute the full control-center/dashboard. Cards should represent staff ownership, status/progress, connected handoffs, blockers, QA and useful actions with technical evidence subordinate. The dashboard remains an explicit Open Relay destination. Preserve exact machine/evidence identity, no staff-based authorization, no productivity scoring. Add regression tests for staff routing and card descriptor/resource linkage, pass exact-head admission/CI, merge/deploy, refresh ChatGPT and verify the card renders in a fresh consumer. After 1.9.6.2 verification, continue owning coherent 1.9.7/1.9.8/1.9.9 successors from current canonical findings/state without stopping for reassignment or creating empty versions; close the umbrella only after final fresh-consumer verification.",
-      "next_action": "Claim from current main. First make primary_staff/supporting_staff canonical Runner metadata and project it through resume/updates/communication. Then repair and verify the contextual in-chat card descriptor/resource path, keeping the full dashboard separate. Ship 1.9.6.2 exact-head. After verification, read the 1.9 umbrella + open findings and continue through coherent 1.9.7, 1.9.8 and 1.9.9 work until the umbrella can close.",
+      "next_action": "PR #72 merged exact head a015761290cf86ada0c48e0537dbede1ce4e6cb2 as de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7; deployed Worker version 14b11840-1c72-4402-a5da-e47d33e2ac4d at 100% via 10961170-a08b-4074-936f-7189084bcbcb. Runtime/source readback reports 1.9.6.2 and context-card/v2. Refresh ChatGPT Relay metadata and verify named staff, updated coordinate schema and compact card in a fresh consumer before completing this slice and continuing successors.",
       "paths": [
         "contracts/staff-routing/",
         "contracts/assignments/",
@@ -4003,7 +4003,39 @@
         "verifier"
       ],
       "state": "claimed",
-      "created_at": "2026-10-01T02:57:49.713Z"
+      "created_at": "2026-10-01T02:57:49.713Z",
+      "primary_staff": "julian",
+      "supporting_staff": [
+        "ellis",
+        "roman"
+      ],
+      "updated_at": "2026-10-01T03:19:08.397Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T03:19:08.397Z",
+          "by": "relay-1.9-wrapup-20261001",
+          "reason": "Bind the wrap-up assignment to the deployed canonical staff resolver and record exact-source deployment before refreshed-consumer verification.",
+          "fields": [
+            "next_action",
+            "primary_staff",
+            "supporting_staff"
+          ],
+          "before": {
+            "next_action": "Complete canonical staff/card regression checks including release-version compatibility, then exact-head publication.",
+            "primary_staff": null,
+            "supporting_staff": null
+          },
+          "after": {
+            "next_action": "PR #72 merged exact head a015761290cf86ada0c48e0537dbede1ce4e6cb2 as de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7; deployed Worker version 14b11840-1c72-4402-a5da-e47d33e2ac4d at 100% via 10961170-a08b-4074-936f-7189084bcbcb. Runtime/source readback reports 1.9.6.2 and context-card/v2. Refresh ChatGPT Relay metadata and verify named staff, updated coordinate schema and compact card in a fresh consumer before completing this slice and continuing successors.",
+            "primary_staff": "julian",
+            "supporting_staff": [
+              "ellis",
+              "roman"
+            ]
+          }
+        }
+      ]
     }
   ],
   "claims": [
@@ -5798,7 +5830,7 @@
       ],
       "goal": "Ship Relay 1.9.6.2 as operational staff routing plus the conversational contextual-card repair, then continue as the wrap-up worker for the remaining Relay 1.9 patch train through 1.9.9 under the umbrella mandate.",
       "acceptance": "Add durable assignment-level primary_staff and supporting_staff metadata resolved from the canonical sticky staff registry while preserving machine owner IDs and authorization underneath. Validate active/reserve/retired rules, duplicates, amend history, role/staff compatibility where appropriate, and deterministic fallback. Carry named teams through queue/claim/amend, resume/updates, worker communication, executive status and human-first presentation. Repair the normal in-chat MCP visual path: contextual Relay tools must attach and render the compact context-card surface from src/relay-chat-ui.js / ui://relay/context-card/...; do not substitute the full control-center/dashboard. Cards should represent staff ownership, status/progress, connected handoffs, blockers, QA and useful actions with technical evidence subordinate. The dashboard remains an explicit Open Relay destination. Preserve exact machine/evidence identity, no staff-based authorization, no productivity scoring. Add regression tests for staff routing and card descriptor/resource linkage, pass exact-head admission/CI, merge/deploy, refresh ChatGPT and verify the card renders in a fresh consumer. After 1.9.6.2 verification, continue owning coherent 1.9.7/1.9.8/1.9.9 successors from current canonical findings/state without stopping for reassignment or creating empty versions; close the umbrella only after final fresh-consumer verification.",
-      "next_action": "Complete canonical staff/card regression checks including release-version compatibility, then exact-head publication.",
+      "next_action": "PR #72 merged exact head a015761290cf86ada0c48e0537dbede1ce4e6cb2 as de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7; deployed Worker version 14b11840-1c72-4402-a5da-e47d33e2ac4d at 100% via 10961170-a08b-4074-936f-7189084bcbcb. Runtime/source readback reports 1.9.6.2 and context-card/v2. Refresh ChatGPT Relay metadata and verify named staff, updated coordinate schema and compact card in a fresh consumer before completing this slice and continuing successors.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-024",
@@ -5820,8 +5852,39 @@
       "base_sha": "f1241e913800349a7e6e415fa447ece86821fe8e",
       "state": "active",
       "created_at": "2026-10-01T03:05:53.991Z",
-      "updated_at": "2026-10-01T03:14:04.118Z",
-      "lease_until": "2026-10-01T15:14:04.118Z"
+      "updated_at": "2026-10-01T03:19:08.397Z",
+      "lease_until": "2026-10-01T15:19:08.397Z",
+      "primary_staff": "julian",
+      "supporting_staff": [
+        "ellis",
+        "roman"
+      ],
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T03:19:08.397Z",
+          "by": "relay-1.9-wrapup-20261001",
+          "reason": "Bind the wrap-up assignment to the deployed canonical staff resolver and record exact-source deployment before refreshed-consumer verification.",
+          "fields": [
+            "next_action",
+            "primary_staff",
+            "supporting_staff"
+          ],
+          "before": {
+            "next_action": "Complete canonical staff/card regression checks including release-version compatibility, then exact-head publication.",
+            "primary_staff": null,
+            "supporting_staff": null
+          },
+          "after": {
+            "next_action": "PR #72 merged exact head a015761290cf86ada0c48e0537dbede1ce4e6cb2 as de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7; deployed Worker version 14b11840-1c72-4402-a5da-e47d33e2ac4d at 100% via 10961170-a08b-4074-936f-7189084bcbcb. Runtime/source readback reports 1.9.6.2 and context-card/v2. Refresh ChatGPT Relay metadata and verify named staff, updated coordinate schema and compact card in a fresh consumer before completing this slice and continuing successors.",
+            "primary_staff": "julian",
+            "supporting_staff": [
+              "ellis",
+              "roman"
+            ]
+          }
+        }
+      ]
     }
   ],
   "migrated_from": "loew-inspector"
