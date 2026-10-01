@@ -60,22 +60,22 @@ export function renderProjectDetail(target, id, data) {
       </div>
       <span class="project-health ${project.managed ? "good" : "quiet"}">${project.managed ? "Managed by Relay" : "Tracked"}</span>
     </div>
-    <div class="overview-metrics" aria-label="Project overview">
-      <span class="overview-metric"><strong>${summary.current}</strong> now</span>
-      <span class="overview-metric"><strong>${summary.moving}</strong> moving</span>
-      <span class="overview-metric"><strong>${summary.waitingExternal}</strong> external wait</span>
-      <span class="overview-metric"><strong>${summary.needsYou}</strong> needs you</span>
+    <div class="overview-metrics" aria-label="project overview">
+      <span class="overview-metric status-metric" data-tone="${summary.current ? "info" : "quiet"}" data-signal="${summary.current ? "working" : "quiet"}"><span class="status-light" aria-hidden="true"></span><strong>${summary.current}</strong> now</span>
+      <span class="overview-metric status-metric" data-tone="${summary.moving ? "good" : "quiet"}" data-signal="${summary.moving ? "working" : "quiet"}"><span class="status-light" aria-hidden="true"></span><strong>${summary.moving}</strong> moving</span>
+      <span class="overview-metric status-metric" data-tone="${summary.waitingExternal ? "wait" : "quiet"}" data-signal="${summary.waitingExternal ? "external" : "quiet"}"><span class="status-light" aria-hidden="true"></span><strong>${summary.waitingExternal}</strong> external wait</span>
+      <span class="overview-metric status-metric" data-tone="${summary.needsYou ? "act" : "quiet"}" data-signal="${summary.needsYou ? "attention" : "quiet"}"><span class="status-light" aria-hidden="true"></span><strong>${summary.needsYou}</strong> needs you</span>
     </div>
     <section class="project-work-section">
-      <h3><span>Now</span><span>${sections.now.length}</span></h3>
+      <h3><span>now</span><span>${sections.now.length}</span></h3>
       ${sections.now.length ? sections.now.map(item => renderProgressRow(item, esc)).join("") : empty("No observed work is active right now.")}
     </section>
     <section class="project-work-section">
-      <h3><span>Up next</span><span>${sections.upNext.length}</span></h3>
+      <h3><span>up next</span><span>${sections.upNext.length}</span></h3>
       ${sections.upNext.length ? sections.upNext.map(queuedRow).join("") : empty("No queued work.")}
     </section>
     <section class="project-work-section">
-      <h3><span>Finished</span><span>${sections.finished.length}</span></h3>
+      <h3><span>finished</span><span>${sections.finished.length}</span></h3>
       ${sections.finished.length ? sections.finished.slice(0, 8).map(item => renderProgressRow(item, esc, { compact: true })).join("") : empty("Nothing recently finished.")}
     </section>
   `;
