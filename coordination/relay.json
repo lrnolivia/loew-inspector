@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T04:45:03.884Z",
+  "updated_at": "2026-10-01T04:45:22.552Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7032,6 +7032,8 @@
       "owner": "relay-1.9.9-chatgpt-native-experience-20261001",
       "branch": "relay/1.9.9-chatgpt-native-experience-20261001",
       "paths": [
+        "src/relay-chat-ui.js",
+        "src/relay-entry.js",
         "src/relay-card-ui.js",
         "src/relay-card-view-model.js",
         "src/relay-card-ui.test.js",
@@ -7154,8 +7156,8 @@
       "base_sha": "544c5a358ce9fb6882e040cf9eff105c2333f72c",
       "state": "active",
       "created_at": "2026-10-01T04:43:37.777Z",
-      "updated_at": "2026-10-01T04:45:03.884Z",
-      "lease_until": "2026-10-01T16:45:03.884Z"
+      "updated_at": "2026-10-01T04:45:22.552Z",
+      "lease_until": "2026-10-01T16:45:22.552Z"
     }
   ],
   "migrated_from": "loew-inspector"
