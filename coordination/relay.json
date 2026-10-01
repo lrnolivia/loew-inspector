@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T01:45:02.465Z",
+  "updated_at": "2026-10-01T01:45:29.815Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3934,10 +3934,16 @@
       "next_action": "Finish release of the feature-shell design pass. Scope now explicitly includes progress-ui presentation, night shift card presentation, and the shared settings glyph touched by the design work. Re-run exact changed-path preflight, open PR against current main, pass Runner admission/repo CI, merge, deploy exact merged source, capture production evidence, complete and verify reserved:false.",
       "task_class": "design",
       "base_sha": "7f27d0c408adf996f25377c1e7dfbdf35deb9cb7",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T00:52:41.345Z",
-      "updated_at": "2026-10-01T01:41:31.328Z",
-      "lease_until": "2026-10-01T13:41:31.328Z"
+      "updated_at": "2026-10-01T01:45:29.815Z",
+      "lease_until": "2026-10-01T13:45:29.815Z",
+      "pr": 65,
+      "merged_head_sha": "81eaf6ee32267af26bd37e4f74fb633df7226f6d",
+      "merge_commit_sha": "1b3e43c2076f1bc04dec4b52652a27f674d8232f",
+      "evidence": "Design-only Relay feature-shell release completed. User-uploaded final 1024x1024 website feature PNGs are committed under apps/web/public/brand/{relay,today,runner,inspector,night-shift}.png and used by brand.js / shared web+MCP bundle; repo SHA-256 values recorded in docs/relay/RELAY_FEATURE_SHELL_UI.md. Canonical Figma accents applied: relay #b5471f, inspector #1c8c93, runner #3bcb8d, today #ff6f78, night shift #ffbf00. Page identity is now large icon + lowercase feature name + human task subtitle (today/focus, runner/coordinate, inspector/review, night shift/monitor); redundant page statusline removed. Legacy pseudo-dot is suppressed for modern status badges so exactly one semantic status light renders. State-bearing cards inherit semantic tone via crisp 1px border, 4px left edge, and low-opacity solid tint; no gradients. Desktop sidebar defaults to an 88px icon rail and expands to ~340px on hover/focus-within, while operator content shifts and stays centered at max 1120px; <=900px retains static horizontal navigation. Browser tests assert exact 1024x1024 bundled marks, canonical accents, single status light, semantic card edge, collapsed/expanded shell geometry, centered canvas, reduced-motion and responsive web/MCP/mobile behavior. Full npm test passed; web build passed; no-gradient and feature-shell invariant scans passed. Exact PR head 81eaf6ee32267af26bd37e4f74fb633df7226f6d passed Runner admission and repository CI; PR #65 squash-merged as 1b3e43c2076f1bc04dec4b52652a27f674d8232f. Exact merged source uploaded as Cloudflare Worker v59 version d70f7297-985c-48dd-9ce3-50063996ae93 and deployed 100% via 241b078c-9c75-4054-9e99-df1bbc9960e6. Runtime readback reports Relay 1.9.5. Production desktop evidence vis_474e27e3-8333-4763-b586-22dfafc13b6a and mobile evidence vis_f30230ad-9b12-40f1-9799-df180c49f475 captured successfully. Historical root transport anomaly remains HTTP 522 while Browser Run renders full Relay page/title/DOM. Main advanced one coordination-only commit beyond deployed product source; compare showed only coordination/relay.json changed.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T01:45:29.815Z"
     },
     {
       "id": "relay-1.9.5-planning-ledger-skill-20260930",
