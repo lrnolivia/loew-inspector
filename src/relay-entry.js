@@ -98,6 +98,7 @@ export function augmentToolList(tools) {
     contextualizeRelayTool(replacement),
     ...extensionTools.map(tool => contextualizeRelayTool({
       ...tool,
+      ...(sourceDescriptions[tool.name] ? { description: sourceDescriptions[tool.name] } : {}),
       securitySchemes: schemes,
       _meta: { ...(tool._meta || {}), securitySchemes: schemes }
     }))
