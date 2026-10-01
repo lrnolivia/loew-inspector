@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T06:02:23.499Z",
+  "updated_at": "2026-10-01T06:08:46.117Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7700,7 +7700,8 @@
         "apps/web/generated.js",
         ".github/workflows/rebuild-generated-1.9.9.yml",
         "packages/runner/src/human-qa.mjs",
-        "packages/runner/test/human-qa.test.mjs"
+        "packages/runner/test/human-qa.test.mjs",
+        "apps/web/public/operator-1.8.css"
       ],
       "resources": [
         "relay-1.9.9-release",
@@ -7830,8 +7831,8 @@
       "base_sha": "544c5a358ce9fb6882e040cf9eff105c2333f72c",
       "state": "active",
       "created_at": "2026-10-01T04:43:37.777Z",
-      "updated_at": "2026-10-01T05:57:24.146Z",
-      "lease_until": "2026-10-01T17:57:24.146Z"
+      "updated_at": "2026-10-01T06:08:46.117Z",
+      "lease_until": "2026-10-01T18:08:46.117Z"
     }
   ],
   "migrated_from": "loew-inspector"
