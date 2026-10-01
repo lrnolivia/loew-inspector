@@ -2,13 +2,14 @@ import { uiApiTool, callUiApi } from "../apps/web/api.js";
 import legacy from "./index.js";
 import { callSourceLifecycleTool } from "./source-lifecycle.js";
 import { sourceTextMutationTools, isSourceTextMutationTool, validateSourceTextMutationArguments, callSourceTextMutationTool } from "./source-text-mutation.js";
+import { staffDirectoryTool, callStaffDirectory, validateStaffDirectoryArguments } from "./staff-registry.js";
 import { runnerCleanupTool, callRunnerCleanup, validateRunnerCleanupArguments } from "./runner-cleanup.js";
 import { cloudUploadTool, callCloudUpload, validateCloudUploadArguments } from "./cloud-upload.js";
 import { QA_SKILL_URI, qaSkillCatalogEntry, qaSkillResourceDescriptor, qaSkillResource } from "./qa-skill.js";
 import { LOEW_NAMING_SKILL_URI, loewNamingSkillCatalogEntry, loewNamingSkillResourceDescriptor, loewNamingSkillResource } from "./loew-naming-skill.js";
 import { RELAY_CONTEXT_CARD_URI, relayContextCardDescriptor, relayContextCardResource, contextualizeRelayTool } from "./relay-chat-ui.js";
 
-export const RELAY_EXTENSION_VERSION = "1.9.3";
+export const RELAY_EXTENSION_VERSION = "1.9.4";
 
 const createBranch = {
   name: "relay_source_create_branch",
@@ -75,7 +76,7 @@ export function augmentToolList(tools) {
     securitySchemes: schemes,
     _meta: { ...(old?._meta || {}), securitySchemes: schemes }
   };
-  const extensionTools = [...lifecycle, ...sourceTextMutationTools, runnerCleanupTool, cloudUploadTool, uiApiTool];
+  const extensionTools = [...lifecycle, ...sourceTextMutationTools, staffDirectoryTool, runnerCleanupTool, cloudUploadTool, uiApiTool];
   const names = new Set(extensionTools.map(tool => tool.name));
   const sourceDescriptions = {
     relay_source_update_file: "Create or replace one UTF-8 file on a non-default branch through relay.SOURCE using configured GitHub source auth (GitHub App preferred). Direct default-branch writes are intentionally blocked; coordination control state must use relay.RUNNER.",
@@ -175,7 +176,7 @@ function patchVersion(payload) {
 }
 
 function isExtensionTool(name) {
-  return name === uiApiTool.name || name === createBranch.name || lifecycle.some(tool => tool.name === name) || isSourceTextMutationTool(name) || name === runnerCleanupTool.name || name === cloudUploadTool.name;
+  return name === uiApiTool.name || name === createBranch.name || lifecycle.some(tool => tool.name === name) || isSourceTextMutationTool(name) || name === staffDirectoryTool.name || name === runnerCleanupTool.name || name === cloudUploadTool.name;
 }
 async function authProbe(request, message, env) {
   const headers = new Headers(request.headers);
@@ -239,6 +240,9 @@ export default {
         } else if (name === cloudUploadTool.name) {
           const args = validateCloudUploadArguments(message.params?.arguments || {});
           result = await callCloudUpload(args, env);
+        } else if (name === staffDirectoryTool.name) {
+          const args = validateStaffDirectoryArguments(message.params?.arguments || {});
+          result = callStaffDirectory(args);
         } else if (isSourceTextMutationTool(name)) {
           const args = validateSourceTextMutationArguments(name, message.params?.arguments || {});
           result = await callSourceTextMutationTool(name, args, env);
