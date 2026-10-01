@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T01:41:26.690Z",
+  "updated_at": "2026-10-01T01:41:31.328Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3815,43 +3815,6 @@
       "completed_at": "2026-10-01T01:28:22.026Z"
     },
     {
-      "id": "relay-feature-shell-accent-assets-20261001",
-      "owner": "relay-feature-shell-accent-assets-20261001",
-      "branch": "relay/feature-shell-accent-assets-20261001",
-      "paths": [
-        "apps/web/public/brand.js",
-        "apps/web/public/brand/",
-        "apps/web/public/index.html",
-        "apps/web/public/operator.js",
-        "apps/web/public/operator-today.js",
-        "apps/web/public/operator-review.js",
-        "apps/web/public/operator-projects.js",
-        "apps/web/public/operator-1.8.css",
-        "apps/web/build.mjs",
-        "apps/web/generated.js",
-        "apps/web/test/browser.test.mjs",
-        "packages/shared-ui/tokens.css",
-        "docs/relay/RELAY_FEATURE_SHELL_UI.md"
-      ],
-      "resources": [
-        "relay-design",
-        "relay-feature-identity",
-        "relay-icon-assets",
-        "relay-sidebar-shell",
-        "relay-card-accent-system",
-        "relay-responsive-layout"
-      ],
-      "goal": "Ship the next Relay design layer: replace website feature marks with the exact user-supplied final icon package, use canonical Figma feature accent colors, eliminate redundant status lights and redundant feature naming, make page identity icon-led with human-task subtitles, make state cards use semantic accent color more clearly without muddy fills, and collapse the desktop sidebar to an icon rail that expands to the current full sidebar on hover/focus while the centered content canvas shifts with it.",
-      "acceptance": "Task class design. Preserve current Relay 1.9.4 architecture and observed-progress semantics. Use exact user-supplied 1024x1024 PNG bytes for relay, today, runner, inspector, and night shift; because relay.SOURCE is UTF-8-only, exact PNG bytes may be packaged as local data-URL JS assets rather than bypassing Relay with direct binary writes. Canonical Figma feature accents are relay sienna #b5471f, inspector teal #1c8c93, runner green #3bcb8d, today coral #ff6f78, night shift amber #ffbf00. Remove duplicate status indicators so status badges render exactly one semantic light. Replace redundant page-statusline feature naming with one clear identity header: large packaged feature icon next to lowercase feature name, with concise human task subtitle (today=focus, runner=coordinate, inspector=review, night shift=monitor) and no repeated subsystem/evidence-queue naming. Use feature accent for page/nav identity and semantic status colors for live state. Cards may receive crisp semantic 1px borders and very light solid color-mix surface tint based on state; no gradients, no muddy large color fields, no fake depth. Desktop sidebar defaults to compact icon rail and expands on hover or keyboard focus to the current 340px presentation; labels/utility copy reveal only when expanded; content margin transitions with sidebar width and inner content remains centered/max-width rather than stretching to fill. Mobile/tablet <=900px keep the current static horizontal navigation pattern without hover dependency. Sidebar/nav must remain keyboard accessible. Rebuild generated.js and update browser tests for exact icon assets, accent mapping, one status light, feature task subtitles, collapsed/expanded sidebar geometry, content shift/max-width, reduced motion, responsive web/MCP/mobile stability. Pass full repo gates, merge/deploy exact source, capture production evidence, close assignment.",
-      "next_action": "Claim current main. Load Impeccable project context/craft floor. Package the five uploaded PNGs as exact local data assets through Relay UTF-8 source transport, update brand/build usage, implement feature accent tokens and icon-led headers, remove redundant page statusline and duplicate badge dot, add centered hover-expand desktop sidebar with responsive fallback, apply subtle semantic card accents, test desktop expanded/collapsed plus MCP/mobile, then merge/deploy exact source and close.",
-      "task_class": "design",
-      "base_sha": "7f27d0c408adf996f25377c1e7dfbdf35deb9cb7",
-      "state": "active",
-      "created_at": "2026-10-01T00:52:41.345Z",
-      "updated_at": "2026-10-01T00:52:41.345Z",
-      "lease_until": "2026-10-01T12:52:41.345Z"
-    },
-    {
       "id": "relay-mcp-icon-metadata-20260930",
       "owner": "codex-relay-mcp-icon-01a0f3f5",
       "branch": "relay/mcp-icon-metadata-20260930",
@@ -3929,6 +3892,46 @@
       "created_at": "2026-10-01T01:35:01.771Z",
       "updated_at": "2026-10-01T01:41:26.690Z",
       "lease_until": "2026-10-01T13:41:26.690Z"
+    },
+    {
+      "id": "relay-feature-shell-accent-assets-20261001",
+      "owner": "relay-feature-shell-accent-assets-20261001",
+      "branch": "relay/feature-shell-accent-assets-20261001",
+      "paths": [
+        "apps/web/public/brand.js",
+        "apps/web/public/brand/",
+        "apps/web/public/index.html",
+        "apps/web/public/operator.js",
+        "apps/web/public/operator-today.js",
+        "apps/web/public/operator-review.js",
+        "apps/web/public/operator-projects.js",
+        "apps/web/public/operator-1.8.css",
+        "apps/web/build.mjs",
+        "apps/web/generated.js",
+        "apps/web/test/browser.test.mjs",
+        "packages/shared-ui/tokens.css",
+        "docs/relay/RELAY_FEATURE_SHELL_UI.md",
+        "apps/web/public/progress-ui.js",
+        "features/night-shift/view.js",
+        "packages/shared-ui/glyphs.js"
+      ],
+      "resources": [
+        "relay-design",
+        "relay-feature-identity",
+        "relay-icon-assets",
+        "relay-sidebar-shell",
+        "relay-card-accent-system",
+        "relay-responsive-layout"
+      ],
+      "goal": "Ship the next Relay design layer: replace website feature marks with the exact user-supplied final icon package, use canonical Figma feature accent colors, eliminate redundant status lights and redundant feature naming, make page identity icon-led with human-task subtitles, make state cards use semantic accent color more clearly without muddy fills, and collapse the desktop sidebar to an icon rail that expands to the current full sidebar on hover/focus while the centered content canvas shifts with it.",
+      "acceptance": "Task class design. Preserve current Relay 1.9.4 architecture and observed-progress semantics. Use exact user-supplied 1024x1024 PNG bytes for relay, today, runner, inspector, and night shift; because relay.SOURCE is UTF-8-only, exact PNG bytes may be packaged as local data-URL JS assets rather than bypassing Relay with direct binary writes. Canonical Figma feature accents are relay sienna #b5471f, inspector teal #1c8c93, runner green #3bcb8d, today coral #ff6f78, night shift amber #ffbf00. Remove duplicate status indicators so status badges render exactly one semantic light. Replace redundant page-statusline feature naming with one clear identity header: large packaged feature icon next to lowercase feature name, with concise human task subtitle (today=focus, runner=coordinate, inspector=review, night shift=monitor) and no repeated subsystem/evidence-queue naming. Use feature accent for page/nav identity and semantic status colors for live state. Cards may receive crisp semantic 1px borders and very light solid color-mix surface tint based on state; no gradients, no muddy large color fields, no fake depth. Desktop sidebar defaults to compact icon rail and expands on hover or keyboard focus to the current 340px presentation; labels/utility copy reveal only when expanded; content margin transitions with sidebar width and inner content remains centered/max-width rather than stretching to fill. Mobile/tablet <=900px keep the current static horizontal navigation pattern without hover dependency. Sidebar/nav must remain keyboard accessible. Rebuild generated.js and update browser tests for exact icon assets, accent mapping, one status light, feature task subtitles, collapsed/expanded sidebar geometry, content shift/max-width, reduced motion, responsive web/MCP/mobile stability. Pass full repo gates, merge/deploy exact source, capture production evidence, close assignment.",
+      "next_action": "Finish release of the feature-shell design pass. Scope now explicitly includes progress-ui presentation, night shift card presentation, and the shared settings glyph touched by the design work. Re-run exact changed-path preflight, open PR against current main, pass Runner admission/repo CI, merge, deploy exact merged source, capture production evidence, complete and verify reserved:false.",
+      "task_class": "design",
+      "base_sha": "7f27d0c408adf996f25377c1e7dfbdf35deb9cb7",
+      "state": "active",
+      "created_at": "2026-10-01T00:52:41.345Z",
+      "updated_at": "2026-10-01T01:41:31.328Z",
+      "lease_until": "2026-10-01T13:41:31.328Z"
     }
   ],
   "migrated_from": "loew-inspector"
