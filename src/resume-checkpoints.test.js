@@ -87,13 +87,22 @@ test("checkpoint contract is compact canonical resume state", () => {
   assert.equal(got.cadence.target_ms, 5 * 60 * 1000);
 });
 
-test("unchanged evidence dedupes across later read times", () => {
-  const first = checkpoint(progress(), new Date("2026-10-01T00:01:00.000Z"));
-  const later = checkpoint(progress(), new Date("2026-10-01T00:04:59.000Z"));
+test("unchanged evidence dedupes across later read times and worker age ticks", () => {
+  const first = checkpoint(progress({ worker: {
+    heartbeat_at: "2026-10-01T00:00:00.000Z",
+    freshness: "fresh",
+    age_ms: 60000
+  }}), new Date("2026-10-01T00:01:00.000Z"));
+  const later = checkpoint(progress({ worker: {
+    heartbeat_at: "2026-10-01T00:00:00.000Z",
+    freshness: "fresh",
+    age_ms: 299000
+  }}), new Date("2026-10-01T00:04:59.000Z"));
   assert.equal(first.checkpoint_id, later.checkpoint_id);
   assert.equal(first.dedupe.key, later.dedupe.key);
   assert.equal(sameCheckpoint(first, later), true);
   assert.notEqual(first.generated_at, later.generated_at);
+  assert.notEqual(first.observation.worker_age_ms, later.observation.worker_age_ms);
 });
 
 test("source identity change creates a new checkpoint", () => {
