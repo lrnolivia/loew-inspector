@@ -30,10 +30,10 @@ try {
   const resources = await rpc("resources/list");
   const skills = await rpc("skills/list");
   if (skills.skills.length < 6) throw new Error("Skill surface incomplete");
-  if (!resources.resources.some(resource => resource.uri === "ui://relay/context-card/v1.html")) throw new Error("Relay contextual card resource missing");
-  const app = await rpc("resources/read", { uri: "ui://relay/control-center/v1.html" });
+  if (!resources.resources.some(resource => resource.uri === "ui://relay/context-card/v6.html")) throw new Error("Relay contextual card resource missing");
+  const app = await rpc("resources/read", { uri: "ui://relay/control-center/v2.html" });
   if (!app.contents[0].text.includes('data-page="night-shift"') || app.contents[0].text.includes(">Night Shift<")) throw new Error("Shared app missing or night shift copy is stale");
-  const card = await rpc("resources/read", { uri: "ui://relay/context-card/v1.html" });
+  const card = await rpc("resources/read", { uri: "ui://relay/context-card/v6.html" });
   if (!card.contents[0].text.includes("observed progress")) throw new Error("Contextual card contract missing");
   await call("relay_source_status");
   await call("relay_source_repo", { repo: "relay" });
@@ -77,10 +77,15 @@ try {
         await page.route("https://relay.loew.fi/**", route => route.continue({ headers: { ...route.request().headers(), ...headers } }));
         await page.goto("https://relay.loew.fi", { waitUntil: "domcontentloaded" });
         await page.locator("#operator-connection").filter({ hasText: "Connected" }).waitFor();
-        await page.getByRole("button", { name: "Runner", exact: true }).click();
-        await page.locator('#project-list [data-repo-icon="relay"][data-icon-source="lrnolivia/relay/apps/web/public/brand/relay-loop.png"] img').waitFor();
-        await page.locator('#project-list [data-project-id="relay"]').click();
+        await page.getByRole("button", { name: "runner", exact: true }).click();
+        await page.locator('#project-tabs [data-repo-icon="relay"][data-icon-source="lrnolivia/relay/apps/web/public/brand/relay-loop.png"] img').waitFor();
+        await page.locator('#project-tabs [data-project-id="relay"]').click();
         await page.locator(".project-detail-head h2").filter({ hasText: "relay" }).waitFor();
+        await page.getByRole("button", { name: "inspector", exact: true }).click();
+        await page.locator("#review-filters").waitFor();
+        for (const label of ["needs review", "completed", "stale", "archived", "all", "clear stale"]) {
+          await page.getByRole("button", { name: label, exact: true }).waitFor();
+        }
         if (await page.evaluate(() => document.documentElement.scrollWidth > innerWidth)) throw new Error("Production viewport overflow: " + capture.id);
         const screenshot = await page.screenshot({ fullPage: false });
         const form = new FormData();
