@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T02:34:09.502Z",
+  "updated_at": "2026-10-01T02:38:14.267Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -4534,13 +4534,13 @@
       ],
       "goal": "Fix Relay MCP inline control-center blank rendering before 1.9.7 by publishing the evolved control-center UI under a fresh MCP Apps resource URI cache key.",
       "acceptance": "Control-center tool/resource and context-card launcher all reference ui://relay/control-center/v2.html; tests pin the new URI and prove the descriptor/resource/tool linkage remains coherent. No design/generated-bundle ownership collision. Ship exact-source hotfix, refresh Relay app, and verify the inline control center paints before starting 1.9.7.",
-      "next_action": "Claim from current main; rotate control-center resource identity to v2, update launcher/tests/release note, preflight/CI, merge/deploy, refresh Relay app and verify inline rendering.",
+      "next_action": "MCP UI cache-key hotfix is merged and deployed from PR #69. Exact tested head ac2198f9a688637522bf36faf58fd7fac08cb394 passed Runner admission and full workspace/build CI; squash merge 570ecf2ae6a3d6f46be6cf03a2ecd8c750c5c476 is deployed as Worker v62 version d8edb8f6-e6af-4400-beb1-1c42f1485503 at 100% via deployment df30978f-1005-4bfe-ac27-06b51329f8ac. Main src/relay-ui.js and src/relay-chat-ui.js now reference ui://relay/control-center/v2.html and no longer reference control-center/v1.html. Refresh the Relay plugin connection in ChatGPT, reopen/refresh the chat, invoke relay_ui_control_center, and confirm the inline surface paints instead of a blank rectangle. If it paints, complete this hotfix and the pending 1.9.6 consumer verification, then begin 1.9.7. If it remains blank, inspect the MCP iframe bootstrap/bridge next; do not start 1.9.7.",
       "task_class": "architecture",
       "base_sha": "3cdcb53ab4dbc7eec2d9f27d29cedeb6a2b1b637",
       "state": "active",
       "created_at": "2026-10-01T02:34:09.502Z",
-      "updated_at": "2026-10-01T02:34:09.502Z",
-      "lease_until": "2026-10-01T14:34:09.502Z"
+      "updated_at": "2026-10-01T02:38:14.267Z",
+      "lease_until": "2026-10-01T14:38:14.267Z"
     }
   ],
   "migrated_from": "loew-inspector"
