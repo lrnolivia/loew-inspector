@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T20:58:50.760Z",
+  "updated_at": "2026-10-01T21:09:05.893Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -10649,7 +10649,7 @@
       ],
       "goal": "MCP rebuild stage 1: add truthful, reversible cancellation/supersession of obsolete assignments so user-requested retirement releases stale reservations without faking successful completion or deleting history.",
       "acceptance": "One bounded draft PR implements explicit retire with cancelled/superseded disposition, preserving original objectives, acceptance/history, branch and PR identity; owner/revision/head safeguards and idempotent reconciliation; retired reservations release capacity and their branches cannot be reused or automatically deleted. Progress/resume report truthful terminal state. Preserve verified-completion rules and existing cleanup safety. Synchronize engine source/mirror/provenance pin and MCP/CLI/workflow behavior. Required unit/regression tests, exact-head preflight and CI pass. No website/shared-UI/probe/card/auth/deployment edits. This completes only the lifecycle prerequisite, NOT the entire MCP rebuild; clean cross-client card proof is the next bounded stage. No merge/deploy or live retirement transactions before their separate verified authorization/gates.",
-      "next_action": "Fix independently reproduced retired-branch cleanup through older completion receipt in both eligibility and pre-delete revalidation, test same-branch multiple claims; document old CLI writer cutover risk. Canonical buffer recovery approval remains pending. Preserve draft-only no merge/deploy/live retirement.",
+      "next_action": "Draft PR108 head fa955cf8e0578e1c3c8ada812b27f4a623b4b9e0 repairs shared retired-branch cleanup in MCP and CLI at initial/final checks. Exact-head quality passed build/typecheck and 305 tests. Required main admission still ENOBUFS. Await separately authorized canonical buffer recovery including automatic deployment implications; no merge/deploy/live retirement. Before retirement inventory/quiesce/upgrade all old CLI/service/in-flight workflow writers. Broader identity/status design and lowercase relay title trace recorded task-locally; actual host title field and desktop/web/iPhone proof remain unverified and separately scoped.",
       "task_class": "maintenance",
       "category": "maintenance",
       "labels": [
@@ -10673,8 +10673,8 @@
       "base_sha": "80abcd05325155ec42e0c7582bb82b1001e3634a",
       "state": "active",
       "created_at": "2026-10-01T20:23:19.113Z",
-      "updated_at": "2026-10-01T20:56:46.141Z",
-      "lease_until": "2026-10-02T08:56:46.141Z"
+      "updated_at": "2026-10-01T21:09:05.893Z",
+      "lease_until": "2026-10-02T09:09:05.893Z"
     }
   ],
   "migrated_from": "loew-inspector"
