@@ -17,3 +17,5 @@ Validation and deployment receipts will be appended before completion. The 1.9 u
 PR #72 tested head `a015761290cf86ada0c48e0537dbede1ce4e6cb2` passed full local tests/build, Chromium card initialization and exact-head Runner/CI gates. Squash merge `de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7` deployed as version `14b11840-1c72-4402-a5da-e47d33e2ac4d`, deployment `10961170-a08b-4074-936f-7189084bcbcb`, at 100%. Runtime and source readback confirmed 1.9.6.2 and context-card/v2; canonical amendment and resume showed Julian with Ellis and Roman under the unchanged machine owner.
 
 Readback exposed technical canonical next-action notes leaking into the human layer. A bounded correction keeps those exact notes in evidence and uses practical verification language in the default card. This assignment remains active until that correction and refreshed-consumer verification are complete.
+
+The corrected card publishes under `ui://relay/context-card/v3.html` so consumers that cached v2 receive the corrected human layer after metadata refresh.

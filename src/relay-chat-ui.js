@@ -1,5 +1,5 @@
 import { STAFF } from './staff-registry.js';
-export const RELAY_CONTEXT_CARD_URI = 'ui://relay/context-card/v2.html';
+export const RELAY_CONTEXT_CARD_URI = 'ui://relay/context-card/v3.html';
 const CONTROL_URI = 'ui://relay/control-center/v2.html';
 const DIRECTORY = Object.fromEntries(STAFF.map(p => [p.id, p.display_name]));
 const CONTEXTUAL_TOOLS = new Set([
