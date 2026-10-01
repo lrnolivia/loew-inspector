@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, relayContextCardDescriptor, relayContextCardResource, relayContextCardTool, validateRelayContextCardArguments, contextualizeRelayTool, isContextualRelayTool } from "./relay-chat-ui.js";
+import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, RELAY_STATUS_CARD_URI, RELAY_STATUS_CARD_TOOL, relayContextCardDescriptor, relayContextCardResource, relayContextCardTool, relayStatusCardDescriptor, relayStatusCardResource, relayStatusCardTool, validateRelayContextCardArguments, contextualizeRelayTool, isContextualRelayTool } from "./relay-chat-ui.js";
 
 test("Relay publishes one versioned compact MCP card resource", () => {
   const descriptor = relayContextCardDescriptor();
@@ -19,6 +19,81 @@ test("Relay publishes one versioned compact MCP card resource", () => {
   assert.match(resource.text, /toolOutput/);
   assert.match(resource.text, /relay_runner_progress/);
   assert.deepEqual(resource._meta.ui.csp.resourceDomains,['https://relay.loew.fi']);
+});
+
+test("legacy bridge bisect keeps v8 as the control and uses a fresh tool/resource identity", () => {
+  const control = relayContextCardResource();
+  const legacy = relayStatusCardResource();
+  const descriptor = relayStatusCardDescriptor();
+  const tool = relayStatusCardTool();
+  assert.equal(RELAY_STATUS_CARD_URI, "ui://relay/status-card/v3-legacy-bridge.html");
+  assert.equal(RELAY_STATUS_CARD_TOOL, "relay_show_legacy_bridge_card");
+  assert.equal(descriptor.uri, RELAY_STATUS_CARD_URI);
+  assert.equal(tool.name, RELAY_STATUS_CARD_TOOL);
+  assert.equal(tool._meta.ui.resourceUri, RELAY_STATUS_CARD_URI);
+  assert.equal(tool._meta["openai/outputTemplate"], RELAY_STATUS_CARD_URI);
+  assert.match(legacy.text, /let toolInput=window\.openai\?\.toolInput\|\|\{\}/);
+  assert.match(legacy.text, /const ready=window\.openai\?Promise\.resolve\(\):rpc\('ui\/initialize'/);
+  assert.match(legacy.text, /if\(window\.openai\?\.toolOutput\)render\(window\.openai\.toolOutput\)/);
+  assert.match(legacy.text, /if\(window\.openai\?\.callTool\)return window\.openai\.callTool\(name,args\)/);
+  assert.match(legacy.text, /openai:set_globals/);
+  assert.match(control.text, /const ready=rpc\('ui\/initialize'/);
+  assert.doesNotMatch(control.text, /const ready=window\.openai\?Promise\.resolve\(\):rpc\('ui\/initialize'/);
+});
+
+test("legacy bridge renders directly from ChatGPT globals without sending ui initialize", async () => {
+  const { chromium } = await import('playwright');
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage();
+    await page.addInitScript(() => {
+      window.openai = {
+        toolInput: { project: 'relay' },
+        toolOutput: { project: 'relay', claim: { primary_staff: 'nico', goal: 'Desktop legacy bridge proof', state: 'active' } },
+        callTool: async () => ({})
+      };
+    });
+    const widgetUrl = 'data:text/html,' + encodeURIComponent(relayStatusCardResource().text);
+    await page.setContent(`<!doctype html><script>
+      window.seenInitialize=false;
+      window.addEventListener('message',event=>{
+        const frame=document.getElementById('widget');
+        const message=event.data;
+        if(event.source!==frame?.contentWindow||message?.jsonrpc!=='2.0')return;
+        if(message.method==='ui/initialize')window.seenInitialize=true;
+      });
+    <\/script><iframe id="widget" src="${widgetUrl}"></iframe>`);
+    const frame = page.frameLocator('#widget');
+    await frame.locator('#title').filter({ hasText: 'Desktop legacy bridge proof' }).waitFor();
+    assert.equal(await page.evaluate(() => window.seenInitialize), false);
+  } finally { await browser.close(); }
+});
+
+test("legacy bridge still initializes standard MCP Apps when ChatGPT globals are absent", async () => {
+  const { chromium } = await import('playwright');
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage();
+    const widgetUrl = 'data:text/html,' + encodeURIComponent(relayStatusCardResource().text);
+    await page.setContent(`<!doctype html><script>
+      window.seenInitialize=false;
+      window.addEventListener('message',event=>{
+        const frame=document.getElementById('widget');
+        const message=event.data;
+        if(event.source!==frame?.contentWindow||message?.jsonrpc!=='2.0')return;
+        if(message.method==='ui/initialize'){
+          window.seenInitialize=true;
+          frame.contentWindow.postMessage({jsonrpc:'2.0',id:message.id,result:{protocolVersion:'2026-01-26'}},'*');
+        } else if(message.method==='ui/notifications/initialized'){
+          frame.contentWindow.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-input',params:{project:'relay'}},'*');
+          frame.contentWindow.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:{structuredContent:{project:'relay',claim:{primary_staff:'nico',goal:'Standard bridge fallback proof',state:'active'}}}},'*');
+        }
+      });
+    <\/script><iframe id="widget" src="${widgetUrl}"></iframe>`);
+    const frame = page.frameLocator('#widget');
+    await frame.locator('#title').filter({ hasText: 'Standard bridge fallback proof' }).waitFor();
+    assert.equal(await page.evaluate(() => window.seenInitialize), true);
+  } finally { await browser.close(); }
 });
 
 test("data tools keep their schemas and do not claim the render template", () => {
