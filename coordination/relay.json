@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T05:09:54.965Z",
+  "updated_at": "2026-10-01T05:10:24.336Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -4000,7 +4000,7 @@
       "id": "relay-1.9.9-chatgpt-native-experience-20261001",
       "owner": "relay-1.9.9-chatgpt-native-experience-20261001",
       "goal": "Ship Relay 1.9.9 as the unified ChatGPT-native experience release: a polished family of contextual in-chat response cards plus a rich opened-Relay app with interactive chat/workspace behavior, all sharing one visual language, one canonical state model and one progressive-disclosure path.",
-      "acceptance": "Relay 1.9.9 must not count any contextual card as shipped until a normal Relay tool call in an ordinary ChatGPT conversation visibly mounts the intended MCP App UI directly under that response in the user's real consumer. Source HTML existing, a ui:// resource being registered, `_meta.ui.resourceUri` / `openai/outputTemplate` being present server-side, or structuredContent being correct are necessary but insufficient. The host/mount path is P0: verify the installed ChatGPT app definition sees the current launcher-tool UI metadata, the resource is discoverable with `text/html;profile=mcp-app`, the consumer call is made through a path that preserves MCP Apps tool-descriptor metadata, and ChatGPT actually renders the component. If the ChatGPT connector/orchestration wrapper strips or fails to honor launcher metadata, record that as the blocker and either change the invocation/registration path or use a supported launcher surface; do not paper over it with more CSS. Visible fresh-consumer render evidence is required before card completion. The existing 1.9.9 live-preview QA, stable preview resolver, canonical progress identity, responsive/motion/accessibility, and visual-direction requirements remain in force.",
+      "acceptance": "Relay 1.9.9 must still pass the existing consumer-visible MCP App card gate: a normal Relay tool call in an ordinary ChatGPT conversation must visibly mount the intended UI, not merely register resources/metadata or return structuredContent. Separately, the Inspector QA surface must implement the user-approved Figma node 59:115 review instrument as the visible card: ~450px default width, compact single-column composition, project pill, progress, one question/reason, binary answer surfaces, note field, and no persistent chrome (no inspector masthead, move/minimize/close buttons, preview/capture status rows, flow badge, previous/next row, separate Overall UI, technical details, save footer, or visible resize handle). The card must autosave, be draggable from non-interactive card regions, resize responsively through invisible edge/corner hit zones, remain clamped on viewport resize, and dock to any viewport edge leaving only a thin real card edge visible. A docked edge gives a restrained occasional idle wiggle plus one return wiggle after meaningful pointer inactivity; prefers-reduced-motion removes the wiggle. The docked edge adapts contrast to the content beneath it: soft off-white glow over dark content, near-black shadow over light content, and a conservative dual-contrast fallback when tone cannot be known. Captured image/video surfaces may sample luminance when safe; live cross-origin previews use an optional postMessage tone handshake and must degrade safely if unavailable. Inspector's review surface behaves like Field's canvas without importing Field's editor runtime: regular wheel/two-finger pan, Ctrl/Cmd+wheel or trackpad pinch zoom at the pointer, middle-mouse pan, Space+drag pan, initial fit-to-view, GPU transforms, and responsive reclamping. Live embeddable previews are the primary QA surface; video then image are fallbacks/evidence. The live page must receive pointer, keyboard, forms, scrolling and navigation normally, with Inspector camera gestures not stealing ordinary page interaction. Full-screen exit is owned by the viewport, not the review card: Escape, browser Back/history state, and a small viewport-only reveal affordance near the safe corner provide exit paths. Existing evidence identity, autosave persistence, deterministic QA gates and live-preview resolver/session contracts remain canonical; do not create a second evidence store.",
       "next_action": "Do not spend more time on card CSS or Relay resource registration. Isolate a supported direct MCP Apps invocation path outside the nested Code Mode/orchestration wrapper, or wait for/target a host path that preserves tool descriptor UI metadata. Keep `relay_render_context_card` as the canonical launcher and preserve visible-card consumer acceptance as the release gate. In parallel, continue non-card 1.9.9 work (live-preview QA plumbing, stable preview resolver, opened-app workspace) because those do not depend on the wrapper mounting inline cards.",
       "paths": [
         "src/relay-card-ui.js",
@@ -4104,11 +4104,13 @@
       "supporting_roles": [
         "art-director",
         "builder",
-        "verifier"
+        "verifier",
+        "motion-director",
+        "product-lead"
       ],
       "state": "claimed",
       "created_at": "2026-10-01T02:57:33.950Z",
-      "amendment_count": 9,
+      "amendment_count": 10,
       "amendments": [
         {
           "at": "2026-10-01T03:02:32.261Z",
@@ -4659,14 +4661,56 @@
           "after": {
             "next_action": "Do not spend more time on card CSS or Relay resource registration. Isolate a supported direct MCP Apps invocation path outside the nested Code Mode/orchestration wrapper, or wait for/target a host path that preserves tool descriptor UI metadata. Keep `relay_render_context_card` as the canonical launcher and preserve visible-card consumer acceptance as the release gate. In parallel, continue non-card 1.9.9 work (live-preview QA plumbing, stable preview resolver, opened-app workspace) because those do not depend on the wrapper mounting inline cards."
           }
+        },
+        {
+          "at": "2026-10-01T05:10:24.336Z",
+          "by": "relay-1.9.9-chatgpt-native-experience-20261001",
+          "reason": "Freeze the user-approved production Inspector QA behavior before implementation: exact Figma review instrument, invisible drag/resize affordances, edge tuck + ambient return cues, adaptive contrast, Field-like pan/zoom canvas behavior, live-preview-first priority, and viewport-owned exit.",
+          "fields": [
+            "acceptance",
+            "supporting_roles",
+            "supporting_staff"
+          ],
+          "before": {
+            "acceptance": "Relay 1.9.9 must not count any contextual card as shipped until a normal Relay tool call in an ordinary ChatGPT conversation visibly mounts the intended MCP App UI directly under that response in the user's real consumer. Source HTML existing, a ui:// resource being registered, `_meta.ui.resourceUri` / `openai/outputTemplate` being present server-side, or structuredContent being correct are necessary but insufficient. The host/mount path is P0: verify the installed ChatGPT app definition sees the current launcher-tool UI metadata, the resource is discoverable with `text/html;profile=mcp-app...",
+            "supporting_roles": [
+              "art-director",
+              "builder",
+              "verifier"
+            ],
+            "supporting_staff": [
+              "valentina",
+              "nico",
+              "roman"
+            ]
+          },
+          "after": {
+            "acceptance": "Relay 1.9.9 must still pass the existing consumer-visible MCP App card gate: a normal Relay tool call in an ordinary ChatGPT conversation must visibly mount the intended UI, not merely register resources/metadata or return structuredContent. Separately, the Inspector QA surface must implement the user-approved Figma node 59:115 review instrument as the visible card: ~450px default width, compact single-column composition, project pill, progress, one question/reason, binary answer surfaces, note field, and no persistent chrome (no inspector masthead, move/minimize/close buttons, preview/capt...",
+            "supporting_roles": [
+              "art-director",
+              "builder",
+              "verifier",
+              "motion-director",
+              "product-lead"
+            ],
+            "supporting_staff": [
+              "valentina",
+              "nico",
+              "roman",
+              "sabine",
+              "vivienne"
+            ]
+          }
         }
       ],
-      "updated_at": "2026-10-01T04:58:53.435Z",
+      "updated_at": "2026-10-01T05:10:24.336Z",
       "primary_staff": "ellis",
       "supporting_staff": [
         "valentina",
         "nico",
-        "roman"
+        "roman",
+        "sabine",
+        "vivienne"
       ],
       "primary_team": "runner",
       "supporting_teams": [
@@ -7273,7 +7317,7 @@
         "inspector-fullscreen-exit-contract"
       ],
       "goal": "Ship Relay 1.9.9 as the unified ChatGPT-native experience release: a polished family of contextual in-chat response cards plus a rich opened-Relay app with interactive chat/workspace behavior, all sharing one visual language, one canonical state model and one progressive-disclosure path.",
-      "acceptance": "Relay 1.9.9 must not count any contextual card as shipped until a normal Relay tool call in an ordinary ChatGPT conversation visibly mounts the intended MCP App UI directly under that response in the user's real consumer. Source HTML existing, a ui:// resource being registered, `_meta.ui.resourceUri` / `openai/outputTemplate` being present server-side, or structuredContent being correct are necessary but insufficient. The host/mount path is P0: verify the installed ChatGPT app definition sees the current launcher-tool UI metadata, the resource is discoverable with `text/html;profile=mcp-app`, the consumer call is made through a path that preserves MCP Apps tool-descriptor metadata, and ChatGPT actually renders the component. If the ChatGPT connector/orchestration wrapper strips or fails to honor launcher metadata, record that as the blocker and either change the invocation/registration path or use a supported launcher surface; do not paper over it with more CSS. Visible fresh-consumer render evidence is required before card completion. The existing 1.9.9 live-preview QA, stable preview resolver, canonical progress identity, responsive/motion/accessibility, and visual-direction requirements remain in force.",
+      "acceptance": "Relay 1.9.9 must still pass the existing consumer-visible MCP App card gate: a normal Relay tool call in an ordinary ChatGPT conversation must visibly mount the intended UI, not merely register resources/metadata or return structuredContent. Separately, the Inspector QA surface must implement the user-approved Figma node 59:115 review instrument as the visible card: ~450px default width, compact single-column composition, project pill, progress, one question/reason, binary answer surfaces, note field, and no persistent chrome (no inspector masthead, move/minimize/close buttons, preview/capture status rows, flow badge, previous/next row, separate Overall UI, technical details, save footer, or visible resize handle). The card must autosave, be draggable from non-interactive card regions, resize responsively through invisible edge/corner hit zones, remain clamped on viewport resize, and dock to any viewport edge leaving only a thin real card edge visible. A docked edge gives a restrained occasional idle wiggle plus one return wiggle after meaningful pointer inactivity; prefers-reduced-motion removes the wiggle. The docked edge adapts contrast to the content beneath it: soft off-white glow over dark content, near-black shadow over light content, and a conservative dual-contrast fallback when tone cannot be known. Captured image/video surfaces may sample luminance when safe; live cross-origin previews use an optional postMessage tone handshake and must degrade safely if unavailable. Inspector's review surface behaves like Field's canvas without importing Field's editor runtime: regular wheel/two-finger pan, Ctrl/Cmd+wheel or trackpad pinch zoom at the pointer, middle-mouse pan, Space+drag pan, initial fit-to-view, GPU transforms, and responsive reclamping. Live embeddable previews are the primary QA surface; video then image are fallbacks/evidence. The live page must receive pointer, keyboard, forms, scrolling and navigation normally, with Inspector camera gestures not stealing ordinary page interaction. Full-screen exit is owned by the viewport, not the review card: Escape, browser Back/history state, and a small viewport-only reveal affordance near the safe corner provide exit paths. Existing evidence identity, autosave persistence, deterministic QA gates and live-preview resolver/session contracts remain canonical; do not create a second evidence store.",
       "next_action": "In parallel with the ChatGPT card host-boundary work, implement the user-approved Inspector QA slice on the existing 1.9.9 branch. Treat Figma node 59:115 as the exact visible review-instrument target: no header chrome, move/minimize/close controls, status rows, overall block, technical details, or save footer. Preserve autosave. Add invisible drag/resize hit regions; edge docking that leaves only a thin card edge visible; restrained idle/return wiggle with reduced-motion fallback; adaptive off-white glow on dark backgrounds / near-black shadow on light backgrounds with safe unknown-tone fallback; and a canvas-like review viewport using Field's input contract (wheel/two-finger pan, Ctrl/Cmd+wheel or pinch zoom at pointer, middle-mouse and Space+drag pan, fit-to-view). Live embeddable previews are primary; video/image are fallbacks. Live page input must pass through normally. Exit full-screen via Escape, browser Back/history, and a viewport-only reveal affordance, never controls on the card.",
       "task_class": "architecture",
       "ledger_refs": [
@@ -7309,7 +7353,9 @@
       "supporting_roles": [
         "art-director",
         "builder",
-        "verifier"
+        "verifier",
+        "motion-director",
+        "product-lead"
       ],
       "primary_team": "runner",
       "supporting_teams": [
@@ -7319,13 +7365,58 @@
       "supporting_staff": [
         "valentina",
         "nico",
-        "roman"
+        "roman",
+        "sabine",
+        "vivienne"
       ],
       "base_sha": "544c5a358ce9fb6882e040cf9eff105c2333f72c",
       "state": "active",
       "created_at": "2026-10-01T04:43:37.777Z",
-      "updated_at": "2026-10-01T05:09:54.965Z",
-      "lease_until": "2026-10-01T17:09:54.965Z"
+      "updated_at": "2026-10-01T05:10:24.336Z",
+      "lease_until": "2026-10-01T17:10:24.336Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T05:10:24.336Z",
+          "by": "relay-1.9.9-chatgpt-native-experience-20261001",
+          "reason": "Freeze the user-approved production Inspector QA behavior before implementation: exact Figma review instrument, invisible drag/resize affordances, edge tuck + ambient return cues, adaptive contrast, Field-like pan/zoom canvas behavior, live-preview-first priority, and viewport-owned exit.",
+          "fields": [
+            "acceptance",
+            "supporting_roles",
+            "supporting_staff"
+          ],
+          "before": {
+            "acceptance": "Relay 1.9.9 must not count any contextual card as shipped until a normal Relay tool call in an ordinary ChatGPT conversation visibly mounts the intended MCP App UI directly under that response in the user's real consumer. Source HTML existing, a ui:// resource being registered, `_meta.ui.resourceUri` / `openai/outputTemplate` being present server-side, or structuredContent being correct are necessary but insufficient. The host/mount path is P0: verify the installed ChatGPT app definition sees the current launcher-tool UI metadata, the resource is discoverable with `text/html;profile=mcp-app...",
+            "supporting_roles": [
+              "art-director",
+              "builder",
+              "verifier"
+            ],
+            "supporting_staff": [
+              "valentina",
+              "nico",
+              "roman"
+            ]
+          },
+          "after": {
+            "acceptance": "Relay 1.9.9 must still pass the existing consumer-visible MCP App card gate: a normal Relay tool call in an ordinary ChatGPT conversation must visibly mount the intended UI, not merely register resources/metadata or return structuredContent. Separately, the Inspector QA surface must implement the user-approved Figma node 59:115 review instrument as the visible card: ~450px default width, compact single-column composition, project pill, progress, one question/reason, binary answer surfaces, note field, and no persistent chrome (no inspector masthead, move/minimize/close buttons, preview/capt...",
+            "supporting_roles": [
+              "art-director",
+              "builder",
+              "verifier",
+              "motion-director",
+              "product-lead"
+            ],
+            "supporting_staff": [
+              "valentina",
+              "nico",
+              "roman",
+              "sabine",
+              "vivienne"
+            ]
+          }
+        }
+      ]
     }
   ],
   "migrated_from": "loew-inspector"
