@@ -11,6 +11,7 @@ const visualHeadingTools = document.querySelector('.visual-heading-tools');
 let stage=null, state=null, questionIndex=0, previewMode='captured';
 let viewportController=null, floatController=null, contrastController=null, historyToken=null;
 let returnFocus=null, background=[];
+let previewCheck=null;
 const sessions = new Map();
 const draftKey = id => 'relay.qa.draft.v1.' + id;
 async function api(url, options = {}) {
@@ -120,25 +121,73 @@ function repaintPanel(focusSelector) {
 }
 function setView(mode) {
   if(!stage||!state)return;
+  previewCheck?.abort();previewCheck=null;
   viewportController?.destroy();previewMode=renderQaPreview(stage,state,mode);
   viewportController=createQaViewport(stage,{mode:previewMode});
-  const select=stage.querySelector('.qa-preview-picker select'),canLive=Boolean(state.live?.active&&state.live?.embeddable&&state.live?.url);
-  select.innerHTML='<option value="captured">Captured</option>'+(state.evidence.video_url?'<option value="video">Recording</option>':'')+'<option value="live" '+(!canLive?'disabled':'')+'>'+(canLive?'Live':'Live unavailable')+'</option>';
+  const select=stage.querySelector('.qa-preview-picker select'),canLive=Boolean(state.live?.active&&state.live?.embeddable&&state.live?.url&&!state.live.renderUnconfirmed);
+  select.innerHTML='<option value="captured">Captured</option>'+(state.evidence.video_url?'<option value="video">Recording</option>':'')+'<option value="live" '+(!canLive?'disabled':'')+'>'+(canLive?'Live':state.live.renderUnconfirmed?'Live unconfirmed':'Live unavailable')+'</option>';
   select.value=previewMode;select.disabled=false;
-  stage.querySelector('.qa-preview-state').textContent=previewMode==='live'?'Live preview':previewMode==='video'?'Recorded evidence':'Captured evidence'+(!canLive?' · live preview unavailable':'');
+  stage.querySelector('.qa-preview-state').textContent=previewMode==='live'?'Checking live preview…':previewMode==='video'?'Recorded evidence':'Captured evidence'+(state.live.renderUnconfirmed?' · live preview unconfirmed':!canLive?' · live preview unavailable':'');
   const frame=stage.querySelector('[data-qa-live-preview]');
-  frame?.addEventListener('error',()=>{if(!stage)return;state.live={active:false,embeddable:false};setView('captured');stage.querySelector('.qa-preview-state').textContent='Live preview could not load · showing captured evidence';},{once:true});
+  if(frame) checkLiveFrame(frame);
+}
+function checkLiveFrame(frame) {
+  const currentStage=stage,currentState=state,check=new AbortController();previewCheck=check;
+  const current=()=>stage===currentStage && state===currentState && frame.isConnected && !check.signal.aborted;
+  const fallback=()=>{
+    if(!current())return;
+    currentState.live={...currentState.live,renderUnconfirmed:true};setView('captured');
+    currentStage.querySelector('.qa-preview-state').textContent='Live preview unconfirmed · captured evidence';
+  };
+  // A browser may fire load for an error page and never fire iframe error.
+  // Cross-origin frames without a readiness protocol remain unverified and
+  // fall back; no guessed sender/message can assert that they are healthy.
+  let timer,navigation=0;
+  const waitForFrame=()=>{
+    if(!current())return;
+    navigation++;clearTimeout(timer);currentStage.querySelector('.qa-preview-state').textContent='Checking live preview…';
+    timer=setTimeout(fallback,8000);
+  };
+  waitForFrame();
+  check.signal.addEventListener('abort',()=>clearTimeout(timer),{once:true});
+  const confirm=async()=>{
+    if(!current())return;
+    const confirmingNavigation=navigation;
+    let documentInFrame,target;
+    try {
+      target=new URL(currentState.live.url,location.origin);
+      documentInFrame=frame.contentDocument;
+      const rendered=new URL(documentInFrame?.location.href || 'about:blank');
+      if(target.origin!==location.origin || rendered.origin!==target.origin || rendered.pathname!==target.pathname || rendered.search!==target.search || documentInFrame.readyState!=='complete' || !documentInFrame.body?.childElementCount)return;
+    } catch { return; }
+    try {
+      const response=await fetch(target.href,{credentials:'same-origin',redirect:'error',cache:'no-store',signal:check.signal});
+      if(!current() || navigation!==confirmingNavigation || frame.contentDocument!==documentInFrame)return;
+      if(!response.ok){fallback();return;}
+      // Confirm both an accessible rendered document and a successful HTTP
+      // response. This is embedding readiness, not application-health proof.
+      clearTimeout(timer);currentStage.querySelector('.qa-preview-state').textContent='Live preview';
+    } catch { if(current() && navigation===confirmingNavigation)fallback(); }
+  };
+  frame.addEventListener('load',()=>{waitForFrame();void confirm();},{signal:check.signal});
+  frame.addEventListener('error',fallback,{signal:check.signal});
+  void confirm();
 }
 export async function openQa(evidenceId) {
   if(stage)closeQa({popHistory:false});
   stage=buildStage();historyToken='relay-qa-'+Date.now().toString(36);history.pushState({...history.state,relayQaToken:historyToken,evidenceId},'',location.href);
   const openingStage=stage;
+  const openingSession=sessions.get(evidenceId);
+  const openingRevision=openingSession?.revision,openingConfirmation=openingSession?.confirmation || 0;
+  const openingPending=Boolean(openingSession?.dirty || openingSession?.promise);
   try {
     const [payload,livePayload]=await Promise.all([api('/api/visual/'+encodeURIComponent(evidenceId)+'/qa'),api('/api/visual/'+encodeURIComponent(evidenceId)+'/live').catch(()=>({live:{active:false,embeddable:false}}))]);
     if(stage!==openingStage)return;
     const pending=sessions.get(evidenceId);
     let draft=null;try{draft=JSON.parse(sessionStorage.getItem(draftKey(evidenceId))||'null');}catch{}
-    state=pending?.dirty||pending?.promise ? pending : {evidence:payload.evidence,questions:payload.questions||[],review:draft?.review||payload.review||{answers:{},notes:'',overall:null},revision:0,dirty:Boolean(draft),saveStatus:draft?'failed':payload.review?.updated_at?'saved':'unsaved',saveError:draft?'Recovered unsaved responses. Retry to save them.':'',timer:null,promise:null};
+    const changedWhileOpening=pending===openingSession && (openingPending || pending?.revision!==openingRevision || (pending?.confirmation || 0)!==openingConfirmation);
+    const newerConfirmed=pending?.review.updated_at && (!payload.review?.updated_at || Date.parse(pending.review.updated_at)>Date.parse(payload.review.updated_at));
+    state=pending && (pending.dirty || pending.promise || changedWhileOpening || newerConfirmed) ? pending : {evidence:payload.evidence,questions:payload.questions||[],review:draft?.review||payload.review||{answers:{},notes:'',overall:null},revision:0,confirmation:0,dirty:Boolean(draft),saveStatus:draft?'failed':payload.review?.updated_at?'saved':'unsaved',saveError:draft?'Recovered unsaved responses. Retry to save them.':'',timer:null,promise:null};
     state.evidence=payload.evidence;state.questions=payload.questions||[];state.live=livePayload.live||{};
     state.noteParts=splitReviewNotes(state.review.notes||'');state.humanNotes=state.noteParts.notes;
     sessions.set(evidenceId,state);
@@ -168,6 +217,7 @@ async function saveReview(active=state) {
       try {
         const payload=await api('/api/visual/'+encodeURIComponent(active.evidence.evidence_id)+'/qa',{method:'POST',body:JSON.stringify(review)});
         if(!payload.review?.updated_at)throw new Error('The server did not confirm this save.');
+        active.confirmation=(active.confirmation || 0)+1;
         if(active.revision===revision){active.review.updated_at=payload.review.updated_at;active.dirty=false;try{sessionStorage.removeItem(draftKey(active.evidence.evidence_id));}catch{}setSaveState(active,'saved');resolveNotification('qa:save:'+active.evidence.evidence_id);}
         else active.saveAgain=true;
       } catch(error) {
@@ -183,6 +233,7 @@ async function saveReview(active=state) {
 function closeQa({popHistory=true}={}) {
   const token=historyToken,active=state;
   if(active?.dirty)void saveReview(active);
+  previewCheck?.abort();previewCheck=null;
   viewportController?.destroy();floatController?.destroy();contrastController?.destroy();
   viewportController=floatController=contrastController=null;
   stage?.remove();stage=null;state=null;historyToken=null;document.body.classList.remove('qa-open');

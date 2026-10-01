@@ -34,6 +34,16 @@ try{
   await page.getByRole('button',{name:'Yes, clear',exact:true}).click();await page.getByRole('button',{name:'Next',exact:true}).click();await page.getByRole('button',{name:'Yes, clear',exact:true}).click();await page.getByRole('button',{name:'Looks good',exact:true}).click();await page.locator('[data-qa-save-state]').filter({hasText:'Saved'}).waitFor();await page.locator('[data-qa-save-state]').scrollIntoViewIfNeeded();await capture(page,'review-final-'+viewport.width,'/inspector#review?evidence='+evidence.evidence_id,'confirmed saved');
   fail=true;await page.locator('.qa-notes textarea').fill('Preserved after failed write.');await page.getByRole('button',{name:'Retry save'}).waitFor();await page.getByRole('button',{name:'Retry save'}).scrollIntoViewIfNeeded();await capture(page,'review-failed-'+viewport.width,'/inspector#review?evidence='+evidence.evidence_id,'explicit save failure with retry');
   await page.getByRole('button',{name:'Hide questions'}).click();await capture(page,'review-unobstructed-'+viewport.width,'/inspector#review?evidence='+evidence.evidence_id,'panel hidden, captured fallback');await page.close();
+  const livePage=await browser.newPage({viewport,colorScheme:'dark',reducedMotion:'reduce'});
+  await livePage.route('**/api/visual/*/qa',route=>route.fulfill({json:{evidence,questions,review}}));
+  await livePage.route('**/api/visual/*/live',route=>route.fulfill({json:{live:{active:true,embeddable:true,status:200,url:fixture.origin+'/blocked-preview'}}}));
+  await livePage.route('**/blocked-preview',route=>route.fulfill({status:200,contentType:'text/html',headers:{'Content-Security-Policy':"frame-ancestors 'none'"},body:'<main>Refused browser embedding fixture</main>'}));
+  await livePage.goto(fixture.origin+'/inspector#review?evidence='+evidence.evidence_id);await livePage.locator('.qa-question').waitFor();await livePage.locator('.qa-preview-state').filter({hasText:'Checking live preview'}).waitFor();
+  await capture(livePage,'live-unverified-'+viewport.width,'/inspector#review?evidence='+evidence.evidence_id,'partial: authorized metadata, browser readiness unverified');
+  await livePage.locator('.qa-preview-state').filter({hasText:'Live preview unconfirmed'}).waitFor();
+  if(await livePage.locator('.qa-preview-picker select').inputValue()!=='captured')throw Error('Unconfirmed live preview failed to fall back');
+  await capture(livePage,'live-fallback-'+viewport.width,'/inspector#review?evidence='+evidence.evidence_id,'partial: refused embedding, bounded captured fallback');await livePage.close();
+
  }
  await writeFile(directory+'/result.json',JSON.stringify({commit,build:webBuildId,pr,fixture:true,captures},null,2));console.log(JSON.stringify({commit,build:webBuildId,captures:captures.length,registered:captures.filter(item=>item.evidence_id).length}));
 }finally{await browser.close();await fixture.close();}

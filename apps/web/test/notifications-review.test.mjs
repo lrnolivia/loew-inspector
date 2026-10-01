@@ -99,6 +99,7 @@ test('Authorized Live is preferred while an explicit Captured choice survives qu
   await page.route('**/authorized-preview',route=>route.fulfill({contentType:'text/html',body:'<main>Actual fixture live preview</main>'}));
   await page.goto(fixture.origin+'/inspector#review?evidence='+evidence.evidence_id);await page.locator('.qa-question').waitFor();
   assert.equal(await page.locator('.qa-preview-picker select').inputValue(),'live');
+  await page.locator('.qa-preview-state').filter({hasText:/^Live preview$/}).waitFor();
   await page.locator('.qa-preview-picker select').selectOption('captured');await page.getByRole('button',{name:'Next',exact:true}).click();
   assert.equal(await page.locator('.qa-preview-picker select').inputValue(),'captured');
   await page.getByRole('button',{name:'Hide questions'}).click();
@@ -121,5 +122,69 @@ test('A growing failed-save message keeps the desktop panel clear of floating co
   const panel=await page.locator('.qa-companion').boundingBox(),toggle=await page.locator('.qa-panel-toggle').boundingBox();
   assert.ok(panel.y+panel.height<=toggle.y,'failed-save feedback cannot grow beneath Hide questions');
   await page.getByRole('button',{name:'Retry save'}).click();await page.locator('[data-qa-save-state]').filter({hasText:'failed'}).waitFor();
+ }finally{await browser.close();await fixture.close();}
+});
+
+test('Reopening during a save cannot replace confirmed responses with an older in-flight GET', {timeout:20000},async()=>{
+ const fixture=await contextFixture(),browser=await chromium.launch();
+ let review={answers:{},notes:'Old note',overall:null,updated_at:'2026-10-01T00:00:00Z'},holdLive=false,releasePost,releaseGet,postStarted,getStarted;
+ const postGate=new Promise(resolve=>releasePost=resolve),getGate=new Promise(resolve=>releaseGet=resolve);
+ const postSignal=new Promise(resolve=>postStarted=resolve),getSignal=new Promise(resolve=>getStarted=resolve);
+ try{
+  const page=await browser.newPage({colorScheme:'dark'});
+  const evidence={evidence_id:'vis_context-capture-relay',screenshot_url:'/api/visual/vis_context-capture-relay/image',context:{project:'relay'}};
+  await page.route('**/api/visual/*/qa',async route=>{
+   if(route.request().method()==='POST'){const payload=route.request().postDataJSON();postStarted();await postGate;review={...payload,updated_at:new Date().toISOString()};return route.fulfill({json:{review}});}
+   const snapshot=structuredClone(review);
+   return route.fulfill({json:{evidence,review:snapshot,questions:[{id:'one',prompt:'Is the result clear?'}]}});
+  });
+  await page.route('**/api/visual/*/live',async route=>{if(holdLive){getStarted();await getGate;}return route.fulfill({json:{live:{active:false}}});});
+  await page.goto(fixture.origin+'/inspector#review?evidence='+evidence.evidence_id);await page.locator('.qa-question').waitFor();
+  await page.getByRole('button',{name:'No, needs work',exact:true}).click();await page.getByRole('button',{name:'Needs work',exact:true}).click();await page.locator('.qa-notes textarea').fill('Newest confirmed note');
+  await page.getByRole('button',{name:'Exit review'}).click();await postSignal;
+  holdLive=true;await page.locator('[data-review-id="'+evidence.evidence_id+'"]').click();await getSignal;
+  releasePost();await page.waitForFunction(id=>sessionStorage.getItem('relay.qa.draft.v1.'+id)===null,evidence.evidence_id);
+  releaseGet();await page.locator('.qa-notes textarea').waitFor();
+  assert.equal(await page.locator('.qa-notes textarea').inputValue(),'Newest confirmed note');
+  assert.equal(await page.locator('[data-qa-answer=no]').getAttribute('aria-pressed'),'true');
+  assert.equal(await page.locator('[data-qa-overall=needs_work]').getAttribute('aria-pressed'),'true');
+  assert.equal(await page.locator('[data-qa-save-state]').innerText(),'Saved');
+  await page.locator('[data-qa-answer=yes]').click();await page.locator('[data-qa-save-state]').filter({hasText:'Saved'}).waitFor();assert.equal(review.notes,'Newest confirmed note','the next write must preserve the confirmed note');
+ }finally{releasePost();releaseGet();await browser.close();await fixture.close();}
+});
+
+test('Authorized iframe HTTP, framing and network failures fall back without relying on error events', {timeout:25000},async()=>{
+ const fixture=await contextFixture(),other=await contextFixture(),browser=await chromium.launch();
+ try{
+  for(const failure of ['http','framing','network','unverified']){
+   const page=await browser.newPage({colorScheme:'dark'});await page.clock.install();
+   await page.addInitScript(()=>{window.__iframeErrors=0;new MutationObserver(()=>{const frame=document.querySelector('[data-qa-live-preview]');if(frame&&!frame.dataset.observed){frame.dataset.observed='true';frame.addEventListener('error',()=>window.__iframeErrors++);}}).observe(document,{subtree:true,childList:true});});
+   const evidence={evidence_id:'vis_context-capture-relay',screenshot_url:'/api/visual/vis_context-capture-relay/image',context:{project:'relay'}};
+   await page.route('**/api/visual/*/qa',route=>route.fulfill({json:{evidence,review:{answers:{},notes:'',overall:null},questions:[{id:'one',prompt:'Review this capture'}]}}));
+   await page.route('**/api/visual/*/live',route=>route.fulfill({json:{live:{active:true,embeddable:true,status:200,url:(failure==='unverified'?other.origin:fixture.origin)+'/broken-preview'}}}));
+   await page.route('**/broken-preview',route=>failure==='network'?route.abort('connectionrefused'):route.fulfill({status:failure==='http'?404:200,contentType:'text/html',headers:failure==='framing'?{'Content-Security-Policy':"frame-ancestors 'none'"}:{},body:'<main>Unavailable preview</main>'}));
+   await page.goto(fixture.origin+'/inspector#review?evidence='+evidence.evidence_id);await page.locator('.qa-question').waitFor();
+   await page.clock.fastForward(9000);
+   assert.equal(await page.locator('.qa-preview-picker select').inputValue(),'captured',failure+' must fall back');
+   assert.match(await page.locator('.qa-preview-state').innerText(),/unconfirmed/);
+   assert.equal(await page.evaluate(()=>window.__iframeErrors),0,'browser failure does not provide iframe error proof');
+   await page.close();
+  }
+ }finally{await browser.close();await fixture.close();await other.close();}
+});
+
+test('A failed navigation invalidates previously confirmed iframe readiness', {timeout:15000},async()=>{
+ const fixture=await contextFixture(),browser=await chromium.launch();
+ try{
+  const page=await browser.newPage({colorScheme:'dark'});await page.clock.install();
+  const evidence={evidence_id:'vis_context-capture-relay',screenshot_url:'/api/visual/vis_context-capture-relay/image',context:{project:'relay'}};
+  await page.route('**/api/visual/*/qa',route=>route.fulfill({json:{evidence,review:{answers:{},notes:'',overall:null},questions:[{id:'one',prompt:'Review this capture'}]}}));
+  await page.route('**/api/visual/*/live',route=>route.fulfill({json:{live:{active:true,embeddable:true,status:200,url:fixture.origin+'/authorized-preview'}}}));
+  await page.route('**/authorized-preview',route=>route.fulfill({contentType:'text/html',body:'<main>Available preview <a href="/broken-preview">Broken destination</a></main>'}));
+  await page.route('**/broken-preview',route=>route.fulfill({status:404,contentType:'text/html',body:'<main>Not found</main>'}));
+  await page.goto(fixture.origin+'/inspector#review?evidence='+evidence.evidence_id);await page.locator('.qa-preview-state').filter({hasText:/^Live preview$/}).waitFor();
+  await page.frameLocator('[data-qa-live-preview]').getByRole('link',{name:'Broken destination'}).click();
+  await page.locator('.qa-preview-state').filter({hasText:'Checking live preview'}).waitFor();await page.clock.fastForward(9000);
+  assert.equal(await page.locator('.qa-preview-picker select').inputValue(),'captured');assert.match(await page.locator('.qa-preview-state').innerText(),/unconfirmed/);
  }finally{await browser.close();await fixture.close();}
 });

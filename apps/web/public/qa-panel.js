@@ -24,7 +24,7 @@ export function renderQaPreview(stage, state, requestedMode) {
   const preview = stage.querySelector(".qa-preview");
   const live = state.live || {};
   const evidence = state.evidence || {};
-  const canLive = Boolean(live.active && live.embeddable && live.url);
+  const canLive = Boolean(live.active && live.embeddable && live.url && !live.renderUnconfirmed);
   const canVideo = Boolean(evidence.video_url);
   const mode =
     requestedMode === "live" && canLive ? "live" :
