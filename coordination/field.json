@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-09-30T20:52:17.211Z",
+  "updated_at": "2026-10-01T22:19:54.782Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -371,7 +371,7 @@
     },
     {
       "id": "field-consolidation-workspace-20260930",
-      "owner": "01a0f0ae-4e8c-7e62-ae7a-3b02faa398f5",
+      "owner": "01a0f989-2e52-701b-a57c-009bedceb014",
       "branch": "field/consolidation-workspace-20260930",
       "paths": [
         "src/Dashboard.tsx",
@@ -427,12 +427,12 @@
       ],
       "goal": "Consolidate Dashboard and explicitly user-authorized Mobile recovery onto current main",
       "acceptance": "Existing Dashboard/create/refresh behavior and current-main Canvas semantics preserved; touch/mobile focused checks and runtime arbitration verified; current user removes Mobile protection, connected-panel follow-up remains deferred; original branches retained",
-      "next_action": "Merge published #136 head9fd1357 now per explicit user waiver of further checks. Preserve all local unpublished Mobile code and stop afterward with recovery receipt.",
+      "next_action": "Lauren authorized Astra Medium successor for Dashboard recovery on 2026-10-01. Preserve existing branch/PR136 and all 26 unpublished Mobile files (recovery patches/hash inventory saved by successor). Reconcile against fresh main and finish reviewable Dashboard recovery with evidence. Supersedes stale immediate-merge next_action; no Field merge/deploy authorized for new changes. Refresh ownership/admission before edits, retain historical Mobile provenance and deferred geometry scope.",
       "base_sha": "854038a3e84f41cd590a4ad18b24fcd4127e2fba",
       "state": "active",
       "created_at": "2026-09-30T10:21:02.409Z",
-      "updated_at": "2026-09-30T20:52:17.211Z",
-      "lease_until": "2026-10-01T08:52:17.211Z"
+      "updated_at": "2026-10-01T22:19:54.782Z",
+      "lease_until": "2026-10-02T10:19:54.782Z"
     },
     {
       "id": "field-ui-hotfix-20260930",
