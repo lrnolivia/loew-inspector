@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T02:44:49.224Z",
+  "updated_at": "2026-10-01T02:44:56.442Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -4744,10 +4744,16 @@
       "next_action": "MCP UI cache-key hotfix is merged and deployed from PR #69. Exact tested head ac2198f9a688637522bf36faf58fd7fac08cb394 passed Runner admission and full workspace/build CI; squash merge 570ecf2ae6a3d6f46be6cf03a2ecd8c750c5c476 is deployed as Worker v62 version d8edb8f6-e6af-4400-beb1-1c42f1485503 at 100% via deployment df30978f-1005-4bfe-ac27-06b51329f8ac. Main src/relay-ui.js and src/relay-chat-ui.js now reference ui://relay/control-center/v2.html and no longer reference control-center/v1.html. Refresh the Relay plugin connection in ChatGPT, reopen/refresh the chat, invoke relay_ui_control_center, and confirm the inline surface paints instead of a blank rectangle. If it paints, complete this hotfix and the pending 1.9.6 consumer verification, then begin 1.9.7. If it remains blank, inspect the MCP iframe bootstrap/bridge next; do not start 1.9.7.",
       "task_class": "architecture",
       "base_sha": "3cdcb53ab4dbc7eec2d9f27d29cedeb6a2b1b637",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T02:34:09.502Z",
-      "updated_at": "2026-10-01T02:38:14.267Z",
-      "lease_until": "2026-10-01T14:38:14.267Z"
+      "updated_at": "2026-10-01T02:44:56.442Z",
+      "lease_until": "2026-10-01T14:44:56.442Z",
+      "pr": 69,
+      "merged_head_sha": "ac2198f9a688637522bf36faf58fd7fac08cb394",
+      "merge_commit_sha": "570ecf2ae6a3d6f46be6cf03a2ecd8c750c5c476",
+      "evidence": "Cache-key hotfix shipped as an independently verified slice. Exact tested PR #69 head ac2198f9a688637522bf36faf58fd7fac08cb394 passed Runner admission and full workspace/build CI; squash merge 570ecf2ae6a3d6f46be6cf03a2ecd8c750c5c476 deployed as Worker v62 version d8edb8f6-e6af-4400-beb1-1c42f1485503 at 100% via deployment df30978f-1005-4bfe-ac27-06b51329f8ac. Main now references ui://relay/control-center/v2.html and not v1. Remaining inline first-paint/bootstrap resilience and client visual verification are deliberately transferred into Relay 1.9.6.2 operational staff routing per user direction.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T02:44:56.442Z"
     }
   ],
   "migrated_from": "loew-inspector"
