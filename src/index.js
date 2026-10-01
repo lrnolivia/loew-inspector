@@ -362,7 +362,7 @@ async function mcp(request, access, env) {
         extensions: { [RELAY_SKILL_EXTENSION]: {} }
       },
       serverInfo: { name: "relay", version: VERSION },
-      instructions: "Relay coordinates managed loew.fi work. When Relay is explicitly requested, use Relay MCP namespaces first; inspect relay.CONTROL, resolve current Runner authority and exact repo/worker before writes, use non-default branches and draft PRs for normal source work, verify resulting state through relay.VERIFY, and never silently substitute another GitHub/browser/cloud integration for a Relay capability."
+      instructions: "Relay coordinates managed loew.fi work. When Relay is explicitly requested, use Relay MCP namespaces first; inspect relay.CONTROL, resolve current Runner authority and exact repo/worker before writes, use non-default branches and draft PRs for normal source work, verify resulting state through relay.VERIFY, and never silently substitute another GitHub/browser/cloud integration for a Relay capability. For user-visible ChatGPT status cards, call relay_render_context_card directly as the render step; do not expect a generic data-tool call or nested wrapper to preserve MCP Apps UI metadata. A card counts as rendered only when the ChatGPT consumer visibly mounts it."
     });
   }
 
