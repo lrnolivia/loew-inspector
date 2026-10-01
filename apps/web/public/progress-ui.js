@@ -40,7 +40,7 @@ export function renderProgressRow(item, esc, { compact = false } = {}) {
   const identities = progressIdentityText(item);
   const timestamp = progressTimestamp(item);
   return `
-    <article class="task-row progress-row" data-progress-state="${esc(item.state || "recorded")}">
+    <article class="task-row progress-row" data-progress-state="${esc(item.state || "recorded")}" data-tone="${esc(state.tone)}" data-signal="${esc(state.signal || "quiet")}">
       <div class="task-state status-badge" data-tone="${esc(state.tone)}" data-signal="${esc(state.signal || "quiet")}"><span class="status-light" aria-hidden="true"></span><span>${esc(state.label)}</span></div>
       <div class="task-copy">
         <strong>${esc(item.assignment || "work item")}</strong>
