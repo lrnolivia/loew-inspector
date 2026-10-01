@@ -8,7 +8,7 @@ if (!['queue', 'claim', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete', '
 function api(endpoint, method = 'GET', body) {
   const args = ['api', endpoint, '--method', method];
   if (body) args.push('--input', '-');
-  const output = execFileSync('gh', args, { input: body ? JSON.stringify(body) : undefined, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] });
+  const output = execFileSync('gh', args, { input: body ? JSON.stringify(body) : undefined, encoding: 'utf8', maxBuffer: 8 * 1024 * 1024, stdio: ['pipe', 'pipe', 'pipe'] });
   return output.trim() ? JSON.parse(output) : null;
 }
 async function pages(endpoint) {
