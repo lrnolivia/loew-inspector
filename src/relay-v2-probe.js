@@ -3,7 +3,7 @@
 // no self-refresh, and no client-side JavaScript. The existing extension layer
 // attaches this resource only to relay_runner_progress for consumer bisecting.
 
-export const RELAY_V2_PROBE_URI = 'ui://relay/probe/minimal-v1.html';
+export const RELAY_V2_PROBE_URI = 'ui://relay/probe/minimal-v2.html';
 const CONTEXTUAL_TOOLS = new Set(['relay_runner_progress']);
 
 export function relayV2ProbeDescriptor() {
@@ -28,6 +28,7 @@ export function contextualizeRelayV2ProbeTool(tool) {
         resourceUri: RELAY_V2_PROBE_URI,
         visibility: meta.ui?.visibility || ['model', 'app']
       },
+      'ui/resourceUri': RELAY_V2_PROBE_URI,
       'openai/outputTemplate': RELAY_V2_PROBE_URI,
       'openai/widgetAccessible': true,
       'openai/toolInvocation/invoking': 'Testing Relay UI…',
