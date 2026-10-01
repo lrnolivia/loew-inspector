@@ -79,26 +79,28 @@ test('card initializes the standard MCP Apps bridge even when window.openai exis
   const browser=await chromium.launch({headless:true});
   try {
     const page=await browser.newPage();
-    await page.addInitScript(() => {
-      window.openai={requestModal:async()=>{}};
+    await page.addInitScript(()=>{window.openai={requestModal:async()=>{}}});
+    const widgetUrl='data:text/html,'+encodeURIComponent(relayContextCardResource().text);
+    await page.setContent(`<!doctype html><script>
       window.seenInitialize=false;
       window.addEventListener('message',event=>{
+        const frame=document.getElementById('widget');
         const message=event.data;
-        if(message?.jsonrpc!=='2.0')return;
+        if(event.source!==frame?.contentWindow||message?.jsonrpc!=='2.0')return;
         if(message.method==='ui/initialize'){
           window.seenInitialize=true;
-          window.postMessage({jsonrpc:'2.0',id:message.id,result:{protocolVersion:'2026-01-26'}},'*');
+          frame.contentWindow.postMessage({jsonrpc:'2.0',id:message.id,result:{protocolVersion:'2026-01-26'}},'*');
         } else if(message.method==='ui/notifications/initialized'){
-          window.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-input',params:{project:'relay'}},'*');
-          window.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:{structuredContent:{project:'relay',claim:{primary_staff:'julian',supporting_staff:['roman'],goal:'Staff routing is ready',state:'active'}}}},'*');
+          frame.contentWindow.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-input',params:{project:'relay'}},'*');
+          frame.contentWindow.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:{structuredContent:{project:'relay',claim:{primary_staff:'julian',supporting_staff:['roman'],goal:'Staff routing is ready',state:'active'}}}},'*');
         }
       });
-    });
-    await page.goto('data:text/html,'+encodeURIComponent(relayContextCardResource().text));
-    await page.locator('#title').filter({hasText:'Staff routing is ready'}).waitFor();
+    <\/script><iframe id="widget" src="${widgetUrl}"></iframe>`);
+    const frame=page.frameLocator('#widget');
+    await frame.locator('#title').filter({hasText:'Staff routing is ready'}).waitFor();
     assert.equal(await page.evaluate(()=>window.seenInitialize),true);
-    assert.equal(await page.locator('#team').textContent(),'Julian');
-    assert.equal(await page.locator('#staff').getAttribute('title'),'Julian with Roman');
+    assert.equal(await frame.locator('#team').textContent(),'Julian');
+    assert.equal(await frame.locator('#staff').getAttribute('title'),'Julian with Roman');
   } finally {await browser.close()}
 });
 
@@ -174,28 +176,30 @@ test('card can reuse the latest stored Inspector QA screenshot through standard 
   const browser=await chromium.launch({headless:true});
   try {
     const page=await browser.newPage();
-    await page.addInitScript(() => {
+    const widgetUrl='data:text/html,'+encodeURIComponent(relayContextCardResource().text);
+    await page.setContent(`<!doctype html><script>
       window.addEventListener('message',event=>{
+        const frame=document.getElementById('widget');
         const message=event.data;
-        if(message?.jsonrpc!=='2.0')return;
+        if(event.source!==frame?.contentWindow||message?.jsonrpc!=='2.0')return;
         if(message.method==='ui/initialize'){
-          window.postMessage({jsonrpc:'2.0',id:message.id,result:{protocolVersion:'2026-01-26'}},'*');
+          frame.contentWindow.postMessage({jsonrpc:'2.0',id:message.id,result:{protocolVersion:'2026-01-26'}},'*');
         } else if(message.method==='ui/notifications/initialized'){
-          window.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-input',params:{project:'relay',show_qa:true}},'*');
-          window.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:{structuredContent:{project:'relay',claim:{primary_staff:'julian',goal:'Visual proof is ready',state:'active'}}}},'*');
+          frame.contentWindow.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-input',params:{project:'relay',show_qa:true}},'*');
+          frame.contentWindow.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:{structuredContent:{project:'relay',claim:{primary_staff:'julian',goal:'Visual proof is ready',state:'active'}}}},'*');
         } else if(message.method==='tools/call'){
           const path=message.params?.arguments?.path;
           let structuredContent={status:404};
           if(path==='/api/visual?project=relay') structuredContent={status:200,body:{evidence:[{evidence_id:'vis_abcdefgh',step_label:'Relay card preview'}]}};
           if(path==='/api/visual/vis_abcdefgh/image') structuredContent={status:200,content_type:'image/png',base64:'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9WlQZQAAAABJRU5ErkJggg=='};
-          window.postMessage({jsonrpc:'2.0',id:message.id,result:{structuredContent,content:[{type:'text',text:JSON.stringify(structuredContent)}]}},'*');
+          frame.contentWindow.postMessage({jsonrpc:'2.0',id:message.id,result:{structuredContent,content:[{type:'text',text:JSON.stringify(structuredContent)}]}},'*');
         }
       });
-    });
-    await page.goto('data:text/html,'+encodeURIComponent(relayContextCardResource().text));
-    await page.locator('#qa-media').waitFor({state:'visible'});
-    assert.equal(await page.locator('#qa-media-id').textContent(),'vis_abcdefgh');
-    assert.equal(await page.locator('#qa-media-caption').textContent(),'Relay card preview');
-    assert.match(await page.locator('#qa-media-image').getAttribute('src'),/^data:image\/png;base64,/);
+    <\/script><iframe id="widget" src="${widgetUrl}"></iframe>`);
+    const frame=page.frameLocator('#widget');
+    await frame.locator('#qa-media').waitFor({state:'visible'});
+    assert.equal(await frame.locator('#qa-media-id').textContent(),'vis_abcdefgh');
+    assert.equal(await frame.locator('#qa-media-caption').textContent(),'Relay card preview');
+    assert.match(await frame.locator('#qa-media-image').getAttribute('src'),/^data:image\/png;base64,/);
   } finally { await browser.close(); }
 });
