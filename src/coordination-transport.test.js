@@ -17,6 +17,7 @@ async function fixture(t, overrides = {}) {
   const state = { engine: RUNNER_ENGINE_SHA, revision: sha, writes: 0, head: sha,
     registration: { id: 'relay', repository: 'lrnolivia/relay', managed: true, default_branch: 'main', implementation: { branch_prefixes: ['relay/'], excluded_branches: ['main'] }, coordination: { status: 'enabled', record: 'coordination/relay.json', max_active_branches: 4, lease_hours: 12 } },
     record: { project: 'relay', claims: [{ id: 'old', owner: 'owner', state: 'held', branch: 'relay/old', goal: 'Retain original objective' }], queue: [], legacy_branches: ['main'] }, ...overrides };
+  if (overrides.recordPadding) state.record.retained_history = 'x'.repeat(overrides.recordPadding);
   await writeFile(statePath, JSON.stringify(state));
   // Mock only the gh process boundary; run the actual CLI, schema validation and adapter.
   await writeFile(join(dir, 'gh'), `#!${process.execPath}
@@ -97,4 +98,14 @@ test('candidate engine sync targets the core pin and leaves canonical guard enfo
   const workflow = await readFile(new URL('../.github/workflows/coordination.yml', import.meta.url), 'utf8');
   assert.match(workflow, /options: \[[^\]]*retire/);
   assert.match(workflow, /node scripts\/coordinate.mjs/);
+});
+
+test('CLI preserves a large coordination record whose base64 response exceeds the default 1 MiB buffer', async t => {
+  const f = await fixture(t, { recordPadding: 820000 });
+  const result = await f.run();
+  assert.equal(result.status, 0, result.stderr);
+  const state = await f.read();
+  assert.equal(state.writes, 1);
+  assert.equal(state.record.retained_history.length, 820000);
+  assert.equal(state.record.claims[0].state, 'cancelled');
 });

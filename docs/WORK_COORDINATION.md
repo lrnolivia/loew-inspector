@@ -21,7 +21,7 @@ When slots are full or ownership conflicts, queue the next task and finish or re
 
 ## Deterministic tools
 
-From an updated Runner checkout, use `node scripts/coordinate.mjs <action> field [request.json]`. It uses authenticated `gh` locally or `GH_TOKEN` in Actions. Credentials stay in the credential store/environment. No OpenAI API key or paid inference is needed.
+From an updated Runner checkout, use `node scripts/coordinate.mjs <action> field [request.json]`. It uses authenticated `gh` locally or `GH_TOKEN` in Actions. Credentials stay in the credential store/environment. CLI responses have a bounded 8 MiB buffer so base64-encoded coordination history can exceed Node’s default 1 MiB subprocess limit without truncation. No OpenAI API key or paid inference is needed.
 
 `queue`, `claim`, `rescope`, `heartbeat`, `hold`, `handoff` and `complete` read the live remote main record and update it through GitHub Contents with its exact blob SHA. Concurrent writes cannot both replace the same revision: one loses, refreshes all claims and re-evaluates once. Do not commit a stale local coordination file to overwrite live ownership. Changes to policies and code remain normal PRs.
 
