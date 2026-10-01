@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T21:54:24.434Z",
+  "updated_at": "2026-10-01T21:57:16.066Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -10738,7 +10738,7 @@
       ],
       "goal": "MCP rebuild stage 2: identify the first actual-host card rendering failure with one additive read-only diagnostic tool/resource before broader rewrite.",
       "acceptance": "Preserve all 51 existing tools and original card controls. Unique self-contained resource and useful text fallback. Independently evidence static shell, script, initialization, tool result, dimensions and read-only action. Same-build actual desktop, browser and iPhone observations; no viewport substitute or unsupported host automation. Exact-head tests/review/checks; authorized serialized Git-native deployment after website release. No auth, credentials, DNS, paid-service or broad UI rewrite changes. Full MCP program remains open.",
-      "next_action": "Refresh ownership and perform admission/preflight; implement bounded additive proof, coordinate deployment after website release, route actual-user-device observations through Julian. Retire obsolete work only after separately verified writer quiescence.",
+      "next_action": "PR110 head603bbe54f294c53f78460d906323dde73f93cff3 adds diagnostic preserving52existing server tools (51model + app-only). Initial independent review cancellation fix complete. Pre-release Wrangler dry-run caught function serialization capturing __name helper; repaired with literal browser source, bundle regression+all14targeted tests pass, fresh CI/focusedreview pending. Website finalrelease cleared; merge/deploy only after finalgates/review. Actualdesktop/web/iPhone evidence NOTRUN; voice packet ready. No obsoletework retirement. Potential existing v2 model hydration packaging defect reproduced offline; original control untouched.",
       "task_class": "maintenance",
       "category": "implementation",
       "primary_team": "runner",
@@ -10748,8 +10748,8 @@
       "base_sha": "be058177e95d08db85719dcb20f402b6e4dd21db",
       "state": "active",
       "created_at": "2026-10-01T21:33:22.416Z",
-      "updated_at": "2026-10-01T21:33:22.416Z",
-      "lease_until": "2026-10-02T09:33:22.416Z"
+      "updated_at": "2026-10-01T21:57:16.066Z",
+      "lease_until": "2026-10-02T09:57:16.066Z"
     },
     {
       "id": "relay-website-notification-center-20261001",
