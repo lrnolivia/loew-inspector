@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T10:02:32.442Z",
+  "updated_at": "2026-10-01T10:02:50.653Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -9370,7 +9370,7 @@
       ],
       "goal": "Ship the Relay card v9 non-blocking bootstrap and size-reporting fixes without redesigning the card; preserve the legacy bridge card exactly as the control.",
       "acceptance": "Rotate the contextual card URI to v9; patch the v8 HTML only at serve time so cardHtml() and the legacy bridge remain unchanged; paint immediately from window.openai globals; run ui/initialize in parallel with a 4s timeout; prefer window.openai.callTool; report ui/notifications/size-changed and notifyIntrinsicHeight; show the host diagnostic line; add immediate-paint and height-reporting regression tests; update the relay-entry v9 URI pins; add docs/relay/CHATGPT_CARD_V9_BOOTSTRAP.md; npm test passes; open one draft PR; do not merge before desktop and browser consumer tests unless the owner overrides.",
-      "next_action": "Read every target from current main, verify each exact replacement target occurs exactly once, create the policy-valid branch recorded on this claim if needed, apply only the v9 handoff edits, run preflight and tests, open a draft PR, then render v9 and legacy controls for consumer testing.",
+      "next_action": "Blocked by the v9 handoff's exact-match guard: on current main, the callTool, ui/initialize ready, and ready.catch old strings each occur twice because a second literal copy exists inside the existing legacy-bridge consumer-bisect replacement code. No source edits were made. Resume only with an updated handoff that disambiguates the intended occurrence/context.",
       "task_class": "architecture",
       "category": "implementation",
       "tags": [
@@ -9386,10 +9386,10 @@
       "primary_staff": "nico",
       "supporting_staff": [],
       "base_sha": "3b1e855e9486a3c034f59db3b53797f45314b2fe",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-10-01T09:43:34.029Z",
-      "updated_at": "2026-10-01T10:01:31.805Z",
-      "lease_until": "2026-10-01T22:01:31.805Z",
+      "updated_at": "2026-10-01T10:02:50.653Z",
+      "lease_until": "2026-10-01T22:02:50.653Z",
       "amendment_count": 1,
       "amendments": [
         {
