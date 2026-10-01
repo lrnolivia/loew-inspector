@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { RELAY_CONTEXT_CARD_URI, relayContextCardDescriptor, relayContextCardResource, contextualizeRelayTool } from "./relay-chat-ui.js";
+import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, relayContextCardDescriptor, relayContextCardResource, relayContextCardTool, validateRelayContextCardArguments, contextualizeRelayTool } from "./relay-chat-ui.js";
 
 test("Relay 1.8 publishes one compact MCP card resource", () => {
   const descriptor = relayContextCardDescriptor();
