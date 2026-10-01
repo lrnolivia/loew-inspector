@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T22:38:43.667Z",
+  "updated_at": "2026-10-01T22:43:47.357Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -10809,7 +10809,7 @@
       ],
       "goal": "Next website round: implement compact actionable notification center/toasts and repair Inspector review overlay, preserving approved released website design and original notification acceptance.",
       "acceptance": "After full verified completion of current website fixes, place a notification bell/menu near the existing Live pill without moving the approved top workspace/connection line. Design compact message-notification-like pop-up toasts that can be dismissed and time out, with differing importance levels, source-feature accent colors, source identity badge and contextual supported actions. Preserve important notifications in the bell menu after toast timeout so alerts are not lost; dismissal does not mark a problem resolved. Use accessible text/severity indicators in addition to color, keyboard/focus support, sensible motion/reduced-motion, and avoid decorative card-edge strips. Avoid oversized error banners. Feature accent and severity are separate concepts. Origin badges must identify actual known project/actor/source without invented senders. Action buttons must use supported guarded operations or useful links and expose results; do not fake execution or approvals. Toast timing, grouping, retention and exact identity schema are design decisions to specify; no live message sends, notification subscriptions or external actions authorized by this backlog entry.\nCurrent website fixes are now verified complete. User explicitly moved Inspector panel work into this round: shared approved neutral palette; reproduce/fix random code in notes entry without losing notes; sequential Back and Next (Finish on last step), distinct from exit/back; truthful durable autosave Saving/Saved/Failed and retry across navigation; discreet opposite-corner static/live preview selector, live prioritized only when actual authorized preview exists and honest fallback. All controls touch/keyboard/focus accessible; floating UI must never permanently obscure content. Keep modular List/Visual viewer/filter/bulk-action project separate. Preserve readable identities and plain language. Implement only admitted paths; report backend scope needed before extending. Exact-head tests/rendered evidence/review required; coordinated serialized release under user's current finish-and-merge authorization.",
-      "next_action": "Julian: review draft PR111 at exact head 2fc5bc51f1eea376762ccf0625cb126745e367ce. Build, typecheck, all 331 tests and final CI 36934188396 passed. All 18 Inspector captures are registered, byte-verified and visually inspected at 1440/390/320px; IDs and review links are in the PR body. Same-owner CAS rescope admitted the bounded CI wiring repair. No backend or held MCP edits. The isolated checkout is clean. After review, coordinate serialized merge and production acceptance; this phase is not merged or deployed yet.",
+      "next_action": "Both independent review blockers reproduced and fixed on 70def2210405e157ca362c60256aff9b4e0886b9; 334 local tests pass, coordination PR gate passes, exact-head CI and 24 evidence registration pending. Await focused independent review; merge held until MCP PR112 healthy receipt and Julian clearance.",
       "task_class": "design",
       "category": "implementation",
       "labels": [
@@ -10833,8 +10833,8 @@
       "base_sha": "2718c97d28871d2f86e3348dac281712ddcae9a5",
       "state": "active",
       "created_at": "2026-10-01T21:54:24.434Z",
-      "updated_at": "2026-10-01T22:24:19.420Z",
-      "lease_until": "2026-10-02T10:24:19.420Z"
+      "updated_at": "2026-10-01T22:43:47.357Z",
+      "lease_until": "2026-10-02T10:43:47.357Z"
     },
     {
       "id": "relay-mcp-card-action-proof-20261001",
