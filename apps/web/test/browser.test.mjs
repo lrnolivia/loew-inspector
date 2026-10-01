@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import http from "node:http";
 import { chromium } from "playwright";
 import { webAssets, mcpHtml } from "../generated.js";
+import { fitTransform, wheelPanDelta, wheelZoomFactor } from "../public/qa-viewport.js";
 
 const evidence = {
   evidence_id: "vis_12345678-abcd", captured_at: "2026-09-30T15:00:00Z", step_label: "Relay navigation",
@@ -10,6 +11,15 @@ const evidence = {
 };
 const questions = [{ id: "intent", prompt: "Is the next action clear?", reason: "Check the Relay flow." }];
 const pixel = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Y9ZlAAAAABJRU5ErkJggg==", "base64");
+
+test("Inspector camera math mirrors Field input semantics", () => {
+  const fit = fitTransform(1200, 800, 1440, 900);
+  assert.ok(fit.scale > 0 && fit.scale <= 2);
+  assert.ok(Number.isFinite(fit.x) && Number.isFinite(fit.y));
+  const pan = wheelPanDelta({ deltaMode: 0, deltaX: 12, deltaY: 18 }, 800);
+  assert.ok(pan.dx < 0 && pan.dy < 0);
+  assert.ok(wheelZoomFactor({ deltaMode: 0, deltaY: -12, metaKey: false }) > 1);
+});
 
 test("shared interface works on web and MCP host transport, including mobile, deep links and exact review saves", async () => {
   let review = null;
@@ -247,58 +257,56 @@ test("shared interface works on web and MCP host transport, including mobile, de
       assert.equal(await view.locator(".review-row").first().evaluate(node => getComputedStyle(node).flexDirection), "column");
       await view.locator("[data-review-id]").click();
       if (mode === "web") {
-        await view.locator(".qa-panel-body .skeleton-inspector").waitFor();
-        assert.equal(await view.locator(".skeleton-inspector .skeleton-answer").count(), 6);
-        assert.equal(await view.locator(".skeleton-inspector .skeleton-notes").count(), 1);
+        await view.locator(".qa-review-loading").waitFor();
         releaseLoading();
-        await view.locator(".skeleton-inspector").waitFor({ state: "detached" });
+        await view.locator(".qa-review-loading").waitFor({ state: "detached" });
       }
-      await view.locator(".qa-product-badge strong").filter({ hasText: "relay" }).waitFor();
-      assert.equal(await view.locator(".qa-tool-identity").textContent(), "inspector");
-      assert.equal(await view.locator(".qa-panel-identity > :first-child").getAttribute("class"), "qa-tool-identity");
-      assert.equal(await view.locator(".qa-panel-head").evaluate(node => getComputedStyle(node).backgroundColor), "rgb(39, 39, 37)");
-      assert.equal(await view.locator(".qa-save-row").evaluate(node => node.parentElement.className), "qa-companion");
+      await view.locator(".qa-project-pill strong").filter({ hasText: "relay" }).waitFor();
+      assert.equal(await view.locator(".qa-review-progress").textContent(), "Review 1 of 1");
+      assert.equal(await view.locator(".qa-tool-identity").count(), 0);
+      assert.equal(await view.locator(".qa-panel-head").count(), 0);
+      assert.equal(await view.locator(".qa-save-row").count(), 0);
+      assert.equal(await view.locator(".qa-overall").count(), 0);
+      assert.equal(await view.locator(".qa-details").count(), 0);
+      assert.equal(await view.locator("[data-qa-close]").count(), 0);
+      assert.equal(await view.locator(".qa-companion").evaluate(node => getComputedStyle(node).backgroundColor), "rgb(52, 49, 46)");
+      assert.equal(await view.locator(".qa-companion").evaluate(node => getComputedStyle(node).borderRadius), "28px");
+      await view.locator(".qa-camera").waitFor();
+      assert.notEqual(await view.locator(".qa-camera").evaluate(node => getComputedStyle(node).transform), "none");
       if (mode === "web") {
         const panel = view.locator(".qa-companion");
-        await page.screenshot({ path: "/tmp/relay-inspector-polish-desktop.png" });
         const before = await panel.boundingBox();
-        await page.mouse.move(before.x + 3, before.y + before.height - 3);
+        assert.ok(Math.abs(before.width - 450) < 2, "Inspector opens at the Figma 450px width");
+        await page.mouse.move(before.x + 3, before.y + 3);
         await page.mouse.down();
-        await page.mouse.move(before.x - 220, before.y + before.height + 30, { steps: 12 });
+        await page.mouse.move(before.x - 90, before.y - 40, { steps: 8 });
         await page.mouse.up();
         const expanded = await panel.boundingBox();
-        assert.ok(expanded.width > before.width + 100, "The native resize grip expands the floating Inspector");
-        assert.equal(await view.locator(".qa-panel-body").evaluate(node => getComputedStyle(node).gridTemplateColumns.split(" ").length), 2);
-        await page.screenshot({ path: "/tmp/relay-inspector-polish-expanded.png" });
-        await panel.evaluate(node => { node.style.width = "300px"; node.style.height = "310px"; });
-        assert.equal(await view.locator(".qa-answer-grid").evaluate(node => getComputedStyle(node).gridTemplateColumns.split(" ").length), 1);
-        const footer = await view.locator(".qa-save-row").boundingBox();
-        const narrow = await panel.boundingBox();
-        const closeButton = await view.locator("[data-qa-close]").boundingBox();
-        assert.equal(await view.locator(".qa-tool-identity span").evaluate(node => getComputedStyle(node).display), "block");
-        assert.ok(closeButton.x + closeButton.width <= narrow.x + narrow.width, "Window controls remain inside the narrowed panel");
-        assert.ok(footer.y + footer.height <= narrow.y + narrow.height + 1, "Save stays visible in a short panel");
-        await page.screenshot({ path: "/tmp/relay-inspector-polish-narrow.png" });
-        await panel.evaluate(node => { node.style.width = ""; node.style.height = ""; });
+        assert.ok(expanded.width > before.width + 50, "Invisible edge resize expands the floating Inspector");
+        assert.equal(await panel.evaluate(node => getComputedStyle(node).resize), "none");
+        await panel.evaluate(node => { node.style.width = "450px"; node.style.height = ""; });
+        await page.screenshot({ path: "/tmp/relay-inspector-spatial-canvas.png" });
       }
-      await view.getByRole("button", { name: "Yes", exact: true }).click();
-      await view.getByRole("button", { name: "Looks good", exact: true }).click();
+      await view.getByRole("button", { name: "Yes, clear", exact: true }).click();
       await view.locator(".qa-save-state").filter({ hasText: "Saved" }).waitFor();
-      await view.locator(".qa-resolution").filter({ hasText: "Your review is saved" }).waitFor();
-      assert.equal(review.evidence_id, evidence.evidence_id); assert.equal(review.answers.intent, "yes");
+      assert.equal(review.evidence_id, evidence.evidence_id);
+      assert.equal(review.answers.intent, "yes");
+      assert.equal(review.overall, "looks_good");
       await view.locator(".qa-notes textarea").fill("A durable note on this exact capture.");
       await view.locator(".qa-save-state").filter({ hasText: "Saved" }).waitFor();
       assert.equal(await view.locator(".qa-notes textarea").inputValue(), "A durable note on this exact capture.");
-      await view.getByRole("button", { name: "Close QA", exact: true }).click();
+      await page.keyboard.press("Escape");
+      await view.locator(".qa-stage").waitFor({ state: "detached" });
       assert.equal(await view.locator(".review-list").evaluate(node => getComputedStyle(node).gap), "28px");
       assert.equal(await view.locator(".operator-brand strong").evaluate(node => getComputedStyle(node).color), "rgb(251, 250, 247)");
       await view.getByRole("button", { name: "Switch to light mode", exact: true }).click();
       assert.equal(await view.locator("html").getAttribute("data-theme"), "light");
       assert.equal(await view.locator(".operator-brand strong").evaluate(node => getComputedStyle(node).color), "rgb(181, 71, 31)");
       await view.locator("[data-review-id]").click();
-      await view.locator(".qa-product-badge strong").waitFor();
-      assert.equal(await view.locator(".qa-panel-head").evaluate(node => getComputedStyle(node).backgroundColor), "rgb(255, 255, 255)");
-      await view.getByRole("button", { name: "Close QA", exact: true }).click();
+      await view.locator(".qa-project-pill strong").waitFor();
+      assert.equal(await view.locator(".qa-companion").evaluate(node => getComputedStyle(node).backgroundColor), "rgb(52, 49, 46)");
+      await page.keyboard.press("Escape");
+      await view.locator(".qa-stage").waitFor({ state: "detached" });
       await view.getByRole("button", { name: "Switch to dark mode", exact: true }).click();
       assert.equal(await view.locator("html").getAttribute("data-theme"), "dark");
       await view.locator("#app-settings").evaluate(node => { window.open = href => { window.__testExternal = href; }; node.click(); });
@@ -325,7 +333,7 @@ test("shared interface works on web and MCP host transport, including mobile, de
         await page.screenshot({ path: "/tmp/relay-b4-mobile-light.png", fullPage: true });
         await page.goto(origin + "#review?evidence=" + evidence.evidence_id);
         await page.locator(".qa-stage").waitFor();
-        assert.equal(await page.locator(".qa-answer.selected").textContent(), "Yes");
+        assert.equal(await page.locator(".qa-answer.selected").textContent(), "Yes, clear");
         assert.equal(await page.locator(".qa-companion").evaluate(node => getComputedStyle(node).resize), "none");
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
         await page.screenshot({ path: "/tmp/relay-inspector-polish-mobile.png" });
