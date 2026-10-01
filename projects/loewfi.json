@@ -77,6 +77,11 @@
   "cloud": {
     "provider": "cloudflare",
     "worker": "loewfi",
-    "write": true
+    "write": true,
+    "transport": "workers-builds",
+    "production_branch": "main",
+    "build_command": "pnpm build",
+    "deploy_command": "npx wrangler deploy --assets ./dist --compatibility-date 2026-08-28",
+    "manual_upload": "recovery-only"
   }
 }
