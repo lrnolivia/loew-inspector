@@ -55,6 +55,13 @@ jobs:
         run: npm run typecheck:2.0 --workspace @relay/web
       - name: Run workspace, contract, API, browser and React tests
         run: npm test
+      - name: Preserve actual website route screenshots
+        if: always() && startsWith(github.head_ref, 'relay/website-2.0-repair-')
+        uses: actions/upload-artifact@v4
+        with:
+          name: relay-website-${{ github.event.pull_request.number }}
+          path: qa-evidence/website/
+          if-no-files-found: error
   visual-review-preview:
     needs: quality
     if: github.event_name == 'pull_request' && github.event.pull_request.draft == true && startsWith(github.head_ref, 'relay/2.0-approved-visual-port-')
