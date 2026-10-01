@@ -20,8 +20,15 @@ export function deriveObservedProgress({ project, claim, branch, commit, pullReq
     if (check?.completed_at) events.push(progressEvent("check-completed", check.completed_at, { check: check.name, conclusion: check.conclusion }));
   }
   const cloudDeployments = deployments(cloud);
-  const latestDeployment = cloudDeployments[0] || null;
-  if (latestDeployment?.created_on) events.push(progressEvent("cloud-deployment", latestDeployment.created_on, { deployment_id: latestDeployment.id }));
+  const cloudVersions = versions(cloud);
+  const sourceIdentity = pullRequest?.merge_commit_sha || claim?.merge_commit_sha || branch?.commit?.sha || claim?.merged_head_sha || null;
+  const matchedVersion = sourceIdentity
+    ? cloudVersions.find(version => version?.annotations?.["workers/commit_sha"] === sourceIdentity) || null
+    : null;
+  const matchedDeployment = matchedVersion
+    ? cloudDeployments.find(deployment => Array.isArray(deployment?.versions) && deployment.versions.some(item => item?.version_id === matchedVersion.id)) || null
+    : null;
+  if (matchedDeployment?.created_on) events.push(progressEvent("cloud-deployment", matchedDeployment.created_on, { deployment_id: matchedDeployment.id }));
   const ordered = dedupeProgressEvents(events);
   const latest = ordered[0] || null;
   const workerFreshness = freshness(claim?.updated_at || claim?.created_at, now, policy);
@@ -49,15 +56,14 @@ export function deriveObservedProgress({ project, claim, branch, commit, pullReq
   if (reconciliation.disposition === "reconciliation-required" && !["complete","failed"].includes(state)) {
     state = "blocked"; stage = "reconciliation"; recovery_action = "Reconcile Runner ownership with live branch/PR inventory.";
   }
-  const latestVersion = versions(cloud)[0] || null;
   const identities = {
     base_sha: claim?.base_sha || null, branch: claim?.branch || null,
-    head_sha: branch?.commit?.sha || claim?.merged_head_sha || null,
+    head_sha: branch?.commit?.sha || pullRequest?.head?.sha || claim?.merged_head_sha || null,
     pr: pullRequest?.number || claim?.pr || null,
     pr_head_sha: pullRequest?.head?.sha || claim?.merged_head_sha || null,
-    merge_commit_sha: claim?.merge_commit_sha || null,
-    cloud_worker: cloud?.script || null, cloud_version_id: latestVersion?.id || null,
-    cloud_deployment_id: latestDeployment?.id || null
+    merge_commit_sha: pullRequest?.merge_commit_sha || claim?.merge_commit_sha || null,
+    cloud_worker: cloud?.script || null, cloud_version_id: matchedVersion?.id || null,
+    cloud_deployment_id: matchedDeployment?.id || null
   };
   const receipt = progressReceipt({ project, assignment: claim?.id, stage, state, last_meaningful_progress_at: latest?.at || null, identities, latest_event: latest });
   return {
