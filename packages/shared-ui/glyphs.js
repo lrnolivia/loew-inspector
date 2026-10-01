@@ -4,6 +4,8 @@ const shapes = {
   projects: '<rect x="3" y="3" width="7" height="7" rx="2.5"/><rect x="14" y="3" width="7" height="7" rx="2.5"/><rect x="3" y="14" width="7" height="7" rx="2.5"/><rect x="14" y="14" width="7" height="7" rx="2.5"/>',
   review: '<path d="M3 12c4-8 14-8 18 0-4 8-14 8-18 0Z"/><circle class="glyph-detail" cx="12" cy="12" r="3"/>',
   moon: '<path d="M20 15A9 9 0 0 1 9 4a9 9 0 1 0 11 11Z"/>',
+  sun: '<circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M2 12h2m16 0h2M5 5l1.4 1.4m11.2 11.2L19 19M5 19l1.4-1.4M17.6 6.4 19 5"/>',
+  refresh: '<path d="M20 7v5h-5M4 17v-5h5"/><path d="M6 7a7 7 0 0 1 12-1l2 3M4 15l2 3a7 7 0 0 0 12-1"/>',
   next: '<path d="m9 5 7 7-7 7"/>',
   previous: '<path d="m15 5-7 7 7 7"/>',
   close: '<path d="m6 6 12 12M18 6 6 18"/>',

@@ -108,7 +108,7 @@ button:active .relay-glyph, summary:active .relay-glyph { transform: scale(.84);
 .clear-card, .attention-card, .automation-row, .review-row, .project-list, .project-detail, .flow-band { box-shadow: 0 8px 24px -14px #00000045; }
 .operator-button, .glyph-chip, .qa-answer, .qa-overall-button { box-shadow: 0 4px 12px -8px #00000040; }
 .project-icon img, .operator-brand img, .subsystem-context img, .qa-panel-brand img { filter: drop-shadow(0 4px 7px #00000022); }
-@media (prefers-color-scheme:light) { .clear-card, .attention-card, .automation-row, .review-row, .project-list, .project-detail, .flow-band { box-shadow: 0 8px 24px -14px #30271f24; } }
+:root[data-theme="light"] .clear-card, :root[data-theme="light"] .attention-card, :root[data-theme="light"] .automation-row, :root[data-theme="light"] .review-row, :root[data-theme="light"] .project-list, :root[data-theme="light"] .project-detail, :root[data-theme="light"] .flow-band { box-shadow: 0 8px 24px -14px #30271f24; }
 @media (max-width: 1100px) { .operator-topbar { width: 280px; padding: 28px 18px; } .operator-shell { margin-left: 280px; padding-left: 28px; padding-right: 28px; } .project-layout { grid-template-columns: 220px minmax(0,1fr); } .today-task { grid-template-columns: 1fr; gap: 12px; } }
 @media (max-width: 900px) {
   .operator-topbar { position: static; width: 100%; display: grid; grid-template-columns: 1fr auto; padding: 24px; gap: 20px; overflow: visible; }
@@ -151,9 +151,8 @@ body { padding-top: 4px; }
 .terra-accent span:nth-child(3) { background: var(--color-resolve); }
 .operator-topbar { border-radius: 0; top: 4px; }
 .qa-flow-badge { margin-bottom: 18px; }
-@media (prefers-color-scheme: light) {
-  .flow-stages .current, .flow-band[data-phase=act] .flow-stages .current, .flow-band[data-phase=resolve] .flow-stages .current, .qa-progress { color: var(--color-text-primary); }
-}
+:root[data-theme="light"] .flow-stages .current, :root[data-theme="light"] .flow-band[data-phase=act] .flow-stages .current, :root[data-theme="light"] .flow-band[data-phase=resolve] .flow-stages .current, :root[data-theme="light"] .qa-progress { color: var(--color-text-primary); }
+
 
 .attention-action > .badge { display: inline-flex; margin: 0; font-size: 15px; line-height: 21px; color: var(--color-text-primary); }
 
