@@ -75,6 +75,11 @@
   "cloud": {
     "provider": "cloudflare",
     "worker": "thetake",
-    "write": true
+    "write": true,
+    "transport": "workers-builds",
+    "production_branch": "main",
+    "build_command": "",
+    "deploy_command": "npx wrangler deploy",
+    "manual_upload": "recovery-only"
   }
 }

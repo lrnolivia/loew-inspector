@@ -194,8 +194,8 @@ async function lookupVersion(cloud, path, commitSha) {
 
 export const cloudUploadTool = {
   name: "relay_cloud_upload_version",
-  title: "Upload exact-source Worker version",
-  description: "Exact-source upload path for allowlisted Workers that still use direct source publication. Canonical relay/relay publication is disabled here; Relay production and recovery use Cloudflare Workers Builds or known-good version rollback.",
+  title: "Recovery upload exact-source Worker version",
+  description: "Recovery/diagnostic-only exact-source upload for allowlisted Workers. Normal web-family publication uses GitHub -> Cloudflare Workers Builds. Canonical Relay source upload is disabled; recover Relay with Workers Builds or known-good version rollback.",
   inputSchema: {
     type: "object",
     properties: {
@@ -205,7 +205,7 @@ export const cloudUploadTool = {
       purpose: { type: "string", enum: ["recovery", "diagnostic"] },
       message: { type: "string", maxLength: 1000 }
     },
-    required: ["script", "repo", "commit_sha"],
+    required: ["script", "repo", "commit_sha", "purpose"],
     additionalProperties: false
   },
   annotations: { readOnlyHint: false, destructiveHint: false, idempotentHint: true, openWorldHint: true }
@@ -217,7 +217,7 @@ export function validateCloudUploadArguments(args) {
   if (!SCRIPT.test(args.script || "")) throw new Error("Invalid Worker script");
   if (!REPO.test(args.repo || "")) throw new Error("Invalid GitHub repository");
   if (!SHA.test(args.commit_sha || "")) throw new Error("Invalid exact source commit SHA");
-  if (args.purpose !== undefined && !["recovery", "diagnostic"].includes(args.purpose)) throw new Error("Invalid manual upload purpose");
+  if (!["recovery", "diagnostic"].includes(args.purpose)) throw new Error("Normal publication uses Cloudflare Workers Builds; manual upload requires explicit recovery or diagnostic purpose");
   if (args.message !== undefined && (typeof args.message !== "string" || args.message.length > 1000)) throw new Error("Invalid upload message");
   return args;
 }

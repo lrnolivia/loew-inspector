@@ -84,7 +84,8 @@ const args = {
   script,
   repo,
   commit_sha: commit,
-  message: "Exact merged source"
+  message: "Exact merged source",
+  purpose: "diagnostic"
 };
 
 test("upload arguments require exact bounded identities", () => {
@@ -195,7 +196,7 @@ test("unsupported relative module types are rejected instead of silently omitted
 });
 
 
-test("canonical relay Worker rejects ordinary manual publication", async () => {
+test("canonical relay Worker rejects diagnostic source upload", async () => {
   const f = fixture({ wranglerName: "relay" });
   await assert.rejects(
     uploadCloudSourceVersion(
@@ -247,4 +248,32 @@ test("source vars cannot replace secrets or arbitrary bindings", async () => {
   const cloud = async path => path.endsWith("/settings") ? { bindings: [{ name: "RELAY_GITHUB_APP_ID", type: "secret_text" }] } : g.cloud(path);
   await assert.rejects(uploadCloudSourceVersion(args, g.env, { ...g, cloud }), /protected binding/);
   assert.equal(g.uploads.length, 0);
+});
+
+for (const project of ["field", "loewfi", "loewtorials", "thetake"]) {
+  test(project + " ordinary publication fails before any source read or cloud mutation", async () => {
+    const f = fixture({ wranglerName: project, writeScripts: project });
+    const { purpose, ...ordinary } = args;
+    await assert.rejects(
+      uploadCloudSourceVersion({ ...ordinary, script: project, repo: project }, f.env, f),
+      /Workers Builds; manual upload requires explicit recovery or diagnostic purpose/
+    );
+    assert.deepEqual(f.githubCalls, []);
+    assert.deepEqual(f.cloudCalls, []);
+    assert.deepEqual(f.uploads, []);
+  });
+}
+test("manual recovery requires an explicit supported purpose", async () => {
+  const f = fixture({ wranglerName: "field", writeScripts: "field" });
+  await assert.rejects(
+    uploadCloudSourceVersion({ ...args, script: "field", repo: "field", purpose: "production" }, f.env, f),
+    /requires explicit recovery or diagnostic purpose/
+  );
+  assert.deepEqual(f.githubCalls, []);
+  for (const purpose of ["recovery", "diagnostic"]) {
+    const g = fixture({ wranglerName: "field", writeScripts: "field" });
+    const result = await uploadCloudSourceVersion({ ...args, script: "field", repo: "field", purpose }, g.env, g);
+    assert.equal(result.ok, true);
+    assert.equal(g.uploads[0].metadata.annotations["workers/tag"], "relay-" + purpose + "-source-upload");
+  }
 });
