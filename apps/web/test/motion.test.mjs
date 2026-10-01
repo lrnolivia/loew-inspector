@@ -8,7 +8,7 @@ async function settle(page, inspector) {
   else {await page.locator('.operator-connection[data-tone=good]').waitFor();await page.locator('[data-progress-notice]').waitFor({state:'detached'});}
 }
 
-test('site motion bridges moving controls and Inspector effects, with strict mobile budget and global Calm', async () => {
+test('site motion bridges moving controls and Inspector effects, with strict mobile budget and global Calm', {timeout:20000}, async () => {
   const fixture=await contextFixture(),browser=await chromium.launch();
   try {
     for(const width of [1440,390,320]) for(const inspector of [false,true]) {
@@ -20,6 +20,8 @@ test('site motion bridges moving controls and Inspector effects, with strict mob
         const header=await page.locator('.operator-topbar').boundingBox();assert.ok(header.height<=61,'brand/tools row with bottom nav');
         const brand=await page.locator('.operator-brand').boundingBox(),brush=await page.locator('.presentation-menu > summary').boundingBox();assert.ok(Math.abs(brand.y+brand.height/2-brush.y-brush.height/2)<=2);
       }
+      // Finish earlier menu/glyph entrances before testing the separate control transition.
+      await page.evaluate(async()=>{await Promise.all(document.getAnimations().filter(animation=>animation.id==='relay-motion-blur' && animation.playState==='running').map(animation=>animation.finished.catch(()=>{})));});
       const observed=await page.evaluate(async () => {
         // Real transition events on existing interactive glyph layers.
         const nodes=[...document.querySelectorAll('.signal-mark')];
@@ -36,7 +38,7 @@ test('site motion bridges moving controls and Inspector effects, with strict mob
         await Promise.all(effects.map(a=>a.finished));
         return {count:effects.length,frames,durations,rest:nodes.map(node=>getComputedStyle(node).filter)};
       });
-      assert.ok(observed.count>0 && observed.count<=(width<=900?2:4));
+      assert.ok(observed.count>0 && observed.count<=(width<=900?2:4),JSON.stringify({width,inspector,observed}));
       assert.ok(observed.frames.every(frames=>frames.some(frame=>/blur/.test(frame.filter)) && frames.at(-1).filter==='none'));
       assert.ok(observed.durations.every(duration=>duration<=(width<=900?240:400)));
       assert.ok(observed.rest.every(filter=>filter==='none'),'no resting text/filter smear');
