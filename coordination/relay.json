@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T02:57:33.950Z",
+  "updated_at": "2026-10-01T02:57:49.713Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3348,6 +3348,68 @@
       ],
       "state": "queued",
       "created_at": "2026-10-01T02:57:33.950Z"
+    },
+    {
+      "id": "relay-1.9.6.2-operational-staff-routing-20261001",
+      "owner": "relay-1.9-wrapup-20261001",
+      "goal": "Ship Relay 1.9.6.2 as operational staff routing plus the conversational contextual-card repair, then continue as the wrap-up worker for the remaining Relay 1.9 patch train through 1.9.9 under the umbrella mandate.",
+      "acceptance": "Add durable assignment-level primary_staff and supporting_staff metadata resolved from the canonical sticky staff registry while preserving machine owner IDs and authorization underneath. Validate active/reserve/retired rules, duplicates, amend history, role/staff compatibility where appropriate, and deterministic fallback. Carry named teams through queue/claim/amend, resume/updates, worker communication, executive status and human-first presentation. Repair the normal in-chat MCP visual path: contextual Relay tools must attach and render the compact context-card surface from src/relay-chat-ui.js / ui://relay/context-card/...; do not substitute the full control-center/dashboard. Cards should represent staff ownership, status/progress, connected handoffs, blockers, QA and useful actions with technical evidence subordinate. The dashboard remains an explicit Open Relay destination. Preserve exact machine/evidence identity, no staff-based authorization, no productivity scoring. Add regression tests for staff routing and card descriptor/resource linkage, pass exact-head admission/CI, merge/deploy, refresh ChatGPT and verify the card renders in a fresh consumer. After 1.9.6.2 verification, continue owning coherent 1.9.7/1.9.8/1.9.9 successors from current canonical findings/state without stopping for reassignment or creating empty versions; close the umbrella only after final fresh-consumer verification.",
+      "next_action": "Claim from current main. First make primary_staff/supporting_staff canonical Runner metadata and project it through resume/updates/communication. Then repair and verify the contextual in-chat card descriptor/resource path, keeping the full dashboard separate. Ship 1.9.6.2 exact-head. After verification, read the 1.9 umbrella + open findings and continue through coherent 1.9.7, 1.9.8 and 1.9.9 work until the umbrella can close.",
+      "paths": [
+        "contracts/staff-routing/",
+        "contracts/assignments/",
+        "src/staff-registry.js",
+        "src/staff-registry.test.js",
+        "src/assignment-taxonomy.js",
+        "src/assignment-taxonomy.test.js",
+        "src/coordination-engine.js",
+        "src/coordination.mjs",
+        "src/runner-control-core.js",
+        "src/runner-control.js",
+        "src/runner-control.test.js",
+        "src/resume-checkpoints.js",
+        "src/resume-checkpoints.test.js",
+        "src/amendment-sync.js",
+        "src/amendment-sync.test.js",
+        "src/worker-communication.js",
+        "src/worker-communication.test.js",
+        "src/communication-presentation.js",
+        "src/communication-presentation.test.js",
+        "src/executive-communication-skill.js",
+        "src/relay-chat-ui.js",
+        "src/relay-chat-ui.test.js",
+        "src/relay-entry.js",
+        "src/relay-entry.test.js",
+        "docs/relay/RELAY_1_9_6_2_RELEASE.md"
+      ],
+      "resources": [
+        "relay-1.9.6.2-release",
+        "relay-operational-staff-routing",
+        "relay-primary-supporting-staff",
+        "relay-contextual-chat-cards",
+        "relay-human-first-status",
+        "relay-mcp-context-card-rendering"
+      ],
+      "task_class": "architecture",
+      "ledger_refs": [
+        "RFS-024",
+        "RFS-025",
+        "RFS-028",
+        "RFS-030"
+      ],
+      "category": "coordination",
+      "tags": [
+        "staff-routing",
+        "context-card",
+        "1.9-wrapup"
+      ],
+      "primary_role": "coordinator",
+      "supporting_roles": [
+        "systems-architect",
+        "verifier"
+      ],
+      "state": "queued",
+      "created_at": "2026-10-01T02:57:49.713Z"
     }
   ],
   "claims": [
