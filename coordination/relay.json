@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T04:21:20.443Z",
+  "updated_at": "2026-10-01T04:23:15.424Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6441,10 +6441,16 @@
       "primary_staff": "valentina",
       "supporting_staff": [],
       "base_sha": "9b865cefeeaa73b9a69bbb51ae01bae4172d7277",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T04:13:18.053Z",
-      "updated_at": "2026-10-01T04:13:18.053Z",
-      "lease_until": "2026-10-01T16:13:18.053Z"
+      "updated_at": "2026-10-01T04:23:15.424Z",
+      "lease_until": "2026-10-01T16:23:15.424Z",
+      "pr": 77,
+      "merged_head_sha": "18c3a8eb00acac56a5e8ab2f12ebee9a7dc31b6f",
+      "merge_commit_sha": "ae18739ba89dcac389f072e0d1bb377bcc40ea5c",
+      "evidence": "Relay 1.9.7 design-class skill-pack release merged via PR #77. Exact head 18c3a8eb00acac56a5e8ab2f12ebee9a7dc31b6f passed Runner coordination admission and squash-merged as ae18739ba89dcac389f072e0d1bb377bcc40ea5c. The release adds Inspector-led art direction/anti-slop, flow/IA, motion, visual QA, team-routing composition, platform guidance for web/macOS/Windows/Android/GNOME, capability-aware Figma orchestration, and performance budgets/visual-performance guidance. No Worker deployment is required because this release changes repository skill guidance/release documentation only and does not alter the Worker bundle or runtime authority.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T04:23:15.424Z"
     }
   ],
   "migrated_from": "loew-inspector"
