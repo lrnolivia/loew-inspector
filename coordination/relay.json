@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T17:56:51.704Z",
+  "updated_at": "2026-10-01T18:02:12.095Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -10013,10 +10013,16 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "a6f74168ce78a3c5e57b55093007042279e1272e",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T17:56:51.704Z",
-      "updated_at": "2026-10-01T17:56:51.704Z",
-      "lease_until": "2026-10-02T05:56:51.704Z"
+      "updated_at": "2026-10-01T18:02:12.095Z",
+      "lease_until": "2026-10-02T06:02:12.095Z",
+      "pr": 102,
+      "merged_head_sha": "e51742b04983c35175e6d71201e690b62fef9bbc",
+      "merge_commit_sha": "99dc3f0c6502629dbae57eacd9afe698a7fc9622",
+      "evidence": "PR #102 merged as 99dc3f0c6502629dbae57eacd9afe698a7fc9622. Clean GitHub checkout contained no apps/web/generated*.js files; npm run build recreated them, typecheck and full test suite passed. Cloudflare Workers Builds push-event build 95d4d0ed-7823-4e2b-bb18-573efaf0be0b cloned exact merge 99dc3f0c, rebuilt ephemeral web/MCP bundles, completed npx wrangler deploy, and produced Worker version 29188c28-3970-4e8b-983f-60f2b2ca2144.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T18:02:12.095Z"
     }
   ],
   "migrated_from": "loew-inspector"
