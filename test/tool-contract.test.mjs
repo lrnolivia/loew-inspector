@@ -6,8 +6,8 @@ import { sourceTextMutationTools } from "../src/source-text-mutation.js";
 import { OPERATION_RECIPE_CONTRACTS, OPERATION_RECIPE_CONTRACT_VERSION } from "../src/operation-recipes.js";
 import { TOOL_DESIGN_STANDARD_VERSION, TOOL_ERROR_CLASSES } from "../src/operations.js";
 
-test("Relay 1.9.8 publishes one tool-design contract version",()=>{
-  assert.equal(RELAY_EXTENSION_VERSION,"1.9.8");
+test("Relay 1.9.9 publishes one tool-design contract version",()=>{
+  assert.equal(RELAY_EXTENSION_VERSION,"1.9.9");
   assert.equal(OPERATION_RECIPE_CONTRACT_VERSION,TOOL_DESIGN_STANDARD_VERSION);
   assert.equal(TOOL_DESIGN_STANDARD_VERSION,"1.0.0");
 });
