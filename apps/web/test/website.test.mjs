@@ -33,7 +33,7 @@ test("actual built website navigation leaves Inspector for React on desktop and 
     if (url.pathname === "/api/workers") return res.end(JSON.stringify(workers));
     if (url.pathname === "/api/progress/relay") return res.end(JSON.stringify(progress));
     if (url.pathname === "/api/visual") return res.end(JSON.stringify({ evidence: [] }));
-    if (url.pathname === "/api/projects/relay") return res.end(JSON.stringify({ project: { id: "relay", name: "relay" }, coordination: { claims: [] } }));
+    if (url.pathname === "/api/projects/relay") return res.end(JSON.stringify({ project: { id: "relay", name: "relay" }, coordination: { claims: [{ id: "website-repair", state: "active" }] } }));
     res.statusCode = 404; res.end("{}");
   });
   await new Promise(resolve => server.listen(0, "127.0.0.1", resolve));
@@ -56,6 +56,7 @@ test("actual built website navigation leaves Inspector for React on desktop and 
         assert.equal(await page.locator("#root .react-page").count(), 1);
         assert.equal(await page.locator("#project-tabs").count(), 0);
         await page.locator('.operator-connection[data-tone="good"]').waitFor();
+        await page.locator("[data-progress-notice]").waitFor({ state: "detached" });
         const font = await page.locator(".react-operator-nav .nav-copy strong").first().evaluate(node => getComputedStyle(node).fontFamily);
         assert.match(font, /Momo Trust Display/);
         const images = await page.locator(".signal-mark").evaluateAll(nodes => nodes.map(node => ({ src: node.src, loaded: node.complete && node.naturalWidth > 0 })));

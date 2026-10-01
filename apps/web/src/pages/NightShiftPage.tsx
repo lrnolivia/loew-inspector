@@ -23,7 +23,7 @@ export function NightShiftPage() {
   const next = nextTimes.sort((a, b) => Date.parse(a) - Date.parse(b))[0];
   const results = [...workers].filter(worker => worker.runtime?.last_run_at).sort((a, b) => Date.parse(b.runtime?.last_run_at || "0") - Date.parse(a.runtime?.last_run_at || "0"));
 
-  const answer = !enabled.length ? "nothing scheduled" : next ? relative(next) : "schedule enabled";
+  const answer = !snapshot ? "pending" : !enabled.length ? "nothing scheduled" : next ? relative(next) : "schedule enabled";
   const cards = [
     { id: "next", label: "will anything happen?", value: answer, detail: !enabled.length ? "Automatic checks are paused or unavailable." : next ? `next reported check ${new Date(next).toLocaleString()}` : "Automatic work is enabled, but Relay has no next-run time to show.", tone: enabled.length ? "good" : "quiet" },
     { id: "projects", label: "included projects", value: String(enabled.length), detail: enabled.length ? "Projects with automatic observation enabled." : "No project is currently scheduled.", tone: enabled.length ? "wait" : "quiet" },

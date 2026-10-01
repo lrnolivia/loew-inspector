@@ -69,10 +69,12 @@ test("Relay 2.0 React shell renders human-first live surfaces responsively", asy
     await page.route("https://fonts.gstatic.com/**", route => route.abort());
     await page.route("**/api/projects", route => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ projects: [{ id: "relay", name: "relay", managed: true }] }) }));
     await page.route("**/api/workers", route => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(workers) }));
+    await page.route("**/api/projects/relay", route => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ coordination: { claims: progress.progress.map(item => ({ id: item.assignment, state: "active" })) } }) }));
     await page.route("**/api/progress/relay*", route => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(progress) }));
 
     await page.goto(origin + "/#/today");
     await page.locator('.operator-connection[data-tone="good"]').filter({ hasText: "live" }).waitFor();
+    await page.locator("[data-progress-notice]").waitFor({ state: "detached" });
 
     assert.equal(await page.getByRole("heading", { name: "today", level: 1 }).textContent(), "today");
     assert.equal(await page.locator(".signal-card").count(), 4);

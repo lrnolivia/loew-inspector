@@ -34,7 +34,7 @@ const server = http.createServer((req, res) => {
   if (url.pathname === "/api/projects") return json({ projects: [{ id: "relay", name: "relay", managed: true }] });
   if (url.pathname === "/api/workers") return json(workers);
   if (url.pathname === "/api/progress/relay") return json(progress);
-  if (url.pathname === "/api/projects/relay") return json({ project: { id: "relay", name: "relay", managed: true }, coordination: { claims: [] } });
+  if (url.pathname === "/api/projects/relay") return json({ project: { id: "relay", name: "relay", managed: true }, coordination: { claims: progress.progress.map(item => ({ id: item.assignment, state: "active" })) } });
   if (url.pathname === "/api/projects/relay/icon") return json({ status: "found", icon: { data_url: "data:image/png;base64," + pixel.toString("base64"), repository: "lrnolivia/relay", path: "apps/web/public/brand/relay.png", blob_sha: "a".repeat(40) } });
   if (url.pathname === "/api/visual") return json({ evidence: [] });
   res.statusCode = 404; return json({ error: "preview route not found", path: url.pathname });
