@@ -84,7 +84,8 @@ const args = {
   script,
   repo,
   commit_sha: commit,
-  message: "Exact merged source"
+  message: "Exact merged source",
+  purpose: "diagnostic"
 };
 
 test("upload arguments require exact bounded identities", () => {
@@ -195,7 +196,7 @@ test("unsupported relative module types are rejected instead of silently omitted
 });
 
 
-test("canonical relay Worker rejects ordinary manual publication", async () => {
+test("canonical relay Worker rejects diagnostic source upload", async () => {
   const f = fixture({ wranglerName: "relay" });
   await assert.rejects(
     uploadCloudSourceVersion(
