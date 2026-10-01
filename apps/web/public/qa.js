@@ -147,7 +147,7 @@ export async function openQa(evidenceId) {
   stage = buildStage();
   stage.querySelector(".qa-preview").innerHTML = loadingMarkup("preview", "Loading captured evidence");
   const panel = stage.querySelector(".qa-companion");
-  panel.innerHTML = '<div class="qa-panel-head"><span class="qa-tool-identity"><img src="' + brand.inspector + '" alt=""><span>inspector</span></span><button type="button" class="qa-icon-button" data-qa-close aria-label="Close QA">×</button></div><div class="qa-panel-body">' + loadingMarkup("project", "Loading review") + '</div>';
+  panel.innerHTML = '<div class="qa-panel-head"><span class="qa-tool-identity"><img src="' + brand.inspector + '" alt=""><span>inspector</span></span><button type="button" class="qa-icon-button" data-qa-close aria-label="Close QA">×</button></div><div class="qa-panel-body">' + loadingMarkup("inspector", "Loading review") + '</div>';
   panel.querySelector("[data-qa-close]").addEventListener("click", closeQa);
 
   const openingStage = stage;
