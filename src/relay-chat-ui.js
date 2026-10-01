@@ -1,15 +1,47 @@
 import { STAFF } from './staff-registry.js';
-export const RELAY_CONTEXT_CARD_URI = 'ui://relay/context-card/v4.html';
+export const RELAY_CONTEXT_CARD_URI = 'ui://relay/context-card/v5.html';
+export const RELAY_CONTEXT_CARD_TOOL = 'relay_render_context_card';
 const CONTROL_URI = 'ui://relay/control-center/v2.html';
 const DIRECTORY = Object.fromEntries(STAFF.map(p => [p.id, p.display_name]));
 const CONTEXTUAL_TOOLS = new Set([
   'relay_runner_project','relay_runner_assignments','relay_runner_progress','relay_runner_resume','relay_runner_updates','relay_runner_coordinate','relay_runner_preflight',
   'relay_source_inventory','relay_source_pull_request','relay_source_checks','relay_source_pull_request_action',
   'relay_cloud_worker','relay_cloud_project','relay_cloud_deploy_version','relay_cloud_deploy_project_version',
-  'relay_verify_browser_snapshot','relay_verify_browser_screenshot','relay_verify_evidence_plan','relay_verify_browser_capture'
+  'relay_verify_browser_snapshot','relay_verify_browser_screenshot','relay_verify_evidence_plan','relay_verify_browser_capture',RELAY_CONTEXT_CARD_TOOL
 ]);
 export function relayContextCardDescriptor() {
   return { uri: RELAY_CONTEXT_CARD_URI, name: 'relay-context-card', title: 'Relay contextual status card', description: 'Compact staff, progress, handoff, blocker and QA context.', mimeType: 'text/html;profile=mcp-app' };
+}
+export function relayContextCardTool() {
+  return {
+    name: RELAY_CONTEXT_CARD_TOOL,
+    title: 'Show Relay status card',
+    description: 'RENDER TOOL — visibly mount a compact Relay status card in ChatGPT for one managed project or assignment. Use this when the user should see the card, not just receive structured Relay data. Relay re-reads canonical Runner state server-side so the card is not based on model-authored progress. This is read-only and safe to retry.',
+    inputSchema: {
+      type: 'object',
+      properties: {
+        project: { type: 'string', minLength: 1, maxLength: 80, pattern: '^[a-z0-9-]+$' },
+        assignment: { type: 'string', minLength: 1, maxLength: 100, pattern: '^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$' }
+      },
+      required: ['project'],
+      additionalProperties: false
+    },
+    annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: true },
+    _meta: {
+      ui: { resourceUri: RELAY_CONTEXT_CARD_URI, visibility: ['model','app'] },
+      'openai/outputTemplate': RELAY_CONTEXT_CARD_URI,
+      'openai/widgetAccessible': true,
+      'openai/toolInvocation/invoking': 'Opening Relay…',
+      'openai/toolInvocation/invoked': 'Relay card ready.'
+    }
+  };
+}
+export function validateRelayContextCardArguments(args) {
+  if (!args || typeof args !== 'object' || Array.isArray(args)) throw new Error('Card arguments must be an object');
+  for (const key of Object.keys(args)) if (!['project','assignment'].includes(key)) throw new Error('Unsupported card argument: '+key);
+  if (typeof args.project !== 'string' || !/^[a-z0-9-]{1,80}$/.test(args.project)) throw new Error('Invalid card project');
+  if (args.assignment !== undefined && (typeof args.assignment !== 'string' || !/^[a-zA-Z0-9][a-zA-Z0-9_.:-]{0,99}$/.test(args.assignment))) throw new Error('Invalid card assignment');
+  return args;
 }
 export function contextualizeRelayTool(tool) {
   if (!tool || !CONTEXTUAL_TOOLS.has(tool.name)) return tool;
@@ -95,7 +127,7 @@ async function callTool(name,args){if(window.openai?.callTool)return window.open
 el.refresh.addEventListener('click',async()=>{el.refresh.disabled=true;try{const project=toolInput.project||lastData?.project;if(project)render(await callTool('relay_runner_progress',{project,...(toolInput.assignment?{assignment:toolInput.assignment}:{})}))}catch(error){el.blocker.hidden=false;el.blocker.textContent=error.message}finally{el.refresh.disabled=false}});
 el['open-relay'].addEventListener('click',async()=>{try{if(window.openai?.requestModal){await window.openai.requestModal({template:${JSON.stringify(CONTROL_URI)}});return}if(window.openai?.callTool){await window.openai.callTool('relay_ui_control_center',{});return}await ready;await rpc('ui/open-link',{url:'https://relay.loew.fi/'})}catch(error){el.blocker.hidden=false;el.blocker.textContent=error.message}});
 window.addEventListener('openai:set_globals',event=>{const globals=event.detail?.globals;if(globals?.toolInput)toolInput=globals.toolInput;if(globals?.toolOutput)render(globals.toolOutput)});
-const ready=window.openai?Promise.resolve():rpc('ui/initialize',{appInfo:{name:'relay-context-card',version:'1.9.6.2'},appCapabilities:{},protocolVersion:'2026-01-26'}).then(()=>window.parent.postMessage({jsonrpc:'2.0',method:'ui/notifications/initialized',params:{}},'*'));
+const ready=window.openai?Promise.resolve():rpc('ui/initialize',{appInfo:{name:'relay-context-card',version:'1.9.9'},appCapabilities:{},protocolVersion:'2026-01-26'}).then(()=>window.parent.postMessage({jsonrpc:'2.0',method:'ui/notifications/initialized',params:{}},'*'));
 ready.catch(error=>{if(!lastData){el.summary.textContent='Relay is waiting for the chat connection.';el.state.textContent='Connection pending'}});
 if(window.openai?.toolOutput)render(window.openai.toolOutput);
 </script></body></html>`;
