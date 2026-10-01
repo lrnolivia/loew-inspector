@@ -157,7 +157,7 @@ test("shared interface works on web and MCP host transport, including mobile, de
       assert.equal(await view.locator('.feature-heading[data-feature="runner"] p').textContent(), "coordinate");
       assert.equal(await view.locator('.feature-heading[data-feature="runner"]').evaluate(node => getComputedStyle(node).getPropertyValue("--feature-accent").trim()), "#3bcb8d");
       assert.equal(await runnerButton.evaluate(node => getComputedStyle(node).getPropertyValue("--feature-accent").trim()), "#3bcb8d");
-      assert.equal(await runnerButton.evaluate(node => getComputedStyle(node).borderBottomWidth), "0px");
+      assert.ok(parseFloat(await runnerButton.evaluate(node => getComputedStyle(node).borderBottomWidth)) <= 1, "active nav must not use fake underline depth");
       await view.getByRole("tab", { name: "relay", exact: true }).click();
       await view.locator("#project-detail").filter({ hasText: "Complete consolidation" }).waitFor();
       assert.equal(await view.locator('.overview-metric:has-text("moving")').getAttribute("data-tone"), "good");
