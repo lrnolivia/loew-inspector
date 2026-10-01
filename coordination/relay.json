@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T06:29:14.766Z",
+  "updated_at": "2026-10-01T06:32:09.903Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -8079,67 +8079,6 @@
       "lease_until": "2026-10-01T18:20:20.044Z"
     },
     {
-      "id": "relay-chatgpt-card-host-mount-followup-20261001",
-      "owner": "relay-chatgpt-card-host-mount-followup-20261001",
-      "branch": "relay/chatgpt-card-host-mount-followup-20261001",
-      "paths": [
-        "src/relay-chat-ui.js",
-        "src/relay-ui.js",
-        "src/relay-entry.js",
-        "src/relay-chat-ui.test.js",
-        "src/relay-ui.test.js",
-        "src/relay-entry.test.js",
-        "docs/relay/CHATGPT_CARD_HOST_MOUNT_FOLLOWUP.md"
-      ],
-      "resources": [
-        "relay-chatgpt-visible-card-gate",
-        "relay-control-center-working-mount-reference",
-        "relay-context-card-host-mount-diff",
-        "relay-direct-mcp-app-invocation-proof"
-      ],
-      "goal": "Isolate why ChatGPT visibly mounts Relay's control-center MCP App UI but does not visibly mount relay_render_context_card, even with the current v6 launcher schema/resource and successful tool execution.",
-      "acceptance": "Produce a source-level and consumer-level comparison of the working relay_ui_control_center mount path versus relay_render_context_card: descriptor metadata, resource registration/URI, tool result shape, openai/ui metadata, invocation path, and host-facing response envelope. Prove one of: (a) a Relay-side contract mismatch and fix it with a fresh visible consumer smoke, or (b) a ChatGPT host/invocation-path limitation with current official MCP Apps contract satisfied. Do not alter visual CSS or card composition unless the root cause is actually rendering inside a successfully mounted iframe.",
-      "next_action": "After 1.9.9 release work is frozen, compare relay_ui_control_center and relay_render_context_card end-to-end from tool listing through resource fetch and host invocation. Use the already observed facts as fixtures: control-center has mounted visibly before; v6 context-card schema is fresh; Worker v72 is live; exact renderer calls succeed; user sees no inline card. Test direct MCP Apps invocation outside nested orchestration if available. Keep this as a host-integration investigation, not a design task.",
-      "task_class": "architecture",
-      "category": "qa-verification",
-      "labels": [
-        {
-          "key": "domain",
-          "value": "chatgpt-mcp-apps"
-        },
-        {
-          "key": "priority",
-          "value": "p0"
-        }
-      ],
-      "tags": [
-        "chatgpt",
-        "mcp-apps",
-        "ui-mount",
-        "host-integration",
-        "relay-cards"
-      ],
-      "primary_role": "verifier",
-      "supporting_roles": [
-        "architect",
-        "builder"
-      ],
-      "primary_team": "inspector",
-      "supporting_teams": [
-        "runner"
-      ],
-      "primary_staff": "roman",
-      "supporting_staff": [
-        "ellis",
-        "nico"
-      ],
-      "base_sha": "2ebe056b29cf7a333e9209cbd475ab9e68de1f55",
-      "state": "active",
-      "created_at": "2026-10-01T06:28:06.664Z",
-      "updated_at": "2026-10-01T06:28:06.664Z",
-      "lease_until": "2026-10-01T18:28:06.664Z"
-    },
-    {
       "id": "relay-2.0-live-react-dashboard-20261001",
       "owner": "relay-2.0-live-react-dashboard-20261001",
       "branch": "relay/2.0-live-react-dashboard-20261001",
@@ -8198,6 +8137,69 @@
       "created_at": "2026-10-01T06:29:14.766Z",
       "updated_at": "2026-10-01T06:29:14.766Z",
       "lease_until": "2026-10-01T18:29:14.766Z"
+    },
+    {
+      "id": "relay-chatgpt-card-host-mount-followup-20261001",
+      "owner": "relay-chatgpt-card-host-mount-followup-20261001",
+      "branch": "relay/chatgpt-card-host-mount-followup-20261001",
+      "paths": [
+        "src/relay-chat-ui.js",
+        "src/relay-ui.js",
+        "src/relay-entry.js",
+        "src/relay-chat-ui.test.js",
+        "src/relay-ui.test.js",
+        "src/relay-entry.test.js",
+        "docs/relay/CHATGPT_CARD_HOST_MOUNT_FOLLOWUP.md",
+        "src/index.js"
+      ],
+      "resources": [
+        "relay-chatgpt-visible-card-gate",
+        "relay-control-center-working-mount-reference",
+        "relay-context-card-host-mount-diff",
+        "relay-direct-mcp-app-invocation-proof",
+        "relay-native-card-registration"
+      ],
+      "goal": "Isolate why ChatGPT visibly mounts Relay's control-center MCP App UI but does not visibly mount relay_render_context_card, even with the current v6 launcher schema/resource and successful tool execution.",
+      "acceptance": "Produce a source-level and consumer-level comparison of the working relay_ui_control_center mount path versus relay_render_context_card: descriptor metadata, resource registration/URI, tool result shape, openai/ui metadata, invocation path, and host-facing response envelope. Prove one of: (a) a Relay-side contract mismatch and fix it with a fresh visible consumer smoke, or (b) a ChatGPT host/invocation-path limitation with current official MCP Apps contract satisfied. Do not alter visual CSS or card composition unless the root cause is actually rendering inside a successfully mounted iframe.",
+      "next_action": "Move the context-card launcher/resource into the same native MCP server registration path as the control center, while preserving the v6 UI contract and outer 1.9 extension version patching. The current official OpenAI MCP Apps contract only requires a registered text/html;profile=mcp-app resource plus _meta.ui.resourceUri on the render tool; Relay already satisfies that contract, so the one meaningful implementation difference to eliminate is wrapper-injected registration versus control-center native registration. Add native card tool/resource/list/read/call handling in src/index.js, make relay-entry avoid replacing a native card definition, test protocol parity, then deploy and run a fresh direct consumer smoke.",
+      "task_class": "architecture",
+      "category": "qa-verification",
+      "labels": [
+        {
+          "key": "domain",
+          "value": "chatgpt-mcp-apps"
+        },
+        {
+          "key": "priority",
+          "value": "p0"
+        }
+      ],
+      "tags": [
+        "chatgpt",
+        "mcp-apps",
+        "ui-mount",
+        "host-integration",
+        "relay-cards"
+      ],
+      "primary_role": "verifier",
+      "supporting_roles": [
+        "architect",
+        "builder"
+      ],
+      "primary_team": "inspector",
+      "supporting_teams": [
+        "runner"
+      ],
+      "primary_staff": "roman",
+      "supporting_staff": [
+        "ellis",
+        "nico"
+      ],
+      "base_sha": "2ebe056b29cf7a333e9209cbd475ab9e68de1f55",
+      "state": "active",
+      "created_at": "2026-10-01T06:28:06.664Z",
+      "updated_at": "2026-10-01T06:32:09.903Z",
+      "lease_until": "2026-10-01T18:32:09.903Z"
     }
   ],
   "migrated_from": "loew-inspector"
