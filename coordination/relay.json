@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T01:05:38.348Z",
+  "updated_at": "2026-10-01T01:06:03.436Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -1762,9 +1762,9 @@
     {
       "id": "relay-findings-rfs-023-20260930",
       "owner": "relay-findings-rfs-023-20260930",
-      "goal": "Document RFS-023: Relay should reduce manual release-contract propagation friction across umbrella/child assignments.",
-      "acceptance": "Append RFS-023 to the canonical findings ledger with the observed sequence from the 1.9 staff-aware narration change: requirement existed in a child slice but not the umbrella; manual promotion hit the 4,000-character acceptance ceiling; a follow-up attempt hit legitimate ownership overlap; the worker then compacted/reframed scope to record the integration contract. Capture impact and suggest automatic parent/child contract propagation or reconciliation that preserves ownership boundaries, summarizes instead of duplicating long acceptance text, and routes changed release-level requirements without manual multi-step restatement. Link the finding to Relay 1.9 for consideration.",
-      "next_action": "Claim a docs-only maintenance branch, append RFS-023, open and merge the docs PR, then complete the assignment. No Worker deployment.",
+      "goal": "Document RFS-023 and RFS-024: eliminate manual release-contract propagation friction and safely deliver new amendments to active workers/chats.",
+      "acceptance": "Append RFS-023 and RFS-024 to the canonical findings ledger and link both to Relay 1.9 for consideration.\n\nRFS-023 documents manual release-contract propagation friction observed while promoting staff-aware narration from a child slice to the 1.9 umbrella: manual promotion hit the 4,000-character acceptance ceiling, then legitimate ownership overlap, requiring compaction/reframing. Suggest automatic parent/child contract propagation or reconciliation that preserves ownership boundaries, summarizes instead of duplicating long acceptance text, and routes changed release-level requirements without manual multi-step restatement.\n\nRFS-024 documents live amendment delivery: active chats/workers can continue from stale instructions after a canonical assignment is amended because amendment history is durable but not automatically consumed by already-running workers. Suggest cursor-based relevant-change sync rather than naive full-history polling: monotonic consumed revision; checks at start/resume, major mutation/commit/PR/deploy transitions, external-wait return and bounded heartbeat cadence; no-change checks inject no context; new amendments classify informational/plan-adjusting/scope-changing/blocking; only scope-changing/blocking updates interrupt and require reconciliation. Preserve exact consumed revision in resume/handoff state.",
+      "next_action": "When branch capacity opens, claim one docs-only maintenance branch, append RFS-023 and RFS-024 to suggestions.md, merge the docs PR, and complete the assignment. No Worker deployment.",
       "paths": [
         "docs/relay/findings/suggestions.md"
       ],
@@ -1774,10 +1774,43 @@
       ],
       "task_class": "maintenance",
       "ledger_refs": [
-        "RFS-023"
+        "RFS-023",
+        "RFS-024"
       ],
       "state": "queued",
-      "created_at": "2026-10-01T01:04:02.031Z"
+      "created_at": "2026-10-01T01:04:02.031Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T01:06:03.436Z",
+          "by": "relay-findings-rfs-023-20260930",
+          "reason": "Combine the related 1.9 coordination findings into one bounded docs-only successor rather than creating another branch reservation.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action",
+            "ledger_refs"
+          ],
+          "before": {
+            "goal": "Document RFS-023: Relay should reduce manual release-contract propagation friction across umbrella/child assignments.",
+            "acceptance": "Append RFS-023 to the canonical findings ledger with the observed sequence from the 1.9 staff-aware narration change: requirement existed in a child slice but not the umbrella; manual promotion hit the 4,000-character acceptance ceiling; a follow-up attempt hit legitimate ownership overlap; the worker then compacted/reframed scope to record the integration contract. Capture impact and suggest automatic parent/child contract propagation or reconciliation that preserves ownership boundaries, summarizes instead of duplicating long acceptance text, and routes changed release-level requirements ...",
+            "next_action": "Claim a docs-only maintenance branch, append RFS-023, open and merge the docs PR, then complete the assignment. No Worker deployment.",
+            "ledger_refs": [
+              "RFS-023"
+            ]
+          },
+          "after": {
+            "goal": "Document RFS-023 and RFS-024: eliminate manual release-contract propagation friction and safely deliver new amendments to active workers/chats.",
+            "acceptance": "Append RFS-023 and RFS-024 to the canonical findings ledger and link both to Relay 1.9 for consideration.\n\nRFS-023 documents manual release-contract propagation friction observed while promoting staff-aware narration from a child slice to the 1.9 umbrella: manual promotion hit the 4,000-character acceptance ceiling, then legitimate ownership overlap, requiring compaction/reframing. Suggest automatic parent/child contract propagation or reconciliation that preserves ownership boundaries, summarizes instead of duplicating long acceptance text, and routes changed release-level requirements wit...",
+            "next_action": "When branch capacity opens, claim one docs-only maintenance branch, append RFS-023 and RFS-024 to suggestions.md, merge the docs PR, and complete the assignment. No Worker deployment.",
+            "ledger_refs": [
+              "RFS-023",
+              "RFS-024"
+            ]
+          }
+        }
+      ],
+      "updated_at": "2026-10-01T01:06:03.436Z"
     }
   ],
   "claims": [
