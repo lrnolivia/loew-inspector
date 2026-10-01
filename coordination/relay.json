@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T03:00:35.352Z",
+  "updated_at": "2026-10-01T03:01:55.871Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3208,9 +3208,9 @@
     {
       "id": "relay-1.9.6.2-staff-routing-20261001",
       "owner": "relay-1.9.6.2-staff-routing-20261001",
-      "goal": "Ship Relay 1.9.6.2 as the operational staff-routing patch: turn canonical assignment taxonomy/roles and the sticky staff directory into durable primary/supporting staff bindings so Relay can truthfully say who is working on what without manual inference.",
-      "acceptance": "Add canonical assignment-level `primary_staff` plus bounded `supporting_staff` identity fields and expose them through Runner reads/resume/status without changing authorization. Resolve bindings deterministically from explicit override first, then assignment primary/supporting roles, category, labels/tags, resources, subsystem/subnet fit and canonical staff role affinities. Use only active approved staff; never invent names, reuse retired identities, or silently rename people. Persist bindings canonically so the same assignment resolves to the same people across chats, workers, resumes and UI. Explicit canonical amendment may reassign staff; automatic routing must preserve sticky identity and record why a binding changed. Staff may support multiple assignments; capacity is context for routing, not a hidden productivity score or authorization gate. The staff directory should surface live assignment bindings derived from canonical Runner state rather than remaining an empty presentation registry. Human-facing communication should use these bindings by default while retaining assignment/worker IDs underneath. Tests cover deterministic routing, explicit override, affinity ties, missing-fit fallback, retired/reserve exclusion, reassignment history, cross-session stickiness, staff-directory readback, resume/status projection and no authorization change.",
-      "next_action": "Begin after the current 1.9.6 MCP UI hotfix is consumer-verified. Add assignment staff fields and deterministic resolver first, then wire staff-directory/resume/status readback and staff-aware narration. Use the currently active board as fixtures: 1.9 coordination, Inspector visual polish, MCP UI hotfix and queued 1.9.7 creative work should resolve to sensible named teams without manual mapping.",
+      "goal": "Ship Relay 1.9.6.2 as the operational org-routing patch: turn lowercase feature teams, assignment taxonomy/roles and sticky staff identities into durable team and named-staff bindings so Relay can truthfully say which team and people own each piece of work.",
+      "acceptance": "Add canonical assignment-level `primary_staff` plus bounded `supporting_staff` identity fields and expose them through Runner reads/resume/status without changing authorization. Resolve bindings deterministically from explicit override first, then assignment primary/supporting roles, category, labels/tags, resources, subsystem/subnet fit and canonical staff role affinities. Use only active approved staff; never invent names, reuse retired identities, or silently rename people. Persist bindings canonically so the same assignment resolves to the same people across chats, workers, resumes and UI. Explicit canonical amendment may reassign staff; automatic routing must preserve sticky identity and record why a binding changed. Staff may support multiple assignments; capacity is context for routing, not a hidden productivity score or authorization gate. The staff directory should surface live assignment bindings derived from canonical Runner state rather than remaining an empty presentation registry. Human-facing communication should use these bindings by default while retaining assignment/worker IDs underneath. Tests cover deterministic routing, explicit override, affinity ties, missing-fit fallback, retired/reserve exclusion, reassignment history, cross-session stickiness, staff-directory readback, resume/status projection and no authorization change. Feature-team layer: add a canonical lowercase team registry and assignment-level `primary_team` plus bounded `supporting_teams`. Routing order becomes assignment -> feature team -> role -> named staff. Initial canonical team ids are `inspector`, `runner`, `night-shift`, `source`, `cloud`, `release`, and `skills`; all user-facing team labels remain lowercase. Staff gain one sticky `home_team` plus optional team memberships so temporary cross-team work does not rewrite organizational identity. Initial home-team map: inspector = valentina, vivienne, margot, sabine, roman; runner = ellis, nico, adrian; night-shift = julian, naomi; source = rafael; cloud = gabriel; release = luca; skills = imani. Cross-team memberships support release/verification/integration/planning work without changing home team. Team routing uses explicit override first, then assignment category/roles/resources/subsystems and team affinities; staff resolution happens inside the selected team(s). Team identity is routing/presentation context only, never authorization.",
+      "next_action": "Begin after the current 1.9.6 UI hotfix is consumer-verified. Implement the lowercase team registry and sticky home-team/membership model first; add primary_team/supporting_teams to assignments; resolve team before role/staff; then expose team+staff bindings through staff directory, Runner reads, resume/status and human-facing narration. Use active board fixtures so visual work routes to inspector, engineering/execution to runner, management/continuity to night-shift, integration to source, reliability to cloud, releases to release and skill/knowledge work to skills.",
       "paths": [
         "contracts/assignments/",
         "contracts/staff/",
@@ -3224,7 +3224,10 @@
         "src/worker-communication.test.js",
         "src/resume-checkpoints.js",
         "src/resume-checkpoints.test.js",
-        "docs/relay/RELAY_1_9_6_2_RELEASE.md"
+        "docs/relay/RELAY_1_9_6_2_RELEASE.md",
+        "contracts/teams/",
+        "src/team-registry.js",
+        "src/team-registry.test.js"
       ],
       "resources": [
         "relay-1.9.6.2-release",
@@ -3234,11 +3237,18 @@
         "relay-role-affinity-resolution",
         "relay-staff-capacity-context",
         "relay-staff-aware-resume",
-        "relay-staff-aware-status"
+        "relay-staff-aware-status",
+        "relay-team-registry",
+        "relay-home-team",
+        "relay-team-memberships",
+        "relay-assignment-team-routing",
+        "relay-primary-team-binding",
+        "relay-supporting-team-binding"
       ],
       "task_class": "architecture",
       "ledger_refs": [
-        "RFS-030"
+        "RFS-030",
+        "RFS-033"
       ],
       "category": "coordination",
       "labels": [
@@ -3265,7 +3275,100 @@
         "verifier"
       ],
       "state": "queued",
-      "created_at": "2026-10-01T02:39:22.086Z"
+      "created_at": "2026-10-01T02:39:22.086Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T03:01:55.871Z",
+          "by": "relay-1.9.6.2-staff-routing-20261001",
+          "reason": "Make feature teams the canonical organizational layer above individual staff so assignments route through stable teams rather than one-off person matching.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action",
+            "paths",
+            "resources",
+            "ledger_refs"
+          ],
+          "before": {
+            "goal": "Ship Relay 1.9.6.2 as the operational staff-routing patch: turn canonical assignment taxonomy/roles and the sticky staff directory into durable primary/supporting staff bindings so Relay can truthfully say who is working on what without manual inference.",
+            "acceptance": "Add canonical assignment-level `primary_staff` plus bounded `supporting_staff` identity fields and expose them through Runner reads/resume/status without changing authorization. Resolve bindings deterministically from explicit override first, then assignment primary/supporting roles, category, labels/tags, resources, subsystem/subnet fit and canonical staff role affinities. Use only active approved staff; never invent names, reuse retired identities, or silently rename people. Persist bindings canonically so the same assignment resolves to the same people across chats, workers, resumes and ...",
+            "next_action": "Begin after the current 1.9.6 MCP UI hotfix is consumer-verified. Add assignment staff fields and deterministic resolver first, then wire staff-directory/resume/status readback and staff-aware narration. Use the currently active board as fixtures: 1.9 coordination, Inspector visual polish, MCP UI hotfix and queued 1.9.7 creative work should resolve to sensible named teams without manual mapping.",
+            "paths": [
+              "contracts/assignments/",
+              "contracts/staff/",
+              "src/staff-registry.js",
+              "src/staff-registry.test.js",
+              "src/assignment-taxonomy.js",
+              "src/assignment-taxonomy.test.js",
+              "src/runner-control.js",
+              "src/runner-control-core.js",
+              "src/worker-communication.js",
+              "src/worker-communication.test.js",
+              "src/resume-checkpoints.js",
+              "src/resume-checkpoints.test.js",
+              "docs/relay/RELAY_1_9_6_2_RELEASE.md"
+            ],
+            "resources": [
+              "relay-1.9.6.2-release",
+              "relay-staff-assignment-routing",
+              "relay-primary-staff-binding",
+              "relay-supporting-staff-binding",
+              "relay-role-affinity-resolution",
+              "relay-staff-capacity-context",
+              "relay-staff-aware-resume",
+              "relay-staff-aware-status"
+            ],
+            "ledger_refs": [
+              "RFS-030"
+            ]
+          },
+          "after": {
+            "goal": "Ship Relay 1.9.6.2 as the operational org-routing patch: turn lowercase feature teams, assignment taxonomy/roles and sticky staff identities into durable team and named-staff bindings so Relay can truthfully say which team and people own each piece of work.",
+            "acceptance": "Add canonical assignment-level `primary_staff` plus bounded `supporting_staff` identity fields and expose them through Runner reads/resume/status without changing authorization. Resolve bindings deterministically from explicit override first, then assignment primary/supporting roles, category, labels/tags, resources, subsystem/subnet fit and canonical staff role affinities. Use only active approved staff; never invent names, reuse retired identities, or silently rename people. Persist bindings canonically so the same assignment resolves to the same people across chats, workers, resumes and ...",
+            "next_action": "Begin after the current 1.9.6 UI hotfix is consumer-verified. Implement the lowercase team registry and sticky home-team/membership model first; add primary_team/supporting_teams to assignments; resolve team before role/staff; then expose team+staff bindings through staff directory, Runner reads, resume/status and human-facing narration. Use active board fixtures so visual work routes to inspector, engineering/execution to runner, management/continuity to night-shift, integration to source, reliability to cloud, releases to release and skill/knowledge work to skills.",
+            "paths": [
+              "contracts/assignments/",
+              "contracts/staff/",
+              "src/staff-registry.js",
+              "src/staff-registry.test.js",
+              "src/assignment-taxonomy.js",
+              "src/assignment-taxonomy.test.js",
+              "src/runner-control.js",
+              "src/runner-control-core.js",
+              "src/worker-communication.js",
+              "src/worker-communication.test.js",
+              "src/resume-checkpoints.js",
+              "src/resume-checkpoints.test.js",
+              "docs/relay/RELAY_1_9_6_2_RELEASE.md",
+              "contracts/teams/",
+              "src/team-registry.js",
+              "src/team-registry.test.js"
+            ],
+            "resources": [
+              "relay-1.9.6.2-release",
+              "relay-staff-assignment-routing",
+              "relay-primary-staff-binding",
+              "relay-supporting-staff-binding",
+              "relay-role-affinity-resolution",
+              "relay-staff-capacity-context",
+              "relay-staff-aware-resume",
+              "relay-staff-aware-status",
+              "relay-team-registry",
+              "relay-home-team",
+              "relay-team-memberships",
+              "relay-assignment-team-routing",
+              "relay-primary-team-binding",
+              "relay-supporting-team-binding"
+            ],
+            "ledger_refs": [
+              "RFS-030",
+              "RFS-033"
+            ]
+          }
+        }
+      ],
+      "updated_at": "2026-10-01T03:01:55.871Z"
     },
     {
       "id": "relay-1.9.8-inline-card-design-system-20261001",
