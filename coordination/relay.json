@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T22:06:48.348Z",
+  "updated_at": "2026-10-01T22:27:03.282Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6818,6 +6818,31 @@
       "supporting_staff": [],
       "state": "claimed",
       "created_at": "2026-10-01T19:47:50.289Z"
+    },
+    {
+      "id": "relay-mcp-card-action-proof-20261001",
+      "owner": "01a0f914-aad0-71e4-8f0c-20c1bf0a2016",
+      "goal": "Isolate observed ChatGPT Work card action timeout with a read-only data-only callback comparison, preserving the released host diagnostic and original Relay capabilities.",
+      "acceptance": "Preserve all 51 original model tools, original app bridge and released host probe descriptor/resource bytes. Add explicitly requested render diagnostic plus app-only data callback without rendering metadata. Bounded request IDs/methods/response/error/timeout/late-response evidence without sensitive payloads. Verify correlation, cancellation, full server envelopes and actual packaged browser code; exact-head tests/build/typecheck/admission and independent review before serialized Git-native release. Record actual same-build Work/iOS/Safari outcomes without treating local fixtures as host proof. Carry forward failed/pending ordinary-chat parity and full MCP rebuild requirements. No auth, permissions, paid services, original card art/CSS or broad UI changes.",
+      "next_action": "Queue successor; supersede held prior host-proof assignment with preserved PR110 and five actual-client screenshots, then claim and preflight before edits.",
+      "paths": [
+        "src/index.js",
+        "src/relay-host-action-probe.js",
+        "src/relay-host-action-probe.test.js",
+        "docs/relay/MCP_HOST_ACTION_PROOF_20261001.md"
+      ],
+      "resources": [
+        "relay-mcp-host-proof",
+        "relay-mcp-discovery-envelope"
+      ],
+      "task_class": "maintenance",
+      "category": "implementation",
+      "primary_team": "runner",
+      "supporting_teams": [],
+      "primary_staff": "ellis",
+      "supporting_staff": [],
+      "state": "claimed",
+      "created_at": "2026-10-01T22:25:31.299Z"
     }
   ],
   "claims": [
@@ -10746,10 +10771,23 @@
       "primary_staff": "ellis",
       "supporting_staff": [],
       "base_sha": "be058177e95d08db85719dcb20f402b6e4dd21db",
-      "state": "held",
+      "state": "superseded",
       "created_at": "2026-10-01T21:33:22.416Z",
-      "updated_at": "2026-10-01T22:03:57.781Z",
-      "lease_until": "2026-10-02T10:03:57.781Z"
+      "updated_at": "2026-10-01T22:26:36.798Z",
+      "lease_until": "2026-10-02T10:03:57.781Z",
+      "retirement": {
+        "at": "2026-10-01T22:26:36.798Z",
+        "intent": {
+          "operation_id": "relay-host-proof-to-data-action-20261001-2226",
+          "owner": "01a0f914-aad0-71e4-8f0c-20c1bf0a2016",
+          "disposition": "superseded",
+          "reason": "Released diagnostic produced actual client evidence but full parity did not pass. Parent authorized a separately admitted data-only callback experiment; preserve failures and remaining acceptance, not completed proof.",
+          "evidence": "Owner quiescent: no product-writing process or pending write; checkout clean at603bbe54f294c53f78460d906323dde73f93cff3. Fresh GitHub old-branch lookup404. Canonical/local coordination engine00d3aa78fac5bbe38b101ca87e8f3c0b72dcef59 and CLI6603f980f07a247e63ca916e50b0cfd03b4c2dcb match; existing writer cutover preserved. PR110 https://github.com/lrnolivia/relay/pull/110 merged6583a9f75424439fd255dafd5faf9dd81e50f0b2, active version4f3897d4-1cf1-4fbb-ba9d-332d6f01d58a. Five screenshot Library IDs: libfile_aebe1d67d09c8191820d40cb5ff440b6 (Mac ordinary no visible card; assistant empty-result claim not raw receipt); libfile_d5d7d22eb55c8191b3f266ab6d2927a9 (Safari two empty frames); libfile_001ad349f50081919e294cab23798f48 (iOS build20261001.1 initial shell/script/init/data pass, action pending); libfile_58c3179fe5188191a501553322d70244 (Mac Work samebuild initial pass); libfile_1ff46a04b4248191be03c3c09c9772cd (same Work sample action10s timeout). Consumer-local bytes/identity/hash manifest and observations preserved at /Users/lrnolivia/Codex/2026-10-01/task-2/evidence/host-proof/. Original51 model tools, app bridge, cards/art, ordinary-chat parity, supported execution, feedback/objective continuity and full staged rebuild requirements transfer to queued successor; no assertion of host proof completion. No other assignment retired or branch deleted.",
+          "superseded_by": "relay-mcp-card-action-proof-20261001",
+          "branch": "relay/mcp-host-proof-20261001",
+          "head_sha": null
+        }
+      }
     },
     {
       "id": "relay-website-notification-center-20261001",
@@ -10759,17 +10797,19 @@
         "apps/web/",
         "packages/shared-ui/",
         "docs/relay/WEBSITE_NOTIFICATION_CENTER_20261001.md",
-        "docs/relay/WEBSITE_REVIEW_OVERLAY_20261001.md"
+        "docs/relay/WEBSITE_REVIEW_OVERLAY_20261001.md",
+        ".github/workflows/ci.yml"
       ],
       "resources": [
         "relay-website-notifications",
         "relay-project-identity",
         "relay-qa-feedback",
-        "relay-inspector-review-overlay"
+        "relay-inspector-review-overlay",
+        "relay-website-preview-ci"
       ],
       "goal": "Next website round: implement compact actionable notification center/toasts and repair Inspector review overlay, preserving approved released website design and original notification acceptance.",
       "acceptance": "After full verified completion of current website fixes, place a notification bell/menu near the existing Live pill without moving the approved top workspace/connection line. Design compact message-notification-like pop-up toasts that can be dismissed and time out, with differing importance levels, source-feature accent colors, source identity badge and contextual supported actions. Preserve important notifications in the bell menu after toast timeout so alerts are not lost; dismissal does not mark a problem resolved. Use accessible text/severity indicators in addition to color, keyboard/focus support, sensible motion/reduced-motion, and avoid decorative card-edge strips. Avoid oversized error banners. Feature accent and severity are separate concepts. Origin badges must identify actual known project/actor/source without invented senders. Action buttons must use supported guarded operations or useful links and expose results; do not fake execution or approvals. Toast timing, grouping, retention and exact identity schema are design decisions to specify; no live message sends, notification subscriptions or external actions authorized by this backlog entry.\nCurrent website fixes are now verified complete. User explicitly moved Inspector panel work into this round: shared approved neutral palette; reproduce/fix random code in notes entry without losing notes; sequential Back and Next (Finish on last step), distinct from exit/back; truthful durable autosave Saving/Saved/Failed and retry across navigation; discreet opposite-corner static/live preview selector, live prioritized only when actual authorized preview exists and honest fallback. All controls touch/keyboard/focus accessible; floating UI must never permanently obscure content. Keep modular List/Visual viewer/filter/bulk-action project separate. Preserve readable identities and plain language. Implement only admitted paths; report backend scope needed before extending. Exact-head tests/rendered evidence/review required; coordinated serialized release under user's current finish-and-merge authorization.",
-      "next_action": "Notification center and Inspector review controls implemented in admitted isolated checkout; build/typecheck and existing browser/project-context checks pass. New retention/serial-save/retry checks under validation. CI Inspector preview registration requires bounded .github/workflows/ci.yml scope amendment before wiring this new branch prefix; no workflow edits performed. MCP release clearance received.",
+      "next_action": "Julian: review draft PR111 at exact head 2fc5bc51f1eea376762ccf0625cb126745e367ce. Build, typecheck, all 331 tests and final CI 36934188396 passed. All 18 Inspector captures are registered, byte-verified and visually inspected at 1440/390/320px; IDs and review links are in the PR body. Same-owner CAS rescope admitted the bounded CI wiring repair. No backend or held MCP edits. The isolated checkout is clean. After review, coordinate serialized merge and production acceptance; this phase is not merged or deployed yet.",
       "task_class": "design",
       "category": "implementation",
       "labels": [
@@ -10793,8 +10833,37 @@
       "base_sha": "2718c97d28871d2f86e3348dac281712ddcae9a5",
       "state": "active",
       "created_at": "2026-10-01T21:54:24.434Z",
-      "updated_at": "2026-10-01T22:06:48.348Z",
-      "lease_until": "2026-10-02T10:06:48.348Z"
+      "updated_at": "2026-10-01T22:24:19.420Z",
+      "lease_until": "2026-10-02T10:24:19.420Z"
+    },
+    {
+      "id": "relay-mcp-card-action-proof-20261001",
+      "owner": "01a0f914-aad0-71e4-8f0c-20c1bf0a2016",
+      "branch": "relay/mcp-card-action-proof-20261001",
+      "paths": [
+        "src/index.js",
+        "src/relay-host-action-probe.js",
+        "src/relay-host-action-probe.test.js",
+        "docs/relay/MCP_HOST_ACTION_PROOF_20261001.md"
+      ],
+      "resources": [
+        "relay-mcp-host-proof",
+        "relay-mcp-discovery-envelope"
+      ],
+      "goal": "Isolate observed ChatGPT Work card action timeout with a read-only data-only callback comparison, preserving the released host diagnostic and original Relay capabilities.",
+      "acceptance": "Preserve all 51 original model tools, original app bridge and released host probe descriptor/resource bytes. Add explicitly requested render diagnostic plus app-only data callback without rendering metadata. Bounded request IDs/methods/response/error/timeout/late-response evidence without sensitive payloads. Verify correlation, cancellation, full server envelopes and actual packaged browser code; exact-head tests/build/typecheck/admission and independent review before serialized Git-native release. Record actual same-build Work/iOS/Safari outcomes without treating local fixtures as host proof. Carry forward failed/pending ordinary-chat parity and full MCP rebuild requirements. No auth, permissions, paid services, original card art/CSS or broad UI changes.",
+      "next_action": "Prior host proof superseded with failures retained. Preflight four approved files, then implement new isolated data-only callback diagnostic; preserve baseline bytes and existing capabilities. Independent review before serialized release.",
+      "task_class": "maintenance",
+      "category": "implementation",
+      "primary_team": "runner",
+      "supporting_teams": [],
+      "primary_staff": "ellis",
+      "supporting_staff": [],
+      "base_sha": "a326159ca7d7565cd8ec3320c0cfa214f0e40814",
+      "state": "active",
+      "created_at": "2026-10-01T22:27:03.282Z",
+      "updated_at": "2026-10-01T22:27:03.282Z",
+      "lease_until": "2026-10-02T10:27:03.282Z"
     }
   ],
   "migrated_from": "loew-inspector"
