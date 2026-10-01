@@ -55,7 +55,7 @@ jobs:
       - run: npm ci
       - run: npm run test:runner
 
-  contract-tests:
+  layout-test:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -65,9 +65,51 @@ jobs:
           node-version: '22'
       - run: npm ci
       - run: npm run test:layout
-      - run: npm run test:contracts
 
-  web-tests:
+  contract-test-files:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.files.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: files
+        shell: bash
+        run: echo "matrix=$(node -e 'const fs=require(\"fs\");process.stdout.write(JSON.stringify(fs.readdirSync(\"test\").filter(f=>f.endsWith(\".test.mjs\")).sort()))')" >> "$GITHUB_OUTPUT"
+
+  contract-file:
+    needs: contract-test-files
+    name: contract-${{ matrix.file }}
+    strategy:
+      fail-fast: false
+      matrix:
+        file: ${{ fromJson(needs.contract-test-files.outputs.matrix) }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: node --test "test/${{ matrix.file }}"
+
+  web-test-files:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.files.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: files
+        shell: bash
+        run: echo "matrix=$(node -e 'const fs=require(\"fs\");process.stdout.write(JSON.stringify(fs.readdirSync(\"apps/web/test\").filter(f=>f.endsWith(\".test.mjs\")).sort()))')" >> "$GITHUB_OUTPUT"
+
+  web-file:
+    needs: web-test-files
+    name: web-${{ matrix.file }}
+    strategy:
+      fail-fast: false
+      matrix:
+        file: ${{ fromJson(needs.web-test-files.outputs.matrix) }}
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -80,7 +122,7 @@ jobs:
       - run: npm ci
       - name: Install deterministic Chromium harness
         run: npx playwright install --with-deps chromium
-      - run: npm test --workspace @relay/web
+      - run: node --test "apps/web/test/${{ matrix.file }}"
 
   typecheck-2-0:
     runs-on: ubuntu-latest
