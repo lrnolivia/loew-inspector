@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T02:57:00.156Z",
+  "updated_at": "2026-10-01T02:57:33.950Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3260,6 +3260,94 @@
       ],
       "state": "queued",
       "created_at": "2026-10-01T02:56:35.886Z"
+    },
+    {
+      "id": "relay-1.9.9-chatgpt-native-experience-20261001",
+      "owner": "relay-1.9.9-chatgpt-native-experience-20261001",
+      "goal": "Ship Relay 1.9.9 as the unified ChatGPT-native experience release: a polished family of contextual in-chat response cards plus a rich opened-Relay app with interactive chat/workspace behavior, all sharing one visual language, one canonical state model and one progressive-disclosure path.",
+      "acceptance": "Unify Relay's two ChatGPT-native UI experiences under one release and design system. Inline chat surfaces are compact contextual visual responses bound to the current turn/tool result; they never carry the full workspace shell or unrelated global state. The opened Relay app is a separate persistent workspace inside ChatGPT with navigation, Today, projects, operations, release/deployment state, history, QA/review and an interactive Relay chat experience that can sustain context, inspect current work, act on bounded controls and move fluidly between conversational guidance and visual workspace state. Inline cards and the opened app share tokens, components, state semantics, staff identity, receipts and human-first result shaping, but use different composition appropriate to their jobs. Create distinct but related card families for operation/progress, project status, release/deployment, staff/team, blocker/recovery, verification/evidence and human-QA. Cards progressively disclose into opened-app detail/workspace views when more context or action is useful. The opened app's interactive chat should feel like talking to Relay inside its own workspace, not a second unrelated chatbot: it consumes the same canonical Runner/Source/Cloud/Verify state, staff bindings, live amendments, recovery signals and operation receipts as normal Relay conversations. No parallel state store, duplicate conversation truth, or dashboard iframe masquerading as chat. Preserve exact artifact/evidence identity where required while keeping technical evidence subordinate by default. Visual direction follows current Terra Prime: restrained neutral surfaces, strong hierarchy, semantic accents, no gradients, no fake underline/bottom-border depth, no generic SaaS chrome. Informational motion may communicate working/waiting/attention/failure/verified states, respects reduced-motion and remains functional rather than decorative. Support light/dark mode, mobile/desktop ChatGPT layouts, keyboard/focus/accessibility, stale-state invalidation and meaningful refresh. The opened app may use richer navigation and denser workspace composition than inline cards; relay.loew.fi remains the standalone web dashboard and is not layout-identical. Tests/evals cover tool-to-card routing, inline-vs-opened-app composition, interactive chat/workspace continuity, state/actions parity, staff-aware narration, stale evidence, progressive disclosure, responsive layout, reduced motion, accessibility basics and no duplicated canonical state. Use the 1.9.7 creative/platform/performance skills for art direction, interaction, motion and performance; design ownership aligns with Valentina, Vivienne, Margot and Sabine, with Nico for implementation and Roman for verification.",
+      "next_action": "Begin after Relay 1.9.7 creative/platform/performance skills and the durable operation framework are available. First define the shared ChatGPT-native design tokens/state model and prototype both ends of the experience together: one representative inline response card and the corresponding opened-app chat/workspace detail view. Validate the progressive-disclosure transition before scaling to the full card family and workspace. Then implement the interactive in-app Relay chat, card routing, QA/release/staff/blocker views, responsive/motion/accessibility behavior and MCP App/browser QA. Do not redesign relay.loew.fi here.",
+      "paths": [
+        "src/relay-chat-ui.js",
+        "src/relay-card-ui.js",
+        "src/relay-card-view-model.js",
+        "src/relay-card-ui.test.js",
+        "src/relay-app-ui.js",
+        "src/relay-project-ui.js",
+        "src/relay-release-ui.js",
+        "src/relay-qa-ui.js",
+        "src/relay-ui.js",
+        "src/relay-entry.js",
+        "src/relay-app-ui.test.js",
+        "apps/web/cards/",
+        "apps/web/chat/",
+        "test/cards/",
+        "test/mcp-app/",
+        "docs/relay/RELAY_1_9_9_RELEASE.md"
+      ],
+      "resources": [
+        "relay-1.9.9-release",
+        "relay-inline-card-design-system",
+        "relay-context-card-families",
+        "relay-opened-app-workspace",
+        "relay-in-app-interactive-chat",
+        "relay-chat-workspace-continuity",
+        "relay-three-surface-ui-contract",
+        "relay-progressive-disclosure-ui",
+        "relay-operation-card",
+        "relay-project-card",
+        "relay-release-card",
+        "relay-staff-card",
+        "relay-blocker-card",
+        "relay-verification-card",
+        "relay-qa-card",
+        "relay-card-motion-status",
+        "relay-card-responsive-layout",
+        "relay-terra-prime-card-language",
+        "relay-human-first-result-contract",
+        "relay-operation-framework",
+        "runner-human-qa",
+        "relay-publication-receipts"
+      ],
+      "task_class": "design",
+      "ledger_refs": [
+        "RFS-031",
+        "RFS-032"
+      ],
+      "category": "design",
+      "labels": [
+        {
+          "key": "release",
+          "value": "1.9.9"
+        },
+        {
+          "key": "surface",
+          "value": "chatgpt-native"
+        },
+        {
+          "key": "domain",
+          "value": "mcp-app-experience"
+        }
+      ],
+      "tags": [
+        "cards",
+        "mcp-app",
+        "interactive-chat",
+        "workspace",
+        "terra-prime",
+        "motion",
+        "chatgpt"
+      ],
+      "primary_role": "art-director",
+      "supporting_roles": [
+        "product-lead",
+        "design-editor",
+        "motion-director",
+        "builder",
+        "verifier"
+      ],
+      "state": "queued",
+      "created_at": "2026-10-01T02:57:33.950Z"
     }
   ],
   "claims": [
