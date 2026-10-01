@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T04:12:42.992Z",
+  "updated_at": "2026-10-01T04:13:18.053Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -2648,7 +2648,7 @@
         "RFS-021",
         "RFS-033"
       ],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-09-30T23:34:30.376Z",
       "amendment_count": 2,
       "amendments": [
@@ -6266,6 +6266,49 @@
       "evidence": "PR #76 exact head f13a510e5070edaf1682b994eb0ce6d18b99505b passed Runner coordination admission and repository test, then squash-merged as 3eef536d217c588e8d3669830b23b02827cd71d3. Relay uploaded exact merged source as Worker version 4ee86e18-3083-4ef9-b7a4-a22c2e3db370 (v68) and deployed it 100% via deployment 1a0f33c2-e52c-459b-8fbf-1c48b452e565. Cloud readback shows workers/commit_sha=3eef536d217c588e8d3669830b23b02827cd71d3 and the new deployment first in history. The same merge includes the user-authorized feature-panel conversational card repair; fresh ChatGPT rendering remains a consumer visual-acceptance check, not a source/runtime blocker.",
       "work_accounted": true,
       "completed_at": "2026-10-01T04:12:42.992Z"
+    },
+    {
+      "id": "relay-1.9.6-creative-platform-packs-20260930",
+      "owner": "relay-1.9.6-creative-platform-packs-20260930",
+      "branch": "relay/1.9.7-creative-platform-packs-20261001",
+      "paths": [
+        "skills/creative/",
+        "skills/platforms/",
+        "skills/performance/",
+        "docs/relay/RELAY_1_9_7_RELEASE.md"
+      ],
+      "resources": [
+        "relay-1.9.7-release",
+        "relay-creative-intelligence",
+        "relay-aesthetic-direction",
+        "relay-flow-ia",
+        "relay-motion-animation",
+        "relay-platform-design",
+        "relay-performance-optimization",
+        "relay-figma-orchestration",
+        "relay-team-aware-skill-routing",
+        "relay-inspector-creative-skills",
+        "relay-runner-engineering-skills",
+        "relay-night-shift-planning-skills"
+      ],
+      "goal": "Ship Relay 1.9.7 as the creative/platform/performance skill-pack release.",
+      "acceptance": "Add composable skill packs for aesthetic/art direction, anti-slop judgment, IA/flow, motion/microinteraction, visual-reference analysis/QA, performance budgets and platform-native web, macOS/SwiftUI, Windows/WinUI, Android/Material and GNOME/GTK/libadwaita guidance. Figma-bound flows declare/use the real dependency and degrade cleanly when absent. Ambitious visuals carry explicit performance checks rather than being flattened by default.",
+      "next_action": "Begin after 1.9.6.2 establishes the lowercase feature-team registry. Make 1.9.7 skill resolution team-aware without making teams authorization: inspector receives the strongest visual/art-direction/motion/visual-QA posture; runner gets engineering/implementation/system-execution posture; night-shift gets planning/coordination/recovery/continuity posture; source/cloud/release/skills keep their specialist packs and may support cross-team assignments. Preserve individual role/staff affinities inside team routing.",
+      "task_class": "design",
+      "ledger_refs": [
+        "RFS-017",
+        "RFS-021",
+        "RFS-033"
+      ],
+      "primary_team": "inspector",
+      "supporting_teams": [],
+      "primary_staff": "valentina",
+      "supporting_staff": [],
+      "base_sha": "9b865cefeeaa73b9a69bbb51ae01bae4172d7277",
+      "state": "active",
+      "created_at": "2026-10-01T04:13:18.053Z",
+      "updated_at": "2026-10-01T04:13:18.053Z",
+      "lease_until": "2026-10-01T16:13:18.053Z"
     }
   ],
   "migrated_from": "loew-inspector"
