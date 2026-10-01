@@ -6,9 +6,6 @@ on:
       - relay/1.9.9-chatgpt-native-experience-20261001
     paths:
       - '.github/workflows/rebuild-generated-1.9.9.yml'
-      - 'apps/web/public/**'
-      - 'apps/web/build.mjs'
-      - 'packages/shared-ui/**'
 
 permissions:
   contents: write
@@ -31,17 +28,13 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci
-      - name: Rebuild committed web artifact
-        run: npm run build
-      - name: Commit generated artifact if changed
+      - name: Verify generated artifact and retire helper
         shell: bash
         run: |
-          if git diff --quiet -- apps/web/generated.js; then
-            echo "generated.js already current"
-            exit 0
-          fi
+          npm run build
           git config user.name "relay-build[bot]"
           git config user.email "relay-build[bot]@users.noreply.github.com"
           git add apps/web/generated.js
-          git commit -m "Rebuild shared Relay web and MCP interface"
+          git rm .github/workflows/rebuild-generated-1.9.9.yml
+          git commit -m "Finalize generated Relay web artifact"
           git push origin HEAD:relay/1.9.9-chatgpt-native-experience-20261001
