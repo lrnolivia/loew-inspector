@@ -107,7 +107,7 @@ test("preserved Inspector surface works at /inspector, including mobile, deep li
       let view = page;
       if (mode === "web") {
         hold("/api/workers");
-        await page.goto(origin + "/inspector#review");
+        await page.goto(origin + "/inspector#today");
         await view.locator("#today-work .content-skeleton").waitFor();
         assert.equal(await view.locator("#today-attention .content-skeleton").getAttribute("role"), "status");
         assert.equal(await view.locator("#operator-connection").evaluate(node => getComputedStyle(node, "::before").position), "static");
