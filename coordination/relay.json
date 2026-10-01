@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T06:24:23.073Z",
+  "updated_at": "2026-10-01T06:25:10.875Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -4001,7 +4001,7 @@
       "owner": "relay-1.9.9-chatgpt-native-experience-20261001",
       "goal": "Ship Relay 1.9.9 as the unified ChatGPT-native experience release: a polished family of contextual in-chat response cards plus a rich opened-Relay app with interactive chat/workspace behavior, all sharing one visual language, one canonical state model and one progressive-disclosure path.",
       "acceptance": "Relay 1.9.9 must still pass the existing consumer-visible MCP App card gate: a normal Relay tool call in an ordinary ChatGPT conversation must visibly mount the intended UI, not merely register resources/metadata or return structuredContent. Separately, the Inspector QA surface must implement the user-approved Figma node 59:115 review instrument as the visible card: ~450px default width, compact single-column composition, project pill, progress, one question/reason, binary answer surfaces, note field, and no persistent chrome (no inspector masthead, move/minimize/close buttons, preview/capture status rows, flow badge, previous/next row, separate Overall UI, technical details, save footer, or visible resize handle). The card must autosave, be draggable from non-interactive card regions, resize responsively through invisible edge/corner hit zones, remain clamped on viewport resize, and dock to any viewport edge leaving only a thin real card edge visible. A docked edge gives a restrained occasional idle wiggle plus one return wiggle after meaningful pointer inactivity; prefers-reduced-motion removes the wiggle. The docked edge adapts contrast to the content beneath it: soft off-white glow over dark content, near-black shadow over light content, and a conservative dual-contrast fallback when tone cannot be known. Captured image/video surfaces may sample luminance when safe; live cross-origin previews use an optional postMessage tone handshake and must degrade safely if unavailable. Inspector's review surface behaves like Field's canvas without importing Field's editor runtime: regular wheel/two-finger pan, Ctrl/Cmd+wheel or trackpad pinch zoom at the pointer, middle-mouse pan, Space+drag pan, initial fit-to-view, GPU transforms, and responsive reclamping. Live embeddable previews are the primary QA surface; video then image are fallbacks/evidence. The live page must receive pointer, keyboard, forms, scrolling and navigation normally, with Inspector camera gestures not stealing ordinary page interaction. Full-screen exit is owned by the viewport, not the review card: Escape, browser Back/history state, and a small viewport-only reveal affordance near the safe corner provide exit paths. Existing evidence identity, autosave persistence, deterministic QA gates and live-preview resolver/session contracts remain canonical; do not create a second evidence store. Inline ChatGPT cards must also be able to show existing Inspector QA evidence that Relay already captured: when a verification result or selected evidence record has an authorized screenshot URL/evidence ID, the compact card may render that screenshot directly inside the card with a clear QA/evidence caption and exact evidence identity. This is reuse of canonical stored evidence, not a new capture and not a second evidence store. The card must not invent or substitute images; it must degrade cleanly to the text/status card when no image is available or the host cannot load it. The MCP App resource CSP must explicitly allow only the Relay-controlled image origins required for these QA screenshots, following the current Apps SDK resource-domain contract.",
-      "next_action": "Fresh ChatGPT tool snapshot now exposes Relay context-card v6 inputs including evidence_id/show_qa. Two fresh relay_render_context_card calls executed successfully for the 1.9.9 assignment, including exact production Inspector evidence vis_b15d7dc4-a2a6-499f-90aa-05c9246ce02d and show_qa=true. In this conversation's connector/Code Mode return path I can still observe only structuredContent/text, so the remaining acceptance question is purely visual on the user's ChatGPT surface: did a populated inline card actually appear? If yes, record consumer acceptance and close 1.9.9; if no, record fresh-schema/current-runtime host rendering failure without changing card CSS.",
+      "next_action": "Final fresh-consumer acceptance failed at the ChatGPT host boundary. The current conversation loaded the v6 relay_render_context_card schema (including evidence_id/show_qa), Relay Worker v72 is live from exact merge 197f43801ac2298efa3a99aebc3159240350cd34, and the renderer executed successfully twice against the 1.9.9 assignment including production Inspector evidence vis_b15d7dc4-a2a6-499f-90aa-05c9246ce02d. The user saw no inline card at all. Treat this as a current ChatGPT consumer/invocation-path rendering failure with Relay's current launcher/resource contract satisfied. Do not change card CSS, resource layout, or Inspector for this symptom. Preserve the deployed v6 renderer and move any further card-mount work into a dedicated host-integration follow-up that compares the successful control-center UI mounting path against relay_render_context_card descriptor/resource delivery in a true direct MCP Apps invocation.",
       "paths": [
         "src/relay-card-ui.js",
         "src/relay-card-view-model.js",
@@ -4129,7 +4129,7 @@
       ],
       "state": "claimed",
       "created_at": "2026-10-01T02:57:33.950Z",
-      "amendment_count": 16,
+      "amendment_count": 17,
       "amendments": [
         {
           "at": "2026-10-01T03:02:32.261Z",
@@ -4948,9 +4948,23 @@
           "after": {
             "next_action": "Fresh ChatGPT tool snapshot now exposes Relay context-card v6 inputs including evidence_id/show_qa. Two fresh relay_render_context_card calls executed successfully for the 1.9.9 assignment, including exact production Inspector evidence vis_b15d7dc4-a2a6-499f-90aa-05c9246ce02d and show_qa=true. In this conversation's connector/Code Mode return path I can still observe only structuredContent/text, so the remaining acceptance question is purely visual on the user's ChatGPT surface: did a populated inline card actually appear? If yes, record consumer acceptance and close 1.9.9; if no, record fr..."
           }
+        },
+        {
+          "at": "2026-10-01T06:25:10.875Z",
+          "by": "relay-1.9.9-chatgpt-native-experience-20261001",
+          "reason": "User explicitly confirmed no inline card appeared after a fresh v6-schema smoke against the current deployed renderer.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Fresh ChatGPT tool snapshot now exposes Relay context-card v6 inputs including evidence_id/show_qa. Two fresh relay_render_context_card calls executed successfully for the 1.9.9 assignment, including exact production Inspector evidence vis_b15d7dc4-a2a6-499f-90aa-05c9246ce02d and show_qa=true. In this conversation's connector/Code Mode return path I can still observe only structuredContent/text, so the remaining acceptance question is purely visual on the user's ChatGPT surface: did a populated inline card actually appear? If yes, record consumer acceptance and close 1.9.9; if no, record fr..."
+          },
+          "after": {
+            "next_action": "Final fresh-consumer acceptance failed at the ChatGPT host boundary. The current conversation loaded the v6 relay_render_context_card schema (including evidence_id/show_qa), Relay Worker v72 is live from exact merge 197f43801ac2298efa3a99aebc3159240350cd34, and the renderer executed successfully twice against the 1.9.9 assignment including production Inspector evidence vis_b15d7dc4-a2a6-499f-90aa-05c9246ce02d. The user saw no inline card at all. Treat this as a current ChatGPT consumer/invocation-path rendering failure with Relay's current launcher/resource contract satisfied. Do not change..."
+          }
         }
       ],
-      "updated_at": "2026-10-01T06:24:23.073Z",
+      "updated_at": "2026-10-01T06:25:10.875Z",
       "primary_staff": "ellis",
       "supporting_staff": [
         "valentina",
@@ -7850,7 +7864,7 @@
       ],
       "goal": "Ship Relay 1.9.9 as the unified ChatGPT-native experience release: a polished family of contextual in-chat response cards plus a rich opened-Relay app with interactive chat/workspace behavior, all sharing one visual language, one canonical state model and one progressive-disclosure path.",
       "acceptance": "Relay 1.9.9 must still pass the existing consumer-visible MCP App card gate: a normal Relay tool call in an ordinary ChatGPT conversation must visibly mount the intended UI, not merely register resources/metadata or return structuredContent. Separately, the Inspector QA surface must implement the user-approved Figma node 59:115 review instrument as the visible card: ~450px default width, compact single-column composition, project pill, progress, one question/reason, binary answer surfaces, note field, and no persistent chrome (no inspector masthead, move/minimize/close buttons, preview/capture status rows, flow badge, previous/next row, separate Overall UI, technical details, save footer, or visible resize handle). The card must autosave, be draggable from non-interactive card regions, resize responsively through invisible edge/corner hit zones, remain clamped on viewport resize, and dock to any viewport edge leaving only a thin real card edge visible. A docked edge gives a restrained occasional idle wiggle plus one return wiggle after meaningful pointer inactivity; prefers-reduced-motion removes the wiggle. The docked edge adapts contrast to the content beneath it: soft off-white glow over dark content, near-black shadow over light content, and a conservative dual-contrast fallback when tone cannot be known. Captured image/video surfaces may sample luminance when safe; live cross-origin previews use an optional postMessage tone handshake and must degrade safely if unavailable. Inspector's review surface behaves like Field's canvas without importing Field's editor runtime: regular wheel/two-finger pan, Ctrl/Cmd+wheel or trackpad pinch zoom at the pointer, middle-mouse pan, Space+drag pan, initial fit-to-view, GPU transforms, and responsive reclamping. Live embeddable previews are the primary QA surface; video then image are fallbacks/evidence. The live page must receive pointer, keyboard, forms, scrolling and navigation normally, with Inspector camera gestures not stealing ordinary page interaction. Full-screen exit is owned by the viewport, not the review card: Escape, browser Back/history state, and a small viewport-only reveal affordance near the safe corner provide exit paths. Existing evidence identity, autosave persistence, deterministic QA gates and live-preview resolver/session contracts remain canonical; do not create a second evidence store. Inline ChatGPT cards must also be able to show existing Inspector QA evidence that Relay already captured: when a verification result or selected evidence record has an authorized screenshot URL/evidence ID, the compact card may render that screenshot directly inside the card with a clear QA/evidence caption and exact evidence identity. This is reuse of canonical stored evidence, not a new capture and not a second evidence store. The card must not invent or substitute images; it must degrade cleanly to the text/status card when no image is available or the host cannot load it. The MCP App resource CSP must explicitly allow only the Relay-controlled image origins required for these QA screenshots, following the current Apps SDK resource-domain contract.",
-      "next_action": "Fresh ChatGPT tool snapshot now exposes Relay context-card v6 inputs including evidence_id/show_qa. Two fresh relay_render_context_card calls executed successfully for the 1.9.9 assignment, including exact production Inspector evidence vis_b15d7dc4-a2a6-499f-90aa-05c9246ce02d and show_qa=true. In this conversation's connector/Code Mode return path I can still observe only structuredContent/text, so the remaining acceptance question is purely visual on the user's ChatGPT surface: did a populated inline card actually appear? If yes, record consumer acceptance and close 1.9.9; if no, record fresh-schema/current-runtime host rendering failure without changing card CSS.",
+      "next_action": "Final fresh-consumer acceptance failed at the ChatGPT host boundary. The current conversation loaded the v6 relay_render_context_card schema (including evidence_id/show_qa), Relay Worker v72 is live from exact merge 197f43801ac2298efa3a99aebc3159240350cd34, and the renderer executed successfully twice against the 1.9.9 assignment including production Inspector evidence vis_b15d7dc4-a2a6-499f-90aa-05c9246ce02d. The user saw no inline card at all. Treat this as a current ChatGPT consumer/invocation-path rendering failure with Relay's current launcher/resource contract satisfied. Do not change card CSS, resource layout, or Inspector for this symptom. Preserve the deployed v6 renderer and move any further card-mount work into a dedicated host-integration follow-up that compares the successful control-center UI mounting path against relay_render_context_card descriptor/resource delivery in a true direct MCP Apps invocation.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-031",
@@ -7904,9 +7918,9 @@
       "base_sha": "544c5a358ce9fb6882e040cf9eff105c2333f72c",
       "state": "active",
       "created_at": "2026-10-01T04:43:37.777Z",
-      "updated_at": "2026-10-01T06:24:23.073Z",
-      "lease_until": "2026-10-01T18:24:23.073Z",
-      "amendment_count": 2,
+      "updated_at": "2026-10-01T06:25:10.875Z",
+      "lease_until": "2026-10-01T18:25:10.875Z",
+      "amendment_count": 3,
       "amendments": [
         {
           "at": "2026-10-01T06:17:01.602Z",
@@ -7934,6 +7948,20 @@
           },
           "after": {
             "next_action": "Fresh ChatGPT tool snapshot now exposes Relay context-card v6 inputs including evidence_id/show_qa. Two fresh relay_render_context_card calls executed successfully for the 1.9.9 assignment, including exact production Inspector evidence vis_b15d7dc4-a2a6-499f-90aa-05c9246ce02d and show_qa=true. In this conversation's connector/Code Mode return path I can still observe only structuredContent/text, so the remaining acceptance question is purely visual on the user's ChatGPT surface: did a populated inline card actually appear? If yes, record consumer acceptance and close 1.9.9; if no, record fr..."
+          }
+        },
+        {
+          "at": "2026-10-01T06:25:10.875Z",
+          "by": "relay-1.9.9-chatgpt-native-experience-20261001",
+          "reason": "User explicitly confirmed no inline card appeared after a fresh v6-schema smoke against the current deployed renderer.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Fresh ChatGPT tool snapshot now exposes Relay context-card v6 inputs including evidence_id/show_qa. Two fresh relay_render_context_card calls executed successfully for the 1.9.9 assignment, including exact production Inspector evidence vis_b15d7dc4-a2a6-499f-90aa-05c9246ce02d and show_qa=true. In this conversation's connector/Code Mode return path I can still observe only structuredContent/text, so the remaining acceptance question is purely visual on the user's ChatGPT surface: did a populated inline card actually appear? If yes, record consumer acceptance and close 1.9.9; if no, record fr..."
+          },
+          "after": {
+            "next_action": "Final fresh-consumer acceptance failed at the ChatGPT host boundary. The current conversation loaded the v6 relay_render_context_card schema (including evidence_id/show_qa), Relay Worker v72 is live from exact merge 197f43801ac2298efa3a99aebc3159240350cd34, and the renderer executed successfully twice against the 1.9.9 assignment including production Inspector evidence vis_b15d7dc4-a2a6-499f-90aa-05c9246ce02d. The user saw no inline card at all. Treat this as a current ChatGPT consumer/invocation-path rendering failure with Relay's current launcher/resource contract satisfied. Do not change..."
           }
         }
       ]
