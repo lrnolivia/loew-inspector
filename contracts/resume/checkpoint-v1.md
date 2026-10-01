@@ -2,7 +2,7 @@
 
 A checkpoint is a compact durable snapshot derived from canonical Relay evidence, not a model-authored handoff.
 
-Status: DRAFT_PLACEHOLDER
+Status: ACTIVE_CONTRACT
 
 Required identity:
 - project
