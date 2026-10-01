@@ -1,6 +1,6 @@
 # Relay 1.9.9 — ChatGPT-native experience
 
-Status: release candidate
+Status: release candidate — final generated artifact refreshed and temporary rebuild helper removed
 
 Relay 1.9.9 closes the 1.9 patch train around the three surfaces a human actually sees: compact in-chat cards, the opened Relay workspace, and Inspector QA.
 
