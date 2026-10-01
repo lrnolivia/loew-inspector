@@ -149,7 +149,10 @@ test('Reopening during a save cannot replace confirmed responses with an older i
   await page.getByRole('button',{name:'Exit review'}).click();await signal(postSignal,'pending POST started');
   // Wait for the popstate event, not just its earlier history-state update.
   await page.waitForFunction(()=>window.__exitPopped,null,{timeout:5000});
-  holdLive=true;await page.locator('[data-review-id="'+evidence.evidence_id+'"]').click({timeout:5000});await signal(Promise.all([getSignal,qaReadSignal]),'reopened live read and stale QA snapshot');
+  holdLive=true;const reopen=page.locator('[data-review-id="'+evidence.evidence_id+'"]');
+  // Center the fixture opener below Inspector's sticky header before a normal click.
+  await reopen.evaluate(button=>button.scrollIntoView({block:'center',behavior:'instant'}));
+  await reopen.click({timeout:5000});await signal(Promise.all([getSignal,qaReadSignal]),'reopened live read and stale QA snapshot');
   releasePost();await page.waitForFunction(id=>sessionStorage.getItem('relay.qa.draft.v1.'+id)===null,evidence.evidence_id,{timeout:5000});
   releaseGet();await page.locator('.qa-notes textarea').waitFor();
   assert.equal(await page.locator('.qa-notes textarea').inputValue(),'Newest confirmed note');
