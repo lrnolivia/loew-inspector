@@ -125,7 +125,7 @@ test("generated cutover serves React at root and mounts the same React control c
   assert.ok(webAssets["/inspector"]);
   assert.match(webAssets["/inspector"].text, /data-page="review"/);
   assert.match(mcpHtml, /id="root"/);
-  assert.doesNotMatch(mcpHtml, /src="\/assets\/relay-2\.0\.js"/);
+  assert.match(mcpHtml, /<script type="module">/);\n  assert.doesNotMatch(mcpHtml, /<script[^>]*src="\/assets\/relay-2\.0\.js"[^>]*><\/script>/);
 
   const browser = await chromium.launch({ headless: true });
   try {
