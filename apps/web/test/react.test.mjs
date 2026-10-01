@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 import { createServer } from "vite";
+import { mcpHtml, webAssets } from "../generated.js";
 
 // This PR gate exercises the Vite/React boundary from the committed lockfile.
 const root = fileURLToPath(new URL("..", import.meta.url));
@@ -116,4 +117,18 @@ test("Relay 2.0 React shell renders human-first live surfaces responsively", asy
     await browser.close();
     await vite.close();
   }
+});
+
+
+test("generated cutover publishes the React control center through the authenticated MCP bridge", () => {
+  assert.match(webAssets["/"].text, /<title>relay 2\.0<\/title>/);
+  assert.ok(webAssets["/inspector"]);
+  assert.match(webAssets["/inspector"].text, /data-page="review"/);
+  assert.match(mcpHtml, /id="root"/);
+  assert.match(mcpHtml, /<script type="module">/);
+  assert.match(mcpHtml, /ui\/initialize/);
+  assert.match(mcpHtml, /ui\/notifications\/initialized/);
+  assert.match(mcpHtml, /tools\/call/);
+  assert.match(mcpHtml, /relay_ui_request/);
+  assert.match(mcpHtml, /\/inspector#review/);
 });

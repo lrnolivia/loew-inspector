@@ -2,7 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import http from "node:http";
 import { chromium } from "playwright";
-import { webAssets, mcpHtml } from "../generated.js";
+import { webAssets } from "../generated.js";
 import { fitTransform, wheelPanDelta, wheelZoomFactor } from "../public/qa-viewport.js";
 // Inspector deliberately reuses Field camera semantics without importing Field editor state.
 // Dashboard triage is reversible: stale review evidence is archived, never deleted.
@@ -24,7 +24,7 @@ test("Inspector camera math mirrors Field input semantics", () => {
   assert.ok(wheelZoomFactor({ deltaMode: 0, deltaY: -12, metaKey: false }) > 1);
 });
 
-test("shared interface works on web and MCP host transport, including mobile, deep links and exact review saves", async () => {
+test("preserved Inspector surface works at /inspector, including mobile, deep links and exact review saves", async () => {
   let review = null;
   let heldPath = "";
   let releaseLoading;
@@ -101,13 +101,13 @@ test("shared interface works on web and MCP host transport, including mobile, de
   const origin = "http://127.0.0.1:" + server.address().port;
   const browser = await chromium.launch({ headless: true });
   try {
-    for (const mode of ["web", "mcp"]) {
+    for (const mode of ["web"]) {
       const page = await browser.newPage({ viewport: { width: 1360, height: 1000 }, colorScheme: "dark" });
       const errors = []; page.on("pageerror", error => errors.push(error.message));
       let view = page;
       if (mode === "web") {
         hold("/api/workers");
-        await page.goto(origin);
+        await page.goto(origin + "/inspector#today");
         await view.locator("#today-work .content-skeleton").waitFor();
         assert.equal(await view.locator("#today-attention .content-skeleton").getAttribute("role"), "status");
         assert.equal(await view.locator("#operator-connection").evaluate(node => getComputedStyle(node, "::before").position), "static");
@@ -352,7 +352,7 @@ test("shared interface works on web and MCP host transport, including mobile, de
         assert.equal(await page.locator("html").getAttribute("data-theme"), "dark", "Manual choice survives reload and overrides system light");
         await page.evaluate(() => localStorage.removeItem("relay-theme"));
         await page.emulateMedia({ colorScheme: "dark" });
-        await page.goto(origin + "#projects?project=relay");
+        await page.goto(origin + "/inspector#projects?project=relay");
         await page.locator("#project-detail").filter({ hasText: "Complete consolidation" }).waitFor();
         assert.equal(await page.getByRole("tab", { name: "relay", exact: true }).getAttribute("aria-selected"), "true");
         await page.screenshot({ path: "/tmp/relay-b4-dark.png" });
@@ -364,7 +364,7 @@ test("shared interface works on web and MCP host transport, including mobile, de
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
         assert.equal(overflow, false);
         await page.screenshot({ path: "/tmp/relay-b4-mobile-light.png", fullPage: true });
-        await page.goto(origin + "#review?evidence=" + evidence.evidence_id);
+        await page.goto(origin + "/inspector#review?evidence=" + evidence.evidence_id);
         await page.locator(".qa-stage").waitFor();
         assert.equal(await page.locator(".qa-answer.selected").textContent(), "Yes, clear");
         assert.equal(await page.locator(".qa-companion").evaluate(node => getComputedStyle(node).resize), "none");

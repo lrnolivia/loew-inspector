@@ -33,7 +33,73 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  test:
+  inspector-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:inspector
+
+  runner-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npm run test:runner
+
+  layout-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npm run test:layout
+
+  contract-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npm run test:contracts
+
+  web-api-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: node --test apps/web/test/api.test.mjs
+
+  web-browser-test:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -44,14 +110,66 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci
-      - name: Install deterministic Chromium harness
-        run: npx playwright install --with-deps chromium
-      - name: Test Relay workspace boundaries and implementations
-        run: npm test
-      - name: Typecheck Relay 2.0 React boundary
-        run: npm run typecheck:2.0 --workspace @relay/web
-      - name: Build Relay 2.0 React boundary
-        run: npm run build:2.0 --workspace @relay/web
-      # The committed legacy bridge must be the deterministic output of the same sources under review.
-      - name: Verify shared web and MCP build
-        run: npm run build && git diff --exit-code -- apps/web/generated.js
+      - run: npx playwright install --with-deps chromium
+      - run: node --test apps/web/test/browser.test.mjs
+
+  web-react-shell-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node --test --test-name-pattern="Relay 2.0 React shell renders human-first live surfaces responsively" apps/web/test/react.test.mjs
+
+  web-react-mcp-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node --test --test-name-pattern="generated cutover publishes the React control center through the authenticated MCP bridge" apps/web/test/react.test.mjs
+
+  typecheck-2-0:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npm run typecheck:2.0 --workspace @relay/web
+
+  vite-build-2-0:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npm run build:2.0 --workspace @relay/web
+
+  generated-bridge:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npm run build && git diff --exit-code -- apps/web/generated.js
