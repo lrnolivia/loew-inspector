@@ -76,3 +76,12 @@ test('technical canonical notes remain exact evidence and never become the defau
   const model=contextCardModel(data);assert.doesNotMatch(model.summary,/a015761|PR #72|Worker version/);assert.doesNotMatch(model.next_step,/a015761/);assert.equal(model.evidence.next_action,next);
   assert.equal(contextualPresentation(data).human.staff,'Julian with Roman');
 });
+
+test('successful merge receipts tolerate numeric check counts without hiding the write result', async () => {
+  const {contextualPresentation}=await import('./relay-chat-ui.js');
+  const receipt={ok:true,checks:{check_runs:3,status_contexts:0},merge:{merged:true},pull_request:{number:73,title:'Repair conversational summaries',merged:true,merge_commit_sha:'a'.repeat(40)}};
+  const result=contextualPresentation(receipt);
+  assert.equal(result.human.what_changed,'The source change is merged.');
+  assert.equal(result.pull_request.merge_commit_sha,receipt.pull_request.merge_commit_sha);
+  assert.equal(result.merge.merged,true);
+});

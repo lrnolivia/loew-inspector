@@ -35,7 +35,7 @@ export function contextCardModel(data = {}, directory = DIRECTORY) {
   const team = primary + (supporting.length ? ' with ' + supporting.join(', ') : '');
   const status = data.ok === false || data.isError ? 'blocked' : first.state || data.state || checkpoint.state || (human.health === 'blocked' ? 'blocked' : 'recorded');
   const error = typeof data.error === 'string' ? data.error : data.error?.message;
-  const checks = data.checks?.check_runs || data.check_runs;
+  const checks = Array.isArray(data.checks?.check_runs) ? data.checks.check_runs : Array.isArray(data.check_runs) ? data.check_runs : null;
   const pr = data.pull_request || (data.number && data.head ? data : null);
   let title = human.outcome || first.goal || data.project || data.script || 'Relay update';
   let summary = human.what_changed || error || first.waiting_reason || data.message || first.next_action || checkpoint.next_action || 'Exact Relay result recorded.';
