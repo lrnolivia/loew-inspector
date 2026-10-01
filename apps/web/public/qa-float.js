@@ -161,7 +161,8 @@ export function createQaFloat(stage, { onDockChange } = {}) {
 
   const finishAction = event => {
     if (!action) return;
-    try { panel.releasePointerCapture(event.pointerId); } catch {}
+    const captureTarget = action.capture === "stage" ? stage : panel;
+    try { captureTarget.releasePointerCapture(event.pointerId); } catch {}
     const wasDrag = action.kind === "drag";
     action = null;
     panel.classList.remove("qa-dragging", "qa-resizing");
@@ -179,16 +180,34 @@ export function createQaFloat(stage, { onDockChange } = {}) {
     const edge = resizeEdge(event, rect);
     if (edge) {
       event.preventDefault();
-      action = { kind: "resize", edge, rect, startX: event.clientX, startY: event.clientY };
+      action = { kind: "resize", edge, rect, startX: event.clientX, startY: event.clientY, capture: "panel" };
       try { panel.setPointerCapture(event.pointerId); } catch {}
       panel.classList.add("qa-resizing");
       return;
     }
     if (interactiveTarget(event.target)) return;
     event.preventDefault();
-    action = { kind: "drag", rect, startX: event.clientX, startY: event.clientY };
+    action = { kind: "drag", rect, startX: event.clientX, startY: event.clientY, capture: "panel" };
     try { panel.setPointerCapture(event.pointerId); } catch {}
     panel.classList.add("qa-dragging");
+  };
+
+  // Rounded card corners are clipped out of the panel's own pointer hit-test.
+  // Catch those invisible edge/corner zones on the stage so resize still works
+  // from the full rectangular card bounds without adding visible handles.
+  const onStagePointerDown = event => {
+    if (action || dockEdge || panel.contains(event.target)) return;
+    const rect = panel.getBoundingClientRect();
+    const insideBounds =
+      event.clientX >= rect.left && event.clientX <= rect.right &&
+      event.clientY >= rect.top && event.clientY <= rect.bottom;
+    if (!insideBounds) return;
+    const edge = resizeEdge(event, rect);
+    if (!edge) return;
+    event.preventDefault();
+    action = { kind: "resize", edge, rect, startX: event.clientX, startY: event.clientY, capture: "stage" };
+    try { stage.setPointerCapture(event.pointerId); } catch {}
+    panel.classList.add("qa-resizing");
   };
 
   const wiggle = () => {
@@ -224,6 +243,10 @@ export function createQaFloat(stage, { onDockChange } = {}) {
   panel.addEventListener("pointermove", onPointerMove);
   panel.addEventListener("pointerup", finishAction);
   panel.addEventListener("pointercancel", finishAction);
+  stage.addEventListener("pointerdown", onStagePointerDown);
+  stage.addEventListener("pointermove", onPointerMove);
+  stage.addEventListener("pointerup", finishAction);
+  stage.addEventListener("pointercancel", finishAction);
   document.addEventListener("pointermove", onActivity, { passive: true });
   window.addEventListener("resize", onResize);
   initialize();
@@ -237,6 +260,10 @@ export function createQaFloat(stage, { onDockChange } = {}) {
       panel.removeEventListener("pointermove", onPointerMove);
       panel.removeEventListener("pointerup", finishAction);
       panel.removeEventListener("pointercancel", finishAction);
+      stage.removeEventListener("pointerdown", onStagePointerDown);
+      stage.removeEventListener("pointermove", onPointerMove);
+      stage.removeEventListener("pointerup", finishAction);
+      stage.removeEventListener("pointercancel", finishAction);
       document.removeEventListener("pointermove", onActivity);
       window.removeEventListener("resize", onResize);
     }
