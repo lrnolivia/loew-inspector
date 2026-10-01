@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T03:19:08.397Z",
+  "updated_at": "2026-10-01T03:22:45.772Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5830,7 +5830,7 @@
       ],
       "goal": "Ship Relay 1.9.6.2 as operational staff routing plus the conversational contextual-card repair, then continue as the wrap-up worker for the remaining Relay 1.9 patch train through 1.9.9 under the umbrella mandate.",
       "acceptance": "Add durable assignment-level primary_staff and supporting_staff metadata resolved from the canonical sticky staff registry while preserving machine owner IDs and authorization underneath. Validate active/reserve/retired rules, duplicates, amend history, role/staff compatibility where appropriate, and deterministic fallback. Carry named teams through queue/claim/amend, resume/updates, worker communication, executive status and human-first presentation. Repair the normal in-chat MCP visual path: contextual Relay tools must attach and render the compact context-card surface from src/relay-chat-ui.js / ui://relay/context-card/...; do not substitute the full control-center/dashboard. Cards should represent staff ownership, status/progress, connected handoffs, blockers, QA and useful actions with technical evidence subordinate. The dashboard remains an explicit Open Relay destination. Preserve exact machine/evidence identity, no staff-based authorization, no productivity scoring. Add regression tests for staff routing and card descriptor/resource linkage, pass exact-head admission/CI, merge/deploy, refresh ChatGPT and verify the card renders in a fresh consumer. After 1.9.6.2 verification, continue owning coherent 1.9.7/1.9.8/1.9.9 successors from current canonical findings/state without stopping for reassignment or creating empty versions; close the umbrella only after final fresh-consumer verification.",
-      "next_action": "PR #72 merged exact head a015761290cf86ada0c48e0537dbede1ce4e6cb2 as de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7; deployed Worker version 14b11840-1c72-4402-a5da-e47d33e2ac4d at 100% via 10961170-a08b-4074-936f-7189084bcbcb. Runtime/source readback reports 1.9.6.2 and context-card/v2. Refresh ChatGPT Relay metadata and verify named staff, updated coordinate schema and compact card in a fresh consumer before completing this slice and continuing successors.",
+      "next_action": "Correct the evidenced technical-note leakage in human card summaries; preserve exact details below, revalidate and ship the correction before fresh ChatGPT consumer completion.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-024",
@@ -5852,8 +5852,8 @@
       "base_sha": "f1241e913800349a7e6e415fa447ece86821fe8e",
       "state": "active",
       "created_at": "2026-10-01T03:05:53.991Z",
-      "updated_at": "2026-10-01T03:19:08.397Z",
-      "lease_until": "2026-10-01T15:19:08.397Z",
+      "updated_at": "2026-10-01T03:21:01.595Z",
+      "lease_until": "2026-10-01T15:21:01.595Z",
       "primary_staff": "julian",
       "supporting_staff": [
         "ellis",
@@ -5885,6 +5885,38 @@
           }
         }
       ]
+    },
+    {
+      "id": "relay-sidebar-theme-refresh-20260930",
+      "owner": "codex-relay-sidebar-theme-20260930",
+      "branch": "relay/sidebar-theme-refresh-20260930",
+      "paths": [
+        "apps/web/public/operator-1.8.css",
+        "apps/web/public/index.html",
+        "apps/web/public/operator.js",
+        "apps/web/public/theme.js",
+        "apps/web/build.mjs",
+        "apps/web/generated.js",
+        "apps/web/test/browser.test.mjs",
+        "packages/shared-ui/glyphs.js",
+        "docs/relay/INSPECTOR_VISUAL_POLISH_20260930.md",
+        "packages/shared-ui/tokens.css",
+        "packages/shared-ui/components.css",
+        "apps/web/public/qa.css"
+      ],
+      "resources": [
+        "relay-design"
+      ],
+      "goal": "Sidebar theme toggle, smaller refresh-tools shortcut, near-white Relay dark title and roomier review cards.",
+      "acceptance": "Persisted manual theme covers all current light/dark styles; title remains sienna light and near-white dark; matching card/skeleton spacing; refresh icon opens actual plugin details honestly; required gates.",
+      "next_action": "Wire existing light styles to an explicit theme attribute and initialize before paint, then finish sidebar/grid polish and publish.",
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "base_sha": "43c0dde2d1be6eb71ef4c6832eceb653ba33a80f",
+      "state": "active",
+      "created_at": "2026-10-01T03:21:45.211Z",
+      "updated_at": "2026-10-01T03:22:45.772Z",
+      "lease_until": "2026-10-01T15:22:45.772Z"
     }
   ],
   "migrated_from": "loew-inspector"

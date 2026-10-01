@@ -1,3 +1,4 @@
+import { bindTheme } from "./theme.js";
 import { showLoading } from "./loading.js";
 import { glyph } from "../../../packages/shared-ui/glyphs.js";
 import { brand, featureAccent } from "./brand.js";
@@ -8,6 +9,8 @@ import { loadNightShift } from "../../../features/night-shift/view.js";
 import { loadToday } from "./operator-today.js";
 import { bindReviewFilters, loadReview } from "./operator-review.js";
 import { esc, loadProjectDetail, loadProjectIndex, projectName, renderProjectDetail } from "./operator-projects.js";
+
+bindTheme();
 
 const pages = [...document.querySelectorAll("[data-page]")];
 const nav = [...document.querySelectorAll("[data-nav]")];
@@ -48,7 +51,7 @@ document.querySelectorAll(".feature-heading").forEach(heading => {
 });
 
 if (appSettings) {
-  appSettings.querySelector(".utility-icon").innerHTML = glyph("settings");
+  appSettings.querySelector(".utility-icon").innerHTML = glyph("refresh");
 }
 
 function setShellMotion(direction) {

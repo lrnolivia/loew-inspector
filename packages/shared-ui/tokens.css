@@ -35,8 +35,7 @@
   --radius-small: 14px;
   --page: min(1240px, calc(100vw - 64px));
 }
-@media (prefers-color-scheme: light) {
-  :root {
+:root[data-theme="light"] {
     color-scheme: light;
     --color-canvas: #f3f3f0;
     --color-surface: #fafaf7;
@@ -56,7 +55,7 @@
     --status-quiet: #77716b;
     --color-link: #087a88;
   }
-}
+
 body { font-family: Inter, system-ui, sans-serif; font-size: 19px; line-height: 28px; }
 a { color: var(--color-link, var(--color-orient)); text-underline-offset: 4px; }
 button, summary, a, input, textarea { -webkit-tap-highlight-color: transparent; }

@@ -290,7 +290,27 @@ test("shared interface works on web and MCP host transport, including mobile, de
       await view.locator(".qa-save-state").filter({ hasText: "Saved" }).waitFor();
       assert.equal(await view.locator(".qa-notes textarea").inputValue(), "A durable note on this exact capture.");
       await view.getByRole("button", { name: "Close QA", exact: true }).click();
+      assert.equal(await view.locator(".review-list").evaluate(node => getComputedStyle(node).gap), "28px");
+      assert.equal(await view.locator(".operator-brand strong").evaluate(node => getComputedStyle(node).color), "rgb(251, 250, 247)");
+      await view.getByRole("button", { name: "Switch to light mode", exact: true }).click();
+      assert.equal(await view.locator("html").getAttribute("data-theme"), "light");
+      assert.equal(await view.locator(".operator-brand strong").evaluate(node => getComputedStyle(node).color), "rgb(181, 71, 31)");
+      await view.locator("[data-review-id]").click();
+      await view.locator(".qa-product-badge strong").waitFor();
+      assert.equal(await view.locator(".qa-panel-head").evaluate(node => getComputedStyle(node).backgroundColor), "rgb(255, 255, 255)");
+      await view.getByRole("button", { name: "Close QA", exact: true }).click();
+      await view.getByRole("button", { name: "Switch to dark mode", exact: true }).click();
+      assert.equal(await view.locator("html").getAttribute("data-theme"), "dark");
+      await view.locator("#app-settings").evaluate(node => { window.open = href => { window.__testExternal = href; }; node.click(); });
+      assert.equal(await view.locator("body").evaluate(() => window.__testExternal), "https://chatgpt.com/settings/plugins-settings/plugin_asdk_app_6abdbca7c98c819187cc153d781b0faf");
+      assert.equal(await view.locator("#app-settings .glyph-refresh").count(), 1);
+      assert.equal(await view.locator("#app-settings .relay-glyph").evaluate(node => getComputedStyle(node).width), "18px");
       if (mode === "web") {
+        await page.emulateMedia({ colorScheme: "light" });
+        await page.reload();
+        assert.equal(await page.locator("html").getAttribute("data-theme"), "dark", "Manual choice survives reload and overrides system light");
+        await page.evaluate(() => localStorage.removeItem("relay-theme"));
+        await page.emulateMedia({ colorScheme: "dark" });
         await page.goto(origin + "#projects?project=relay");
         await page.locator("#project-detail").filter({ hasText: "Complete consolidation" }).waitFor();
         assert.equal(await page.getByRole("tab", { name: "relay", exact: true }).getAttribute("aria-selected"), "true");
