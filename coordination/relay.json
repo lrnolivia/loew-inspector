@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T16:38:20.309Z",
+  "updated_at": "2026-10-01T16:48:32.059Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -9553,7 +9553,7 @@
       ],
       "goal": "Create a minimal MCP App host probe that isolates ChatGPT mounting from Relay card complexity and oversized structuredContent.",
       "acceptance": "Use the existing extension resource hook only; advertise a fresh static ui:// Relay probe resource on a small read-only Relay tool result; return no Runner assignment dump; resource renders static text without custom handshake, window.openai dependency, self-refresh, or Relay card design; preserve current v9 and legacy cards untouched; exact-head tests/CI pass; deploy temporary exact-head Worker for cross-client consumer test before merge.",
-      "next_action": "Create the branch from current main, replace the historical v2 probe with the minimal static host probe attached to relay_control_status, validate resource/tool metadata, run exact-head tests, open draft PR, temporarily deploy exact head, then invoke relay_control_status for iPhone/web/desktop comparison.",
+      "next_action": "PR #96 exact head e4080bbb2ac30b7f51fb5716fd685d9d4683c8b2 is fully green and contains the static minimal-v2 host probe with both nested ui.resourceUri and flat ui/resourceUri metadata. Temporary Worker upload is blocked only because relay_cloud_upload_version cannot read the current oversized apps/web/generated.js. Wait for the owning release lane's fully green PR #97 generated-payload split to merge, then cut/rebase this probe from repaired main, rerun CI, upload/deploy temporarily, and invoke assignment-scoped relay_runner_progress across iPhone/web/native desktop. Do not modify or merge PR #97 from this lane.",
       "task_class": "maintenance",
       "category": "qa-verification",
       "tags": [
@@ -9569,10 +9569,10 @@
       "primary_staff": "nico",
       "supporting_staff": [],
       "base_sha": "a79bc74350e003b53f39cac066cd044e27651a07",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-10-01T16:38:20.309Z",
-      "updated_at": "2026-10-01T16:38:20.309Z",
-      "lease_until": "2026-10-02T04:38:20.309Z"
+      "updated_at": "2026-10-01T16:48:32.059Z",
+      "lease_until": "2026-10-02T04:48:32.059Z"
     }
   ],
   "migrated_from": "loew-inspector"
