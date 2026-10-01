@@ -113,3 +113,24 @@ test('finished work does not repeat stale next actions or redundant single statu
   });
   assert.equal(duplicated.next_step,null);
 });
+
+
+test('feature identity drives the giant-notification header and pertinent metric', async () => {
+  const {contextCardModel}=await import('./relay-chat-ui.js');
+  const runner=contextCardModel({
+    project:'relay',
+    claim:{primary_team:'runner',primary_staff:'nico',state:'working',goal:'Build the card',progress_percent:50}
+  });
+  assert.equal(runner.feature,'runner');
+  assert.equal(runner.metric,'50%');
+  assert.equal(runner.metric_label,'completion');
+  assert.equal(runner.signal,'working');
+
+  const verification=contextCardModel({checks:{check_runs:[
+    {name:'test',status:'completed',conclusion:'success'},
+    {name:'admission',status:'completed',conclusion:'success'}
+  ]}});
+  assert.equal(verification.feature,'inspector');
+  assert.equal(verification.metric,'2/2');
+  assert.equal(verification.metric_label,'checks reported');
+});
