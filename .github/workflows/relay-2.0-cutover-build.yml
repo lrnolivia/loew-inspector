@@ -36,17 +36,19 @@ jobs:
           CONTRACTS=$?
           npm test --workspace @relay/web > /tmp/web.log 2>&1
           WEB=$?
+          set -e
           {
             echo
-            echo "# BEGIN CUTOVER DIAGNOSTICS"
-            echo "# inspector_exit=$INSPECTOR layout_exit=$LAYOUT contracts_exit=$CONTRACTS web_exit=$WEB"
-            for pair in "INSPECTOR:/tmp/inspector.log" "LAYOUT:/tmp/layout.log" "CONTRACTS:/tmp/contracts.log" "WEB:/tmp/web.log"; do
-              label="${pair%%:*}"
-              file="${pair#*:}"
-              echo "# --- $label ---"
-              tail -n 100 "$file" | sed -E $'s/\x1b\\[[0-9;]*[mK]//g' | sed 's/^/# /'
-            done
-            echo "# END CUTOVER DIAGNOSTICS"
+            echo "# CUTOVER_DIAGNOSTICS_BEGIN"
+            echo "# CUTOVER_INSPECTOR_EXIT=$INSPECTOR"
+            echo "# CUTOVER_INSPECTOR_B64=$(tail -c 12000 /tmp/inspector.log | base64 -w0)"
+            echo "# CUTOVER_LAYOUT_EXIT=$LAYOUT"
+            echo "# CUTOVER_LAYOUT_B64=$(tail -c 8000 /tmp/layout.log | base64 -w0)"
+            echo "# CUTOVER_CONTRACTS_EXIT=$CONTRACTS"
+            echo "# CUTOVER_CONTRACTS_B64=$(tail -c 12000 /tmp/contracts.log | base64 -w0)"
+            echo "# CUTOVER_WEB_EXIT=$WEB"
+            echo "# CUTOVER_WEB_B64=$(tail -c 12000 /tmp/web.log | base64 -w0)"
+            echo "# CUTOVER_DIAGNOSTICS_END"
           } >> .github/workflows/ci.yml
           git config user.name "relay-release"
           git config user.email "actions@users.noreply.github.com"
