@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T21:57:16.066Z",
+  "updated_at": "2026-10-01T22:03:57.781Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -10738,7 +10738,7 @@
       ],
       "goal": "MCP rebuild stage 2: identify the first actual-host card rendering failure with one additive read-only diagnostic tool/resource before broader rewrite.",
       "acceptance": "Preserve all 51 existing tools and original card controls. Unique self-contained resource and useful text fallback. Independently evidence static shell, script, initialization, tool result, dimensions and read-only action. Same-build actual desktop, browser and iPhone observations; no viewport substitute or unsupported host automation. Exact-head tests/review/checks; authorized serialized Git-native deployment after website release. No auth, credentials, DNS, paid-service or broad UI rewrite changes. Full MCP program remains open.",
-      "next_action": "PR110 head603bbe54f294c53f78460d906323dde73f93cff3 adds diagnostic preserving52existing server tools (51model + app-only). Initial independent review cancellation fix complete. Pre-release Wrangler dry-run caught function serialization capturing __name helper; repaired with literal browser source, bundle regression+all14targeted tests pass, fresh CI/focusedreview pending. Website finalrelease cleared; merge/deploy only after finalgates/review. Actualdesktop/web/iPhone evidence NOTRUN; voice packet ready. No obsoletework retirement. Potential existing v2 model hydration packaging defect reproduced offline; original control untouched.",
+      "next_action": "Await actual client evidence, not code completion. PR110 approved head603bbe5 passed326 tests/build/typecheck/admission; merged6583a9f75424439fd255dafd5faf9dd81e50f0b2. Workers Build6d844aa0-e5ca-4228-af25-29dbd99598d7 success; active version4f3897d4-1cf1-4fbb-ba9d-332d6f01d58a at100%; postmergeCI36932202076 success. Julian to route supported existing-connection metadata refresh, then one actual ChatGPT client call relay_test_card_connection build20261001.1. Record first missing milestone and one read-only action. Desktop/browser/iPhone NOT RUN. No native-control bypass or broad rewrite until observed boundary. Original52 server tools/cards preserved. No obsolete-work retirement performed; parent coordinates writer quiescence.",
       "task_class": "maintenance",
       "category": "implementation",
       "primary_team": "runner",
@@ -10746,10 +10746,10 @@
       "primary_staff": "ellis",
       "supporting_staff": [],
       "base_sha": "be058177e95d08db85719dcb20f402b6e4dd21db",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-10-01T21:33:22.416Z",
-      "updated_at": "2026-10-01T21:57:16.066Z",
-      "lease_until": "2026-10-02T09:57:16.066Z"
+      "updated_at": "2026-10-01T22:03:57.781Z",
+      "lease_until": "2026-10-02T10:03:57.781Z"
     },
     {
       "id": "relay-website-notification-center-20261001",
