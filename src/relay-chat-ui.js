@@ -27,6 +27,7 @@ export function contextCardModel(data = {}, directory = DIRECTORY) {
   const checkpoints = data.checkpoints || [];
   const first = data.claim || (typeof data.assignment === 'object' ? data.assignment : null) || data.claims?.find(x=>x.state!=='completed') || data.claims?.[0] || data.queue?.[0] || data.progress?.[0] || data.latest?.assignment || checkpoints[0]?.assignment || data.coordination?.claims?.find(x=>x.state!=='completed') || {};
   const checkpoint = data.latest || checkpoints[0] || {};
+  const technicalNote = text => /[a-f0-9]{24,40}|relay_[a-z_]+|version_id|commit_sha|Worker version|PR #\d+/.test(String(text || ''));
   const human = data.human || {};
   const name = id => directory[id] || 'Unassigned staff';
   const primary = human.responsible_staff?.display_name || (first.primary_staff ? name(first.primary_staff) : data.primary_staff ? name(data.primary_staff) : 'Relay');
@@ -38,6 +39,7 @@ export function contextCardModel(data = {}, directory = DIRECTORY) {
   const pr = data.pull_request || (data.number && data.head ? data : null);
   let title = human.outcome || first.goal || data.project || data.script || 'Relay update';
   let summary = human.what_changed || error || first.waiting_reason || data.message || first.next_action || checkpoint.next_action || 'Exact Relay result recorded.';
+  if (technicalNote(summary) && !error && !first.waiting_reason) summary = checkpoint.identities?.merge_commit_sha ? 'The source change is merged. The next verification gate is ready.' : 'Canonical work state is available. Exact source and runtime details are recorded below.';
   let label = states[status] || status;
   let tone = ['blocked','failed','officially-stale'].includes(status) ? 'bad' : status.includes('wait') || status === 'held' ? 'wait' : 'quiet';
   let rows = (data.progress || data.claims || data.queue || []).slice(0,3).map(x=>({label:x.primary_staff ? name(x.primary_staff) : 'Relay', text:states[x.state] || x.state || 'Recorded'}));
@@ -53,12 +55,12 @@ export function contextCardModel(data = {}, directory = DIRECTORY) {
   const qa = human.qa || checkpoint.qa_context || data.qa || null;
   const handoff = data.action === 'handoff' ? 'Ownership handed to '+(data.claim?.owner || 'the recorded successor')+'.' : data.handoff?.summary || null;
   const identities = first.identities || checkpoint.identities || data.identities || {};
-  const evidence = { assignment:first.id || first.assignment || (typeof data.assignment==='string'?data.assignment:null), owner:first.owner, branch:first.branch || identities.branch, head_sha:identities.head_sha || identities.pr_head_sha || pr?.head?.sha, pr:pr?.number || identities.pr, merge_commit_sha:pr?.merge_commit_sha || identities.merge_commit_sha, version_id:data.version_id, deployment_id:data.deployment?.id, evidence_id:data.evidence_id || data.evidence?.evidence_id, record_sha:data.record_sha };
-  return { title, team, label, tone, summary, rows, blocker, qa, handoff, next_step:human.next_step || first.next_action || checkpoint.next_action || null, evidence:Object.fromEntries(Object.entries(evidence).filter(([,v])=>v!=null)), refresh:Boolean(data.project) };
+  const evidence = { assignment:first.id || first.assignment || (typeof data.assignment==='string'?data.assignment:null), owner:first.owner, branch:first.branch || identities.branch, head_sha:identities.head_sha || identities.pr_head_sha || pr?.head?.sha, pr:pr?.number || identities.pr, merge_commit_sha:pr?.merge_commit_sha || identities.merge_commit_sha, version_id:data.version_id, deployment_id:data.deployment?.id, evidence_id:data.evidence_id || data.evidence?.evidence_id, record_sha:data.record_sha, next_action:first.next_action || checkpoint.next_action || null };
+  return { title, team, label, tone, summary, rows, blocker, qa, handoff, next_step:technicalNote(human.next_step || first.next_action || checkpoint.next_action) ? 'Verify the refreshed chat connection before continuing.' : human.next_step || first.next_action || checkpoint.next_action || null, evidence:Object.fromEntries(Object.entries(evidence).filter(([,v])=>v!=null)), refresh:Boolean(data.project) };
 }
 export function contextualPresentation(data) {
   const m=contextCardModel(data);
-  return { ...data, human: data.human || { outcome:m.title, health:m.blocker?'blocked':m.tone==='wait'?'waiting':'healthy', staff:m.team, what_changed:m.summary, next_step:m.next_step, blocker:m.blocker, qa:m.qa } };
+  return { ...data, human: data.human || { outcome:m.title, health:m.blocker?'blocked':m.tone==='wait'||m.label==='recorded'?'waiting':'healthy', staff:m.team, what_changed:m.summary, next_step:m.next_step, blocker:m.blocker, qa:m.qa } };
 }
 function cardHtml() {
   return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><style>
@@ -69,7 +71,7 @@ const model=${contextCardModel.toString()};
 const ids=['title','state','team','summary','rows','blocker','handoff','qa','next','details','evidence','refresh','open-relay'];
 const el=Object.fromEntries(ids.map(id=>[id,document.getElementById(id)]));
 let toolInput=window.openai?.toolInput||{};let lastData=null;let seq=0;const pending=new Map();
-function unwrap(result){if(result?.structuredContent)return result.structuredContent;for(const item of result?.content||[]){if(item.type==='text'){try{return JSON.parse(item.text)}catch{}}}return result||{}}
+function unwrap(result){if(result?.structuredContent)return result.structuredContent;for(const item of result?.content||[]){if(item.type==='text'){try{return JSON.parse(item.text)}catch{}}}return result?.isError?{ok:false,error:result.content?.find(x=>x.type==='text')?.text||'The Relay action failed.'}:result||{}}
 function render(result){const data=unwrap(result);lastData=data;const m=model(data,DIRECTORY);el.title.textContent=m.title;el.team.textContent=m.team;el.state.textContent=m.label;el.state.dataset.tone=m.tone;el.summary.textContent=m.summary;el.rows.replaceChildren();for(const r of m.rows){const div=document.createElement('div');div.className='row';const strong=document.createElement('strong');strong.textContent=r.label;const span=document.createElement('span');span.textContent=r.text;div.append(strong,span);el.rows.append(div)}for(const key of ['blocker','handoff']){el[key].hidden=!m[key];el[key].textContent=m[key]||''}el.qa.hidden=!m.qa;el.qa.textContent=m.qa?(m.qa.intended_result||m.qa.reason||'QA evidence is available.')+(m.qa.checks?' Check: '+m.qa.checks.join('; '):''):'';el.next.hidden=!m.next_step;el.next.textContent=m.next_step?'Next: '+m.next_step:'';el.details.hidden=!Object.keys(m.evidence).length;el.evidence.textContent=JSON.stringify(m.evidence,null,2);el.refresh.hidden=!m.refresh}
 function rpc(method,params){return new Promise((resolve,reject)=>{const id=++seq;const timer=setTimeout(()=>{pending.delete(id);reject(new Error('Relay host timed out'))},15000);pending.set(id,{resolve,reject,timer});window.parent.postMessage({jsonrpc:'2.0',id,method,params},'*')})}
 window.addEventListener('message',event=>{if(event.source!==window.parent||event.data?.jsonrpc!=='2.0')return;const msg=event.data;const waiter=pending.get(msg.id);if(waiter){pending.delete(msg.id);clearTimeout(waiter.timer);msg.error?waiter.reject(new Error(msg.error.message)):waiter.resolve(msg.result);return}if(msg.method==='ui/notifications/tool-input')toolInput=msg.params?.arguments||{};if(msg.method==='ui/notifications/tool-result')render(msg.params);if(msg.method==='ui/resource-teardown'&&msg.id)window.parent.postMessage({jsonrpc:'2.0',id:msg.id,result:{}},'*')});

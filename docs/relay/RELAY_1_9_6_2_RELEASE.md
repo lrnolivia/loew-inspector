@@ -11,3 +11,9 @@ Resume/checkpoint hashes, amendment windows, progress, worker messages and execu
 Normal conversational tools select `ui://relay/context-card/v2.html`. This compact resource renders staff, progress, blockers, connected handoffs, QA and next actions. Exact evidence is subordinate in an expandable panel. The explicit Open Relay action opens the full dashboard. The resource supports ChatGPT globals and MCP Apps initialization/tool-result notifications, binds elements explicitly to avoid browser API collisions, and displays connection/error uncertainty without manufacturing success.
 
 Validation and deployment receipts will be appended before completion. The 1.9 umbrella remains open until successor creative/platform/performance/integration work is accounted for and fresh-consumer verification passes.
+
+## Initial shipment and consumer-led correction
+
+PR #72 tested head `a015761290cf86ada0c48e0537dbede1ce4e6cb2` passed full local tests/build, Chromium card initialization and exact-head Runner/CI gates. Squash merge `de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7` deployed as version `14b11840-1c72-4402-a5da-e47d33e2ac4d`, deployment `10961170-a08b-4074-936f-7189084bcbcb`, at 100%. Runtime and source readback confirmed 1.9.6.2 and context-card/v2; canonical amendment and resume showed Julian with Ellis and Roman under the unchanged machine owner.
+
+Readback exposed technical canonical next-action notes leaking into the human layer. A bounded correction keeps those exact notes in evidence and uses practical verification language in the default card. This assignment remains active until that correction and refreshed-consumer verification are complete.
