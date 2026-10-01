@@ -7,6 +7,7 @@ import { esc, projectName } from "./operator-projects.js";
 
 let reviewItems = [];
 let reviewMode = "needs";
+let reviewUi = null;
 let cardPreviewMode = "relay";
 
 const cardPreviews = Object.freeze({
@@ -164,45 +165,168 @@ function evidenceTitle(item) {
   return item.step_label || context.surface || "Screen review";
 }
 
+function reviewDisposition(item) {
+  const explicit = item.qaReview?.disposition;
+  if (["pending", "completed", "stale", "archived"].includes(explicit)) return explicit;
+  return item.qaReview?.overall ? "completed" : "pending";
+}
+
+function reviewStats() {
+  const stats = { pending: 0, completed: 0, stale: 0, archived: 0 };
+  reviewItems.forEach(item => { stats[reviewDisposition(item)] += 1; });
+  return stats;
+}
+
+function updateReviewOverview() {
+  const stats = reviewStats();
+  reviewUi?.setOverviewDetail(
+    stats.pending + " awaiting review · " +
+    stats.stale + " stale · " +
+    stats.completed + " completed"
+  );
+}
+
+function visibleReviews() {
+  if (reviewMode === "all") return reviewItems.filter(item => reviewDisposition(item) !== "archived");
+  const wanted = reviewMode === "needs" ? "pending" : reviewMode;
+  return reviewItems.filter(item => reviewDisposition(item) === wanted);
+}
+
+function dispositionMeta(disposition) {
+  if (disposition === "completed") return { label: "completed", tone: "done", signal: "steady" };
+  if (disposition === "stale") return { label: "stale", tone: "warn", signal: "steady" };
+  if (disposition === "archived") return { label: "archived", tone: "quiet", signal: "steady" };
+  return { label: "needs review", tone: "act", signal: "attention" };
+}
+
+function reviewActions(disposition) {
+  if (disposition === "completed") return [
+    ["pending", "reopen"],
+    ["stale", "mark stale"]
+  ];
+  if (disposition === "stale") return [["pending", "reopen"]];
+  if (disposition === "archived") return [["stale", "restore"]];
+  return [
+    ["completed", "mark completed"],
+    ["stale", "mark stale"]
+  ];
+}
+
+async function setReviewDisposition(item, disposition, { render = true } = {}) {
+  const current = item.qaReview || {};
+  const payload = {
+    answers: { ...(current.answers || {}) },
+    notes: current.notes || "",
+    overall: current.overall || null,
+    disposition
+  };
+  const result = await api(
+    "/api/visual/" + encodeURIComponent(item.evidence_id) + "/qa",
+    { method: "POST", body: JSON.stringify(payload) }
+  );
+  item.qaReview = result.review || { ...payload, evidence_id: item.evidence_id };
+  if (render) {
+    renderReview();
+    updateReviewOverview();
+  }
+  reviewUi?.setConnection("connected", "good");
+}
+
+async function clearStaleReviews(button) {
+  const stale = reviewItems.filter(item => reviewDisposition(item) === "stale");
+  if (!stale.length) return;
+  button.disabled = true;
+  const label = button.textContent;
+  button.textContent = "clearing…";
+  try {
+    await Promise.all(stale.map(item => setReviewDisposition(item, "archived", { render: false })));
+    renderReview();
+    updateReviewOverview();
+  } catch (error) {
+    reviewUi?.setConnection("couldn’t update review", "bad");
+  } finally {
+    button.textContent = label;
+    button.disabled = reviewStats().stale === 0;
+  }
+}
+
 function renderReview() {
   const target = document.querySelector("#review-list");
   const count = document.querySelector("#review-count");
   const filters = document.querySelector("#review-filters");
-  const needs = reviewItems.filter(item => !item.qaReview?.overall);
-  const visible = reviewMode === "needs" ? needs : reviewItems;
+  const bulk = document.querySelector('[data-review-bulk="clear-stale"]');
+  const stats = reviewStats();
+  const visible = visibleReviews();
 
-  count.innerHTML = '<span class="status-light" aria-hidden="true"></span><span>' + (needs.length ? needs.length + " need" + (needs.length === 1 ? "s" : "") + " you" : "all caught up") + '</span>';
+  count.innerHTML = '<span class="status-light" aria-hidden="true"></span><span>' +
+    (stats.pending ? stats.pending + " need" + (stats.pending === 1 ? "s" : "") + " you" : "all caught up") +
+    '</span>';
   count.className = "review-count status-badge";
-  count.dataset.tone = needs.length ? "act" : "done";
-  count.dataset.signal = needs.length ? "attention" : "steady";
-  filters.querySelectorAll("[data-review-mode]").forEach(button => {
+  count.dataset.tone = stats.pending ? "act" : "done";
+  count.dataset.signal = stats.pending ? "attention" : "steady";
+
+  filters?.querySelectorAll("[data-review-mode]").forEach(button => {
     button.classList.toggle("active", button.dataset.reviewMode === reviewMode);
   });
+  if (bulk) {
+    bulk.disabled = stats.stale === 0;
+    bulk.title = stats.stale ? "Archive " + stats.stale + " stale review" + (stats.stale === 1 ? "" : "s") : "No stale reviews";
+  }
 
   if (!visible.length) {
-    target.innerHTML = '<div class="clear-card review-clear"><strong>nothing waiting for review.</strong><span>switch to all if you want to revisit an earlier screen.</span></div>';
+    const empty = {
+      needs: ["nothing waiting for review.", "completed and stale captures stay out of your active queue."],
+      completed: ["nothing completed yet.", "mark a capture completed when you are done with it."],
+      stale: ["no stale captures.", "mark outdated evidence stale, then clear it when you are ready."],
+      archived: ["archive is empty.", "clear stale moves old captures here so they can still be restored."],
+      all: ["no active review evidence.", "archived captures remain available in the archived filter."]
+    }[reviewMode] || ["nothing here.", ""];
+    target.innerHTML = '<div class="clear-card review-clear"><strong>' + esc(empty[0]) + '</strong><span>' + esc(empty[1]) + '</span></div>';
     return;
   }
 
-  target.innerHTML = visible.slice(0, 10).map(item => {
+  target.innerHTML = visible.slice(0, 18).map(item => {
     const context = item.context || {};
-    const reviewed = Boolean(item.qaReview?.overall);
+    const disposition = reviewDisposition(item);
+    const meta = dispositionMeta(disposition);
+    const actions = reviewActions(disposition).map(([next, label]) =>
+      '<button type="button" class="review-action" data-review-action="' + esc(next) +
+      '" data-evidence-action-id="' + esc(item.evidence_id) + '">' + esc(label) + '</button>'
+    ).join("");
     return `
-      <button class="review-row" type="button" data-review-id="${esc(item.evidence_id)}" data-tone="${reviewed ? "done" : "act"}" data-signal="${reviewed ? "steady" : "attention"}">
-        <img src="${esc(item.screenshot_url)}" alt="">
-        <span class="review-copy">
-          <span class="review-project project-name">${iconSlot(context.project)}${esc(projectName(context.project || "review"))}</span>
-          <strong>${esc(evidenceTitle(item))}</strong>
-          <small>${esc(context.environment || "capture")} · ${esc(relative(item.captured_at))}</small>
-        </span>
-        <span class="review-state status-badge ${reviewed ? "done" : ""}" data-tone="${reviewed ? "done" : "act"}" data-signal="${reviewed ? "steady" : "attention"}"><span class="status-light" aria-hidden="true"></span><span>${reviewed ? "reviewed" : "needs review"}</span></span>
-      </button>
+      <article class="review-row" data-tone="${esc(meta.tone)}" data-signal="${esc(meta.signal)}" data-review-disposition="${esc(disposition)}">
+        <button class="review-open" type="button" data-review-id="${esc(item.evidence_id)}" aria-label="Open ${esc(evidenceTitle(item))}">
+          <img src="${esc(item.screenshot_url)}" alt="">
+          <span class="review-copy">
+            <span class="review-project project-name">${iconSlot(context.project)}${esc(projectName(context.project || "review"))}</span>
+            <strong>${esc(evidenceTitle(item))}</strong>
+            <small>${esc(context.environment || "capture")} · ${esc(relative(item.captured_at))}</small>
+          </span>
+        </button>
+        <div class="review-card-footer">
+          <span class="review-state status-badge ${disposition === "completed" ? "done" : ""}" data-tone="${esc(meta.tone)}" data-signal="${esc(meta.signal)}"><span class="status-light" aria-hidden="true"></span><span>${esc(meta.label)}</span></span>
+          <div class="review-actions">${actions}</div>
+        </div>
+      </article>
     `;
   }).join("");
 
   hydrateProjectIcons(target);
   target.querySelectorAll("[data-review-id]").forEach(button => {
     button.addEventListener("click", () => openQa(button.dataset.reviewId));
+  });
+  target.querySelectorAll("[data-review-action]").forEach(button => {
+    button.addEventListener("click", async () => {
+      const item = reviewItems.find(candidate => candidate.evidence_id === button.dataset.evidenceActionId);
+      if (!item) return;
+      button.disabled = true;
+      try {
+        await setReviewDisposition(item, button.dataset.reviewAction);
+      } catch (error) {
+        button.disabled = false;
+        reviewUi?.setConnection("couldn’t update review", "bad");
+      }
+    });
   });
 }
 
@@ -215,9 +339,13 @@ export function bindReviewFilters() {
     reviewMode = button.dataset.reviewMode;
     renderReview();
   });
+  document.querySelector('[data-review-bulk="clear-stale"]')?.addEventListener("click", event => {
+    void clearStaleReviews(event.currentTarget);
+  });
 }
 
 export async function loadReview(ui, projectId = "") {
+  reviewUi = ui;
   const target = document.querySelector("#review-list");
   const count = document.querySelector("#review-count");
   showLoading(target, "review", "Loading captures");
@@ -239,7 +367,7 @@ export async function loadReview(ui, projectId = "") {
       if (seen.has(key)) continue;
       seen.add(key);
       deduped.push(item);
-      if (deduped.length >= 14) break;
+      if (deduped.length >= 30) break;
     }
 
     reviewItems = await Promise.all(deduped.map(async item => {
@@ -252,8 +380,7 @@ export async function loadReview(ui, projectId = "") {
     }));
 
     renderReview();
-    const needs = reviewItems.filter(item => !item.qaReview?.overall).length;
-    ui.setOverviewDetail(needs + " awaiting review · " + (reviewItems.length - needs) + " reviewed in this view");
+    updateReviewOverview();
     ui.setConnection("connected", "good");
   } catch (error) {
     count.textContent = "";
