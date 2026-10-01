@@ -128,7 +128,7 @@ test('A growing failed-save message keeps the desktop panel clear of floating co
  }finally{await browser.close();await fixture.close();}
 });
 
-test('Reopening during a save cannot replace confirmed responses with an older in-flight GET', {timeout:20000},async()=>{
+test('Reopening during a save cannot replace confirmed responses with an older in-flight GET', {timeout:30000},async()=>{
  const fixture=await contextFixture(),browser=await chromium.launch();
  let review={answers:{},notes:'Old note',overall:null,updated_at:'2026-10-01T00:00:00Z'},holdLive=false,releasePost,releaseGet,postStarted,getStarted,qaReadStarted;
  const postGate=new Promise(resolve=>releasePost=resolve),getGate=new Promise(resolve=>releaseGet=resolve);
@@ -144,11 +144,13 @@ test('Reopening during a save cannot replace confirmed responses with an older i
   await page.route('**/api/visual/*/live',async route=>{if(holdLive){getStarted();await getGate;}return route.fulfill({json:{live:{active:false}}});});
   await page.goto(fixture.origin+'/inspector#review?evidence='+evidence.evidence_id);await page.locator('.qa-question').waitFor();
   await page.getByRole('button',{name:'No, needs work',exact:true}).click();await page.locator('.qa-notes textarea').fill('Newest confirmed note');
-  await page.getByRole('button',{name:'Exit review'}).click();await postSignal;
-  // Exit traverses history asynchronously. Settle that transition before reopening.
-  await page.waitForFunction(()=>!history.state?.relayQaToken);
-  holdLive=true;await page.locator('[data-review-id="'+evidence.evidence_id+'"]').click();await Promise.all([getSignal,qaReadSignal]);
-  releasePost();await page.waitForFunction(id=>sessionStorage.getItem('relay.qa.draft.v1.'+id)===null,evidence.evidence_id);
+  const signal=async(promise,label)=>{let timer;try{return await Promise.race([promise,new Promise((_,reject)=>timer=setTimeout(()=>reject(Error('Regression phase timed out: '+label)),5000))]);}finally{clearTimeout(timer);}};
+  await page.evaluate(()=>{window.__exitPopped=false;addEventListener('popstate',()=>window.__exitPopped=true,{once:true});});
+  await page.getByRole('button',{name:'Exit review'}).click();await signal(postSignal,'pending POST started');
+  // Wait for the popstate event, not just its earlier history-state update.
+  await page.waitForFunction(()=>window.__exitPopped,null,{timeout:5000});
+  holdLive=true;await page.locator('[data-review-id="'+evidence.evidence_id+'"]').click({timeout:5000});await signal(Promise.all([getSignal,qaReadSignal]),'reopened live read and stale QA snapshot');
+  releasePost();await page.waitForFunction(id=>sessionStorage.getItem('relay.qa.draft.v1.'+id)===null,evidence.evidence_id,{timeout:5000});
   releaseGet();await page.locator('.qa-notes textarea').waitFor();
   assert.equal(await page.locator('.qa-notes textarea').inputValue(),'Newest confirmed note');
   assert.equal(await page.locator('[data-qa-answer=no]').getAttribute('aria-pressed'),'true');
