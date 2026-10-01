@@ -2,6 +2,12 @@ name: Relay 2.0 lockfile + build proof
 
 on:
   workflow_dispatch:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'apps/web/package.json'
+      - 'package-lock.json'
+      - '.github/workflows/relay-2.0-lockfile.yml'
 
 permissions:
   contents: write
