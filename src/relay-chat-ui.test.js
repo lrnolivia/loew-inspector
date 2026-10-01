@@ -61,7 +61,8 @@ test('card actually initializes and receives results without browser-global elem
       await page.goto('data:text/html,'+encodeURIComponent(relayContextCardResource().text));
       if(bridge==='mcp') await page.evaluate(()=>window.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:{structuredContent:{project:'relay',claim:{primary_staff:'julian',supporting_staff:['roman'],goal:'Staff routing is ready',state:'active'}}}},'*'));
       await assert.doesNotReject(page.locator('#title').filter({hasText:'Staff routing is ready'}).waitFor());
-      assert.equal(await page.locator('#team').textContent(),'Julian with Roman');
+      assert.equal(await page.locator('#team').textContent(),'Julian');
+      assert.equal(await page.locator('#staff').getAttribute('title'),'Julian with Roman');
       assert.deepEqual(errors,[]);
       if(bridge==='openai'){await page.getByRole('button',{name:'Open Relay'}).click();assert.equal(await page.evaluate(()=>window.modalRequested),true)}
       await page.close();
