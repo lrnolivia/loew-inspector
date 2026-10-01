@@ -88,7 +88,10 @@ function checkpointCore({ project, assignment, progress, changedPaths, changedPa
       recent_commits: recentCommits || []
     },
     activity: {
-      worker: progress?.worker || null,
+      worker: progress?.worker ? {
+        heartbeat_at: progress.worker.heartbeat_at || null,
+        freshness: progress.worker.freshness || null
+      } : null,
       external: progress?.external || null,
       last_meaningful_progress_at: progress?.last_meaningful_progress_at || null,
       progress_freshness: progress?.progress_freshness || null,
@@ -119,6 +122,9 @@ export function deriveResumeCheckpoint(input, now = new Date()) {
     dedupe: {
       unchanged_state_reuses_checkpoint_id: true,
       key: checkpointId
+    },
+    observation: {
+      worker_age_ms: input.progress?.worker?.age_ms ?? null
     },
     cadence: {
       target_ms: target,
