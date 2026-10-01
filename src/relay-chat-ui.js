@@ -47,14 +47,17 @@ export function validateRelayContextCardArguments(args) {
   if (args.show_qa !== undefined && typeof args.show_qa !== 'boolean') throw new Error('Invalid card show_qa flag');
   return args;
 }
+export function isContextualRelayTool(name) {
+  return CONTEXTUAL_TOOLS.has(name);
+}
 export function contextualizeRelayTool(tool) {
-  if (!tool || !CONTEXTUAL_TOOLS.has(tool.name)) return tool;
+  if (!tool || tool.name !== RELAY_CONTEXT_CARD_TOOL) return tool;
   const meta = tool._meta || {};
   return { ...tool, _meta: { ...meta,
     ui: { ...(meta.ui || {}), resourceUri: RELAY_CONTEXT_CARD_URI, visibility: meta.ui?.visibility || ['model','app'] },
     'openai/outputTemplate': RELAY_CONTEXT_CARD_URI, 'openai/widgetAccessible': true,
-    'openai/toolInvocation/invoking': meta['openai/toolInvocation/invoking'] || 'Checking Relay…',
-    'openai/toolInvocation/invoked': meta['openai/toolInvocation/invoked'] || 'Relay updated.'
+    'openai/toolInvocation/invoking': meta['openai/toolInvocation/invoking'] || 'Opening Relay…',
+    'openai/toolInvocation/invoked': meta['openai/toolInvocation/invoked'] || 'Relay card ready.'
   }};
 }
 // Pure model shared by the real iframe and deterministic consumer tests.

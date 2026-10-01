@@ -7,6 +7,7 @@ import { evidenceEngines, planEvidenceRequest, normalizeBrowserCapacityError } f
 import { ingestExternalEvidence, upsertEvidenceRun } from "./external-evidence.js";
 import { getRecipe, listRecipes, saveRecipeFromSession } from "./recipe-store.js";
 import { RELAY_CONTROL_CENTER_URI, relayControlCenterResource } from "./relay-ui.js";
+import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, relayContextCardDescriptor, relayContextCardResource, relayContextCardTool, validateRelayContextCardArguments } from "./relay-chat-ui.js";
 import { RELAY_SKILL_EXTENSION, relaySkillCatalog, relaySkillByUri, relaySkillResourceDescriptors, relaySkillResource } from "./skills.js";
 import { sourceAuthStatus, githubApiRequest as sourceGithubApiRequest, commitSourceFiles } from "./source.js";
 import { runnerControlTools, callRunnerControl, runnerControlError } from "./runner-control.js";
@@ -378,6 +379,7 @@ async function mcp(request, access, env) {
           description: "Interactive control surface for relay.CONTROL, relay.RUNNER, relay.SOURCE, relay.CLOUD, and relay.VERIFY.",
           mimeType: "text/html;profile=mcp-app"
         },
+        relayContextCardDescriptor(),
         ...relaySkillResourceDescriptors()
       ]
     });
@@ -387,6 +389,9 @@ async function mcp(request, access, env) {
     const uri = message.params?.uri;
     if (uri === RELAY_CONTROL_CENTER_URI) {
       return rpc(id, { contents: [relayControlCenterResource()] });
+    }
+    if (uri === RELAY_CONTEXT_CARD_URI) {
+      return rpc(id, { contents: [relayContextCardResource()] });
     }
     const skillResource = relaySkillResource(uri);
     if (skillResource) return rpc(id, { contents: [skillResource] });
@@ -433,6 +438,7 @@ async function mcp(request, access, env) {
             }
           }
         },
+        relayContextCardTool(),
 
         {
           name: "relay_control_status",
@@ -926,6 +932,17 @@ async function mcp(request, access, env) {
           const failure = runnerControlError(error);
           return rpc(id, { content: [{ type: "text", text: JSON.stringify(failure) }], structuredContent: failure, isError: true });
         }
+      }
+
+      if (name === RELAY_CONTEXT_CARD_TOOL) {
+        const cardArgs = validateRelayContextCardArguments(args);
+        const { evidence_id, show_qa, ...runnerArgs } = cardArgs;
+        const result = await callRunnerControl("relay_runner_assignments", runnerArgs, env);
+        return relayResult(id, {
+          ...result,
+          ...(evidence_id ? { evidence_id } : {}),
+          ...(show_qa === true ? { show_qa: true } : {})
+        });
       }
 
       if (name === "relay_ui_control_center") {

@@ -9,7 +9,7 @@ import { cloudUploadTool, callCloudUpload, validateCloudUploadArguments } from "
 import { QA_SKILL_URI, qaSkillCatalogEntry, qaSkillResourceDescriptor, qaSkillResource } from "./qa-skill.js";
 import { LOEW_NAMING_SKILL_URI, loewNamingSkillCatalogEntry, loewNamingSkillResourceDescriptor, loewNamingSkillResource } from "./loew-naming-skill.js";
 import { EXECUTIVE_COMMUNICATION_SKILL_URI, executiveCommunicationSkillCatalogEntry, executiveCommunicationSkillResourceDescriptor, executiveCommunicationSkillResource } from "./executive-communication-skill.js";
-import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, relayContextCardDescriptor, relayContextCardResource, relayContextCardTool, validateRelayContextCardArguments, contextualizeRelayTool, contextualPresentation } from "./relay-chat-ui.js";
+import { isContextualRelayTool, contextualizeRelayTool, contextualPresentation } from "./relay-chat-ui.js";
 
 export const RELAY_EXTENSION_VERSION = "1.9.9";
 
@@ -78,7 +78,7 @@ export function augmentToolList(tools) {
     securitySchemes: schemes,
     _meta: { ...(old?._meta || {}), securitySchemes: schemes }
   };
-  const extensionTools = [...lifecycle, ...sourceTextMutationTools, staffDirectoryTool, runnerCleanupTool, cloudUploadTool, uiApiTool, relayContextCardTool()];
+  const extensionTools = [...lifecycle, ...sourceTextMutationTools, staffDirectoryTool, runnerCleanupTool, cloudUploadTool, uiApiTool];
   const names = new Set(extensionTools.map(tool => tool.name));
   const sourceDescriptions = {
     relay_source_file: "QUERY — read one UTF-8 repository file through relay.SOURCE. Safe to retry. Use its blob SHA as the expected identity before exact text mutation when applicable.",
@@ -107,7 +107,6 @@ export function augmentToolList(tools) {
 
 export function augmentResourceList(resources) {
   const list = Array.isArray(resources) ? [...resources] : [];
-  if (!list.some(resource => resource?.uri === RELAY_CONTEXT_CARD_URI)) list.push(relayContextCardDescriptor());
   if (!list.some(resource => resource?.uri === QA_SKILL_URI)) list.push(qaSkillResourceDescriptor());
   if (!list.some(resource => resource?.uri === LOEW_NAMING_SKILL_URI)) list.push(loewNamingSkillResourceDescriptor());
   if (!list.some(resource => resource?.uri === EXECUTIVE_COMMUNICATION_SKILL_URI)) list.push(executiveCommunicationSkillResourceDescriptor());
@@ -186,7 +185,7 @@ function patchVersion(payload) {
 }
 
 function isExtensionTool(name) {
-  return name === RELAY_CONTEXT_CARD_TOOL || name === uiApiTool.name || name === createBranch.name || lifecycle.some(tool => tool.name === name) || isSourceTextMutationTool(name) || name === staffDirectoryTool.name || name === runnerCleanupTool.name || name === cloudUploadTool.name;
+  return name === uiApiTool.name || name === createBranch.name || lifecycle.some(tool => tool.name === name) || isSourceTextMutationTool(name) || name === staffDirectoryTool.name || name === runnerCleanupTool.name || name === cloudUploadTool.name;
 }
 async function authProbe(request, message, env) {
   const headers = new Headers(request.headers);
@@ -211,7 +210,7 @@ async function readMcp(request) {
   try { return JSON.parse(raw); } catch { return null; }
 }
 function toolResult(id, result, name) {
-  if (contextualizeRelayTool({name})._meta) result = contextualPresentation(result);
+  if (isContextualRelayTool(name)) result = contextualPresentation(result);
   return responseJson({
     jsonrpc: "2.0",
     id,
@@ -290,12 +289,7 @@ export default {
       try {
         const name = message.params.name;
         let result;
-        if (name === RELAY_CONTEXT_CARD_TOOL) {
-          const args = validateRelayContextCardArguments(message.params?.arguments || {});
-          const { evidence_id, show_qa, ...runnerArgs } = args;
-          result = await callRunnerControlCore("relay_runner_assignments", runnerArgs, env);
-          result = { ...result, ...(evidence_id ? { evidence_id } : {}), ...(show_qa === true ? { show_qa: true } : {}) };
-        } else if (name === uiApiTool.name) {
+        if (name === uiApiTool.name) {
           result = await callUiApi(message.params?.arguments || {}, env);
         } else if (name === runnerCleanupTool.name) {
           const args = validateRunnerCleanupArguments(message.params?.arguments || {});
@@ -335,7 +329,6 @@ export default {
       });
     }
     if (message.method === "resources/read" && response.status === 200) {
-      if (message.params?.uri === RELAY_CONTEXT_CARD_URI) return rpcResult(message.id ?? null, { contents: [relayContextCardResource()] }, response.headers);
       if (message.params?.uri === QA_SKILL_URI) return rpcResult(message.id ?? null, { contents: [qaSkillResource()] }, response.headers);
       if (message.params?.uri === LOEW_NAMING_SKILL_URI) return rpcResult(message.id ?? null, { contents: [loewNamingSkillResource()] }, response.headers);
       if (message.params?.uri === EXECUTIVE_COMMUNICATION_SKILL_URI) return rpcResult(message.id ?? null, { contents: [executiveCommunicationSkillResource()] }, response.headers);
@@ -357,7 +350,7 @@ export default {
         if (payload?.result?.tools) payload.result.tools = augmentToolList(payload.result.tools);
       });
     }
-    if (message.method === "tools/call" && contextualizeRelayTool({ name: message.params?.name })._meta) {
+    if (message.method === "tools/call" && isContextualRelayTool(message.params?.name)) {
       return rewrite(response, payload => {
         const data = payload?.result?.structuredContent;
         if (data) payload.result.structuredContent = contextualPresentation(data);

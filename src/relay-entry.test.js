@@ -4,7 +4,7 @@ import { RELAY_EXTENSION_VERSION, augmentToolList, augmentResourceList, augmentS
 import { QA_SKILL_URI } from "./qa-skill.js";
 import { LOEW_NAMING_SKILL_URI } from "./loew-naming-skill.js";
 import { EXECUTIVE_COMMUNICATION_SKILL_URI } from "./executive-communication-skill.js";
-import { RELAY_CONTEXT_CARD_URI } from "./relay-chat-ui.js";
+import { RELAY_CONTEXT_CARD_URI, relayContextCardTool, relayContextCardDescriptor } from "./relay-chat-ui.js";
 
 test("Relay extension publishes source inventory and exact-head PR action", () => {
   const tools = augmentToolList([{
@@ -20,7 +20,7 @@ test("Relay extension publishes source inventory and exact-head PR action", () =
     inputSchema: { type: "object" },
     annotations: {},
     securitySchemes: [{ type: "oauth2", scopes: [] }]
-  }]);
+  }, relayContextCardTool()]);
   const names = tools.map(tool => tool.name);
   assert.ok(names.includes("relay_source_inventory"));
   assert.ok(names.includes("relay_source_pull_request_action"));
@@ -89,8 +89,8 @@ test("server validation accepts exact-head merge input", () => {
 });
 
 
-test("Relay extension appends native QA, naming, and executive communication skills once", () => {
-  const resources = augmentResourceList([{ uri: "skill://relay/existing/SKILL.md" }]);
+test("Relay extension preserves native card resources and appends skills once", () => {
+  const resources = augmentResourceList([{ uri: "skill://relay/existing/SKILL.md" }, relayContextCardDescriptor()]);
   const skills = augmentSkillList([{ uri: "skill://relay/existing/SKILL.md" }]);
   assert.equal(resources.filter(item => item.uri === RELAY_CONTEXT_CARD_URI).length, 1);
   for (const uri of [QA_SKILL_URI, LOEW_NAMING_SKILL_URI, EXECUTIVE_COMMUNICATION_SKILL_URI]) {
