@@ -1,5 +1,5 @@
 import { mcpHtml } from "../apps/web/generated.js";
-export const RELAY_CONTROL_CENTER_URI = "ui://relay/control-center/v1.html";
+export const RELAY_CONTROL_CENTER_URI = "ui://relay/control-center/v2.html";
 export function relayControlCenterResource() {
   return {
     uri: RELAY_CONTROL_CENTER_URI,
