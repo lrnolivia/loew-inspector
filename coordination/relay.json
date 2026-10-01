@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T06:40:21.037Z",
+  "updated_at": "2026-10-01T06:41:01.731Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -8243,7 +8243,7 @@
       ],
       "goal": "Isolate why ChatGPT visibly mounts Relay's control-center MCP App UI but does not visibly mount relay_render_context_card, even with the current v6 launcher schema/resource and successful tool execution.",
       "acceptance": "Produce a source-level and consumer-level comparison of the working relay_ui_control_center mount path versus relay_render_context_card: descriptor metadata, resource registration/URI, tool result shape, openai/ui metadata, invocation path, and host-facing response envelope. Prove one of: (a) a Relay-side contract mismatch and fix it with a fresh visible consumer smoke, or (b) a ChatGPT host/invocation-path limitation with current official MCP Apps contract satisfied. Do not alter visual CSS or card composition unless the root cause is actually rendering inside a successfully mounted iframe.",
-      "next_action": "Native-registration experiment is shipped. PR #85 exact head 62d85ffea0d66dd63e077b5a05d02f68c3c9e4bb passed tests and Runner admission, squash-merged as 7de82e4b12e7f53c62c31bb7261e3deb8e934685, uploaded as Relay Worker v73 version f2375909-ad52-41c2-823a-0c015abeeab6 and deployed at 100% via e35f66ab-8abe-4763-a6e1-3d7ff900f197. relay_render_context_card and its v6 resource now register/call through the same native src/index.js MCP path as relay_ui_control_center; relay-entry no longer injects/intercepts the card. Generic data tools remain contextually human-shaped but no longer advertise the card UI template; only the dedicated render tool owns _meta.ui.resourceUri, matching current OpenAI MCP Apps guidance. Next gate: refresh the Relay app/tool catalog and run one visible relay_render_context_card smoke. If no card appears, compare the refreshed native card call against a refreshed relay_ui_control_center call in the same conversation; if both fail to mount through the connector path, classify the remaining issue as ChatGPT invocation-host forwarding rather than Relay registration.",
+      "next_action": "When Lauren is ready, refresh the `$relay` ChatGPT tool catalog and run one visible `relay_render_context_card` smoke. Then immediately compare a refreshed `relay_ui_control_center` call in the same conversation if the card still does not mount. Do not change card CSS or Inspector while waiting.",
       "task_class": "architecture",
       "category": "qa-verification",
       "labels": [
@@ -8278,10 +8278,10 @@
         "nico"
       ],
       "base_sha": "2ebe056b29cf7a333e9209cbd475ab9e68de1f55",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-10-01T06:28:06.664Z",
-      "updated_at": "2026-10-01T06:40:21.037Z",
-      "lease_until": "2026-10-01T18:40:21.037Z",
+      "updated_at": "2026-10-01T06:41:01.731Z",
+      "lease_until": "2026-10-01T18:41:01.731Z",
       "amendment_count": 1,
       "amendments": [
         {
