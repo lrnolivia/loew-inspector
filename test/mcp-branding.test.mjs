@@ -9,7 +9,7 @@ const request = (method) => new Request("https://relay.loew.fi/mcp", {
 const result = { protocolVersion: "2025-03-26", capabilities: { tools: {} },
   serverInfo: { name: "relay", version: "1.6.0" }, instructions: "Existing guidance" };
 
-test("initialize advertises exact original PNG and preserves protocol identity", async () => {
+test("initialize advertises exact supplied PNG and preserves protocol identity", async () => {
   const response = await brandInitializeResponse(request("initialize"), new Response(
     JSON.stringify({ jsonrpc: "2.0", id: 7, result }),
     { headers: { "Content-Type": "application/json", "Content-Length": "1", "X-Test": "retained" } }
@@ -28,7 +28,7 @@ test("initialize advertises exact original PNG and preserves protocol identity",
   const bytes = Buffer.from(relayIcon.src.split(",")[1], "base64");
   assert.equal(bytes.readUInt32BE(16), 1024);
   assert.equal(bytes.readUInt32BE(20), 1024);
-  assert.equal(createHash("sha256").update(bytes).digest("hex"), "fd0390dfa527f2e40a411f99fb1018a247cd6b386025c38d3051b602d3408e6d");
+  assert.equal(createHash("sha256").update(bytes).digest("hex"), "3a1effe91b1670275d4b908f29a1a3c68729df4aa9f0da2d695401869ed8b676");
 });
 
 test("tool responses and authentication failures pass through unchanged", async () => {
