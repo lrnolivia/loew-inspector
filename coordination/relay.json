@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T02:12:15.405Z",
+  "updated_at": "2026-10-01T02:13:37.904Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -4372,7 +4372,8 @@
         "contracts/presentation/",
         "src/communication-presentation.js",
         "src/communication-presentation.test.js",
-        "test/communication-evals/"
+        "test/communication-evals/",
+        "src/executive-communication-skill.js"
       ],
       "resources": [
         "relay-1.9.6-release",
@@ -4419,7 +4420,7 @@
       ],
       "goal": "Ship Relay 1.9.6 as the planning/coordination intelligence release that consumes the 1.9.4 staff directory and 1.9.5 skills runtime.",
       "acceptance": "Planning/coordination skills consult latest resume state and relevant findings before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and expose them to routing, filtering, checkpoints and skill selection without changing authorization. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/branch/PR/evidence identity, state impact/requested action, and reconcile against canonical state before acting. Consume the canonical 1.9.4 staff identities instead of recreating names. Add Julian-managed relationship context per sticky staff identity from explicit feedback/repeated collaboration patterns; no autonomous relationship engine, hidden affinity scores, inferred sensitive traits or canned jokes. Worker communication resolves approved sticky staff names while preserving canonical machine IDs underneath; unbound workers keep machine identity. Human-facing narration is organization-first and executive by default: lead with plain-language health/outcome, who is handling it, and what happens next. Keep branch names, SHAs, schema/runtime versions, namespaces, transport mechanics and tool internals out of ordinary chat/status unless they explain a blocker/failure, are needed for a concrete QA decision, or the user asks for technical detail. Preserve exact machine evidence underneath for traceability. Live amendment delivery: active workers/chats maintain a monotonic amendment cursor and perform a bounded relevant-change check at synchronization points such as start/resume, before major source mutations or commit/PR/deploy transitions, after external waits, and on the normal heartbeat cadence. No-change checks add no model context. New amendments are classified informational, plan-adjusting, scope-changing or blocking; informational/plan-adjusting changes merge into the next safe step, while scope-changing/blocking changes force canonical reconciliation before further conflicting work. Expose exact consumed revision so resumes and handoffs know what instructions the worker has seen. Stall recovery: add a caught-up/self-recovery skill plus Relay-side no-progress detection. Worker-side recovery detects repeated/no-op actions, stale heartbeat with no external wait, unchanged canonical progress across expected transition points, repeated identical tool failures, or circular replanning; it reconstructs from the latest valid resume checkpoint + canonical assignment/source/PR/deploy state, identifies the last successful action and precise stall point, emits a concise \"caught up here\" status, and resumes from the next safe action without user prompting. Relay-side detection records a bounded recovery signal/checkpoint when observed progress stalls so an active/resumed chat can consume it through live amendment/instruction sync. Do not self-recover through genuine external waits, unresolved authorization/tool-schema/client failures, destructive ambiguity, or scope conflicts; those surface as explicit blockers. Limit retries and prevent recovery loops. Communication-skill implementation: ship a first-class Relay executive communication skill, not just prose policy. The skill defines a two-layer output contract: a compact human layer with health/outcome, responsible staff, what changed and next step; and subordinate technical_evidence carrying exact branches/SHAs/schema/runtime/tool identities for traceability. Ordinary chat/status must render from the human layer first. Add result-shaping helpers/contracts so Relay tools can expose presentation-ready summary fields separately from machine evidence, and evals that transform technical fixture outputs into plain-language staff-aware updates while preserving blockers/QA-critical detail. The skill may guide tone/presentation but never alter technical truth or authorization.",
-      "next_action": "The executive communication MCP skill is already implemented on the active 1.9.6 branch with native skill exposure and tests. Preserve that slice, continue the remaining 1.9.6 coordination work, and add complementary human-first result shaping/evals without duplicating the skill.",
+      "next_action": "Runner admission found only one undeclared but intentional file: src/executive-communication-skill.js. Add it canonically, preserve the existing executive communication MCP skill, finish/check the complementary human-first presentation contracts/result shaping/evals required by the latest 1.9.6 brief, then rerun admission/CI on the same release branch.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-001",
@@ -4442,136 +4443,8 @@
       "base_sha": "3b4659551bad0fdcf5310f4cb3c5ade7403409af",
       "state": "active",
       "created_at": "2026-10-01T01:45:02.465Z",
-      "updated_at": "2026-10-01T02:08:47.438Z",
-      "lease_until": "2026-10-01T14:08:47.438Z",
-      "amendment_count": 2,
-      "amendments": [
-        {
-          "at": "2026-10-01T02:01:52.892Z",
-          "by": "relay-1.9.5-planning-ledger-skill-20260930",
-          "reason": "Move executive narration from a canonical policy into the actual 1.9 skills/runtime surface with structured result shaping and eval coverage, without colliding with the active MCP branding work.",
-          "fields": [
-            "acceptance",
-            "next_action",
-            "paths",
-            "resources"
-          ],
-          "before": {
-            "acceptance": "Planning/coordination skills consult latest resume state and relevant findings before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and expose them to routing, filtering, checkpoints and skill selection without changing authorization. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/branch/PR/evidence identity, state impact/requested action, and reconcile ag...",
-            "next_action": "Finish canonical taxonomy persistence across queue/claim/amend + Runner schemas + resume projection/tests, then add workflow telemetry and Julian-managed relationship context, bump 1.9.6, preflight/CI/release.",
-            "paths": [
-              "skills/planning/",
-              "skills/coordination/",
-              "contracts/assignments/",
-              "src/assignment-taxonomy.js",
-              "src/assignment-taxonomy.test.js",
-              "src/worker-communication.js",
-              "src/worker-communication.test.js",
-              "src/runner-control.js",
-              "src/runner-control-core.js",
-              "src/coordination-engine.js",
-              "src/coordination.mjs",
-              "docs/relay/RELAY_1_9_6_RELEASE.md",
-              "src/amendment-sync.js",
-              "src/amendment-sync.test.js",
-              "src/recovery-signals.js",
-              "src/recovery-signals.test.js",
-              "src/workflow-telemetry.js",
-              "src/workflow-telemetry.test.js",
-              "src/relationship-context.js",
-              "src/relationship-context.test.js",
-              "... +5 more"
-            ],
-            "resources": [
-              "relay-1.9.6-release",
-              "relay-ledger-routing",
-              "relay-planning-skill",
-              "relay-worker-communication-skill",
-              "relay-interworker-handoffs",
-              "relay-canonical-state-reconciliation",
-              "relay-assignment-taxonomy",
-              "relay-assignment-labels-tags",
-              "relay-worker-roles",
-              "relay-role-skill-resolution",
-              "relay-contextual-levity",
-              "relay-staff-relationship-context",
-              "relay-lead-managed-adaptation",
-              "relay-staff-aware-worker-communication",
-              "relay-human-org-narration",
-              "relay-staff-attributed-status",
-              "relay-live-amendment-sync",
-              "relay-amendment-cursor",
-              "relay-worker-instruction-reconciliation",
-              "relay-stall-recovery-skill",
-              "... +17 more"
-            ]
-          },
-          "after": {
-            "acceptance": "Planning/coordination skills consult latest resume state and relevant findings before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and expose them to routing, filtering, checkpoints and skill selection without changing authorization. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/branch/PR/evidence identity, state impact/requested action, and reconcile ag...",
-            "next_action": "Continue 1.9.6 with the executive communication skill as a concrete implementation: add human-first presentation contracts/result shaping and eval fixtures so normal Relay updates expose health/outcome + staff ownership + next step first, with exact technical_evidence subordinate. Keep MCP-wide instruction changes minimal and only add them in a non-conflicting follow-up if skill/result shaping alone cannot reliably produce the behavior.",
-            "paths": [
-              "skills/planning/",
-              "skills/coordination/",
-              "contracts/assignments/",
-              "src/assignment-taxonomy.js",
-              "src/assignment-taxonomy.test.js",
-              "src/worker-communication.js",
-              "src/worker-communication.test.js",
-              "src/runner-control.js",
-              "src/runner-control-core.js",
-              "src/coordination-engine.js",
-              "src/coordination.mjs",
-              "docs/relay/RELAY_1_9_6_RELEASE.md",
-              "src/amendment-sync.js",
-              "src/amendment-sync.test.js",
-              "src/recovery-signals.js",
-              "src/recovery-signals.test.js",
-              "src/workflow-telemetry.js",
-              "src/workflow-telemetry.test.js",
-              "src/relationship-context.js",
-              "src/relationship-context.test.js",
-              "... +10 more"
-            ],
-            "resources": [
-              "relay-1.9.6-release",
-              "relay-ledger-routing",
-              "relay-planning-skill",
-              "relay-worker-communication-skill",
-              "relay-interworker-handoffs",
-              "relay-canonical-state-reconciliation",
-              "relay-assignment-taxonomy",
-              "relay-assignment-labels-tags",
-              "relay-worker-roles",
-              "relay-role-skill-resolution",
-              "relay-contextual-levity",
-              "relay-staff-relationship-context",
-              "relay-lead-managed-adaptation",
-              "relay-staff-aware-worker-communication",
-              "relay-human-org-narration",
-              "relay-staff-attributed-status",
-              "relay-live-amendment-sync",
-              "relay-amendment-cursor",
-              "relay-worker-instruction-reconciliation",
-              "relay-stall-recovery-skill",
-              "... +21 more"
-            ]
-          }
-        },
-        {
-          "at": "2026-10-01T02:08:47.438Z",
-          "by": "relay-1.9.5-planning-ledger-skill-20260930",
-          "reason": "Keep the active worker aligned with the communication-skill patch that has already landed.",
-          "fields": [
-            "next_action"
-          ],
-          "before": {
-            "next_action": "Continue 1.9.6 with the executive communication skill as a concrete implementation: add human-first presentation contracts/result shaping and eval fixtures so normal Relay updates expose health/outcome + staff ownership + next step first, with exact technical_evidence subordinate. Keep MCP-wide instruction changes minimal and only add them in a non-conflicting follow-up if skill/result shaping alone cannot reliably produce the behavior."
-          },
-          "after": {
-            "next_action": "The executive communication MCP skill is already implemented on the active 1.9.6 branch with native skill exposure and tests. Preserve that slice, continue the remaining 1.9.6 coordination work, and add complementary human-first result shaping/evals without duplicating the skill."
-          }
-        }
-      ]
+      "updated_at": "2026-10-01T02:13:37.904Z",
+      "lease_until": "2026-10-01T14:13:37.904Z"
     }
   ],
   "migrated_from": "loew-inspector"
