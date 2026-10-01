@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T03:58:11.793Z",
+  "updated_at": "2026-10-01T04:12:42.992Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6197,10 +6197,10 @@
         "roman"
       ],
       "base_sha": "fc80663333dd047facb3575af76b0c933e64dde1",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T03:34:00.700Z",
-      "updated_at": "2026-10-01T03:58:11.793Z",
-      "lease_until": "2026-10-01T15:58:11.793Z",
+      "updated_at": "2026-10-01T04:12:42.992Z",
+      "lease_until": "2026-10-01T16:12:42.992Z",
       "amendment_count": 1,
       "amendments": [
         {
@@ -6259,7 +6259,13 @@
             ]
           }
         }
-      ]
+      ],
+      "pr": 76,
+      "merged_head_sha": "f13a510e5070edaf1682b994eb0ce6d18b99505b",
+      "merge_commit_sha": "3eef536d217c588e8d3669830b23b02827cd71d3",
+      "evidence": "PR #76 exact head f13a510e5070edaf1682b994eb0ce6d18b99505b passed Runner coordination admission and repository test, then squash-merged as 3eef536d217c588e8d3669830b23b02827cd71d3. Relay uploaded exact merged source as Worker version 4ee86e18-3083-4ef9-b7a4-a22c2e3db370 (v68) and deployed it 100% via deployment 1a0f33c2-e52c-459b-8fbf-1c48b452e565. Cloud readback shows workers/commit_sha=3eef536d217c588e8d3669830b23b02827cd71d3 and the new deployment first in history. The same merge includes the user-authorized feature-panel conversational card repair; fresh ChatGPT rendering remains a consumer visual-acceptance check, not a source/runtime blocker.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T04:12:42.992Z"
     }
   ],
   "migrated_from": "loew-inspector"
