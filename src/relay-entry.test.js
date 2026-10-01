@@ -5,6 +5,7 @@ import { QA_SKILL_URI } from "./qa-skill.js";
 import { LOEW_NAMING_SKILL_URI } from "./loew-naming-skill.js";
 import { EXECUTIVE_COMMUNICATION_SKILL_URI } from "./executive-communication-skill.js";
 import { RELAY_CONTEXT_CARD_URI, relayContextCardTool, relayContextCardDescriptor } from "./relay-chat-ui.js";
+import { RELAY_V2_PROBE_URI, relayV2ProbeDescriptor } from "./relay-v2-probe.js";
 
 test("Relay extension publishes source inventory and exact-head PR action", () => {
   const tools = augmentToolList([{
@@ -20,6 +21,13 @@ test("Relay extension publishes source inventory and exact-head PR action", () =
     inputSchema: { type: "object" },
     annotations: {},
     securitySchemes: [{ type: "oauth2", scopes: [] }]
+  }, {
+    name: "relay_runner_progress",
+    description: "Read Relay progress",
+    inputSchema: { type: "object", properties: { project: { type: "string" } }, required: ["project"] },
+    annotations: { readOnlyHint: true },
+    securitySchemes: [{ type: "oauth2", scopes: [] }],
+    _meta: { existing: true }
   }, relayContextCardTool()]);
   const names = tools.map(tool => tool.name);
   assert.ok(names.includes("relay_source_inventory"));
@@ -31,6 +39,10 @@ test("Relay extension publishes source inventory and exact-head PR action", () =
   const renderer=tools.find(tool=>tool.name==="relay_render_context_card");
   assert.equal(renderer._meta.ui.resourceUri,"ui://relay/context-card/v8.html");
   assert.equal(renderer._meta["openai/outputTemplate"],"ui://relay/context-card/v8.html");
+  const progress=tools.find(tool=>tool.name==="relay_runner_progress");
+  assert.equal(progress._meta.ui.resourceUri,RELAY_V2_PROBE_URI);
+  assert.equal(progress._meta["openai/outputTemplate"],RELAY_V2_PROBE_URI);
+  assert.deepEqual(progress.inputSchema,{ type: "object", properties: { project: { type: "string" } }, required: ["project"] });
   const branch = tools.find(tool => tool.name === "relay_source_create_branch");
   assert.match(branch.description, /exact 40-character commit SHA/);
   assert.equal(branch._meta.existing, true);
@@ -93,6 +105,8 @@ test("Relay extension preserves native card resources and appends skills once", 
   const resources = augmentResourceList([{ uri: "skill://relay/existing/SKILL.md" }, relayContextCardDescriptor()]);
   const skills = augmentSkillList([{ uri: "skill://relay/existing/SKILL.md" }]);
   assert.equal(resources.filter(item => item.uri === RELAY_CONTEXT_CARD_URI).length, 1);
+  assert.equal(resources.filter(item => item.uri === RELAY_V2_PROBE_URI).length, 1);
+  assert.deepEqual(resources.find(item => item.uri === RELAY_V2_PROBE_URI), relayV2ProbeDescriptor());
   for (const uri of [QA_SKILL_URI, LOEW_NAMING_SKILL_URI, EXECUTIVE_COMMUNICATION_SKILL_URI]) {
     assert.equal(resources.filter(item => item.uri === uri).length, 1);
     assert.equal(skills.filter(item => item.uri === uri).length, 1);
@@ -101,6 +115,7 @@ test("Relay extension preserves native card resources and appends skills once", 
   const resourcesAgain = augmentResourceList(resources);
   const skillsAgain = augmentSkillList(skills);
   assert.equal(resourcesAgain.filter(item => item.uri === RELAY_CONTEXT_CARD_URI).length, 1);
+  assert.equal(resourcesAgain.filter(item => item.uri === RELAY_V2_PROBE_URI).length, 1);
   for (const uri of [QA_SKILL_URI, LOEW_NAMING_SKILL_URI, EXECUTIVE_COMMUNICATION_SKILL_URI]) {
     assert.equal(resourcesAgain.filter(item => item.uri === uri).length, 1);
     assert.equal(skillsAgain.filter(item => item.uri === uri).length, 1);
