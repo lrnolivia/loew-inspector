@@ -81,7 +81,7 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
       (context.project ? '<span class="qa-project-pill">' + iconSlot(context.project) +
         '<strong>' + qaEscape(projectName(context.project)) + '</strong></span>' : "") +
     '</div>' +
-    '<section class="qa-question-card">' +
+    '<div class="qa-question-content"><section class="qa-question-card">' +
       '<h2 class="qa-question">' + qaEscape(q?.prompt || "Anything feel off?") + '</h2>' +
       '<p class="qa-question-reason">' + qaEscape(q?.reason || "Leave a note if there is anything you want changed.") + '</p>' +
       (q ? '<div class="qa-answer-stack" role="group" aria-label="Answer">' +
@@ -91,10 +91,8 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
         }).join("") + '</div>' : "") +
     '</section>' +
     (guidance ? '<details class="qa-guidance"><summary>Earlier review guidance</summary><p>This was prepared by an agent. Your notes are separate; the original packet is retained.</p><ul>' + guidanceQuestions.map(item => '<li>' + qaEscape(item) + '</li>').join('') + '</ul></details>' : '') +
-    '<label class="qa-notes"><span>Your notes</span><textarea maxlength="' + Math.max(0,6000 - (state.noteParts?.prefix?.length || 0) - (state.noteParts?.prefix ? 16 : 0)) + '" placeholder="Add a note…">' +
-      qaEscape(state.humanNotes ?? review.notes ?? '') + '</textarea></label>' +
     '<div class="qa-feedback"><span class="qa-save-state" data-qa-save-state role="status" aria-live="polite"></span><button type="button" data-qa-retry hidden>Retry save</button></div>' +
-    '<nav class="qa-question-nav" aria-label="Review questions"><button type="button" data-qa-previous ' + (questionIndex === 0 ? 'disabled' : '') + '>Back</button>' +
+    '</div><nav class="qa-question-nav" aria-label="Review questions"><button type="button" data-qa-notes-open aria-haspopup="dialog" aria-controls="qa-notes-dialog">Notes</button><button type="button" data-qa-previous ' + (questionIndex === 0 ? 'disabled' : '') + '>Back</button>' +
     (questionIndex < questions.length - 1 ? '<button type="button" data-qa-next>Next</button>' : '<button type="button" data-qa-finish ' + (!allAnswered ? 'disabled' : '') + '>Finish</button>') + '</nav>';
 
 
@@ -108,6 +106,33 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
   panel.querySelector('[data-qa-next]')?.addEventListener('click', () => handlers.navigate(1));
   panel.querySelector('[data-qa-finish]')?.addEventListener('click', () => handlers.finish());
   panel.querySelector('[data-qa-retry]')?.addEventListener('click', () => handlers.retry());
-  const textarea = panel.querySelector("textarea");
-  if (textarea) textarea.addEventListener("input", function () { handlers.notes(textarea.value); });
+  stage.querySelector('.qa-notes-popout')?.remove();
+  const notes = document.createElement('dialog');
+  notes.id = 'qa-notes-dialog';
+  notes.className = 'qa-notes-popout';
+  notes.setAttribute('aria-labelledby', 'qa-notes-title');
+  notes.innerHTML = '<div class="qa-notes-head"><h2 id="qa-notes-title">Your notes</h2><button type="button" data-qa-notes-close>Done</button></div>' +
+    '<label class="qa-notes"><span class="sr-only">Your notes</span><textarea maxlength="' + Math.max(0,6000 - (state.noteParts?.prefix?.length || 0) - (state.noteParts?.prefix ? 16 : 0)) + '" placeholder="Add a note…">' +
+    qaEscape(state.humanNotes ?? review.notes ?? '') + '</textarea></label>' +
+    '<div class="qa-feedback"><span class="qa-save-state" data-qa-save-state role="status" aria-live="polite"></span><button type="button" data-qa-retry hidden>Retry save</button></div>';
+  stage.append(notes);
+  const notesButton = panel.querySelector('[data-qa-notes-open]');
+  const closeNotes = () => { notes.close(); notesButton.focus(); };
+  notesButton.addEventListener('click', () => { notes.showModal(); notes.querySelector('textarea').focus(); });
+  notes.querySelector('[data-qa-notes-close]').addEventListener('click', closeNotes);
+  notes.querySelector('[data-qa-retry]').addEventListener('click', () => handlers.retry());
+  // Keep keyboard focus inside the popout; Escape closes only notes,
+  // without exiting the surrounding Inspector review.
+  notes.addEventListener('keydown', event => {
+    event.stopPropagation();
+    if (event.key === 'Escape') { event.preventDefault(); closeNotes(); }
+    if (event.key === 'Tab') {
+      const controls = Array.from(notes.querySelectorAll('button,textarea')).filter(node => !node.hidden && !node.disabled);
+      if (event.shiftKey && document.activeElement === controls[0]) { event.preventDefault(); controls.at(-1).focus(); }
+      else if (!event.shiftKey && document.activeElement === controls.at(-1)) { event.preventDefault(); controls[0].focus(); }
+    }
+  });
+  notes.addEventListener('cancel', event => { event.preventDefault(); closeNotes(); });
+  const textarea = notes.querySelector('textarea');
+  textarea.addEventListener('input', () => handlers.notes(textarea.value));
 }

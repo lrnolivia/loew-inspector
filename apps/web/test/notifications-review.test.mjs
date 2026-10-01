@@ -5,6 +5,12 @@ import { mkdir } from 'node:fs/promises';
 import { contextFixture } from './project-context-fixture.mjs';
 import { splitReviewNotes, joinReviewNotes } from '../public/qa-notes.js';
 
+async function fillNotes(page, text) {
+  await page.getByRole('button',{name:'Notes',exact:true}).click();
+  await page.locator('.qa-notes textarea').fill(text);
+  await page.getByRole('button',{name:'Done',exact:true}).click();
+}
+
 const marker='Agent-prepared review packet (pending human judgment):';
 const packet=marker+'\n'+JSON.stringify({title:'Old guidance',questions:[{prompt:'Check "quoted" text and braces } safely.'}]});
 test('Legacy guidance preserves original packet and every human note character',()=>{
@@ -78,16 +84,16 @@ test('Review navigation, exact notes, sequential saves, retry and authorized pre
     assert.equal(await page.locator('[data-qa-answer=yes]').getAttribute('aria-pressed'),'true');
     await page.getByRole('button',{name:'Next',exact:true}).click();await page.getByRole('button',{name:'Not sure',exact:true}).first().click();
 
-    await page.locator('[data-qa-save-state]').filter({hasText:'Saved'}).waitFor();
-    slow=true;await page.locator('.qa-notes textarea').fill('First edit');await page.locator('[data-qa-save-state]').filter({hasText:'Saving'}).waitFor();
+    await page.locator('.qa-companion [data-qa-save-state]').filter({hasText:'Saved'}).waitFor();
+    slow=true;await fillNotes(page,'First edit');await page.locator('.qa-companion [data-qa-save-state]').filter({hasText:'Saving'}).waitFor();
     while(!release)await new Promise(resolve=>setTimeout(resolve,20));
-    await page.locator('.qa-notes textarea').fill('  Latest exact note\n');slow=false;release();
-    await page.locator('[data-qa-save-state]').filter({hasText:'Saved'}).waitFor();assert.equal(splitReviewNotes(review.notes).notes,'  Latest exact note\n');
-    fail=true;await page.locator('.qa-notes textarea').fill('Kept during failure');await page.getByRole('button',{name:'Retry save'}).waitFor();
-    await page.getByRole('button',{name:'Back',exact:true}).click();assert.match(await page.locator('[data-qa-save-state]').innerText(),/failed/);
+    await fillNotes(page,'  Latest exact note\n');slow=false;release();
+    await page.locator('.qa-companion [data-qa-save-state]').filter({hasText:'Saved'}).waitFor();assert.equal(splitReviewNotes(review.notes).notes,'  Latest exact note\n');
+    fail=true;await fillNotes(page,'Kept during failure');await page.getByRole('button',{name:'Retry save'}).waitFor();
+    await page.getByRole('button',{name:'Back',exact:true}).click();assert.match(await page.locator('.qa-companion [data-qa-save-state]').innerText(),/failed/);
     await page.reload();await page.getByRole('button',{name:'Retry save'}).waitFor();assert.equal(await page.locator('.qa-notes textarea').inputValue(),'Kept during failure');
-    assert.match(await page.locator('[data-qa-save-state]').innerText(),/Recovered unsaved/);
-    fail=false;await page.getByRole('button',{name:'Retry save'}).click();await page.locator('[data-qa-save-state]').filter({hasText:'Saved'}).waitFor();
+    assert.match(await page.locator('.qa-companion [data-qa-save-state]').innerText(),/Recovered unsaved/);
+    fail=false;await page.getByRole('button',{name:'Retry save'}).click();await page.locator('.qa-companion [data-qa-save-state]').filter({hasText:'Saved'}).waitFor();
     await page.getByRole('button',{name:'Hide questions'}).click();assert.equal(await page.locator('.qa-companion').isVisible(),false);
     await page.getByRole('button',{name:'Show questions'}).click();assert.equal(await page.locator('.qa-companion').isVisible(),true);
     await mkdir('/tmp/relay-next-evidence',{recursive:true});await page.screenshot({path:'/tmp/relay-next-evidence/review-mobile.png'});
@@ -109,6 +115,17 @@ test('Authorized Live is preferred while an explicit Captured choice survives qu
   const compact=await page.locator('.qa-companion').boundingBox();assert.ok(compact.width<=208 && compact.height<=360);assert.ok(compact.width*compact.height<320*740/3,'mobile questions leave most of the preview visible');
   for(const selector of ['[data-qa-answer=yes]','[data-qa-answer=no]','[data-qa-answer=not_sure]','[data-qa-next]']){const control=await page.locator(selector).boundingBox();assert.ok(control.height>=44,'compact controls retain touch height');assert.ok(control.y>=compact.y && control.y+control.height<=compact.y+compact.height,'compact primary controls remain fully visible');}
   await page.locator('.qa-preview-state').filter({hasText:/^Live preview$/}).waitFor();
+  const firstChoice=await page.locator('[data-qa-answer=yes]').boundingBox(),secondChoice=await page.locator('[data-qa-answer=no]').boundingBox();assert.equal(firstChoice.x,secondChoice.x);assert.ok(secondChoice.y>=firstChoice.y+firstChoice.height,'mobile choices stack instead of squeezing into a row');
+  const footer=await page.locator('.qa-question-nav').boundingBox();await page.locator('.qa-question-content').evaluate(node=>node.scrollTop=node.scrollHeight);assert.equal((await page.locator('.qa-question-nav').boundingBox()).y,footer.y,'question scrolling leaves main navigation visible');await page.locator('.qa-question-content').evaluate(node=>node.scrollTop=0);
+  await page.getByRole('button',{name:'Notes',exact:true}).click();
+  assert.equal(await page.locator('.qa-notes-popout').getAttribute('open'),'');
+  assert.equal(await page.locator('.qa-notes textarea').evaluate(node=>document.activeElement===node),true);
+  await page.keyboard.press('Shift+Tab');await page.keyboard.press('Shift+Tab');
+  assert.equal(await page.locator('.qa-notes-popout').evaluate(node=>node.contains(document.activeElement)),true,'notes traps keyboard focus');
+  await page.screenshot({path:'/tmp/relay-mobile-notes-working.png'});
+  await page.keyboard.press('Escape');assert.equal(await page.locator('.qa-notes-popout').isVisible(),false);assert.equal(await page.locator('.qa-stage').isVisible(),true);
+  assert.equal(await page.locator('[data-qa-notes-open]').evaluate(node=>document.activeElement===node),true);
+  await page.screenshot({path:'/tmp/relay-mobile-stacked-working.png'});
   await page.locator('.qa-preview-picker select').selectOption('captured');await page.getByRole('button',{name:'Next',exact:true}).click();
   assert.equal(await page.locator('.qa-preview-picker select').inputValue(),'captured');
   await page.getByRole('button',{name:'Hide questions'}).click();
@@ -130,7 +147,7 @@ test('A growing failed-save message keeps the desktop panel clear of floating co
   await page.locator('.qa-companion').evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   const panel=await page.locator('.qa-companion').boundingBox(),toggle=await page.locator('.qa-panel-toggle').boundingBox();
   assert.ok(panel.y+panel.height<=toggle.y,'failed-save feedback cannot grow beneath Hide questions');
-  await page.getByRole('button',{name:'Retry save'}).click();await page.locator('[data-qa-save-state]').filter({hasText:'failed'}).waitFor();
+  await page.getByRole('button',{name:'Retry save'}).click();await page.locator('.qa-companion [data-qa-save-state]').filter({hasText:'failed'}).waitFor();
  }finally{await browser.close();await fixture.close();}
 });
 
@@ -149,7 +166,7 @@ test('Reopening during a save cannot replace confirmed responses with an older i
   });
   await page.route('**/api/visual/*/live',async route=>{if(holdLive){getStarted();await getGate;}return route.fulfill({json:{live:{active:false}}});});
   await page.goto(fixture.origin+'/inspector#review?evidence='+evidence.evidence_id);await page.locator('.qa-question').waitFor();
-  await page.getByRole('button',{name:'No, needs work',exact:true}).click();await page.locator('.qa-notes textarea').fill('Newest confirmed note');
+  await page.getByRole('button',{name:'No, needs work',exact:true}).click();await fillNotes(page,'Newest confirmed note');
   const signal=async(promise,label)=>{let timer;try{return await Promise.race([promise,new Promise((_,reject)=>timer=setTimeout(()=>reject(Error('Regression phase timed out: '+label)),5000))]);}finally{clearTimeout(timer);}};
   await page.evaluate(()=>{window.__exitPopped=false;addEventListener('popstate',()=>window.__exitPopped=true,{once:true});});
   await page.getByRole('button',{name:'Exit review'}).click();await signal(postSignal,'pending POST started');
@@ -162,12 +179,12 @@ test('Reopening during a save cannot replace confirmed responses with an older i
   await page.waitForFunction(()=>document.querySelector('.operator-topbar').getBoundingClientRect().width<100,null,{timeout:5000});
   await reopen.click({timeout:5000});await signal(Promise.all([getSignal,qaReadSignal]),'reopened live read and stale QA snapshot');
   releasePost();await page.waitForFunction(id=>sessionStorage.getItem('relay.qa.draft.v1.'+id)===null,evidence.evidence_id,{timeout:5000});
-  releaseGet();await page.locator('.qa-notes textarea').waitFor();
+  releaseGet();await page.locator('.qa-question').waitFor();
   assert.equal(await page.locator('.qa-notes textarea').inputValue(),'Newest confirmed note');
   assert.equal(await page.locator('[data-qa-answer=no]').getAttribute('aria-pressed'),'true');
   assert.equal(await page.locator('.qa-verdict').count(),0);
-  assert.equal(await page.locator('[data-qa-save-state]').innerText(),'Saved');
-  await page.locator('[data-qa-answer=yes]').click();await page.locator('[data-qa-save-state]').filter({hasText:'Saved'}).waitFor();assert.equal(review.notes,'Newest confirmed note','the next write must preserve the confirmed note');
+  assert.equal(await page.locator('.qa-companion [data-qa-save-state]').innerText(),'Saved');
+  await page.locator('[data-qa-answer=yes]').click();await page.locator('.qa-companion [data-qa-save-state]').filter({hasText:'Saved'}).waitFor();assert.equal(review.notes,'Newest confirmed note','the next write must preserve the confirmed note');
  }finally{releasePost();releaseGet();await browser.close();await fixture.close();}
 });
 

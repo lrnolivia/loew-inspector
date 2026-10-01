@@ -96,10 +96,9 @@ function persistDraft(s) {
 function setSaveState(s, status, error='') {
   s.saveStatus=status;s.saveError=error;
   if (state!==s || !stage) return;
-  const output=stage.querySelector('[data-qa-save-state]');
   const labels={unsaved:'Not saved yet',saving:'Saving…',saved:'Saved',failed:'Save failed. Your responses are still here.'};
-  if(output){output.textContent=labels[status] || status;output.dataset.state=status;if(error)output.textContent+=' '+error;if(s.dirty && s.draftAvailable===false)output.textContent+=' Reload recovery is unavailable in this browser. Keep this review open until saved.';}
-  const retry=stage.querySelector('[data-qa-retry]');if(retry)retry.hidden=status!=='failed';
+  stage.querySelectorAll('[data-qa-save-state]').forEach(output=>{output.textContent=labels[status] || status;output.dataset.state=status;if(error)output.textContent+=' '+error;if(s.dirty && s.draftAvailable===false)output.textContent+=' Reload recovery is unavailable in this browser. Keep this review open until saved.';});
+  stage.querySelectorAll('[data-qa-retry]').forEach(retry=>retry.hidden=status!=='failed');
   requestAnimationFrame(()=>{if(state===s && stage && !stage.querySelector('.qa-companion').hidden)floatController?.refresh();});
 }
 function edited() { state.revision++;state.dirty=true;persistDraft(state);setSaveState(state,'saving'); }
@@ -245,7 +244,7 @@ window.addEventListener('keydown',event=>{
   if(!stage)return;
   if(event.key==='Escape'){event.preventDefault();event.stopPropagation();closeQa();}
   if(event.key==='Tab'){
-    const nodes=Array.from(stage.querySelectorAll('button:not(:disabled),select:not(:disabled),textarea,a[href]')).filter(node=>!node.closest('[hidden]'));
+    const nodes=Array.from(stage.querySelectorAll('button:not(:disabled),select:not(:disabled),textarea,a[href]')).filter(node=>!node.closest('[hidden],dialog:not([open])'));
     if(!nodes.length)return;
     if(event.shiftKey&&document.activeElement===nodes[0]){event.preventDefault();nodes.at(-1).focus();}
     else if(!event.shiftKey&&document.activeElement===nodes.at(-1)){event.preventDefault();nodes[0].focus();}
