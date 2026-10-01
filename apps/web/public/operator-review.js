@@ -98,7 +98,6 @@ function renderChatCardPreview() {
       <section class="chat-card-hero">
         <div class="chat-card-mark" aria-hidden="true"><img src="${esc(brand[card.feature] || brand.relay)}" alt=""></div>
         <div class="chat-card-copy">
-          <span class="chat-card-kicker">${esc(card.kicker)}</span>
           <h3>${esc(card.feature.replace("-", " "))}</h3>
           <strong>${esc(card.title)}</strong>
           <p>${esc(card.summary)}</p>
