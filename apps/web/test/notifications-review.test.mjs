@@ -20,6 +20,8 @@ test('Notifications retain attention after dismiss/timeout and survive Inspector
     const page=await browser.newPage({viewport:{width:390,height:844},reducedMotion:'reduce',colorScheme:'dark'});
     await page.goto(fixture.origin+'/#/today');
     await page.locator('.notification-toasts .notification-message').waitFor();
+    const badge=await page.locator('[data-notification-count]').evaluate(node=>({text:node.textContent,width:node.offsetWidth,height:node.offsetHeight,radius:getComputedStyle(node).borderRadius,animation:getComputedStyle(node).animationName}));
+    assert.equal(badge.text,'1');assert.equal(badge.width,badge.height);assert.equal(badge.radius,'50%');assert.equal(badge.animation,'none');
     assert.match(await page.locator('.notification-toasts').innerText(),/Night Shift · field/);
     await page.getByRole('button',{name:'Dismiss notification',exact:true}).click();
     await page.getByRole('button',{name:/^Notifications/}).click();
@@ -35,6 +37,8 @@ test('Notifications retain attention after dismiss/timeout and survive Inspector
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
     const timeoutPage=await browser.newPage({viewport:{width:1440,height:900},colorScheme:'dark'});
     await timeoutPage.clock.install();await timeoutPage.goto(fixture.origin+'/#/today');await timeoutPage.locator('.notification-toasts .notification-message').waitFor();
+    assert.equal(await timeoutPage.locator('[data-notification-count]').evaluate(node=>getComputedStyle(node).animationName),'notification-count-pulse');
+    await timeoutPage.evaluate(()=>document.documentElement.dataset.presentationMotion='calm');assert.equal(await timeoutPage.locator('[data-notification-count]').evaluate(node=>getComputedStyle(node).animationName),'none');await timeoutPage.evaluate(()=>delete document.documentElement.dataset.presentationMotion);
     await timeoutPage.locator('.notification-toasts a').focus();await timeoutPage.clock.fastForward(11000);
     assert.equal(await timeoutPage.locator('.notification-toasts .notification-message').count(),1,'focused notification stays available');
     await timeoutPage.locator('.notification-bell').focus();await timeoutPage.clock.fastForward(11000);
@@ -102,6 +106,8 @@ test('Authorized Live is preferred while an explicit Captured choice survives qu
   await page.route('**/authorized-preview',route=>route.fulfill({contentType:'text/html',body:'<main>Actual fixture live preview</main>'}));
   await page.goto(fixture.origin+'/inspector#review?evidence='+evidence.evidence_id);await page.locator('.qa-question').waitFor();
   assert.equal(await page.locator('.qa-preview-picker select').inputValue(),'live');
+  const compact=await page.locator('.qa-companion').boundingBox();assert.ok(compact.width<=208 && compact.height<=360);assert.ok(compact.width*compact.height<320*740/3,'mobile questions leave most of the preview visible');
+  for(const selector of ['[data-qa-answer=yes]','[data-qa-answer=no]','[data-qa-answer=not_sure]','[data-qa-next]'])assert.ok((await page.locator(selector).boundingBox()).height>=44,'compact controls retain touch height');
   await page.locator('.qa-preview-state').filter({hasText:/^Live preview$/}).waitFor();
   await page.locator('.qa-preview-picker select').selectOption('captured');await page.getByRole('button',{name:'Next',exact:true}).click();
   assert.equal(await page.locator('.qa-preview-picker select').inputValue(),'captured');

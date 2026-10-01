@@ -25,8 +25,8 @@ export function createQaFloat(stage, { onDockChange } = {}) {
   const panel = stage.querySelector(".qa-companion");
   if (!panel) return { destroy() {}, refresh() {}, restore() {} };
 
-  const minWidth = 300;
-  const minHeight = 250;
+  const isNarrow = () => innerWidth <= 520;
+  const minimumSize = () => ({ minWidth:isNarrow()?180:300, minHeight:isNarrow()?220:250 });
   const visibleDockEdge = 14;
   const dockThreshold = 12;
   let action = null;
@@ -102,7 +102,8 @@ export function createQaFloat(stage, { onDockChange } = {}) {
   };
 
   const initialize = () => {
-    panel.style.width = Math.min(450, Math.max(minWidth, innerWidth - 24)) + "px";
+    const {minWidth}=minimumSize();
+    panel.style.width = Math.min(isNarrow()?208:450, Math.max(minWidth, innerWidth - 24)) + "px";
     panel.style.height = "";
     requestAnimationFrame(() => {
       const rect = panel.getBoundingClientRect();
@@ -137,6 +138,7 @@ export function createQaFloat(stage, { onDockChange } = {}) {
     let height = action.rect.height;
     let left = action.rect.left;
     let top = action.rect.top;
+    const {minWidth,minHeight}=minimumSize();
     const maxWidth = Math.max(minWidth, innerWidth - 24);
     const maxHeight = Math.max(minHeight, innerHeight - 152);
     if (action.edge.includes("e")) width = clamp(action.rect.width + dx, minWidth, maxWidth);
@@ -232,6 +234,8 @@ export function createQaFloat(stage, { onDockChange } = {}) {
   }, 1000);
 
   const onResize = () => {
+    const {minWidth,minHeight}=minimumSize();
+    if(isNarrow()) panel.style.width=Math.min(208,innerWidth-24)+"px";
     if (dockEdge) return placeDocked();
     const rect = panel.getBoundingClientRect();
     if (rect.width > innerWidth - 24) panel.style.width = Math.max(minWidth, innerWidth - 24) + "px";

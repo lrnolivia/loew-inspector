@@ -2,7 +2,7 @@
 
 Assignment: `relay-website-notification-center-20261001`, persistent owner Julian-PM, primary staff julian. This phase follows the verified release of the current website fixes.
 
-The bell sits beside the existing connection pill on the workspace line. Message cards use the approved shared neutral surfaces. Their icon badge identifies the actual source feature and known project; source accent is independent from the written severity (Update, Needs attention, Problem). No sender is inferred. The global multicolor strip and page brands remain.
+The bell sits beside the existing connection pill on the workspace line. Its count is a fixed circular badge with high-contrast bright text and a gentle pulse; the number remains the actual unresolved important count, never a hardcoded 1. Reduced motion and Calm stop the pulse. Message cards use the approved shared neutral surfaces. Their icon badge identifies the actual source feature and known project; source accent is independent from the written severity (Update, Needs attention, Problem). No sender is inferred. The global multicolor strip and page brands remain.
 
 Info and warning toasts last seven seconds; errors last ten seconds. Hover or keyboard focus pauses the timeout. At most two are shown on desktop and one on narrow screens; all remain in the bell menu. Dismissing a toast only hides its popup. It never resolves a problem or changes a review verdict. Stable issue IDs group repeat observations rather than generating a toast every minute. A changed message or a recurrence after observed recovery can notify again. Actual successful reads/saves and known healthy worker states can label an issue Recovered. Unknown or unavailable runtime state cannot.
 
