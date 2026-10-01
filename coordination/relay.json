@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T05:10:24.336Z",
+  "updated_at": "2026-10-01T05:10:43.073Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -4001,7 +4001,7 @@
       "owner": "relay-1.9.9-chatgpt-native-experience-20261001",
       "goal": "Ship Relay 1.9.9 as the unified ChatGPT-native experience release: a polished family of contextual in-chat response cards plus a rich opened-Relay app with interactive chat/workspace behavior, all sharing one visual language, one canonical state model and one progressive-disclosure path.",
       "acceptance": "Relay 1.9.9 must still pass the existing consumer-visible MCP App card gate: a normal Relay tool call in an ordinary ChatGPT conversation must visibly mount the intended UI, not merely register resources/metadata or return structuredContent. Separately, the Inspector QA surface must implement the user-approved Figma node 59:115 review instrument as the visible card: ~450px default width, compact single-column composition, project pill, progress, one question/reason, binary answer surfaces, note field, and no persistent chrome (no inspector masthead, move/minimize/close buttons, preview/capture status rows, flow badge, previous/next row, separate Overall UI, technical details, save footer, or visible resize handle). The card must autosave, be draggable from non-interactive card regions, resize responsively through invisible edge/corner hit zones, remain clamped on viewport resize, and dock to any viewport edge leaving only a thin real card edge visible. A docked edge gives a restrained occasional idle wiggle plus one return wiggle after meaningful pointer inactivity; prefers-reduced-motion removes the wiggle. The docked edge adapts contrast to the content beneath it: soft off-white glow over dark content, near-black shadow over light content, and a conservative dual-contrast fallback when tone cannot be known. Captured image/video surfaces may sample luminance when safe; live cross-origin previews use an optional postMessage tone handshake and must degrade safely if unavailable. Inspector's review surface behaves like Field's canvas without importing Field's editor runtime: regular wheel/two-finger pan, Ctrl/Cmd+wheel or trackpad pinch zoom at the pointer, middle-mouse pan, Space+drag pan, initial fit-to-view, GPU transforms, and responsive reclamping. Live embeddable previews are the primary QA surface; video then image are fallbacks/evidence. The live page must receive pointer, keyboard, forms, scrolling and navigation normally, with Inspector camera gestures not stealing ordinary page interaction. Full-screen exit is owned by the viewport, not the review card: Escape, browser Back/history state, and a small viewport-only reveal affordance near the safe corner provide exit paths. Existing evidence identity, autosave persistence, deterministic QA gates and live-preview resolver/session contracts remain canonical; do not create a second evidence store.",
-      "next_action": "Do not spend more time on card CSS or Relay resource registration. Isolate a supported direct MCP Apps invocation path outside the nested Code Mode/orchestration wrapper, or wait for/target a host path that preserves tool descriptor UI metadata. Keep `relay_render_context_card` as the canonical launcher and preserve visible-card consumer acceptance as the release gate. In parallel, continue non-card 1.9.9 work (live-preview QA plumbing, stable preview resolver, opened-app workspace) because those do not depend on the wrapper mounting inline cards.",
+      "next_action": "Direct-path fix is published. Relay source PR #80 exact head 4326301e7adce594135555c07149eb7d9fead3cb passed admission/tests, squash-merged as 7714827fc9a02287b9e35b5a6cd2a4de87ee8d9a, and deployed as Worker version ab6d8401-8cc7-48f7-a8a4-b8e1c7a775be (v71) via deployment e9ce7f8b-1cec-45a8-b839-2dffb7e983ab. Server initialize instructions now direct user-visible card requests to relay_render_context_card. The owned private ChatGPT plugin relay-loewfi is updated to 0.5.5 (release pluginrel_6abdeb38a1e081919bb1c2af88e928cf), includes a ChatGPT-native UI routing skill, and its .app.json now requires the current Relay MCP app asdk_app_6abdbca7c98c819187cc153d781b0faf instead of the stale Composio dependency. Next acceptance step: invoke the updated relay-loewfi plugin directly in ChatGPT and ask for a Relay status card; success requires a visible inline mount. If that direct plugin/app dependency path still returns structuredContent only, record it as a ChatGPT host bug/boundary with current OpenAI MCP Apps docs satisfied; do not rework card CSS.",
       "paths": [
         "src/relay-card-ui.js",
         "src/relay-card-view-model.js",
@@ -4068,7 +4068,19 @@
         "relay-fresh-consumer-render-proof",
         "relay-safe-chatgpt-tool-refresh",
         "relay-chatgpt-tool-snapshot-staleness",
-        "relay-local-session-boundary"
+        "relay-local-session-boundary",
+        "relay-direct-plugin-invocation-path",
+        "relay-render-tool-selection-guidance",
+        "inspector-floating-review-instrument",
+        "inspector-edge-docking",
+        "inspector-idle-wiggle",
+        "inspector-adaptive-edge-contrast",
+        "inspector-canvas-navigation",
+        "field-canvas-input-contract",
+        "inspector-live-surface-priority",
+        "inspector-fullscreen-exit-contract",
+        "relay-plugin-direct-app-dependency",
+        "relay-plugin-release-0.5.5"
       ],
       "task_class": "architecture",
       "ledger_refs": [
@@ -4110,7 +4122,7 @@
       ],
       "state": "claimed",
       "created_at": "2026-10-01T02:57:33.950Z",
-      "amendment_count": 10,
+      "amendment_count": 11,
       "amendments": [
         {
           "at": "2026-10-01T03:02:32.261Z",
@@ -4701,9 +4713,70 @@
               "vivienne"
             ]
           }
+        },
+        {
+          "at": "2026-10-01T05:10:43.073Z",
+          "by": "relay-1.9.9-chatgpt-native-experience-20261001",
+          "reason": "Publish and record the direct ChatGPT plugin path that binds Relay skills to the current Relay MCP app and avoids the stale indirect dependency.",
+          "fields": [
+            "next_action",
+            "resources"
+          ],
+          "before": {
+            "next_action": "In parallel with the ChatGPT card host-boundary work, implement the user-approved Inspector QA slice on the existing 1.9.9 branch. Treat Figma node 59:115 as the exact visible review-instrument target: no header chrome, move/minimize/close controls, status rows, overall block, technical details, or save footer. Preserve autosave. Add invisible drag/resize hit regions; edge docking that leaves only a thin card edge visible; restrained idle/return wiggle with reduced-motion fallback; adaptive off-white glow on dark backgrounds / near-black shadow on light backgrounds with safe unknown-tone fa...",
+            "resources": [
+              "relay-1.9.9-release",
+              "relay-inline-card-design-system",
+              "relay-context-card-families",
+              "relay-opened-app-workspace",
+              "relay-in-app-interactive-chat",
+              "relay-chat-workspace-continuity",
+              "relay-three-surface-ui-contract",
+              "relay-progressive-disclosure-ui",
+              "relay-operation-card",
+              "relay-project-card",
+              "relay-release-card",
+              "relay-staff-card",
+              "relay-blocker-card",
+              "relay-verification-card",
+              "relay-qa-card",
+              "relay-card-motion-status",
+              "relay-card-responsive-layout",
+              "relay-terra-prime-card-language",
+              "relay-human-first-result-contract",
+              "relay-operation-framework",
+              "... +39 more"
+            ]
+          },
+          "after": {
+            "next_action": "Direct-path fix is published. Relay source PR #80 exact head 4326301e7adce594135555c07149eb7d9fead3cb passed admission/tests, squash-merged as 7714827fc9a02287b9e35b5a6cd2a4de87ee8d9a, and deployed as Worker version ab6d8401-8cc7-48f7-a8a4-b8e1c7a775be (v71) via deployment e9ce7f8b-1cec-45a8-b839-2dffb7e983ab. Server initialize instructions now direct user-visible card requests to relay_render_context_card. The owned private ChatGPT plugin relay-loewfi is updated to 0.5.5 (release pluginrel_6abdeb38a1e081919bb1c2af88e928cf), includes a ChatGPT-native UI routing skill, and its .app.json now ...",
+            "resources": [
+              "relay-1.9.9-release",
+              "relay-inline-card-design-system",
+              "relay-context-card-families",
+              "relay-opened-app-workspace",
+              "relay-in-app-interactive-chat",
+              "relay-chat-workspace-continuity",
+              "relay-three-surface-ui-contract",
+              "relay-progressive-disclosure-ui",
+              "relay-operation-card",
+              "relay-project-card",
+              "relay-release-card",
+              "relay-staff-card",
+              "relay-blocker-card",
+              "relay-verification-card",
+              "relay-qa-card",
+              "relay-card-motion-status",
+              "relay-card-responsive-layout",
+              "relay-terra-prime-card-language",
+              "relay-human-first-result-contract",
+              "relay-operation-framework",
+              "... +41 more"
+            ]
+          }
         }
       ],
-      "updated_at": "2026-10-01T05:10:24.336Z",
+      "updated_at": "2026-10-01T05:10:43.073Z",
       "primary_staff": "ellis",
       "supporting_staff": [
         "valentina",
@@ -7314,11 +7387,13 @@
         "inspector-canvas-navigation",
         "field-canvas-input-contract",
         "inspector-live-surface-priority",
-        "inspector-fullscreen-exit-contract"
+        "inspector-fullscreen-exit-contract",
+        "relay-plugin-direct-app-dependency",
+        "relay-plugin-release-0.5.5"
       ],
       "goal": "Ship Relay 1.9.9 as the unified ChatGPT-native experience release: a polished family of contextual in-chat response cards plus a rich opened-Relay app with interactive chat/workspace behavior, all sharing one visual language, one canonical state model and one progressive-disclosure path.",
       "acceptance": "Relay 1.9.9 must still pass the existing consumer-visible MCP App card gate: a normal Relay tool call in an ordinary ChatGPT conversation must visibly mount the intended UI, not merely register resources/metadata or return structuredContent. Separately, the Inspector QA surface must implement the user-approved Figma node 59:115 review instrument as the visible card: ~450px default width, compact single-column composition, project pill, progress, one question/reason, binary answer surfaces, note field, and no persistent chrome (no inspector masthead, move/minimize/close buttons, preview/capture status rows, flow badge, previous/next row, separate Overall UI, technical details, save footer, or visible resize handle). The card must autosave, be draggable from non-interactive card regions, resize responsively through invisible edge/corner hit zones, remain clamped on viewport resize, and dock to any viewport edge leaving only a thin real card edge visible. A docked edge gives a restrained occasional idle wiggle plus one return wiggle after meaningful pointer inactivity; prefers-reduced-motion removes the wiggle. The docked edge adapts contrast to the content beneath it: soft off-white glow over dark content, near-black shadow over light content, and a conservative dual-contrast fallback when tone cannot be known. Captured image/video surfaces may sample luminance when safe; live cross-origin previews use an optional postMessage tone handshake and must degrade safely if unavailable. Inspector's review surface behaves like Field's canvas without importing Field's editor runtime: regular wheel/two-finger pan, Ctrl/Cmd+wheel or trackpad pinch zoom at the pointer, middle-mouse pan, Space+drag pan, initial fit-to-view, GPU transforms, and responsive reclamping. Live embeddable previews are the primary QA surface; video then image are fallbacks/evidence. The live page must receive pointer, keyboard, forms, scrolling and navigation normally, with Inspector camera gestures not stealing ordinary page interaction. Full-screen exit is owned by the viewport, not the review card: Escape, browser Back/history state, and a small viewport-only reveal affordance near the safe corner provide exit paths. Existing evidence identity, autosave persistence, deterministic QA gates and live-preview resolver/session contracts remain canonical; do not create a second evidence store.",
-      "next_action": "In parallel with the ChatGPT card host-boundary work, implement the user-approved Inspector QA slice on the existing 1.9.9 branch. Treat Figma node 59:115 as the exact visible review-instrument target: no header chrome, move/minimize/close controls, status rows, overall block, technical details, or save footer. Preserve autosave. Add invisible drag/resize hit regions; edge docking that leaves only a thin card edge visible; restrained idle/return wiggle with reduced-motion fallback; adaptive off-white glow on dark backgrounds / near-black shadow on light backgrounds with safe unknown-tone fallback; and a canvas-like review viewport using Field's input contract (wheel/two-finger pan, Ctrl/Cmd+wheel or pinch zoom at pointer, middle-mouse and Space+drag pan, fit-to-view). Live embeddable previews are primary; video/image are fallbacks. Live page input must pass through normally. Exit full-screen via Escape, browser Back/history, and a viewport-only reveal affordance, never controls on the card.",
+      "next_action": "Direct-path fix is published. Relay source PR #80 exact head 4326301e7adce594135555c07149eb7d9fead3cb passed admission/tests, squash-merged as 7714827fc9a02287b9e35b5a6cd2a4de87ee8d9a, and deployed as Worker version ab6d8401-8cc7-48f7-a8a4-b8e1c7a775be (v71) via deployment e9ce7f8b-1cec-45a8-b839-2dffb7e983ab. Server initialize instructions now direct user-visible card requests to relay_render_context_card. The owned private ChatGPT plugin relay-loewfi is updated to 0.5.5 (release pluginrel_6abdeb38a1e081919bb1c2af88e928cf), includes a ChatGPT-native UI routing skill, and its .app.json now requires the current Relay MCP app asdk_app_6abdbca7c98c819187cc153d781b0faf instead of the stale Composio dependency. Next acceptance step: invoke the updated relay-loewfi plugin directly in ChatGPT and ask for a Relay status card; success requires a visible inline mount. If that direct plugin/app dependency path still returns structuredContent only, record it as a ChatGPT host bug/boundary with current OpenAI MCP Apps docs satisfied; do not rework card CSS.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-031",
@@ -7372,9 +7447,9 @@
       "base_sha": "544c5a358ce9fb6882e040cf9eff105c2333f72c",
       "state": "active",
       "created_at": "2026-10-01T04:43:37.777Z",
-      "updated_at": "2026-10-01T05:10:24.336Z",
-      "lease_until": "2026-10-01T17:10:24.336Z",
-      "amendment_count": 1,
+      "updated_at": "2026-10-01T05:10:43.073Z",
+      "lease_until": "2026-10-01T17:10:43.073Z",
+      "amendment_count": 2,
       "amendments": [
         {
           "at": "2026-10-01T05:10:24.336Z",
@@ -7413,6 +7488,67 @@
               "roman",
               "sabine",
               "vivienne"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T05:10:43.073Z",
+          "by": "relay-1.9.9-chatgpt-native-experience-20261001",
+          "reason": "Publish and record the direct ChatGPT plugin path that binds Relay skills to the current Relay MCP app and avoids the stale indirect dependency.",
+          "fields": [
+            "next_action",
+            "resources"
+          ],
+          "before": {
+            "next_action": "In parallel with the ChatGPT card host-boundary work, implement the user-approved Inspector QA slice on the existing 1.9.9 branch. Treat Figma node 59:115 as the exact visible review-instrument target: no header chrome, move/minimize/close controls, status rows, overall block, technical details, or save footer. Preserve autosave. Add invisible drag/resize hit regions; edge docking that leaves only a thin card edge visible; restrained idle/return wiggle with reduced-motion fallback; adaptive off-white glow on dark backgrounds / near-black shadow on light backgrounds with safe unknown-tone fa...",
+            "resources": [
+              "relay-1.9.9-release",
+              "relay-inline-card-design-system",
+              "relay-context-card-families",
+              "relay-opened-app-workspace",
+              "relay-in-app-interactive-chat",
+              "relay-chat-workspace-continuity",
+              "relay-three-surface-ui-contract",
+              "relay-progressive-disclosure-ui",
+              "relay-operation-card",
+              "relay-project-card",
+              "relay-release-card",
+              "relay-staff-card",
+              "relay-blocker-card",
+              "relay-verification-card",
+              "relay-qa-card",
+              "relay-card-motion-status",
+              "relay-card-responsive-layout",
+              "relay-terra-prime-card-language",
+              "relay-human-first-result-contract",
+              "relay-operation-framework",
+              "... +39 more"
+            ]
+          },
+          "after": {
+            "next_action": "Direct-path fix is published. Relay source PR #80 exact head 4326301e7adce594135555c07149eb7d9fead3cb passed admission/tests, squash-merged as 7714827fc9a02287b9e35b5a6cd2a4de87ee8d9a, and deployed as Worker version ab6d8401-8cc7-48f7-a8a4-b8e1c7a775be (v71) via deployment e9ce7f8b-1cec-45a8-b839-2dffb7e983ab. Server initialize instructions now direct user-visible card requests to relay_render_context_card. The owned private ChatGPT plugin relay-loewfi is updated to 0.5.5 (release pluginrel_6abdeb38a1e081919bb1c2af88e928cf), includes a ChatGPT-native UI routing skill, and its .app.json now ...",
+            "resources": [
+              "relay-1.9.9-release",
+              "relay-inline-card-design-system",
+              "relay-context-card-families",
+              "relay-opened-app-workspace",
+              "relay-in-app-interactive-chat",
+              "relay-chat-workspace-continuity",
+              "relay-three-surface-ui-contract",
+              "relay-progressive-disclosure-ui",
+              "relay-operation-card",
+              "relay-project-card",
+              "relay-release-card",
+              "relay-staff-card",
+              "relay-blocker-card",
+              "relay-verification-card",
+              "relay-qa-card",
+              "relay-card-motion-status",
+              "relay-card-responsive-layout",
+              "relay-terra-prime-card-language",
+              "relay-human-first-result-contract",
+              "relay-operation-framework",
+              "... +41 more"
             ]
           }
         }
