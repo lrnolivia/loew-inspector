@@ -24,3 +24,13 @@ export function glyph(name) {
   const kind = Object.hasOwn(shapes, name) ? name : "neutral";
   return '<svg class="relay-glyph glyph-' + kind + '" viewBox="0 0 24 24" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">' + shapes[kind] + '</svg>';
 }
+
+// Summary semantics reuse the existing rounded family. Attention/review is an
+// eye; repair is reserved for checks that actually report a blocker or error.
+export function telemetryGlyph(id) {
+  return ({ needs: "review", moving: "play", automatic: "refresh", freshness: "refresh",
+    now: "play", external: "pause", fresh: "refresh", next: "today", projects: "projects",
+    attention: "repair", monitoring: "review", "needs-review": "review",
+    "visible-captures": "projects", "chat-previews": "more", heartbeat: "refresh",
+    activity: "play", status: "neutral", state: "neutral", phase: "play", events: "more" })[id] || "neutral";
+}

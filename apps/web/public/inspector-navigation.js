@@ -16,7 +16,9 @@ export function inspectorWebsiteNavigation() {
     if (!destination) return;
     event.preventDefault();
     event.stopImmediatePropagation();
-    location.assign(destination);
+    const params = new URLSearchParams(location.hash.split("?")[1] || "");
+    const project = params.get("project");
+    location.assign(destination + (project ? "?project=" + encodeURIComponent(project) : ""));
   }, true);
   window.addEventListener("hashchange", reconcile);
   reconcile();

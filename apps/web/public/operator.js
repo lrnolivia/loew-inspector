@@ -1,6 +1,9 @@
+import { bindMotion } from "../../../packages/shared-ui/motion.js";
+import { bindPresentation, countVisual } from "../../../packages/shared-ui/presentation.js";
 import { bindTheme } from "./theme.js";
 import { showLoading } from "./loading.js";
-import { glyph } from "../../../packages/shared-ui/glyphs.js";
+import { projectFromHash, projectHref } from "../../../packages/shared-ui/project-context.js";
+import { glyph, telemetryGlyph } from "../../../packages/shared-ui/glyphs.js";
 import { brand, featureAccent } from "./brand.js";
 import { iconSlot, hydrateProjectIcons } from "./project-icons.js";
 import { openQa } from "./qa.js";
@@ -11,6 +14,8 @@ import { bindReviewFilters, loadReview } from "./operator-review.js";
 import { esc, loadProjectDetail, loadProjectIndex, projectName, renderProjectDetail } from "./operator-projects.js";
 
 bindTheme();
+bindPresentation();
+bindMotion();
 
 const pages = [...document.querySelectorAll("[data-page]")];
 const nav = [...document.querySelectorAll("[data-nav]")];
@@ -23,7 +28,7 @@ const sidebar = document.querySelector(".operator-topbar");
 
 let toastTimer = null;
 let projectIds = [];
-let selectedProject = null;
+let selectedProject = projectFromHash(location.hash) || null;
 const projectCache = new Map();
 
 const navigation = {
@@ -127,6 +132,8 @@ function renderProjectTabs() {
 
 async function chooseProject(id) {
   selectedProject = id || null;
+  const next = projectHref("#" + route(), selectedProject);
+  if (location.hash !== next) { location.hash = next; return; }
   projectCache.clear();
   renderProjectTabs();
   if (route() === "projects") {
@@ -174,7 +181,8 @@ function openProject(id) {
   location.hash = "projects?project=" + encodeURIComponent(id);
 }
 
-async function openSettings() {
+async function openSettings(event) {
+  event?.preventDefault();
   const href = "https://chatgpt.com/settings/plugins-settings/plugin_asdk_app_6abe234861d881919e30db65d656492f";
   try {
     if (window.openai?.openExternal) await window.openai.openExternal({ href });
@@ -184,23 +192,34 @@ async function openSettings() {
   }
 }
 
+document.querySelectorAll("[data-signal-id] .signal-mark").forEach(slot => {
+  slot.innerHTML = glyph(telemetryGlyph(slot.closest("[data-signal-id]").dataset.signalId));
+});
+
 const ui = { setConnection, notify, openProject, setFlow, setOverviewDetail, contextProject };
 
 function updateInspectorSignals() {
-  const rows = [...document.querySelectorAll("#review-list .review-row")];
-  const visible = rows.filter(row => !row.hidden && getComputedStyle(row).display !== "none");
-  const needs = rows.filter(row => {
-    const disposition = row.dataset.reviewDisposition || "";
-    return !["completed", "archived"].includes(disposition);
-  });
+  const list = document.querySelector("#review-list");
+  const loading = list?.querySelector(".content-skeleton");
+  const state = list?.dataset.summaryState || "loading";
   const previews = document.querySelectorAll("#chat-card-tabs [role='tab'], #chat-card-tabs button").length;
   const set = (id, value) => {
     const node = document.getElementById(id);
-    if (node) node.textContent = String(value);
+    if (node) { node.textContent = String(value); node.dataset.valueKind = /^\d+$/.test(String(value)) ? "number" : "text"; }
   };
-  set("inspector-signal-needs", needs.length);
-  set("inspector-signal-visible", visible.length);
+  set("inspector-signal-needs", loading || state === "loading" ? "pending" : state === "error" ? "unavailable" : list.dataset.summaryNeeds);
+  set("inspector-signal-visible", loading || state === "loading" ? "pending" : state === "error" ? "unavailable" : list.dataset.summaryVisible);
   set("inspector-signal-previews", previews);
+  document.querySelectorAll('.inspector-signal-deck .signal-card').forEach(card => {
+    const value = card.querySelector('strong').textContent;
+    if (card.dataset.visualValue === value) return;
+    card.dataset.visualValue = value;
+    let slot = card.querySelector('.signal-visual-slot');
+    if (!slot) { slot = document.createElement('span'); slot.className = 'signal-visual-slot'; card.append(slot); }
+    slot.innerHTML = countVisual(value);
+  });
+  const needsCard = document.getElementById("inspector-signal-needs")?.closest(".signal-card");
+  if (needsCard) needsCard.dataset.tone = state === "error" ? "warn" : state === "ready" && Number(list.dataset.summaryNeeds) > 0 ? "act" : "quiet";
 }
 
 const inspectorSignalObserver = new MutationObserver(updateInspectorSignals);
@@ -210,6 +229,9 @@ const inspectorSignalObserver = new MutationObserver(updateInspectorSignals);
 });
 
 async function showPage(name) {
+  selectedProject = projectFromHash(location.hash) || null;
+  const heading = document.querySelector('.operator-page[data-page="' + name + '"] .feature-heading');
+  if (heading && projectTabs) heading.after(projectTabs.closest(".project-context"));
   pages.forEach(page => { page.hidden = page.dataset.page !== name; });
   nav.forEach(button => {
     const active = button.dataset.nav === name;
@@ -250,7 +272,7 @@ async function showPage(name) {
 nav.forEach(button => button.addEventListener("click", () => {
   const next = button.dataset.nav;
   if (location.hash === "#" + next) showPage(next);
-  else location.hash = next;
+  else location.hash = projectHref("#" + next, contextProject());
 }));
 
 appSettings?.addEventListener("click", openSettings);

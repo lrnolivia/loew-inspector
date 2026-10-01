@@ -54,17 +54,16 @@ test("actual built website navigation leaves Inspector for React on desktop and 
         assert.equal(new URL(page.url()).pathname, "/");
         assert.equal(new URL(page.url()).hash, "#/" + route);
         assert.equal(await page.locator("#root .react-page").count(), 1);
-        assert.equal(await page.locator("#project-tabs").count(), 0);
+        assert.equal(await page.getByRole("group", { name: "Project context" }).count(), 1);
         await page.locator('.operator-connection[data-tone="good"]').waitFor();
         await page.locator("[data-progress-notice]").waitFor({ state: "detached" });
         const font = await page.locator(".react-operator-nav .nav-copy strong").first().evaluate(node => getComputedStyle(node).fontFamily);
         assert.match(font, /Momo Trust Display/);
-        const images = await page.locator(".signal-mark").evaluateAll(nodes => nodes.map(node => ({ src: node.src, loaded: node.complete && node.naturalWidth > 0 })));
-        assert.equal(images.length, 4);
-        assert.ok(images.every(image => image.loaded));
+        const image = await page.locator(".feature-mark").evaluate(node => ({ src: node.src, loaded: node.complete && node.naturalWidth > 0 }));
+        assert.equal(await page.locator(".signal-mark svg").count(), 4);
         const file = route === "night-shift" ? "nightshift-icon.png.png" : route + "-icon.png";
         const canonical = "data:image/png;base64," + (await readFile(new URL("../../../icons/" + file, import.meta.url))).toString("base64");
-        assert.ok(images.every(image => image.src === canonical), "built website uses the exact canonical icon bytes");
+        assert.ok(image.loaded && image.src === canonical, "page header retains exact canonical brand icon bytes");
         assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
         await page.screenshot({ path: `qa-evidence/website/${route}-${viewport.width}.png`, fullPage: true });
         captures.push(route);
@@ -77,7 +76,7 @@ test("actual built website navigation leaves Inspector for React on desktop and 
       for (const [hash, target] of [["today", "today"], ["projects?project=relay", "runner?project=relay"], ["night-shift", "night-shift"]]) {
         await page.goto(origin + "/inspector#" + hash);
         await page.waitForURL(origin + "/#/" + target);
-        assert.equal(await page.locator("#project-tabs").count(), 0);
+        assert.equal(await page.getByRole("group", { name: "Project context" }).count(), 1);
       }
       assert.deepEqual(errors, []);
       await page.close();

@@ -1,3 +1,5 @@
+import { statusLabel } from "../../../../packages/shared-ui/presentation-copy.js";
+import { ProjectSwitcher } from "../components/ProjectSwitcher";
 import { FeatureHeader } from "../components/FeatureHeader";
 import { SignalDeck } from "../components/SignalDeck";
 import { ProgressNotice } from "../components/ProgressNotice";
@@ -18,19 +20,20 @@ export function RunnerPage() {
   const incomplete = !snapshot || Boolean(snapshot.loadingProgress?.length || snapshot.failedProgress?.length);
   const count = (value: number) => incomplete ? value ? `${value}+` : "pending" : String(value);
   const cards = [
-    { id: "now", label: "happening now", value: count(all.length), detail: incomplete ? "Available activity so far; some project reads are pending or unavailable." : "Meaningful work with current canonical state.", tone: all.length ? "good" : "quiet" },
-    { id: "needs", label: "needs you", value: count(needs), detail: incomplete ? "Available activity so far; some project reads are pending or unavailable." : needs ? "Runner has a decision, blocker, or failed check to surface." : "No current work is waiting on you.", tone: needs ? "act" : "quiet" },
-    { id: "external", label: "external wait", value: count(external), detail: incomplete ? "Available activity so far; some project reads are pending or unavailable." : external ? "A check or external system is still running." : "No work is waiting on an external system.", tone: external ? "wait" : "quiet" },
-    { id: "fresh", label: "freshness", value: state, detail: incomplete ? "Activity coverage is incomplete." : stale ? `${stale} work item${stale === 1 ? "" : "s"} may be stale.` : "Current work has no stale warning.", tone: stale ? "warn" : state === "live" ? "good" : "quiet" }
+    { id: "now", label: "current work", value: count(all.length), detail: incomplete ? "Some projects are still loading or could not refresh." : "Includes work in progress and work waiting for its next step.", tone: all.length ? "good" : "quiet" },
+    { id: "needs", label: "needs you", value: count(needs), detail: incomplete ? "Some projects are still loading or could not refresh." : needs ? "A decision or a fix is needed." : "No current work is waiting on you.", tone: needs ? "act" : "quiet" },
+    { id: "external", label: "waiting for a response", value: count(external), detail: incomplete ? "Some projects are still loading or could not refresh." : external ? "Work is waiting on another service." : "No work is waiting on another service.", tone: external ? "wait" : "quiet" },
+    { id: "fresh", label: "last update", value: statusLabel(state), detail: incomplete ? "Some project activity is unavailable." : stale ? `${stale} work item${stale === 1 ? "" : "s"} may need an update.` : "No overdue update is reported.", tone: stale ? "warn" : state === "live" ? "good" : "quiet" }
   ];
   return (
     <div className="page operator-page react-page">
       <FeatureHeader feature="runner" title="runner" subtitle="coordinate" />
+      <ProjectSwitcher />
       <ProgressNotice />
       <SignalDeck cards={cards} feature="runner" />
       <section className="operator-section">
-        <div className="section-heading"><h2>meaningful work</h2><span>{all.length} {incomplete ? "loaded" : "current"}</span></div>
-        <div className="work-list">{all.length ? all.map(({ project, item }) => <WorkCard project={project} item={item} key={`${project}:${item.assignment}`} />) : incomplete ? null : <div className="empty-card"><strong>Nothing is moving right now.</strong><p>Runner will show work here when Relay has current execution evidence.</p></div>}</div>
+        <div className="section-heading"><h2>current work</h2><span>{all.length} {incomplete ? "loaded" : "current"}</span></div>
+        <div className="work-list">{all.length ? all.map(({ project, item }) => <WorkCard project={project} item={item} key={`${project}:${item.assignment}`} />) : incomplete ? null : <div className="empty-card"><strong>No current work to show.</strong><p>Work appears here when Relay receives an update.</p></div>}</div>
       </section>
     </div>
   );
