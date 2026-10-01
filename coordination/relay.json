@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T04:43:12.115Z",
+  "updated_at": "2026-10-01T04:43:37.777Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -4107,7 +4107,7 @@
         "builder",
         "verifier"
       ],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-10-01T02:57:33.950Z",
       "amendment_count": 5,
       "amendments": [
@@ -6980,6 +6980,136 @@
       "evidence": "PR #78 merged at 2026-10-01T04:42:17Z. Exact PR head a9a9df9dc1f620ed48664195fdafe47257adc4d3 merged as 1e89f16296155db705675ce770aa4e2d5e233b28. The branch was cleaned up after merge. The newly requested context-card launcher repair was not in that merged head and is being split into a clean post-1.9.8 hotfix from current main rather than mutating historical completion.",
       "work_accounted": true,
       "completed_at": "2026-10-01T04:42:56.171Z"
+    },
+    {
+      "id": "relay-1.9.9-chatgpt-native-experience-20261001",
+      "owner": "relay-1.9.9-chatgpt-native-experience-20261001",
+      "branch": "relay/1.9.9-chatgpt-native-experience-20261001",
+      "paths": [
+        "src/relay-chat-ui.js",
+        "src/relay-card-ui.js",
+        "src/relay-card-view-model.js",
+        "src/relay-card-ui.test.js",
+        "src/relay-app-ui.js",
+        "src/relay-project-ui.js",
+        "src/relay-release-ui.js",
+        "src/relay-qa-ui.js",
+        "src/relay-ui.js",
+        "src/relay-entry.js",
+        "src/relay-app-ui.test.js",
+        "apps/web/cards/",
+        "apps/web/chat/",
+        "test/cards/",
+        "test/mcp-app/",
+        "docs/relay/RELAY_1_9_9_RELEASE.md",
+        "docs/relay/RELEASE_PLAN_1.9.9.md"
+      ],
+      "resources": [
+        "relay-1.9.9-release",
+        "relay-inline-card-design-system",
+        "relay-context-card-families",
+        "relay-opened-app-workspace",
+        "relay-in-app-interactive-chat",
+        "relay-chat-workspace-continuity",
+        "relay-three-surface-ui-contract",
+        "relay-progressive-disclosure-ui",
+        "relay-operation-card",
+        "relay-project-card",
+        "relay-release-card",
+        "relay-staff-card",
+        "relay-blocker-card",
+        "relay-verification-card",
+        "relay-qa-card",
+        "relay-card-motion-status",
+        "relay-card-responsive-layout",
+        "relay-terra-prime-card-language",
+        "relay-human-first-result-contract",
+        "relay-operation-framework",
+        "runner-human-qa",
+        "relay-publication-receipts",
+        "relay-team-aware-chat-ui",
+        "relay-team-status-card",
+        "relay-cross-team-handoff-ui",
+        "relay-1.9.9-human-first-visual-refresh",
+        "relay-live-runner-progress",
+        "relay-chatgpt-in-app-dashboard",
+        "relay-datadog-mcp-interaction-reference",
+        "relay-progress-honesty-rules",
+        "relay-1.9.9-screen-state-inventory",
+        "relay-web-panel-notification-card-language",
+        "relay-feature-reporter-iconography",
+        "relay-staff-reporter-badge",
+        "relay-live-preview-qa",
+        "relay-stable-preview-resolver",
+        "relay-preview-session-lifecycle",
+        "relay-iframe-embed-contract",
+        "relay-preview-auth-session",
+        "relay-preview-reconnect",
+        "relay-input-passthrough",
+        "relay-live-preview-first",
+        "relay-chatgpt-visible-card-gate",
+        "relay-mcp-host-mount-path",
+        "relay-launcher-tool-metadata",
+        "relay-fresh-consumer-render-proof"
+      ],
+      "goal": "Ship Relay 1.9.9 as the unified ChatGPT-native experience release: a polished family of contextual in-chat response cards plus a rich opened-Relay app with interactive chat/workspace behavior, all sharing one visual language, one canonical state model and one progressive-disclosure path.",
+      "acceptance": "Relay 1.9.9 must not count any contextual card as shipped until a normal Relay tool call in an ordinary ChatGPT conversation visibly mounts the intended MCP App UI directly under that response in the user's real consumer. Source HTML existing, a ui:// resource being registered, `_meta.ui.resourceUri` / `openai/outputTemplate` being present server-side, or structuredContent being correct are necessary but insufficient. The host/mount path is P0: verify the installed ChatGPT app definition sees the current launcher-tool UI metadata, the resource is discoverable with `text/html;profile=mcp-app`, the consumer call is made through a path that preserves MCP Apps tool-descriptor metadata, and ChatGPT actually renders the component. If the ChatGPT connector/orchestration wrapper strips or fails to honor launcher metadata, record that as the blocker and either change the invocation/registration path or use a supported launcher surface; do not paper over it with more CSS. Visible fresh-consumer render evidence is required before card completion. The existing 1.9.9 live-preview QA, stable preview resolver, canonical progress identity, responsive/motion/accessibility, and visual-direction requirements remain in force.",
+      "next_action": "Before further card styling, isolate the MCP App launch path end-to-end. Compare Relay's direct `/mcp` tool descriptor and resource registration against ChatGPT's installed/refreshed app definition and current Apps SDK contract; verify `_meta.ui.resourceUri` on the actual launcher tool seen by the host, resource MIME and URI versioning, and whether the current connector/orchestration invocation path preserves that metadata. Run a minimal contextual tool call such as relay_runner_progress as the smoke case. Success means the user visibly sees the card in this chat. If not, capture the exact layer that drops the mount contract and fix or route around that layer before continuing 1.9.9 card CSS.",
+      "task_class": "design",
+      "ledger_refs": [
+        "RFS-031",
+        "RFS-032",
+        "RFS-033"
+      ],
+      "category": "design",
+      "labels": [
+        {
+          "key": "release",
+          "value": "1.9.9"
+        },
+        {
+          "key": "surface",
+          "value": "chatgpt-native"
+        },
+        {
+          "key": "domain",
+          "value": "mcp-app-experience"
+        }
+      ],
+      "tags": [
+        "cards",
+        "mcp-app",
+        "interactive-chat",
+        "workspace",
+        "terra-prime",
+        "motion",
+        "chatgpt"
+      ],
+      "primary_role": "art-director",
+      "supporting_roles": [
+        "product-lead",
+        "design-editor",
+        "motion-director",
+        "builder",
+        "verifier"
+      ],
+      "primary_team": "inspector",
+      "supporting_teams": [
+        "runner"
+      ],
+      "primary_staff": "valentina",
+      "supporting_staff": [
+        "vivienne",
+        "margot",
+        "sabine",
+        "nico",
+        "roman"
+      ],
+      "base_sha": "544c5a358ce9fb6882e040cf9eff105c2333f72c",
+      "state": "active",
+      "created_at": "2026-10-01T04:43:37.777Z",
+      "updated_at": "2026-10-01T04:43:37.777Z",
+      "lease_until": "2026-10-01T16:43:37.777Z"
     }
   ],
   "migrated_from": "loew-inspector"
