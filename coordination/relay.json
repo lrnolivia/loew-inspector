@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T09:56:38.760Z",
+  "updated_at": "2026-10-01T09:57:18.450Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -9301,7 +9301,7 @@
       ],
       "goal": "Rebuild and ship the exact historical Relay v2 contextual card probe from current main so native macOS, web and iPhone can be compared without PR #92 merge conflicts.",
       "acceptance": "Current main is the base. Historical v2 card from de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7 is restored faithfully under isolated symbols; relay_runner_progress alone carries v2 metadata; resource is served through the pre-#85 relay-entry list/read path; current v8 and v3 controls remain unchanged; embedded MCP icon matches canonical PNG; exact-head CI and Runner admission pass; merged source is deployed before consumer testing.",
-      "next_action": "Claim relay/inline-card-v2-final-20261001 from current main, replay only the final isolated v2 probe plus icon parity sync, open a fresh PR, pass CI/admission, merge and deploy.",
+      "next_action": "Resume only after the owner-requested card v9 nonblocking bootstrap hotfix is resolved and the overlapping src/relay-entry.test.js path is free.",
       "task_class": "architecture",
       "category": "implementation",
       "tags": [
@@ -9317,10 +9317,10 @@
       "primary_staff": "nico",
       "supporting_staff": [],
       "base_sha": "3b1e855e9486a3c034f59db3b53797f45314b2fe",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-10-01T09:43:34.029Z",
-      "updated_at": "2026-10-01T09:43:34.029Z",
-      "lease_until": "2026-10-01T21:43:34.029Z"
+      "updated_at": "2026-10-01T09:57:18.450Z",
+      "lease_until": "2026-10-01T21:57:18.450Z"
     }
   ],
   "migrated_from": "loew-inspector"
