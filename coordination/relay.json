@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T19:23:11.502Z",
+  "updated_at": "2026-10-01T19:26:05.039Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6527,7 +6527,7 @@
       "id": "relay-website-project-context-polish-20261001",
       "owner": "Julian-PM",
       "goal": "FIXES: preserve the newly approved Relay website design while restoring project context on all four pages, matching Inspector top cards to the new card family, and replacing repeated inner telemetry brand marks with semantic glyphs from the existing system.",
-      "acceptance": "Keep the approved overall visual direction and correct page-header icons. On Today, Runner, Night Shift and Inspector use page icon/title header, then project switcher, then existing status ticker and top-card content. Restore missing project switchers on Today/Runner/Night Shift; move Inspector's existing switcher to the same location. Inspector top cards match the new approved Today/Runner/Night Shift card treatment. Inner telemetry cards use varied meaningful glyphs from the existing shared/Figma glyph system; do not create a new icon family or replace header marks. Preserve all functionality, project selection across navigation, Momo title/navigation styling and responsive behavior. Verify exact-build desktop/narrow journeys and surface reviewable evidence in Inspector. Keep NEW FEATURES separate; none are requested in this follow-up. Additional approved visual fixes from Lauren's 2026-10-01 voice review: use #151412 for darkest page background, #1C1B19 for base surface, #211F1D for subtle-contrast surface, #292724 for raised/icon surface, and #514A45 as brightest panel cap; preserve current depth/contrast and iterate after review rather than arbitrary recoloring. Eliminate decorative colored accent edge strips/caps on cards and panels, including left-edge and top-edge variants shown in Lauren's Relay and Human Interfaces/Figma screenshots. Do not reintroduce that treatment; retain meaningful status color through appropriate non-edge indicators. Compare exact URL, build and theme when investigating shared-browser versus personal-browser color differences; do not assume cache or display cause.",
+      "acceptance": "Keep the approved overall visual direction and correct page-header icons. On Today, Runner, Night Shift and Inspector use page icon/title header, then project switcher, then existing status ticker and top-card content. Restore missing project switchers on Today/Runner/Night Shift; move Inspector's existing switcher to the same location. Inspector top cards match the new approved Today/Runner/Night Shift card treatment. Inner telemetry cards use varied meaningful glyphs from the existing shared/Figma glyph system; do not create a new icon family or replace header marks. Preserve all functionality, project selection across navigation, Momo title/navigation styling and responsive behavior. Verify exact-build desktop/narrow journeys and surface reviewable evidence in Inspector. Keep NEW FEATURES separate; none are requested in this follow-up. Additional approved visual fixes from Lauren's 2026-10-01 voice review: use #151412 for darkest page background, #1C1B19 for base surface, #211F1D for subtle-contrast surface, #292724 for raised/icon surface, and #514A45 as brightest panel cap; preserve current depth/contrast and iterate after review rather than arbitrary recoloring. Eliminate decorative colored accent edge strips/caps on cards and panels, including left-edge and top-edge variants shown in Lauren's Relay and Human Interfaces/Figma screenshots. Do not reintroduce that treatment; retain meaningful status color through appropriate non-edge indicators. Compare exact URL, build and theme when investigating shared-browser versus personal-browser color differences; do not assume cache or display cause. Final confirmed readback (2026-10-01 19:02-19:04 UTC): retain the existing topmost 'your workspace / name' line and connected badge in place; page icon/title, project switcher and ticker/card hierarchy sits below it. The five-color mapping applies only to neutral surfaces, not semantic status colors. Removal of Inspector's ugly card-edge strips is covered by replacing its old cards, not a separate implementation task; preserve the global site-top color strip outside this card-specific change. ALL PROJECTS is the initial aggregate default on every page/ticker; explicit project selection narrows the view. Do not invent a persistence/reset policy beyond that default. Complete and verify this ENTIRE fixes batch, including functioning project/data behavior and exact-latest-build visual/journey evidence, BEFORE implementing later website parts/features. Future work belongs in a separate dependent backlog; merge/deploy alone is not completion.",
       "next_action": "Queued from Lauren's voice review on 2026-10-01 around 18:43-18:47 UTC. Preserve the current website repair assignment's original goal and acceptance. Wait for relay-website-2.0-repair-20261001 to finish or explicitly hand off its live-data acceptance blocker; then obtain an admitted bounded implementation assignment/branch. First verify shared glyph/Figma mappings and current project-selection behavior. No merge/deployment or ownership takeover is authorized by this queue record.",
       "paths": [
         "apps/web/",
@@ -6556,7 +6556,7 @@
       "supporting_staff": [],
       "state": "queued",
       "created_at": "2026-10-01T18:48:57.266Z",
-      "amendment_count": 1,
+      "amendment_count": 2,
       "amendments": [
         {
           "at": "2026-10-01T18:55:01.468Z",
@@ -6571,9 +6571,23 @@
           "after": {
             "acceptance": "Keep the approved overall visual direction and correct page-header icons. On Today, Runner, Night Shift and Inspector use page icon/title header, then project switcher, then existing status ticker and top-card content. Restore missing project switchers on Today/Runner/Night Shift; move Inspector's existing switcher to the same location. Inspector top cards match the new approved Today/Runner/Night Shift card treatment. Inner telemetry cards use varied meaningful glyphs from the existing shared/Figma glyph system; do not create a new icon family or replace header marks. Preserve all function..."
           }
+        },
+        {
+          "at": "2026-10-01T19:26:05.039Z",
+          "by": "Julian-PM",
+          "reason": "Persist Lauren's confirmed workspace hierarchy, All Projects default and complete-fixes-before-features gate after canonical Runner reads recovered.",
+          "fields": [
+            "acceptance"
+          ],
+          "before": {
+            "acceptance": "Keep the approved overall visual direction and correct page-header icons. On Today, Runner, Night Shift and Inspector use page icon/title header, then project switcher, then existing status ticker and top-card content. Restore missing project switchers on Today/Runner/Night Shift; move Inspector's existing switcher to the same location. Inspector top cards match the new approved Today/Runner/Night Shift card treatment. Inner telemetry cards use varied meaningful glyphs from the existing shared/Figma glyph system; do not create a new icon family or replace header marks. Preserve all function..."
+          },
+          "after": {
+            "acceptance": "Keep the approved overall visual direction and correct page-header icons. On Today, Runner, Night Shift and Inspector use page icon/title header, then project switcher, then existing status ticker and top-card content. Restore missing project switchers on Today/Runner/Night Shift; move Inspector's existing switcher to the same location. Inspector top cards match the new approved Today/Runner/Night Shift card treatment. Inner telemetry cards use varied meaningful glyphs from the existing shared/Figma glyph system; do not create a new icon family or replace header marks. Preserve all function..."
+          }
         }
       ],
-      "updated_at": "2026-10-01T18:55:01.468Z"
+      "updated_at": "2026-10-01T19:26:05.039Z"
     }
   ],
   "claims": [
