@@ -36,8 +36,9 @@ export function hostProbeResult(args, request, meta = {}) {
     `Relay card test ${HOST_PROBE_BUILD} returned successfully. This confirms the server answered, not that a card appeared. If you see the test card, select “Check connection” once. Sample ${data.sample_id}.` }] };
 }
 
-// Serialized as one self-contained program; no string-replacement bootstraps.
-export function startHostProbe(config) {
+// Literal browser source survives Worker bundlers without capturing their helpers.
+// One self-contained program; no toString serialization or replacement bootstraps.
+const HOST_PROBE_SCRIPT = String.raw`(function startHostProbe(config) {
   const byId = id => document.getElementById(id);
   const mark = (id, text, state = "pass") => {
     byId(id).textContent = text;
@@ -55,7 +56,7 @@ export function startHostProbe(config) {
   let resultTimer, resultState = "waiting";
   const post = message => window.parent.postMessage({ jsonrpc: "2.0", ...message }, "*");
   const request = (method, params) => new Promise((resolve, reject) => {
-    const id = `relay-proof-${++nextId}`;
+    const id = "relay-proof-" + ++nextId;
     const timer = setTimeout(() => { pending.delete(id); reject(new Error("The host did not answer in time.")); }, 10000);
     pending.set(id, { resolve, reject, timer });
     post({ id, method, params });
@@ -73,7 +74,7 @@ export function startHostProbe(config) {
     clearTimeout(resultTimer);
     try {
       const data = sample(result);
-      byId("sample").textContent = `${data.observed_at} · ${data.sample_id}`;
+      byId("sample").textContent = data.observed_at + " · " + data.sample_id;
       details.request_hints = { http_user_agent: text(data.request_hints?.http_user_agent),
         openai_user_agent: text(data.request_hints?.openai_user_agent) };
       resultState = "received"; mark("result", "Data arrived"); record("tool-result");
@@ -88,7 +89,7 @@ export function startHostProbe(config) {
     const old = details.dimensions;
     if (old?.height === height && old?.width === width) return;
     details.dimensions = { width, height, sent_to_host: connected };
-    mark("size", `${width} × ${height} pixels${connected ? " · size sent" : " · measured"}`);
+    mark("size", width + " × " + height + " pixels" + (connected ? " · size sent" : " · measured"));
     if (connected) post({ method: "ui/notifications/size-changed", params: { height } });
     record("dimensions");
   }
@@ -126,7 +127,7 @@ export function startHostProbe(config) {
     byId("check").disabled = true; mark("action", "Checking…", "waiting"); record("action-requested");
     try {
       const data = sample(await request("tools/call", { name: config.tool, arguments: {} }));
-      byId("action-sample").textContent = `${data.observed_at} · ${data.sample_id}`;
+      byId("action-sample").textContent = data.observed_at + " · " + data.sample_id;
       mark("action", "Read-only check worked"); record("action-result");
     } catch (error) { mark("action", error.message, "error"); record("action-error"); }
     finally { if (!stopped) byId("check").disabled = false; }
@@ -148,7 +149,7 @@ export function startHostProbe(config) {
       } else mark("action", "This host did not offer tool calls", "unsupported");
       details.dimensions = null; measure();
     }).catch(error => { if (!stopped) { mark("init", error.message, "error"); mark("action", "Needs a host connection", "waiting"); record("initialization-error"); } });
-}
+})`;
 
 export function hostProbeResource() {
   const config = { build: HOST_PROBE_BUILD, uri: HOST_PROBE_URI, tool: HOST_PROBE_TOOL, protocol: HOST_PROBE_PROTOCOL };
@@ -161,5 +162,5 @@ export function hostProbeResource() {
 <ol aria-label="Connection milestones"><li id="static">Card appeared</li><li id="script">Waiting for script</li><li id="init">Waiting for host</li><li id="result">Waiting for data</li><li id="size">Waiting for dimensions</li><li id="action">Waiting to check</li></ol>
 <p id="sample"></p><button id="check" type="button" disabled>Check connection</button><p id="action-sample"></p><p>The whole card and button should be reachable. “Size sent” does not confirm the host used that size.</p>
 <details><summary>Technical details</summary><p>Host names and request hints are informational, not permissions or proof of local computer access.</p><pre id="diagnostics"></pre></details>
-</main><script>(${startHostProbe.toString()})(${JSON.stringify(config)});</script></body></html>` };
+</main><script>${HOST_PROBE_SCRIPT}(${JSON.stringify(config)});</script></body></html>` };
 }

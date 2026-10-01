@@ -69,6 +69,16 @@ test("diagnostic has bounded hints, explicit no-argument validation and a self-c
   assert.deepEqual(resource._meta.ui.csp, { connectDomains: [], resourceDomains: [] });
 });
 
+test("Worker bundling preserves the entire embedded browser program without external helpers", async () => {
+  const { build } = await import("esbuild");
+  const bundled = await build({ entryPoints: [new URL("./relay-host-probe.js", import.meta.url).pathname],
+    bundle: true, write: false, format: "esm", platform: "neutral", keepNames: true });
+  const module = await import("data:text/javascript;base64," + Buffer.from(bundled.outputFiles[0].text).toString("base64"));
+  const resource = module.hostProbeResource();
+  assert.doesNotMatch(resource.text, /\b__name\b/);
+  assert.deepEqual(resource, hostProbeResource());
+});
+
 async function mount(browser, mode = "normal", width = 390) {
   const context = await browser.newContext({ viewport: { width, height: 680 } });
   const page = await context.newPage();
