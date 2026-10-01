@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T01:28:48.216Z",
+  "updated_at": "2026-10-01T01:29:45.124Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3648,10 +3648,8 @@
         "apps/mcp/index.js",
         "apps/mcp/branding.js",
         "apps/mcp/relay-icon.js",
-        "test/mcp-branding.test.mjs",
         "apps/mcp/relay-icon.png",
-        "docs/relay/DEVELOPMENT_CADENCE.md",
-        "docs/relay/findings/RFS-027-large-asset-intake.md"
+        "test/mcp-branding.test.mjs"
       ],
       "resources": [
         "relay-mcp-server-icon-metadata",
@@ -3660,12 +3658,12 @@
       ],
       "goal": "Advertise supplied Relay Loop PNG and concise description through MCP server identity metadata.",
       "acceptance": "Initialize returns exact supplied PNG as serverInfo.icons without changing auth, protocol negotiation, tools or capabilities; focused checks pass; ChatGPT existing app icon remains explicitly unverified until refreshed.",
-      "next_action": "Finish the MCP icon using the user-uploaded apps/mcp/relay-icon.png as exact source of truth; remove/replace the half-finished base64 streaming workaround; update integrity coverage. In the same coherent maintenance patch, codify universal large/binary asset intake in DEVELOPMENT_CADENCE.md and RFS-027: ask the user to upload directly to the exact admitted GitHub repo/branch/folder with a direct link when GitHub is the better transport; then validate/hash/parse/rename/move/normalize in canonical scope. Chat/base64/chunk transport is fallback only.",
+      "next_action": "Final icon head 93a2599b11c1eab99074190e8651fb4ac2a29161 contains the exact final PNG plus MCP metadata. Workspace CI is green. Add the binary asset path to canonical ownership, rerun Runner admission on this exact head, then merge/deploy if green.",
       "base_sha": "4bfecdab5e16df1b1298ac01c36e355840cc779b",
       "state": "active",
       "created_at": "2026-09-30T20:32:25.239Z",
-      "updated_at": "2026-10-01T01:28:29.471Z",
-      "lease_until": "2026-10-01T13:28:29.471Z"
+      "updated_at": "2026-10-01T01:29:45.124Z",
+      "lease_until": "2026-10-01T13:29:45.124Z"
     }
   ],
   "migrated_from": "loew-inspector"
