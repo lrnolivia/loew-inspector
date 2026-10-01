@@ -41,6 +41,24 @@ function fixture(options = {}) {
 const coordinate = (f, action, request = defaultRequest, expected_record_sha = sha) => callRunnerControl('relay_runner_coordinate', { project: 'relay', action, request, expected_record_sha }, {}, f.api);
 const claim = (extra = {}) => ({ ...defaultRequest, state: 'active', base_sha: sha, created_at: new Date().toISOString(), lease_until: new Date(Date.now() + 3600000).toISOString(), ...extra });
 
+test('canonical teams survive queue claim heartbeat and audited amendment under machine ownership', async () => {
+  const f=fixture();
+  const {branch,...queuedRequest}=defaultRequest;
+  await coordinate(f,'queue',{...queuedRequest,category:'design',primary_role:'art-director',supporting_roles:['builder','verifier']});
+  const queued=f.record.queue[0];
+  assert.equal(queued.primary_team,'inspector');
+  assert.deepEqual(queued.supporting_teams,['runner']);
+  await coordinate(f,'claim',defaultRequest,newSha);
+  assert.equal(f.record.claims[0].primary_team,'inspector');
+  assert.equal(f.record.claims[0].primary_staff,'valentina');
+  await coordinate(f,'heartbeat',{id:'task',owner:'worker',next_action:'Continue the design'},newSha);
+  assert.equal(f.record.claims[0].primary_team,'inspector');
+  await coordinate(f,'amend',{id:'task',owner:'worker',supporting_teams:['runner','release'],reason:'Add publication support'},newSha);
+  assert.equal(f.record.claims[0].primary_staff,'valentina');
+  assert.ok(f.record.claims[0].amendments.at(-1).fields.includes('supporting_teams'));
+  await assert.rejects(coordinate(f,'amend',{id:'task',owner:'another-owner',primary_team:'runner',reason:'Attempt takeover'},newSha),/another owner/);
+});
+
 test('generated policy is byte-exact Runner source with correct Git blob provenance', async () => {
   const source = await readFile(new URL('./coordination-engine.js', import.meta.url));
   const hash = createHash('sha1').update(`blob ${source.length}\0`).update(source).digest('hex');

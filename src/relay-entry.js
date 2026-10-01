@@ -3,6 +3,7 @@ import legacy from "./index.js";
 import { callSourceLifecycleTool } from "./source-lifecycle.js";
 import { sourceTextMutationTools, isSourceTextMutationTool, validateSourceTextMutationArguments, callSourceTextMutationTool } from "./source-text-mutation.js";
 import { staffDirectoryTool, callStaffDirectory, validateStaffDirectoryArguments } from "./staff-registry.js";
+import { callRunnerControlCore } from "./runner-control-core.js";
 import { runnerCleanupTool, callRunnerCleanup, validateRunnerCleanupArguments } from "./runner-cleanup.js";
 import { cloudUploadTool, callCloudUpload, validateCloudUploadArguments } from "./cloud-upload.js";
 import { QA_SKILL_URI, qaSkillCatalogEntry, qaSkillResourceDescriptor, qaSkillResource } from "./qa-skill.js";
@@ -246,7 +247,8 @@ export default {
           result = await callCloudUpload(args, env);
         } else if (name === staffDirectoryTool.name) {
           const args = validateStaffDirectoryArguments(message.params?.arguments || {});
-          result = callStaffDirectory(args);
+          const bindings=args.project ? await callRunnerControlCore("relay_runner_assignments",{project:args.project},env) : null;
+          result = {...callStaffDirectory(args,undefined,bindings?.claims||[]),bindings_source:bindings?{project:args.project,record_sha:bindings.record_sha}:null};
         } else if (isSourceTextMutationTool(name)) {
           const args = validateSourceTextMutationArguments(name, message.params?.arguments || {});
           result = await callSourceTextMutationTool(name, args, env);

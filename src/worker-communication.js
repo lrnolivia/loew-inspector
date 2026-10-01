@@ -46,17 +46,20 @@ export function dedupeWorkerMessages(messages=[]){
 export function narrateWorkerMessage(message){
   const who=message.team?.primary_staff?.display_name || message.sender.display_name;
   const support=(message.team?.supporting_staff||[]).map(p=>p.display_name);
+  const teamName=message.team?.primary_team?message.team.primary_team+": ":"";
   const withTeam=support.length?" supported by "+support.join(", "):"";
   const to=message.recipient?(" with "+message.recipient.display_name):"";
   const validation=message.machine.evidence_ids.length?(" Validation: "+message.machine.evidence_ids.join(", ")+"."):"";
   const ask=message.requested_action?(" Next: "+message.requested_action):"";
-  return (who+withTeam+to+": "+message.summary+" "+message.impact+"."+ask+validation).replace(/\s+/g," ").trim();
+  return (teamName+who+withTeam+to+": "+message.summary+" "+message.impact+"."+ask+validation).replace(/\s+/g," ").trim();
 }
 export function reconcileWorkerMessage(message,canonical={}){
   const conflicts=[];
   if(canonical.assignment&&canonical.assignment!==message.machine.assignment) conflicts.push("assignment");
   if(canonical.branch&&canonical.branch!==message.machine.branch) conflicts.push("branch");
   if(canonical.owner&&canonical.owner!==message.machine.owner) conflicts.push("owner");
+  if (canonical.primary_team !== undefined && canonical.primary_team !== message.team?.primary_team) conflicts.push("primary_team");
+  if (canonical.supporting_teams && JSON.stringify(canonical.supporting_teams) !== JSON.stringify(message.team?.supporting_teams||[])) conflicts.push("supporting_teams");
   if (canonical.primary_staff !== undefined && canonical.primary_staff !== (message.team?.primary_staff?.id || null)) conflicts.push("primary_staff");
   if (canonical.supporting_staff && JSON.stringify(canonical.supporting_staff) !== JSON.stringify((message.team?.supporting_staff||[]).map(p=>p.id))) conflicts.push("supporting_staff");
   return Object.freeze({

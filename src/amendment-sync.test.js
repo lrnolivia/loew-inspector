@@ -16,3 +16,7 @@ test('staff amendments are relevant planning updates without changing authorizat
   assert.equal(window.updates[0].after.primary_staff,'roman');
   assert.equal(window.reconcile_required,false);
 });
+
+test('team amendments require planning synchronization',()=>{
+  assert.equal(classifyAmendment({fields:['primary_team','supporting_teams']}),'plan-adjusting');
+});

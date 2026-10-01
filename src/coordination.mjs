@@ -22,7 +22,7 @@ const CATEGORIES = new Set(['architecture', 'design', 'implementation', 'researc
 const ROLE_ID = /^[a-z][a-z0-9-]{0,63}$/;
 const TAG_ID = /^[a-z0-9][a-z0-9._-]{0,63}$/;
 const LABEL_KEY = /^[a-z][a-z0-9.-]{0,63}$/;
-const AMENDABLE_FIELDS = ['goal', 'acceptance', 'next_action', 'paths', 'resources', 'task_class', 'ledger_refs', 'category', 'labels', 'tags', 'primary_role', 'supporting_roles', 'primary_staff', 'supporting_staff'];
+const AMENDABLE_FIELDS = ['goal', 'acceptance', 'next_action', 'paths', 'resources', 'task_class', 'ledger_refs', 'category', 'labels', 'tags', 'primary_role', 'supporting_roles', 'primary_staff', 'supporting_staff', 'primary_team', 'supporting_teams'];
 
 function normalizeResources(values) {
   if (!Array.isArray(values) || values.some((value) => typeof value !== 'string' || !value)) throw new Error('Resources must be a valid string array.');
@@ -139,12 +139,12 @@ export function transition(record, request, policy, now = new Date()) {
     if ('ledger_refs' in request) patch.ledger_refs = normalizeLedgerRefs(request.ledger_refs);
     Object.assign(patch, metadataFields(request));
     const before = Object.fromEntries(supplied.map((field) => [field, target[field]]));
-    const staffPatch = Object.fromEntries(["primary_staff", "supporting_staff"].filter(key => key in request).map(key => [key, request[key]]));
+    const staffPatch = Object.fromEntries(["primary_staff", "supporting_staff", "primary_team", "supporting_teams"].filter(key => key in request).map(key => [key, request[key]]));
     const preview = { ...target, ...patch, ...staffPatch };
-    if (["category", "primary_role", "supporting_roles", "primary_staff", "supporting_staff"].some(key => key in request)) Object.assign(patch, normalizeAssignmentStaff(preview));
+    if (["category", "primary_role", "supporting_roles", "primary_staff", "supporting_staff", "primary_team", "supporting_teams"].some(key => key in request)) Object.assign(patch, normalizeAssignmentStaff(preview));
     Object.assign(preview, patch);
     if (!supplied.some(field => JSON.stringify(before[field]) !== JSON.stringify(preview[field]))) throw new Error("Amendment does not change assignment state.");
-    for (const field of ["primary_staff", "supporting_staff"]) {
+    for (const field of ["primary_staff", "supporting_staff", "primary_team", "supporting_teams"]) {
       if (!supplied.includes(field) && JSON.stringify(target[field]) !== JSON.stringify(preview[field])) {
         supplied.push(field); before[field] = target[field];
       }

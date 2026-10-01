@@ -86,6 +86,39 @@
           "items": {
             "type": "object"
           }
+        },
+        "primary_team": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "inspector",
+            "runner",
+            "night-shift",
+            "source",
+            "cloud",
+            "release",
+            "skills",
+            null
+          ]
+        },
+        "supporting_teams": {
+          "type": "array",
+          "maxItems": 6,
+          "uniqueItems": true,
+          "items": {
+            "type": "string",
+            "enum": [
+              "inspector",
+              "runner",
+              "night-shift",
+              "source",
+              "cloud",
+              "release",
+              "skills"
+            ]
+          }
         }
       },
       "additionalProperties": false

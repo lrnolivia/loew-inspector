@@ -2,6 +2,16 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { deriveResumeCheckpoint, sameCheckpoint, RESUME_CONTRACT_VERSION } from "./resume-checkpoints.js";
 
+test('team reassignment invalidates a checkpoint while preserving staff and machine identity',()=>{
+  const input={project:'relay',assignment:{id:'team-task',owner:'machine-owner',primary_team:'runner',supporting_teams:['inspector'],primary_staff:'nico',supporting_staff:['roman']},progress:{state:'working'},recordSha:'a'.repeat(40),policySha:'b'.repeat(40)};
+  const first=deriveResumeCheckpoint(input);
+  const next=deriveResumeCheckpoint({...input,assignment:{...input.assignment,supporting_teams:['inspector','release']}});
+  assert.equal(first.assignment.primary_team,'runner');
+  assert.equal(next.assignment.owner,'machine-owner');
+  assert.equal(next.assignment.primary_staff,'nico');
+  assert.equal(sameCheckpoint(first,next),false);
+});
+
 const assignment = {
   id: "relay-1.9.3-resume-checkpoints-20260930",
   owner: "relay-1.9.3-resume-checkpoints-20260930",

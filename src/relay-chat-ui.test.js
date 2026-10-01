@@ -61,7 +61,8 @@ test('card actually initializes and receives results without browser-global elem
       await page.goto('data:text/html,'+encodeURIComponent(relayContextCardResource().text));
       if(bridge==='mcp') await page.evaluate(()=>window.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:{structuredContent:{project:'relay',claim:{primary_staff:'julian',supporting_staff:['roman'],goal:'Staff routing is ready',state:'active'}}}},'*'));
       await assert.doesNotReject(page.locator('#title').filter({hasText:'Staff routing is ready'}).waitFor());
-      assert.equal(await page.locator('#team').textContent(),'Julian with Roman');
+      assert.equal(await page.locator('#team').textContent(),'Julian');
+      assert.equal(await page.locator('#staff').getAttribute('title'),'Julian with Roman');
       assert.deepEqual(errors,[]);
       if(bridge==='openai'){await page.getByRole('button',{name:'Open Relay'}).click();assert.equal(await page.evaluate(()=>window.modalRequested),true)}
       await page.close();
@@ -84,4 +85,53 @@ test('successful merge receipts tolerate numeric check counts without hiding the
   assert.equal(result.human.what_changed,'The source change is merged.');
   assert.equal(result.pull_request.merge_commit_sha,receipt.pull_request.merge_commit_sha);
   assert.equal(result.merge.merged,true);
+});
+
+
+test('context card is host-transparent and avoids the old framed panel chrome', () => {
+  const resource = relayContextCardResource();
+  assert.match(resource.text, /html,body\{background:transparent!important\}/);
+  assert.match(resource.text, /\.card\{--accent:#b5471f;border:0;padding:8px 2px;background:transparent!important;box-shadow:none\}/);
+  assert.match(resource.text, /grid-template-columns:minmax\(0,1fr\) minmax\(230px,38%\)/);
+  assert.match(resource.text, /feature-mark/);
+  assert.match(resource.text, /status-light/);
+  assert.doesNotMatch(resource.text, /\.card\{border:1px solid/);
+});
+
+test('finished work does not repeat stale next actions or redundant single status rows', async () => {
+  const {contextCardModel}=await import('./relay-chat-ui.js');
+  const finished=contextCardModel({
+    project:'relay',
+    claim:{primary_staff:'julian',state:'completed',goal:'Ship the team foundation',next_action:'Old instruction that should no longer appear'}
+  });
+  assert.equal(finished.next_step,null);
+  assert.deepEqual(finished.rows,[]);
+
+  const duplicated=contextCardModel({
+    project:'relay',
+    claim:{primary_staff:'julian',state:'active',goal:'Repair the card',next_action:'Keep going'},
+    human:{what_changed:'Keep going',next_step:'Keep going'}
+  });
+  assert.equal(duplicated.next_step,null);
+});
+
+
+test('feature identity drives the giant-notification header and pertinent metric', async () => {
+  const {contextCardModel}=await import('./relay-chat-ui.js');
+  const runner=contextCardModel({
+    project:'relay',
+    claim:{primary_team:'runner',primary_staff:'nico',state:'working',goal:'Build the card',progress_percent:50}
+  });
+  assert.equal(runner.feature,'runner');
+  assert.equal(runner.metric,'50%');
+  assert.equal(runner.metric_label,'completion');
+  assert.equal(runner.signal,'working');
+
+  const verification=contextCardModel({checks:{check_runs:[
+    {name:'test',status:'completed',conclusion:'success'},
+    {name:'admission',status:'completed',conclusion:'success'}
+  ]}});
+  assert.equal(verification.feature,'inspector');
+  assert.equal(verification.metric,'2/2');
+  assert.equal(verification.metric_label,'checks reported');
 });

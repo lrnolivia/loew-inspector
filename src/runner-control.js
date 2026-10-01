@@ -52,6 +52,8 @@ const requestProperties = {
   tags: tagsSchema,
   primary_role: roleSchema,
   supporting_roles: supportingRolesSchema,
+  primary_team: { type: ["string", "null"], enum: ["inspector","runner","night-shift","source","cloud","release","skills",null] },
+  supporting_teams: { type: "array", maxItems: 6, uniqueItems: true, items: {type:"string",enum:["inspector","runner","night-shift","source","cloud","release","skills"]} },
   primary_staff: { type: ["string", "null"], maxLength: 80 },
   supporting_staff: { type: "array", maxItems: 8, uniqueItems: true, items: text(80) },
   successor: identity,
@@ -217,7 +219,7 @@ export async function callRunnerControl(name, args, env, apiOverride) {
     const assignments = [...canonical.claims, ...canonical.queue];
     return { ...progress, progress: (progress.progress || []).map(item => {
       const assignment = assignments.find(a => a.id === item.assignment);
-      return { ...item, primary_staff: assignment?.primary_staff || null, supporting_staff: assignment?.supporting_staff || [], goal: assignment?.goal || null };
+      return { ...item, primary_team: assignment?.primary_team || null, supporting_teams: assignment?.supporting_teams || [], primary_staff: assignment?.primary_staff || null, supporting_staff: assignment?.supporting_staff || [], goal: assignment?.goal || null };
     }) };
   }
   if (name === 'relay_runner_resume') return callResume(args, env, apiOverride);
