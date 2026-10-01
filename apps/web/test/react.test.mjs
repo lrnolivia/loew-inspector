@@ -118,3 +118,46 @@ test("Relay 2.0 React shell renders human-first live surfaces responsively", asy
     await vite.close();
   }
 });
+
+
+test("generated cutover serves React at root and mounts the same React control center through MCP", async () => {
+  assert.match(webAssets["/"].text, /<title>relay 2\.0<\/title>/);
+  assert.ok(webAssets["/inspector"]);
+  assert.match(webAssets["/inspector"].text, /data-page="review"/);
+  assert.match(mcpHtml, /id="root"/);
+  assert.doesNotMatch(mcpHtml, /src="\/assets\/relay-2\.0\.js"/);
+
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage({ viewport: { width: 1200, height: 900 }, colorScheme: "dark" });
+    await page.route("https://fonts.googleapis.com/**", route => route.fulfill({ status: 200, contentType: "text/css", body: "" }));
+    await page.route("https://fonts.gstatic.com/**", route => route.abort());
+    await page.setContent('<iframe id="app" style="width:100%;height:860px;border:0"></iframe>');
+    await page.evaluate(({ html, progress, workers }) => {
+      window.addEventListener("message", event => {
+        const message = event.data;
+        if (message?.jsonrpc !== "2.0" || message.id === undefined) return;
+        let result = {};
+        if (message.method === "tools/call" && message.params?.name === "relay_ui_request") {
+          const path = message.params.arguments.path;
+          let body;
+          if (path === "/api/projects") body = { projects: [{ id: "relay", name: "relay", managed: true }] };
+          else if (path === "/api/workers") body = workers;
+          else if (path.startsWith("/api/progress/relay")) body = progress;
+          else body = {};
+          result = { structuredContent: { status: 200, content_type: "application/json", body } };
+        }
+        event.source.postMessage({ jsonrpc: "2.0", id: message.id, result }, "*");
+      });
+      document.querySelector("#app").srcdoc = html;
+    }, { html: mcpHtml, progress, workers });
+
+    const frame = page.frameLocator("#app");
+    await frame.locator('.connection-state[data-state="live"]').waitFor({ timeout: 10000 });
+    assert.equal(await frame.getByRole("heading", { name: "today", level: 1 }).textContent(), "today");
+    assert.equal(await frame.getByRole("link", { name: "inspector", exact: true }).getAttribute("href"), "/inspector#review");
+    assert.equal(await frame.locator(".signal-card").count(), 4);
+  } finally {
+    await browser.close();
+  }
+});
