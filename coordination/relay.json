@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T18:02:38.781Z",
+  "updated_at": "2026-10-01T18:02:54.755Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6493,7 +6493,7 @@
       ],
       "primary_staff": "julian",
       "supporting_staff": [],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-10-01T18:02:38.781Z"
     }
   ],
@@ -10055,6 +10055,42 @@
       "evidence": "PR #102 merged as 99dc3f0c6502629dbae57eacd9afe698a7fc9622. Clean GitHub checkout contained no apps/web/generated*.js files; npm run build recreated them, typecheck and full test suite passed. Cloudflare Workers Builds push-event build 95d4d0ed-7823-4e2b-bb18-573efaf0be0b cloned exact merge 99dc3f0c, rebuilt ephemeral web/MCP bundles, completed npx wrangler deploy, and produced Worker version 29188c28-3970-4e8b-983f-60f2b2ca2144.",
       "work_accounted": true,
       "completed_at": "2026-10-01T18:02:12.095Z"
+    },
+    {
+      "id": "relay-retire-manual-upload-20261001",
+      "owner": "normal-chat-retire-upload-20261001",
+      "branch": "relay/retire-manual-upload-20261001",
+      "paths": [
+        "projects/relay.json",
+        "src/cloud-upload.js",
+        "src/cloud-upload.test.js",
+        "docs/relay/RELEASE_PIPELINE.md"
+      ],
+      "resources": [
+        "relay-release-policy",
+        "relay-cloud-recovery"
+      ],
+      "goal": "Retire direct source reconstruction/upload for the canonical Relay Worker now that generated bundles are build-only; recovery must use known-good version rollback or Cloudflare Workers Builds.",
+      "acceptance": "projects/relay.json reports manual_upload disabled; relay_cloud_upload_version rejects relay/relay regardless of purpose before GitHub source reads; other allowlisted Workers retain existing upload behavior; tests pin the invariant.",
+      "next_action": "Create branch, disable canonical Relay manual source upload in policy/code, run quality/admission, merge, and verify Git-native deployment.",
+      "task_class": "architecture",
+      "category": "architecture",
+      "tags": [
+        "pipeline",
+        "recovery",
+        "rollback"
+      ],
+      "primary_team": "release",
+      "supporting_teams": [
+        "cloud"
+      ],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "base_sha": "3687d82392a30f1ed84ae4c384d9442730e4dd37",
+      "state": "active",
+      "created_at": "2026-10-01T18:02:54.755Z",
+      "updated_at": "2026-10-01T18:02:54.755Z",
+      "lease_until": "2026-10-02T06:02:54.755Z"
     }
   ],
   "migrated_from": "loew-inspector"
