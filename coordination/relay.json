@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T02:23:17.511Z",
+  "updated_at": "2026-10-01T02:25:26.503Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -4445,6 +4445,35 @@
       "created_at": "2026-10-01T01:45:02.465Z",
       "updated_at": "2026-10-01T02:23:17.511Z",
       "lease_until": "2026-10-01T14:23:17.511Z"
+    },
+    {
+      "id": "relay-inspector-visual-polish-20260930",
+      "owner": "codex-relay-inspector-visual-polish-20260930",
+      "branch": "relay/inspector-visual-polish-20260930",
+      "paths": [
+        "apps/web/public/qa.css",
+        "apps/web/public/qa-panel.js",
+        "apps/web/public/operator.css",
+        "apps/web/public/operator-1.8.css",
+        "apps/web/public/operator.js",
+        "apps/web/generated.js",
+        "apps/web/test/browser.test.mjs",
+        ".superdesign/",
+        "docs/relay/INSPECTOR_VISUAL_POLISH_20260930.md"
+      ],
+      "resources": [
+        "relay-design",
+        "relay-inspector-companion-presentation"
+      ],
+      "goal": "Refine Relay floating Inspector and compact dashboard presentation from user screenshots: neutral charcoal, product badge, responsive resizing, smaller chrome/status, updated ChatGPT settings URL. Record image zoom/pan, anchored comments, actionable reports and relationship simplification as deferred behavior.",
+      "acceptance": "Concrete reviewed design uses existing identity/icons, neutral floating panel and compact hierarchy at narrow and wide sizes; settings URL matches user-supplied plugin; production implementation proceeds after Superdesign preview review; behavioral backlog is durable.",
+      "next_action": "Prepare a Superdesign visual preview and durable behavioral backlog using current main; present exact design for user review before production UI edits.",
+      "task_class": "design",
+      "base_sha": "f183508d4f03d39d9a08021e0a4772058cb991cf",
+      "state": "active",
+      "created_at": "2026-10-01T02:25:26.503Z",
+      "updated_at": "2026-10-01T02:25:26.503Z",
+      "lease_until": "2026-10-01T14:25:26.503Z"
     }
   ],
   "migrated_from": "loew-inspector"
