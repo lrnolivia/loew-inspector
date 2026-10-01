@@ -29,8 +29,8 @@ test("Relay extension publishes source inventory and exact-head PR action", () =
   assert.ok(names.includes("relay_staff_directory"));
   assert.ok(names.includes("relay_render_context_card"));
   const renderer=tools.find(tool=>tool.name==="relay_render_context_card");
-  assert.equal(renderer._meta.ui.resourceUri,"ui://relay/context-card/v7.html");
-  assert.equal(renderer._meta["openai/outputTemplate"],"ui://relay/context-card/v7.html");
+  assert.equal(renderer._meta.ui.resourceUri,"ui://relay/context-card/v8.html");
+  assert.equal(renderer._meta["openai/outputTemplate"],"ui://relay/context-card/v8.html");
   const branch = tools.find(tool => tool.name === "relay_source_create_branch");
   assert.match(branch.description, /exact 40-character commit SHA/);
   assert.equal(branch._meta.existing, true);
@@ -135,7 +135,7 @@ test("fresh inline status card is listed and readable through the authenticated 
     assert.equal(body.error, undefined);
     return body.result;
   };
-  const uri = "ui://relay/status-card/v1.html";
+  const uri = "ui://relay/status-card/v2.html";
   const { tools } = await rpc("tools/list");
   const fresh = tools.filter(tool => tool.name === "relay_show_status_card");
   assert.equal(fresh.length, 1);
@@ -150,7 +150,7 @@ test("fresh inline status card is listed and readable through the authenticated 
   assert.equal(tool._meta["openai/ui"], undefined);
   assert.deepEqual(tool.inputSchema, old.inputSchema);
   assert.deepEqual(tool.annotations, old.annotations);
-  assert.equal(old._meta.ui.resourceUri, "ui://relay/context-card/v7.html");
+  assert.equal(old._meta.ui.resourceUri, "ui://relay/context-card/v8.html");
   const { resources } = await rpc("resources/list");
   assert.equal(resources.filter(resource => resource.uri === uri).length, 1);
   assert.equal(resources.find(resource => resource.uri === uri).mimeType, "text/html;profile=mcp-app");
