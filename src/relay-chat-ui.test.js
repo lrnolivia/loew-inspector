@@ -85,3 +85,28 @@ test('successful merge receipts tolerate numeric check counts without hiding the
   assert.equal(result.pull_request.merge_commit_sha,receipt.pull_request.merge_commit_sha);
   assert.equal(result.merge.merged,true);
 });
+
+
+test('context card is host-transparent and avoids the old framed panel chrome', () => {
+  const resource = relayContextCardResource();
+  assert.match(resource.text, /html,body\{background:transparent!important\}/);
+  assert.match(resource.text, /\.card\{border:0;border-radius:0;padding:8px 2px;background:transparent!important;box-shadow:none\}/);
+  assert.doesNotMatch(resource.text, /\.card\{border:1px solid/);
+});
+
+test('finished work does not repeat stale next actions or redundant single status rows', async () => {
+  const {contextCardModel}=await import('./relay-chat-ui.js');
+  const finished=contextCardModel({
+    project:'relay',
+    claim:{primary_staff:'julian',state:'completed',goal:'Ship the team foundation',next_action:'Old instruction that should no longer appear'}
+  });
+  assert.equal(finished.next_step,null);
+  assert.deepEqual(finished.rows,[]);
+
+  const duplicated=contextCardModel({
+    project:'relay',
+    claim:{primary_staff:'julian',state:'active',goal:'Repair the card',next_action:'Keep going'},
+    human:{what_changed:'Keep going',next_step:'Keep going'}
+  });
+  assert.equal(duplicated.next_step,null);
+});
