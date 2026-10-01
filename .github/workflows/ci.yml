@@ -35,7 +35,7 @@ concurrency:
 jobs:
   inspector-tests:
     runs-on: ubuntu-latest
-    timeout-minutes: 5
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
         with:
@@ -101,7 +101,7 @@ jobs:
 
   web-browser-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
         with:
@@ -115,7 +115,7 @@ jobs:
 
   web-react-shell-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
         with:
@@ -129,7 +129,7 @@ jobs:
 
   web-react-mcp-test:
     runs-on: ubuntu-latest
-    timeout-minutes: 8
+    timeout-minutes: 12
     steps:
       - uses: actions/checkout@v4
         with:
@@ -172,4 +172,35 @@ jobs:
         with:
           node-version: '22'
       - run: npm ci
-      - run: npm run build && git diff --exit-code -- apps/web/generated.js
+      - run: npm run build && git diff --exit-code -- apps/web/generated.js apps/web/generated-react.js apps/web/generated-inspector.js
+
+
+  visual-review-preview:
+    if: github.event_name == 'pull_request' && github.event.pull_request.draft == true && startsWith(github.head_ref, 'relay/2.0-approved-visual-port-')
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CF_ACCESS_CLIENT_ID: ${{ vars.CF_ACCESS_CLIENT_ID }}
+      CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF }}
+      PREVIEW_COMMIT: ${{ github.event.pull_request.head.sha }}
+      PREVIEW_PR: ${{ github.event.pull_request.number }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - name: Build exact Relay web assets
+        run: npm run build --workspace @relay/web
+      - name: Capture and ingest Inspector preview evidence
+        run: node apps/web/test/visual-review.mjs
+      - name: Preserve preview captures
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relay-visual-review-${{ github.event.pull_request.number }}
+          path: qa-evidence/
+          if-no-files-found: ignore

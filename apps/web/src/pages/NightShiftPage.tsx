@@ -32,15 +32,15 @@ export function NightShiftPage() {
   ];
 
   return (
-    <div className="page">
-      <FeatureHeader feature="night-shift" title="night shift" subtitle="what will happen tonight, and what happened while you were away" />
+    <div className="page operator-page react-page">
+      <FeatureHeader feature="night-shift" title="night shift" subtitle="monitor" />
       <SignalDeck cards={cards} />
-      <section>
+      <section className="operator-section">
         <div className="section-heading"><h2>while you were away</h2><span>{results.length} results on record</span></div>
         <div className="night-list">
           {results.length ? results.slice(0, 10).map(worker => {
             const tone = worker.runtime?.last_error ? "bad" : worker.runtime?.status === "running" ? "good" : "quiet";
-            return <article className="night-card" key={worker.id} data-tone={tone}>
+            return <article className="automation-row night-card" key={worker.id} data-tone={tone}>
               <div className="night-card-head"><strong>{projectLabel(worker.id)}</strong><StatusLight tone={tone} label={worker.runtime?.last_error ? "needs attention" : worker.runtime?.status === "running" ? "checking now" : "recorded"} /></div>
               <p>{worker.runtime?.last_summary || worker.runtime?.last_error || "No result summary was recorded."}</p>
               <small>last run {relative(worker.runtime?.last_run_at)} · {worker.enabled ? `next ${relative(worker.runtime?.next_run_at)}` : "automatic checks paused"}</small>

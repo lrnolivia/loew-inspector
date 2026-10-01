@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T09:37:31.270Z",
+  "updated_at": "2026-10-01T17:26:15.760Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -255,8 +255,8 @@
       "id": "relay-web-dashboard-20260930",
       "owner": "relay-web-dashboard-20260930",
       "goal": "Expose Relay's MCP App dashboard as a first-class authenticated web dashboard on relay.loew.fi with parity to the in-chat state model and controls.",
-      "acceptance": "relay.loew.fi presents the same projects, durable operations, publication receipts, QA handoffs, release state, recovery/rollback actions and history as the MCP App without duplicating state; shared components/data adapters are reused where practical; deep links can open a specific project/operation/release/QA item; auth and mutations use Relay's existing bounded control plane; web and in-chat surfaces remain behaviorally consistent; the dashboard consumes the future shared suite shell/navigation so Relay feels like one utility with Runner and Inspector rather than a separate website. Surface parity means canonical state, actions, receipts, identity and behavioral outcomes remain consistent across inline chat cards, the opened ChatGPT app workspace and relay.loew.fi; it does not require identical composition. The web dashboard owns the broadest persistent navigation/deep-link/history shell. The opened ChatGPT app may use a denser app-specific workspace optimized for the host container. Inline chat cards remain contextual and minimal. Shared components/view-models are encouraged only where they preserve each surface's distinct interaction job.",
-      "next_action": "Implement after the MCP App view-model is stable. Share canonical state/actions and reusable components, but let relay.loew.fi, the opened ChatGPT app workspace and inline response cards use different compositions appropriate to web workspace, app workspace and conversation respectively.",
+      "acceptance": "relay.loew.fi presents the same projects, durable operations, publication receipts, QA handoffs, release state, recovery/rollback actions and history as the MCP App without duplicating state; shared components/data adapters are reused where practical; deep links can open a specific project/operation/release/QA item; auth and mutations use Relay's existing bounded control plane; web and in-chat surfaces remain behaviorally consistent; the dashboard consumes the future shared suite shell/navigation so Relay feels like one utility with Runner and Inspector rather than a separate website. Surface parity means canonical state, actions, receipts, identity and behavioral outcomes remain consistent across inline chat cards, the opened ChatGPT app workspace and relay.loew.fi; it does not require identical composition. VISUAL CANON: the current Inspector chat-card preview gallery is the near-canonical Relay visual language and the dashboard should visibly inherit it: Terra Prime dark surfaces, rounded geometry, Momo display hierarchy, strong feature marks, restrained status color, compact human-first telemetry, and the same spacing/radius/type/icon/token family. The dashboard should feel like that visual system expanded into a persistent workspace, not like a separate redesign. Do not literally stretch inline cards into pages: the web dashboard owns broader navigation, deep links, history, multi-card signal decks, and persistent controls; the opened ChatGPT app may use a denser app-specific workspace; inline cards remain contextual and minimal. Shared components/view-models are encouraged where they preserve each surface's distinct interaction job. No future dashboard redesign should replace the Inspector-preview visual language without explicit owner approval.",
+      "next_action": "When dashboard work resumes, begin from the current Inspector preview gallery and shared card tokens as the visual reference, then adapt them to workspace-scale navigation and information density rather than inventing a new skin. Preserve the established 2.0 content flows where approved. Treat divergence from the preview language as a review blocker unless explicitly approved.",
       "paths": [
         "web/relay/",
         "src/relay-web.js",
@@ -272,7 +272,7 @@
       ],
       "state": "queued",
       "created_at": "2026-09-30T13:25:57.685Z",
-      "amendment_count": 1,
+      "amendment_count": 2,
       "amendments": [
         {
           "at": "2026-10-01T02:51:32.361Z",
@@ -302,9 +302,26 @@
               "relay-surface-parity-without-layout-parity"
             ]
           }
+        },
+        {
+          "at": "2026-10-01T17:20:32.752Z",
+          "by": "relay-web-dashboard-20260930",
+          "reason": "Owner clarified that the current Inspector chat-card previews are the near-canonical visual language Relay 2.0 dashboard work was intended to inherit. Record that relationship explicitly so future dashboard work preserves the visual system without copying inline-card composition.",
+          "fields": [
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "acceptance": "relay.loew.fi presents the same projects, durable operations, publication receipts, QA handoffs, release state, recovery/rollback actions and history as the MCP App without duplicating state; shared components/data adapters are reused where practical; deep links can open a specific project/operation/release/QA item; auth and mutations use Relay's existing bounded control plane; web and in-chat surfaces remain behaviorally consistent; the dashboard consumes the future shared suite shell/navigation so Relay feels like one utility with Runner and Inspector rather than a separate website. Surfa...",
+            "next_action": "Implement after the MCP App view-model is stable. Share canonical state/actions and reusable components, but let relay.loew.fi, the opened ChatGPT app workspace and inline response cards use different compositions appropriate to web workspace, app workspace and conversation respectively."
+          },
+          "after": {
+            "acceptance": "relay.loew.fi presents the same projects, durable operations, publication receipts, QA handoffs, release state, recovery/rollback actions and history as the MCP App without duplicating state; shared components/data adapters are reused where practical; deep links can open a specific project/operation/release/QA item; auth and mutations use Relay's existing bounded control plane; web and in-chat surfaces remain behaviorally consistent; the dashboard consumes the future shared suite shell/navigation so Relay feels like one utility with Runner and Inspector rather than a separate website. Surfa...",
+            "next_action": "When dashboard work resumes, begin from the current Inspector preview gallery and shared card tokens as the visual reference, then adapt them to workspace-scale navigation and information density rather than inventing a new skin. Preserve the established 2.0 content flows where approved. Treat divergence from the preview language as a review blocker unless explicitly approved."
+          }
         }
       ],
-      "updated_at": "2026-10-01T02:51:32.361Z"
+      "updated_at": "2026-10-01T17:20:32.752Z"
     },
     {
       "id": "inspector-visual-review-web-20260930",
@@ -6024,15 +6041,24 @@
     {
       "id": "relay-2.0-control-center-resource-bust-20261001",
       "owner": "relay-2.0-control-center-resource-bust-20261001",
-      "goal": "Force ChatGPT to load the shipped Relay 2.0 React control center by rotating the MCP App resource identity away from the cached pre-2.0 URI.",
-      "acceptance": "Relay control center uses a fresh ui:// resource URI; resource/read and tool outputTemplate/resourceUri all resolve to it; React mcpHtml remains unchanged; exact-head tests and Runner admission pass; merged exact commit is deployed and the old v2 resource is no longer advertised.",
-      "next_action": "Create the hotfix branch, rotate the control-center resource URI, update its regression test, run CI, merge, deploy, and re-open the control center from the new ChatGPT app.",
+      "goal": "Make ChatGPT load the actual Relay 2.0 React control center instead of its cached legacy v2 resource, and apply the approved Momo navigation/brand typography plus the new repo /icons artwork.",
+      "acceptance": "Rotate the MCP control-center ui:// resource identity so ChatGPT cannot reuse the legacy v2 HTML; the resource body remains the generated React mcpHtml; React Today, Runner and Night Shift are the surfaces mounted in ChatGPT; Relay brand and feature navigation labels use Momo Trust Display; generated feature icon data comes from the canonical repository /icons assets (relay-icon.png, today-icon.png, runner-icon.png, inspector-icon.png, nightshift-icon.png.png); Inspector remains separately available at /inspector; deterministic generated output and exact-head tests pass before merge/deploy.",
+      "next_action": "Rotate the control-center identity to fresh v4; write current-main versions of web source onto the stale branch with Momo brand/navigation overrides; make build.mjs and legacy brand imports source canonical root /icons; patch split generated React/Inspector payloads to the same deterministic icon/CSS output; run generated bridge and exact-head CI, then merge/deploy.",
       "paths": [
         "src/relay-ui.js",
-        "src/relay-ui.test.js"
+        "src/relay-ui.test.js",
+        "apps/web/src/styles.css",
+        "apps/web/build.mjs",
+        "apps/web/public/brand.js",
+        "apps/web/public/operator-1.8.css",
+        "apps/web/generated-react.js",
+        "apps/web/generated-inspector.js"
       ],
       "resources": [
-        "relay-control-center-resource-identity"
+        "relay-control-center-resource-identity",
+        "relay-react-control-center",
+        "relay-momo-navigation",
+        "relay-repo-icons"
       ],
       "task_class": "maintenance",
       "category": "release",
@@ -6041,7 +6067,333 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "state": "claimed",
-      "created_at": "2026-10-01T09:36:40.990Z"
+      "created_at": "2026-10-01T09:36:40.990Z",
+      "updated_at": "2026-10-01T17:26:15.760Z",
+      "amendment_count": 3,
+      "amendments": [
+        {
+          "at": "2026-10-01T17:21:10.724Z",
+          "by": "relay-2.0-control-center-resource-bust-retired-20261001",
+          "reason": "Owner has now confirmed the deployed ChatGPT control center is still showing the cached legacy v2 resource while Inspector shows the intended 2.0 content; resume this parked lane for the approved cache-key rotation and presentation corrections.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action",
+            "paths",
+            "resources"
+          ],
+          "before": {
+            "goal": "Force ChatGPT to load the shipped Relay 2.0 React control center by rotating the MCP App resource identity away from the cached pre-2.0 URI.",
+            "acceptance": "Relay control center uses a fresh ui:// resource URI; resource/read and tool outputTemplate/resourceUri all resolve to it; React mcpHtml remains unchanged; exact-head tests and Runner admission pass; merged exact commit is deployed and the old v2 resource is no longer advertised.",
+            "next_action": "Retired/superseded. Keep this branch unmerged; do not resume unless a future approved control-center build explicitly needs a cache-key rotation.",
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js"
+            ],
+            "resources": [
+              "relay-control-center-resource-identity"
+            ]
+          },
+          "after": {
+            "goal": "Make ChatGPT load the actual Relay 2.0 React control center instead of its cached legacy v2 resource, and apply the approved Momo navigation/brand typography plus the new repo /icons artwork.",
+            "acceptance": "Rotate the MCP control-center ui:// resource identity so ChatGPT cannot reuse the legacy v2 HTML; the resource body remains the generated React mcpHtml; React Today, Runner and Night Shift are the surfaces mounted in ChatGPT; Relay brand and feature navigation labels use Momo Trust Display; generated feature icon data comes from the canonical repository /icons assets (relay-icon.png, today-icon.png, runner-icon.png, inspector-icon.png, nightshift-icon.png.png); Inspector remains separately available at /inspector; deterministic generated output and exact-head tests pass before merge/deploy.",
+            "next_action": "Read exact current main/branch files, update the cache URI and React presentation/icon source, regenerate deterministic web payloads on the branch, run exact-head admission/tests, then merge and deploy exact merged source. Verify ChatGPT control center mounts the fresh React resource.",
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js",
+              "apps/web/src/App.tsx",
+              "apps/web/src/styles.css",
+              "apps/web/build.mjs",
+              "apps/web/generated-react.js",
+              "apps/web/generated.js"
+            ],
+            "resources": [
+              "relay-control-center-resource-identity",
+              "relay-react-control-center",
+              "relay-momo-navigation",
+              "relay-repo-icons"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T17:25:44.395Z",
+          "by": "relay-2.0-control-center-resource-bust-retired-20261001",
+          "reason": "Include the preserved Inspector icon bundle in the same owner-approved 2.0 cache-bust so React and Inspector consume one canonical /icons set; drop files that do not require direct edits.",
+          "fields": [
+            "next_action",
+            "paths"
+          ],
+          "before": {
+            "next_action": "Resume the parked cache-bust lane now that the owner confirmed the cached legacy v2 control center is still visible. Reconcile the existing branch to current main, rotate control-center URI, apply Momo brand/nav typography, source feature icons from /icons, regenerate deterministic assets, run exact-head gates, merge and deploy.",
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js",
+              "apps/web/src/App.tsx",
+              "apps/web/src/styles.css",
+              "apps/web/build.mjs",
+              "apps/web/generated-react.js",
+              "apps/web/generated.js"
+            ]
+          },
+          "after": {
+            "next_action": "Rotate the control-center identity to fresh v4; write current-main versions of web source onto the stale branch with Momo brand/navigation overrides; make build.mjs and legacy brand imports source canonical root /icons; patch split generated React/Inspector payloads to the same deterministic icon/CSS output; run generated bridge and exact-head CI, then merge/deploy.",
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js",
+              "apps/web/src/styles.css",
+              "apps/web/build.mjs",
+              "apps/web/public/brand.js",
+              "apps/web/generated-react.js",
+              "apps/web/generated-inspector.js"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T17:26:15.760Z",
+          "by": "relay-2.0-control-center-resource-bust-retired-20261001",
+          "reason": "Apply the same owner-requested Momo Relay/nav typography to the preserved Inspector shell so the two 2.0 surfaces do not diverge.",
+          "fields": [
+            "paths"
+          ],
+          "before": {
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js",
+              "apps/web/src/styles.css",
+              "apps/web/build.mjs",
+              "apps/web/public/brand.js",
+              "apps/web/generated-react.js",
+              "apps/web/generated-inspector.js"
+            ]
+          },
+          "after": {
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js",
+              "apps/web/src/styles.css",
+              "apps/web/build.mjs",
+              "apps/web/public/brand.js",
+              "apps/web/public/operator-1.8.css",
+              "apps/web/generated-react.js",
+              "apps/web/generated-inspector.js"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "relay-inline-card-v2-final-20261001",
+      "owner": "relay-inline-card-v2-final-20261001",
+      "goal": "Ship the Relay card v9 non-blocking bootstrap and size-reporting fixes without redesigning the card; preserve the legacy bridge card exactly as the control.",
+      "acceptance": "Rotate the contextual card URI to v9; patch the v8 HTML only at serve time so cardHtml() and the legacy bridge remain unchanged; paint immediately from window.openai globals; run ui/initialize in parallel with a 4s timeout; prefer window.openai.callTool; report ui/notifications/size-changed and notifyIntrinsicHeight; show the host diagnostic line; add immediate-paint and height-reporting regression tests; update the relay-entry v9 URI pins; add docs/relay/CHATGPT_CARD_V9_BOOTSTRAP.md; npm test passes; open one draft PR; do not merge before desktop and browser consumer tests unless the owner overrides.",
+      "next_action": "Read every target from current main, verify each exact replacement target occurs exactly once, create the policy-valid branch recorded on this claim if needed, apply only the v9 handoff edits, run preflight and tests, open a draft PR, then render v9 and legacy controls for consumer testing.",
+      "paths": [
+        "src/relay-v2-probe.js",
+        "src/relay-entry.js",
+        "src/relay-entry.test.js",
+        "docs/relay/CHATGPT_INLINE_CARD_CLEANROOM.md",
+        "apps/mcp/relay-icon.js",
+        "test/mcp-branding.test.mjs"
+      ],
+      "resources": [
+        "relay-context-card-v2-probe",
+        "relay-extension-resource-path",
+        "relay-mcp-icon-parity"
+      ],
+      "task_class": "architecture",
+      "category": "implementation",
+      "tags": [
+        "chatgpt",
+        "mcp-apps",
+        "v2",
+        "inline-card",
+        "bisect"
+      ],
+      "primary_role": "builder",
+      "primary_team": "runner",
+      "supporting_teams": [],
+      "primary_staff": "nico",
+      "supporting_staff": [],
+      "state": "claimed",
+      "created_at": "2026-10-01T09:41:30.796Z",
+      "updated_at": "2026-10-01T10:01:31.805Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T10:01:31.805Z",
+          "by": "relay-inline-card-v2-final-20261001",
+          "reason": "Owner supplied a newer card-v9 execution handoff that supersedes the unstarted v2 replay in this same reserved card lane.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "goal": "Rebuild and ship the exact historical Relay v2 contextual card probe from current main so native macOS, web and iPhone can be compared without PR #92 merge conflicts.",
+            "acceptance": "Current main is the base. Historical v2 card from de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7 is restored faithfully under isolated symbols; relay_runner_progress alone carries v2 metadata; resource is served through the pre-#85 relay-entry list/read path; current v8 and v3 controls remain unchanged; embedded MCP icon matches canonical PNG; exact-head CI and Runner admission pass; merged source is deployed before consumer testing.",
+            "next_action": "Apply the owner-requested v9 nonblocking bootstrap handoff on this held card lane; preserve the legacy bridge control; update only the contextual card, its tests, relay-entry URI pins, and the v9 bootstrap doc; then run exact-head validation and open a draft PR."
+          },
+          "after": {
+            "goal": "Ship the Relay card v9 non-blocking bootstrap and size-reporting fixes without redesigning the card; preserve the legacy bridge card exactly as the control.",
+            "acceptance": "Rotate the contextual card URI to v9; patch the v8 HTML only at serve time so cardHtml() and the legacy bridge remain unchanged; paint immediately from window.openai globals; run ui/initialize in parallel with a 4s timeout; prefer window.openai.callTool; report ui/notifications/size-changed and notifyIntrinsicHeight; show the host diagnostic line; add immediate-paint and height-reporting regression tests; update the relay-entry v9 URI pins; add docs/relay/CHATGPT_CARD_V9_BOOTSTRAP.md; npm test passes; open one draft PR; do not merge before desktop and browser consumer tests unless the owner...",
+            "next_action": "Read every target from current main, verify each exact replacement target occurs exactly once, create the policy-valid branch recorded on this claim if needed, apply only the v9 handoff edits, run preflight and tests, open a draft PR, then render v9 and legacy controls for consumer testing."
+          }
+        }
+      ]
+    },
+    {
+      "id": "relay-2.0-approved-visual-port-20261001",
+      "owner": "relay-2.0-approved-visual-port-20261001",
+      "goal": "Port the Relay React experience onto the exact approved 1.8/1.9 visual system while preserving the liked 2.0 Runner and Night Shift content layouts/flows, restoring the old Today flow, adding at least three useful universal header data cards to every primary page, and using Momo Trust Display for headings.",
+      "acceptance": "React uses the preserved 1.8/1.9 CSS/tokens/navigation/surfaces/spacing as its presentation source of truth. Today restores needs-you, work-happening-now, and automatic-checks flow. Runner and Night Shift retain their approved 2.0 content architecture and detail flow but are rendered in the old visual system. Today, Runner, Night Shift, and Inspector each expose at least three meaningful universal header data cards. Major headings use Momo Trust Display; body/control text remains Inter. Before merge, desktop and mobile screenshots for every primary page and Runner detail are captured into Inspector and left pending human approval. Do not merge or deploy without that approval.",
+      "next_action": "Claim a fresh branch from current main, port React markup/styles onto the actual preserved 1.8/1.9 design, build/test, publish a draft PR, create a preview deployment, capture all primary pages in Inspector, and stop for human review.",
+      "paths": [
+        "apps/web/src/",
+        "apps/web/build.mjs",
+        "apps/web/public/index.html",
+        "apps/web/public/operator.js",
+        "apps/web/public/operator.css",
+        "apps/web/public/operator-1.8.css",
+        "apps/web/test/react.test.mjs",
+        "apps/web/test/browser.test.mjs",
+        "apps/web/generated.js"
+      ],
+      "resources": [
+        "relay-1.8-1.9-visual-source-of-truth",
+        "relay-2.0-runner-flow",
+        "relay-2.0-night-shift-flow",
+        "relay-universal-header-data-cards",
+        "relay-inspector-human-visual-gate"
+      ],
+      "task_class": "design",
+      "category": "design",
+      "primary_team": "inspector",
+      "supporting_teams": [
+        "runner",
+        "night-shift",
+        "release"
+      ],
+      "primary_staff": "vivienne",
+      "supporting_staff": [
+        "nico",
+        "julian",
+        "ellis"
+      ],
+      "state": "claimed",
+      "created_at": "2026-10-01T09:55:15.263Z"
+    },
+    {
+      "id": "relay-card-v9-nonblocking-bootstrap-20261001",
+      "owner": "relay-card-v9-nonblocking-bootstrap-20261001",
+      "goal": "Resolve the post-v9 cross-client Relay card split proven by same-turn testing: iPhone mounts and paints but remains unhydrated in Connecting state; ChatGPT web mounts a blank MCP frame; native macOS desktop does not mount the card surface at all.",
+      "acceptance": "Treat iPhone, web, and native macOS as distinct consumer gates. iPhone must hydrate canonical tool results after the already-working immediate paint/size handshake; web must paint the mounted MCP frame and hydrate canonical results; native macOS must mount the card surface again. Preserve the approved card design and do not paper over failures with client-specific prose fallbacks. DESIGN CANON: the current Inspector chat-card preview gallery is the visual source of truth for Relay inline conversational cards. Do not redesign, reskin, restyle, or substitute dashboard composition while fixing MCP transport/mounting. Preserve the existing Terra Prime card language, current feature art/state mapping, dark surfaces, rounded geometry, Momo display typography, strong approximately 76px feature mark, feature name only modestly smaller, and removal of the redundant small 'relay' eyebrow. Remaining visual work is polish only: tighten card footprint and vertical density, improve use of available space, correct left-side spacing/alignment, maintain clear human-first hierarchy, and make responsive sizing feel intentional without changing the recognized composition. Inline cards are contextual conversation objects, not miniature dashboards: one purpose, one dominant state/headline, compact supporting telemetry/content, normally no more than two primary actions, no global/sidebar navigation, and expand/open Relay for deeper workflows. Inspector/dashboard signal cards may share tokens/components and visual DNA but are a separate persistent composition. UI interactions should feed selection/action context back into the conversation where supported. Add regression coverage for immediate paint, result hydration, resource delivery, and mount metadata; use a fresh resource identity for changed resource bytes; verify the same ordinary-chat render on iPhone, web, and native macOS before completion.",
+      "next_action": "Continue the three-client MCP host diagnosis from the 12:24 ET evidence without touching the canonical Inspector-preview visual composition. Fix hydration/resource/mount behavior first. Any CSS change must be limited to the recorded polish items (footprint/density/use of space/left alignment/responsiveness) and must be compared against the current Inspector preview gallery before merge. Do not import the Relay dashboard shell, navigation, or page composition into the inline card.",
+      "paths": [
+        "src/relay-chat-ui.js",
+        "src/relay-chat-ui.test.js",
+        "src/relay-entry.test.js",
+        "docs/relay/CHATGPT_CARD_V9_BOOTSTRAP.md",
+        "apps/mcp/production-smoke.mjs"
+      ],
+      "resources": [
+        "relay-context-card-v9",
+        "relay-chatgpt-bootstrap",
+        "relay-card-size-reporting"
+      ],
+      "task_class": "maintenance",
+      "category": "implementation",
+      "tags": [
+        "chatgpt",
+        "mcp-apps",
+        "inline-card",
+        "v9",
+        "bootstrap",
+        "hotfix"
+      ],
+      "primary_role": "builder",
+      "primary_team": "runner",
+      "supporting_teams": [
+        "inspector",
+        "release"
+      ],
+      "primary_staff": "nico",
+      "supporting_staff": [
+        "ellis"
+      ],
+      "state": "queued",
+      "created_at": "2026-10-01T09:57:55.276Z",
+      "amendment_count": 2,
+      "amendments": [
+        {
+          "at": "2026-10-01T16:26:20.409Z",
+          "by": "relay-card-v9-nonblocking-bootstrap-20261001",
+          "reason": "User supplied decisive post-v9 screenshots from iPhone, web, and native macOS showing three different failure modes in the same test.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "goal": "Ship the card v9 non-blocking bootstrap and size-reporting fixes without redesigning the Relay card, preserving the legacy bridge control exactly.",
+            "acceptance": "Rotate the contextual card URI to v9; patch v8 HTML at serve time so legacy cardHtml() output remains unchanged; paint immediately from window.openai globals; run ui/initialize in parallel with a 4s timeout; prefer window.openai.callTool; report intrinsic size and ui/notifications/size-changed; show the host diagnostic line; add regression coverage for immediate globals paint and size reporting; update relay-entry URI pins; add the v9 bootstrap doc; update stale production smoke pins if still present; npm test passes; open one draft PR and do not merge before desktop and browser consumer te...",
+            "next_action": "Claim the assignment from current main on the Runner-approved branch relay/card-v9-nonblocking-bootstrap, apply only the exact handoff edits after verifying each target string, run preflight and tests, open a draft PR, then verify consumer behavior with the direct render tool and legacy bridge control."
+          },
+          "after": {
+            "goal": "Resolve the post-v9 cross-client Relay card split proven by same-turn testing: iPhone mounts and paints but remains unhydrated in Connecting state; ChatGPT web mounts a blank MCP frame; native macOS desktop does not mount the card surface at all.",
+            "acceptance": "Treat the three clients as distinct gates. iPhone: canonical tool result hydrates the already-painted card so status leaves Connecting/current-state placeholder while preserving working globals handshake and size reporting. Web: the mounted MCP frame paints static card UI and then hydrates canonical result instead of remaining blank. Native macOS desktop: the tool invocation mounts a card surface again, matching the previously known-good desktop behavior. Preserve the approved card design; do not paper over failures with client-specific prose fallbacks. Add regression coverage for immediate...",
+            "next_action": "Start from the user-supplied same-turn evidence at 12:24 ET after merged v9: iPhone shows full card chrome plus 'Waiting for the Relay result…', 'Connecting', em dash current state, Open Relay, and diagnostic 'host check: globals yes · handshake ok 24ms · height 403'; web shows a large mounted gray MCP frame with only a tiny loading mark and no card paint; native macOS desktop shows Relay tool activity and assistant prose but no card surface. This proves v9 fixed iPhone bootstrap/size reporting but not result hydration, did not fix web document paint, and did not restore desktop mount. Repr..."
+          }
+        },
+        {
+          "at": "2026-10-01T17:19:54.267Z",
+          "by": "relay-card-v9-nonblocking-bootstrap-20261001",
+          "reason": "Owner clarified the existing Inspector chat-card preview gallery is the canonical visual design. Consolidate previously scattered polish notes and prevent MCP host debugging or 2.0 dashboard work from redesigning the approved cards.",
+          "fields": [
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "acceptance": "Treat the three clients as distinct gates. iPhone: canonical tool result hydrates the already-painted card so status leaves Connecting/current-state placeholder while preserving working globals handshake and size reporting. Web: the mounted MCP frame paints static card UI and then hydrates canonical result instead of remaining blank. Native macOS desktop: the tool invocation mounts a card surface again, matching the previously known-good desktop behavior. Preserve the approved card design; do not paper over failures with client-specific prose fallbacks. Add regression coverage for immediate...",
+            "next_action": "Start from the user-supplied same-turn evidence at 12:24 ET after merged v9: iPhone shows full card chrome plus 'Waiting for the Relay result…', 'Connecting', em dash current state, Open Relay, and diagnostic 'host check: globals yes · handshake ok 24ms · height 403'; web shows a large mounted gray MCP frame with only a tiny loading mark and no card paint; native macOS desktop shows Relay tool activity and assistant prose but no card surface. This proves v9 fixed iPhone bootstrap/size reporting but not result hydration, did not fix web document paint, and did not restore desktop mount. Repr..."
+          },
+          "after": {
+            "acceptance": "Treat iPhone, web, and native macOS as distinct consumer gates. iPhone must hydrate canonical tool results after the already-working immediate paint/size handshake; web must paint the mounted MCP frame and hydrate canonical results; native macOS must mount the card surface again. Preserve the approved card design and do not paper over failures with client-specific prose fallbacks. DESIGN CANON: the current Inspector chat-card preview gallery is the visual source of truth for Relay inline conversational cards. Do not redesign, reskin, restyle, or substitute dashboard composition while fixing...",
+            "next_action": "Continue the three-client MCP host diagnosis from the 12:24 ET evidence without touching the canonical Inspector-preview visual composition. Fix hydration/resource/mount behavior first. Any CSS change must be limited to the recorded polish items (footprint/density/use of space/left alignment/responsiveness) and must be compared against the current Inspector preview gallery before merge. Do not import the Relay dashboard shell, navigation, or page composition into the inline card."
+          }
+        }
+      ],
+      "updated_at": "2026-10-01T17:19:54.267Z"
+    },
+    {
+      "id": "relay-2.0-generated-split-20261001",
+      "owner": "relay-2.0-generated-split-20261001",
+      "goal": "Split Relay's deterministic generated Worker payload into multiple imported modules below GitHub Contents API's 1 MiB per-file read limit, without changing the approved rendered UI or runtime behavior.",
+      "acceptance": "generated.js and every imported generated module are each below 1 MiB; total Worker source graph remains below Relay's 2 MiB cap; deterministic build/checks are green; the rendered React/Inspector output remains byte-equivalent in behavior; Cloud upload can read and upload the exact merged commit.",
+      "next_action": "Create a clean branch from merged PR #94 commit 75b805fca8fbf089449e8aebbbc64f5f36e6fb1d, split build output deterministically, run exact-head gates, merge, deploy exact merge commit, then complete both the packaging successor and parent visual-port assignment.",
+      "paths": [
+        "apps/web/build.mjs",
+        "apps/web/generated.js",
+        "apps/web/generated-react.js",
+        "apps/web/generated-inspector.js",
+        "apps/web/test/react.test.mjs",
+        ".github/workflows/ci.yml"
+      ],
+      "resources": [
+        "relay-generated-worker-payload",
+        "relay-cloud-upload-source-limit"
+      ],
+      "task_class": "maintenance",
+      "category": "release",
+      "primary_team": "release",
+      "supporting_teams": [
+        "inspector"
+      ],
+      "primary_staff": "julian",
+      "supporting_staff": [
+        "vivienne"
+      ],
+      "state": "claimed",
+      "created_at": "2026-10-01T16:36:32.366Z"
     }
   ],
   "claims": [
@@ -6907,7 +7259,7 @@
       ],
       "goal": "Ship Relay 1.9 as the skills-runtime and creative-intelligence release, including a first-class assignment-amendment workflow and planning skills that use the findings ledger to route worthwhile discoveries into the right existing or future assignment instead of leaving them as inert notes or spawning unnecessary parallel work.",
       "acceptance": "Relay 1.9 ships as a patch train with these canonical capabilities:\n\n- relay.SKILLS: deterministic JIT resolution, bounded context, provenance/license/integrity metadata, capability gating, project-private overlays, safe upstream audit/update, and composable creative/platform/performance/GitHub/Cloudflare skills. Creative coverage includes aesthetic direction, IA/flow, motion, visual QA, optimization, web, macOS, Windows, Android and GNOME; Figma-bound skills use the real dependency when available.\n- worker communication: inspect sibling live state first; classify FYI/request/blocker/decision/handoff/scope-change; cite exact project/assignment/branch/PR/evidence identity; communicate context, impact and requested action; reconcile received messages against canonical state before acting; avoid duplicate/no-op chatter. Messages never silently change ownership/scope: Runner amend/rescope/handoff remains authoritative.\n- organization-first narration: later coordination successors must consume canonical staff identity and describe people + ownership + outcome + validation by default; preserve machine IDs/evidence underneath and keep low-level transport/tool/SHA detail subordinate unless directly relevant. Relationship adaptation stays Julian/lead-managed; no canned joke bank.\n- assignment taxonomy: durable amendable category, labels, tags and designated role metadata. Controlled categories include architecture, design, implementation, research, QA/verification, maintenance, release and coordination. Labels are structured cross-cutting metadata; tags are bounded freeform discovery/context metadata. One primary role plus optional supporting roles may drive skill selection/communication posture but never authorization. Role metadata is separate from sticky staff identity; names come from the canonical staff directory. Expose taxonomy/roles to routing, filtering, UI and resume checkpoints.\n- live amendment sync: active workers/chats consume only new relevant canonical amendments from a monotonic cursor at bounded synchronization points; unchanged checks inject nothing, and scope-changing/blocking updates reconcile before conflicting work continues.\n- safe assignment amendments: stable identity/ownership, immutable claimed branch/base, CAS/readback, conflict-safe scope changes, bounded who/when/what/why history. Planning skills amend canonical state rather than hand-edit it.\n- findings-ledger routing: classify adopt/defer/reject/supersede; route adopted findings into the safest existing assignment or deliberate successor; maintain RFS linkage/status. Ledger is planning input, not automatic backlog.\n- low-overhead resume checkpoints from canonical evidence: assignment/branch/base/head, changed paths, commits, PR/check/deploy stage, last successful action, blockers/waits, next action, QA context, ledger refs and exact evidence identities; dedupe unchanged state and expose latest-valid resume.\n- universal meaningful x.x.# cadence: test/admit exact source; merge; deploy if applicable; verify runtime/readback; refresh integrations/consumer when needed; verify the new surface; continue from canonical state.\n- valid work must not be blocked by file/document/context/request-size ceilings: switch automatically to patch/edit, append, bounded chunks, indexed/sharded logical docs and deterministic reassembly while preserving ownership/provenance/CAS safety.\n- preserve Relay 1.8 UI contracts: human headline + short description, subordinate technical detail, specific QA asks, live previews when viable with exact identity.\n\nTests cover taxonomy/roles, communication/handoffs, amendments, ledger routing, resume, size-safe transport, skill gating and UI/QA. No parallel state store, giant permanent prompt dump, one-tool-per-skill explosion or new standing credentials.",
-      "next_action": "Fresh Codex wrap-up worker owns the remainder of Relay 1.9 through 1.9.9. First ship 1.9.6.2 operational staff routing plus conversational context-card repair: durable primary/supporting named staff over machine owner authority, propagated through resume/updates/communication/status/cards; normal in-chat visuals use the contextual-card surface, while the full control-center/dashboard is only an explicit Open Relay destination. Then continue through coherent 1.9.7, 1.9.8 and 1.9.9 patches as real remaining integration/creative/platform/performance/closure work emerges from canonical state and findings. Do not stop for reassignment between patches, and do not create empty versions. Close the 1.9 umbrella only after all successor work is accounted for and final fresh-consumer verification passes.",
+      "next_action": "Close the stale umbrella with a release-doc-only archival PR, then complete the reservation; all implementation successors are already shipped.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-018",
@@ -6922,10 +7274,10 @@
         "RFS-030"
       ],
       "base_sha": "47fb7b4f73afc3407977503fb706c4935711aee5",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T22:49:27.571Z",
-      "updated_at": "2026-10-01T02:57:00.156Z",
-      "lease_until": "2026-10-01T14:57:00.156Z",
+      "updated_at": "2026-10-01T10:02:32.442Z",
+      "lease_until": "2026-10-01T22:02:32.442Z",
       "amendment_count": 7,
       "amendments": [
         {
@@ -7132,7 +7484,13 @@
             "next_action": "Fresh Codex wrap-up worker owns the remainder of Relay 1.9 through 1.9.9. First ship 1.9.6.2 operational staff routing plus conversational context-card repair: durable primary/supporting named staff over machine owner authority, propagated through resume/updates/communication/status/cards; normal in-chat visuals use the contextual-card surface, while the full control-center/dashboard is only an explicit Open Relay destination. Then continue through coherent 1.9.7, 1.9.8 and 1.9.9 patches as real remaining integration/creative/platform/performance/closure work emerges from canonical state an..."
           }
         }
-      ]
+      ],
+      "pr": 55,
+      "merged_head_sha": "6bb489270a509d83c1783d0b153f3e530416174a",
+      "merge_commit_sha": "de6aee58153b224bd8dd74d564dc21ab950c50dd",
+      "evidence": "PR #55 was already merged from the exact claimed branch relay/1.9-skills-runtime-creative-20260930 as de6aee58153b224bd8dd74d564dc21ab950c50dd on 2026-09-30. The 1.9.6.2–1.9.9 successor patch train is also completed and recorded. This completion reconciles the stale umbrella reservation only; no new source or runtime change is made.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T10:02:32.442Z"
     },
     {
       "id": "relay-1.9.2-source-scale-20260930",
@@ -9128,7 +9486,7 @@
       ],
       "goal": "Fix Relay inline cards that mount as visible ChatGPT MCP App frames in the browser but remain blank on later/remounted renders in the same ordinary chat, despite earlier successful renders.",
       "acceptance": "Reproduce the exact observed browser failure: ordinary ChatGPT browser chat creates the Relay MCP App frame ('Opening Show Relay status card', CSP off) but the card body remains blank, including multiple renders in the same chat after earlier successful cards. Treat visible empty iframe as a lifecycle/runtime failure, not a mount failure. Identify whether the failure is resource fetch/cache identity, ui/initialize sequencing, tool-result delivery timing, host remount/replay behavior, or an unhandled widget JS exception. Add regression coverage for repeated/remounted cards in one conversation and reload/revisit behavior. Card must render approved UI from canonical result on first mount and after browser revisit/remount, without relying on a one-time host notification. Preserve approved design. Rotate resource identity if caching requires it. Ship exact-head tests, deploy, refresh tool metadata, and verify at least three direct ordinary-chat renders plus reopening the same chat still paint. Research findings to encode in the fix: OpenAI's current plugin UI docs require the MCP Apps bridge as primary but still document window.openai.toolOutput/toolInput as compatibility aliases; official issue #195 reproduces ChatGPT web remounting a historical MCP App without re-emitting ontoolresult, leaving it empty after revisit; the current Relay v7 renderer only paints from ui/notifications/tool-result and deliberately removed the compatibility fallback. Add a defensive hydration ladder: standard tool-result notification first, current window.openai.toolOutput if already populated, current window.openai.toolInput for arguments, optional openai:set_globals compatibility subscription, then a bounded read-only self-refresh via tools/call when canonical project/assignment arguments are available. Keep this additive, not host-name branching. Treat resource URI as a cache key and rotate on any HTML/JS/CSS change. Desktop is not categorically unsupported: current OpenAI plugin docs and official example issues demonstrate MCP UI in the native macOS desktop app, so desktop non-mount remains a separate host/client compatibility gate, not an accepted limitation.",
-      "next_action": "Unblock PR #92 by syncing the embedded MCP icon payload/test to the already-committed 1024px PNG on this same active branch, without altering artwork; then rerun CI and continue the v2 card probe deployment.",
+      "next_action": "Superseded by a clean rebuild from current main because PR #92 is now merge-conflicted after unrelated main changes landed.",
       "task_class": "architecture",
       "category": "implementation",
       "labels": [
@@ -9168,25 +9526,40 @@
         "ellis"
       ],
       "base_sha": "63bf9091a7d268c6f176ff444ffc578387510d71",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T08:03:22.446Z",
-      "updated_at": "2026-10-01T09:32:20.196Z",
-      "lease_until": "2026-10-01T21:32:20.196Z"
+      "updated_at": "2026-10-01T09:43:20.464Z",
+      "lease_until": "2026-10-01T21:43:20.464Z",
+      "pr": 90,
+      "merged_head_sha": "6d32e0efbb06568221c1521af735e12aba80691f",
+      "merge_commit_sha": "4b6e80c26fb8589038f9636e8fc2cc9aee89bf50",
+      "evidence": "PR #90 merged the native desktop legacy-bridge bisect on the claimed branch and was deployed as Worker v77. Subsequent experimental commits on the same branch (PR #92/v2 replay) are explicitly superseded and carried forward into queued successor relay-inline-card-v2-final-20261001, so no unmerged intent is lost.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T09:43:20.464Z"
     },
     {
       "id": "relay-2.0-control-center-resource-bust-20261001",
-      "owner": "relay-2.0-control-center-resource-bust-20261001",
+      "owner": "relay-2.0-control-center-resource-bust-retired-20261001",
       "branch": "relay/2.0-control-center-resource-bust-20261001",
       "paths": [
         "src/relay-ui.js",
-        "src/relay-ui.test.js"
+        "src/relay-ui.test.js",
+        "apps/web/src/styles.css",
+        "apps/web/build.mjs",
+        "apps/web/public/brand.js",
+        "apps/web/public/operator-1.8.css",
+        "apps/web/generated-react.js",
+        "apps/web/generated-inspector.js"
       ],
       "resources": [
-        "relay-control-center-resource-identity"
+        "relay-control-center-resource-identity",
+        "relay-react-control-center",
+        "relay-momo-navigation",
+        "relay-repo-icons"
       ],
-      "goal": "Force ChatGPT to load the shipped Relay 2.0 React control center by rotating the MCP App resource identity away from the cached pre-2.0 URI.",
-      "acceptance": "Relay control center uses a fresh ui:// resource URI; resource/read and tool outputTemplate/resourceUri all resolve to it; React mcpHtml remains unchanged; exact-head tests and Runner admission pass; merged exact commit is deployed and the old v2 resource is no longer advertised.",
-      "next_action": "Create the hotfix branch, rotate the control-center resource URI, update its regression test, run CI, merge, deploy, and re-open the control center from the new ChatGPT app.",
+      "goal": "Make ChatGPT load the actual Relay 2.0 React control center instead of its cached legacy v2 resource, and apply the approved Momo navigation/brand typography plus the new repo /icons artwork.",
+      "acceptance": "Rotate the MCP control-center ui:// resource identity so ChatGPT cannot reuse the legacy v2 HTML; the resource body remains the generated React mcpHtml; React Today, Runner and Night Shift are the surfaces mounted in ChatGPT; Relay brand and feature navigation labels use Momo Trust Display; generated feature icon data comes from the canonical repository /icons assets (relay-icon.png, today-icon.png, runner-icon.png, inspector-icon.png, nightshift-icon.png.png); Inspector remains separately available at /inspector; deterministic generated output and exact-head tests pass before merge/deploy.",
+      "next_action": "Rotate the control-center identity to fresh v4; write current-main versions of web source onto the stale branch with Momo brand/navigation overrides; make build.mjs and legacy brand imports source canonical root /icons; patch split generated React/Inspector payloads to the same deterministic icon/CSS output; run generated bridge and exact-head CI, then merge/deploy.",
       "task_class": "maintenance",
       "category": "release",
       "primary_team": "release",
@@ -9196,8 +9569,291 @@
       "base_sha": "9fa0f90ecb3e423c9c27c069a602a9dcf6cd6633",
       "state": "active",
       "created_at": "2026-10-01T09:37:31.270Z",
-      "updated_at": "2026-10-01T09:37:31.270Z",
-      "lease_until": "2026-10-01T21:37:31.270Z"
+      "updated_at": "2026-10-01T17:26:15.760Z",
+      "lease_until": "2026-10-02T05:26:15.760Z",
+      "amendment_count": 3,
+      "amendments": [
+        {
+          "at": "2026-10-01T17:21:10.724Z",
+          "by": "relay-2.0-control-center-resource-bust-retired-20261001",
+          "reason": "Owner has now confirmed the deployed ChatGPT control center is still showing the cached legacy v2 resource while Inspector shows the intended 2.0 content; resume this parked lane for the approved cache-key rotation and presentation corrections.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action",
+            "paths",
+            "resources"
+          ],
+          "before": {
+            "goal": "Force ChatGPT to load the shipped Relay 2.0 React control center by rotating the MCP App resource identity away from the cached pre-2.0 URI.",
+            "acceptance": "Relay control center uses a fresh ui:// resource URI; resource/read and tool outputTemplate/resourceUri all resolve to it; React mcpHtml remains unchanged; exact-head tests and Runner admission pass; merged exact commit is deployed and the old v2 resource is no longer advertised.",
+            "next_action": "Retired/superseded. Keep this branch unmerged; do not resume unless a future approved control-center build explicitly needs a cache-key rotation.",
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js"
+            ],
+            "resources": [
+              "relay-control-center-resource-identity"
+            ]
+          },
+          "after": {
+            "goal": "Make ChatGPT load the actual Relay 2.0 React control center instead of its cached legacy v2 resource, and apply the approved Momo navigation/brand typography plus the new repo /icons artwork.",
+            "acceptance": "Rotate the MCP control-center ui:// resource identity so ChatGPT cannot reuse the legacy v2 HTML; the resource body remains the generated React mcpHtml; React Today, Runner and Night Shift are the surfaces mounted in ChatGPT; Relay brand and feature navigation labels use Momo Trust Display; generated feature icon data comes from the canonical repository /icons assets (relay-icon.png, today-icon.png, runner-icon.png, inspector-icon.png, nightshift-icon.png.png); Inspector remains separately available at /inspector; deterministic generated output and exact-head tests pass before merge/deploy.",
+            "next_action": "Read exact current main/branch files, update the cache URI and React presentation/icon source, regenerate deterministic web payloads on the branch, run exact-head admission/tests, then merge and deploy exact merged source. Verify ChatGPT control center mounts the fresh React resource.",
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js",
+              "apps/web/src/App.tsx",
+              "apps/web/src/styles.css",
+              "apps/web/build.mjs",
+              "apps/web/generated-react.js",
+              "apps/web/generated.js"
+            ],
+            "resources": [
+              "relay-control-center-resource-identity",
+              "relay-react-control-center",
+              "relay-momo-navigation",
+              "relay-repo-icons"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T17:25:44.395Z",
+          "by": "relay-2.0-control-center-resource-bust-retired-20261001",
+          "reason": "Include the preserved Inspector icon bundle in the same owner-approved 2.0 cache-bust so React and Inspector consume one canonical /icons set; drop files that do not require direct edits.",
+          "fields": [
+            "next_action",
+            "paths"
+          ],
+          "before": {
+            "next_action": "Resume the parked cache-bust lane now that the owner confirmed the cached legacy v2 control center is still visible. Reconcile the existing branch to current main, rotate control-center URI, apply Momo brand/nav typography, source feature icons from /icons, regenerate deterministic assets, run exact-head gates, merge and deploy.",
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js",
+              "apps/web/src/App.tsx",
+              "apps/web/src/styles.css",
+              "apps/web/build.mjs",
+              "apps/web/generated-react.js",
+              "apps/web/generated.js"
+            ]
+          },
+          "after": {
+            "next_action": "Rotate the control-center identity to fresh v4; write current-main versions of web source onto the stale branch with Momo brand/navigation overrides; make build.mjs and legacy brand imports source canonical root /icons; patch split generated React/Inspector payloads to the same deterministic icon/CSS output; run generated bridge and exact-head CI, then merge/deploy.",
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js",
+              "apps/web/src/styles.css",
+              "apps/web/build.mjs",
+              "apps/web/public/brand.js",
+              "apps/web/generated-react.js",
+              "apps/web/generated-inspector.js"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T17:26:15.760Z",
+          "by": "relay-2.0-control-center-resource-bust-retired-20261001",
+          "reason": "Apply the same owner-requested Momo Relay/nav typography to the preserved Inspector shell so the two 2.0 surfaces do not diverge.",
+          "fields": [
+            "paths"
+          ],
+          "before": {
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js",
+              "apps/web/src/styles.css",
+              "apps/web/build.mjs",
+              "apps/web/public/brand.js",
+              "apps/web/generated-react.js",
+              "apps/web/generated-inspector.js"
+            ]
+          },
+          "after": {
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js",
+              "apps/web/src/styles.css",
+              "apps/web/build.mjs",
+              "apps/web/public/brand.js",
+              "apps/web/public/operator-1.8.css",
+              "apps/web/generated-react.js",
+              "apps/web/generated-inspector.js"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "relay-inline-card-v2-final-20261001",
+      "owner": "relay-inline-card-v2-final-20261001",
+      "branch": "relay/inline-card-v2-final3-20261001",
+      "paths": [
+        "src/relay-chat-ui.js",
+        "src/relay-chat-ui.test.js",
+        "src/relay-entry.test.js",
+        "docs/relay/CHATGPT_CARD_V9_BOOTSTRAP.md"
+      ],
+      "resources": [
+        "relay-context-card-v9",
+        "relay-chatgpt-bootstrap",
+        "relay-card-size-reporting"
+      ],
+      "goal": "Ship the Relay card v9 non-blocking bootstrap and size-reporting fixes without redesigning the card; preserve the legacy bridge card exactly as the control.",
+      "acceptance": "Rotate the contextual card URI to v9; patch the v8 HTML only at serve time so cardHtml() and the legacy bridge remain unchanged; paint immediately from window.openai globals; run ui/initialize in parallel with a 4s timeout; prefer window.openai.callTool; report ui/notifications/size-changed and notifyIntrinsicHeight; show the host diagnostic line; add immediate-paint and height-reporting regression tests; update the relay-entry v9 URI pins; add docs/relay/CHATGPT_CARD_V9_BOOTSTRAP.md; npm test passes; open one draft PR; do not merge before desktop and browser consumer tests unless the owner overrides.",
+      "next_action": "Draft PR #95 is green on exact head 844842c31c63aaaabd01345d6990bf8ea4bb3943. Temporary Worker v81 bb649fdd-773c-42bf-96e8-d99013e6bc6e is deployed at 100% from that exact commit; prior v80 db38cf73-31b7-41f8-beaf-8d0c87d65757 is the rollback target. Direct relay_render_context_card and relay_show_legacy_bridge_card calls were fired in the current iPhone chat. Await client observations for iPhone, browser, and native desktop; do not merge until those results are recorded unless the owner explicitly overrides.",
+      "task_class": "architecture",
+      "category": "implementation",
+      "tags": [
+        "chatgpt",
+        "mcp-apps",
+        "v2",
+        "inline-card",
+        "bisect"
+      ],
+      "primary_role": "builder",
+      "primary_team": "runner",
+      "supporting_teams": [],
+      "primary_staff": "nico",
+      "supporting_staff": [],
+      "base_sha": "3b1e855e9486a3c034f59db3b53797f45314b2fe",
+      "state": "completed",
+      "created_at": "2026-10-01T09:43:34.029Z",
+      "updated_at": "2026-10-01T16:06:35.666Z",
+      "lease_until": "2026-10-02T04:06:35.666Z",
+      "pr": 95,
+      "merged_head_sha": "844842c31c63aaaabd01345d6990bf8ea4bb3943",
+      "merge_commit_sha": "49c65e21b0776bc12cee8b2aeb9a5a8ac980caa5",
+      "evidence": "PR #95 merged by explicit owner override after all 12 executed CI checks passed; squash merge commit 49c65e21b0776bc12cee8b2aeb9a5a8ac980caa5. Temporary Worker v81 had already deployed the exact green PR head for consumer testing.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T16:06:35.666Z"
+    },
+    {
+      "id": "relay-2.0-approved-visual-port-20261001",
+      "owner": "relay-2.0-generated-split-20261001",
+      "branch": "relay/2.0-approved-visual-port-20261001",
+      "paths": [
+        "apps/web/src/",
+        "apps/web/build.mjs",
+        "apps/web/public/index.html",
+        "apps/web/public/operator.js",
+        "apps/web/public/operator.css",
+        "apps/web/public/operator-1.8.css",
+        "apps/web/test/react.test.mjs",
+        "apps/web/test/browser.test.mjs",
+        "apps/web/test/visual-review.mjs",
+        "apps/web/generated.js",
+        ".github/workflows/ci.yml"
+      ],
+      "resources": [
+        "relay-1.8-1.9-visual-source-of-truth",
+        "relay-2.0-runner-flow",
+        "relay-2.0-night-shift-flow",
+        "relay-universal-header-data-cards",
+        "relay-inspector-human-visual-gate",
+        "relay-pr-preview-evidence"
+      ],
+      "goal": "Port the Relay React experience onto the exact approved 1.8/1.9 visual system while preserving the liked 2.0 Runner and Night Shift content layouts/flows, restoring the old Today flow, adding at least three useful universal header data cards to every primary page, and using Momo Trust Display for headings.",
+      "acceptance": "React uses the preserved 1.8/1.9 CSS/tokens/navigation/surfaces/spacing as its presentation source of truth. Today restores needs-you, work-happening-now, and automatic-checks flow. Runner and Night Shift retain their approved 2.0 content architecture and detail flow but are rendered in the old visual system. Today, Runner, Night Shift, and Inspector each expose at least three meaningful universal header data cards. Major headings use Momo Trust Display; body/control text remains Inter. Before merge, desktop and mobile screenshots for every primary page and Runner detail are captured into Inspector and left pending human approval. Do not merge or deploy without that approval.",
+      "next_action": "PR #94 is merged and visually approved. Deployment is blocked only by the >1 MiB generated.js source-read limit. Packaging successor relay-2.0-generated-split-20261001 owns the remaining build/deploy work; do not alter approved UI.",
+      "task_class": "design",
+      "category": "design",
+      "primary_team": "inspector",
+      "supporting_teams": [
+        "runner",
+        "night-shift",
+        "release"
+      ],
+      "primary_staff": "vivienne",
+      "supporting_staff": [
+        "nico",
+        "julian",
+        "ellis"
+      ],
+      "base_sha": "9809da5c2c0d2f32476a38b3fd7a05c95a5d98c5",
+      "state": "completed",
+      "created_at": "2026-10-01T10:03:17.975Z",
+      "updated_at": "2026-10-01T16:37:38.464Z",
+      "lease_until": "2026-10-02T04:37:38.464Z",
+      "pr": 94,
+      "merged_head_sha": "2edfcb22caacdb59fdbb1237aa88c03f62a55a62",
+      "merge_commit_sha": "75b805fca8fbf089449e8aebbbc64f5f36e6fb1d",
+      "evidence": "User visually approved the Inspector review set. PR #94 merged successfully from exact head 2edfcb22caacdb59fdbb1237aa88c03f62a55a62 as squash merge 75b805fca8fbf089449e8aebbbc64f5f36e6fb1d after all substantive exact-head gates passed. The approved UI work is complete. Production deployment is delegated to packaging successor relay-2.0-generated-split-20261001 because the merged generated.js exceeds GitHub Contents API's 1 MiB per-file source-read limit; successor must not alter approved UI.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T16:37:38.464Z"
+    },
+    {
+      "id": "relay-2.0-generated-split-20261001",
+      "owner": "relay-2.0-generated-split-20261001",
+      "branch": "relay/2.0-generated-split-20261001",
+      "paths": [
+        "apps/web/build.mjs",
+        "apps/web/generated.js",
+        "apps/web/generated-react.js",
+        "apps/web/generated-inspector.js",
+        "apps/web/test/react.test.mjs",
+        ".github/workflows/ci.yml"
+      ],
+      "resources": [
+        "relay-generated-worker-payload",
+        "relay-cloud-upload-source-limit"
+      ],
+      "goal": "Split Relay's deterministic generated Worker payload into multiple imported modules below GitHub Contents API's 1 MiB per-file read limit, without changing the approved rendered UI or runtime behavior.",
+      "acceptance": "generated.js and every imported generated module are each below 1 MiB; total Worker source graph remains below Relay's 2 MiB cap; deterministic build/checks are green; the rendered React/Inspector output remains byte-equivalent in behavior; Cloud upload can read and upload the exact merged commit.",
+      "next_action": "Create a clean branch from merged PR #94 commit 75b805fca8fbf089449e8aebbbc64f5f36e6fb1d, split build output deterministically, run exact-head gates, merge, deploy exact merge commit, then complete both the packaging successor and parent visual-port assignment.",
+      "task_class": "maintenance",
+      "category": "release",
+      "primary_team": "release",
+      "supporting_teams": [
+        "inspector"
+      ],
+      "primary_staff": "julian",
+      "supporting_staff": [
+        "vivienne"
+      ],
+      "base_sha": "052226572801e786b5b2515b8913f8944fb84e0a",
+      "state": "completed",
+      "created_at": "2026-10-01T16:37:53.414Z",
+      "updated_at": "2026-10-01T16:48:50.368Z",
+      "lease_until": "2026-10-02T04:48:50.368Z",
+      "pr": 97,
+      "merged_head_sha": "86d02fbaad48e19811bb930452ba561931d26983",
+      "merge_commit_sha": "e6e7b58df71a8ea34600b803d415c41c34110270",
+      "evidence": "Packaging-only PR #97 merged after all exact-head gates passed on head 86d02fbaad48e19811bb930452ba561931d26983. Squash merge commit e6e7b58df71a8ea34600b803d415c41c34110270. Deterministic generated payload split into apps/web/generated.js (1,095 bytes), generated-react.js (772,368 bytes), and generated-inspector.js (497,037 bytes), all below GitHub Contents API's 1 MiB per-file source-read limit and within Relay's total Worker graph cap. Undeployed validation upload from branch head succeeded as Worker version 82, proving import-graph source upload. Exact merged commit uploaded as Worker version 83 id 8ea489f2-4fec-4f61-98d2-07ef68dece42 and deployed at 100% under deployment e462bdf7-f2b2-480b-b3f3-0a669ac42c76. Cloud readback confirms exact commit annotation and 100% traffic. Authenticated production browser opened https://relay.loew.fi/#/today with title 'relay 2.0'; Inspector production evidence vis_466b7171-72f6-49b8-a74c-a4d1be2e3640 captures the live approved UI.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T16:48:50.368Z"
+    },
+    {
+      "id": "relay-mcp-minimal-probe-20261001",
+      "owner": "relay-mcp-minimal-probe-20261001",
+      "branch": "relay/mcp-minimal-probe-20261001",
+      "paths": [
+        "src/relay-v2-probe.js"
+      ],
+      "resources": [
+        "relay-mcp-minimal-probe"
+      ],
+      "goal": "Create a minimal MCP App host probe that isolates ChatGPT mounting from Relay card complexity and oversized structuredContent.",
+      "acceptance": "Use the existing extension resource hook only; advertise a fresh static ui:// Relay probe resource on a small read-only Relay tool result; return no Runner assignment dump; resource renders static text without custom handshake, window.openai dependency, self-refresh, or Relay card design; preserve current v9 and legacy cards untouched; exact-head tests/CI pass; deploy temporary exact-head Worker for cross-client consumer test before merge.",
+      "next_action": "PR #96 exact head e4080bbb2ac30b7f51fb5716fd685d9d4683c8b2 is fully green and contains the static minimal-v2 host probe with both nested ui.resourceUri and flat ui/resourceUri metadata. Temporary Worker upload is blocked only because relay_cloud_upload_version cannot read the current oversized apps/web/generated.js. Wait for the owning release lane's fully green PR #97 generated-payload split to merge, then cut/rebase this probe from repaired main, rerun CI, upload/deploy temporarily, and invoke assignment-scoped relay_runner_progress across iPhone/web/native desktop. Do not modify or merge PR #97 from this lane.",
+      "task_class": "maintenance",
+      "category": "qa-verification",
+      "tags": [
+        "chatgpt",
+        "mcp-apps",
+        "probe",
+        "inline-ui",
+        "host"
+      ],
+      "primary_role": "builder",
+      "primary_team": "runner",
+      "supporting_teams": [],
+      "primary_staff": "nico",
+      "supporting_staff": [],
+      "base_sha": "a79bc74350e003b53f39cac066cd044e27651a07",
+      "state": "held",
+      "created_at": "2026-10-01T16:38:20.309Z",
+      "updated_at": "2026-10-01T16:48:32.059Z",
+      "lease_until": "2026-10-02T04:48:32.059Z"
     }
   ],
   "migrated_from": "loew-inspector"

@@ -5,7 +5,7 @@ import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, RELAY_STATUS_CARD_URI,
 test("Relay publishes one versioned compact MCP card resource", () => {
   const descriptor = relayContextCardDescriptor();
   const resource = relayContextCardResource();
-  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v8.html");
+  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v9.html");
   assert.equal(descriptor.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.mimeType, "text/html;profile=mcp-app");
@@ -14,7 +14,9 @@ test("Relay publishes one versioned compact MCP card resource", () => {
   assert.match(resource.text, /qa-media/);
   assert.match(resource.text, /ui\/initialize/);
   assert.match(resource.text, /ui\/notifications\/initialized/);
-  assert.doesNotMatch(resource.text, /notifyIntrinsicHeight/);
+  assert.match(resource.text, /ui\/notifications\/size-changed/);
+  assert.match(resource.text, /notifyIntrinsicHeight/);
+  assert.match(resource.text, /id="diag"/);
   assert.match(resource.text, /openai:set_globals/);
   assert.match(resource.text, /toolOutput/);
   assert.match(resource.text, /relay_runner_progress/);
@@ -342,5 +344,48 @@ test('historical remount self-recovers once from canonical progress when the hos
     assert.equal(calls.length,1);
     assert.equal(calls[0].name,'relay_runner_progress');
     assert.deepEqual(calls[0].arguments,{project:'relay'});
+  } finally {await browser.close()}
+});
+
+
+test('v9 card paints from ChatGPT globals immediately when the host never answers ui/initialize', async () => {
+  const {chromium}=await import('playwright');
+  const browser=await chromium.launch({headless:true});
+  try {
+    const page=await browser.newPage();
+    await page.addInitScript(()=>{window.openai={toolInput:{project:'relay'},toolOutput:{project:'relay',claim:{primary_staff:'nico',goal:'Immediate paint proof',state:'active'}}}});
+    const widgetUrl='data:text/html,'+encodeURIComponent(relayContextCardResource().text);
+    await page.setContent(`<!doctype html><iframe id="widget" src="${widgetUrl}"></iframe>`);
+    const frame=page.frameLocator('#widget');
+    await frame.locator('#title').filter({hasText:'Immediate paint proof'}).waitFor({timeout:3000});
+    assert.match(await frame.locator('#diag').textContent(),/globals yes/);
+  } finally {await browser.close()}
+});
+
+test('v9 card reports its height with ui/notifications/size-changed and shows handshake diagnostics', async () => {
+  const {chromium}=await import('playwright');
+  const browser=await chromium.launch({headless:true});
+  try {
+    const page=await browser.newPage();
+    const widgetUrl='data:text/html,'+encodeURIComponent(relayContextCardResource().text);
+    await page.setContent(`<!doctype html><script>
+      window.sizes=[];
+      window.addEventListener('message',event=>{
+        const frame=document.getElementById('widget');
+        const message=event.data;
+        if(event.source!==frame?.contentWindow||message?.jsonrpc!=='2.0')return;
+        if(message.method==='ui/notifications/size-changed')window.sizes.push(message.params);
+        if(message.method==='ui/initialize'){
+          frame.contentWindow.postMessage({jsonrpc:'2.0',id:message.id,result:{protocolVersion:'2026-01-26'}},'*');
+        } else if(message.method==='ui/notifications/initialized'){
+          frame.contentWindow.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-input',params:{project:'relay'}},'*');
+          frame.contentWindow.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:{structuredContent:{project:'relay',claim:{primary_staff:'julian',goal:'Height report proof',state:'active'}}}},'*');
+        }
+      });
+    <\/script><iframe id="widget" src="${widgetUrl}"></iframe>`);
+    const frame=page.frameLocator('#widget');
+    await frame.locator('#title').filter({hasText:'Height report proof'}).waitFor();
+    await page.waitForFunction(()=>window.sizes.some(size=>size.height>0));
+    await frame.locator('#diag').filter({hasText:/handshake ok/}).waitFor();
   } finally {await browser.close()}
 });
