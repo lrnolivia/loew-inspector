@@ -1,5 +1,5 @@
 import { glyph } from "../../../packages/shared-ui/glyphs.js";
-import { brand } from "./brand.js";
+import { brand, featureAccent } from "./brand.js";
 import { iconSlot, hydrateProjectIcons } from "./project-icons.js";
 import { openQa } from "./qa.js";
 import { loadNightShift } from "../../../features/night-shift/view.js";
@@ -22,54 +22,31 @@ let selectedProject = null;
 const projectCache = new Map();
 
 const navigation = {
-  today: ["today", "current focus", "today"],
-  projects: ["runner", "projects & coordination", "projects"],
-  review: ["inspector", "review & evidence", "review"],
-  "night-shift": ["night shift", "unattended activity", "moon"]
-};
-
-const overview = {
-  today: ["relay", "live workspace", "Observed work, decisions and automatic checks"],
-  projects: ["runner", "observed execution", "Runner, GitHub and Cloud evidence"],
-  review: ["inspector", "evidence queue", "Project-scoped visual review and QA"],
-  "night-shift": ["night shift", "unattended activity", "Automatic work and its latest result"]
+  today: ["today", "focus", "today"],
+  projects: ["runner", "coordinate", "runner"],
+  review: ["inspector", "review", "inspector"],
+  "night-shift": ["night shift", "monitor", "night-shift"]
 };
 
 nav.forEach(button => {
-  const [label, detail, icon] = navigation[button.dataset.nav];
+  const [label, detail, feature] = navigation[button.dataset.nav];
   button.setAttribute("aria-label", label);
-  const tool = button.dataset.nav === "projects" ? "runner" : button.dataset.nav === "review" ? "inspector" : null;
-  button.innerHTML = '<span class="glyph-chip">' + (tool ? '<img class="tool-mark" src="' + brand[tool] + '" alt="">' : glyph(icon)) + '</span><span class="nav-copy"><strong>' + label + '</strong><small>' + detail + '</small></span><span class="nav-chevron">' + glyph("next") + '</span>';
+  button.dataset.feature = feature;
+  button.style.setProperty("--feature-accent", featureAccent[feature] || featureAccent.relay);
+  button.innerHTML = '<span class="glyph-chip"><img class="tool-mark" src="' + brand[feature] + '" alt=""></span><span class="nav-copy"><strong>' + label + '</strong><small>' + detail + '</small></span><span class="nav-chevron">' + glyph("next") + '</span>';
 });
 
-pages.forEach(page => {
-  const heading = page.querySelector(".page-heading");
-  const key = page.dataset.page;
-  const [kicker, title, detail] = overview[key];
-  const system = key === "review" ? "inspector" : key === "projects" ? "runner" : null;
-  const line = document.createElement("div");
-  line.className = "page-statusline";
-  line.setAttribute("aria-label", "Current view");
-  line.innerHTML = '<div class="page-statusline-copy">' +
-    (system ? '<span class="subsystem-context"><img src="' + brand[system] + '" alt=""><span>' + kicker + '</span></span>' : '<span class="page-status-kicker">' + kicker + '</span>') +
-    '<strong data-flow-label>' + title + '</strong></div><span class="page-overview-detail">' + detail + '</span>';
-  heading.after(line);
+document.querySelectorAll("[data-feature-icon]").forEach(image => {
+  const feature = image.dataset.featureIcon;
+  image.src = brand[feature] || brand.relay;
+});
+document.querySelectorAll(".feature-heading").forEach(heading => {
+  const feature = heading.dataset.feature || "relay";
+  heading.style.setProperty("--feature-accent", featureAccent[feature] || featureAccent.relay);
 });
 
-function setFlow(phase, label) {
-  const page = pages.find(item => !item.hidden);
-  if (!page) return;
-  const line = page.querySelector(".page-statusline");
-  if (!line) return;
-  line.dataset.phase = phase;
-  const target = line.querySelector("[data-flow-label]");
-  if (target && label) target.textContent = label;
-}
-
-function setOverviewDetail(label) {
-  const page = pages.find(item => !item.hidden);
-  const detail = page?.querySelector(".page-overview-detail");
-  if (detail && label) detail.textContent = label;
+if (appSettings) {
+  appSettings.querySelector(".utility-icon").innerHTML = glyph("settings");
 }
 
 function route() {
