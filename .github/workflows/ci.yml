@@ -91,21 +91,6 @@ jobs:
           name: relay-website-${{ github.event.pull_request.number }}
           path: apps/web/qa-evidence/website/
           if-no-files-found: error
-      - name: Diagnose authenticated production API on repair branch
-        if: startsWith(github.head_ref, 'relay/website-2.0-repair-')
-        env:
-          CF_ACCESS_CLIENT_ID: ${{ vars.CF_ACCESS_CLIENT_ID }}
-          CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF }}
-          EXPECTED_SOURCE_SHA: ${{ github.sha }}
-          DIAGNOSE_ONLY: 'true'
-        run: node apps/web/verify-production.mjs
-      - name: Preserve production API diagnostic
-        if: always() && startsWith(github.head_ref, 'relay/website-2.0-repair-')
-        uses: actions/upload-artifact@v4
-        with:
-          name: relay-website-diagnostic-${{ github.event.pull_request.number }}
-          path: qa-evidence/production/
-          if-no-files-found: error
   visual-review-preview:
     needs: quality
     if: github.event_name == 'pull_request' && github.event.pull_request.draft == true && startsWith(github.head_ref, 'relay/2.0-approved-visual-port-')
