@@ -24,7 +24,7 @@ test("Inspector camera math mirrors Field input semantics", () => {
   assert.ok(wheelZoomFactor({ deltaMode: 0, deltaY: -12, metaKey: false }) > 1);
 });
 
-test("preserved Inspector surface works at /inspector, including mobile, deep links and exact review saves", async () => {
+test("preserved legacy components and Inspector review support mobile, deep links and exact saves", async () => {
   let review = null;
   let heldPath = "";
   let releaseLoading;
@@ -76,6 +76,12 @@ test("preserved Inspector surface works at /inspector, including mobile, deep li
   const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, "http://localhost");
     const send = body => { res.setHeader("Content-Type", "application/json"); res.end(JSON.stringify(body)); };
+    // Isolate legacy component coverage from the real website navigation. The
+    // production /inspector route may never host legacy Today/Runner bodies.
+    if (url.pathname === "/legacy-components") {
+      res.setHeader("Content-Type", "text/html");
+      return res.end(webAssets["/inspector"].text.replace(/<script data-relay-inspector-navigation>[\s\S]*?<\/script>/, ""));
+    }
     const asset = webAssets[url.pathname];
     if (asset) { res.setHeader("Content-Type", asset.type); return res.end(asset.text); }
     if (url.pathname === "/host") { res.setHeader("Content-Type", "text/html"); return res.end('<iframe id="app" style="width:100%;height:900px;border:0"></iframe>'); }
@@ -107,7 +113,7 @@ test("preserved Inspector surface works at /inspector, including mobile, deep li
       let view = page;
       if (mode === "web") {
         hold("/api/workers");
-        await page.goto(origin + "/inspector#today");
+        await page.goto(origin + "/legacy-components#today");
         await view.locator("#today-work .content-skeleton").waitFor();
         assert.equal(await view.locator("#today-attention .content-skeleton").getAttribute("role"), "status");
         assert.equal(await view.locator("#operator-connection").evaluate(node => getComputedStyle(node, "::before").position), "static");
@@ -355,7 +361,7 @@ test("preserved Inspector surface works at /inspector, including mobile, deep li
         assert.equal(await page.locator("html").getAttribute("data-theme"), "dark", "Manual choice survives reload and overrides system light");
         await page.evaluate(() => localStorage.removeItem("relay-theme"));
         await page.emulateMedia({ colorScheme: "dark" });
-        await page.goto(origin + "/inspector#projects?project=relay");
+        await page.goto(origin + "/legacy-components#projects?project=relay");
         await page.locator("#project-detail").filter({ hasText: "Complete consolidation" }).waitFor();
         assert.equal(await page.getByRole("tab", { name: "relay", exact: true }).getAttribute("aria-selected"), "true");
         await page.screenshot({ path: "/tmp/relay-b4-dark.png" });

@@ -1,6 +1,7 @@
 name: Relay workspace checks
 
 on:
+  workflow_dispatch:
   pull_request:
     paths:
       - 'apps/**'
@@ -33,6 +34,34 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  website-production:
+    name: verify actual deployed website
+    needs: quality
+    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, 'Repair actual Relay website'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      CF_ACCESS_CLIENT_ID: ${{ vars.CF_ACCESS_CLIENT_ID }}
+      CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF }}
+      EXPECTED_SOURCE_SHA: ${{ github.sha }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: npm run build
+      - name: Verify exact live source and capture actual website pages
+        run: node apps/web/verify-production.mjs
+      - name: Preserve production screenshots and receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relay-website-production-${{ github.sha }}
+          path: qa-evidence/production/
+          if-no-files-found: error
   quality:
     name: quality
     runs-on: ubuntu-latest
@@ -55,6 +84,13 @@ jobs:
         run: npm run typecheck:2.0 --workspace @relay/web
       - name: Run workspace, contract, API, browser and React tests
         run: npm test
+      - name: Preserve actual website route screenshots
+        if: always() && startsWith(github.head_ref, 'relay/website-2.0-repair-')
+        uses: actions/upload-artifact@v4
+        with:
+          name: relay-website-${{ github.event.pull_request.number }}
+          path: apps/web/qa-evidence/website/
+          if-no-files-found: error
   visual-review-preview:
     needs: quality
     if: github.event_name == 'pull_request' && github.event.pull_request.draft == true && startsWith(github.head_ref, 'relay/2.0-approved-visual-port-')

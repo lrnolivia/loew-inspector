@@ -34,7 +34,7 @@ export function NightShiftPage() {
   return (
     <div className="page operator-page react-page">
       <FeatureHeader feature="night-shift" title="night shift" subtitle="monitor" />
-      <SignalDeck cards={cards} />
+      <SignalDeck cards={cards} feature="night-shift" />
       <section className="operator-section">
         <div className="section-heading"><h2>while you were away</h2><span>{results.length} results on record</span></div>
         <div className="night-list">
