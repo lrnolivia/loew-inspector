@@ -89,14 +89,42 @@
         <strong id="review-count"></strong>
       </header>
 
-      <div id="review-filters" class="review-filters" role="group" aria-label="inspector filter">
-        <button type="button" class="active" data-review-mode="needs">needs review</button>
-        <button type="button" data-review-mode="all">all</button>
-      </div>
+      <section class="operator-section inspector-card-studio" aria-labelledby="chat-card-heading">
+        <div class="section-heading inspector-card-heading">
+          <div>
+            <h2 id="chat-card-heading">chat cards</h2>
+            <span>the compact Relay surfaces that should appear inside ChatGPT</span>
+          </div>
+          <span class="preview-badge">preview</span>
+        </div>
+        <div id="chat-card-tabs" class="chat-card-tabs" role="tablist" aria-label="Chat card preview"></div>
+        <div id="chat-card-preview" class="chat-card-stage" aria-live="polite"></div>
+      </section>
 
-      <div id="review-list" class="review-list" aria-live="polite">
+      <section class="operator-section inspector-review-queue" aria-labelledby="review-queue-heading">
+        <div class="section-heading">
+          <div>
+            <h2 id="review-queue-heading">evidence review</h2>
+            <span>screens and captures waiting for your call</span>
+          </div>
+        </div>
+        <div class="review-toolbar">
+          <div id="review-filters" class="review-filters" role="group" aria-label="inspector filter">
+            <button type="button" class="active" data-review-mode="needs">needs review</button>
+            <button type="button" data-review-mode="completed">completed</button>
+            <button type="button" data-review-mode="stale">stale</button>
+            <button type="button" data-review-mode="archived">archived</button>
+            <button type="button" data-review-mode="all">all</button>
+          </div>
+          <div class="review-bulk-actions" aria-label="inspector review actions">
+            <button type="button" data-review-bulk="clear-stale">clear stale</button>
+          </div>
+        </div>
 
-      </div>
+        <div id="review-list" class="review-list" aria-live="polite">
+
+        </div>
+      </section>
     </section>
     <section class="operator-page" data-page="night-shift" hidden>
       <header class="page-heading feature-heading" data-feature="night-shift"><img class="feature-mark" data-feature-icon="night-shift" alt=""><div class="feature-heading-copy"><h1>night shift</h1><p>monitor</p></div></header>

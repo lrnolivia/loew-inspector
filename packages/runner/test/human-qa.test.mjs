@@ -32,13 +32,16 @@ test("QA review keeps known answers and rejects invalid verdicts", () => {
   const review = normalizeQaReview({
     answers: { intent: "yes", ignored: "no" },
     overall: "looks_good",
-    notes: "ship it"
+    notes: "ship it",
+    disposition: "completed"
   }, questions, "2026-09-30T12:00:00.000Z");
 
   assert.deepEqual(review.answers, { intent: "yes" });
   assert.equal(review.overall, "looks_good");
+  assert.equal(review.disposition, "completed");
   assert.equal(review.updated_at, "2026-09-30T12:00:00.000Z");
   assert.throws(() => normalizeQaReview({ overall: "perfect" }, questions), /verdict/);
+  assert.throws(() => normalizeQaReview({ disposition: "deleted" }, questions), /disposition/);
 });
 
 test("frame policy blocks cross-origin SAMEORIGIN previews", () => {

@@ -5,12 +5,15 @@ import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, relayContextCardDescri
 test("Relay publishes one versioned compact MCP card resource", () => {
   const descriptor = relayContextCardDescriptor();
   const resource = relayContextCardResource();
-  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v5.html");
+  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v6.html");
   assert.equal(descriptor.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.mimeType, "text/html;profile=mcp-app");
   assert.match(resource.text, /observed progress|runner/i);
   assert.match(resource.text, /open relay/i);
+  assert.match(resource.text, /qa-media/);
+  assert.match(resource.text, /notifyIntrinsicHeight/);
+  assert.deepEqual(resource._meta.ui.csp.resourceDomains,['https://relay.loew.fi']);
 });
 
 test("contextual tool metadata is additive and keeps schemas intact", () => {
@@ -34,6 +37,8 @@ test("dedicated launcher owns the MCP Apps mount contract", () => {
   assert.equal(tool.annotations.readOnlyHint,true);
   assert.equal(tool.inputSchema.additionalProperties,false);
   assert.deepEqual(validateRelayContextCardArguments({project:"relay",assignment:"relay-1.9.9-chatgpt-native-experience-20261001"}),{project:"relay",assignment:"relay-1.9.9-chatgpt-native-experience-20261001"});
+  assert.deepEqual(validateRelayContextCardArguments({project:"relay",evidence_id:"vis_abcdefgh",show_qa:true}),{project:"relay",evidence_id:"vis_abcdefgh",show_qa:true});
+  assert.throws(()=>validateRelayContextCardArguments({project:"relay",evidence_id:"bad"}),/Invalid card evidence id/);
   assert.throws(()=>validateRelayContextCardArguments({project:"relay",surprise:true}),/Unsupported card argument/);
 });
 
@@ -73,6 +78,7 @@ test('card actually initializes and receives results without browser-global elem
       await page.goto('data:text/html,'+encodeURIComponent(relayContextCardResource().text));
       if(bridge==='mcp') await page.evaluate(()=>window.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:{structuredContent:{project:'relay',claim:{primary_staff:'julian',supporting_staff:['roman'],goal:'Staff routing is ready',state:'active'}}}},'*'));
       await assert.doesNotReject(page.locator('#title').filter({hasText:'Staff routing is ready'}).waitFor());
+      assert.equal(await page.locator('#qa-media').isHidden(),true);
       assert.equal(await page.locator('#team').textContent(),'Julian');
       assert.equal(await page.locator('#staff').getAttribute('title'),'Julian with Roman');
       assert.deepEqual(errors,[]);
@@ -146,4 +152,32 @@ test('feature identity drives the giant-notification header and pertinent metric
   assert.equal(verification.feature,'inspector');
   assert.equal(verification.metric,'2/2');
   assert.equal(verification.metric_label,'checks reported');
+});
+
+
+test('card can reuse the latest stored Inspector QA screenshot and reports intrinsic height', async () => {
+  const {chromium}=await import('playwright');
+  const browser=await chromium.launch({headless:true});
+  try {
+    const page=await browser.newPage();
+    await page.addInitScript(() => {
+      window.openai={
+        toolInput:{project:'relay',show_qa:true},
+        toolOutput:{project:'relay',claim:{primary_staff:'julian',goal:'Visual proof is ready',state:'active'}},
+        notifyIntrinsicHeight:height=>{window.reportedHeight=height},
+        callTool:async(name,args)=>{
+          if(name!=='relay_ui_request') return {};
+          if(args.path==='/api/visual?project=relay') return {structuredContent:{status:200,body:{evidence:[{evidence_id:'vis_abcdefgh',step_label:'Relay card preview'}]}}};
+          if(args.path==='/api/visual/vis_abcdefgh/image') return {structuredContent:{status:200,content_type:'image/png',base64:'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9WlQZQAAAABJRU5ErkJggg=='}};
+          return {structuredContent:{status:404}};
+        }
+      };
+    });
+    await page.goto('data:text/html,'+encodeURIComponent(relayContextCardResource().text));
+    await page.locator('#qa-media').waitFor({state:'visible'});
+    assert.equal(await page.locator('#qa-media-id').textContent(),'vis_abcdefgh');
+    assert.equal(await page.locator('#qa-media-caption').textContent(),'Relay card preview');
+    assert.match(await page.locator('#qa-media-image').getAttribute('src'),/^data:image\/png;base64,/);
+    await page.waitForFunction(()=>Number(window.reportedHeight)>0);
+  } finally { await browser.close(); }
 });
