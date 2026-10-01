@@ -15,6 +15,7 @@ const toast = document.querySelector("#operator-toast");
 const projectTabs = document.querySelector("#project-tabs");
 const projectDetail = document.querySelector("#project-detail");
 const appSettings = document.querySelector("#app-settings");
+const sidebar = document.querySelector(".operator-topbar");
 
 let toastTimer = null;
 let projectIds = [];
@@ -48,6 +49,22 @@ document.querySelectorAll(".feature-heading").forEach(heading => {
 if (appSettings) {
   appSettings.querySelector(".utility-icon").innerHTML = glyph("settings");
 }
+
+function setShellMotion(direction) {
+  if (!sidebar || window.innerWidth <= 900) return;
+  document.body.dataset.shellMotion = direction;
+}
+
+sidebar?.addEventListener("pointerenter", () => setShellMotion("expand"));
+sidebar?.addEventListener("pointerleave", () => {
+  if (!sidebar.contains(document.activeElement)) setShellMotion("collapse");
+});
+sidebar?.addEventListener("focusin", () => setShellMotion("expand"));
+sidebar?.addEventListener("focusout", () => {
+  requestAnimationFrame(() => {
+    if (!sidebar.contains(document.activeElement)) setShellMotion("collapse");
+  });
+});
 
 function setFlow(phase) {
   document.body.dataset.flow = phase || "orient";
