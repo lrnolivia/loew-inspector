@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T06:33:20.314Z",
+  "updated_at": "2026-10-01T06:40:21.037Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5398,7 +5398,7 @@
       "owner": "relay-chatgpt-card-host-mount-followup-20261001",
       "goal": "Isolate why ChatGPT visibly mounts Relay's control-center MCP App UI but does not visibly mount relay_render_context_card, even with the current v6 launcher schema/resource and successful tool execution.",
       "acceptance": "Produce a source-level and consumer-level comparison of the working relay_ui_control_center mount path versus relay_render_context_card: descriptor metadata, resource registration/URI, tool result shape, openai/ui metadata, invocation path, and host-facing response envelope. Prove one of: (a) a Relay-side contract mismatch and fix it with a fresh visible consumer smoke, or (b) a ChatGPT host/invocation-path limitation with current official MCP Apps contract satisfied. Do not alter visual CSS or card composition unless the root cause is actually rendering inside a successfully mounted iframe.",
-      "next_action": "After 1.9.9 release work is frozen, compare relay_ui_control_center and relay_render_context_card end-to-end from tool listing through resource fetch and host invocation. Use the already observed facts as fixtures: control-center has mounted visibly before; v6 context-card schema is fresh; Worker v72 is live; exact renderer calls succeed; user sees no inline card. Test direct MCP Apps invocation outside nested orchestration if available. Keep this as a host-integration investigation, not a design task.",
+      "next_action": "Native-registration experiment is shipped. PR #85 exact head 62d85ffea0d66dd63e077b5a05d02f68c3c9e4bb passed tests and Runner admission, squash-merged as 7de82e4b12e7f53c62c31bb7261e3deb8e934685, uploaded as Relay Worker v73 version f2375909-ad52-41c2-823a-0c015abeeab6 and deployed at 100% via e35f66ab-8abe-4763-a6e1-3d7ff900f197. relay_render_context_card and its v6 resource now register/call through the same native src/index.js MCP path as relay_ui_control_center; relay-entry no longer injects/intercepts the card. Generic data tools remain contextually human-shaped but no longer advertise the card UI template; only the dedicated render tool owns _meta.ui.resourceUri, matching current OpenAI MCP Apps guidance. Next gate: refresh the Relay app/tool catalog and run one visible relay_render_context_card smoke. If no card appears, compare the refreshed native card call against a refreshed relay_ui_control_center call in the same conversation; if both fail to mount through the connector path, classify the remaining issue as ChatGPT invocation-host forwarding rather than Relay registration.",
       "paths": [
         "src/relay-chat-ui.js",
         "src/relay-ui.js",
@@ -5448,7 +5448,25 @@
         "nico"
       ],
       "state": "claimed",
-      "created_at": "2026-10-01T06:25:37.158Z"
+      "created_at": "2026-10-01T06:25:37.158Z",
+      "updated_at": "2026-10-01T06:40:21.037Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T06:40:21.037Z",
+          "by": "relay-chatgpt-card-host-mount-followup-20261001",
+          "reason": "Record the merged/deployed native registration experiment and the exact remaining consumer test.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Move the context-card launcher/resource into the same native MCP server registration path as the control center, while preserving the v6 UI contract and outer 1.9 extension version patching. The current official OpenAI MCP Apps contract only requires a registered text/html;profile=mcp-app resource plus _meta.ui.resourceUri on the render tool; Relay already satisfies that contract, so the one meaningful implementation difference to eliminate is wrapper-injected registration versus control-center native registration. Add native card tool/resource/list/read/call handling in src/index.js, make ..."
+          },
+          "after": {
+            "next_action": "Native-registration experiment is shipped. PR #85 exact head 62d85ffea0d66dd63e077b5a05d02f68c3c9e4bb passed tests and Runner admission, squash-merged as 7de82e4b12e7f53c62c31bb7261e3deb8e934685, uploaded as Relay Worker v73 version f2375909-ad52-41c2-823a-0c015abeeab6 and deployed at 100% via e35f66ab-8abe-4763-a6e1-3d7ff900f197. relay_render_context_card and its v6 resource now register/call through the same native src/index.js MCP path as relay_ui_control_center; relay-entry no longer injects/intercepts the card. Generic data tools remain contextually human-shaped but no longer advertise..."
+          }
+        }
+      ]
     },
     {
       "id": "relay-2.0-today-runner-react-slice-20261001",
@@ -8225,7 +8243,7 @@
       ],
       "goal": "Isolate why ChatGPT visibly mounts Relay's control-center MCP App UI but does not visibly mount relay_render_context_card, even with the current v6 launcher schema/resource and successful tool execution.",
       "acceptance": "Produce a source-level and consumer-level comparison of the working relay_ui_control_center mount path versus relay_render_context_card: descriptor metadata, resource registration/URI, tool result shape, openai/ui metadata, invocation path, and host-facing response envelope. Prove one of: (a) a Relay-side contract mismatch and fix it with a fresh visible consumer smoke, or (b) a ChatGPT host/invocation-path limitation with current official MCP Apps contract satisfied. Do not alter visual CSS or card composition unless the root cause is actually rendering inside a successfully mounted iframe.",
-      "next_action": "Move the context-card launcher/resource into the same native MCP server registration path as the control center, while preserving the v6 UI contract and outer 1.9 extension version patching. The current official OpenAI MCP Apps contract only requires a registered text/html;profile=mcp-app resource plus _meta.ui.resourceUri on the render tool; Relay already satisfies that contract, so the one meaningful implementation difference to eliminate is wrapper-injected registration versus control-center native registration. Add native card tool/resource/list/read/call handling in src/index.js, make relay-entry avoid replacing a native card definition, test protocol parity, then deploy and run a fresh direct consumer smoke.",
+      "next_action": "Native-registration experiment is shipped. PR #85 exact head 62d85ffea0d66dd63e077b5a05d02f68c3c9e4bb passed tests and Runner admission, squash-merged as 7de82e4b12e7f53c62c31bb7261e3deb8e934685, uploaded as Relay Worker v73 version f2375909-ad52-41c2-823a-0c015abeeab6 and deployed at 100% via e35f66ab-8abe-4763-a6e1-3d7ff900f197. relay_render_context_card and its v6 resource now register/call through the same native src/index.js MCP path as relay_ui_control_center; relay-entry no longer injects/intercepts the card. Generic data tools remain contextually human-shaped but no longer advertise the card UI template; only the dedicated render tool owns _meta.ui.resourceUri, matching current OpenAI MCP Apps guidance. Next gate: refresh the Relay app/tool catalog and run one visible relay_render_context_card smoke. If no card appears, compare the refreshed native card call against a refreshed relay_ui_control_center call in the same conversation; if both fail to mount through the connector path, classify the remaining issue as ChatGPT invocation-host forwarding rather than Relay registration.",
       "task_class": "architecture",
       "category": "qa-verification",
       "labels": [
@@ -8262,8 +8280,25 @@
       "base_sha": "2ebe056b29cf7a333e9209cbd475ab9e68de1f55",
       "state": "active",
       "created_at": "2026-10-01T06:28:06.664Z",
-      "updated_at": "2026-10-01T06:32:09.903Z",
-      "lease_until": "2026-10-01T18:32:09.903Z"
+      "updated_at": "2026-10-01T06:40:21.037Z",
+      "lease_until": "2026-10-01T18:40:21.037Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T06:40:21.037Z",
+          "by": "relay-chatgpt-card-host-mount-followup-20261001",
+          "reason": "Record the merged/deployed native registration experiment and the exact remaining consumer test.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Move the context-card launcher/resource into the same native MCP server registration path as the control center, while preserving the v6 UI contract and outer 1.9 extension version patching. The current official OpenAI MCP Apps contract only requires a registered text/html;profile=mcp-app resource plus _meta.ui.resourceUri on the render tool; Relay already satisfies that contract, so the one meaningful implementation difference to eliminate is wrapper-injected registration versus control-center native registration. Add native card tool/resource/list/read/call handling in src/index.js, make ..."
+          },
+          "after": {
+            "next_action": "Native-registration experiment is shipped. PR #85 exact head 62d85ffea0d66dd63e077b5a05d02f68c3c9e4bb passed tests and Runner admission, squash-merged as 7de82e4b12e7f53c62c31bb7261e3deb8e934685, uploaded as Relay Worker v73 version f2375909-ad52-41c2-823a-0c015abeeab6 and deployed at 100% via e35f66ab-8abe-4763-a6e1-3d7ff900f197. relay_render_context_card and its v6 resource now register/call through the same native src/index.js MCP path as relay_ui_control_center; relay-entry no longer injects/intercepts the card. Generic data tools remain contextually human-shaped but no longer advertise..."
+          }
+        }
+      ]
     }
   ],
   "migrated_from": "loew-inspector"
