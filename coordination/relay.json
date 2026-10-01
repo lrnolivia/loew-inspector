@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T10:03:17.975Z",
+  "updated_at": "2026-10-01T10:12:43.384Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -9354,67 +9354,6 @@
       "lease_until": "2026-10-01T22:03:05.077Z"
     },
     {
-      "id": "relay-inline-card-v2-final-20261001",
-      "owner": "relay-inline-card-v2-final-20261001",
-      "branch": "relay/inline-card-v2-final3-20261001",
-      "paths": [
-        "src/relay-chat-ui.js",
-        "src/relay-chat-ui.test.js",
-        "src/relay-entry.test.js",
-        "docs/relay/CHATGPT_CARD_V9_BOOTSTRAP.md"
-      ],
-      "resources": [
-        "relay-context-card-v9",
-        "relay-chatgpt-bootstrap",
-        "relay-card-size-reporting"
-      ],
-      "goal": "Ship the Relay card v9 non-blocking bootstrap and size-reporting fixes without redesigning the card; preserve the legacy bridge card exactly as the control.",
-      "acceptance": "Rotate the contextual card URI to v9; patch the v8 HTML only at serve time so cardHtml() and the legacy bridge remain unchanged; paint immediately from window.openai globals; run ui/initialize in parallel with a 4s timeout; prefer window.openai.callTool; report ui/notifications/size-changed and notifyIntrinsicHeight; show the host diagnostic line; add immediate-paint and height-reporting regression tests; update the relay-entry v9 URI pins; add docs/relay/CHATGPT_CARD_V9_BOOTSTRAP.md; npm test passes; open one draft PR; do not merge before desktop and browser consumer tests unless the owner overrides.",
-      "next_action": "Blocked by the v9 handoff's exact-match guard: on current main, the callTool, ui/initialize ready, and ready.catch old strings each occur twice because a second literal copy exists inside the existing legacy-bridge consumer-bisect replacement code. No source edits were made. Resume only with an updated handoff that disambiguates the intended occurrence/context.",
-      "task_class": "architecture",
-      "category": "implementation",
-      "tags": [
-        "chatgpt",
-        "mcp-apps",
-        "v2",
-        "inline-card",
-        "bisect"
-      ],
-      "primary_role": "builder",
-      "primary_team": "runner",
-      "supporting_teams": [],
-      "primary_staff": "nico",
-      "supporting_staff": [],
-      "base_sha": "3b1e855e9486a3c034f59db3b53797f45314b2fe",
-      "state": "held",
-      "created_at": "2026-10-01T09:43:34.029Z",
-      "updated_at": "2026-10-01T10:02:50.653Z",
-      "lease_until": "2026-10-01T22:02:50.653Z",
-      "amendment_count": 1,
-      "amendments": [
-        {
-          "at": "2026-10-01T10:01:31.805Z",
-          "by": "relay-inline-card-v2-final-20261001",
-          "reason": "Owner supplied a newer card-v9 execution handoff that supersedes the unstarted v2 replay in this same reserved card lane.",
-          "fields": [
-            "goal",
-            "acceptance",
-            "next_action"
-          ],
-          "before": {
-            "goal": "Rebuild and ship the exact historical Relay v2 contextual card probe from current main so native macOS, web and iPhone can be compared without PR #92 merge conflicts.",
-            "acceptance": "Current main is the base. Historical v2 card from de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7 is restored faithfully under isolated symbols; relay_runner_progress alone carries v2 metadata; resource is served through the pre-#85 relay-entry list/read path; current v8 and v3 controls remain unchanged; embedded MCP icon matches canonical PNG; exact-head CI and Runner admission pass; merged source is deployed before consumer testing.",
-            "next_action": "Apply the owner-requested v9 nonblocking bootstrap handoff on this held card lane; preserve the legacy bridge control; update only the contextual card, its tests, relay-entry URI pins, and the v9 bootstrap doc; then run exact-head validation and open a draft PR."
-          },
-          "after": {
-            "goal": "Ship the Relay card v9 non-blocking bootstrap and size-reporting fixes without redesigning the card; preserve the legacy bridge card exactly as the control.",
-            "acceptance": "Rotate the contextual card URI to v9; patch the v8 HTML only at serve time so cardHtml() and the legacy bridge remain unchanged; paint immediately from window.openai globals; run ui/initialize in parallel with a 4s timeout; prefer window.openai.callTool; report ui/notifications/size-changed and notifyIntrinsicHeight; show the host diagnostic line; add immediate-paint and height-reporting regression tests; update the relay-entry v9 URI pins; add docs/relay/CHATGPT_CARD_V9_BOOTSTRAP.md; npm test passes; open one draft PR; do not merge before desktop and browser consumer tests unless the owner...",
-            "next_action": "Read every target from current main, verify each exact replacement target occurs exactly once, create the policy-valid branch recorded on this claim if needed, apply only the v9 handoff edits, run preflight and tests, open a draft PR, then render v9 and legacy controls for consumer testing."
-          }
-        }
-      ]
-    },
-    {
       "id": "relay-2.0-approved-visual-port-20261001",
       "owner": "relay-2.0-approved-visual-port-20261001",
       "branch": "relay/2.0-approved-visual-port-20261001",
@@ -9458,6 +9397,44 @@
       "created_at": "2026-10-01T10:03:17.975Z",
       "updated_at": "2026-10-01T10:03:17.975Z",
       "lease_until": "2026-10-01T22:03:17.975Z"
+    },
+    {
+      "id": "relay-inline-card-v2-final-20261001",
+      "owner": "relay-inline-card-v2-final-20261001",
+      "branch": "relay/inline-card-v2-final3-20261001",
+      "paths": [
+        "src/relay-chat-ui.js",
+        "src/relay-chat-ui.test.js",
+        "src/relay-entry.test.js",
+        "docs/relay/CHATGPT_CARD_V9_BOOTSTRAP.md"
+      ],
+      "resources": [
+        "relay-context-card-v9",
+        "relay-chatgpt-bootstrap",
+        "relay-card-size-reporting"
+      ],
+      "goal": "Ship the Relay card v9 non-blocking bootstrap and size-reporting fixes without redesigning the card; preserve the legacy bridge card exactly as the control.",
+      "acceptance": "Rotate the contextual card URI to v9; patch the v8 HTML only at serve time so cardHtml() and the legacy bridge remain unchanged; paint immediately from window.openai globals; run ui/initialize in parallel with a 4s timeout; prefer window.openai.callTool; report ui/notifications/size-changed and notifyIntrinsicHeight; show the host diagnostic line; add immediate-paint and height-reporting regression tests; update the relay-entry v9 URI pins; add docs/relay/CHATGPT_CARD_V9_BOOTSTRAP.md; npm test passes; open one draft PR; do not merge before desktop and browser consumer tests unless the owner overrides.",
+      "next_action": "Owner explicitly authorized resolving the duplicate literal guard by applying v9 only to the generated cardHtml output path. Preserve cardHtml() and the legacy bridge control unchanged; implement v9, test, and open the required draft PR.",
+      "task_class": "architecture",
+      "category": "implementation",
+      "tags": [
+        "chatgpt",
+        "mcp-apps",
+        "v2",
+        "inline-card",
+        "bisect"
+      ],
+      "primary_role": "builder",
+      "primary_team": "runner",
+      "supporting_teams": [],
+      "primary_staff": "nico",
+      "supporting_staff": [],
+      "base_sha": "3b1e855e9486a3c034f59db3b53797f45314b2fe",
+      "state": "active",
+      "created_at": "2026-10-01T09:43:34.029Z",
+      "updated_at": "2026-10-01T10:12:43.384Z",
+      "lease_until": "2026-10-01T22:12:43.384Z"
     }
   ],
   "migrated_from": "loew-inspector"
