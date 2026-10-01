@@ -100,3 +100,26 @@ test("validator rejects duplicate ids, duplicate names, retired records without 
   assert.throws(() => validateStaffRegistry([{ ...base[0], status: "retired", retired_reason: "", personality: null }]), /requires a reason/);
   assert.throws(() => validateStaffRegistry([{ ...base[0], personality: null }]), /requires personality/);
 });
+
+
+test("bounded staff directory read contract supports person and subnet lookup", async () => {
+  const mod = await import("./staff-registry.js");
+  const { staffDirectoryTool, validateStaffDirectoryArguments, callStaffDirectory } = mod;
+  assert.equal(staffDirectoryTool.name, "relay_staff_directory");
+  assert.equal(staffDirectoryTool.annotations.readOnlyHint, true);
+  assert.equal(validateStaffDirectoryArguments({ staff: "Roman" }).staff, "Roman");
+  assert.throws(() => validateStaffDirectoryArguments({ surprise: true }), /Unsupported staff directory argument/);
+
+  const roman = callStaffDirectory({ staff: "roman" });
+  assert.equal(roman.namespace, "relay.STAFF");
+  assert.equal(roman.staff.display_name, "Roman");
+  assert.equal(roman.staff.role.title, "The Verifier");
+
+  const source = callStaffDirectory({ subnet: "source" });
+  assert.deepEqual(source.staff.map(person => person.display_name), ["Rafael"]);
+
+  const retiredHidden = callStaffDirectory({ staff: "Felix" });
+  assert.equal(retiredHidden.staff, null);
+  const retiredVisible = callStaffDirectory({ staff: "Felix", include_retired: true });
+  assert.equal(retiredVisible.staff.status, "retired");
+});
