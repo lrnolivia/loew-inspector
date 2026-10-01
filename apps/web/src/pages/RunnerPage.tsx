@@ -23,7 +23,7 @@ export function RunnerPage() {
   return (
     <div className="page operator-page react-page">
       <FeatureHeader feature="runner" title="runner" subtitle="coordinate" />
-      <SignalDeck cards={cards} />
+      <SignalDeck cards={cards} feature="runner" />
       <section className="operator-section">
         <div className="section-heading"><h2>meaningful work</h2><span>{all.length} current</span></div>
         <div className="work-list">{all.length ? all.map(({ project, item }) => <WorkCard project={project} item={item} key={`${project}:${item.assignment}`} />) : <div className="empty-card"><strong>Nothing is moving right now.</strong><p>Runner will show work here when Relay has current execution evidence.</p></div>}</div>
