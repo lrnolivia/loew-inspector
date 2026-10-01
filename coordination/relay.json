@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T01:36:23.484Z",
+  "updated_at": "2026-10-01T01:38:04.545Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3891,7 +3891,10 @@
         "docs/skills/",
         "docs/relay/RELAY_1_9_5_RELEASE.md",
         "src/skills-registry.test.js",
-        "src/skills-audit.test.js"
+        "src/skills-audit.test.js",
+        "src/skills-resolver.test.js",
+        "src/skills-runtime.test.js",
+        "src/skills-upstream.test.js"
       ],
       "resources": [
         "relay-1.9.5-release",
@@ -3903,7 +3906,7 @@
       ],
       "goal": "Ship Relay 1.9.5 as the first-class skills registry/runtime foundation, consuming the canonical staff identities from Relay 1.9.4 for later role-driven skill posture.",
       "acceptance": "Implement manifest validation, provenance/license/integrity metadata, deterministic JIT skill resolution with bounded context, dependency/capability gating, project-private overlays and auditable upstream update policy. Untrusted bundles get no ambient authority. Keep the MCP surface compact and explain why skills are selected, rejected or unavailable. Staff identities from Relay 1.9.4 may inform role/affinity selection but never authorization. Tests cover manifest validation, provenance/license policy, version/update drift, path containment, context budgets, deterministic resolution, dependency/tool gating, hostile bundles and cross-pack composition. Universal artifact-ingress law: when canonical bytes already exist (uploaded image/file, local artifact, Git blob, generated binary), workers must never manually transcribe/reconstruct those bytes through model-authored base64/text chunks. Compute and record a source digest first, use a binary-safe or exact-byte transport, read back the stored artifact, and verify byte count/digest equality before CI, release, or downstream transformation. If the available transport cannot preserve exact bytes, stop that transport path and route through an approved binary-safe intake rather than guessing/retyping. Chunking is allowed only as a transport mechanism over machine-derived exact bytes with deterministic ordering and final digest verification. Teach this rule in relevant source/integration/release skills and test exact-byte mismatch rejection.",
-      "next_action": "Batch the 1.9.5 foundation now: manifest contract + registry/audit primitives + exact-byte ingress law + focused tests in one coherent commit; then add deterministic resolver/runtime/private overlays in the next commit while the icon release finishes independently.",
+      "next_action": "Batch the full 1.9.5 core in one release slice: manifest/registry/audit + deterministic resolver/runtime + upstream drift policy + exact-byte ingress guidance/tests. Then run exact-path preflight/CI and ship if green.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-019",
@@ -3914,8 +3917,8 @@
       "base_sha": "5bd1c6590c341690b7d1e8411b2d8c8bc2856841",
       "state": "active",
       "created_at": "2026-10-01T01:35:01.771Z",
-      "updated_at": "2026-10-01T01:36:23.484Z",
-      "lease_until": "2026-10-01T13:36:23.484Z"
+      "updated_at": "2026-10-01T01:38:04.545Z",
+      "lease_until": "2026-10-01T13:38:04.545Z"
     }
   ],
   "migrated_from": "loew-inspector"
