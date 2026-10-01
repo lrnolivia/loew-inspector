@@ -86,8 +86,18 @@ const brandUrls = Object.fromEntries(await Promise.all(Object.entries(brandFiles
 ])));
 const inlineBrandUrls = value => {
   let next = String(value);
-  for (const [url, data] of Object.entries(brandUrls)) next = next.replaceAll(url, data);
-  return next;
+  const declarations = [];
+  let index = 0;
+  for (const [url, data] of Object.entries(brandUrls)) {
+    next = next.replaceAll(url, data);
+    const literal = JSON.stringify(data);
+    const symbol = `__relayBrand${index++}`;
+    if (next.includes(literal)) {
+      next = next.replaceAll(literal, symbol);
+      declarations.push(`const ${symbol}=${literal};`);
+    }
+  }
+  return declarations.join("") + next;
 };
 
 const reactHtml = String(htmlAsset.source);
