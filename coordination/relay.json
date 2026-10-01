@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T18:32:18.414Z",
+  "updated_at": "2026-10-01T18:48:57.266Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6522,6 +6522,40 @@
       "supporting_staff": [],
       "state": "claimed",
       "created_at": "2026-10-01T18:14:00.745Z"
+    },
+    {
+      "id": "relay-website-project-context-polish-20261001",
+      "owner": "Julian-PM",
+      "goal": "FIXES: preserve the newly approved Relay website design while restoring project context on all four pages, matching Inspector top cards to the new card family, and replacing repeated inner telemetry brand marks with semantic glyphs from the existing system.",
+      "acceptance": "Keep the approved overall visual direction and correct page-header icons. On Today, Runner, Night Shift and Inspector use page icon/title header, then project switcher, then existing status ticker and top-card content. Restore missing project switchers on Today/Runner/Night Shift; move Inspector's existing switcher to the same location. Inspector top cards match the new approved Today/Runner/Night Shift card treatment. Inner telemetry cards use varied meaningful glyphs from the existing shared/Figma glyph system; do not create a new icon family or replace header marks. Preserve all functionality, project selection across navigation, Momo title/navigation styling and responsive behavior. Verify exact-build desktop/narrow journeys and surface reviewable evidence in Inspector. Keep NEW FEATURES separate; none are requested in this follow-up.",
+      "next_action": "Queued from Lauren's voice review on 2026-10-01 around 18:43-18:47 UTC. Preserve the current website repair assignment's original goal and acceptance. Wait for relay-website-2.0-repair-20261001 to finish or explicitly hand off its live-data acceptance blocker; then obtain an admitted bounded implementation assignment/branch. First verify shared glyph/Figma mappings and current project-selection behavior. No merge/deployment or ownership takeover is authorized by this queue record.",
+      "paths": [
+        "apps/web/",
+        "packages/shared-ui/",
+        "docs/relay/WEBSITE_PROJECT_CONTEXT_POLISH_20261001.md"
+      ],
+      "resources": [
+        "relay-website-route-cutover",
+        "relay-website-project-context",
+        "relay-website-semantic-glyphs"
+      ],
+      "category": "implementation",
+      "labels": [
+        {
+          "key": "backlog",
+          "value": "fixes"
+        },
+        {
+          "key": "source",
+          "value": "Lauren voice review 2026-10-01"
+        }
+      ],
+      "primary_team": "source",
+      "supporting_teams": [],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "state": "queued",
+      "created_at": "2026-10-01T18:48:57.266Z"
     }
   ],
   "claims": [
