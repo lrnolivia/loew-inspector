@@ -35,7 +35,7 @@ export function taxonomySkillContext(taxonomy){
   const t=normalizeAssignmentTaxonomy(taxonomy);
   return Object.freeze({
     task_class:t.category,
-    intent_tags:[t.category,...t.tags,...t.labels.map(x=>x.key+"."+String(x.value).toLowerCase().replace(/[^a-z0-9._-]+/g,"-"))],
+    intent_tags:[t.category,...t.tags,...t.labels.map(x=>x.key+"."+String(x.value).toLowerCase().replace(/[^a-z0-9._-]+/g,"-")),...(t.primary_role?["role."+t.primary_role]:[]),...t.supporting_roles.map(role=>"role."+role)],
     primary_role:t.primary_role,
     supporting_roles:t.supporting_roles
   });
