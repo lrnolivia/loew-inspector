@@ -78,7 +78,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: files
         shell: bash
-        run: echo "matrix=$(node -e 'const fs=require("fs");process.stdout.write(JSON.stringify(fs.readdirSync("test").filter(f=>f.endsWith(".test.mjs")).sort()))')" >> "$GITHUB_OUTPUT"
+        run: node -e 'const fs=require("fs");console.log("matrix="+JSON.stringify(fs.readdirSync("test").filter(f=>f.endsWith(".test.mjs")).sort()))' >> "$GITHUB_OUTPUT"
 
   contract-file:
     needs: contract-test-files
@@ -107,7 +107,7 @@ jobs:
       - uses: actions/checkout@v4
       - id: files
         shell: bash
-        run: echo "matrix=$(node -e 'const fs=require("fs");process.stdout.write(JSON.stringify(fs.readdirSync("apps/web/test").filter(f=>f.endsWith(".test.mjs")).sort()))')" >> "$GITHUB_OUTPUT"
+        run: node -e 'const fs=require("fs");console.log("matrix="+JSON.stringify(fs.readdirSync("apps/web/test").filter(f=>f.endsWith(".test.mjs")).sort()))' >> "$GITHUB_OUTPUT"
 
   web-file:
     needs: web-test-files
