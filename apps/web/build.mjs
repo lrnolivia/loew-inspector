@@ -1,3 +1,4 @@
+import { presentationMenu } from "../../packages/shared-ui/presentation.js";
 import { build as esbuild } from "esbuild";
 import { build as viteBuild } from "vite";
 import react from "@vitejs/plugin-react";
@@ -29,7 +30,10 @@ const legacyCss =
   await fs.readFile(path.join(here, "../../packages/shared-ui/tokens.css"), "utf8") + "\n" +
   await fs.readFile(path.join(here, "../../packages/shared-ui/components.css"), "utf8") + "\n" +
   await source("operator-1.8.css") + "\n" +
-  await source("qa.css");
+  await source("qa.css") + "\n" +
+  await fs.readFile(path.join(here, "../../packages/shared-ui/telemetry.css"), "utf8") + "\n" +
+  await fs.readFile(path.join(here, "../../packages/shared-ui/responsive-shell.css"), "utf8") + "\n" +
+  await fs.readFile(path.join(here, "../../packages/shared-ui/motion.css"), "utf8");
 
 const legacyShellOverrides = `
 .operator-brand strong,
@@ -41,6 +45,7 @@ const legacyShellOverrides = `
 `;
 
 let inspectorHtml = (await source("index.html"))
+  .replace("__RELAY_PRESENTATION_MENU__", () => presentationMenu())
   .replaceAll("__RELAY_ICON__", relayIcon)
   .replace("__RELAY_THEME_BOOTSTRAP__", () => "<script>(" + themeBootstrap.toString() + ")()</script>")
   .replace(/<link rel="stylesheet" href="\/(?:operator|operator-1\\.8|qa).css">/g, "")
@@ -102,7 +107,7 @@ const inlineBrandUrls = value => {
   return declarations.join("") + next;
 };
 
-const reactHtml = String(htmlAsset.source);
+const reactHtml = String(htmlAsset.source).replace("</head>", () => "<script>(" + themeBootstrap.toString() + ")()</script></head>");
 const reactJs = inlineBrandUrls(jsChunk.code);
 const reactCss = String(cssAsset.source);
 const webBuildId = createHash("sha256").update(JSON.stringify([reactHtml, reactJs, reactCss, inspectorHtml, legacyScript])).digest("hex");

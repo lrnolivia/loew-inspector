@@ -10,7 +10,7 @@ export function themeBootstrap() {
 }
 export function bindTheme() {
   const button = document.getElementById("theme-toggle");
-  if (!button) return;
+  if (!button) return () => {};
   const update = () => {
     const light = document.documentElement.dataset.theme === "light";
     const label = light ? "Switch to dark mode" : "Switch to light mode";
@@ -20,15 +20,19 @@ export function bindTheme() {
     button.querySelector(".utility-label").textContent = light ? "Dark mode" : "Light mode";
   };
   themeBootstrap(); update();
-  button.addEventListener("click", () => {
+  const toggle = () => {
     const theme = document.documentElement.dataset.theme === "light" ? "dark" : "light";
     document.documentElement.dataset.theme = theme;
     try { localStorage.setItem("relay-theme", theme); } catch {}
     update();
-  });
-  matchMedia("(prefers-color-scheme: light)").addEventListener("change", () => {
+  };
+  button.addEventListener("click", toggle);
+  const media = matchMedia("(prefers-color-scheme: light)");
+  const systemChange = () => {
     let saved;
     try { saved = localStorage.getItem("relay-theme"); } catch {}
     if (saved !== "light" && saved !== "dark") { themeBootstrap(); update(); }
-  });
+  };
+  media.addEventListener("change", systemChange);
+  return () => { button.removeEventListener("click", toggle); media.removeEventListener("change", systemChange); };
 }

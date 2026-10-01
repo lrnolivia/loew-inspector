@@ -1,4 +1,9 @@
+import { bindMotion } from "../../../packages/shared-ui/motion.js";
+import { useEffect } from "react";
+import { presentationMenu, bindPresentation } from "../../../packages/shared-ui/presentation.js";
+import { bindTheme } from "../public/theme.js";
 import { HashRouter, NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { projectHref } from "../../../packages/shared-ui/project-context.js";
 import { LiveRelayProvider, useLiveRelay } from "./live";
 import { TodayPage } from "./pages/TodayPage";
 import { RunnerPage } from "./pages/RunnerPage";
@@ -12,7 +17,8 @@ const navItems = [
 ];
 
 function Shell() {
-  const { state } = useLiveRelay();
+  useEffect(() => { const presentation = bindPresentation(); const theme = bindTheme(); const motion = bindMotion(); return () => { presentation(); theme?.(); motion(); }; }, []);
+  const { state, project } = useLiveRelay();
   const location = useLocation();
   const pageLabel = location.pathname.startsWith("/runner") ? "runner" : location.pathname.startsWith("/night-shift") ? "night shift" : "today";
   const tone = state === "live" ? "good" : state === "offline" ? "bad" : "quiet";
@@ -21,7 +27,7 @@ function Shell() {
     <>
       <div className="terra-accent" aria-hidden="true"><span/><span/><span/><span/><span/></div>
       <header className="operator-topbar react-operator-topbar">
-        <a className="operator-brand react-brand" href="#/today">
+        <a className="operator-brand react-brand" href={projectHref("#/today", project)}>
           <img src="/brand/relay.png" alt="" width="52" height="52" />
           <strong>relay</strong>
           <span>project control</span>
@@ -29,30 +35,26 @@ function Shell() {
         <div className="nav-label">work</div>
         <nav className="operator-nav react-operator-nav" aria-label="Relay">
           {navItems.slice(0, 2).map(item => (
-            <NavLink key={item.to} to={item.to} data-feature={item.feature} className={({ isActive }) => isActive ? "active" : ""}>
+            <NavLink key={item.to} to={projectHref(item.to, project)} data-feature={item.feature} className={({ isActive }) => isActive ? "active" : ""}>
               <span className="glyph-chip"><img className="tool-mark" src={item.icon} alt="" /></span>
               <span className="nav-copy"><strong>{item.label}</strong><small>{item.detail}</small></span>
               <span className="nav-chevron" aria-hidden="true">›</span>
             </NavLink>
           ))}
-          <a href="/inspector#review" data-feature="inspector">
+          <a href={projectHref("/inspector#review", project)} data-feature="inspector">
             <span className="glyph-chip"><img className="tool-mark" src="/brand/inspector.png" alt="" /></span>
             <span className="nav-copy"><strong>inspector</strong><small>review</small></span>
             <span className="nav-chevron" aria-hidden="true">›</span>
           </a>
           {navItems.slice(2).map(item => (
-            <NavLink key={item.to} to={item.to} data-feature={item.feature} className={({ isActive }) => isActive ? "active" : ""}>
+            <NavLink key={item.to} to={projectHref(item.to, project)} data-feature={item.feature} className={({ isActive }) => isActive ? "active" : ""}>
               <span className="glyph-chip"><img className="tool-mark" src={item.icon} alt="" /></span>
               <span className="nav-copy"><strong>{item.label}</strong><small>{item.detail}</small></span>
               <span className="nav-chevron" aria-hidden="true">›</span>
             </NavLink>
           ))}
         </nav>
-        <div className="operator-utility">
-          <a className="utility-button react-utility-link" href="https://chatgpt.com/settings/plugins-settings/plugin_asdk_app_6abe234861d881919e30db65d656492f" target="_blank" rel="noreferrer">
-            <span className="utility-label">refresh tools</span><span className="utility-arrow" aria-hidden="true">↗</span>
-          </a>
-        </div>
+        <div className="operator-utility" dangerouslySetInnerHTML={{ __html: presentationMenu() }} />
       </header>
 
       <main className="operator-shell react-operator-shell">

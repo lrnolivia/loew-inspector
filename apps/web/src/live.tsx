@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useSearchParams } from "react-router-dom";
 import { loadDashboard } from "./api";
 import type { ConnectionState, DashboardSnapshot } from "./types";
 
@@ -7,11 +8,21 @@ type LiveRelay = {
   state: ConnectionState;
   error: string | null;
   refresh: () => Promise<void>;
+  project: string;
+  selectProject: (id: string) => void;
 };
 
 const LiveRelayContext = createContext<LiveRelay | null>(null);
 
 export function LiveRelayProvider({ children }: { children: ReactNode }) {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const project = searchParams.get("project") || "";
+  const selectProject = (id: string) => {
+    const params = new URLSearchParams(searchParams);
+    if (id) params.set("project", id);
+    else params.delete("project");
+    setSearchParams(params);
+  };
   const [snapshot, setSnapshot] = useState<DashboardSnapshot | null>(null);
   const [state, setState] = useState<ConnectionState>("connecting");
   const [error, setError] = useState<string | null>(null);
@@ -59,7 +70,14 @@ export function LiveRelayProvider({ children }: { children: ReactNode }) {
     };
   }, []);
 
-  const value = useMemo(() => ({ snapshot, state, error, refresh }), [snapshot, state, error]);
+  const scopedSnapshot = useMemo(() => snapshot && project ? {
+    ...snapshot,
+    progress: Object.fromEntries(Object.entries(snapshot.progress).filter(([id]) => id === project)),
+    workers: snapshot.workers.filter(worker => worker.id === project),
+    loadingProgress: snapshot.loadingProgress?.filter(id => id === project),
+    failedProgress: snapshot.failedProgress?.filter(id => id === project)
+  } : snapshot, [snapshot, project]);
+  const value = { snapshot: scopedSnapshot, state, error, refresh, project, selectProject };
   return <LiveRelayContext.Provider value={value}>{children}</LiveRelayContext.Provider>;
 }
 

@@ -174,17 +174,17 @@ test("preserved legacy components and Inspector review support mobile, deep link
       await page.waitForTimeout(40);
       assert.equal(await view.locator("body").getAttribute("data-shell-motion"), "expand");
       const movingPage = view.locator('.operator-page[data-page="today"]');
-      assert.equal(await movingPage.evaluate(node => getComputedStyle(node).animationName), "relay-shell-expand-inertia");
+      assert.equal(await movingPage.evaluate(node => getComputedStyle(node).animationName), "none");
       assert.ok(parseFloat(await movingPage.evaluate(node => getComputedStyle(node).animationDuration)) <= .26);
       await page.waitForTimeout(220);
       const expanded = await sidebar.evaluate(node => ({ width: node.getBoundingClientRect().width, navOpacity: getComputedStyle(node.querySelector(".nav-copy")).opacity }));
       assert.ok(expanded.width >= 330 && expanded.width <= 350, mode + " expanded sidebar width");
       assert.equal(expanded.navOpacity, "1");
-      assert.ok(parseFloat(await shell.evaluate(node => getComputedStyle(node).marginLeft)) >= 330);
+      assert.equal(parseFloat(await shell.evaluate(node => getComputedStyle(node).marginLeft)), Math.round(collapsed.width), "sidebar overlays without moving content");
       await shell.hover();
       await page.waitForTimeout(40);
       assert.equal(await view.locator("body").getAttribute("data-shell-motion"), "collapse");
-      assert.equal(await movingPage.evaluate(node => getComputedStyle(node).animationName), "relay-shell-collapse-inertia");
+      assert.equal(await movingPage.evaluate(node => getComputedStyle(node).animationName), "none");
       await page.waitForTimeout(180);
       const attention = view.locator(".attention-card").first();
       await attention.waitFor();
@@ -225,7 +225,7 @@ test("preserved legacy components and Inspector review support mobile, deep link
       const failedSurface = await failedRow.evaluate(node => getComputedStyle(node).backgroundColor);
       const workingSurface = await view.locator('.progress-row[data-progress-state="working"]').evaluate(node => getComputedStyle(node).backgroundColor);
       assert.equal(failedSurface, workingSurface, "User-directed neutral greige cards keep status color in the badge");
-      assert.equal(failedSurface, "rgb(34, 34, 32)");
+      assert.equal(failedSurface, "rgb(28, 27, 25)");
       assert.notEqual(failedColor, await view.locator('.progress-row[data-progress-state="working"] .status-badge').first().evaluate(node => getComputedStyle(node).color));
       await view.locator('#project-tabs [data-project-id="relay"] [data-repo-icon="relay"][data-icon-sha="' + "b".repeat(40) + '"] img').waitFor();
       assert.equal(await view.locator('#project-tabs [data-project-id="relay"] [data-repo-icon="relay"]').evaluate(node => getComputedStyle(node).backgroundColor), "rgba(0, 0, 0, 0)");
@@ -341,6 +341,7 @@ test("preserved legacy components and Inspector review support mobile, deep link
       await view.locator(".qa-stage").waitFor({ state: "detached" });
       assert.equal(await view.locator(".review-list").evaluate(node => getComputedStyle(node).gap), "28px");
       assert.equal(await view.locator(".operator-brand strong").evaluate(node => getComputedStyle(node).color), "rgb(251, 250, 247)");
+      await view.locator(".presentation-menu > summary").click();
       await view.getByRole("button", { name: "Switch to light mode", exact: true }).click();
       assert.equal(await view.locator("html").getAttribute("data-theme"), "light");
       assert.equal(await view.locator(".operator-brand strong").evaluate(node => getComputedStyle(node).color), "rgb(181, 71, 31)");
@@ -349,9 +350,10 @@ test("preserved legacy components and Inspector review support mobile, deep link
       assert.equal(await view.locator(".qa-companion").evaluate(node => getComputedStyle(node).backgroundColor), "rgb(52, 49, 46)");
       await page.keyboard.press("Escape");
       await view.locator(".qa-stage").waitFor({ state: "detached" });
+      await view.locator(".presentation-menu > summary").click();
       await view.getByRole("button", { name: "Switch to dark mode", exact: true }).click();
       assert.equal(await view.locator("html").getAttribute("data-theme"), "dark");
-      await view.locator("#app-settings").evaluate(node => { window.open = href => { window.__testExternal = href; }; node.click(); });
+      assert.equal(await view.locator("#app-settings").evaluate(node => { window.open = href => { window.__testExternal = href; }; const event = new MouseEvent("click", { bubbles: true, cancelable: true }); node.dispatchEvent(event); return event.defaultPrevented; }), true, "Inspector opens settings once through its existing host-aware handler");
       assert.equal(await view.locator("body").evaluate(() => window.__testExternal), "https://chatgpt.com/settings/plugins-settings/plugin_asdk_app_6abe234861d881919e30db65d656492f");
       assert.equal(await view.locator("#app-settings .glyph-refresh").count(), 1);
       assert.equal(await view.locator("#app-settings .relay-glyph").evaluate(node => getComputedStyle(node).width), "18px");
@@ -369,7 +371,7 @@ test("preserved legacy components and Inspector review support mobile, deep link
         await page.emulateMedia({ colorScheme: "light" });
         await page.getByRole("button", { name: "today", exact: true }).click();
         await page.locator("#operator-connection").filter({ hasText: "connected" }).waitFor();
-        assert.equal(await page.locator(".operator-topbar").evaluate(node => getComputedStyle(node).position), "static");
+        assert.equal(await page.locator(".operator-topbar").evaluate(node => getComputedStyle(node).position), "relative");
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
         assert.equal(overflow, false);
         await page.screenshot({ path: "/tmp/relay-b4-mobile-light.png", fullPage: true });
