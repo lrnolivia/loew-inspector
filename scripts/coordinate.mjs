@@ -1,9 +1,10 @@
 import fs from 'node:fs/promises';
+import { callRunnerControl } from '../src/runner-control.js';
 import { execFileSync } from 'node:child_process';
 import { transition, evaluate, occupying } from '../src/coordination.mjs';
 
 const [action, project, inputFile] = process.argv.slice(2);
-if (!['queue', 'claim', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete', 'audit', 'cleanup', 'preflight', 'pr-gate'].includes(action) || !/^[a-z0-9-]+$/.test(project ?? '')) throw new Error('Usage: node scripts/coordinate.mjs <action> <project> [request.json]');
+if (!['queue', 'claim', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete', 'retire', 'audit', 'cleanup', 'preflight', 'pr-gate'].includes(action) || !/^[a-z0-9-]+$/.test(project ?? '')) throw new Error('Usage: node scripts/coordinate.mjs <action> <project> [request.json]');
 // gh handles macOS keychain auth locally and GH_TOKEN in Actions; no credential output.
 function api(endpoint, method = 'GET', body) {
   const args = ['api', endpoint, '--method', method];
@@ -43,7 +44,22 @@ function mergedProof(claim, number) {
   return pr;
 }
 
-if (['queue', 'claim', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete'].includes(action)) {
+if (action === 'retire') {
+  if (!inputFile) throw new Error('A JSON retirement request file is required.');
+  const { expected_record_sha, ...request } = JSON.parse(await fs.readFile(inputFile, 'utf8'));
+  if (!/^[a-f0-9]{40}$/.test(expected_record_sha || '')) throw new Error('Retirement requires expected_record_sha.');
+  const receipt = await callRunnerControl('relay_runner_coordinate', {
+    project, action, expected_record_sha, request
+  }, process.env, async (path, options) => {
+    try { return api(path.replace(/^\//, ''), options?.method || 'GET', options?.body); }
+    catch (error) {
+      const status = /HTTP (\d{3})/.exec(error.stderr?.toString() || '');
+      if (status) error.status = Number(status[1]);
+      throw error;
+    }
+  });
+  console.log(JSON.stringify(receipt, null, 2));
+} else if (['queue', 'claim', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete'].includes(action)) {
   if (!inputFile) throw new Error('A JSON request file is required.');
   const request = JSON.parse(await fs.readFile(inputFile, 'utf8'));
   request.action = action;

@@ -44,7 +44,7 @@ Use actual paths; this example is not a project assignment. `queue` uses the sam
 
 `preflight` requires id, owner and the complete proposed/current changed file list as `paths`. Check both committed and uncommitted task changes against main; do not supply a cherry-picked subset. It verifies live ownership, lease, local declared paths and inventory findings. A passed preflight is coordination evidence, not a product or QA pass.
 
-`complete` requires id, owner, pr, `work_accounted: true`, and `evidence` pointing to a durable completion/disposition record. The tool fetches the PR and records actual merged head and merge commit. An unfinished task is held; there is no blind release or expiration-based takeover operation.
+`complete` requires id, owner, pr, `work_accounted: true`, and `evidence` pointing to a durable completion/disposition record. The tool fetches the PR and records actual merged head and merge commit. Pause unfinished work with a hold. Explicitly abandoned or replaced work may be retired through the bounded transaction below; there is no blind release or expiration-based takeover operation.
 
 When an assignment produced screenshot, image, or video QA evidence, durable work accounting also follows [Runner Visual Evidence Policy](VISUAL_EVIDENCE_POLICY.md). The completion record must reference the relevant Runner Visuals evidence/run ID(s). The producer does not wait for media transfer completion: a durable Visuals receipt in `queued` or `uploading` state is sufficient to hand off the bytes and continue. Runner owns background upload, retry, post-merge archive, storage-budget enforcement, and purge. Once the exact evidenced work is verified on the default branch and a compact archive bundle is durably committed to the configured visual archive repository, full-resolution working media is purge-eligible.
 
@@ -67,3 +67,40 @@ Atomic claims enforce the budget/ownership for clients using the protocol. Deter
 Field's existing Mobile #123 is imported as a held reservation with its live PR file scope and `existing-mobile-owner`. The actual owner must adopt/renew it or record an authorized handoff before further mutation. This import does not move ownership. Other legacy workers must be reconciled into current claims before they continue; updates to the legacy inventory require recovery evidence and an ordinary reviewed policy change, never a client appending a new branch to grandfather itself.
 
 Runner 3.0 must use this engine and these records rather than introducing another queue or ownership truth. For a new project, register the coordination policy and record once. Defaults and branch prefixes remain project-specific.
+
+
+## Retirement without false completion
+
+`retire` records an owner-authorized `cancelled` or `superseded` disposition. It preserves the assignment id, owner, goal, acceptance, amendments, scope, original next action, lease, branch, PR and all other work evidence. The new terminal state releases branch budget, path/resource reservations and the owner's active slot. It does not report successful delivery, merge or close a PR, delete a branch, stop a process, or start a replacement worker. Retired ids and branches cannot be reused. Held, expired and unknown states still reserve capacity.
+
+Before retirement, reconcile the actual owner, stop or confirm quiescence of writers, and record where unpublished work and remaining requirements are preserved. The engine cannot inspect another machine's unsaved files or terminate its agent. The owner field remains an existing coordination assertion, not a new authentication grant. Runtime credentials and repository access retain their existing boundaries.
+
+MCP uses `relay_runner_coordinate` with `action: "retire"`, fresh top-level `expected_record_sha`, and this request shape:
+
+```json
+{
+  "id": "existing-assignment",
+  "owner": "actual-current-owner",
+  "disposition": "cancelled",
+  "operation_id": "unique-retirement-operation-id",
+  "reason": "Why this work is abandoned",
+  "evidence": "Durable record of writer quiescence, retained branch/PR/unpublished work and requirements disposition",
+  "expected_head_sha": "<exact 40-character live branch SHA>"
+}
+```
+
+Use `superseded` only with `superseded_by` naming a distinct existing nonterminal claim or queued assignment. A queued successor expresses intent; it does not establish execution. For a claim whose branch is genuinely absent, explicitly pass `expected_head_sha: null`; only a provider 404 confirms absence. Permission errors, outages and incomplete responses fail closed. For a queue-only assignment, omit `expected_head_sha` entirely. The adapter obtains the actual branch identity, and callers cannot supply its internal verification field.
+
+For CLI or `coordination.yml` workflow dispatch, use the same request fields plus `expected_record_sha` **inside the request JSON file/input**, then invoke `node scripts/coordinate.mjs retire <project> request.json`. This action calls the same schema validator and mutation adapter as MCP, including live canonical-engine and policy guards. Unlike legacy CLI transactions, retirement does not automatically retry after a CAS conflict.
+
+Each retirement stores an immutable timestamp and normalized intent under `retirement`. Refresh the record after a lost response. Reusing the same operation id and identical intent against the refreshed record returns the retained receipt without a write or timestamp change. A changed intent, wrong owner, reused operation id on another assignment, stale record, or changed head is rejected. Unverifiable readback reports uncertainty; it is never reported as success. The branch-head read and record CAS are separate GitHub operations, not a cross-resource atomic lock: writers must remain stopped through the transaction. Later external branch activity remains evidence, not permission to resume.
+
+Retirement is reversible only in the sense that it preserves work/history for recovery. This batch provides no restore action or terminal heartbeat loophole. Future work needs new admission with current budget, owner, scope and resource checks; any future restoration API would require those checks explicitly. Do not roll back an old coordination JSON over newer claims.
+
+Progress/reconciliation/resume keep `cancelled` or `superseded` terminal despite old leases, check failures or missing branches. Resume carries the retirement receipt, suppresses obsolete next actions/QA requests, and schedules no refresh. External running checks can still be reported factually; retirement does not cancel them. Cleanup remains restricted to verified, accounted **completed** work and never deletes a retired branch.
+
+### Engine provenance and release sequence
+
+`src/coordination.mjs` is canonical. `src/coordination-engine.js` is its byte-exact runtime mirror; `RUNNER_ENGINE_SHA` lives in `src/runner-control-core.js` and identifies the Git blob. `node scripts/sync-coordination-engine.mjs --local` synchronizes a reviewed local candidate's mirror/pin before tests; without `--local` it reads and verifies canonical main. Neither mode deploys or disables drift checks.
+
+Review/merge, runtime publication, and individual live retirement transactions are separate authorization gates. After a canonical engine merge and before the matching runtime is published, the old runtime's drift guard will intentionally block mutations. Verify the deployed build, discovered schema and exact engine pin before live retirement. Preserve completion/cleanup guards throughout the cutover. This batch has not merged, deployed, or retired any live assignment.

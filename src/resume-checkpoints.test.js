@@ -227,3 +227,38 @@ test('resume binds durable staff and team changes invalidate the checkpoint',()=
   const next=deriveResumeCheckpoint({...input,assignment:{...input.assignment,supporting_staff:[]}});
   assert.notEqual(next.checkpoint_id,first.checkpoint_id);
 });
+test('retirement suppresses stale resume instructions, QA and cadence while retaining evidence', () => {
+  for (const state of ['cancelled', 'superseded']) {
+    const retirement = { at: '2026-10-01T00:00:00Z', intent: { evidence: 'Branch retained' } };
+    const result = deriveResumeCheckpoint({ project: 'relay', assignment: { ...assignment, state, retirement, next_action: 'Renew and ask for QA' }, progress: progress({ state: 'waiting-for-human', waiting_reason: 'Approve', recovery_action: 'Renew', next_action: 'Resume old work' }) });
+    assert.equal(result.state, state);
+    assert.equal(result.stage, 'retired');
+    assert.equal(result.next_action, null);
+    assert.equal(result.cadence.next_refresh_at, null);
+    assert.equal(result.cadence.target_ms, null);
+    assert.equal(result.qa_context.required, false);
+    assert.deepEqual(result.wait, { reason: null, recovery_action: null });
+    assert.deepEqual(result.retirement, retirement);
+    assert.match(result.resume.instruction, /do not renew or resume/);
+  }
+});
+test('live resume route returns terminal queue-only work once and does not duplicate retired claim mirrors', async () => {
+  const { callResume } = await import('./resume-checkpoints.js');
+  const retired = { id: 'old', owner: 'worker', state: 'cancelled', branch: 'relay/old', next_action: 'Resume obsolete work', retirement: { at: '2026-10-01T00:00:00Z', intent: { evidence: 'Preserved' } } };
+  const queued = { ...retired, id: 'queue-only', branch: undefined, state: 'superseded' };
+  const registration = { id: 'relay', repository: 'lrnolivia/relay', managed: true, default_branch: 'main', implementation: { branch_prefixes: ['relay/'], excluded_branches: ['main'] }, coordination: { status: 'enabled', record: 'coordination/relay.json', max_active_branches: 4, lease_hours: 12 } };
+  const record = { project: 'relay', claims: [retired], queue: [retired, queued], legacy_branches: ['main'] };
+  const api = async path => {
+    if (path.includes('/contents/')) return { type: 'file', encoding: 'base64', sha: 'a'.repeat(40), content: Buffer.from(JSON.stringify(path.includes('projects/') ? registration : record)).toString('base64') };
+    if (path.includes('/branches?') || path.includes('/pulls?') || path.includes('/commits?')) return [];
+    throw new Error(`Unexpected request ${path}`);
+  };
+  const result = await callResume({ project: 'relay' }, {}, api);
+  assert.equal(result.checkpoints.length, 2);
+  for (const checkpoint of result.checkpoints) {
+    assert.equal(checkpoint.next_action, null);
+    assert.equal(checkpoint.cadence.target_ms, null);
+    assert.equal(checkpoint.retirement.intent.evidence, 'Preserved');
+  }
+  assert.equal(result.checkpoints.find(item => item.assignment.id === 'queue-only').state, 'superseded');
+});

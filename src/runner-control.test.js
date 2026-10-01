@@ -7,7 +7,7 @@ const sha = 'a'.repeat(40);
 const newSha = 'b'.repeat(40);
 const defaultRequest = { id: 'task', owner: 'worker', branch: 'relay/task', paths: ['src/'], resources: ['relay-control'], goal: 'Native tools', acceptance: 'Policy enforced', next_action: 'Implement' };
 function fixture(options = {}) {
-  let record = { schema: 1, project: 'relay', claims: options.claims || [], queue: [], legacy_branches: ['main', 'old-task'] };
+  let record = { schema: 1, project: 'relay', claims: options.claims || [], queue: options.queue || [], legacy_branches: ['main', 'old-task'] };
   let revision = sha;
   const writes = [];
   const calls = [];
@@ -31,6 +31,10 @@ function fixture(options = {}) {
       return writes.length ? file(`${JSON.stringify(record, null, 2)}\n`, revision) : file(record, revision);
     }
     if (path.includes('/branches?')) return options.branches || [];
+    if (path.includes('/git/ref/heads/relay%2Ftask')) {
+      if (options.headError) throw Object.assign(new Error('Head unavailable'), { status: options.headError });
+      return { object: { sha: options.head || sha } };
+    }
     if (path.includes('/git/ref/heads/main')) return { object: { sha } };
     if (path.includes('/pulls?state=open')) return [];
     if (path.endsWith('/pulls/9')) return options.pr || { merged: false };
@@ -63,6 +67,7 @@ test('generated policy is byte-exact Runner source with correct Git blob provena
   const source = await readFile(new URL('./coordination-engine.js', import.meta.url));
   const hash = createHash('sha1').update(`blob ${source.length}\0`).update(source).digest('hex');
   assert.equal(hash, RUNNER_ENGINE_SHA);
+  assert.deepEqual(source, await readFile(new URL('./coordination.mjs', import.meta.url)));
 });
 test('definitions describe reads and bounded writes with strict server validation', async () => {
   assert.equal(runnerControlTools.length, 11);
@@ -240,4 +245,48 @@ test('staff is canonical across queue claim amend and handoff, without staff aut
   assert.equal(handed.claim.owner,'successor-machine');
   assert.equal(handed.claim.primary_staff,'julian');
   assert.equal(handed.claim.branch,defaultRequest.branch);
+});
+
+const retirement = (extra = {}) => ({ id: 'task', owner: 'worker', disposition: 'cancelled', reason: 'Experiment abandoned', evidence: 'Writers stopped; branch and PR retained', operation_id: 'retire-task-1', expected_head_sha: sha, ...extra });
+test('retire verifies branch head and record CAS, with exact readback and idempotent replay', async () => {
+  const f = fixture({ claims: [claim({ state: 'held' })], timeout: true });
+  const result = await coordinate(f, 'retire', retirement());
+  assert.equal(result.assignment.state, 'cancelled');
+  assert.equal(result.receipt.reconciled_after_transport_error, true);
+  assert.equal(f.writes[0].body.sha, sha);
+  const replay = await coordinate(f, 'retire', retirement(), newSha);
+  assert.equal(replay.receipt.replayed, true);
+  assert.deepEqual(replay.assignment.retirement, result.assignment.retirement);
+  assert.equal(f.writes.length, 1);
+  await assert.rejects(coordinate(f, 'retire', retirement({ reason: 'Different' }), newSha), /different intent/);
+  await assert.rejects(coordinate(f, 'heartbeat', { id: 'task', owner: 'worker', next_action: 'Resume' }, newSha), /active claim/);
+});
+test('retire treats only confirmed 404 as absent and never accepts caller-verified heads', async () => {
+  const absent = fixture({ claims: [claim()], headError: 404 });
+  assert.equal((await coordinate(absent, 'retire', retirement({ expected_head_sha: null }))).assignment.state, 'cancelled');
+  for (const options of [{ head: newSha }, { headError: 403 }, { headError: 500 }]) {
+    const f = fixture({ claims: [claim()], ...options });
+    await assert.rejects(coordinate(f, 'retire', retirement()));
+    assert.equal(f.writes.length, 0);
+  }
+  const f = fixture({ claims: [claim()] });
+  await assert.rejects(coordinate(f, 'retire', retirement({ verified_head_sha: sha })), /unsupported/);
+  await assert.rejects(coordinate(f, 'retire', retirement({ owner: 'someone-else' })), /owner/);
+  await assert.rejects(coordinate(f, 'retire', retirement(), newSha), /Record changed/);
+  assert.equal(f.writes.length, 0);
+});
+test('retire preserves drift and conflict guards and reports uncertain readback without retry', async () => {
+  for (const [options, code, writes] of [[{ engineSha: newSha }, 'policy_drift', 0], [{ conflict: true }, 'conflict', 1], [{ readbackUnavailable: true, timeout: true }, 'uncertain_write', 1]]) {
+    const f = fixture({ claims: [claim()], ...options });
+    await assert.rejects(coordinate(f, 'retire', retirement()), error => error.code === code);
+    assert.equal(f.writes.length, writes);
+  }
+});
+test('queued retirement makes no branch request and returns its terminal assignment', async () => {
+  const f = fixture({ queue: [{ id: 'task', owner: 'worker', state: 'queued', goal: 'Keep intent' }] });
+  const { expected_head_sha, ...request } = retirement();
+  const result = await coordinate(f, 'retire', request);
+  assert.equal(result.assignment.goal, 'Keep intent');
+  assert.equal(result.assignment.state, 'cancelled');
+  assert.equal(f.calls.some(path => path.includes('/git/ref/')), false);
 });

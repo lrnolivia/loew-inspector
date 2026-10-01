@@ -1,7 +1,7 @@
 import { githubApiRequest } from './source.js';
 import { transition, evaluate, occupying, normalizeScope } from './coordination-engine.js';
 
-export const RUNNER_ENGINE_SHA = '21265cd09e4cc0e120be2e8f23676ce0053ee785';
+export const RUNNER_ENGINE_SHA = '00d3aa78fac5bbe38b101ca87e8f3c0b72dcef59';
 export const DEFAULT_RUNNER_CONTROL_REPOSITORY = 'lrnolivia/relay';
 
 export class ControlError extends Error {
@@ -160,7 +160,8 @@ async function mutate(api, control, controlRepository, context, args) {
     heartbeat: ['id', 'owner', 'next_action'],
     hold: ['id', 'owner', 'next_action'],
     handoff: ['id', 'owner', 'successor', 'next_action'],
-    complete: ['id', 'owner', 'pr', 'work_accounted', 'evidence']
+    complete: ['id', 'owner', 'pr', 'work_accounted', 'evidence'],
+    retire: ['id', 'owner', 'disposition', 'reason', 'evidence', 'operation_id', 'expected_head_sha', 'superseded_by']
   }[args.action];
   for (const key of Object.keys(args.request)) {
     if (!allowed.includes(key)) throw new ControlError('validation', `request.${key} is unsupported for ${args.action}`);
@@ -174,7 +175,8 @@ async function mutate(api, control, controlRepository, context, args) {
     heartbeat: ['next_action'],
     hold: ['next_action'],
     handoff: ['successor', 'next_action'],
-    complete: ['pr', 'work_accounted', 'evidence']
+    complete: ['pr', 'work_accounted', 'evidence'],
+    retire: ['disposition', 'reason', 'evidence', 'operation_id']
   }[args.action];
   for (const key of required) {
     if (!(key in args.request)) throw new ControlError('validation', `request.${key} is required for ${args.action}`);
@@ -212,6 +214,24 @@ async function mutate(api, control, controlRepository, context, args) {
     request.merge_commit_sha = pr.merge_commit_sha;
   }
 
+  if (args.action === 'retire') {
+    const claim = context.record.value.claims.find(item => item.id === request.id);
+    if (claim) {
+      if (claim.owner !== request.owner) throw new ControlError('ownership', 'Retirement requires the current assignment owner');
+      let head;
+      try {
+        head = (await api(`${base}/git/ref/heads/${encodeURIComponent(claim.branch)}`))?.object?.sha;
+        if (!/^[a-f0-9]{40}$/.test(head || '')) throw new ControlError('provider', 'Branch head response is incomplete');
+      } catch (error) {
+        if (error.status !== 404) throw error;
+        head = null;
+      }
+      // A replay returns its retained receipt even if later external activity changed the branch.
+      // It still passes intent/owner validation below and never performs another write.
+      request.verified_head_sha = head;
+    }
+  }
+
   let next;
   try {
     next = transition(context.record.value, request, context.policy);
@@ -226,6 +246,12 @@ async function mutate(api, control, controlRepository, context, args) {
   await engineGuard(api, control);
 
   const content = `${JSON.stringify(next, null, 2)}\n`;
+  if (args.action === 'retire' && JSON.stringify(next) === JSON.stringify(context.record.value)) {
+    const assignment = next.claims.find(item => item.id === request.id) || next.queue.find(item => item.id === request.id);
+    return result(context, { action: args.action, claim: assignment, assignment,
+      receipt: { repository: controlRepository, path: `coordination/${args.project}.json`, record_sha: context.record.sha,
+        replayed: true, retirement: assignment.retirement } });
+  }
   let saved;
   let writeError;
   try {
@@ -266,8 +292,8 @@ async function mutate(api, control, controlRepository, context, args) {
   const queuedItem = verified.value.queue.find(item => item.id === request.id);
   const assignment = args.action === 'queue'
     ? queuedItem
-    : args.action === 'amend'
-      ? (activeClaim || queuedItem)
+    : args.action === 'amend' || args.action === 'retire'
+      ? (verified.value.claims.find(item => item.id === request.id) || activeClaim || queuedItem)
       : verified.value.claims.find(item => item.id === request.id);
   return result({ ...context, record: verified }, {
     action: args.action,

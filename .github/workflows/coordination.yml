@@ -8,14 +8,14 @@ on:
       action:
         description: Coordination action
         type: choice
-        options: [audit, queue, claim, rescope, heartbeat, hold, handoff, complete, preflight]
+        options: [audit, queue, claim, rescope, heartbeat, hold, handoff, complete, retire, preflight]
         default: audit
       project:
         description: Registered project id
         type: string
         default: field
       request:
-        description: JSON request; required for claim, queue, rescope, heartbeat, hold, handoff, complete, preflight
+        description: JSON request; required for claim, queue, rescope, heartbeat, hold, handoff, complete, retire, preflight
         type: string
         default: '{}'
 

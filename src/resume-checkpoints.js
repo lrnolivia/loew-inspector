@@ -1,3 +1,4 @@
+import { retired } from "./coordination-engine.js";
 import { createHash } from "node:crypto";
 import { githubApiRequest } from "./source.js";
 import { callProgress } from "./progress-api.js";
@@ -47,13 +48,14 @@ function successfulEvent(events = []) {
 }
 
 function cadence(progress) {
-  if (!progress || progress.state === "complete") return null;
+  if (!progress || progress.state === "complete" || retired(progress)) return null;
   if (progress.state === "waiting-for-human") return HUMAN_CADENCE_MS;
   if (progress.state === "waiting-on-external-system") return EXTERNAL_CADENCE_MS;
   return ACTIVE_CADENCE_MS;
 }
 
 function qaContext(progress, assignment) {
+  if (retired(assignment) || retired(progress)) return { required: false };
   const text = [progress?.waiting_reason, progress?.next_action, assignment?.next_action].filter(Boolean).join(" ");
   if (progress?.state === "waiting-for-human" || /\b(qa|review|visual|preview|human|approve|approval)\b/i.test(text)) {
     return {
@@ -67,6 +69,7 @@ function qaContext(progress, assignment) {
 }
 
 function checkpointCore({ project, assignment, progress, changedPaths, changedPathsTruncated, recentCommits, recordSha, policySha }) {
+  const terminal = retired(assignment) || retired(progress);
   return {
     contract_version: RESUME_CONTRACT_VERSION,
     project,
@@ -85,8 +88,9 @@ function checkpointCore({ project, assignment, progress, changedPaths, changedPa
       supporting_roles: Array.isArray(assignment?.supporting_roles) ? assignment.supporting_roles : [],
       ledger_refs: Array.isArray(assignment?.ledger_refs) ? assignment.ledger_refs : []
     },
-    state: progress?.state || assignment?.state || "unknown",
-    stage: progress?.stage || "unknown",
+    state: retired(assignment) ? assignment.state : progress?.state || assignment?.state || "unknown",
+    retirement: assignment?.retirement || progress?.retirement || null,
+    stage: terminal ? "retired" : progress?.stage || "unknown",
     identities: progress?.identities || {
       base_sha: assignment?.base_sha || null,
       branch: assignment?.branch || null
@@ -108,10 +112,10 @@ function checkpointCore({ project, assignment, progress, changedPaths, changedPa
       last_successful_action: successfulEvent(progress?.events || [])
     },
     wait: {
-      reason: progress?.waiting_reason || null,
-      recovery_action: progress?.recovery_action || null
+      reason: terminal ? null : progress?.waiting_reason || null,
+      recovery_action: terminal ? null : progress?.recovery_action || null
     },
-    next_action: progress?.next_action || assignment?.next_action || null,
+    next_action: terminal ? null : progress?.next_action || assignment?.next_action || null,
     qa_context: qaContext(progress, assignment),
     canonical_record_sha: recordSha || null,
     policy_sha: policySha || null
@@ -121,7 +125,7 @@ function checkpointCore({ project, assignment, progress, changedPaths, changedPa
 export function deriveResumeCheckpoint(input, now = new Date()) {
   const core = checkpointCore(input);
   const checkpointId = hash(core);
-  const target = cadence(input.progress);
+  const target = retired(core) ? null : cadence(input.progress);
   const generatedAt = now.toISOString();
   return {
     ...core,
@@ -140,7 +144,7 @@ export function deriveResumeCheckpoint(input, now = new Date()) {
       next_refresh_at: target === null ? null : new Date(now.getTime() + target).toISOString()
     },
     resume: {
-      instruction: core.next_action || "Reconcile current canonical evidence before choosing the next action.",
+      instruction: retired(core) ? "Assignment retired. Preserve its evidence; do not renew or resume it. Any future work requires fresh admission." : core.next_action || "Reconcile current canonical evidence before choosing the next action.",
       reconstruct_chat_history: false
     }
   };
@@ -201,8 +205,8 @@ async function recentCommits(api, repoBase, claim) {
 function queuedCheckpoint(project, assignment, recordSha, policySha, now = new Date()) {
   const progress = {
     assignment: assignment.id,
-    state: "queued",
-    stage: "queued",
+    state: assignment.state,
+    stage: retired(assignment) ? "retired" : "queued",
     identities: {},
     events: [],
     next_action: assignment.next_action || null
@@ -251,7 +255,8 @@ export async function callResume(args, env = {}, apiOverride, cloudOverride, now
   }
 
   for (const item of assignments.queue || []) {
-    if (item.state !== "queued") continue;
+    if (item.state !== "queued" && !retired(item)) continue;
+    if ((assignments.claims || []).some(claim => claim.id === item.id)) continue;
     if (args.assignment && item.id !== args.assignment) continue;
     checkpoints.push(queuedCheckpoint(args.project, item, assignments.record_sha, assignments.policy_sha, now));
   }

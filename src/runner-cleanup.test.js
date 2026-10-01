@@ -230,3 +230,13 @@ test("cleanup reads policy and coordination from configured Relay control author
   assert.equal(result.ok, true);
   assert.ok(f.calls.some(call => call.path.startsWith("/repos/lrnolivia/relay/contents/projects/relay.json")));
 });
+test('retired claims never qualify for cleanup even with inherited completion-like evidence', async () => {
+  for (const state of ['cancelled', 'superseded']) {
+    const f = fixture({ claims: [completed({ state })] });
+    const result = await callRunnerCleanup({ project: 'relay', mode: 'execute' }, {}, f.api);
+    assert.deepEqual(result.eligible, []);
+    assert.deepEqual(result.deleted, []);
+    assert.deepEqual(f.deletes, []);
+    assert.equal(f.branches.has('relay/done-task'), true);
+  }
+});
