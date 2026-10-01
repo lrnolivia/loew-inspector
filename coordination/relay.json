@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T07:00:06.384Z",
+  "updated_at": "2026-10-01T07:02:29.755Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5486,8 +5486,8 @@
       "id": "relay-2.0-today-runner-react-slice-20261001",
       "owner": "relay-2.0-today-runner-react-slice-20261001",
       "goal": "Build Relay 2.0's first working React/live-state proof across Today, Runner and night shift, explicitly carrying forward the Runner + night shift product work that did not actually ship in 1.9.9, without touching the separate ChatGPT inline-card host lane.",
-      "acceptance": "A clean checkout can build the new Vite React app without committing dist/generated bundle output; Today, Runner and night shift render canonical Relay data; the missing Runner/night shift experience intended for 1.9.9 is implemented here as an explicit 2.0 carry-forward rather than retroactively claimed as shipped; Runner must lead with human questions rather than system nouns: what is happening, what changed, what needs the user, what happens next, and whether anything is stuck, with assignment/queue/receipt identities available as secondary detail rather than primary hierarchy; night shift must read as a calm unattended-work briefing: what was checked, what quietly passed, what changed while the user was away, what is currently watching, and only the small set of items worth attention, rather than a worker/process table; a bounded live event contract updates progress/worker/monitoring state without manual page refresh; dropped streams visibly enter reconnecting/stale states and reconcile from a canonical snapshot; project context is URL-addressable; each primary page uses a compact top-of-page signal deck based on the corrected Inspector card family, with strong identity marks, restrained feature-name reduction, two-up desktop layout, horizontal pan/scroll-snap, optional idle advance, and reduced-motion support; deeper page content must use plain-language summaries, progressive disclosure for technical identity/receipts, and explicit human actions only when a real decision is needed; existing 1.9.9 production UI remains available until later cutover; no files owned by the ChatGPT card host assignment are modified.",
-      "next_action": "Keep the corrected Inspector card proportions as the visual baseline, then redesign Runner around 'now / needs you / next / recent changes' and night shift around 'while you were away / watching / changed / attention'. Only after those human-facing information architectures are locked should the React routes and live-state components be committed.",
+      "acceptance": "A clean checkout can build the new Vite React app without committing dist/generated bundle output. Preserve the original Relay product hierarchy: Relay is the human-facing product; Runner is the execution/coordination subsystem surfaced only through human-readable progress and useful controls; Inspector verifies; night shift is the 'what happened while you weren't looking' briefing and should summarize meaningful unattended work, what quietly passed, what changed, what needs review and what is blocked. Today is the present-tense system window. Today, Runner and night shift must explain what is happening, why it matters and the next useful action within seconds. Runner work must be presented as human-readable horizontal cards/timelines and plain-language current-state sections before assignment IDs, branches, queue records or receipts; technical identities belong in progressive disclosure. Night shift should lead with a digest such as '8 things happened while you were away · 2 need review · 1 project is blocked', then show only consequential changes and current watches rather than a worker table. The missing Runner/night-shift 1.9.9 work is explicitly carried into 2.0 rather than retroactively counted as shipped. Live canonical updates must appear without manual refresh; reconnect/stale states must be truthful. Each primary page uses the corrected shared card family: strong identity marks, only modestly smaller feature names, tighter geometry, two-up desktop signal deck, horizontal pan/scroll-snap, restrained idle advance, and reduced-motion support. Existing 1.9.9 production UI remains available until cutover; do not touch the separate ChatGPT card-host lane.",
+      "next_action": "Redesign and implement Runner around human questions: 'what's happening', 'what changed', 'what needs me', 'what's next', and 'is anything stuck?', with technical details behind disclosure. Redesign night shift as the original while-you-were-away digest: headline summary counts, meaningful overnight/unattended changes, review/blocker callouts, and a calm currently-watching section. Keep Today as current-state aggregation. Use the corrected Inspector card proportions as the shared visual baseline, then continue the React/live-state build.",
       "paths": [
         "apps/web/package.json",
         "apps/web/vite.config.ts",
@@ -5548,7 +5548,7 @@
       ],
       "state": "claimed",
       "created_at": "2026-10-01T06:33:20.314Z",
-      "amendment_count": 4,
+      "amendment_count": 5,
       "amendments": [
         {
           "at": "2026-10-01T06:43:57.215Z",
@@ -5646,9 +5646,26 @@
             "acceptance": "A clean checkout can build the new Vite React app without committing dist/generated bundle output; Today, Runner and night shift render canonical Relay data; the missing Runner/night shift experience intended for 1.9.9 is implemented here as an explicit 2.0 carry-forward rather than retroactively claimed as shipped; Runner must lead with human questions rather than system nouns: what is happening, what changed, what needs the user, what happens next, and whether anything is stuck, with assignment/queue/receipt identities available as secondary detail rather than primary hierarchy; night shi...",
             "next_action": "Keep the corrected Inspector card proportions as the visual baseline, then redesign Runner around 'now / needs you / next / recent changes' and night shift around 'while you were away / watching / changed / attention'. Only after those human-facing information architectures are locked should the React routes and live-state components be committed."
           }
+        },
+        {
+          "at": "2026-10-01T07:02:29.755Z",
+          "by": "relay-2.0-today-runner-react-slice-20261001",
+          "reason": "Reviewed the original Relay product/UI brief from 2026-09-30 plus the later 1.9.9 checkpoint. Restore the original hierarchy: Relay is the human-facing product, Runner executes, Inspector verifies, and night shift summarizes what matters / what happened while the user was away. Technical coordination identities stay secondary.",
+          "fields": [
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "acceptance": "A clean checkout can build the new Vite React app without committing dist/generated bundle output; Today, Runner and night shift render canonical Relay data; the missing Runner/night shift experience intended for 1.9.9 is implemented here as an explicit 2.0 carry-forward rather than retroactively claimed as shipped; Runner must lead with human questions rather than system nouns: what is happening, what changed, what needs the user, what happens next, and whether anything is stuck, with assignment/queue/receipt identities available as secondary detail rather than primary hierarchy; night shi...",
+            "next_action": "Keep the corrected Inspector card proportions as the visual baseline, then redesign Runner around 'now / needs you / next / recent changes' and night shift around 'while you were away / watching / changed / attention'. Only after those human-facing information architectures are locked should the React routes and live-state components be committed."
+          },
+          "after": {
+            "acceptance": "A clean checkout can build the new Vite React app without committing dist/generated bundle output. Preserve the original Relay product hierarchy: Relay is the human-facing product; Runner is the execution/coordination subsystem surfaced only through human-readable progress and useful controls; Inspector verifies; night shift is the 'what happened while you weren't looking' briefing and should summarize meaningful unattended work, what quietly passed, what changed, what needs review and what is blocked. Today is the present-tense system window. Today, Runner and night shift must explain what...",
+            "next_action": "Redesign and implement Runner around human questions: 'what's happening', 'what changed', 'what needs me', 'what's next', and 'is anything stuck?', with technical details behind disclosure. Redesign night shift as the original while-you-were-away digest: headline summary counts, meaningful overnight/unattended changes, review/blocker callouts, and a calm currently-watching section. Keep Today as current-state aggregation. Use the corrected Inspector card proportions as the shared visual baseline, then continue the React/live-state build."
+          }
         }
       ],
-      "updated_at": "2026-10-01T07:00:06.384Z"
+      "updated_at": "2026-10-01T07:02:29.755Z"
     },
     {
       "id": "relay-inline-card-cleanroom-20261001",
@@ -8535,8 +8552,8 @@
         "relay-inspector-preview-density"
       ],
       "goal": "Build Relay 2.0's first working React/live-state proof across Today, Runner and night shift, explicitly carrying forward the Runner + night shift product work that did not actually ship in 1.9.9, without touching the separate ChatGPT inline-card host lane.",
-      "acceptance": "A clean checkout can build the new Vite React app without committing dist/generated bundle output; Today, Runner and night shift render canonical Relay data; the missing Runner/night shift experience intended for 1.9.9 is implemented here as an explicit 2.0 carry-forward rather than retroactively claimed as shipped; Runner must lead with human questions rather than system nouns: what is happening, what changed, what needs the user, what happens next, and whether anything is stuck, with assignment/queue/receipt identities available as secondary detail rather than primary hierarchy; night shift must read as a calm unattended-work briefing: what was checked, what quietly passed, what changed while the user was away, what is currently watching, and only the small set of items worth attention, rather than a worker/process table; a bounded live event contract updates progress/worker/monitoring state without manual page refresh; dropped streams visibly enter reconnecting/stale states and reconcile from a canonical snapshot; project context is URL-addressable; each primary page uses a compact top-of-page signal deck based on the corrected Inspector card family, with strong identity marks, restrained feature-name reduction, two-up desktop layout, horizontal pan/scroll-snap, optional idle advance, and reduced-motion support; deeper page content must use plain-language summaries, progressive disclosure for technical identity/receipts, and explicit human actions only when a real decision is needed; existing 1.9.9 production UI remains available until later cutover; no files owned by the ChatGPT card host assignment are modified.",
-      "next_action": "Keep the corrected Inspector card proportions as the visual baseline, then redesign Runner around 'now / needs you / next / recent changes' and night shift around 'while you were away / watching / changed / attention'. Only after those human-facing information architectures are locked should the React routes and live-state components be committed.",
+      "acceptance": "A clean checkout can build the new Vite React app without committing dist/generated bundle output. Preserve the original Relay product hierarchy: Relay is the human-facing product; Runner is the execution/coordination subsystem surfaced only through human-readable progress and useful controls; Inspector verifies; night shift is the 'what happened while you weren't looking' briefing and should summarize meaningful unattended work, what quietly passed, what changed, what needs review and what is blocked. Today is the present-tense system window. Today, Runner and night shift must explain what is happening, why it matters and the next useful action within seconds. Runner work must be presented as human-readable horizontal cards/timelines and plain-language current-state sections before assignment IDs, branches, queue records or receipts; technical identities belong in progressive disclosure. Night shift should lead with a digest such as '8 things happened while you were away · 2 need review · 1 project is blocked', then show only consequential changes and current watches rather than a worker table. The missing Runner/night-shift 1.9.9 work is explicitly carried into 2.0 rather than retroactively counted as shipped. Live canonical updates must appear without manual refresh; reconnect/stale states must be truthful. Each primary page uses the corrected shared card family: strong identity marks, only modestly smaller feature names, tighter geometry, two-up desktop signal deck, horizontal pan/scroll-snap, restrained idle advance, and reduced-motion support. Existing 1.9.9 production UI remains available until cutover; do not touch the separate ChatGPT card-host lane.",
+      "next_action": "Redesign and implement Runner around human questions: 'what's happening', 'what changed', 'what needs me', 'what's next', and 'is anything stuck?', with technical details behind disclosure. Redesign night shift as the original while-you-were-away digest: headline summary counts, meaningful overnight/unattended changes, review/blocker callouts, and a calm currently-watching section. Keep Today as current-state aggregation. Use the corrected Inspector card proportions as the shared visual baseline, then continue the React/live-state build.",
       "task_class": "architecture",
       "category": "implementation",
       "labels": [
@@ -8577,9 +8594,9 @@
       "base_sha": "0f0dc565dea89951e9d571b96d3771466d087b32",
       "state": "active",
       "created_at": "2026-10-01T06:45:18.694Z",
-      "updated_at": "2026-10-01T07:00:06.384Z",
-      "lease_until": "2026-10-01T19:00:06.384Z",
-      "amendment_count": 2,
+      "updated_at": "2026-10-01T07:02:29.755Z",
+      "lease_until": "2026-10-01T19:02:29.755Z",
+      "amendment_count": 3,
       "amendments": [
         {
           "at": "2026-10-01T06:54:00.908Z",
@@ -8610,6 +8627,23 @@
           "after": {
             "acceptance": "A clean checkout can build the new Vite React app without committing dist/generated bundle output; Today, Runner and night shift render canonical Relay data; the missing Runner/night shift experience intended for 1.9.9 is implemented here as an explicit 2.0 carry-forward rather than retroactively claimed as shipped; Runner must lead with human questions rather than system nouns: what is happening, what changed, what needs the user, what happens next, and whether anything is stuck, with assignment/queue/receipt identities available as secondary detail rather than primary hierarchy; night shi...",
             "next_action": "Keep the corrected Inspector card proportions as the visual baseline, then redesign Runner around 'now / needs you / next / recent changes' and night shift around 'while you were away / watching / changed / attention'. Only after those human-facing information architectures are locked should the React routes and live-state components be committed."
+          }
+        },
+        {
+          "at": "2026-10-01T07:02:29.755Z",
+          "by": "relay-2.0-today-runner-react-slice-20261001",
+          "reason": "Reviewed the original Relay product/UI brief from 2026-09-30 plus the later 1.9.9 checkpoint. Restore the original hierarchy: Relay is the human-facing product, Runner executes, Inspector verifies, and night shift summarizes what matters / what happened while the user was away. Technical coordination identities stay secondary.",
+          "fields": [
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "acceptance": "A clean checkout can build the new Vite React app without committing dist/generated bundle output; Today, Runner and night shift render canonical Relay data; the missing Runner/night shift experience intended for 1.9.9 is implemented here as an explicit 2.0 carry-forward rather than retroactively claimed as shipped; Runner must lead with human questions rather than system nouns: what is happening, what changed, what needs the user, what happens next, and whether anything is stuck, with assignment/queue/receipt identities available as secondary detail rather than primary hierarchy; night shi...",
+            "next_action": "Keep the corrected Inspector card proportions as the visual baseline, then redesign Runner around 'now / needs you / next / recent changes' and night shift around 'while you were away / watching / changed / attention'. Only after those human-facing information architectures are locked should the React routes and live-state components be committed."
+          },
+          "after": {
+            "acceptance": "A clean checkout can build the new Vite React app without committing dist/generated bundle output. Preserve the original Relay product hierarchy: Relay is the human-facing product; Runner is the execution/coordination subsystem surfaced only through human-readable progress and useful controls; Inspector verifies; night shift is the 'what happened while you weren't looking' briefing and should summarize meaningful unattended work, what quietly passed, what changed, what needs review and what is blocked. Today is the present-tense system window. Today, Runner and night shift must explain what...",
+            "next_action": "Redesign and implement Runner around human questions: 'what's happening', 'what changed', 'what needs me', 'what's next', and 'is anything stuck?', with technical details behind disclosure. Redesign night shift as the original while-you-were-away digest: headline summary counts, meaningful overnight/unattended changes, review/blocker callouts, and a calm currently-watching section. Keep Today as current-state aggregation. Use the corrected Inspector card proportions as the shared visual baseline, then continue the React/live-state build."
           }
         }
       ]
