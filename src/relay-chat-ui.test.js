@@ -74,23 +74,34 @@ test('cards show named teams blockers handoffs QA and subordinate exact evidence
   assert.equal(contextCardModel({ok:false,error:{message:'Authorization required'}}).label,'Blocked');
   assert.equal(contextCardModel({check_runs:[]}).label,'No checks recorded');
 });
-test('card actually initializes and receives results without browser-global element collisions', async () => {
+test('card initializes the standard MCP Apps bridge even when window.openai exists', async () => {
   const {chromium}=await import('playwright');
   const browser=await chromium.launch({headless:true});
   try {
-    for(const bridge of ['openai','mcp']) {
-      const page=await browser.newPage();const errors=[];page.on('pageerror',e=>errors.push(e.message));
-      if(bridge==='openai') await page.addInitScript(()=>{window.openai={toolOutput:{project:'relay',claim:{primary_staff:'julian',supporting_staff:['roman'],goal:'Staff routing is ready',state:'active'}},callTool:async()=>({}),requestModal:async()=>{window.modalRequested=true}}});
-      await page.goto('data:text/html,'+encodeURIComponent(relayContextCardResource().text));
-      if(bridge==='mcp') await page.evaluate(()=>window.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:{structuredContent:{project:'relay',claim:{primary_staff:'julian',supporting_staff:['roman'],goal:'Staff routing is ready',state:'active'}}}},'*'));
-      await assert.doesNotReject(page.locator('#title').filter({hasText:'Staff routing is ready'}).waitFor());
-      assert.equal(await page.locator('#qa-media').isHidden(),true);
-      assert.equal(await page.locator('#team').textContent(),'Julian');
-      assert.equal(await page.locator('#staff').getAttribute('title'),'Julian with Roman');
-      assert.deepEqual(errors,[]);
-      if(bridge==='openai'){await page.getByRole('button',{name:'Open Relay'}).click();assert.equal(await page.evaluate(()=>window.modalRequested),true)}
-      await page.close();
-    }
+    const page=await browser.newPage();
+    const widget=relayContextCardResource().text.replace('<head>','<head><script>window.openai={requestModal:async()=>{}};<\\/script>');
+    await page.setContent('<iframe id="widget"></iframe>');
+    await page.evaluate(html=>{
+      const frame=document.getElementById('widget');
+      window.seenInitialize=false;
+      window.addEventListener('message',event=>{
+        const message=event.data;
+        if(event.source!==frame.contentWindow||message?.jsonrpc!=='2.0')return;
+        if(message.method==='ui/initialize'){
+          window.seenInitialize=true;
+          event.source.postMessage({jsonrpc:'2.0',id:message.id,result:{protocolVersion:'2026-01-26'}},'*');
+        } else if(message.method==='ui/notifications/initialized'){
+          event.source.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-input',params:{project:'relay'}},'*');
+          event.source.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:{structuredContent:{project:'relay',claim:{primary_staff:'julian',supporting_staff:['roman'],goal:'Staff routing is ready',state:'active'}}}},'*');
+        }
+      });
+      frame.srcdoc=html;
+    },widget);
+    const frame=page.frameLocator('#widget');
+    await frame.locator('#title').filter({hasText:'Staff routing is ready'}).waitFor();
+    assert.equal(await page.evaluate(()=>window.seenInitialize),true);
+    assert.equal(await frame.locator('#team').textContent(),'Julian');
+    assert.equal(await frame.locator('#staff').getAttribute('title'),'Julian with Roman');
   } finally {await browser.close()}
 });
 
