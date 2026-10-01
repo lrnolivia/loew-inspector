@@ -41,3 +41,17 @@ test("cloud identity ignores unrelated newer Relay deployments", () => {
   assert.equal(p.identities.cloud_deployment_id,"deploy-mine");
   assert.equal(p.events.some(event=>event.deployment_id==="deploy-newer"),false);
 });
+test('retirement dominates stale leases, failed checks and branch drift without claiming delivery', () => {
+  for (const state of ['cancelled', 'superseded']) {
+    const retirement = { at: '2026-09-30T21:00:00Z', intent: { reason: 'Abandoned', evidence: 'Preserved' } };
+    const p = deriveObservedProgress({ project: 'relay', claim: { ...claim, state, retirement, updated_at: '2020-01-01', next_action: 'Renew and ask for QA' }, checks: [{ name: 'tests', status: 'completed', conclusion: 'failure' }, { name: 'external', status: 'in_progress' }], findings: [{ type: 'missing_branch', assignment: 'x' }], now });
+    assert.equal(p.state, state);
+    assert.equal(p.stage, 'retired');
+    assert.equal(p.next_action, null);
+    assert.equal(p.recovery_action, null);
+    assert.equal(p.waiting_reason, null);
+    assert.deepEqual(p.retirement, retirement);
+    assert.equal(p.external.active, true); // Observed external work is not cancelled by a ledger change.
+    assert.equal(p.events.some(event => event.type === 'runner-heartbeat'), false);
+  }
+});

@@ -11,7 +11,7 @@ import { callResume } from './resume-checkpoints.js';
 import { callAssignmentUpdates } from './amendment-sync.js';
 import { projectCloudStatus, deployProjectCloudVersion } from './project-cloud.js';
 
-const MUTATIONS = ['queue', 'claim', 'amend', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete'];
+const MUTATIONS = ['queue', 'claim', 'amend', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete', 'retire'];
 const text = (max = 500) => ({ type: 'string', minLength: 1, maxLength: max });
 const identity = { ...text(100), pattern: '^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$' };
 const projectSchema = { ...text(80), pattern: '^[a-z0-9-]+$' };
@@ -57,6 +57,10 @@ const requestProperties = {
   primary_staff: { type: ["string", "null"], maxLength: 80 },
   supporting_staff: { type: "array", maxItems: 8, uniqueItems: true, items: text(80) },
   successor: identity,
+  disposition: { type: 'string', enum: ['cancelled', 'superseded'] },
+  superseded_by: identity,
+  operation_id: identity,
+  expected_head_sha: { type: ['string', 'null'], pattern: '^[a-f0-9]{40}$', description: 'Retire only: exact branch head, or explicit null when the claimed branch is absent. Omit for queued work.' },
   pr: { type: 'integer', minimum: 1, maximum: 1000000 },
   work_accounted: { type: 'boolean' },
   evidence: text(4000)
@@ -128,7 +132,7 @@ const DEFINITIONS = [
   },
   {
     name: 'relay_runner_coordinate',
-    description: 'COMMAND / TRANSACTION — perform one CAS-protected Runner queue, claim, amend, rescope, heartbeat, hold, handoff, or completion mutation. Read relay_runner_assignments/project first to obtain the current expected_record_sha and ownership. Claim resolves base_sha server-side; callers must omit it. Completion requires a verified merged PR. On conflict/uncertain outcome, refresh canonical state before retrying; never replay blindly or take over ownership implicitly.',
+    description: 'COMMAND / TRANSACTION — perform one CAS-protected Runner queue, claim, amend, rescope, heartbeat, hold, handoff, complete, or retire mutation. Read relay_runner_assignments/project first to obtain the current expected_record_sha and ownership. Claim resolves base_sha server-side; callers must omit it. Completion requires a verified merged PR. Retirement records cancelled/superseded work without delivery or deletion: require current owner, disposition, reason, evidence, operation_id and expected_head_sha for claims (null only for an absent branch); superseded also requires superseded_by. Stop writers and account for retained work before retiring. On conflict/uncertain outcome, refresh canonical state before retrying; never replay blindly or take over ownership implicitly.',
     inputSchema: schema({
       project: projectSchema,
       action: { type: 'string', enum: MUTATIONS },

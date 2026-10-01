@@ -1,3 +1,4 @@
+import { retired } from "./coordination-engine.js";
 import { PROGRESS_POLICY, freshness } from "./operations.js";
 import { progressEvent, dedupeProgressEvents } from "./operation-events.js";
 import { progressReceipt } from "./operation-receipts.js";
@@ -10,7 +11,8 @@ const versions = cloud => Array.isArray(cloud?.versions) ? cloud.versions : Arra
 export function deriveObservedProgress({ project, claim, branch, commit, pullRequest, checks = [], cloud, findings = [], now = new Date(), policy = PROGRESS_POLICY }) {
   const events = [];
   if (claim?.created_at) events.push(progressEvent("claim-created", claim.created_at, { branch: claim.branch }));
-  if (claim?.updated_at) events.push(progressEvent("runner-heartbeat", claim.updated_at, { state: claim.state }));
+  if (claim?.retirement?.at) events.push(progressEvent("assignment-retired", claim.retirement.at, { state: claim.state }));
+  if (claim?.updated_at && !retired(claim)) events.push(progressEvent("runner-heartbeat", claim.updated_at, { state: claim.state }));
   const commitAt = ts(commit?.commit?.committer?.date || commit?.commit?.author?.date);
   if (branch?.commit?.sha && commitAt) events.push(progressEvent("source-commit", commitAt, { head_sha: branch.commit.sha }));
   if (pullRequest?.created_at) events.push(progressEvent("pull-request-opened", pullRequest.created_at, { pr: pullRequest.number }));
@@ -37,7 +39,8 @@ export function deriveObservedProgress({ project, claim, branch, commit, pullReq
   const failedCheck = checks.find(check => check?.status === "completed" && !["success","neutral","skipped"].includes(check?.conclusion));
   const reconciliation = reconcileExecution(claim, findings);
   let state = "working", stage = "implementation", waiting_reason = null, recovery_action = null;
-  if (claim?.state === "completed") { state = "complete"; stage = "complete"; }
+  if (retired(claim)) { state = claim.state; stage = "retired"; }
+  else if (claim?.state === "completed") { state = "complete"; stage = "complete"; }
   else if (claim?.state === "held") {
     state = /human|approval|review|await/i.test(claim?.next_action || "") ? "waiting-for-human" : "blocked";
     stage = "held"; waiting_reason = claim?.next_action || "Runner claim is held"; recovery_action = claim?.next_action || null;
@@ -72,6 +75,7 @@ export function deriveObservedProgress({ project, claim, branch, commit, pullReq
     external: { active: Boolean(runningCheck), system: runningCheck ? "github" : null, detail: waiting_reason },
     last_meaningful_progress_at: latest?.at || null, progress_freshness: progressFreshness.state,
     latest_event: latest, events: ordered, identities, waiting_reason, recovery_action, reconciliation, receipt,
-    next_action: claim?.next_action || null
+    retirement: claim?.retirement || null,
+    next_action: retired(claim) ? null : claim?.next_action || null
   };
 }
