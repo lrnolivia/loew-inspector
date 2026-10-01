@@ -33,7 +33,41 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  workspace-tests:
+  inspector-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npm run test:inspector
+
+  runner-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npm run test:runner
+
+  contract-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npm run test:layout
+      - run: npm run test:contracts
+
+  web-tests:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -46,8 +80,7 @@ jobs:
       - run: npm ci
       - name: Install deterministic Chromium harness
         run: npx playwright install --with-deps chromium
-      - name: Test Relay workspace boundaries and implementations
-        run: npm test
+      - run: npm test --workspace @relay/web
 
   typecheck-2-0:
     runs-on: ubuntu-latest
