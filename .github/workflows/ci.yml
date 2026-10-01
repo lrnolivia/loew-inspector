@@ -176,7 +176,7 @@ jobs:
 
 
   visual-review-preview:
-    if: github.event_name == 'pull_request' && startsWith(github.head_ref, 'relay/2.0-approved-visual-port-')
+    if: github.event_name == 'pull_request' && github.event.pull_request.draft == true && startsWith(github.head_ref, 'relay/2.0-approved-visual-port-')
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
