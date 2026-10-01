@@ -7,7 +7,7 @@ import { evidenceEngines, planEvidenceRequest, normalizeBrowserCapacityError } f
 import { ingestExternalEvidence, upsertEvidenceRun } from "./external-evidence.js";
 import { getRecipe, listRecipes, saveRecipeFromSession } from "./recipe-store.js";
 import { RELAY_CONTROL_CENTER_URI, relayControlCenterResource } from "./relay-ui.js";
-import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, relayContextCardDescriptor, relayContextCardResource, relayContextCardTool, validateRelayContextCardArguments } from "./relay-chat-ui.js";
+import { RELAY_STATUS_CARD_URI, RELAY_STATUS_CARD_TOOL, relayStatusCardDescriptor, relayStatusCardResource, relayStatusCardTool, RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, relayContextCardDescriptor, relayContextCardResource, relayContextCardTool, validateRelayContextCardArguments } from "./relay-chat-ui.js";
 import { RELAY_SKILL_EXTENSION, relaySkillCatalog, relaySkillByUri, relaySkillResourceDescriptors, relaySkillResource } from "./skills.js";
 import { sourceAuthStatus, githubApiRequest as sourceGithubApiRequest, commitSourceFiles } from "./source.js";
 import { runnerControlTools, callRunnerControl, runnerControlError } from "./runner-control.js";
@@ -380,6 +380,7 @@ async function mcp(request, access, env) {
           mimeType: "text/html;profile=mcp-app"
         },
         relayContextCardDescriptor(),
+        relayStatusCardDescriptor(),
         ...relaySkillResourceDescriptors()
       ]
     });
@@ -392,6 +393,9 @@ async function mcp(request, access, env) {
     }
     if (uri === RELAY_CONTEXT_CARD_URI) {
       return rpc(id, { contents: [relayContextCardResource()] });
+    }
+    if (uri === RELAY_STATUS_CARD_URI) {
+      return rpc(id, { contents: [relayStatusCardResource()] });
     }
     const skillResource = relaySkillResource(uri);
     if (skillResource) return rpc(id, { contents: [skillResource] });
@@ -439,6 +443,7 @@ async function mcp(request, access, env) {
           }
         },
         relayContextCardTool(),
+        relayStatusCardTool(),
 
         {
           name: "relay_control_status",
@@ -934,7 +939,7 @@ async function mcp(request, access, env) {
         }
       }
 
-      if (name === RELAY_CONTEXT_CARD_TOOL) {
+      if (name === RELAY_CONTEXT_CARD_TOOL || name === RELAY_STATUS_CARD_TOOL) {
         const cardArgs = validateRelayContextCardArguments(args);
         const { evidence_id, show_qa, ...runnerArgs } = cardArgs;
         const result = await callRunnerControl("relay_runner_assignments", runnerArgs, env);
