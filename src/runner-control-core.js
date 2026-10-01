@@ -1,7 +1,7 @@
 import { githubApiRequest } from './source.js';
 import { transition, evaluate, occupying, normalizeScope } from './coordination-engine.js';
 
-export const RUNNER_ENGINE_SHA = '302bfe1df311f5df8e171373a362255bdff8eb1d';
+export const RUNNER_ENGINE_SHA = '781650ccc68627be1cf26c5a615fc51529749ce2';
 export const DEFAULT_RUNNER_CONTROL_REPOSITORY = 'lrnolivia/relay';
 
 export class ControlError extends Error {
@@ -153,9 +153,9 @@ async function mutate(api, control, controlRepository, context, args) {
   }
 
   const allowed = {
-    queue: ['id', 'owner', 'paths', 'resources', 'goal', 'acceptance', 'next_action', 'task_class', 'ledger_refs'],
-    claim: ['id', 'owner', 'branch', 'paths', 'resources', 'goal', 'acceptance', 'next_action', 'task_class', 'ledger_refs'],
-    amend: ['id', 'owner', 'paths', 'resources', 'goal', 'acceptance', 'next_action', 'task_class', 'ledger_refs', 'reason'],
+    queue: ['id', 'owner', 'paths', 'resources', 'goal', 'acceptance', 'next_action', 'task_class', 'ledger_refs', 'category', 'labels', 'tags', 'primary_role', 'supporting_roles'],
+    claim: ['id', 'owner', 'branch', 'paths', 'resources', 'goal', 'acceptance', 'next_action', 'task_class', 'ledger_refs', 'category', 'labels', 'tags', 'primary_role', 'supporting_roles'],
+    amend: ['id', 'owner', 'paths', 'resources', 'goal', 'acceptance', 'next_action', 'task_class', 'ledger_refs', 'category', 'labels', 'tags', 'primary_role', 'supporting_roles', 'reason'],
     rescope: ['id', 'owner', 'paths', 'resources', 'next_action'],
     heartbeat: ['id', 'owner', 'next_action'],
     hold: ['id', 'owner', 'next_action'],

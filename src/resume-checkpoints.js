@@ -74,6 +74,11 @@ function checkpointCore({ project, assignment, progress, changedPaths, changedPa
       id: assignment?.id || progress?.assignment || null,
       owner: assignment?.owner || null,
       task_class: assignment?.task_class || null,
+      category: assignment?.category || null,
+      labels: Array.isArray(assignment?.labels) ? assignment.labels : [],
+      tags: Array.isArray(assignment?.tags) ? assignment.tags : [],
+      primary_role: assignment?.primary_role || null,
+      supporting_roles: Array.isArray(assignment?.supporting_roles) ? assignment.supporting_roles : [],
       ledger_refs: Array.isArray(assignment?.ledger_refs) ? assignment.ledger_refs : []
     },
     state: progress?.state || assignment?.state || "unknown",

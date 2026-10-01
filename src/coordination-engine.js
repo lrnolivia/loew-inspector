@@ -17,7 +17,11 @@ export function covered(file, scopes) {
 }
 
 const TASK_CLASSES = new Set(['design', 'architecture', 'maintenance']);
-const AMENDABLE_FIELDS = ['goal', 'acceptance', 'next_action', 'paths', 'resources', 'task_class', 'ledger_refs'];
+const CATEGORIES = new Set(['architecture', 'design', 'implementation', 'research', 'qa-verification', 'maintenance', 'release', 'coordination']);
+const ROLE_ID = /^[a-z][a-z0-9-]{0,63}$/;
+const TAG_ID = /^[a-z0-9][a-z0-9._-]{0,63}$/;
+const LABEL_KEY = /^[a-z][a-z0-9.-]{0,63}$/;
+const AMENDABLE_FIELDS = ['goal', 'acceptance', 'next_action', 'paths', 'resources', 'task_class', 'ledger_refs', 'category', 'labels', 'tags', 'primary_role', 'supporting_roles'];
 
 function normalizeResources(values) {
   if (!Array.isArray(values) || values.some((value) => typeof value !== 'string' || !value)) throw new Error('Resources must be a valid string array.');
@@ -32,6 +36,54 @@ function normalizeLedgerRefs(values) {
   if (values === undefined) return undefined;
   if (!Array.isArray(values) || values.length > 50 || values.some((value) => typeof value !== 'string' || !/^[A-Za-z0-9][A-Za-z0-9_.:-]{0,99}$/.test(value))) throw new Error('Ledger refs must be stable identifiers.');
   return [...new Set(values)];
+}
+function normalizeCategory(value) {
+  if (value === undefined) return undefined;
+  if (!CATEGORIES.has(value)) throw new Error('Invalid assignment category.');
+  return value;
+}
+function normalizeLabels(values) {
+  if (values === undefined) return undefined;
+  if (!Array.isArray(values) || values.length > 32) throw new Error('Assignment labels must be a bounded array.');
+  const seen = new Set();
+  return values.map((label) => {
+    if (!label || typeof label !== 'object' || Array.isArray(label) || !LABEL_KEY.test(label.key || '') || typeof label.value !== 'string' || !label.value.trim() || label.value.length > 120) throw new Error('Invalid assignment label.');
+    const key = label.key + '=' + label.value;
+    if (seen.has(key)) throw new Error('Duplicate assignment label.');
+    seen.add(key);
+    return { key: label.key, value: label.value };
+  });
+}
+function normalizeTags(values) {
+  if (values === undefined) return undefined;
+  if (!Array.isArray(values) || values.length > 32) throw new Error('Assignment tags must be a bounded array.');
+  const tags = values.map((value) => String(value).toLowerCase());
+  if (tags.some((value) => !TAG_ID.test(value)) || new Set(tags).size !== tags.length) throw new Error('Invalid or duplicate assignment tag.');
+  return tags;
+}
+function normalizePrimaryRole(value) {
+  if (value === undefined) return undefined;
+  if (value === null || value === '') return null;
+  if (typeof value !== 'string' || !ROLE_ID.test(value)) throw new Error('Invalid primary role.');
+  return value;
+}
+function normalizeSupportingRoles(values) {
+  if (values === undefined) return undefined;
+  if (!Array.isArray(values) || values.length > 8 || values.some((value) => typeof value !== 'string' || !ROLE_ID.test(value)) || new Set(values).size !== values.length) throw new Error('Invalid supporting roles.');
+  return [...values];
+}
+function validateRoleMetadata(primary, supporting) {
+  if (primary && Array.isArray(supporting) && supporting.includes(primary)) throw new Error('Primary role cannot also be supporting.');
+}
+function metadataFields(request) {
+  const metadata = {};
+  if ('category' in request) metadata.category = normalizeCategory(request.category);
+  if ('labels' in request) metadata.labels = normalizeLabels(request.labels);
+  if ('tags' in request) metadata.tags = normalizeTags(request.tags);
+  if ('primary_role' in request) metadata.primary_role = normalizePrimaryRole(request.primary_role);
+  if ('supporting_roles' in request) metadata.supporting_roles = normalizeSupportingRoles(request.supporting_roles);
+  validateRoleMetadata(metadata.primary_role, metadata.supporting_roles);
+  return metadata;
 }
 function auditValue(value) {
   if (typeof value === 'string') return value.length > 600 ? value.slice(0, 597) + '...' : value;
@@ -62,6 +114,7 @@ export function transition(record, request, policy, now = new Date()) {
       next_action: request.next_action, paths: request.paths.map(normalizeScope), resources: normalizeResources(request.resources ?? []),
       ...(request.task_class ? { task_class: normalizeTaskClass(request.task_class) } : {}),
       ...(request.ledger_refs ? { ledger_refs: normalizeLedgerRefs(request.ledger_refs) } : {}),
+      ...metadataFields(request),
       state: 'queued', created_at: now.toISOString() });
     next.updated_at = now.toISOString();
     return next;
@@ -82,8 +135,10 @@ export function transition(record, request, policy, now = new Date()) {
     if ('resources' in request) patch.resources = normalizeResources(request.resources);
     if ('task_class' in request) patch.task_class = normalizeTaskClass(request.task_class);
     if ('ledger_refs' in request) patch.ledger_refs = normalizeLedgerRefs(request.ledger_refs);
+    Object.assign(patch, metadataFields(request));
     const before = Object.fromEntries(supplied.map((field) => [field, target[field]]));
     const preview = { ...target, ...patch };
+    validateRoleMetadata(preview.primary_role, preview.supporting_roles);
     const changed = supplied.filter((field) => JSON.stringify(before[field]) !== JSON.stringify(preview[field]));
     if (!changed.length) throw new Error('Amendment does not change assignment state.');
     if (current) {
@@ -135,6 +190,7 @@ export function transition(record, request, policy, now = new Date()) {
       goal: request.goal, acceptance: request.acceptance, next_action: request.next_action,
       ...(request.task_class ? { task_class: normalizeTaskClass(request.task_class) } : {}),
       ...(request.ledger_refs ? { ledger_refs: normalizeLedgerRefs(request.ledger_refs) } : {}),
+      ...metadataFields(request),
       base_sha: request.base_sha, state: 'active', created_at: now.toISOString() });
     const queued = next.queue.find((q) => q.id === request.id);
     if (queued && queued.owner !== request.owner) throw new Error('Queued assignment belongs to another owner.');
