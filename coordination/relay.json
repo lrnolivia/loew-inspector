@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T03:02:49.067Z",
+  "updated_at": "2026-10-01T03:05:06.380Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5522,6 +5522,36 @@
       "evidence": "PR https://github.com/lrnolivia/relay/pull/70; tested head 60ef37e2793a95fa3f0a79aaa7f4a30a5b553530; squash merge caedde2fb7f23bbafd06533075bdf2d30964db72; Cloudflare version d87211ee-5a43-4b0d-8900-04dc357158f5 at 100% in deployment d9d9b478-f790-442f-8cc6-0c2c79a55dbb, verified matching commit annotation. npm ci/full npm test and exact-head CI/admission passed; deterministic browser delayed skeletons, checking-dot alignment/pulse/reduced motion, responsive resize, mobile and exact capture saves passed on web and simulated MCP. Live authenticated fetch/snapshot returned HTTP 522: production visual QA remains unconfirmed, no production browser success claimed. Snapshot evidence vis_035f9795-98ac-409c-bda0-d0893bc32819. Durable accepted design and deferred zoom/pan/comments/actionable connected reports/ChatGPT contextual card: docs/relay/INSPECTOR_VISUAL_POLISH_20260930.md. All implementation committed and pushed; local checkout clean.",
       "work_accounted": true,
       "completed_at": "2026-10-01T03:00:35.352Z"
+    },
+    {
+      "id": "relay-inspector-greige-cards-20260930",
+      "owner": "codex-relay-inspector-greige-20260930",
+      "branch": "relay/inspector-greige-cards-20260930",
+      "paths": [
+        "packages/shared-ui/tokens.css",
+        "apps/web/public/brand.js",
+        "apps/web/public/operator-1.8.css",
+        "apps/web/public/qa.css",
+        "apps/web/public/loading.js",
+        "apps/web/public/qa.js",
+        "apps/web/public/operator.js",
+        "apps/web/public/operator-today.js",
+        "features/night-shift/view.js",
+        "apps/web/generated.js",
+        "apps/web/test/browser.test.mjs",
+        "docs/relay/INSPECTOR_VISUAL_POLISH_20260930.md"
+      ],
+      "resources": [
+        "relay-design"
+      ],
+      "goal": "Quick user-directed greige palette correction, contrasting project badges, brighter Inspector cyan and three-column visual cards with matching skeletons.",
+      "acceptance": "Remove brown and blue cast from neutral surfaces; retain approved icons; Inspector uses canonical bright cyan; desktop review cards and skeletons match in three columns with responsive two/one columns; loading shapes match actual content sections; normal checks and publication.",
+      "next_action": "Implement targeted tokens/layout/loading corrections and verify browser before publishing.",
+      "base_sha": "11461cfe2dd4432b381e60b258f5e633f079c419",
+      "state": "active",
+      "created_at": "2026-10-01T03:05:06.380Z",
+      "updated_at": "2026-10-01T03:05:06.380Z",
+      "lease_until": "2026-10-01T15:05:06.380Z"
     }
   ],
   "migrated_from": "loew-inspector"
