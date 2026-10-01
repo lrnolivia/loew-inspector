@@ -796,9 +796,9 @@ select:focus-visible {
 }
 
 .chat-card-stage {
-  min-height: 250px;
-  padding: 18px;
-  border-radius: 28px;
+  min-height: 224px;
+  padding: 14px;
+  border-radius: 26px;
   background: #11110f;
   overflow: hidden;
 }
@@ -810,11 +810,11 @@ html[data-theme="light"] .chat-card-stage {
 .chat-card-preview {
   --card-accent: #b5471f;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(250px, 38%);
-  gap: 18px;
+  grid-template-columns: minmax(0, 1.08fr) minmax(260px, .92fr);
+  gap: 12px;
   align-items: stretch;
   min-width: 0;
-  padding: 8px 2px;
+  padding: 4px 0;
   color: #f2f2ef;
   background: transparent;
 }
@@ -825,19 +825,19 @@ html[data-theme="light"] .chat-card-preview {
 
 .chat-card-hero {
   display: grid;
-  grid-template-columns: 64px minmax(0, 1fr);
-  gap: 14px;
+  grid-template-columns: 76px minmax(0, 1fr);
+  gap: 10px;
   align-items: start;
-  padding: 10px 4px;
+  padding: 6px 2px;
 }
 
 .chat-card-mark {
   position: relative;
-  width: 64px;
-  height: 64px;
+  width: 76px;
+  height: 76px;
   display: grid;
   place-items: center;
-  border-radius: 20px;
+  border-radius: 22px;
   background: color-mix(in srgb, var(--card-accent) 13%, transparent);
 }
 
@@ -861,8 +861,8 @@ html[data-theme="light"] .chat-card-preview {
 }
 
 .chat-card-mark img {
-  width: 36px;
-  height: 36px;
+  width: 43px;
+  height: 43px;
   object-fit: contain;
   filter: drop-shadow(0 0 10px color-mix(in srgb, var(--card-accent) 36%, transparent));
 }
@@ -881,7 +881,7 @@ html[data-theme="light"] .chat-card-preview {
   margin: 1px 0 9px;
   color: var(--card-accent);
   font-family: "Momo Trust Display", "IBM Plex Sans", system-ui, sans-serif;
-  font-size: clamp(28px, 3.2vw, 38px);
+  font-size: clamp(27px, 3vw, 36px);
   font-weight: 400;
   line-height: .98;
   letter-spacing: -.04em;
@@ -890,14 +890,14 @@ html[data-theme="light"] .chat-card-preview {
 
 .chat-card-copy > strong {
   display: block;
-  max-width: 28ch;
+  max-width: 32ch;
   font-size: 16px;
   line-height: 1.28;
 }
 
 .chat-card-copy > p {
-  max-width: 44ch;
-  margin: 6px 0 0;
+  max-width: 50ch;
+  margin: 5px 0 0;
   color: #aaa9a4;
   font-size: 13px;
 }
@@ -912,8 +912,8 @@ html[data-theme="light"] .chat-card-copy > p {
   gap: 7px;
   width: max-content;
   max-width: 100%;
-  margin-top: 12px;
-  padding: 5px 9px 5px 5px;
+  margin-top: 9px;
+  padding: 4px 9px 4px 4px;
   border-radius: 999px;
   background: rgba(255,255,250,.065);
   font-size: 11px;
@@ -966,8 +966,8 @@ html[data-theme="light"] .chat-card-staff {
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: 16px;
-  border-radius: 22px;
+  padding: 14px;
+  border-radius: 20px;
   background: #292826;
 }
 
@@ -990,8 +990,8 @@ html[data-theme="light"] .chat-card-insight {
 .chat-card-state[data-tone="act"] { color: #ffbf00; }
 
 .chat-card-metric {
-  margin-top: 14px;
-  font-size: 36px;
+  margin-top: 10px;
+  font-size: 34px;
   font-weight: 760;
   line-height: 1;
   letter-spacing: -1px;
@@ -1022,8 +1022,8 @@ html[data-theme="light"] .chat-card-meter { background: #ebe8e2; }
 
 .chat-card-rows {
   display: grid;
-  gap: 5px;
-  margin-top: 12px;
+  gap: 4px;
+  margin-top: 9px;
 }
 
 .chat-card-row {
@@ -1051,7 +1051,7 @@ html[data-theme="light"] .chat-card-next {
 }
 
 .chat-card-next {
-  margin: 9px 0 0;
+  margin: 7px 0 0;
   font-size: 11px;
 }
 
@@ -1060,7 +1060,7 @@ html[data-theme="light"] .chat-card-next {
   flex-wrap: wrap;
   gap: 7px;
   margin-top: auto;
-  padding-top: 13px;
+  padding-top: 10px;
 }
 
 .chat-card-actions button {

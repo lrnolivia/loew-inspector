@@ -1,6 +1,7 @@
 import { callRunnerControlCore } from "./runner-control-core.js";
 import { callResume } from "./resume-checkpoints.js";
 import { deriveRecoverySignal } from "./recovery-signals.js";
+import { consumeQaFeedback } from "../packages/runner/src/qa-feedback.mjs";
 
 const PRIORITY={informational:1,"plan-adjusting":2,"scope-changing":3,blocking:4};
 
@@ -39,6 +40,14 @@ export async function callAssignmentUpdates(args,env={},apiOverride){
     previous_checkpoint_id:args.checkpoint_id||null,
     recovery_attempts:args.recovery_attempts||0
   });
+  const feedback=await consumeQaFeedback(env.EVIDENCE,{
+    project:args.project,
+    assignment:assignment.id,
+    owner:assignment.owner,
+    branch:assignment.branch
+  });
+  const feedbackImpact=feedback.conflicts.length?"blocking":feedback.events.length?"plan-adjusting":"informational";
+  const impact=PRIORITY[feedbackImpact]>PRIORITY[window.impact]?feedbackImpact:window.impact;
   return Object.freeze({
     ok:true,
     namespace:"relay.RUNNER",
@@ -53,10 +62,14 @@ export async function callAssignmentUpdates(args,env={},apiOverride){
     next_cursor:window.next_cursor,
     current_amendment_count:window.total,
     gap:window.gap,
-    impact:window.impact,
-    reconcile_required:window.reconcile_required,
-    context_injection:window.updates.length>0,
+    impact,
+    reconcile_required:window.reconcile_required||feedback.conflicts.length>0,
+    context_injection:window.updates.length>0||feedback.events.length>0||feedback.conflicts.length>0,
     updates:window.updates,
+    feedback_available:feedback.available,
+    feedback:feedback.events,
+    feedback_conflicts:feedback.conflicts,
+    feedback_acknowledged:feedback.acknowledged,
     checkpoint_id:checkpoint?.checkpoint_id||null,
     recovery
   });

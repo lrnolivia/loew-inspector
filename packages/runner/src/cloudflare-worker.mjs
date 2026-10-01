@@ -4,6 +4,7 @@ import { projectIcon } from "./project-icons.mjs";
 import { applyWorkerSettings, publicWorkerSettings } from "./settings.mjs";
 import { listVisualEvidence, getVisualEvidence, getVisualImage, compareVisualEvidence, listVisualRuns, reviewVisualRun } from "./visual-evidence.mjs";
 import { getQaReview, saveQaReview, qaQuestionsForEvidence, inspectLivePreview } from "./human-qa.mjs";
+import { recordQaFeedback } from "./qa-feedback.mjs";
 const GITHUB_API = "https://api.github.com";
 const OWNER = "lrnolivia";
 const REPOSITORY = "relay";
@@ -321,7 +322,8 @@ export async function handleApi(request, env, { authenticatedMcp = false } = {})
       return json({ ok: true, evidence, questions, review });
     }
     const review = await saveQaReview(env.EVIDENCE, qaMatch[1], await readBody(request), evidence);
-    return json({ ok: true, evidence_id: qaMatch[1], questions, review });
+    const feedback = await recordQaFeedback(env.EVIDENCE, evidence, review);
+    return json({ ok: true, evidence_id: qaMatch[1], questions, review, feedback });
   }
 
   const liveMatch = url.pathname.match(/^\/api\/visual\/(vis_[a-zA-Z0-9-]{8,128})\/live$/);

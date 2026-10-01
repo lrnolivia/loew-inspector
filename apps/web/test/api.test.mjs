@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import { validateUiRequest, callUiApi } from "../api.js";
 import { handleApi } from "../../../packages/runner/src/cloudflare-worker.mjs";
+import { consumeQaFeedback } from "../../../packages/runner/src/qa-feedback.mjs";
 import app from "../../mcp/index.js";
 
 test("UI transport limits methods, routes, inputs and cannot carry trusted identity", () => {
@@ -24,7 +25,7 @@ test("web API fails closed without a verified identity and rejects cross-origin 
 
 test("MCP review transport writes to the existing evidence-bound QA key and reads it back", async () => {
   const id = "vis_12345678-abcd";
-  const evidence = { evidence_id: id, step_label: "Relay navigation", context: { project: "relay", commit_sha: "a".repeat(40) } };
+  const evidence = { evidence_id: id, step_label: "Relay navigation", context: { project: "relay", assignment: "relay-2.0-fixture", owner: "relay-2.0-fixture", branch: "relay/2.0-fixture", commit_sha: "a".repeat(40) } };
   const objects = new Map([["records/" + id + ".json", evidence]]);
   const bucket = {
     list: async ({ prefix }) => ({ objects: [...objects.keys()].filter(key => key.startsWith(prefix)).map(key => ({ key })) }),
@@ -35,6 +36,13 @@ test("MCP review transport writes to the existing evidence-bound QA key and read
   const result = await callUiApi({ path: "/api/visual/" + id + "/qa", method: "POST", body: { answers: { intent: "yes" }, overall: "looks_good" } }, { EVIDENCE: bucket });
   assert.equal(result.status, 200);
   assert.equal(result.body.review.evidence_id, id);
+  assert.equal(result.body.feedback.identity.assignment, "relay-2.0-fixture");
+  assert.equal(result.body.feedback.identity.branch, "relay/2.0-fixture");
+  const consumed = await consumeQaFeedback(bucket, { project: "relay", assignment: "relay-2.0-fixture", owner: "relay-2.0-fixture", branch: "relay/2.0-fixture" });
+  assert.equal(consumed.events.length, 1);
+  assert.deepEqual(consumed.acknowledged, [result.body.feedback.event_id]);
+  const repeated = await consumeQaFeedback(bucket, { project: "relay", assignment: "relay-2.0-fixture", owner: "relay-2.0-fixture", branch: "relay/2.0-fixture" });
+  assert.equal(repeated.events.length, 0);
   const read = await callUiApi({ path: "/api/visual/" + id + "/qa" }, { EVIDENCE: bucket });
   assert.equal(read.body.review.overall, "looks_good");
   assert.equal(read.body.evidence.context.commit_sha, "a".repeat(40));

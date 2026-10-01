@@ -4,11 +4,24 @@
   "private": true,
   "type": "module",
   "description": "Shared Relay operator and artifact-bound review interface for web and MCP app.",
+  "dependencies": {
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1",
+    "react-router-dom": "^7.9.2"
+  },
   "devDependencies": {
-    "esbuild": "0.25.10"
+    "@types/react": "^19.1.16",
+    "@types/react-dom": "^19.1.9",
+    "@vitejs/plugin-react": "^5.0.4",
+    "esbuild": "0.25.10",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.7"
   },
   "scripts": {
     "build": "node build.mjs",
+    "build:2.0": "vite build",
+    "dev:2.0": "vite",
+    "typecheck:2.0": "tsc --noEmit",
     "test": "node --test test/*.test.mjs",
     "check": "node --check ../mcp/index.js"
   }
