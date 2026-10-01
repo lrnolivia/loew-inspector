@@ -783,7 +783,6 @@ body[data-page="night-shift"] { --page-feature-accent: var(--feature-night-shift
 
   .operator-brand strong,
   .operator-brand span,
-  .nav-label,
   .nav-copy,
   .nav-chevron,
   .utility-label,
@@ -797,12 +796,23 @@ body[data-page="night-shift"] { --page-feature-accent: var(--feature-night-shift
     transition:opacity .16s ease,max-width .24s cubic-bezier(.2,.8,.2,1),width .24s cubic-bezier(.2,.8,.2,1);
   }
 
+  .operator-topbar .nav-label {
+    display:none !important;
+  }
+  .operator-topbar:hover .nav-label,
+  .operator-topbar:focus-within .nav-label {
+    display:block !important;
+    opacity:1;
+    width:auto;
+    max-width:240px;
+    margin:8px 16px -18px;
+    pointer-events:auto;
+  }
+
   .operator-topbar:hover .operator-brand strong,
   .operator-topbar:focus-within .operator-brand strong,
   .operator-topbar:hover .operator-brand span,
   .operator-topbar:focus-within .operator-brand span,
-  .operator-topbar:hover .nav-label,
-  .operator-topbar:focus-within .nav-label,
   .operator-topbar:hover .nav-copy,
   .operator-topbar:focus-within .nav-copy,
   .operator-topbar:hover .nav-chevron,
