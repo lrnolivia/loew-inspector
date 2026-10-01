@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T16:06:35.666Z",
+  "updated_at": "2026-10-01T16:10:47.427Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -9424,7 +9424,7 @@
       ],
       "goal": "Port the Relay React experience onto the exact approved 1.8/1.9 visual system while preserving the liked 2.0 Runner and Night Shift content layouts/flows, restoring the old Today flow, adding at least three useful universal header data cards to every primary page, and using Momo Trust Display for headings.",
       "acceptance": "React uses the preserved 1.8/1.9 CSS/tokens/navigation/surfaces/spacing as its presentation source of truth. Today restores needs-you, work-happening-now, and automatic-checks flow. Runner and Night Shift retain their approved 2.0 content architecture and detail flow but are rendered in the old visual system. Today, Runner, Night Shift, and Inspector each expose at least three meaningful universal header data cards. Major headings use Momo Trust Display; body/control text remains Inter. Before merge, desktop and mobile screenshots for every primary page and Runner detail are captured into Inspector and left pending human approval. Do not merge or deploy without that approval.",
-      "next_action": "Human visual review required before merge. Review PR #94 exact head f70a00a880e8ef923ead9ec0b67ed9ffaf25a8c8 in Inspector: Today desktop vis_0b7eb346-5b05-4ded-ae3d-5cb74dfd5c03; Runner desktop vis_05c3ecf7-8677-4b24-97c9-7144a7699a7c; Runner detail desktop vis_07c84cab-f92a-44c5-a5fb-de1f65285c2e; Night Shift desktop vis_d1187e04-b46e-432c-ac79-1c2e102a10f5; Inspector desktop vis_5ab2e338-de6d-4624-bc95-13230a7a7b2a; Today mobile vis_824c6fda-1e3f-462d-a375-82e4bff16be9; Runner mobile vis_0d499163-4ac8-4561-ad41-be78d4b561b3; Runner detail mobile vis_f2f504c0-69e7-47d0-92ad-2996ca083144; Night Shift mobile vis_55803924-e1a4-4205-9a65-80adaf92742b; Inspector mobile vis_eaed1b7e-b2fb-490b-81fb-1b7a5445b58b. Source/Vite/typecheck/MCP/Inspector/Runner/API/layout tests are green. generated-bridge and legacy browser test remain red only because committed generated.js is stale; release packaging is intentionally deferred until visual approval.",
+      "next_action": "User approved merge. Reconcile deterministic generated.js through a temporary exact-branch CI packager, remove the temporary packager, require all exact-head gates green, then mark PR #94 ready, squash merge, and deploy the exact merge commit.",
       "task_class": "design",
       "category": "design",
       "primary_team": "inspector",
@@ -9440,10 +9440,10 @@
         "ellis"
       ],
       "base_sha": "9809da5c2c0d2f32476a38b3fd7a05c95a5d98c5",
-      "state": "held",
+      "state": "active",
       "created_at": "2026-10-01T10:03:17.975Z",
-      "updated_at": "2026-10-01T10:30:56.872Z",
-      "lease_until": "2026-10-01T22:30:56.872Z"
+      "updated_at": "2026-10-01T16:10:47.427Z",
+      "lease_until": "2026-10-02T04:10:47.427Z"
     }
   ],
   "migrated_from": "loew-inspector"
