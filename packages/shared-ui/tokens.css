@@ -1,12 +1,12 @@
 /* Terra Prime HUI foundations: Figma 6hjtD0UcLwU44DPDDrAKht, node 4:4. */
 :root {
   color-scheme: dark;
-  --color-canvas: #111110;
-  --color-surface: #1c1b19;
-  --color-raised: #292724;
-  --color-floating: #34312e;
-  --color-text-primary: #f4f0ea;
-  --color-text-secondary: #c6bfb7;
+  --color-canvas: #121211;
+  --color-surface: #222220;
+  --color-raised: #30302d;
+  --color-floating: #272725;
+  --color-text-primary: #f2f1ee;
+  --color-text-secondary: #c2c1bb;
   --color-border: transparent;
   --color-orient: #18afc0;
   --color-act: #f0643b;
@@ -22,7 +22,7 @@
   --status-success: #3bcb8d;
   --status-quiet: #8f8982;
   --feature-relay: #b5471f;
-  --feature-inspector: #1c8c93;
+  --feature-inspector: #18afc0;
   --feature-runner: #3bcb8d;
   --feature-today: #ff6f78;
   --feature-night-shift: #ffbf00;
@@ -38,12 +38,12 @@
 @media (prefers-color-scheme: light) {
   :root {
     color-scheme: light;
-    --color-canvas: #f3f1ed;
-    --color-surface: #faf8f4;
-    --color-raised: #fffdfc;
-    --color-floating: #fffdfc;
-    --color-text-primary: #1c1b19;
-    --color-text-secondary: #69635e;
+    --color-canvas: #f3f3f0;
+    --color-surface: #fafaf7;
+    --color-raised: #ffffff;
+    --color-floating: #ffffff;
+    --color-text-primary: #222220;
+    --color-text-secondary: #686862;
     --color-good: #16794e;
     --color-bad: #b3283e;
     --status-info: #087a88;
@@ -81,7 +81,7 @@ a:focus-visible, input:focus-visible { outline: 2px solid var(--color-focus); ou
 .clear-card span { color: var(--color-text-secondary); font-size: 17px; line-height: 25px; }
 .attention-card div > strong { font-size: 19px; line-height: 28px; }
 .attention-card button, .operator-button { min-height: 56px; border: 0; border-radius: 14px; padding: 0 24px; background: var(--color-raised); font-size: 15px; }
-.operator-button.primary { background: var(--color-act); color: #111110; }
+.operator-button.primary { background: var(--color-act); color: #121211; }
 .today-task, .automation-row, .task-row { border: 0; padding: 24px; border-radius: 20px; background: var(--color-surface); margin-top: 12px; }
 .today-task:last-child, .automation-row:last-child, .project-work-section .task-row:last-child { border: 0; }
 .today-task-title { white-space: normal; line-height: 25px; font-size: 17px; }
@@ -108,7 +108,7 @@ a:focus-visible, input:focus-visible { outline: 2px solid var(--color-focus); ou
 .qa-question-reason { font-size: 17px; line-height: 25px; }
 .qa-stage button, .qa-stage summary, .qa-stage a { min-height: 44px; }
 .qa-answer, .qa-overall-button { font-size: 15px; }
-.qa-answer.selected, .qa-overall-button.selected { background: var(--color-resolve); color: #111110; }
+.qa-answer.selected, .qa-overall-button.selected { background: var(--color-resolve); color: #121211; }
 .qa-save-state { color: var(--color-good); }
 @media (max-width: 900px) {
   .operator-topbar { grid-template-columns: 1fr auto; padding: 24px 0; gap: 20px; }

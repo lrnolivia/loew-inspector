@@ -73,7 +73,7 @@ test("shared interface works on web and MCP host transport, including mobile, de
     if (url.pathname === "/api/progress/relay") return send(progress);
     if (url.pathname === "/api/workers") return send(workers);
     if (url.pathname === "/api/visual") return send({ evidence: [evidence] });
-    if (url.pathname.endsWith("/image")) { res.setHeader("Content-Type", "image/png"); return res.end(pixel); }
+    if (url.pathname.endsWith("/image")) { res.setHeader("Cache-Control", "no-store"); res.setHeader("Content-Type", "image/png"); return res.end(pixel); }
     if (url.pathname.endsWith("/live")) return send({ live: { active: false } });
     if (url.pathname.endsWith("/qa")) {
       if (req.method === "POST") {
@@ -205,7 +205,9 @@ test("shared interface works on web and MCP host transport, including mobile, de
       assert.equal(await failedRow.evaluate(node => getComputedStyle(node).borderTopWidth), "0px");
       const failedSurface = await failedRow.evaluate(node => getComputedStyle(node).backgroundColor);
       const workingSurface = await view.locator('.progress-row[data-progress-state="working"]').evaluate(node => getComputedStyle(node).backgroundColor);
-      assert.notEqual(failedSurface, workingSurface, "state color may tint material without using strokes");
+      assert.equal(failedSurface, workingSurface, "User-directed neutral greige cards keep status color in the badge");
+      assert.equal(failedSurface, "rgb(34, 34, 32)");
+      assert.notEqual(failedColor, await view.locator('.progress-row[data-progress-state="working"] .status-badge').first().evaluate(node => getComputedStyle(node).color));
       await view.locator('#project-tabs [data-project-id="relay"] [data-repo-icon="relay"][data-icon-sha="' + "b".repeat(40) + '"] img').waitFor();
       assert.equal(await view.locator('#project-tabs [data-project-id="relay"] [data-repo-icon="relay"]').evaluate(node => getComputedStyle(node).backgroundColor), "rgba(0, 0, 0, 0)");
       for (const width of [560, 900, 1360]) {
@@ -225,19 +227,36 @@ test("shared interface works on web and MCP host transport, including mobile, de
       assert.equal(await view.locator(".project-tabs").count(), 1);
       await view.getByRole("button", { name: "night shift", exact: true }).click();
       await view.locator("#night-shift-work").filter({ hasText: "Latest canonical run" }).waitFor();
+      if (mode === "web") hold("/api/visual");
       await view.getByRole("button", { name: "inspector", exact: true }).click();
+      let skeletonWidth;
+      if (mode === "web") {
+        await view.locator(".skeleton-review .skeleton-card").first().waitFor();
+        assert.equal(await view.locator(".skeleton-review .skeleton-card").count(), 3);
+        skeletonWidth = (await view.locator(".skeleton-review .skeleton-card").first().boundingBox()).width;
+        releaseLoading();
+      }
       if (mode === "mcp") await view.getByRole("button", { name: "all", exact: true }).click();
-      if (mode === "web") hold("/api/visual/vis_12345678-abcd/image");
+      await view.locator("[data-review-id]").waitFor();
+      if (mode === "web") {
+        assert.ok(Math.abs((await view.locator(".review-row").first().boundingBox()).width - skeletonWidth) < 1, "Review skeleton and loaded card have matching widths");
+        await page.screenshot({ path: "/tmp/relay-greige-review-cards.png" });
+        hold("/api/visual/vis_12345678-abcd/qa");
+      }
+      assert.equal(await view.locator(".review-list").evaluate(node => getComputedStyle(node).gridTemplateColumns.split(" ").length), 3);
+      assert.equal(await view.locator(".review-row").first().evaluate(node => getComputedStyle(node).flexDirection), "column");
       await view.locator("[data-review-id]").click();
+      if (mode === "web") {
+        await view.locator(".qa-panel-body .skeleton-inspector").waitFor();
+        assert.equal(await view.locator(".skeleton-inspector .skeleton-answer").count(), 6);
+        assert.equal(await view.locator(".skeleton-inspector .skeleton-notes").count(), 1);
+        releaseLoading();
+        await view.locator(".skeleton-inspector").waitFor({ state: "detached" });
+      }
       await view.locator(".qa-product-badge strong").filter({ hasText: "relay" }).waitFor();
       assert.equal(await view.locator(".qa-tool-identity").textContent(), "inspector");
       assert.equal(await view.locator(".qa-panel-identity > :first-child").getAttribute("class"), "qa-tool-identity");
-      if (mode === "web") {
-        await view.locator(".qa-preview .content-skeleton").waitFor();
-        releaseLoading();
-        await view.locator(".qa-preview .content-skeleton").waitFor({ state: "detached" });
-      }
-      assert.equal(await view.locator(".qa-panel-head").evaluate(node => getComputedStyle(node).backgroundColor), "rgb(32, 35, 39)");
+      assert.equal(await view.locator(".qa-panel-head").evaluate(node => getComputedStyle(node).backgroundColor), "rgb(39, 39, 37)");
       assert.equal(await view.locator(".qa-save-row").evaluate(node => node.parentElement.className), "qa-companion");
       if (mode === "web") {
         const panel = view.locator(".qa-companion");

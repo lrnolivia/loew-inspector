@@ -404,14 +404,14 @@ body.qa-open { overflow: hidden; }
 
 /* The capture is the subject; the review companion stays compact and neutral. */
 .qa-stage {
-  --color-canvas: #111214;
-  --color-surface: #1b1d20;
-  --color-raised: #292c31;
-  --color-floating: #202327;
-  --color-text-primary: #f2f3f5;
-  --color-text-secondary: #b5bac3;
-  --color-neutral: #a0a7b2;
-  --color-border: #363b43;
+  --color-canvas: #121211;
+  --color-surface: #222220;
+  --color-raised: #343430;
+  --color-floating: #272725;
+  --color-text-primary: #f2f1ee;
+  --color-text-secondary: #c2c1bb;
+  --color-neutral: #a6a69e;
+  --color-border: #3d3d38;
   --color-light-panel: var(--color-raised);
   --color-on-light: var(--color-text-primary);
   --color-on-light-secondary: var(--color-text-secondary);
@@ -514,14 +514,14 @@ body.qa-open { overflow: hidden; }
 }
 @media (prefers-color-scheme: light) {
   .qa-stage {
-    --color-canvas: #f3f4f6;
-    --color-surface: #f9fafb;
-    --color-raised: #e8ebef;
+    --color-canvas: #f3f3f0;
+    --color-surface: #fafaf7;
+    --color-raised: #e8e8e2;
     --color-floating: #ffffff;
-    --color-text-primary: #20242a;
-    --color-text-secondary: #555e6a;
-    --color-neutral: #626c7a;
-    --color-border: #dce1e7;
+    --color-text-primary: #242421;
+    --color-text-secondary: #595952;
+    --color-neutral: #6b6b63;
+    --color-border: #deded6;
   }
 }
 @media (pointer: coarse) {

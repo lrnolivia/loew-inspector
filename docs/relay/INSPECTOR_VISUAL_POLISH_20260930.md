@@ -38,3 +38,7 @@ The MCP HTML builder uses literal callback replacements so minified JavaScript c
 Full repository tests passed. Browser checks cover web and MCP-host transport, native resize, narrow/wide composition, mobile overflow, fixed save footer and durable exact-capture review saves. Final publication identities are recorded below when available.
 
 Impeccable's detector found three pre-existing sidebar width/padding/margin animation warnings in operator-1.8.css. This pass did not alter those animations; no new findings were reported for the Inspector or settings changes.
+
+## Greige and visual-card follow-up
+
+User correction: neutral greige surfaces replace both the brown status-card washes and the blue-grey Inspector panel. Project badges have raised greige fills and a subtle inset edge. Inspector heading uses the shared bright cyan #18afc0; the approved bitmap icon is preserved pending the user's replacement. Review uses visual cards in three desktop columns, two medium columns and one mobile column. Skeletons follow these same card dimensions and responsive grid, and section-specific work/attention/automation/Inspector placeholders replace the generic rows.
