@@ -1,5 +1,5 @@
 export const RELAY_CONTEXT_CARD_URI = "ui://relay/context-card/v1.html";
-const CONTROL_URI = "ui://relay/control-center/v1.html";
+const CONTROL_URI = "ui://relay/control-center/v2.html";
 
 const CONTEXTUAL_TOOLS = new Set([
   "relay_runner_project",
