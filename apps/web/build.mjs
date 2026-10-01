@@ -21,7 +21,7 @@ const escapeScript = value => value.replace(/<\/script/gi, "<\\/script");
 
 const legacyScript = await bundle("public/operator.js");
 const bridge = await bundle("mcp-bridge.js");
-const relayIcon = "data:image/png;base64," + (await fs.readFile(path.join(here, "public/brand/relay.png"))).toString("base64");
+const relayIcon = "data:image/png;base64," + (await fs.readFile(path.join(here, "../../icons/relay-icon.png"))).toString("base64");
 const legacyCss =
   await source("operator.css") + "\n" +
   await fs.readFile(path.join(here, "../../packages/shared-ui/tokens.css"), "utf8") + "\n" +
@@ -29,12 +29,21 @@ const legacyCss =
   await source("operator-1.8.css") + "\n" +
   await source("qa.css");
 
+const legacyShellOverrides = `
+.operator-brand strong,
+.operator-nav .nav-copy strong,
+.nav-label {
+  font-family: "Momo Trust Display", Inter, system-ui, sans-serif;
+  font-weight: 400;
+}
+`;
+
 let inspectorHtml = (await source("index.html"))
   .replaceAll("__RELAY_ICON__", relayIcon)
   .replace("__RELAY_THEME_BOOTSTRAP__", () => "<script>(" + themeBootstrap.toString() + ")()</script>")
   .replace(/<link rel="stylesheet" href="\/(?:operator|operator-1\\.8|qa).css">/g, "")
   .replace("<title>relay</title>", "<title>relay inspector</title>")
-  .replace("</head>", () => "<style>" + legacyCss + "</style><script>if(!location.hash)location.replace(location.pathname+'#review')</script></head>");
+  .replace("</head>", () => "<style>" + legacyCss + "\n" + legacyShellOverrides + "</style><script>if(!location.hash)location.replace(location.pathname+'#review')</script></head>");
 
 const viteResult = await viteBuild({
   root: here,
@@ -64,15 +73,31 @@ const jsChunk = outputs.find(item => item.type === "chunk" && item.isEntry);
 const cssAsset = outputs.find(item => item.type === "asset" && item.fileName.endsWith(".css"));
 if (!htmlAsset || !jsChunk || !cssAsset) throw new Error("Relay 2.0 Vite build did not emit the expected HTML, JS and CSS assets.");
 
-const brandNames = ["relay", "today", "runner", "inspector", "night-shift"];
-const brandUrls = Object.fromEntries(await Promise.all(brandNames.map(async name => [
+const brandFiles = {
+  relay: "relay-icon.png",
+  today: "today-icon.png",
+  runner: "runner-icon.png",
+  inspector: "inspector-icon.png",
+  "night-shift": "nightshift-icon.png.png"
+};
+const brandUrls = Object.fromEntries(await Promise.all(Object.entries(brandFiles).map(async ([name, file]) => [
   "/brand/" + name + ".png",
-  "data:image/png;base64," + (await fs.readFile(path.join(here, "public/brand", name + ".png"))).toString("base64")
+  "data:image/png;base64," + (await fs.readFile(path.join(here, "../../icons", file))).toString("base64")
 ])));
 const inlineBrandUrls = value => {
   let next = String(value);
-  for (const [url, data] of Object.entries(brandUrls)) next = next.replaceAll(url, data);
-  return next;
+  const declarations = [];
+  let index = 0;
+  for (const [url, data] of Object.entries(brandUrls)) {
+    next = next.replaceAll(url, data);
+    const literal = JSON.stringify(data);
+    const symbol = `__relayBrand${index++}`;
+    if (next.includes(literal)) {
+      next = next.replaceAll(literal, symbol);
+      declarations.push(`const ${symbol}=${literal};`);
+    }
+  }
+  return declarations.join("") + next;
 };
 
 const reactHtml = String(htmlAsset.source);

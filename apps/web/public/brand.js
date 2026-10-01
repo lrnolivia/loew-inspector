@@ -1,8 +1,8 @@
-import relay from "./brand/relay.png";
-import today from "./brand/today.png";
-import runner from "./brand/runner.png";
-import inspector from "./brand/inspector.png";
-import nightShift from "./brand/night-shift.png";
+import relay from "../../../icons/relay-icon.png";
+import today from "../../../icons/today-icon.png";
+import runner from "../../../icons/runner-icon.png";
+import inspector from "../../../icons/inspector-icon.png";
+import nightShift from "../../../icons/nightshift-icon.png.png";
 
 export const brand = Object.freeze({
   relay,

@@ -523,3 +523,11 @@ a { color: inherit; }
     transform: none !important;
   }
 }
+
+/* Relay 2.0 typography: product title + navigation labels */
+.react-brand strong,
+.react-operator-nav .nav-copy strong,
+.nav-label {
+  font-family: "Momo Trust Display", Inter, system-ui, sans-serif;
+  font-weight: 400;
+}
