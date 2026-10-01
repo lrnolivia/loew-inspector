@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T09:54:59.716Z",
+  "updated_at": "2026-10-01T09:55:15.263Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6078,6 +6078,47 @@
       "supporting_staff": [],
       "state": "claimed",
       "created_at": "2026-10-01T09:41:30.796Z"
+    },
+    {
+      "id": "relay-2.0-approved-visual-port-20261001",
+      "owner": "relay-2.0-approved-visual-port-20261001",
+      "goal": "Port the Relay React experience onto the exact approved 1.8/1.9 visual system while preserving the liked 2.0 Runner and Night Shift content layouts/flows, restoring the old Today flow, adding at least three useful universal header data cards to every primary page, and using Momo Trust Display for headings.",
+      "acceptance": "React uses the preserved 1.8/1.9 CSS/tokens/navigation/surfaces/spacing as its presentation source of truth. Today restores needs-you, work-happening-now, and automatic-checks flow. Runner and Night Shift retain their approved 2.0 content architecture and detail flow but are rendered in the old visual system. Today, Runner, Night Shift, and Inspector each expose at least three meaningful universal header data cards. Major headings use Momo Trust Display; body/control text remains Inter. Before merge, desktop and mobile screenshots for every primary page and Runner detail are captured into Inspector and left pending human approval. Do not merge or deploy without that approval.",
+      "next_action": "Claim a fresh branch from current main, port React markup/styles onto the actual preserved 1.8/1.9 design, build/test, publish a draft PR, create a preview deployment, capture all primary pages in Inspector, and stop for human review.",
+      "paths": [
+        "apps/web/src/",
+        "apps/web/build.mjs",
+        "apps/web/public/index.html",
+        "apps/web/public/operator.js",
+        "apps/web/public/operator.css",
+        "apps/web/public/operator-1.8.css",
+        "apps/web/test/react.test.mjs",
+        "apps/web/test/browser.test.mjs",
+        "apps/web/generated.js"
+      ],
+      "resources": [
+        "relay-1.8-1.9-visual-source-of-truth",
+        "relay-2.0-runner-flow",
+        "relay-2.0-night-shift-flow",
+        "relay-universal-header-data-cards",
+        "relay-inspector-human-visual-gate"
+      ],
+      "task_class": "design",
+      "category": "design",
+      "primary_team": "inspector",
+      "supporting_teams": [
+        "runner",
+        "night-shift",
+        "release"
+      ],
+      "primary_staff": "vivienne",
+      "supporting_staff": [
+        "nico",
+        "julian",
+        "ellis"
+      ],
+      "state": "queued",
+      "created_at": "2026-10-01T09:55:15.263Z"
     }
   ],
   "claims": [
