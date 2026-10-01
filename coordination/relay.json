@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T08:50:51.364Z",
+  "updated_at": "2026-10-01T08:56:09.584Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -9133,13 +9133,14 @@
         "apps/web/test/browser.test.mjs",
         "apps/web/test/react.test.mjs",
         "apps/mcp/index.js",
+        "src/relay-ui.test.js",
         ".github/workflows/ci.yml",
         ".github/workflows/relay-2.0-cutover-build.yml"
       ],
       "resources": [],
       "goal": "Cut Relay 2.0 over to the tested React/Vite frontend in production while preserving Inspector and authenticated MCP/web transport.",
       "acceptance": "Production serves the React/Vite Relay 2.0 UI at root, Inspector remains available at /inspector, MCP uses the React UI through the authenticated bridge, deterministic generated Worker assets match source, CI passes before merge, and deployment uses the exact merged commit.",
-      "next_action": "Implement the React production bridge, preserve Inspector at /inspector, regenerate the deterministic Worker asset bridge with a temporary self-removing workflow, and verify exact-head CI.",
+      "next_action": "Update the stale control-center resource regression for the React MCP surface, identify remaining contract/web failures by named CI file gates, then restore green exact-head checks.",
       "primary_team": "night-shift",
       "supporting_teams": [],
       "primary_staff": "julian",
@@ -9147,8 +9148,8 @@
       "base_sha": "3140175bd5442343b32fae63c8d3546f7edfa899",
       "state": "active",
       "created_at": "2026-10-01T08:34:06.842Z",
-      "updated_at": "2026-10-01T08:43:16.745Z",
-      "lease_until": "2026-10-01T20:43:16.745Z"
+      "updated_at": "2026-10-01T08:56:09.584Z",
+      "lease_until": "2026-10-01T20:56:09.584Z"
     }
   ],
   "migrated_from": "loew-inspector"
