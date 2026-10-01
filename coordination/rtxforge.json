@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "rtxforge",
-  "updated_at": "2026-10-01T22:23:36.942Z",
+  "updated_at": "2026-10-01T22:47:12.113Z",
   "legacy_branches": [
     "backup/github-main-before-0.5.8",
     "backup/main-0.5.8-ada",
@@ -10,7 +10,35 @@
     "main",
     "runner/universal-authority"
   ],
-  "queue": [],
+  "queue": [
+    {
+      "id": "rtxforge-figma-fidelity-20261001",
+      "owner": "01a0cbec-6302-7aa0-a0c8-546f9b46587d",
+      "goal": "PAUSED by user: correct production Figma designs against repository source/captures. Source path is READ-ONLY reference, not authorization to edit code. User rejected previous result as ugly/inaccurate; previous completion claim is invalid.",
+      "acceptance": "Editable designs visually match repo captures and source, with shared Foundations/Components propagating into Library, Details, Progress/Dialogs, QA. Inter is a fallback because Adwaita Sans unavailable in Figma; exact font fidelity unresolved.",
+      "next_action": "DO NOT RESUME until user explicitly asks. Stopped after FAILED visual review of Details29:475 and Graphics30:685: hero hidden by gradient; sidebar labels black on dark, selection fills fully opaque; footer dividers too bright. Next diagnose variable paint/gradient opacity; reset glyphs in header23:62/64/66/68 swapped to51:329. Then continue Library/List/Progress/Dialogs/QA correction. Retained file https://www.figma.com/design/UV0o89IkpCbYfXQmO3EziZ . References /home/loew/Repos/rtxForge/dist/{gnome-library,gnome-game-settings,gnome-settings,gnome-progress,list-final,install-presets-final}.png plus gui/rtxforge_gtk.py. CP assets18:6/18:7/18:8 replaced from actual demo media; hero hash a36c70e3a27387b8997948aacda0303b41572605. Added Adwaita icons64:2789..64:2812 and Sidebar Row64:2815; changed sidebars28:93,30:675; preference rows56px with regular titles, buttons minWidth70. Hero28:426 gradient currently faulty. Details/Settings grouped row frames64:3344..64:3363. No product/game writes. Preserve unrelated local documentation changes. Separate installation Relay assignment untouched.",
+      "paths": [
+        "gui/rtxforge_gtk.py"
+      ],
+      "resources": [
+        "figma:UV0o89IkpCbYfXQmO3EziZ"
+      ],
+      "category": "design",
+      "labels": [
+        {
+          "key": "execution",
+          "value": "paused-by-user"
+        }
+      ],
+      "primary_role": "design",
+      "primary_team": "inspector",
+      "supporting_teams": [],
+      "primary_staff": "valentina",
+      "supporting_staff": [],
+      "state": "queued",
+      "created_at": "2026-10-01T22:47:12.113Z"
+    }
+  ],
   "claims": [
     {
       "id": "rtxforge-coordination-bootstrap-20260930",
@@ -39,7 +67,7 @@
     },
     {
       "id": "rtxforge-bazzite-4070-install-package-20261001",
-      "owner": "rtxforge-install-package-chat-7b3354eebff7",
+      "owner": "01a0f997-7f61-7e62-9b39-ae49f311792d",
       "branch": "rtxforge/bazzite-4070-install-package",
       "paths": [
         "packaging/",
@@ -51,16 +79,18 @@
         "tests/test_package_download.py",
         "README.md",
         "docs/INSTALLATION.md",
-        ".github/workflows/linux-build.yml"
+        ".github/workflows/linux-build.yml",
+        ".github/workflows/runner-coordination.yml"
       ],
       "resources": [
         "bazzite-installation-package",
         "provider-preparation",
-        "appimage-installation"
+        "appimage-installation",
+        "runner-work-admission"
       ],
       "goal": "Deliver a reproducible Bazzite GNOME x86_64 RTX 4070 installation package using the existing rtxForge UI and pinned DLSS-Unlocked runtime options, local file writes and guarded GitHub sync.",
       "acceptance": "Verified AppImage and installer; read-only host checks; explicit selectable MFG/NR modes; preserve existing settings/backups; verified downloads and repeatable recovery tests. Actual NVIDIA/game/HDR behavior remains unverified until exercised on the user's PC.",
-      "next_action": "STOPPED BY USER; handoff to real local Codex. Read full handoff in https://github.com/lrnolivia/rtxForge/pull/5 and RTXFORGE_LOCAL_CODEX_HANDOFF.md. Existing branch at 0ffe216e510295998274aa633c969f19f7e996ee; cloud checkout clean and synced. Transfer this same assignment to actual successor owner before edits. 249 local tests pass. CI build 36934058892: missing cairo typelib; admission 36934057467: legacy control record frozen for migration. Fix only after scope/authority refresh; verify actual Bazzite/4070. No merge/release; no running writer or CI job.",
+      "next_action": "User-authorized four-game batch deployed and verified at app head 4730041262ab031119668e1ff35176809f06c521. Crimson/Cyberpunk MFG-only; Outer Worlds 2/Avatar NR+MFG with NR on at startup. All managed hashes and launch sync pass; native NVIDIA/Streamline preserved; recovery baselines retained, no source/global prefs change. Superseding artifact-bound human QA packet and evidence in PR #5. Await user's GameMode results; gameplay/MFG/NR/HDR/VRR unverified.",
       "category": "implementation",
       "primary_role": "implementation",
       "primary_team": "release",
@@ -70,8 +100,8 @@
       "base_sha": "4156ec19515f10af519564699aaebe6adf75c850",
       "state": "held",
       "created_at": "2026-10-01T21:59:59.674Z",
-      "updated_at": "2026-10-01T22:23:36.942Z",
-      "lease_until": "2026-10-02T10:23:36.942Z"
+      "updated_at": "2026-10-01T22:40:46.533Z",
+      "lease_until": "2026-10-02T10:40:46.533Z"
     }
   ]
 }
