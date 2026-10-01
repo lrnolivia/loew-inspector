@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T16:10:47.427Z",
+  "updated_at": "2026-10-01T16:26:20.409Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6147,9 +6147,9 @@
     {
       "id": "relay-card-v9-nonblocking-bootstrap-20261001",
       "owner": "relay-card-v9-nonblocking-bootstrap-20261001",
-      "goal": "Ship the card v9 non-blocking bootstrap and size-reporting fixes without redesigning the Relay card, preserving the legacy bridge control exactly.",
-      "acceptance": "Rotate the contextual card URI to v9; patch v8 HTML at serve time so legacy cardHtml() output remains unchanged; paint immediately from window.openai globals; run ui/initialize in parallel with a 4s timeout; prefer window.openai.callTool; report intrinsic size and ui/notifications/size-changed; show the host diagnostic line; add regression coverage for immediate globals paint and size reporting; update relay-entry URI pins; add the v9 bootstrap doc; update stale production smoke pins if still present; npm test passes; open one draft PR and do not merge before desktop and browser consumer tests unless owner overrides.",
-      "next_action": "Claim the assignment from current main on the Runner-approved branch relay/card-v9-nonblocking-bootstrap, apply only the exact handoff edits after verifying each target string, run preflight and tests, open a draft PR, then verify consumer behavior with the direct render tool and legacy bridge control.",
+      "goal": "Resolve the post-v9 cross-client Relay card split proven by same-turn testing: iPhone mounts and paints but remains unhydrated in Connecting state; ChatGPT web mounts a blank MCP frame; native macOS desktop does not mount the card surface at all.",
+      "acceptance": "Treat the three clients as distinct gates. iPhone: canonical tool result hydrates the already-painted card so status leaves Connecting/current-state placeholder while preserving working globals handshake and size reporting. Web: the mounted MCP frame paints static card UI and then hydrates canonical result instead of remaining blank. Native macOS desktop: the tool invocation mounts a card surface again, matching the previously known-good desktop behavior. Preserve the approved card design; do not paper over failures with client-specific prose fallbacks. Add regression coverage for immediate paint, result hydration, resource delivery, and mount metadata. Use fresh resource identity for any resource-byte change. Verify the same ordinary-chat render on iPhone, web, and native macOS before completion.",
+      "next_action": "Start from the user-supplied same-turn evidence at 12:24 ET after merged v9: iPhone shows full card chrome plus 'Waiting for the Relay result…', 'Connecting', em dash current state, Open Relay, and diagnostic 'host check: globals yes · handshake ok 24ms · height 403'; web shows a large mounted gray MCP frame with only a tiny loading mark and no card paint; native macOS desktop shows Relay tool activity and assistant prose but no card surface. This proves v9 fixed iPhone bootstrap/size reporting but not result hydration, did not fix web document paint, and did not restore desktop mount. Reproduce each gate separately, inspect tool-result delivery/resource-read behavior for iPhone and web, then inspect tool outputTemplate/resource registration/mount metadata for desktop. Do not merge the next fix until all three clients are retested.",
       "paths": [
         "src/relay-chat-ui.js",
         "src/relay-chat-ui.test.js",
@@ -6183,7 +6183,31 @@
         "ellis"
       ],
       "state": "queued",
-      "created_at": "2026-10-01T09:57:55.276Z"
+      "created_at": "2026-10-01T09:57:55.276Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T16:26:20.409Z",
+          "by": "relay-card-v9-nonblocking-bootstrap-20261001",
+          "reason": "User supplied decisive post-v9 screenshots from iPhone, web, and native macOS showing three different failure modes in the same test.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "goal": "Ship the card v9 non-blocking bootstrap and size-reporting fixes without redesigning the Relay card, preserving the legacy bridge control exactly.",
+            "acceptance": "Rotate the contextual card URI to v9; patch v8 HTML at serve time so legacy cardHtml() output remains unchanged; paint immediately from window.openai globals; run ui/initialize in parallel with a 4s timeout; prefer window.openai.callTool; report intrinsic size and ui/notifications/size-changed; show the host diagnostic line; add regression coverage for immediate globals paint and size reporting; update relay-entry URI pins; add the v9 bootstrap doc; update stale production smoke pins if still present; npm test passes; open one draft PR and do not merge before desktop and browser consumer te...",
+            "next_action": "Claim the assignment from current main on the Runner-approved branch relay/card-v9-nonblocking-bootstrap, apply only the exact handoff edits after verifying each target string, run preflight and tests, open a draft PR, then verify consumer behavior with the direct render tool and legacy bridge control."
+          },
+          "after": {
+            "goal": "Resolve the post-v9 cross-client Relay card split proven by same-turn testing: iPhone mounts and paints but remains unhydrated in Connecting state; ChatGPT web mounts a blank MCP frame; native macOS desktop does not mount the card surface at all.",
+            "acceptance": "Treat the three clients as distinct gates. iPhone: canonical tool result hydrates the already-painted card so status leaves Connecting/current-state placeholder while preserving working globals handshake and size reporting. Web: the mounted MCP frame paints static card UI and then hydrates canonical result instead of remaining blank. Native macOS desktop: the tool invocation mounts a card surface again, matching the previously known-good desktop behavior. Preserve the approved card design; do not paper over failures with client-specific prose fallbacks. Add regression coverage for immediate...",
+            "next_action": "Start from the user-supplied same-turn evidence at 12:24 ET after merged v9: iPhone shows full card chrome plus 'Waiting for the Relay result…', 'Connecting', em dash current state, Open Relay, and diagnostic 'host check: globals yes · handshake ok 24ms · height 403'; web shows a large mounted gray MCP frame with only a tiny loading mark and no card paint; native macOS desktop shows Relay tool activity and assistant prose but no card surface. This proves v9 fixed iPhone bootstrap/size reporting but not result hydration, did not fix web document paint, and did not restore desktop mount. Repr..."
+          }
+        }
+      ],
+      "updated_at": "2026-10-01T16:26:20.409Z"
     }
   ],
   "claims": [
