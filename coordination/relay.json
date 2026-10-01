@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T05:57:24.146Z",
+  "updated_at": "2026-10-01T05:59:49.675Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5178,6 +5178,69 @@
         }
       ],
       "updated_at": "2026-10-01T05:28:54.013Z"
+    },
+    {
+      "id": "relay-2.0-inspector-feedback-loop-20261001",
+      "owner": "relay-2.0-inspector-feedback-loop-20261001",
+      "goal": "Make Inspector human feedback a live, durable work input for Relay agents instead of passive saved review data.",
+      "acceptance": "Inspector notes, answers and review/disposition changes must remain attached to exact project/assignment/artifact/evidence identity, while also emitting a durable feedback event with a monotonic cursor. Active workers poll or receive the feedback stream at normal synchronization points and surface unread relevant feedback without relying on chat history. A worker resuming after being idle must fetch all unacknowledged feedback since its last acknowledged cursor before continuing work. Feedback delivery must be identity-safe: if assignment/branch/head/evidence no longer matches, Relay marks the feedback stale/context-mismatched rather than silently applying it. Workers acknowledge feedback only after reading it and record a disposition such as accepted, applied, deferred, needs-clarification or superseded, with an implementation/evidence receipt when applicable. Inspector shows delivery state so the user can tell whether feedback is unread, seen, being acted on, applied, or stale. Editing a note creates a new revision/event rather than erasing delivery history. Do not create a second visual evidence store; the feedback stream indexes canonical QA reviews/evidence and may reuse Runner's existing amendment/update cursor patterns.",
+      "next_action": "During the Relay 2.0 live-app rebuild, design the canonical feedback event/inbox contract first, then wire Inspector saves to emit events and wire active/resuming workers to poll and acknowledge them through Runner synchronization.",
+      "paths": [
+        "apps/web/",
+        "packages/runner/",
+        "src/worker-communication.js",
+        "src/progress-api.js",
+        "docs/relay/"
+      ],
+      "resources": [
+        "inspector-feedback-inbox",
+        "inspector-feedback-events",
+        "runner-feedback-polling",
+        "runner-feedback-acknowledgement",
+        "relay-2.0-live-app"
+      ],
+      "task_class": "architecture",
+      "category": "architecture",
+      "labels": [
+        {
+          "key": "release",
+          "value": "2.0"
+        },
+        {
+          "key": "surface",
+          "value": "inspector"
+        },
+        {
+          "key": "domain",
+          "value": "human-feedback"
+        }
+      ],
+      "tags": [
+        "inspector",
+        "feedback",
+        "workers",
+        "polling",
+        "live-app",
+        "human-qa"
+      ],
+      "primary_role": "architect",
+      "supporting_roles": [
+        "builder",
+        "verifier",
+        "product-lead"
+      ],
+      "primary_team": "inspector",
+      "supporting_teams": [
+        "runner"
+      ],
+      "primary_staff": null,
+      "supporting_staff": [
+        "nico",
+        "roman",
+        "vivienne"
+      ],
+      "state": "queued",
+      "created_at": "2026-10-01T05:59:49.675Z"
     }
   ],
   "claims": [
