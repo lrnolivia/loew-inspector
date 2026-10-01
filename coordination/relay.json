@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T00:05:21.429Z",
+  "updated_at": "2026-10-01T00:07:46.591Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -1096,6 +1096,40 @@
       ],
       "state": "queued",
       "created_at": "2026-09-30T23:34:30.376Z"
+    },
+    {
+      "id": "relay-status-motion-ui-20260930",
+      "owner": "relay-status-motion-ui-20260930",
+      "goal": "Ship a design-only Relay status/motion UI layer on top of current main: make feature naming consistently lowercase and aligned with actual feature names, and make observed status visually legible through semantic color, pulsing status lights, and restrained ambient motion that communicates liveness rather than decoration.",
+      "acceptance": "Task class design. Preserve current 1.9.x architecture and observed-progress semantics. All human-facing feature/page identity is lowercase: today, runner, inspector, night shift. Runner pages must not fall back to Projects as the primary title; Inspector pages must not fall back to Review as the primary title. Semantic status colors must distinguish healthy/complete, working, external-system wait, needs-human/action, warning/possibly-stale/stale, and failure, with non-color cues retained. Failed badges must never render as flat neutral gray. Metric counts such as now, moving, external wait, and needs you must visually encode state: zero/inactive remains quiet; nonzero counts inherit the relevant semantic tone. Add purposeful ambient motion/status lights: working states use a subtle active pulse, external waits use a distinct breathing/activity signal, needs-human uses an attention pulse, stale/warning uses a slower caution signal, failure uses a strong but restrained alert signal, healthy/complete may use a calm steady or occasional confirmation shimmer. Motion must be CSS/transform/opacity/filter-based where possible, bounded to status indicators rather than large layout areas, and must not create latency or decorative churn. prefers-reduced-motion must stop looping/spatial motion while preserving color, shape, label and a static state indicator. Keep existing flat/no-gradient direction, project tab rail, repaired card geometry, and quiet ChatGPT settings control. No gradients. No fake bottom-border depth. Browser tests must assert lowercase feature titles/nav, semantic badge tones, nonzero metric tone behavior, failed-state non-neutral color, pulsing indicator classes/animations, reduced-motion fallback, and responsive desktop/mobile stability. Regenerate generated.js, pass full repo/browser gates, merge/deploy exact source, capture production evidence, and close the assignment.",
+      "next_action": "Claim from current main. Audit existing tokens and status-state mappings, then implement one shared semantic status/token layer used by Runner metrics, progress badges, Today attention states and connection/status lights. Rename human-facing feature/page labels to lowercase feature names. Add bounded liveness animations with reduced-motion fallbacks. Keep architecture untouched. Rebuild bundle, run exact browser tests and responsive QA, merge/deploy exact source, and close.",
+      "paths": [
+        "apps/web/public/index.html",
+        "apps/web/public/operator.js",
+        "apps/web/public/operator-today.js",
+        "apps/web/public/operator-projects.js",
+        "apps/web/public/operator-review.js",
+        "apps/web/public/operator.css",
+        "apps/web/public/operator-1.8.css",
+        "apps/web/public/qa.css",
+        "apps/web/generated.js",
+        "apps/web/build.mjs",
+        "apps/web/test/browser.test.mjs",
+        "features/night-shift/view.js",
+        "packages/shared-ui/",
+        "docs/relay/RELAY_STATUS_MOTION_UI.md"
+      ],
+      "resources": [
+        "relay-design",
+        "relay-status-color-system",
+        "relay-status-motion",
+        "relay-lowercase-feature-language",
+        "relay-semantic-metrics",
+        "relay-ambient-liveness",
+        "relay-responsive-layout"
+      ],
+      "state": "queued",
+      "created_at": "2026-10-01T00:07:46.591Z"
     }
   ],
   "claims": [
