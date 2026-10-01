@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T17:20:32.752Z",
+  "updated_at": "2026-10-01T17:21:10.724Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6041,15 +6041,23 @@
     {
       "id": "relay-2.0-control-center-resource-bust-20261001",
       "owner": "relay-2.0-control-center-resource-bust-20261001",
-      "goal": "Force ChatGPT to load the shipped Relay 2.0 React control center by rotating the MCP App resource identity away from the cached pre-2.0 URI.",
-      "acceptance": "Relay control center uses a fresh ui:// resource URI; resource/read and tool outputTemplate/resourceUri all resolve to it; React mcpHtml remains unchanged; exact-head tests and Runner admission pass; merged exact commit is deployed and the old v2 resource is no longer advertised.",
-      "next_action": "Create the hotfix branch, rotate the control-center resource URI, update its regression test, run CI, merge, deploy, and re-open the control center from the new ChatGPT app.",
+      "goal": "Make ChatGPT load the actual Relay 2.0 React control center instead of its cached legacy v2 resource, and apply the approved Momo navigation/brand typography plus the new repo /icons artwork.",
+      "acceptance": "Rotate the MCP control-center ui:// resource identity so ChatGPT cannot reuse the legacy v2 HTML; the resource body remains the generated React mcpHtml; React Today, Runner and Night Shift are the surfaces mounted in ChatGPT; Relay brand and feature navigation labels use Momo Trust Display; generated feature icon data comes from the canonical repository /icons assets (relay-icon.png, today-icon.png, runner-icon.png, inspector-icon.png, nightshift-icon.png.png); Inspector remains separately available at /inspector; deterministic generated output and exact-head tests pass before merge/deploy.",
+      "next_action": "Read exact current main/branch files, update the cache URI and React presentation/icon source, regenerate deterministic web payloads on the branch, run exact-head admission/tests, then merge and deploy exact merged source. Verify ChatGPT control center mounts the fresh React resource.",
       "paths": [
         "src/relay-ui.js",
-        "src/relay-ui.test.js"
+        "src/relay-ui.test.js",
+        "apps/web/src/App.tsx",
+        "apps/web/src/styles.css",
+        "apps/web/build.mjs",
+        "apps/web/generated-react.js",
+        "apps/web/generated.js"
       ],
       "resources": [
-        "relay-control-center-resource-identity"
+        "relay-control-center-resource-identity",
+        "relay-react-control-center",
+        "relay-momo-navigation",
+        "relay-repo-icons"
       ],
       "task_class": "maintenance",
       "category": "release",
@@ -6058,7 +6066,55 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "state": "claimed",
-      "created_at": "2026-10-01T09:36:40.990Z"
+      "created_at": "2026-10-01T09:36:40.990Z",
+      "updated_at": "2026-10-01T17:21:10.724Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T17:21:10.724Z",
+          "by": "relay-2.0-control-center-resource-bust-retired-20261001",
+          "reason": "Owner has now confirmed the deployed ChatGPT control center is still showing the cached legacy v2 resource while Inspector shows the intended 2.0 content; resume this parked lane for the approved cache-key rotation and presentation corrections.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action",
+            "paths",
+            "resources"
+          ],
+          "before": {
+            "goal": "Force ChatGPT to load the shipped Relay 2.0 React control center by rotating the MCP App resource identity away from the cached pre-2.0 URI.",
+            "acceptance": "Relay control center uses a fresh ui:// resource URI; resource/read and tool outputTemplate/resourceUri all resolve to it; React mcpHtml remains unchanged; exact-head tests and Runner admission pass; merged exact commit is deployed and the old v2 resource is no longer advertised.",
+            "next_action": "Retired/superseded. Keep this branch unmerged; do not resume unless a future approved control-center build explicitly needs a cache-key rotation.",
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js"
+            ],
+            "resources": [
+              "relay-control-center-resource-identity"
+            ]
+          },
+          "after": {
+            "goal": "Make ChatGPT load the actual Relay 2.0 React control center instead of its cached legacy v2 resource, and apply the approved Momo navigation/brand typography plus the new repo /icons artwork.",
+            "acceptance": "Rotate the MCP control-center ui:// resource identity so ChatGPT cannot reuse the legacy v2 HTML; the resource body remains the generated React mcpHtml; React Today, Runner and Night Shift are the surfaces mounted in ChatGPT; Relay brand and feature navigation labels use Momo Trust Display; generated feature icon data comes from the canonical repository /icons assets (relay-icon.png, today-icon.png, runner-icon.png, inspector-icon.png, nightshift-icon.png.png); Inspector remains separately available at /inspector; deterministic generated output and exact-head tests pass before merge/deploy.",
+            "next_action": "Read exact current main/branch files, update the cache URI and React presentation/icon source, regenerate deterministic web payloads on the branch, run exact-head admission/tests, then merge and deploy exact merged source. Verify ChatGPT control center mounts the fresh React resource.",
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js",
+              "apps/web/src/App.tsx",
+              "apps/web/src/styles.css",
+              "apps/web/build.mjs",
+              "apps/web/generated-react.js",
+              "apps/web/generated.js"
+            ],
+            "resources": [
+              "relay-control-center-resource-identity",
+              "relay-react-control-center",
+              "relay-momo-navigation",
+              "relay-repo-icons"
+            ]
+          }
+        }
+      ]
     },
     {
       "id": "relay-inline-card-v2-final-20261001",
@@ -9422,14 +9478,22 @@
       "branch": "relay/2.0-control-center-resource-bust-20261001",
       "paths": [
         "src/relay-ui.js",
-        "src/relay-ui.test.js"
+        "src/relay-ui.test.js",
+        "apps/web/src/App.tsx",
+        "apps/web/src/styles.css",
+        "apps/web/build.mjs",
+        "apps/web/generated-react.js",
+        "apps/web/generated.js"
       ],
       "resources": [
-        "relay-control-center-resource-identity"
+        "relay-control-center-resource-identity",
+        "relay-react-control-center",
+        "relay-momo-navigation",
+        "relay-repo-icons"
       ],
-      "goal": "Force ChatGPT to load the shipped Relay 2.0 React control center by rotating the MCP App resource identity away from the cached pre-2.0 URI.",
-      "acceptance": "Relay control center uses a fresh ui:// resource URI; resource/read and tool outputTemplate/resourceUri all resolve to it; React mcpHtml remains unchanged; exact-head tests and Runner admission pass; merged exact commit is deployed and the old v2 resource is no longer advertised.",
-      "next_action": "Retired/superseded. Keep this branch unmerged; do not resume unless a future approved control-center build explicitly needs a cache-key rotation.",
+      "goal": "Make ChatGPT load the actual Relay 2.0 React control center instead of its cached legacy v2 resource, and apply the approved Momo navigation/brand typography plus the new repo /icons artwork.",
+      "acceptance": "Rotate the MCP control-center ui:// resource identity so ChatGPT cannot reuse the legacy v2 HTML; the resource body remains the generated React mcpHtml; React Today, Runner and Night Shift are the surfaces mounted in ChatGPT; Relay brand and feature navigation labels use Momo Trust Display; generated feature icon data comes from the canonical repository /icons assets (relay-icon.png, today-icon.png, runner-icon.png, inspector-icon.png, nightshift-icon.png.png); Inspector remains separately available at /inspector; deterministic generated output and exact-head tests pass before merge/deploy.",
+      "next_action": "Read exact current main/branch files, update the cache URI and React presentation/icon source, regenerate deterministic web payloads on the branch, run exact-head admission/tests, then merge and deploy exact merged source. Verify ChatGPT control center mounts the fresh React resource.",
       "task_class": "maintenance",
       "category": "release",
       "primary_team": "release",
@@ -9439,8 +9503,55 @@
       "base_sha": "9fa0f90ecb3e423c9c27c069a602a9dcf6cd6633",
       "state": "held",
       "created_at": "2026-10-01T09:37:31.270Z",
-      "updated_at": "2026-10-01T10:03:05.077Z",
-      "lease_until": "2026-10-01T22:03:05.077Z"
+      "updated_at": "2026-10-01T17:21:10.724Z",
+      "lease_until": "2026-10-02T05:21:10.724Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T17:21:10.724Z",
+          "by": "relay-2.0-control-center-resource-bust-retired-20261001",
+          "reason": "Owner has now confirmed the deployed ChatGPT control center is still showing the cached legacy v2 resource while Inspector shows the intended 2.0 content; resume this parked lane for the approved cache-key rotation and presentation corrections.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action",
+            "paths",
+            "resources"
+          ],
+          "before": {
+            "goal": "Force ChatGPT to load the shipped Relay 2.0 React control center by rotating the MCP App resource identity away from the cached pre-2.0 URI.",
+            "acceptance": "Relay control center uses a fresh ui:// resource URI; resource/read and tool outputTemplate/resourceUri all resolve to it; React mcpHtml remains unchanged; exact-head tests and Runner admission pass; merged exact commit is deployed and the old v2 resource is no longer advertised.",
+            "next_action": "Retired/superseded. Keep this branch unmerged; do not resume unless a future approved control-center build explicitly needs a cache-key rotation.",
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js"
+            ],
+            "resources": [
+              "relay-control-center-resource-identity"
+            ]
+          },
+          "after": {
+            "goal": "Make ChatGPT load the actual Relay 2.0 React control center instead of its cached legacy v2 resource, and apply the approved Momo navigation/brand typography plus the new repo /icons artwork.",
+            "acceptance": "Rotate the MCP control-center ui:// resource identity so ChatGPT cannot reuse the legacy v2 HTML; the resource body remains the generated React mcpHtml; React Today, Runner and Night Shift are the surfaces mounted in ChatGPT; Relay brand and feature navigation labels use Momo Trust Display; generated feature icon data comes from the canonical repository /icons assets (relay-icon.png, today-icon.png, runner-icon.png, inspector-icon.png, nightshift-icon.png.png); Inspector remains separately available at /inspector; deterministic generated output and exact-head tests pass before merge/deploy.",
+            "next_action": "Read exact current main/branch files, update the cache URI and React presentation/icon source, regenerate deterministic web payloads on the branch, run exact-head admission/tests, then merge and deploy exact merged source. Verify ChatGPT control center mounts the fresh React resource.",
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js",
+              "apps/web/src/App.tsx",
+              "apps/web/src/styles.css",
+              "apps/web/build.mjs",
+              "apps/web/generated-react.js",
+              "apps/web/generated.js"
+            ],
+            "resources": [
+              "relay-control-center-resource-identity",
+              "relay-react-control-center",
+              "relay-momo-navigation",
+              "relay-repo-icons"
+            ]
+          }
+        }
+      ]
     },
     {
       "id": "relay-inline-card-v2-final-20261001",
