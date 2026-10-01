@@ -1,6 +1,7 @@
 const REVIEW_PREFIX = "reviews/human-qa/";
 const QUESTION_ANSWERS = new Set(["yes", "no", "not_sure"]);
 const OVERALL_VERDICTS = new Set(["looks_good", "needs_work", "not_sure"]);
+const REVIEW_DISPOSITIONS = new Set(["pending", "completed", "stale", "archived"]);
 
 function badRequest(message) {
   return Object.assign(new Error(message), { status: 400 });
@@ -119,11 +120,17 @@ export function normalizeQaReview(input = {}, questions = [], now = new Date().t
   const notes = input.notes == null ? "" : String(input.notes);
   if (notes.length > 6000) throw badRequest("QA notes must be 6000 characters or fewer.");
 
+  const disposition = input.disposition == null || input.disposition === ""
+    ? null
+    : String(input.disposition);
+  if (disposition && !REVIEW_DISPOSITIONS.has(disposition)) throw badRequest("Invalid QA disposition.");
+
   return {
     schema: 1,
     overall,
     answers,
     notes,
+    disposition,
     updated_at: now
   };
 }
@@ -143,9 +150,20 @@ export async function getQaReview(bucket, evidenceId) {
 export async function saveQaReview(bucket, evidenceId, input, evidence) {
   if (!bucket?.put) throw new Error("Visual evidence R2 binding unavailable.");
   const questions = qaQuestionsForEvidence(evidence);
+  const previous = await getQaReview(bucket, evidenceId);
+  const hasDisposition = Object.prototype.hasOwnProperty.call(input || {}, "disposition");
+  const normalized = normalizeQaReview({
+    ...(input || {}),
+    disposition: hasDisposition ? input.disposition : (previous?.disposition || null)
+  }, questions);
+  const previousDisposition = previous?.disposition || null;
   const review = {
     evidence_id: evidenceId,
-    ...normalizeQaReview(input, questions)
+    ...normalized,
+    disposition_updated_at:
+      normalized.disposition === previousDisposition
+        ? (previous?.disposition_updated_at || null)
+        : normalized.updated_at
   };
   await bucket.put(reviewKey(evidenceId), JSON.stringify(review), {
     httpMetadata: { contentType: "application/json" }
