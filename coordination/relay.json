@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T04:13:18.053Z",
+  "updated_at": "2026-10-01T04:16:34.878Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3846,7 +3846,7 @@
       "owner": "relay-1.9.9-chatgpt-native-experience-20261001",
       "goal": "Ship Relay 1.9.9 as the unified ChatGPT-native experience release: a polished family of contextual in-chat response cards plus a rich opened-Relay app with interactive chat/workspace behavior, all sharing one visual language, one canonical state model and one progressive-disclosure path.",
       "acceptance": "Treat the user-provided 2026-09-30 RELEASE_PLAN_1.9.9.md checkpoint as the latest approved visual/interaction direction for Relay 1.9.9. Preserve Inspector as the successful surface and preserve Relay's established dark surfaces, colorful page identities, chunky icons, rounded cards, and no-gradient direction while improving composition, hierarchy, readability, explanatory language, and accessible responsive behavior. Today, Runner, and Night Shift must explain what is happening, why it matters, and the next useful action within seconds; Runner work is shown as human-readable horizontal cards with technical identifiers/evidence subordinate in expandable detail. ChatGPT inline progress cards are compact contextual visual responses. Clicking one opens a simplified interactive Relay/Runner dashboard inside ChatGPT for that exact selected work; it does NOT default to the standalone web dashboard. The in-app view shows current activity, honest circular/linear completion with declared basis, phase phrase, latest meaningful update, freshness, milestones, a small useful graph where real timestamped data exists, blockers/requests, and the next action. From that in-app dashboard, an explicit Open full dashboard action may open relay.loew.fi preserving the same work identity. The standalone web dashboard owns broader workspace navigation, full history, evidence, and operational detail. Card, in-app dashboard, and web must reuse one canonical progress record and never report competing completion state. Today/Runner/Night Shift work cards also resolve to the exact live Runner progress destination. That destination provides a readable timestamped update stream/ticker, stable reading position with a new-updates affordance, milestone/activity graphs only when backed by real data, clear freshness/live/reconnecting/stale state, and a seconds-scale delivery target to validate during implementation (initial target: within 10 seconds after an event becomes available to Relay, without implying visibility into unreported work). Progress language may be playful (for example half-way/finish-line/wrapping-up/delivery phrases) only when evidence supports the phase. Percentages come from declared milestones or measurable work units, expose the basis, are approximate when appropriate, never rise merely with elapsed time, and must explain scope changes. If no valid numeric basis exists, show phase and completed milestones without inventing a percentage. Ready for review is distinct from delivered/shipped. Mockups/specification must cover populated, empty, paused, blocked, stale/unknown, reconnecting, scope-change, failure, ready-for-review, and delivered states; light/dark, mobile/desktop, reduced-motion, keyboard/focus/accessibility, and no duplicated canonical state. Verify actual ChatGPT MCP/App rendering, navigation, and refresh capabilities before claiming self-updating cards. If automatic inline refresh is unsupported, provide explicit refresh/fresh timestamped status behavior. The Datadog MCP Apps pattern is an interaction reference only, not proof of Relay host capabilities. Before product implementation, finish the detailed end-to-end interaction specification and matching mockups for compact inline card -> simplified in-app dashboard -> selected activity/milestone/graph detail -> optional full web dashboard, with clear back navigation. No implementation/deployment/QA completion is implied by this planning update.",
-      "next_action": "Ingest the uploaded RELEASE_PLAN_1.9.9.md checkpoint as authoritative 1.9.9 direction. Before implementation, finish the exact end-to-end flow and screen/state inventory for compact ChatGPT card -> simplified interactive in-app Runner dashboard -> selected activity/milestone/graph detail -> optional full relay.loew.fi dashboard, preserving the same work identity and clear return navigation. Specify default composition, labels/actions, readable live-update stream/ticker behavior, honest progress semantics, freshness, and loading/empty/paused/blocked/stale/reconnecting/scope-change/failure/ready-for-review/delivered states. Verify real ChatGPT MCP/App refresh/navigation capabilities and document fallbacks rather than assuming live cards. Prepare and review matching mockups using the approved human-first visual direction before changing the product. Implementation still follows the 1.9.7/team foundation and durable operation framework; inspector owns visual direction/review, runner supports implementation, night-shift owns coordination/continuity, and specialist teams join as needed.",
+      "next_action": "Use the uploaded RELEASE_PLAN_1.9.9.md plus the now-shipped PR #76 conversational-card direction as authoritative visual input. Before broader 1.9.9 implementation, finish the end-to-end flow and mockups for compact ChatGPT card -> simplified interactive in-app Runner dashboard -> selected activity/milestone/graph detail -> optional full relay.loew.fi dashboard. Inline cards must visually match Relay's web feature panels rather than generic SaaS cards: transparent host canvas; giant-notification composition; corresponding Relay/team icon with bounded pulse/glow beside a large lowercase feature heading; a small human blurb beneath; a rounded information panel to the right with the single most pertinent large readable metric/data visualization; actions underneath; and, when space and canonical staff identity permit, a compact name badge with silhouette avatar for the primary reporter. Use runner/inspector/night-shift page identities and accents consistently, use relevant specialist glyphs when source/cloud/release/skills is reporting, and fall back to Relay identity when no team/person is the meaningful reporter. Preserve truthful progress/freshness semantics, responsive stacking, reduced motion, exact work identity, and no duplicated state. Verify actual ChatGPT MCP/App refresh/navigation capabilities and document fallbacks. Inspector owns visual review; runner supports implementation; night-shift owns continuity; specialist teams join as needed.",
       "paths": [
         "src/relay-chat-ui.js",
         "src/relay-card-ui.js",
@@ -3897,7 +3897,10 @@
         "relay-chatgpt-in-app-dashboard",
         "relay-datadog-mcp-interaction-reference",
         "relay-progress-honesty-rules",
-        "relay-1.9.9-screen-state-inventory"
+        "relay-1.9.9-screen-state-inventory",
+        "relay-web-panel-notification-card-language",
+        "relay-feature-reporter-iconography",
+        "relay-staff-reporter-badge"
       ],
       "task_class": "design",
       "ledger_refs": [
@@ -3939,7 +3942,7 @@
       ],
       "state": "queued",
       "created_at": "2026-10-01T02:57:33.950Z",
-      "amendment_count": 2,
+      "amendment_count": 3,
       "amendments": [
         {
           "at": "2026-10-01T03:02:32.261Z",
@@ -4116,9 +4119,70 @@
               "... +11 more"
             ]
           }
+        },
+        {
+          "at": "2026-10-01T04:16:34.878Z",
+          "by": "relay-1.9.9-chatgpt-native-experience-20261001",
+          "reason": "Preserve the user's clarified card art direction so 1.9.9 builds on the deployed web-panel/giant-notification visual language instead of regressing to generic cards.",
+          "fields": [
+            "next_action",
+            "resources"
+          ],
+          "before": {
+            "next_action": "Ingest the uploaded RELEASE_PLAN_1.9.9.md checkpoint as authoritative 1.9.9 direction. Before implementation, finish the exact end-to-end flow and screen/state inventory for compact ChatGPT card -> simplified interactive in-app Runner dashboard -> selected activity/milestone/graph detail -> optional full relay.loew.fi dashboard, preserving the same work identity and clear return navigation. Specify default composition, labels/actions, readable live-update stream/ticker behavior, honest progress semantics, freshness, and loading/empty/paused/blocked/stale/reconnecting/scope-change/failure/re...",
+            "resources": [
+              "relay-1.9.9-release",
+              "relay-inline-card-design-system",
+              "relay-context-card-families",
+              "relay-opened-app-workspace",
+              "relay-in-app-interactive-chat",
+              "relay-chat-workspace-continuity",
+              "relay-three-surface-ui-contract",
+              "relay-progressive-disclosure-ui",
+              "relay-operation-card",
+              "relay-project-card",
+              "relay-release-card",
+              "relay-staff-card",
+              "relay-blocker-card",
+              "relay-verification-card",
+              "relay-qa-card",
+              "relay-card-motion-status",
+              "relay-card-responsive-layout",
+              "relay-terra-prime-card-language",
+              "relay-human-first-result-contract",
+              "relay-operation-framework",
+              "... +11 more"
+            ]
+          },
+          "after": {
+            "next_action": "Use the uploaded RELEASE_PLAN_1.9.9.md plus the now-shipped PR #76 conversational-card direction as authoritative visual input. Before broader 1.9.9 implementation, finish the end-to-end flow and mockups for compact ChatGPT card -> simplified interactive in-app Runner dashboard -> selected activity/milestone/graph detail -> optional full relay.loew.fi dashboard. Inline cards must visually match Relay's web feature panels rather than generic SaaS cards: transparent host canvas; giant-notification composition; corresponding Relay/team icon with bounded pulse/glow beside a large lowercase feat...",
+            "resources": [
+              "relay-1.9.9-release",
+              "relay-inline-card-design-system",
+              "relay-context-card-families",
+              "relay-opened-app-workspace",
+              "relay-in-app-interactive-chat",
+              "relay-chat-workspace-continuity",
+              "relay-three-surface-ui-contract",
+              "relay-progressive-disclosure-ui",
+              "relay-operation-card",
+              "relay-project-card",
+              "relay-release-card",
+              "relay-staff-card",
+              "relay-blocker-card",
+              "relay-verification-card",
+              "relay-qa-card",
+              "relay-card-motion-status",
+              "relay-card-responsive-layout",
+              "relay-terra-prime-card-language",
+              "relay-human-first-result-contract",
+              "relay-operation-framework",
+              "... +14 more"
+            ]
+          }
         }
       ],
-      "updated_at": "2026-10-01T03:48:36.594Z"
+      "updated_at": "2026-10-01T04:16:34.878Z"
     },
     {
       "id": "relay-1.9.6.2-operational-staff-routing-20261001",
