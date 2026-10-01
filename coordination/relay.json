@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T16:37:53.414Z",
+  "updated_at": "2026-10-01T16:38:20.309Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -9540,6 +9540,39 @@
       "created_at": "2026-10-01T16:37:53.414Z",
       "updated_at": "2026-10-01T16:37:53.414Z",
       "lease_until": "2026-10-02T04:37:53.414Z"
+    },
+    {
+      "id": "relay-mcp-minimal-probe-20261001",
+      "owner": "relay-mcp-minimal-probe-20261001",
+      "branch": "relay/mcp-minimal-probe-20261001",
+      "paths": [
+        "src/relay-v2-probe.js"
+      ],
+      "resources": [
+        "relay-mcp-minimal-probe"
+      ],
+      "goal": "Create a minimal MCP App host probe that isolates ChatGPT mounting from Relay card complexity and oversized structuredContent.",
+      "acceptance": "Use the existing extension resource hook only; advertise a fresh static ui:// Relay probe resource on a small read-only Relay tool result; return no Runner assignment dump; resource renders static text without custom handshake, window.openai dependency, self-refresh, or Relay card design; preserve current v9 and legacy cards untouched; exact-head tests/CI pass; deploy temporary exact-head Worker for cross-client consumer test before merge.",
+      "next_action": "Create the branch from current main, replace the historical v2 probe with the minimal static host probe attached to relay_control_status, validate resource/tool metadata, run exact-head tests, open draft PR, temporarily deploy exact head, then invoke relay_control_status for iPhone/web/desktop comparison.",
+      "task_class": "maintenance",
+      "category": "qa-verification",
+      "tags": [
+        "chatgpt",
+        "mcp-apps",
+        "probe",
+        "inline-ui",
+        "host"
+      ],
+      "primary_role": "builder",
+      "primary_team": "runner",
+      "supporting_teams": [],
+      "primary_staff": "nico",
+      "supporting_staff": [],
+      "base_sha": "a79bc74350e003b53f39cac066cd044e27651a07",
+      "state": "active",
+      "created_at": "2026-10-01T16:38:20.309Z",
+      "updated_at": "2026-10-01T16:38:20.309Z",
+      "lease_until": "2026-10-02T04:38:20.309Z"
     }
   ],
   "migrated_from": "loew-inspector"
