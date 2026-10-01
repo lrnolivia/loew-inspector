@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T09:57:18.450Z",
+  "updated_at": "2026-10-01T09:57:55.276Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6119,6 +6119,47 @@
       ],
       "state": "queued",
       "created_at": "2026-10-01T09:55:15.263Z"
+    },
+    {
+      "id": "relay-card-v9-nonblocking-bootstrap-20261001",
+      "owner": "relay-card-v9-nonblocking-bootstrap-20261001",
+      "goal": "Ship the card v9 non-blocking bootstrap and size-reporting fixes without redesigning the Relay card, preserving the legacy bridge control exactly.",
+      "acceptance": "Rotate the contextual card URI to v9; patch v8 HTML at serve time so legacy cardHtml() output remains unchanged; paint immediately from window.openai globals; run ui/initialize in parallel with a 4s timeout; prefer window.openai.callTool; report intrinsic size and ui/notifications/size-changed; show the host diagnostic line; add regression coverage for immediate globals paint and size reporting; update relay-entry URI pins; add the v9 bootstrap doc; update stale production smoke pins if still present; npm test passes; open one draft PR and do not merge before desktop and browser consumer tests unless owner overrides.",
+      "next_action": "Claim the assignment from current main on the Runner-approved branch relay/card-v9-nonblocking-bootstrap, apply only the exact handoff edits after verifying each target string, run preflight and tests, open a draft PR, then verify consumer behavior with the direct render tool and legacy bridge control.",
+      "paths": [
+        "src/relay-chat-ui.js",
+        "src/relay-chat-ui.test.js",
+        "src/relay-entry.test.js",
+        "docs/relay/CHATGPT_CARD_V9_BOOTSTRAP.md",
+        "apps/mcp/production-smoke.mjs"
+      ],
+      "resources": [
+        "relay-context-card-v9",
+        "relay-chatgpt-bootstrap",
+        "relay-card-size-reporting"
+      ],
+      "task_class": "maintenance",
+      "category": "implementation",
+      "tags": [
+        "chatgpt",
+        "mcp-apps",
+        "inline-card",
+        "v9",
+        "bootstrap",
+        "hotfix"
+      ],
+      "primary_role": "builder",
+      "primary_team": "runner",
+      "supporting_teams": [
+        "inspector",
+        "release"
+      ],
+      "primary_staff": "nico",
+      "supporting_staff": [
+        "ellis"
+      ],
+      "state": "queued",
+      "created_at": "2026-10-01T09:57:55.276Z"
     }
   ],
   "claims": [
