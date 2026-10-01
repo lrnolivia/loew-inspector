@@ -8,6 +8,7 @@ Relay 1.9.6 is the planning and coordination intelligence release.
 - taxonomy projected into resume checkpoints and routing/skill context without changing Runner authorization;
 - staff-aware worker communication with stable Relay staff names while exact machine assignment/branch/PR/evidence identity remains underneath;
 - organization-first executive status narration with technical internals hidden by default;
+- a first-class executive communication MCP skill plus a two-layer human/technical result contract, presentation helper and eval fixtures;
 - monotonic live-amendment cursor through `relay_runner_updates`, including no-change suppression, retained-history gap detection and scope/blocking reconciliation;
 - bounded caught-up recovery from the latest canonical checkpoint, with explicit exclusions for genuine external waits, human review, authorization/client/schema failures, destructive ambiguity and scope conflicts;
 - recovery learning that emits capability/tool lessons, never staff productivity scores;
