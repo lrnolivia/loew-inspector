@@ -1,5 +1,5 @@
 import { STAFF } from './staff-registry.js';
-export const RELAY_CONTEXT_CARD_URI = 'ui://relay/context-card/v8.html';
+export const RELAY_CONTEXT_CARD_URI = 'ui://relay/context-card/v9.html';
 export const RELAY_CONTEXT_CARD_TOOL = 'relay_render_context_card';
 export const RELAY_STATUS_CARD_URI = 'ui://relay/status-card/v3-legacy-bridge.html';
 export const RELAY_STATUS_CARD_TOOL = 'relay_show_legacy_bridge_card';
@@ -168,8 +168,26 @@ function legacyBridgeCardHtml() {
   return html;
 }
 
+// v9: non-blocking host bootstrap + size reporting. Patches the v8 HTML at serve time so the
+// legacy bridge bisect card (built from cardHtml()) stays byte-for-byte unchanged.
+const BOOTSTRAP_V9 = `const diag={t0:Date.now(),globals:Boolean(window.openai),init:'pending',h:0};function showDiag(){const d=document.getElementById('diag');if(d)d.textContent='host check: globals '+(diag.globals?'yes':'no')+' · handshake '+diag.init+' · height '+diag.h}function reportSize(){try{const height=Math.ceil(document.documentElement.scrollHeight);if(height===diag.h)return;diag.h=height;window.parent.postMessage({jsonrpc:'2.0',method:'ui/notifications/size-changed',params:{width:Math.ceil(document.documentElement.scrollWidth),height}},'*');if(window.openai&&typeof window.openai.notifyIntrinsicHeight==='function')window.openai.notifyIntrinsicHeight(height);showDiag()}catch{}}if(typeof ResizeObserver==='function')new ResizeObserver(reportSize).observe(document.body);const ready=rpc('ui/initialize',{appInfo:{name:'relay-context-card',version:'1.9.9'},appCapabilities:{},protocolVersion:'2026-01-26'},4000).then(()=>{diag.init='ok '+(Date.now()-diag.t0)+'ms';window.parent.postMessage({jsonrpc:'2.0',method:'ui/notifications/initialized',params:{}},'*');hydrateOpenAiGlobals();diag.h=0;reportSize();setTimeout(()=>{void recoverCanonicalState()},350)});hydrateOpenAiGlobals();showDiag();reportSize();`;
+function replaceOnce(html, from, to) {
+  if (!html.includes(from)) throw new Error('Relay card v9 patch target missing: ' + from.slice(0, 60));
+  return html.replace(from, () => to);
+}
+function resilientCardHtml() {
+  let html = cardHtml();
+  html = replaceOnce(html, "function rpc(method,params){", "function rpc(method,params,ms=15000){");
+  html = replaceOnce(html, "reject(new Error('Relay host timed out'))},15000);", "reject(new Error('Relay host timed out'))},ms);");
+  html = replaceOnce(html, "async function callTool(name,args){await ready;return rpc('tools/call',{name,arguments:args})}", "async function callTool(name,args){if(window.openai?.callTool)return window.openai.callTool(name,args);await ready;return rpc('tools/call',{name,arguments:args})}");
+  html = replaceOnce(html, "const ready=rpc('ui/initialize',{appInfo:{name:'relay-context-card',version:'1.9.9'},appCapabilities:{},protocolVersion:'2026-01-26'}).then(()=>{window.parent.postMessage({jsonrpc:'2.0',method:'ui/notifications/initialized',params:{}},'*');hydrateOpenAiGlobals();setTimeout(()=>{void recoverCanonicalState()},350)});", BOOTSTRAP_V9);
+  html = replaceOnce(html, "ready.catch(error=>{hydrateOpenAiGlobals();if(!lastData){", "ready.catch(error=>{diag.init='timeout';showDiag();hydrateOpenAiGlobals();setTimeout(()=>{void recoverCanonicalState()},350);if(!lastData){");
+  html = replaceOnce(html, '<details id="details" hidden>', '<p class="micro" id="diag" style="grid-column:1/-1;margin:0 4px"></p><details id="details" hidden>');
+  return html;
+}
+
 export function relayContextCardResource() {
-  return { uri:RELAY_CONTEXT_CARD_URI, mimeType:'text/html;profile=mcp-app', text:cardHtml(), _meta:{ui:{prefersBorder:false,csp:{connectDomains:['https://relay.loew.fi'],resourceDomains:['https://relay.loew.fi']}},'openai/widgetDescription':'Compact staff-aware Relay context. Can reuse existing Inspector QA screenshots when requested. Open Relay for the full control center.','openai/ui':{availableDisplayModes:['inline']}} };
+  return { uri:RELAY_CONTEXT_CARD_URI, mimeType:'text/html;profile=mcp-app', text:resilientCardHtml(), _meta:{ui:{prefersBorder:false,csp:{connectDomains:['https://relay.loew.fi'],resourceDomains:['https://relay.loew.fi']}},'openai/widgetDescription':'Compact staff-aware Relay context. Can reuse existing Inspector QA screenshots when requested. Open Relay for the full control center.','openai/ui':{availableDisplayModes:['inline']}} };
 }
 
 // Fresh cache identities: rotate whenever card HTML, JS, or CSS changes.
