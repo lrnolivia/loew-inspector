@@ -1,4 +1,21 @@
-import relay from "./brand/relay-loop.png";
-import runner from "./brand/runner-dispatch-final.png";
-import inspector from "./brand/inspector-views.png";
-export const brand = { relay, runner, inspector };
+import relay from "./brand/relay.png";
+import today from "./brand/today.png";
+import runner from "./brand/runner.png";
+import inspector from "./brand/inspector.png";
+import nightShift from "./brand/night-shift.png";
+
+export const brand = Object.freeze({
+  relay,
+  today,
+  runner,
+  inspector,
+  "night-shift": nightShift
+});
+
+export const featureAccent = Object.freeze({
+  relay: "#b5471f",
+  inspector: "#1c8c93",
+  runner: "#3bcb8d",
+  today: "#ff6f78",
+  "night-shift": "#ffbf00"
+});
