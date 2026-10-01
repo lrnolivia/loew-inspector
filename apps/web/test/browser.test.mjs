@@ -210,6 +210,32 @@ test("shared interface works on web and MCP host transport, including mobile, de
       await view.getByRole("button", { name: "inspector", exact: true }).click();
       if (mode === "mcp") await view.getByRole("button", { name: "all", exact: true }).click();
       await view.locator("[data-review-id]").click();
+      await view.locator(".qa-product-badge strong").filter({ hasText: "relay" }).waitFor();
+      assert.equal(await view.locator(".qa-tool-identity").textContent(), "inspector");
+      assert.equal(await view.locator(".qa-panel-head").evaluate(node => getComputedStyle(node).backgroundColor), "rgb(32, 35, 39)");
+      assert.equal(await view.locator(".qa-save-row").evaluate(node => node.parentElement.className), "qa-companion");
+      if (mode === "web") {
+        const panel = view.locator(".qa-companion");
+        await page.screenshot({ path: "/tmp/relay-inspector-polish-desktop.png" });
+        const before = await panel.boundingBox();
+        await page.mouse.move(before.x + 3, before.y + before.height - 3);
+        await page.mouse.down();
+        await page.mouse.move(before.x - 220, before.y + before.height + 30, { steps: 12 });
+        await page.mouse.up();
+        const expanded = await panel.boundingBox();
+        assert.ok(expanded.width > before.width + 100, "The native resize grip expands the floating Inspector");
+        assert.equal(await view.locator(".qa-panel-body").evaluate(node => getComputedStyle(node).gridTemplateColumns.split(" ").length), 2);
+        await page.screenshot({ path: "/tmp/relay-inspector-polish-expanded.png" });
+        await panel.evaluate(node => { node.style.width = "300px"; node.style.height = "310px"; });
+        assert.equal(await view.locator(".qa-answer-grid").evaluate(node => getComputedStyle(node).gridTemplateColumns.split(" ").length), 1);
+        const footer = await view.locator(".qa-save-row").boundingBox();
+        const narrow = await panel.boundingBox();
+        const closeButton = await view.locator("[data-qa-close]").boundingBox();
+        assert.ok(closeButton.x + closeButton.width <= narrow.x + narrow.width, "Window controls remain inside the narrowed panel");
+        assert.ok(footer.y + footer.height <= narrow.y + narrow.height + 1, "Save stays visible in a short panel");
+        await page.screenshot({ path: "/tmp/relay-inspector-polish-narrow.png" });
+        await panel.evaluate(node => { node.style.width = ""; node.style.height = ""; });
+      }
       await view.getByRole("button", { name: "Yes", exact: true }).click();
       await view.getByRole("button", { name: "Looks good", exact: true }).click();
       await view.locator(".qa-save-state").filter({ hasText: "Saved" }).waitFor();
@@ -235,6 +261,9 @@ test("shared interface works on web and MCP host transport, including mobile, de
         await page.goto(origin + "#review?evidence=" + evidence.evidence_id);
         await page.locator(".qa-stage").waitFor();
         assert.equal(await page.locator(".qa-answer.selected").textContent(), "Yes");
+        assert.equal(await page.locator(".qa-companion").evaluate(node => getComputedStyle(node).resize), "none");
+        assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
+        await page.screenshot({ path: "/tmp/relay-inspector-polish-mobile.png" });
       }
       assert.deepEqual(errors, []);
       await page.close();

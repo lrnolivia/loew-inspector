@@ -171,7 +171,7 @@ function openProject(id) {
 }
 
 async function openSettings() {
-  const href = "https://chatgpt.com/settings/plugins-settings/plugin_asdk_app_6abcbc2be3c081919a9a9ce9c3d2d141";
+  const href = "https://chatgpt.com/settings/plugins-settings/plugin_asdk_app_6abdbca7c98c819187cc153d781b0faf";
   try {
     if (window.openai?.openExternal) await window.openai.openExternal({ href });
     else window.open(href, "_blank", "noopener,noreferrer");
