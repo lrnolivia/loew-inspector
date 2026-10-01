@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "rtxforge",
-  "updated_at": "2026-10-01T22:40:46.533Z",
+  "updated_at": "2026-10-01T22:47:12.113Z",
   "legacy_branches": [
     "backup/github-main-before-0.5.8",
     "backup/main-0.5.8-ada",
@@ -10,7 +10,35 @@
     "main",
     "runner/universal-authority"
   ],
-  "queue": [],
+  "queue": [
+    {
+      "id": "rtxforge-figma-fidelity-20261001",
+      "owner": "01a0cbec-6302-7aa0-a0c8-546f9b46587d",
+      "goal": "PAUSED by user: correct production Figma designs against repository source/captures. Source path is READ-ONLY reference, not authorization to edit code. User rejected previous result as ugly/inaccurate; previous completion claim is invalid.",
+      "acceptance": "Editable designs visually match repo captures and source, with shared Foundations/Components propagating into Library, Details, Progress/Dialogs, QA. Inter is a fallback because Adwaita Sans unavailable in Figma; exact font fidelity unresolved.",
+      "next_action": "DO NOT RESUME until user explicitly asks. Stopped after FAILED visual review of Details29:475 and Graphics30:685: hero hidden by gradient; sidebar labels black on dark, selection fills fully opaque; footer dividers too bright. Next diagnose variable paint/gradient opacity; reset glyphs in header23:62/64/66/68 swapped to51:329. Then continue Library/List/Progress/Dialogs/QA correction. Retained file https://www.figma.com/design/UV0o89IkpCbYfXQmO3EziZ . References /home/loew/Repos/rtxForge/dist/{gnome-library,gnome-game-settings,gnome-settings,gnome-progress,list-final,install-presets-final}.png plus gui/rtxforge_gtk.py. CP assets18:6/18:7/18:8 replaced from actual demo media; hero hash a36c70e3a27387b8997948aacda0303b41572605. Added Adwaita icons64:2789..64:2812 and Sidebar Row64:2815; changed sidebars28:93,30:675; preference rows56px with regular titles, buttons minWidth70. Hero28:426 gradient currently faulty. Details/Settings grouped row frames64:3344..64:3363. No product/game writes. Preserve unrelated local documentation changes. Separate installation Relay assignment untouched.",
+      "paths": [
+        "gui/rtxforge_gtk.py"
+      ],
+      "resources": [
+        "figma:UV0o89IkpCbYfXQmO3EziZ"
+      ],
+      "category": "design",
+      "labels": [
+        {
+          "key": "execution",
+          "value": "paused-by-user"
+        }
+      ],
+      "primary_role": "design",
+      "primary_team": "inspector",
+      "supporting_teams": [],
+      "primary_staff": "valentina",
+      "supporting_staff": [],
+      "state": "queued",
+      "created_at": "2026-10-01T22:47:12.113Z"
+    }
+  ],
   "claims": [
     {
       "id": "rtxforge-coordination-bootstrap-20260930",
