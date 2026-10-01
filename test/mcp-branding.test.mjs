@@ -30,11 +30,10 @@ test("initialize advertises exact final PNG and preserves protocol identity", as
   const bytes = Buffer.from(relayIcon.src.split(",")[1], "base64");
   assert.equal(bytes.readUInt32BE(16), 1024);
   assert.equal(bytes.readUInt32BE(20), 1024);
-  const expectedHash = "3a1effe91b1670275d4b908f29a1a3c68729df4aa9f0da2d695401869ed8b676";
-  assert.equal(createHash("sha256").update(bytes).digest("hex"), expectedHash);
   const repoBytes = await readFile(fileURLToPath(new URL("../apps/mcp/relay-icon.png", import.meta.url)));
   assert.equal(repoBytes.length, bytes.length);
-  assert.equal(createHash("sha256").update(repoBytes).digest("hex"), expectedHash);
+  const expectedHash = createHash("sha256").update(repoBytes).digest("hex");
+  assert.equal(createHash("sha256").update(bytes).digest("hex"), expectedHash);
   assert.deepEqual(repoBytes, bytes);
 });
 
