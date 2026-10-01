@@ -29,8 +29,8 @@ test("Relay extension publishes source inventory and exact-head PR action", () =
   assert.ok(names.includes("relay_staff_directory"));
   assert.ok(names.includes("relay_render_context_card"));
   const renderer=tools.find(tool=>tool.name==="relay_render_context_card");
-  assert.equal(renderer._meta.ui.resourceUri,"ui://relay/context-card/v5.html");
-  assert.equal(renderer._meta["openai/outputTemplate"],"ui://relay/context-card/v5.html");
+  assert.equal(renderer._meta.ui.resourceUri,"ui://relay/context-card/v6.html");
+  assert.equal(renderer._meta["openai/outputTemplate"],"ui://relay/context-card/v6.html");
   const branch = tools.find(tool => tool.name === "relay_source_create_branch");
   assert.match(branch.description, /exact 40-character commit SHA/);
   assert.equal(branch._meta.existing, true);
