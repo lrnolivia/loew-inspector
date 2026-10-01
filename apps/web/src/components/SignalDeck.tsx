@@ -48,7 +48,7 @@ export function SignalDeck({ cards, feature = "relay" }: { cards: SignalCardData
           <article className="signal-card" data-tone={card.tone || "quiet"} key={card.id} tabIndex={0}>
             <img className="signal-mark" src={marks[feature] || marks.relay} width="76" height="76" alt="" />
             <span className="signal-label">{card.label}</span>
-            <strong>{card.value}</strong>
+            <strong data-value-kind={/^[\d.,%]+$/.test(card.value) ? "number" : "text"}>{card.value}</strong>
             <p>{card.detail}</p>
           </article>
         ))}
