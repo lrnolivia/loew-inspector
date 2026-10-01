@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T02:51:32.361Z",
+  "updated_at": "2026-10-01T02:55:32.511Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -4801,7 +4801,8 @@
         "apps/web/public/operator-review.js",
         "apps/web/public/index.html",
         "features/night-shift/view.js",
-        "apps/web/public/qa.js"
+        "apps/web/public/qa.js",
+        "apps/web/build.mjs"
       ],
       "resources": [
         "relay-design",
@@ -4809,13 +4810,13 @@
       ],
       "goal": "Refine Relay floating Inspector and compact dashboard presentation from user screenshots: neutral charcoal, product badge, responsive resizing, smaller chrome/status, updated ChatGPT settings URL. Record image zoom/pan, anchored comments, actionable reports and relationship simplification as deferred behavior.",
       "acceptance": "Direct website design per user instruction 'just design it', refined to a midpoint after user rejected over-dense and oversized alternatives: neutral floating Inspector, comfortable type/spacing, canonical product badge, responsive native resize and persistent header/save footer; corrected settings URL; review identity/save behavior and main-interface design preserved. Required tests and exact-head browser/admission gates pass; behavioral requests and blank ChatGPT card remain documented for a later session.",
-      "next_action": "Implement and validate loading skeletons including Inspector evidence loading, with clear Inspector/project badge branding.",
+      "next_action": "Repair evidenced MCP HTML build replacement bug triggered by minified dollar variable, finish connection dot alignment/pulse, and publish validated visual/skeleton pass.",
       "task_class": "design",
       "base_sha": "f183508d4f03d39d9a08021e0a4772058cb991cf",
       "state": "active",
       "created_at": "2026-10-01T02:25:26.503Z",
-      "updated_at": "2026-10-01T02:50:18.100Z",
-      "lease_until": "2026-10-01T14:50:18.100Z"
+      "updated_at": "2026-10-01T02:55:32.511Z",
+      "lease_until": "2026-10-01T14:55:32.511Z"
     }
   ],
   "migrated_from": "loew-inspector"
