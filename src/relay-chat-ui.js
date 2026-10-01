@@ -41,16 +41,16 @@ export function contextCardModel(data = {}, directory = DIRECTORY) {
   let summary = human.what_changed || error || first.waiting_reason || data.message || first.next_action || checkpoint.next_action || 'Exact Relay result recorded.';
   if (technicalNote(summary) && !error && !first.waiting_reason) summary = checkpoint.identities?.merge_commit_sha ? 'The source change is merged. The next verification gate is ready.' : 'Canonical work state is available. Exact source and runtime details are recorded below.';
   let label = states[status] || status;
-  let tone = ['blocked','failed','officially-stale'].includes(status) ? 'bad' : status.includes('wait') || status === 'held' ? 'wait' : 'quiet';
+  let tone = ['blocked','failed','officially-stale'].includes(status) ? 'bad' : status.includes('wait') || status === 'held' ? 'wait' : ['active','working'].includes(status) ? 'info' : ['completed','complete'].includes(status) ? 'good' : 'quiet';
   let rows = (data.progress || data.claims || data.queue || []).slice(0,3).map(x=>({label:x.primary_staff ? name(x.primary_staff) : 'Relay', text:states[x.state] || x.state || 'Recorded'}));
   if (checks) {
     const failed = checks.find(x=>x.status==='completed' && !['success','neutral','skipped'].includes(x.conclusion));
     const running = checks.find(x=>x.status!=='completed');
-    title = 'Verification'; label = failed ? 'Failed' : running ? 'Running' : checks.length ? 'Checks complete' : 'No checks recorded'; tone=failed?'bad':running?'wait':'quiet';
+    title = 'Verification'; label = failed ? 'Failed' : running ? 'Running' : checks.length ? 'Checks complete' : 'No checks recorded'; tone=failed?'bad':running?'info':checks.length?'good':'quiet';
     summary = failed ? failed.name+' failed.' : running ? running.name+' is running.' : checks.length ? 'Recorded checks are complete.' : 'Verification is unconfirmed.';
     rows = checks.slice(0,3).map(x=>({label:x.name,text:x.conclusion||x.status}));
   }
-  if (pr) { title=pr.title||'Source change'; label=pr.merged?'Merged':pr.draft?'Draft':'In review'; summary=pr.merged?'The source change is merged.':'The source change is awaiting its next gate.'; }
+  if (pr) { title=pr.title||'Source change'; label=pr.merged?'Merged':pr.draft?'Draft':'In review'; tone=pr.merged?'good':pr.draft?'quiet':'info'; summary=pr.merged?'The source change is merged.':'The source change is awaiting its next gate.'; }
   const blocker = human.blocker || error || (status==='blocked' ? first.waiting_reason || 'The next gate needs attention.' : null);
   const qa = human.qa || checkpoint.qa_context || data.qa || null;
   const handoff = data.action === 'handoff' ? 'Ownership handed to '+(data.claim?.owner || 'the recorded successor')+'.' : data.handoff?.summary || null;
@@ -62,7 +62,16 @@ export function contextCardModel(data = {}, directory = DIRECTORY) {
   let nextStep = terminal ? null : technicalNote(rawNext) ? 'Verify the refreshed chat connection before continuing.' : rawNext;
   if (nextStep && (normalize(nextStep) === normalize(summary) || normalize(summary).includes(normalize(nextStep)))) nextStep = null;
   if (rows.length === 1 && rows[0].label === primary && normalize(rows[0].text) === normalize(label)) rows = [];
-  return { title, team, label, tone, summary, rows, blocker, qa, handoff, next_step:nextStep, evidence:Object.fromEntries(Object.entries(evidence).filter(([,v])=>v!=null)), refresh:Boolean(data.project) };
+  const primaryTeam = first.primary_team || data.primary_team || (checks ? 'inspector' : pr ? 'source' : 'relay');
+  const feature = ['relay','runner','inspector','night-shift','source','cloud','release','skills'].includes(primaryTeam) ? primaryTeam : 'relay';
+  const signal = tone === 'bad' ? 'danger' : tone === 'wait' ? 'external' : tone === 'info' ? 'working' : tone === 'good' ? 'steady' : 'quiet';
+  const rawPercent = first.progress_percent ?? first.percent ?? first.completion?.percent ?? data.progress_percent ?? null;
+  const percent = Number.isFinite(Number(rawPercent)) && Number(rawPercent) >= 0 && Number(rawPercent) <= 100 ? Math.round(Number(rawPercent)) : null;
+  let metric = percent != null ? percent+'%' : label;
+  let metric_label = percent != null ? 'completion' : 'current state';
+  if (checks) { const done=checks.filter(x=>x.status==='completed').length; metric=checks.length ? done+'/'+checks.length : label; metric_label=checks.length ? 'checks reported' : 'verification'; }
+  if (pr?.number) { metric='#'+pr.number; metric_label=pr.merged?'merged pull request':pr.draft?'draft pull request':'pull request'; }
+  return { title, feature, primary_staff:primary, team, label, tone, signal, summary, rows, blocker, qa, handoff, next_step:nextStep, metric, metric_label, percent, evidence:Object.fromEntries(Object.entries(evidence).filter(([,v])=>v!=null)), refresh:Boolean(data.project) };
 }
 export function contextualPresentation(data) {
   const m=contextCardModel(data);
