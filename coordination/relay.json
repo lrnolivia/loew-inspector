@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T03:33:41.934Z",
+  "updated_at": "2026-10-01T03:34:00.700Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3418,7 +3418,7 @@
         "integrator",
         "verifier"
       ],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-10-01T02:39:22.086Z",
       "amendment_count": 1,
       "amendments": [
@@ -5929,6 +5929,89 @@
       "evidence": "PR https://github.com/lrnolivia/relay/pull/74; tested head 9ef8f31e4d388c20fc17d08f1267c46f20e8cc81; merge 49acae750d604c18eec8097fb4dbc7845232d2f9; version 1182e6a4-e8d0-4dc9-8797-89428e157ed2 at 100%, matching commit annotation verified. Full npm test, exact-head CI and admission passed. Browser checks on web/simulated MCP cover theme toggle, persisted override of system appearance, Inspector light palette, 28px card gutters, exact external refresh-details URL and 18px icon, mobile overflow and review saves. Refresh shortcut opens plugin details for user to select Refresh, per documented OpenAI flow; automatic tool refresh not claimed. Durable design and manual refresh limitation in docs/relay/INSPECTOR_VISUAL_POLISH_20260930.md. No production browser inspection claimed; prior HTTP522 harness was not retried. Checkout clean/pushed.",
       "work_accounted": true,
       "completed_at": "2026-10-01T03:29:24.202Z"
+    },
+    {
+      "id": "relay-1.9.6.2-staff-routing-20261001",
+      "owner": "relay-1.9.6.2-staff-routing-20261001",
+      "branch": "relay/1.9.7-team-foundation-20261001",
+      "paths": [
+        "contracts/assignments/",
+        "contracts/staff/",
+        "src/staff-registry.js",
+        "src/staff-registry.test.js",
+        "src/assignment-taxonomy.js",
+        "src/assignment-taxonomy.test.js",
+        "src/runner-control.js",
+        "src/runner-control-core.js",
+        "src/worker-communication.js",
+        "src/worker-communication.test.js",
+        "src/resume-checkpoints.js",
+        "src/resume-checkpoints.test.js",
+        "docs/relay/RELAY_1_9_6_2_RELEASE.md",
+        "contracts/teams/",
+        "src/team-registry.js",
+        "src/team-registry.test.js"
+      ],
+      "resources": [
+        "relay-1.9.6.2-release",
+        "relay-staff-assignment-routing",
+        "relay-primary-staff-binding",
+        "relay-supporting-staff-binding",
+        "relay-role-affinity-resolution",
+        "relay-staff-capacity-context",
+        "relay-staff-aware-resume",
+        "relay-staff-aware-status",
+        "relay-team-registry",
+        "relay-home-team",
+        "relay-team-memberships",
+        "relay-assignment-team-routing",
+        "relay-primary-team-binding",
+        "relay-supporting-team-binding"
+      ],
+      "goal": "Finish canonical feature-team routing required by 1.9.7 creative skill resolution",
+      "acceptance": "Add canonical assignment-level `primary_staff` plus bounded `supporting_staff` identity fields and expose them through Runner reads/resume/status without changing authorization. Resolve bindings deterministically from explicit override first, then assignment primary/supporting roles, category, labels/tags, resources, subsystem/subnet fit and canonical staff role affinities. Use only active approved staff; never invent names, reuse retired identities, or silently rename people. Persist bindings canonically so the same assignment resolves to the same people across chats, workers, resumes and UI. Explicit canonical amendment may reassign staff; automatic routing must preserve sticky identity and record why a binding changed. Staff may support multiple assignments; capacity is context for routing, not a hidden productivity score or authorization gate. The staff directory should surface live assignment bindings derived from canonical Runner state rather than remaining an empty presentation registry. Human-facing communication should use these bindings by default while retaining assignment/worker IDs underneath. Tests cover deterministic routing, explicit override, affinity ties, missing-fit fallback, retired/reserve exclusion, reassignment history, cross-session stickiness, staff-directory readback, resume/status projection and no authorization change. Feature-team layer: add a canonical lowercase team registry and assignment-level `primary_team` plus bounded `supporting_teams`. Routing order becomes assignment -> feature team -> role -> named staff. Initial canonical team ids are `inspector`, `runner`, `night-shift`, `source`, `cloud`, `release`, and `skills`; all user-facing team labels remain lowercase. Staff gain one sticky `home_team` plus optional team memberships so temporary cross-team work does not rewrite organizational identity. Initial home-team map: inspector = valentina, vivienne, margot, sabine, roman; runner = ellis, nico, adrian; night-shift = julian, naomi; source = rafael; cloud = gabriel; release = luca; skills = imani. Cross-team memberships support release/verification/integration/planning work without changing home team. Team routing uses explicit override first, then assignment category/roles/resources/subsystems and team affinities; staff resolution happens inside the selected team(s). Team identity is routing/presentation context only, never authorization.",
+      "next_action": "User-authorized Relay 1.9 wrap-up takeover: claim the queued lineage then transfer atomically to relay-1.9-wrapup-20261001 before any implementation. Staff routing already shipped; remaining team/home-team/skill-routing integration is a real prerequisite, not a duplicate release.",
+      "task_class": "architecture",
+      "ledger_refs": [
+        "RFS-030",
+        "RFS-033"
+      ],
+      "category": "coordination",
+      "labels": [
+        {
+          "key": "release",
+          "value": "1.9.6.2"
+        },
+        {
+          "key": "domain",
+          "value": "staff-routing"
+        }
+      ],
+      "tags": [
+        "staff",
+        "routing",
+        "organization",
+        "assignments"
+      ],
+      "primary_role": "coordinator",
+      "supporting_roles": [
+        "knowledge-planner",
+        "architect",
+        "integrator",
+        "verifier"
+      ],
+      "primary_staff": "julian",
+      "supporting_staff": [
+        "imani",
+        "ellis",
+        "rafael",
+        "roman"
+      ],
+      "base_sha": "fc80663333dd047facb3575af76b0c933e64dde1",
+      "state": "active",
+      "created_at": "2026-10-01T03:34:00.700Z",
+      "updated_at": "2026-10-01T03:34:00.700Z",
+      "lease_until": "2026-10-01T15:34:00.700Z"
     }
   ],
   "migrated_from": "loew-inspector"
