@@ -89,7 +89,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: relay-website-${{ github.event.pull_request.number }}
-          path: qa-evidence/website/
+          path: apps/web/qa-evidence/website/
           if-no-files-found: error
   visual-review-preview:
     needs: quality
