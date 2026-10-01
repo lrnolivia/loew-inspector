@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T00:21:44.983Z",
+  "updated_at": "2026-10-01T00:24:05.416Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -766,9 +766,9 @@
     {
       "id": "relay-1.9.4-skills-runtime-core-20260930",
       "owner": "relay-1.9.4-skills-runtime-core-20260930",
-      "goal": "Ship Relay 1.9.4 as the first-class skills registry/runtime foundation.",
-      "acceptance": "Implement manifest validation, provenance/license/integrity metadata, deterministic JIT resolution with bounded context, dependency/capability gating, project-private overlays and auditable upstream update policy. Untrusted bundles get no ambient authority. Keep MCP surface small and explain why skills are selected/rejected/unavailable. Tests cover validation, provenance, version drift, path containment, context budgets and tool gating.",
-      "next_action": "Begin after resume/checkpoint foundation is stable so skills can consume canonical resume/planning context.",
+      "goal": "Ship Relay 1.9.4 as the staff-identity and skills-runtime foundation, with the canonical named staff directory implemented first so later skill resolution, routing and communication have stable human identities to attach to.",
+      "acceptance": "Implement a canonical staff registry with sticky approved names, active/reserve/retired lifecycle, role affinities, subsystem/subnet memberships, optional worker bindings, and compact durable personality profiles. Names are presentation/routing metadata only and never authorization; canonical owner ids remain authoritative. Initial active staff: Julian (central lead/coordination), Valentina (creative direction), Vivienne (product/interaction), Naomi (research/strategy), Ellis (systems architecture), Luca (release/deploy), Nico (implementation), Margot (design review/polish), Roman (verification/evidence), Imani (planning/skills/knowledge), Rafael (SOURCE/integration/rescue), Adrian (Runner/infrastructure/maintenance), Gabriel (Cloud/reliability), Sabine (motion/visual systems). Reserve: Mateo (integrations/connectors), Bianca (product/brand/launch), Dominique (program strategy/operations). Felix is retired and must not be auto-reused. Staff identity is sticky across assignments/workers/subnets until explicitly renamed/retired. Personality profiles may shape voice, collaboration style, humor tolerance, strengths and quirks, but never technical truth, authority or sensitive inference; no canned jokes. Add validation/resolution tests and a bounded read contract for directory lookup. Then continue the original skills-runtime foundation: manifest validation, provenance/license/integrity, deterministic JIT resolution, bounded context, dependency/capability gating, overlays and auditable upstream policy.",
+      "next_action": "Build the staff registry first: durable schema + initial cast + resolver/read contract + tests. Then connect staff role affinities into the skills runtime foundation without making names an authorization mechanism.",
       "paths": [
         "packages/skills/",
         "contracts/skills/",
@@ -778,14 +778,23 @@
         "src/skills-audit.js",
         "src/skills-upstream.js",
         "docs/skills/",
-        "docs/relay/RELAY_1_9_4_RELEASE.md"
+        "docs/relay/RELAY_1_9_4_RELEASE.md",
+        "contracts/staff/",
+        "src/staff-registry.js",
+        "src/staff-registry.test.js",
+        "docs/relay/staff/"
       ],
       "resources": [
         "relay-1.9.4-release",
         "relay-skills-runtime",
         "relay-skill-registry",
         "relay-skill-provenance",
-        "relay-jit-skill-loading"
+        "relay-jit-skill-loading",
+        "relay-staff-registry",
+        "relay-sticky-staff-identity",
+        "relay-staff-personality-profiles",
+        "relay-subnet-membership",
+        "relay-worker-personas"
       ],
       "task_class": "architecture",
       "ledger_refs": [
@@ -794,7 +803,78 @@
         "RFS-022"
       ],
       "state": "queued",
-      "created_at": "2026-09-30T23:34:21.335Z"
+      "created_at": "2026-09-30T23:34:21.335Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T00:24:05.416Z",
+          "by": "relay-1.9.4-skills-runtime-core-20260930",
+          "reason": "User explicitly prioritized the named staff system now. Make stable human identities a prerequisite substrate for later routing, communication and role-driven skill resolution instead of postponing it to the later planning slice.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action",
+            "paths",
+            "resources"
+          ],
+          "before": {
+            "goal": "Ship Relay 1.9.4 as the first-class skills registry/runtime foundation.",
+            "acceptance": "Implement manifest validation, provenance/license/integrity metadata, deterministic JIT resolution with bounded context, dependency/capability gating, project-private overlays and auditable upstream update policy. Untrusted bundles get no ambient authority. Keep MCP surface small and explain why skills are selected/rejected/unavailable. Tests cover validation, provenance, version drift, path containment, context budgets and tool gating.",
+            "next_action": "Begin after resume/checkpoint foundation is stable so skills can consume canonical resume/planning context.",
+            "paths": [
+              "packages/skills/",
+              "contracts/skills/",
+              "src/skills-registry.js",
+              "src/skills-resolver.js",
+              "src/skills-runtime.js",
+              "src/skills-audit.js",
+              "src/skills-upstream.js",
+              "docs/skills/",
+              "docs/relay/RELAY_1_9_4_RELEASE.md"
+            ],
+            "resources": [
+              "relay-1.9.4-release",
+              "relay-skills-runtime",
+              "relay-skill-registry",
+              "relay-skill-provenance",
+              "relay-jit-skill-loading"
+            ]
+          },
+          "after": {
+            "goal": "Ship Relay 1.9.4 as the staff-identity and skills-runtime foundation, with the canonical named staff directory implemented first so later skill resolution, routing and communication have stable human identities to attach to.",
+            "acceptance": "Implement a canonical staff registry with sticky approved names, active/reserve/retired lifecycle, role affinities, subsystem/subnet memberships, optional worker bindings, and compact durable personality profiles. Names are presentation/routing metadata only and never authorization; canonical owner ids remain authoritative. Initial active staff: Julian (central lead/coordination), Valentina (creative direction), Vivienne (product/interaction), Naomi (research/strategy), Ellis (systems architecture), Luca (release/deploy), Nico (implementation), Margot (design review/polish), Roman (verifica...",
+            "next_action": "Build the staff registry first: durable schema + initial cast + resolver/read contract + tests. Then connect staff role affinities into the skills runtime foundation without making names an authorization mechanism.",
+            "paths": [
+              "packages/skills/",
+              "contracts/skills/",
+              "src/skills-registry.js",
+              "src/skills-resolver.js",
+              "src/skills-runtime.js",
+              "src/skills-audit.js",
+              "src/skills-upstream.js",
+              "docs/skills/",
+              "docs/relay/RELAY_1_9_4_RELEASE.md",
+              "contracts/staff/",
+              "src/staff-registry.js",
+              "src/staff-registry.test.js",
+              "docs/relay/staff/"
+            ],
+            "resources": [
+              "relay-1.9.4-release",
+              "relay-skills-runtime",
+              "relay-skill-registry",
+              "relay-skill-provenance",
+              "relay-jit-skill-loading",
+              "relay-staff-registry",
+              "relay-sticky-staff-identity",
+              "relay-staff-personality-profiles",
+              "relay-subnet-membership",
+              "relay-worker-personas"
+            ]
+          }
+        }
+      ],
+      "updated_at": "2026-10-01T00:24:05.416Z"
     },
     {
       "id": "relay-1.9.5-planning-ledger-skill-20260930",
