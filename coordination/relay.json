@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T05:59:49.675Z",
+  "updated_at": "2026-10-01T06:02:23.499Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5241,6 +5241,70 @@
       ],
       "state": "queued",
       "created_at": "2026-10-01T05:59:49.675Z"
+    },
+    {
+      "id": "relay-cross-chat-lane-lease-guard-20261001",
+      "owner": "relay-cross-chat-lane-lease-guard-20261001",
+      "goal": "Eliminate accidental cross-chat work collisions in Relay. Two chats must never be able to silently act as the same active worker on one assignment just because they share the same machine owner or Relay app identity.",
+      "acceptance": "Runner distinguishes machine/staff ownership from an active chat/workstream lane. Claim/resume issues a bounded opaque lane lease/fencing token to the active chat; canonical assignment state stores only the active lane identity/epoch and heartbeat metadata, not a reusable secret. Assignment mutations and branch-affecting coordination writes require the current lane lease and fail closed with a conflict when called from another chat, even when owner matches. Read-only progress/resume remains available to observers but clearly reports observer/read-only status. Another chat may submit a pending amendment/note without changing live next_action, scope, paths, state or branch; the active lane can accept/reject it. Explicit handoff/takeover rotates the lane epoch/token and records an audit event. Stale lanes may be reclaimed only through an explicit takeover flow with CAS against the latest canonical record. Resume never leaks a current fencing token to a different chat. Tests cover same-owner/different-lane collisions, stale retries, explicit handoff, takeover, observer reads, queued suggestions, and token rotation. Existing path/resource ownership checks remain in force as a second layer.",
+      "next_action": "Begin immediately after Relay 1.9.9 closes. First document the lane-lease state machine and compatibility path. Then add lane identity/epoch to canonical coordination, require it on assignment mutations, add observer-mode resume/progress, add a pending-amendment inbox for cross-chat suggestions, and implement explicit handoff/takeover with CAS and token rotation. Prove that two simulated chats sharing the same owner cannot mutate the same assignment concurrently.",
+      "paths": [
+        "contracts/coordination/",
+        "src/coordination-engine.js",
+        "src/coordination.mjs",
+        "src/runner-control.js",
+        "src/runner-control-core.js",
+        "src/runner-control.test.js",
+        "src/resume-checkpoints.js",
+        "src/resume-checkpoints.test.js",
+        "src/amendment-sync.js",
+        "src/amendment-sync.test.js",
+        "docs/relay/CROSS_CHAT_COORDINATION_GUARD.md"
+      ],
+      "resources": [
+        "relay-cross-chat-lane-lease",
+        "relay-conversation-fencing-token",
+        "relay-explicit-takeover",
+        "relay-read-only-observer-mode",
+        "relay-pending-amendment-inbox",
+        "relay-same-owner-collision-guard"
+      ],
+      "task_class": "architecture",
+      "category": "coordination",
+      "labels": [
+        {
+          "key": "domain",
+          "value": "coordination-safety"
+        },
+        {
+          "key": "priority",
+          "value": "p0-post-1.9.9"
+        }
+      ],
+      "tags": [
+        "coordination",
+        "concurrency",
+        "chat-lanes",
+        "leases",
+        "fencing",
+        "runner"
+      ],
+      "primary_role": "architect",
+      "supporting_roles": [
+        "builder",
+        "verifier"
+      ],
+      "primary_team": "runner",
+      "supporting_teams": [
+        "inspector"
+      ],
+      "primary_staff": "ellis",
+      "supporting_staff": [
+        "roman",
+        "nico"
+      ],
+      "state": "queued",
+      "created_at": "2026-10-01T06:02:23.499Z"
     }
   ],
   "claims": [
