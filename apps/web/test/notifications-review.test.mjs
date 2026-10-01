@@ -107,7 +107,7 @@ test('Authorized Live is preferred while an explicit Captured choice survives qu
   await page.goto(fixture.origin+'/inspector#review?evidence='+evidence.evidence_id);await page.locator('.qa-question').waitFor();
   assert.equal(await page.locator('.qa-preview-picker select').inputValue(),'live');
   const compact=await page.locator('.qa-companion').boundingBox();assert.ok(compact.width<=208 && compact.height<=360);assert.ok(compact.width*compact.height<320*740/3,'mobile questions leave most of the preview visible');
-  for(const selector of ['[data-qa-answer=yes]','[data-qa-answer=no]','[data-qa-answer=not_sure]','[data-qa-next]'])assert.ok((await page.locator(selector).boundingBox()).height>=44,'compact controls retain touch height');
+  for(const selector of ['[data-qa-answer=yes]','[data-qa-answer=no]','[data-qa-answer=not_sure]','[data-qa-next]']){const control=await page.locator(selector).boundingBox();assert.ok(control.height>=44,'compact controls retain touch height');assert.ok(control.y>=compact.y && control.y+control.height<=compact.y+compact.height,'compact primary controls remain fully visible');}
   await page.locator('.qa-preview-state').filter({hasText:/^Live preview$/}).waitFor();
   await page.locator('.qa-preview-picker select').selectOption('captured');await page.getByRole('button',{name:'Next',exact:true}).click();
   assert.equal(await page.locator('.qa-preview-picker select').inputValue(),'captured');
