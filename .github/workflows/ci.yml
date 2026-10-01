@@ -139,7 +139,7 @@ jobs:
           node-version: '22'
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - run: node --test --test-name-pattern="generated cutover serves React at root and mounts the same React control center through MCP" apps/web/test/react.test.mjs
+      - run: node --test --test-name-pattern="generated cutover publishes the React control center through the authenticated MCP bridge" apps/web/test/react.test.mjs
 
   typecheck-2-0:
     runs-on: ubuntu-latest
