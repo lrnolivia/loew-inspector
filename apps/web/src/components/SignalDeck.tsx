@@ -8,7 +8,12 @@ export type SignalCardData = {
   tone?: string;
 };
 
-export function SignalDeck({ cards }: { cards: SignalCardData[] }) {
+const marks: Record<string, string> = {
+  relay: "/brand/relay.png", today: "/brand/today.png", runner: "/brand/runner.png",
+  inspector: "/brand/inspector.png", "night-shift": "/brand/night-shift.png"
+};
+
+export function SignalDeck({ cards, feature = "relay" }: { cards: SignalCardData[]; feature?: string }) {
   const track = useRef<HTMLDivElement>(null);
   const [paused, setPaused] = useState(false);
 
@@ -28,7 +33,7 @@ export function SignalDeck({ cards }: { cards: SignalCardData[] }) {
   }, [cards.length, paused]);
 
   return (
-    <section className="signal-deck" aria-label="live summary">
+    <section className="signal-deck" data-feature={feature} aria-label="live summary">
       <div
         className="signal-track"
         ref={track}
@@ -41,6 +46,7 @@ export function SignalDeck({ cards }: { cards: SignalCardData[] }) {
       >
         {cards.map(card => (
           <article className="signal-card" data-tone={card.tone || "quiet"} key={card.id} tabIndex={0}>
+            <img className="signal-mark" src={marks[feature] || marks.relay} width="76" height="76" alt="" />
             <span className="signal-label">{card.label}</span>
             <strong>{card.value}</strong>
             <p>{card.detail}</p>
