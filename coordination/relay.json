@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T09:16:55.652Z",
+  "updated_at": "2026-10-01T09:17:07.727Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5975,6 +5975,37 @@
         }
       ],
       "updated_at": "2026-10-01T09:15:01.587Z"
+    },
+    {
+      "id": "relay-mcp-icon-parity-hotfix-20261001",
+      "owner": "relay-mcp-icon-parity-hotfix-20261001",
+      "goal": "Restore MCP branding parity after the newly committed Relay icon changed the PNG bytes but not the generated embedded icon payload/test expectation, so unrelated CI no longer blocks card bisect PR #92.",
+      "acceptance": "apps/mcp/relay-icon.js and apps/mcp/relay-icon.png represent identical PNG bytes; test/mcp-branding.test.mjs derives or asserts the new canonical hash/size; exact-head branding/workspace tests pass; no card or runtime behavior changes.",
+      "next_action": "Claim from current main, regenerate the embedded relay-icon.js payload from the newly committed relay-icon.png without altering the icon artwork, update the exact expected hash if needed, run exact-head tests, merge, then refresh PR #92 against green main.",
+      "paths": [
+        "apps/mcp/relay-icon.js",
+        "apps/mcp/relay-icon.png",
+        "test/mcp-branding.test.mjs"
+      ],
+      "resources": [
+        "relay-mcp-icon-parity"
+      ],
+      "task_class": "maintenance",
+      "category": "implementation",
+      "tags": [
+        "mcp",
+        "icon",
+        "branding",
+        "ci",
+        "hotfix"
+      ],
+      "primary_role": "builder",
+      "primary_team": "release",
+      "supporting_teams": [],
+      "primary_staff": null,
+      "supporting_staff": [],
+      "state": "queued",
+      "created_at": "2026-10-01T09:17:07.727Z"
     }
   ],
   "claims": [
