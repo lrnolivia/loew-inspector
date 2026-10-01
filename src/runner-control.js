@@ -21,6 +21,12 @@ const pathsSchema = { type: 'array', minItems: 1, maxItems: 200, items: text(500
 const resourcesSchema = { type: 'array', maxItems: 100, items: text(200), uniqueItems: true };
 const ledgerRefsSchema = { type: 'array', maxItems: 50, items: identity, uniqueItems: true };
 const taskClassSchema = { type: 'string', enum: ['design', 'architecture', 'maintenance'] };
+const categorySchema = { type: 'string', enum: ['architecture', 'design', 'implementation', 'research', 'qa-verification', 'maintenance', 'release', 'coordination'] };
+const labelSchema = schema({ key: { type: 'string', minLength: 1, maxLength: 64, pattern: '^[a-z][a-z0-9.-]{0,63}$' }, value: text(120) }, ['key', 'value']);
+const labelsSchema = { type: 'array', maxItems: 32, items: labelSchema };
+const tagsSchema = { type: 'array', maxItems: 32, uniqueItems: true, items: { type: 'string', minLength: 1, maxLength: 64, pattern: '^[a-z0-9][a-z0-9._-]{0,63}$' } };
+const roleSchema = { type: 'string', minLength: 0, maxLength: 64, pattern: '^(?:|[a-z][a-z0-9-]{0,63})$' };
+const supportingRolesSchema = { type: 'array', maxItems: 8, uniqueItems: true, items: { type: 'string', minLength: 1, maxLength: 64, pattern: '^[a-z][a-z0-9-]{0,63}$' } };
 const requestProperties = {
   id: identity,
   owner: identity,
@@ -33,6 +39,11 @@ const requestProperties = {
   reason: text(1000),
   task_class: taskClassSchema,
   ledger_refs: ledgerRefsSchema,
+  category: categorySchema,
+  labels: labelsSchema,
+  tags: tagsSchema,
+  primary_role: roleSchema,
+  supporting_roles: supportingRolesSchema,
   successor: identity,
   pr: { type: 'integer', minimum: 1, maximum: 1000000 },
   work_accounted: { type: 'boolean' },
