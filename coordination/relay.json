@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T01:06:26.975Z",
+  "updated_at": "2026-10-01T01:09:07.143Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -2416,27 +2416,6 @@
       "completed_at": "2026-09-30T16:39:17.366Z"
     },
     {
-      "id": "relay-mcp-icon-metadata-20260930",
-      "owner": "codex-relay-mcp-icon-01a0f3f5",
-      "branch": "relay/mcp-icon-metadata-20260930",
-      "paths": [
-        "apps/mcp/index.js",
-        "apps/mcp/branding.js",
-        "test/mcp-branding.test.mjs"
-      ],
-      "resources": [
-        "relay-mcp-server-icon-metadata"
-      ],
-      "goal": "Advertise supplied Relay Loop PNG and concise description through MCP server identity metadata.",
-      "acceptance": "Initialize returns exact supplied PNG as serverInfo.icons without changing auth, protocol negotiation, tools or capabilities; focused checks pass; ChatGPT existing app icon remains explicitly unverified until refreshed.",
-      "next_action": "User supplied a new final 1024x1024 Relay icon. Replace the embedded serverInfo.icons PNG byte-for-byte with the new asset SHA-256 3a1effe91b1670275d4b908f29a1a3c68729df4aa9f0da2d695401869ed8b676, update focused integrity coverage, refresh PR #47 against current state if needed, run CI, merge/deploy exact source, then verify MCP initialize metadata and ChatGPT icon refresh.",
-      "base_sha": "4bfecdab5e16df1b1298ac01c36e355840cc779b",
-      "state": "active",
-      "created_at": "2026-09-30T20:32:25.239Z",
-      "updated_at": "2026-10-01T00:50:52.654Z",
-      "lease_until": "2026-10-01T12:50:52.654Z"
-    },
-    {
       "id": "field-consolidation-live-receipt-20260930",
       "owner": "01a0f0ae-4e8c-7e62-ae7a-3b02faa398f5",
       "branch": "relay/field-consolidation-live-receipt-20260930",
@@ -3081,6 +3060,28 @@
       "created_at": "2026-10-01T00:52:41.345Z",
       "updated_at": "2026-10-01T00:52:41.345Z",
       "lease_until": "2026-10-01T12:52:41.345Z"
+    },
+    {
+      "id": "relay-mcp-icon-metadata-20260930",
+      "owner": "codex-relay-mcp-icon-01a0f3f5",
+      "branch": "relay/mcp-icon-metadata-20260930",
+      "paths": [
+        "apps/mcp/index.js",
+        "apps/mcp/branding.js",
+        "apps/mcp/relay-icon.js",
+        "test/mcp-branding.test.mjs"
+      ],
+      "resources": [
+        "relay-mcp-server-icon-metadata"
+      ],
+      "goal": "Advertise supplied Relay Loop PNG and concise description through MCP server identity metadata.",
+      "acceptance": "Initialize returns exact supplied PNG as serverInfo.icons without changing auth, protocol negotiation, tools or capabilities; focused checks pass; ChatGPT existing app icon remains explicitly unverified until refreshed.",
+      "next_action": "User supplied a new final 1024x1024 Relay icon. Replace the embedded serverInfo.icons PNG byte-for-byte with the new asset SHA-256 3a1effe91b1670275d4b908f29a1a3c68729df4aa9f0da2d695401869ed8b676, update focused integrity coverage, refresh PR #47 against current state if needed, run CI, merge/deploy exact source, then verify MCP initialize metadata and ChatGPT icon refresh.",
+      "base_sha": "4bfecdab5e16df1b1298ac01c36e355840cc779b",
+      "state": "active",
+      "created_at": "2026-09-30T20:32:25.239Z",
+      "updated_at": "2026-10-01T01:09:07.143Z",
+      "lease_until": "2026-10-01T13:09:07.143Z"
     }
   ],
   "migrated_from": "loew-inspector"
