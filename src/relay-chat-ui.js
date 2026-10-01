@@ -53,17 +53,13 @@ export function isContextualRelayTool(name) {
   return CONTEXTUAL_TOOLS.has(name);
 }
 export function contextualizeRelayTool(tool) {
-  if (!tool) return tool;
-  const isRenderer = tool.name === RELAY_CONTEXT_CARD_TOOL;
-  const isLegacyMountProbe = tool.name === 'relay_runner_progress';
-  if (!isRenderer && !isLegacyMountProbe) return tool;
+  if (!tool || tool.name !== RELAY_CONTEXT_CARD_TOOL) return tool;
   const meta = tool._meta || {};
-  const resourceUri = isLegacyMountProbe ? RELAY_STATUS_CARD_URI : RELAY_CONTEXT_CARD_URI;
   return { ...tool, _meta: { ...meta,
-    ui: { ...(meta.ui || {}), resourceUri, visibility: meta.ui?.visibility || ['model','app'] },
-    'openai/outputTemplate': resourceUri, 'openai/widgetAccessible': true,
-    'openai/toolInvocation/invoking': meta['openai/toolInvocation/invoking'] || (isLegacyMountProbe ? 'Checking Relay progress…' : 'Opening Relay…'),
-    'openai/toolInvocation/invoked': meta['openai/toolInvocation/invoked'] || (isLegacyMountProbe ? 'Relay progress ready.' : 'Relay card ready.')
+    ui: { ...(meta.ui || {}), resourceUri: RELAY_CONTEXT_CARD_URI, visibility: meta.ui?.visibility || ['model','app'] },
+    'openai/outputTemplate': RELAY_CONTEXT_CARD_URI, 'openai/widgetAccessible': true,
+    'openai/toolInvocation/invoking': meta['openai/toolInvocation/invoking'] || 'Opening Relay…',
+    'openai/toolInvocation/invoked': meta['openai/toolInvocation/invoked'] || 'Relay card ready.'
   }};
 }
 // Pure model shared by the real iframe and deterministic consumer tests.
