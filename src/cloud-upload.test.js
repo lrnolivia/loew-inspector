@@ -195,16 +195,31 @@ test("unsupported relative module types are rejected instead of silently omitted
 });
 
 
-test("canonical relay Worker identity is allowed before runtime cutover", async () => {
+test("canonical relay Worker rejects ordinary manual publication", async () => {
+  const f = fixture({ wranglerName: "relay" });
+  await assert.rejects(
+    uploadCloudSourceVersion(
+      { ...args, script: "relay" },
+      f.env,
+      { github: f.github, cloud: f.cloud, rawUpload: f.rawUpload }
+    ),
+    /Workers Builds/
+  );
+  assert.equal(f.githubCalls.length, 0);
+  assert.equal(f.uploads.length, 0);
+});
+
+test("canonical relay Worker preserves explicit recovery upload escape hatch", async () => {
   const f = fixture({ wranglerName: "relay" });
   const result = await uploadCloudSourceVersion(
-    { ...args, script: "relay" },
+    { ...args, script: "relay", purpose: "recovery" },
     f.env,
     { github: f.github, cloud: f.cloud, rawUpload: f.rawUpload }
   );
   assert.equal(result.ok, true);
   assert.equal(f.uploads.length, 1);
   assert.equal(f.uploads[0].metadata.annotations["workers/repository_url"], "https://github.com/lrnolivia/relay");
+  assert.equal(f.uploads[0].metadata.annotations["workers/tag"], "relay-recovery-source-upload");
 });
 
 test('upload includes multiline named imports and reexports', async () => {
