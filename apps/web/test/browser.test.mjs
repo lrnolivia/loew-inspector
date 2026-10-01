@@ -180,7 +180,7 @@ test("preserved legacy components and Inspector review support mobile, deep link
       const expanded = await sidebar.evaluate(node => ({ width: node.getBoundingClientRect().width, navOpacity: getComputedStyle(node.querySelector(".nav-copy")).opacity }));
       assert.ok(expanded.width >= 330 && expanded.width <= 350, mode + " expanded sidebar width");
       assert.equal(expanded.navOpacity, "1");
-      assert.equal(parseFloat(await shell.evaluate(node => getComputedStyle(node).marginLeft)), 88, "sidebar overlays without moving content");
+      assert.equal(parseFloat(await shell.evaluate(node => getComputedStyle(node).marginLeft)), Math.round(collapsed.width), "sidebar overlays without moving content");
       await shell.hover();
       await page.waitForTimeout(40);
       assert.equal(await view.locator("body").getAttribute("data-shell-motion"), "collapse");
