@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T03:05:53.991Z",
+  "updated_at": "2026-10-01T03:13:28.289Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5548,10 +5548,16 @@
       "acceptance": "Remove brown and blue cast from neutral surfaces; retain approved icons; Inspector uses canonical bright cyan; desktop review cards and skeletons match in three columns with responsive two/one columns; loading shapes match actual content sections; normal checks and publication.",
       "next_action": "Implement targeted tokens/layout/loading corrections and verify browser before publishing.",
       "base_sha": "11461cfe2dd4432b381e60b258f5e633f079c419",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T03:05:06.380Z",
-      "updated_at": "2026-10-01T03:05:06.380Z",
-      "lease_until": "2026-10-01T15:05:06.380Z"
+      "updated_at": "2026-10-01T03:13:28.289Z",
+      "lease_until": "2026-10-01T15:13:28.289Z",
+      "pr": 71,
+      "merged_head_sha": "2d78794793131b6e70d4487b4b3b083d255e1344",
+      "merge_commit_sha": "0c9b6d4777f70697e892570ce2d5fea62f93d066",
+      "evidence": "PR https://github.com/lrnolivia/relay/pull/71; tested head 2d78794793131b6e70d4487b4b3b083d255e1344; full npm test, exact-head CI test and Runner admission passed. Merge 0c9b6d4777f70697e892570ce2d5fea62f93d066 deployed as version f0b5121e-008d-4055-b1ff-16f01d47516d at 100%, verified by deployment/version commit annotation. Browser proof covers matching three-column review/skeleton widths, neutral greige cards, Inspector-specific question/answer/notes skeletons, resize/mobile and durable review saves on web/simulated MCP. Bitmap icon preserved for user replacement. Accepted palette/cards/loading corrections in docs/relay/INSPECTOR_VISUAL_POLISH_20260930.md; prior behavioral backlog preserved. Authenticated live browser QA had HTTP 522 in preceding pass and was not re-looped; production visual inspection not claimed. Checkout clean and pushed.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T03:13:28.289Z"
     },
     {
       "id": "relay-1.9.6.2-operational-staff-routing-20261001",
