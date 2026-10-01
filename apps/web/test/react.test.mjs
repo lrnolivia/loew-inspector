@@ -96,7 +96,7 @@ test("Relay 2.0 React shell renders human-first live surfaces responsively", asy
     assert.ok(third.x + third.width <= track.x + track.width + 2, "the third summary card is visible without horizontal scrolling");
     assert.equal(await page.locator(".signal-card").first().getAttribute("tabindex"), "0");
 
-    await page.getByRole("link", { name: "runner", exact: true }).click();
+    await page.getByRole("link", { name: /^runner/ }).click();
     await page.getByRole("heading", { name: "runner", level: 1 }).waitFor();
     assert.equal(await page.locator(".signal-card").count(), 4);
     assert.equal(await page.locator(".work-card").count(), 2);
@@ -107,7 +107,7 @@ test("Relay 2.0 React shell renders human-first live surfaces responsively", asy
     assert.equal(await page.locator(".work-detail .signal-card").count(), 3);
     await page.getByRole("link", { name: "← runner" }).click();
 
-    await page.getByRole("link", { name: "night shift", exact: true }).click();
+    await page.getByRole("link", { name: /^night shift/ }).click();
     await page.getByRole("heading", { name: "night shift", level: 1 }).waitFor();
     assert.equal(await page.locator(".signal-card").count(), 4);
     assert.equal(await page.locator('.signal-card:has-text("will anything happen?")').count(), 1);
