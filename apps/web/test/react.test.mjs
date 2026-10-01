@@ -72,16 +72,16 @@ test("Relay 2.0 React shell renders human-first live surfaces responsively", asy
     await page.route("**/api/progress/relay*", route => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(progress) }));
 
     await page.goto(origin + "/#/today");
-    await page.locator('.connection-state[data-state="live"]').waitFor();
+    await page.locator('.operator-connection[data-tone="good"]').filter({ hasText: "live" }).waitFor();
 
     assert.equal(await page.getByRole("heading", { name: "today", level: 1 }).textContent(), "today");
     assert.equal(await page.locator(".signal-card").count(), 4);
     assert.equal(await page.locator('.signal-card:has-text("needs you") > strong').textContent(), "1");
     assert.equal(await page.locator('.signal-card:has-text("moving") > strong').textContent(), "1");
-    assert.equal(await page.locator('.signal-card:has-text("ready to review") > strong').textContent(), "1");
+    assert.equal(await page.locator('.signal-card:has-text("automatic checks") > strong').textContent(), "1");
 
     const mark = await page.locator(".feature-mark").boundingBox();
-    assert.ok(mark && Math.abs(mark.width - 76) < 2, "desktop feature mark keeps the strong 76px identity scale");
+    assert.ok(mark && Math.abs(mark.width - 96) < 2, "desktop feature mark keeps the approved 1.8/1.9 identity scale");
     const font = await page.getByRole("heading", { name: "today", level: 1 }).evaluate(node => getComputedStyle(node).fontFamily);
     assert.match(font, /Momo Trust Display/);
     assert.equal(await page.locator("body").evaluate(node => getComputedStyle(node).backgroundImage), "none");
@@ -91,25 +91,32 @@ test("Relay 2.0 React shell renders human-first live surfaces responsively", asy
     const first = await page.locator(".signal-card").nth(0).boundingBox();
     const second = await page.locator(".signal-card").nth(1).boundingBox();
     assert.ok(track && first && second);
-    assert.ok(first.width > track.width * .43 && first.width < track.width * .52);
-    assert.ok(second.x > first.x, "desktop signal deck presents cards side by side");
+    const third = await page.locator(".signal-card").nth(2).boundingBox();
+    assert.ok(first.width > track.width * .28 && first.width < track.width * .36);
+    assert.ok(second.x > first.x && third && third.x > second.x, "desktop signal deck presents at least three cards side by side");
     assert.equal(await page.locator(".signal-card").first().getAttribute("tabindex"), "0");
 
     await page.getByRole("link", { name: "runner", exact: true }).click();
     await page.getByRole("heading", { name: "runner", level: 1 }).waitFor();
+    assert.equal(await page.locator(".signal-card").count(), 4);
     assert.equal(await page.locator(".work-card").count(), 2);
     assert.equal(await page.locator(".work-card details").first().getByText("technical details").count(), 1);
     assert.equal(await page.locator(".work-card").first().locator(".progress-ring").count(), 1);
+    await page.getByRole("link", { name: "view live progress" }).first().click();
+    await page.locator(".work-detail").waitFor();
+    assert.equal(await page.locator(".work-detail .signal-card").count(), 3);
+    await page.getByRole("link", { name: "← runner" }).click();
 
     await page.getByRole("link", { name: "night shift", exact: true }).click();
     await page.getByRole("heading", { name: "night shift", level: 1 }).waitFor();
+    assert.equal(await page.locator(".signal-card").count(), 4);
     assert.equal(await page.locator('.signal-card:has-text("will anything happen?")').count(), 1);
     assert.match(await page.locator(".night-card").first().textContent(), /Night shift verified/);
 
     await page.setViewportSize({ width: 390, height: 844 });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
     const mobileMark = await page.locator(".feature-mark").boundingBox();
-    assert.ok(mobileMark && Math.abs(mobileMark.width - 68) < 2);
+    assert.ok(mobileMark && Math.abs(mobileMark.width - 60) < 2);
 
     await page.emulateMedia({ reducedMotion: "reduce" });
     assert.equal(await page.locator(".signal-track").evaluate(node => getComputedStyle(node).scrollBehavior), "auto");
