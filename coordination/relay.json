@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T04:23:46.405Z",
+  "updated_at": "2026-10-01T04:25:12.513Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6467,7 +6467,10 @@
         "src/operations.js",
         "src/operation-recipes.js",
         "test/tools/",
-        "test/tool-evals/"
+        "test/tool-evals/",
+        "src/relay-entry.test.js",
+        "test/tool-contract.test.mjs",
+        "test/tool-evals.test.mjs"
       ],
       "resources": [
         "relay-1.9.8-release",
@@ -6484,7 +6487,7 @@
       ],
       "goal": "Ship Relay 1.9.8 as the agentic-tool contract hardening release: audit and improve Relay's MCP/tool surface using the Arcade Agentic Tool Patterns as the normative review baseline for production-grade tool interface design, discovery, composition, execution, output shaping, context, resilience and security.",
       "acceptance": "Use https://arcade.dev/patterns/llm.txt as the external tool-design review baseline, not as a blind checklist. For every Relay tool family and durable operation recipe, classify the applicable patterns and either satisfy them or record a concise deliberate deviation. Required baseline expectations include: LLM-optimized tool descriptions; clear query/command/discovery separation; constrained typed inputs with sensible defaults and human-friendly identifiers where safe; explicit dependency/call-order hints; layered discovery/capability matching/health checks; composable abstraction levels, task bundles/batching where they reduce agent loops, and explicit operation chains; idempotency/readback/transaction/timeout boundaries appropriate to mutation risk; token-efficient structured outputs with progressive detail and resource references instead of giant payloads; explicit context/identity boundaries; structured error classification with retryability, user/auth requirements and actionable recovery guidance; graceful degradation/fallback only when authority and truth are preserved; credentials injected server-side, permissions enforced in code, scopes declared, and auditable mutations. Preserve Relay's existing canonical authority model, exact-head/CAS safety, Runner ownership, SOURCE/CLOUD/VERIFY boundaries and no-standing-secret rules. Add a versioned Relay tool-design standard plus tests/evals that reject ambiguous descriptions, unconstrained dangerous inputs, raw opaque errors, hidden side effects, unauthorized fallback paths, oversized default responses and tools that duplicate an existing higher-level operation. Audit existing tools and operation recipes; fix high-value gaps without exploding the tool count. Arcade patterns are guidance: when two patterns are alternatives, choose the one appropriate to the tool's role and document why.",
-      "next_action": "Start after 1.9.7 creative/platform skills are stable and before 1.9.9 ChatGPT-native UI. First add the versioned Relay tool-design standard and an applicability matrix for every exposed MCP tool/tool family. Audit descriptions, schemas, discovery, errors, outputs, composition and security. Then patch the highest-impact gaps, add conformance tests/evals, and make the operation framework consume the same standard. Finish with a fresh-client tool-schema review proving agents can discover the right capability, recover from representative failures, and avoid unnecessary low-level tool chains.",
+      "next_action": "Implement the 1.9.8 versioned tool-design standard and applicability matrix, structured error envelope/recovery guidance, high-value tool-description/dependency-hint improvements, durable operation-recipe contracts, and executable conformance/eval coverage. Root test files are included because repository CI discovers test/*.test.mjs; update the relay-entry version assertion for the 1.9.8 runtime identity.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-034"
@@ -6536,8 +6539,8 @@
       "base_sha": "8a49308c554a1269c8b3d1cf30ede3d7775bdb5c",
       "state": "active",
       "created_at": "2026-10-01T04:23:46.405Z",
-      "updated_at": "2026-10-01T04:23:46.405Z",
-      "lease_until": "2026-10-01T16:23:46.405Z"
+      "updated_at": "2026-10-01T04:25:12.513Z",
+      "lease_until": "2026-10-01T16:25:12.513Z"
     }
   ],
   "migrated_from": "loew-inspector"
