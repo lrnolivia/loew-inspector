@@ -85,3 +85,5 @@ and resources are unchanged. Motion tests and exact-head preview records cover
 these boundaries; earlier PR107 captures remain the before-review evidence.
 
 The latest copy refinement uses shared display mappings for status, phase and progress updates. Queued work is “waiting to start”; deployed and verified remain separate. Unknown states stay unreported. Infrastructure diagnostics stay available in Details, while preview review notes contain readable questions instead of a JSON packet. These are display changes and do not change execution or held MCP resources.
+
+Lauren’s final refinement makes the selected bottom-navigation layout an opaque floating capsule with a soft drop shadow. The four destinations stay together, inset from the side and bottom safe areas. Scroll content includes matching bottom clearance. The approved palette, top-navigation option, mobile hero and presentation behavior remain intact.

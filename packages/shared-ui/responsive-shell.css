@@ -44,8 +44,9 @@
   .operator-nav :is(.nav-copy small,.nav-chevron) { display: none !important; }
   .operator-nav :is(a,button).active { background: var(--color-raised) !important; box-shadow: inset 0 0 0 1px var(--color-panel-cap); }
   .operator-shell { margin-left: 0 !important; width: 100% !important; padding: 16px 16px 40px !important; }
-  :root[data-presentation-nav="bottom"] .operator-nav { position: fixed; bottom: 0; left: 0; width: 100%; z-index: 1000; padding: 8px 12px max(8px, env(safe-area-inset-bottom)) !important; background: var(--color-surface); box-shadow: 0 -1px 0 var(--color-panel-cap); }
-  :root[data-presentation-nav="bottom"] .operator-shell { padding-bottom: 104px !important; }
+  :root[data-presentation-nav="bottom"] .operator-nav { position: fixed; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); left: max(12px, env(safe-area-inset-left, 0px)); right: max(12px, env(safe-area-inset-right, 0px)); width: auto !important; max-width: 560px; margin-inline: auto; z-index: 1000; padding: 8px !important; border: 1px solid var(--color-panel-cap); border-radius: 999px; background: var(--color-surface); box-shadow: 0 8px 24px #00000050, 0 2px 6px #00000035; }
+  :root[data-presentation-nav="bottom"] .operator-nav :is(a,button) { border-radius: 999px; }
+  :root[data-presentation-nav="bottom"] .operator-shell { padding-bottom: calc(116px + env(safe-area-inset-bottom, 0px)) !important; }
 }
 @media (max-width: 760px) {
   .signal-track { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }

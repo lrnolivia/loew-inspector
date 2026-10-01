@@ -142,6 +142,11 @@ test('compact navigation, full-height rail and local presentation presets remain
       assert.equal(await page.locator('html').getAttribute('data-presentation-nav'),'bottom');
       if(width<=900) {
         const nav = await page.locator('.operator-nav').boundingBox(); assert.ok(nav.y>700 && nav.y+nav.height<=845);
+        const pill=await page.locator('.operator-nav').evaluate(node=>({radius:getComputedStyle(node).borderRadius,shadow:getComputedStyle(node).boxShadow,rect:node.getBoundingClientRect().toJSON(),targets:[...node.children].map(child=>child.getBoundingClientRect().toJSON()),clearance:parseFloat(getComputedStyle(document.querySelector('.operator-shell')).paddingBottom)}));
+        assert.equal(pill.radius,'999px');assert.notEqual(pill.shadow,'none');
+        assert.ok(pill.rect.x>=12 && pill.rect.right<=width-12 && 844-pill.rect.bottom>=12,'pill floats clear of viewport edges');
+        assert.equal(pill.targets.length,4);assert.ok(pill.targets.every(target=>target.width>=60 && target.height>=44 && target.x>=pill.rect.x && target.right<=pill.rect.right));
+        assert.ok(pill.clearance>=pill.rect.height+12,'scroll content clears the floating pill');
         await page.evaluate(()=>window.scrollTo(0,document.body.scrollHeight));
         assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
       }
