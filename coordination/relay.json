@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T22:26:36.798Z",
+  "updated_at": "2026-10-01T22:27:03.282Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6841,7 +6841,7 @@
       "supporting_teams": [],
       "primary_staff": "ellis",
       "supporting_staff": [],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-10-01T22:25:31.299Z"
     }
   ],
@@ -10835,6 +10835,35 @@
       "created_at": "2026-10-01T21:54:24.434Z",
       "updated_at": "2026-10-01T22:24:19.420Z",
       "lease_until": "2026-10-02T10:24:19.420Z"
+    },
+    {
+      "id": "relay-mcp-card-action-proof-20261001",
+      "owner": "01a0f914-aad0-71e4-8f0c-20c1bf0a2016",
+      "branch": "relay/mcp-card-action-proof-20261001",
+      "paths": [
+        "src/index.js",
+        "src/relay-host-action-probe.js",
+        "src/relay-host-action-probe.test.js",
+        "docs/relay/MCP_HOST_ACTION_PROOF_20261001.md"
+      ],
+      "resources": [
+        "relay-mcp-host-proof",
+        "relay-mcp-discovery-envelope"
+      ],
+      "goal": "Isolate observed ChatGPT Work card action timeout with a read-only data-only callback comparison, preserving the released host diagnostic and original Relay capabilities.",
+      "acceptance": "Preserve all 51 original model tools, original app bridge and released host probe descriptor/resource bytes. Add explicitly requested render diagnostic plus app-only data callback without rendering metadata. Bounded request IDs/methods/response/error/timeout/late-response evidence without sensitive payloads. Verify correlation, cancellation, full server envelopes and actual packaged browser code; exact-head tests/build/typecheck/admission and independent review before serialized Git-native release. Record actual same-build Work/iOS/Safari outcomes without treating local fixtures as host proof. Carry forward failed/pending ordinary-chat parity and full MCP rebuild requirements. No auth, permissions, paid services, original card art/CSS or broad UI changes.",
+      "next_action": "Prior host proof superseded with failures retained. Preflight four approved files, then implement new isolated data-only callback diagnostic; preserve baseline bytes and existing capabilities. Independent review before serialized release.",
+      "task_class": "maintenance",
+      "category": "implementation",
+      "primary_team": "runner",
+      "supporting_teams": [],
+      "primary_staff": "ellis",
+      "supporting_staff": [],
+      "base_sha": "a326159ca7d7565cd8ec3320c0cfa214f0e40814",
+      "state": "active",
+      "created_at": "2026-10-01T22:27:03.282Z",
+      "updated_at": "2026-10-01T22:27:03.282Z",
+      "lease_until": "2026-10-02T10:27:03.282Z"
     }
   ],
   "migrated_from": "loew-inspector"
