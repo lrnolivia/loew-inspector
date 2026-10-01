@@ -23,12 +23,12 @@ test("timeline derives bounded phase durations from canonical events",()=>{
 
 test("aggregation supports workflow dimensions and staff only as a filter",()=>{
   const segments=[
-    {phase:"active-execution",duration_ms:100,tool_family:"relay.SOURCE",staff_id:"nico"},
-    {phase:"active-execution",duration_ms:200,tool_family:"relay.SOURCE",staff_id:"rafael"},
+    {phase:"active-execution",duration_ms:100,task_class:"implementation",tool_family:"relay.SOURCE",staff_id:"nico"},
+    {phase:"active-execution",duration_ms:200,task_class:"implementation",tool_family:"relay.SOURCE",staff_id:"rafael"},
     {phase:"external-wait",duration_ms:500,tool_family:"github",staff_id:"nico"}
   ];
-  const all=aggregateWorkflowTelemetry(segments,{dimensions:["phase","tool_family"]});
-  assert.equal(all.find(x=>x.key==="active-execution|relay.SOURCE").duration_ms,300);
+  const all=aggregateWorkflowTelemetry(segments,{dimensions:["phase","task_class","tool_family"]});
+  assert.equal(all.find(x=>x.key==="active-execution|implementation|relay.SOURCE").duration_ms,300);
   const nico=aggregateWorkflowTelemetry(segments,{dimensions:["phase"],staff_id:"nico"});
   assert.equal(nico.reduce((n,x)=>n+x.duration_ms,0),600);
   assert.equal(telemetrySummary(segments).staff_productivity_ranking,null);

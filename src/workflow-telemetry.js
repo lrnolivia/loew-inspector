@@ -32,6 +32,7 @@ export function deriveWorkflowTimeline(events=[], { end_at=null }={}){
       ended_at:new Date(Math.max(event._at,next)).toISOString(),
       duration_ms:Math.max(0,next-event._at),
       event_type:event.type||null,
+      task_class:event.task_class||null,
       capability:event.capability||null,
       skill:event.skill||null,
       tool_family:event.tool_family||null,
@@ -45,7 +46,7 @@ function keyOf(segment, dimensions){
   return dimensions.map(key=>String(segment[key]??"unknown")).join("|");
 }
 export function aggregateWorkflowTelemetry(segments=[], { dimensions=["phase"], staff_id=null }={}){
-  const safeDimensions=dimensions.filter(key=>["phase","capability","skill","tool_family","reason"].includes(key)).slice(0,5);
+  const safeDimensions=dimensions.filter(key=>["phase","task_class","capability","skill","tool_family","reason"].includes(key)).slice(0,6);
   if(!safeDimensions.length) throw new Error("at least one allowed telemetry dimension is required");
   const groups=new Map();
   for(const segment of segments){
