@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T18:16:43.368Z",
+  "updated_at": "2026-10-01T18:16:50.797Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6520,7 +6520,7 @@
       "supporting_teams": [],
       "primary_staff": "luca",
       "supporting_staff": [],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-10-01T18:14:00.745Z"
     }
   ],
@@ -10151,6 +10151,37 @@
       "created_at": "2026-10-01T18:10:09.482Z",
       "updated_at": "2026-10-01T18:16:26.077Z",
       "lease_until": "2026-10-02T06:16:26.077Z"
+    },
+    {
+      "id": "web-family-git-release-20261001",
+      "owner": "codex-web-family-release-20261001",
+      "branch": "relay/web-family-git-release-20261001",
+      "paths": [
+        "projects/field.json",
+        "projects/loewfi.json",
+        "projects/loewtorials.json",
+        "projects/thetake.json",
+        "src/cloud-upload.js",
+        "src/cloud-upload.test.js",
+        "docs/relay/WEB_FAMILY_RELEASE_20261001.md"
+      ],
+      "resources": [
+        "web-family-release-policy"
+      ],
+      "goal": "Align the four existing Git-native Cloudflare release paths with canonical Relay policy and restrict manual source uploads to explicit recovery/diagnostic purposes.",
+      "acceptance": "All four registrations match proven Workers Builds commands; ordinary manual uploads are rejected before source reads; existing build triggers are scoped/cached with exact-commit verification and recovery retained.",
+      "next_action": "Claim current main, align four proven Git-native registrations, add generic recovery-purpose enforcement and tests, tune Cloudflare triggers, then merge and verify.",
+      "task_class": "architecture",
+      "category": "release",
+      "primary_team": "release",
+      "supporting_teams": [],
+      "primary_staff": "luca",
+      "supporting_staff": [],
+      "base_sha": "3ec1f889a3bf2d6ac5f54245db8cffceb46a4f8b",
+      "state": "active",
+      "created_at": "2026-10-01T18:16:50.797Z",
+      "updated_at": "2026-10-01T18:16:50.797Z",
+      "lease_until": "2026-10-02T06:16:50.797Z"
     }
   ],
   "migrated_from": "loew-inspector"
