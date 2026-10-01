@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T19:26:50.861Z",
+  "updated_at": "2026-10-01T19:34:22.441Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6593,7 +6593,7 @@
       "id": "relay-website-work-queue-views-20261001",
       "owner": "Julian-PM",
       "goal": "NEW FEATURES, DEFERRED: make Relay work items easy to identify, review, sort and manage consistently in optional list and Inspector-style visual-card views, preserving both presentations.",
-      "acceptance": "Implement only AFTER relay-website-project-context-polish-20261001 is fully completed and verified. Offer a view switcher between existing compact/list work items and Inspector-style visual work cards on every relevant website page; do not force a new default view or invent persistence policy. Keep Inspector screenshots and use fitting semantic imagery/glyphs elsewhere; show project and what is happening at a glance. Use one reusable project identity badge everywhere: Inspector pill container, project icon, prominent NightShift/list-style name; refine type/icon scale and spacing. Reuse Need Review, Completed, Stale, Archived and All filters. Retain Clear Stale; add Clear Complete, Mark All Stale and Mark All Complete. Add per-card/list checkboxes and separate time/importance sorting; preserve filters, sort and selection across view changes. Make selected-items, current-filter and all-project bulk scope unmistakable, including counts; support undo for clearing/status changes. Each work item shows next action or blocker. Define timestamp, importance source, clear/completion/stale semantics explicitly before implementing them; proposed defaults are not user-approved. Do not infer destructive deletion or execute bulk changes to existing records from this feature request. Preserve accessibility, loading/error/empty states, consistent item identity and exact-build evidence. This concerns WORK-ITEM cards, not top telemetry cards or conversational MCP cards.",
+      "acceptance": "Implement only AFTER relay-website-project-context-polish-20261001 is fully completed and verified. Offer a view switcher between existing compact/list work items and Inspector-style visual work cards on every relevant website page; do not force a new default view or invent persistence policy. Keep Inspector screenshots and use fitting semantic imagery/glyphs elsewhere; show project and what is happening at a glance. Use one reusable project identity badge everywhere: Inspector pill container, project icon, prominent NightShift/list-style name; refine type/icon scale and spacing. Reuse Need Review, Completed, Stale, Archived and All filters. Retain Clear Stale; add Clear Complete, Mark All Stale and Mark All Complete. Add per-card/list checkboxes and separate time/importance sorting; preserve filters, sort and selection across view changes. Make selected-items, current-filter and all-project bulk scope unmistakable, including counts; support undo for clearing/status changes. Each work item shows next action or blocker. Define timestamp, importance source, clear/completion/stale semantics explicitly before implementing them; proposed defaults are not user-approved. Do not infer destructive deletion or execute bulk changes to existing records from this feature request. Preserve accessibility, loading/error/empty states, consistent item identity and exact-build evidence. This concerns WORK-ITEM cards, not top telemetry cards or conversational MCP cards. Extensibility requirement confirmed by Lauren at 19:33 UTC: design this as one modular reusable work viewer so future item types and filtering dimensions can be added without rebuilding every page. Share query/filter/sort/selection/action state across List and Visual presentations, use explicit item/filter/action extension contracts, and preserve existing behavior when a module is added. Prove a new filter dimension can be added once and behave consistently in both views. Avoid a second task system, arbitrary plugin runtime, or unrequested features; implementation remains behind the full WEBSITE FIXES gate.",
       "next_action": "DEFERRED behind full acceptance of current WEBSITE FIXES. Research/specification may continue, but no feature implementation before that gate. Review the prepared Relay-Work-Queue-Feature-Spec with Lauren for unresolved semantics, then obtain scoped admission without replacing prior goals. No new credentials, billing, merge/deploy, or live bulk record changes authorized by this queue entry.",
       "paths": [
         "apps/web/",
@@ -6628,7 +6628,25 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "state": "queued",
-      "created_at": "2026-10-01T19:26:50.861Z"
+      "created_at": "2026-10-01T19:26:50.861Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T19:34:22.441Z",
+          "by": "Julian-PM",
+          "reason": "Add Lauren's explicit modular, extensible viewer requirement without changing the approved feature scope or fixes-first gate.",
+          "fields": [
+            "acceptance"
+          ],
+          "before": {
+            "acceptance": "Implement only AFTER relay-website-project-context-polish-20261001 is fully completed and verified. Offer a view switcher between existing compact/list work items and Inspector-style visual work cards on every relevant website page; do not force a new default view or invent persistence policy. Keep Inspector screenshots and use fitting semantic imagery/glyphs elsewhere; show project and what is happening at a glance. Use one reusable project identity badge everywhere: Inspector pill container, project icon, prominent NightShift/list-style name; refine type/icon scale and spacing. Reuse Need..."
+          },
+          "after": {
+            "acceptance": "Implement only AFTER relay-website-project-context-polish-20261001 is fully completed and verified. Offer a view switcher between existing compact/list work items and Inspector-style visual work cards on every relevant website page; do not force a new default view or invent persistence policy. Keep Inspector screenshots and use fitting semantic imagery/glyphs elsewhere; show project and what is happening at a glance. Use one reusable project identity badge everywhere: Inspector pill container, project icon, prominent NightShift/list-style name; refine type/icon scale and spacing. Reuse Need..."
+          }
+        }
+      ],
+      "updated_at": "2026-10-01T19:34:22.441Z"
     }
   ],
   "claims": [
