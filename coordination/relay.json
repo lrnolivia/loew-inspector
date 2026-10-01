@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T10:30:56.872Z",
+  "updated_at": "2026-10-01T16:06:35.666Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -9386,10 +9386,16 @@
       "primary_staff": "nico",
       "supporting_staff": [],
       "base_sha": "3b1e855e9486a3c034f59db3b53797f45314b2fe",
-      "state": "held",
+      "state": "completed",
       "created_at": "2026-10-01T09:43:34.029Z",
-      "updated_at": "2026-10-01T10:19:11.811Z",
-      "lease_until": "2026-10-01T22:19:11.811Z"
+      "updated_at": "2026-10-01T16:06:35.666Z",
+      "lease_until": "2026-10-02T04:06:35.666Z",
+      "pr": 95,
+      "merged_head_sha": "844842c31c63aaaabd01345d6990bf8ea4bb3943",
+      "merge_commit_sha": "49c65e21b0776bc12cee8b2aeb9a5a8ac980caa5",
+      "evidence": "PR #95 merged by explicit owner override after all 12 executed CI checks passed; squash merge commit 49c65e21b0776bc12cee8b2aeb9a5a8ac980caa5. Temporary Worker v81 had already deployed the exact green PR head for consumer testing.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T16:06:35.666Z"
     },
     {
       "id": "relay-2.0-approved-visual-port-20261001",
