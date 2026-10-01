@@ -6,6 +6,11 @@ const assignment = {
   id: "relay-1.9.3-resume-checkpoints-20260930",
   owner: "relay-1.9.3-resume-checkpoints-20260930",
   task_class: "architecture",
+  category: "architecture",
+  labels: [{ key: "area", value: "Runner" }],
+  tags: ["recovery"],
+  primary_role: "architect",
+  supporting_roles: ["verifier"],
   ledger_refs: ["RFS-020"],
   base_sha: "a".repeat(40),
   branch: "relay/1.9.3-resume-checkpoints-20260930",
@@ -79,6 +84,11 @@ test("checkpoint contract is compact canonical resume state", () => {
   assert.equal(got.contract_version, RESUME_CONTRACT_VERSION);
   assert.equal(got.durability, "derived-from-canonical-evidence");
   assert.equal(got.assignment.task_class, "architecture");
+  assert.equal(got.assignment.category, "architecture");
+  assert.deepEqual(got.assignment.labels, [{ key: "area", value: "Runner" }]);
+  assert.deepEqual(got.assignment.tags, ["recovery"]);
+  assert.equal(got.assignment.primary_role, "architect");
+  assert.deepEqual(got.assignment.supporting_roles, ["verifier"]);
   assert.deepEqual(got.assignment.ledger_refs, ["RFS-020"]);
   assert.equal(got.identities.head_sha, "b".repeat(40));
   assert.deepEqual(got.source.changed_paths, ["src/resume-checkpoints.js"]);
