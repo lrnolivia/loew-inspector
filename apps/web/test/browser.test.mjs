@@ -131,14 +131,24 @@ test("shared interface works on web and MCP host transport, including mobile, de
       assert.equal(collapsed.navOpacity, "0");
       assert.ok(await view.locator('.operator-page[data-page="today"]').evaluate(node => node.getBoundingClientRect().width) <= 1121, mode + " centered content max-width");
       assert.ok(parseFloat(await shell.evaluate(node => getComputedStyle(node).marginLeft)) >= 84);
+      const sidebarTransition = await sidebar.evaluate(node => getComputedStyle(node).transitionDuration);
+      assert.ok(sidebarTransition.split(",").every(value => parseFloat(value) <= .26), mode + " sidebar transition must stay fast");
       await sidebar.hover();
-      await page.waitForTimeout(280);
+      await page.waitForTimeout(40);
+      assert.equal(await view.locator("body").getAttribute("data-shell-motion"), "expand");
+      const movingPage = view.locator('.operator-page[data-page="today"]');
+      assert.equal(await movingPage.evaluate(node => getComputedStyle(node).animationName), "relay-shell-expand-inertia");
+      assert.ok(parseFloat(await movingPage.evaluate(node => getComputedStyle(node).animationDuration)) <= .26);
+      await page.waitForTimeout(220);
       const expanded = await sidebar.evaluate(node => ({ width: node.getBoundingClientRect().width, navOpacity: getComputedStyle(node.querySelector(".nav-copy")).opacity }));
       assert.ok(expanded.width >= 330 && expanded.width <= 350, mode + " expanded sidebar width");
       assert.equal(expanded.navOpacity, "1");
       assert.ok(parseFloat(await shell.evaluate(node => getComputedStyle(node).marginLeft)) >= 330);
       await shell.hover();
-      await page.waitForTimeout(280);
+      await page.waitForTimeout(40);
+      assert.equal(await view.locator("body").getAttribute("data-shell-motion"), "collapse");
+      assert.equal(await movingPage.evaluate(node => getComputedStyle(node).animationName), "relay-shell-collapse-inertia");
+      await page.waitForTimeout(180);
       const attention = view.locator(".attention-card").first();
       await attention.waitFor();
       const geometry = await attention.evaluate(node => {
@@ -173,8 +183,11 @@ test("shared interface works on web and MCP host transport, including mobile, de
       assert.notEqual(failedColor, "rgb(198, 191, 183)");
       assert.notEqual(await failedBadge.locator(".status-light").evaluate(node => getComputedStyle(node, "::after").animationName), "none");
       const failedRow = view.locator('.progress-row[data-progress-state="failed"]');
-      assert.equal(await failedRow.evaluate(node => getComputedStyle(node).borderLeftWidth), "4px");
-      assert.notEqual(await failedRow.evaluate(node => getComputedStyle(node).borderLeftColor), "rgb(198, 191, 183)");
+      assert.equal(await failedRow.evaluate(node => getComputedStyle(node).borderLeftWidth), "0px");
+      assert.equal(await failedRow.evaluate(node => getComputedStyle(node).borderTopWidth), "0px");
+      const failedSurface = await failedRow.evaluate(node => getComputedStyle(node).backgroundColor);
+      const workingSurface = await view.locator('.progress-row[data-progress-state="working"]').evaluate(node => getComputedStyle(node).backgroundColor);
+      assert.notEqual(failedSurface, workingSurface, "state color may tint material without using strokes");
       await view.locator('#project-tabs [data-project-id="relay"] [data-repo-icon="relay"][data-icon-sha="' + "b".repeat(40) + '"] img').waitFor();
       assert.equal(await view.locator('#project-tabs [data-project-id="relay"] [data-repo-icon="relay"]').evaluate(node => getComputedStyle(node).backgroundColor), "rgba(0, 0, 0, 0)");
       for (const width of [560, 900, 1360]) {
@@ -183,6 +196,8 @@ test("shared interface works on web and MCP host transport, including mobile, de
       }
       await page.emulateMedia({ reducedMotion: "reduce" });
       assert.equal(await view.locator(".relay-glyph").first().evaluate(node => getComputedStyle(node).transitionDuration), "0s");
+      assert.equal(await shell.evaluate(node => getComputedStyle(node).transitionDuration), "0s");
+      assert.equal(await view.locator('.operator-page[data-page="projects"]').evaluate(node => getComputedStyle(node).animationName), "none");
       assert.equal(await failedBadge.locator(".status-light").evaluate(node => getComputedStyle(node, "::after").animationName), "none");
       assert.equal(await failedBadge.evaluate(node => getComputedStyle(node).color), failedColor);
       await page.emulateMedia({ reducedMotion: "no-preference" });
