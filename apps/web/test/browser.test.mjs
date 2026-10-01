@@ -127,7 +127,7 @@ test("shared interface works on web and MCP host transport, including mobile, de
       });
       assert.equal(geometry.contained, true, mode + " attention action must stay inside its card");
       await view.getByRole("button", { name: "runner", exact: true }).click();
-      assert.equal(await view.locator('[data-page="projects"] h1').textContent(), "runner");
+      assert.equal(await view.getByRole("heading", { name: "runner", level: 1, exact: true }).textContent(), "runner");
       assert.equal(await view.getByRole("button", { name: "runner", exact: true }).evaluate(node => getComputedStyle(node).borderBottomWidth), "0px");
       await view.getByRole("tab", { name: "relay", exact: true }).click();
       await view.locator("#project-detail").filter({ hasText: "Complete consolidation" }).waitFor();
