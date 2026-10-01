@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T21:09:05.893Z",
+  "updated_at": "2026-10-01T21:29:53.817Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -10671,10 +10671,16 @@
       "primary_staff": "ellis",
       "supporting_staff": [],
       "base_sha": "80abcd05325155ec42e0c7582bb82b1001e3634a",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T20:23:19.113Z",
-      "updated_at": "2026-10-01T21:09:05.893Z",
-      "lease_until": "2026-10-02T09:09:05.893Z"
+      "updated_at": "2026-10-01T21:29:53.817Z",
+      "lease_until": "2026-10-02T09:29:53.817Z",
+      "pr": 108,
+      "merged_head_sha": "fa955cf8e0578e1c3c8ada812b27f4a623b4b9e0",
+      "merge_commit_sha": "cbce6e3fa117084272668e2751411f410de8de1c",
+      "evidence": "Lifecycle prerequisite only delivered; full MCP rebuild remains ongoing. PR108 exact head fa955cf8e0578e1c3c8ada812b27f4a623b4b9e0 passed canonical admission36926243397 and quality305tests. Authorized squash merge cbce6e3fa117084272668e2751411f410de8de1c; post-merge quality36928799871 success; Workers Build446f3ce8-a580-4894-b941-647cef60438c success, active versiondb96dd04-e027-4eec-b594-1e273a255d4f at100%; live Runner engine00d3aa78fac5bbe38b101ca87e8f3c0b72dcef59. Buffer recovery7b869b8 separately verified. GitHub delete_branch_on_merge=true automatically removed merged branch; no manual deletion. Source/tests/cutover docs preserved in merged PR. No live obsoletework retirement; writer inventory pending. Next bounded stage must admit actual cross-client card proof preserving51capabilities; design requirements and source report retained task-locally.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T21:29:53.817Z"
     }
   ],
   "migrated_from": "loew-inspector"
