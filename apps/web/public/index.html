@@ -108,9 +108,17 @@
             <span>screens and captures waiting for your call</span>
           </div>
         </div>
-        <div id="review-filters" class="review-filters" role="group" aria-label="inspector filter">
-          <button type="button" class="active" data-review-mode="needs">needs review</button>
-          <button type="button" data-review-mode="all">all</button>
+        <div class="review-toolbar">
+          <div id="review-filters" class="review-filters" role="group" aria-label="inspector filter">
+            <button type="button" class="active" data-review-mode="needs">needs review</button>
+            <button type="button" data-review-mode="completed">completed</button>
+            <button type="button" data-review-mode="stale">stale</button>
+            <button type="button" data-review-mode="archived">archived</button>
+            <button type="button" data-review-mode="all">all</button>
+          </div>
+          <div class="review-bulk-actions" aria-label="inspector review actions">
+            <button type="button" data-review-bulk="clear-stale">clear stale</button>
+          </div>
         </div>
 
         <div id="review-list" class="review-list" aria-live="polite">
