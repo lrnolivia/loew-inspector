@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T09:42:18.432Z",
+  "updated_at": "2026-10-01T09:43:20.464Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -9204,10 +9204,16 @@
         "ellis"
       ],
       "base_sha": "63bf9091a7d268c6f176ff444ffc578387510d71",
-      "state": "held",
+      "state": "completed",
       "created_at": "2026-10-01T08:03:22.446Z",
-      "updated_at": "2026-10-01T09:41:14.621Z",
-      "lease_until": "2026-10-01T21:41:14.621Z"
+      "updated_at": "2026-10-01T09:43:20.464Z",
+      "lease_until": "2026-10-01T21:43:20.464Z",
+      "pr": 90,
+      "merged_head_sha": "6d32e0efbb06568221c1521af735e12aba80691f",
+      "merge_commit_sha": "4b6e80c26fb8589038f9636e8fc2cc9aee89bf50",
+      "evidence": "PR #90 merged the native desktop legacy-bridge bisect on the claimed branch and was deployed as Worker v77. Subsequent experimental commits on the same branch (PR #92/v2 replay) are explicitly superseded and carried forward into queued successor relay-inline-card-v2-final-20261001, so no unmerged intent is lost.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T09:43:20.464Z"
     },
     {
       "id": "relay-2.0-control-center-resource-bust-20261001",
