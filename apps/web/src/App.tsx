@@ -1,26 +1,65 @@
-import { HashRouter, NavLink, Navigate, Route, Routes } from "react-router-dom";
+import { HashRouter, NavLink, Navigate, Route, Routes, useLocation } from "react-router-dom";
 import { LiveRelayProvider, useLiveRelay } from "./live";
 import { TodayPage } from "./pages/TodayPage";
 import { RunnerPage } from "./pages/RunnerPage";
 import { RunnerWorkPage } from "./pages/RunnerWorkPage";
 import { NightShiftPage } from "./pages/NightShiftPage";
 
+const navItems = [
+  { to: "/today", label: "today", detail: "focus", feature: "today", icon: "/brand/today.png" },
+  { to: "/runner", label: "runner", detail: "coordinate", feature: "runner", icon: "/brand/runner.png" },
+  { to: "/night-shift", label: "night shift", detail: "monitor", feature: "night-shift", icon: "/brand/night-shift.png" }
+];
+
 function Shell() {
   const { state } = useLiveRelay();
+  const location = useLocation();
+  const pageLabel = location.pathname.startsWith("/runner") ? "runner" : location.pathname.startsWith("/night-shift") ? "night shift" : "today";
+  const tone = state === "live" ? "good" : state === "offline" ? "bad" : "quiet";
+
   return (
     <>
       <div className="terra-accent" aria-hidden="true"><span/><span/><span/><span/><span/></div>
-      <header className="app-header">
-        <a className="relay-brand" href="#/today"><img src="/brand/relay.png" alt="" /><strong>relay</strong></a>
-        <nav aria-label="Relay">
-          <NavLink to="/today">today</NavLink>
-          <NavLink to="/runner">runner</NavLink>
-          <a href="/inspector#review">inspector</a>
-          <NavLink to="/night-shift">night shift</NavLink>
+      <header className="operator-topbar react-operator-topbar">
+        <a className="operator-brand react-brand" href="#/today">
+          <img src="/brand/relay.png" alt="" width="52" height="52" />
+          <strong>relay</strong>
+          <span>project control</span>
+        </a>
+        <div className="nav-label">work</div>
+        <nav className="operator-nav react-operator-nav" aria-label="Relay">
+          {navItems.slice(0, 2).map(item => (
+            <NavLink key={item.to} to={item.to} data-feature={item.feature} className={({ isActive }) => isActive ? "active" : ""}>
+              <span className="glyph-chip"><img className="tool-mark" src={item.icon} alt="" /></span>
+              <span className="nav-copy"><strong>{item.label}</strong><small>{item.detail}</small></span>
+              <span className="nav-chevron" aria-hidden="true">›</span>
+            </NavLink>
+          ))}
+          <a href="/inspector#review" data-feature="inspector">
+            <span className="glyph-chip"><img className="tool-mark" src="/brand/inspector.png" alt="" /></span>
+            <span className="nav-copy"><strong>inspector</strong><small>review</small></span>
+            <span className="nav-chevron" aria-hidden="true">›</span>
+          </a>
+          {navItems.slice(2).map(item => (
+            <NavLink key={item.to} to={item.to} data-feature={item.feature} className={({ isActive }) => isActive ? "active" : ""}>
+              <span className="glyph-chip"><img className="tool-mark" src={item.icon} alt="" /></span>
+              <span className="nav-copy"><strong>{item.label}</strong><small>{item.detail}</small></span>
+              <span className="nav-chevron" aria-hidden="true">›</span>
+            </NavLink>
+          ))}
         </nav>
-        <span className="connection-state" data-state={state}><span aria-hidden="true"/>{state}</span>
+        <div className="operator-utility">
+          <a className="utility-button react-utility-link" href="https://chatgpt.com/settings/plugins-settings/plugin_asdk_app_6abe234861d881919e30db65d656492f" target="_blank" rel="noreferrer">
+            <span className="utility-label">refresh tools</span><span className="utility-arrow" aria-hidden="true">↗</span>
+          </a>
+        </div>
       </header>
-      <main className="app-main">
+
+      <main className="operator-shell react-operator-shell">
+        <div className="workspace-context">
+          <div className="workspace-left"><span>your workspace <span aria-hidden="true">/</span> {pageLabel}</span></div>
+          <div className="operator-connection" data-tone={tone}>{state}</div>
+        </div>
         <Routes>
           <Route path="/today" element={<TodayPage />} />
           <Route path="/runner" element={<RunnerPage />} />
