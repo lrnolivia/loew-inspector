@@ -1108,3 +1108,127 @@ body[data-page="night-shift"] { --page-feature-accent: var(--feature-night-shift
 @media (max-width: 640px) { .review-list, .skeleton-review > div { gap: 24px; } }
 
 @media (max-width: 900px) { .operator-utility { flex-direction: row; flex-wrap: wrap; } }
+
+/* Inspector review triage keeps queue lifecycle explicit without turning cards into dashboards. */
+.review-toolbar {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-bottom:18px;
+}
+.review-filters {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+}
+.review-bulk-actions {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-left:auto;
+}
+.review-bulk-actions button,
+.review-action {
+  border:0;
+  border-radius:999px;
+  background:var(--color-raised);
+  color:var(--color-text-secondary);
+  font-size:12px;
+  font-weight:650;
+  line-height:1;
+  cursor:pointer;
+  transition:background .14s ease,color .14s ease,transform .14s ease,opacity .14s ease;
+}
+.review-bulk-actions button {
+  min-height:38px;
+  padding:0 14px;
+}
+.review-bulk-actions button:not(:disabled):hover,
+.review-action:not(:disabled):hover {
+  color:var(--color-text-primary);
+  transform:translateY(-1px);
+}
+.review-bulk-actions button:disabled,
+.review-action:disabled {
+  opacity:.38;
+  cursor:default;
+}
+.review-list .review-row {
+  position:relative;
+}
+.review-open {
+  width:100%;
+  padding:0;
+  border:0;
+  background:transparent;
+  color:inherit;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  text-align:left;
+  cursor:pointer;
+}
+.review-open > img {
+  width:100%;
+  height:auto;
+  aspect-ratio:16 / 10;
+  object-fit:contain;
+  border-radius:0;
+  background:var(--color-canvas);
+}
+.review-open:hover .review-copy > strong {
+  color:var(--color-text-primary);
+}
+.review-card-footer {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+  padding:0 18px 18px;
+}
+.review-row .review-card-footer .review-state {
+  margin:0;
+}
+.review-actions {
+  display:flex;
+  align-items:center;
+  justify-content:flex-end;
+  gap:6px;
+  flex-wrap:wrap;
+  margin-left:auto;
+}
+.review-action {
+  min-height:30px;
+  padding:0 10px;
+}
+.review-row[data-review-disposition="archived"] {
+  opacity:.7;
+}
+.review-row[data-review-disposition="archived"]:hover {
+  opacity:1;
+}
+@media (max-width:640px) {
+  .review-toolbar { align-items:stretch; }
+  .review-filters {
+    width:100%;
+    overflow-x:auto;
+    flex-wrap:nowrap;
+    padding-bottom:2px;
+    scrollbar-width:none;
+  }
+  .review-filters::-webkit-scrollbar { display:none; }
+  .review-filters button { flex:0 0 auto; }
+  .review-bulk-actions {
+    width:100%;
+    margin-left:0;
+    justify-content:flex-end;
+  }
+  .review-card-footer { align-items:flex-start; }
+}
+@media (prefers-reduced-motion:reduce) {
+  .review-bulk-actions button,
+  .review-action { transition:none; }
+}
