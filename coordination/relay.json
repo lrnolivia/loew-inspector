@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T10:01:31.805Z",
+  "updated_at": "2026-10-01T10:02:32.442Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7064,10 +7064,10 @@
         "RFS-030"
       ],
       "base_sha": "47fb7b4f73afc3407977503fb706c4935711aee5",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T22:49:27.571Z",
-      "updated_at": "2026-10-01T10:01:16.992Z",
-      "lease_until": "2026-10-01T22:01:16.992Z",
+      "updated_at": "2026-10-01T10:02:32.442Z",
+      "lease_until": "2026-10-01T22:02:32.442Z",
       "amendment_count": 7,
       "amendments": [
         {
@@ -7274,7 +7274,13 @@
             "next_action": "Fresh Codex wrap-up worker owns the remainder of Relay 1.9 through 1.9.9. First ship 1.9.6.2 operational staff routing plus conversational context-card repair: durable primary/supporting named staff over machine owner authority, propagated through resume/updates/communication/status/cards; normal in-chat visuals use the contextual-card surface, while the full control-center/dashboard is only an explicit Open Relay destination. Then continue through coherent 1.9.7, 1.9.8 and 1.9.9 patches as real remaining integration/creative/platform/performance/closure work emerges from canonical state an..."
           }
         }
-      ]
+      ],
+      "pr": 55,
+      "merged_head_sha": "6bb489270a509d83c1783d0b153f3e530416174a",
+      "merge_commit_sha": "de6aee58153b224bd8dd74d564dc21ab950c50dd",
+      "evidence": "PR #55 was already merged from the exact claimed branch relay/1.9-skills-runtime-creative-20260930 as de6aee58153b224bd8dd74d564dc21ab950c50dd on 2026-09-30. The 1.9.6.2–1.9.9 successor patch train is also completed and recorded. This completion reconciles the stale umbrella reservation only; no new source or runtime change is made.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T10:02:32.442Z"
     },
     {
       "id": "relay-1.9.2-source-scale-20260930",
