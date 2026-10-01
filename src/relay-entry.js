@@ -8,7 +8,7 @@ import { QA_SKILL_URI, qaSkillCatalogEntry, qaSkillResourceDescriptor, qaSkillRe
 import { LOEW_NAMING_SKILL_URI, loewNamingSkillCatalogEntry, loewNamingSkillResourceDescriptor, loewNamingSkillResource } from "./loew-naming-skill.js";
 import { RELAY_CONTEXT_CARD_URI, relayContextCardDescriptor, relayContextCardResource, contextualizeRelayTool } from "./relay-chat-ui.js";
 
-export const RELAY_EXTENSION_VERSION = "1.9.2";
+export const RELAY_EXTENSION_VERSION = "1.9.3";
 
 const createBranch = {
   name: "relay_source_create_branch",

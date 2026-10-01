@@ -7,6 +7,7 @@ import {
   runnerControlRepository
 } from './runner-control-core.js';
 import { callProgress } from './progress-api.js';
+import { callResume } from './resume-checkpoints.js';
 import { projectCloudStatus, deployProjectCloudVersion } from './project-cloud.js';
 
 const MUTATIONS = ['queue', 'claim', 'amend', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete'];
@@ -61,6 +62,11 @@ const DEFINITIONS = [
   {
     name: 'relay_runner_progress',
     description: 'Read evidence-derived execution progress for current claims and queued work. Progress is derived from Runner, GitHub and configured Cloud evidence; claim state and next_action prose are context, not proof of execution.',
+    inputSchema: schema({ project: projectSchema, assignment: identity }, ['project'])
+  },
+  {
+    name: 'relay_runner_resume',
+    description: 'Read compact deterministic resume checkpoints derived passively from canonical Runner, GitHub and Cloud evidence. Unchanged evidence reuses the same checkpoint id, so interrupted chats can resume without model-authored handoffs.',
     inputSchema: schema({ project: projectSchema, assignment: identity }, ['project'])
   },
   {
@@ -168,6 +174,7 @@ export async function callRunnerControl(name, args, env, apiOverride) {
   if (!definition) return null;
   validateControlArguments(args, definition.inputSchema);
   if (name === 'relay_runner_progress') return callProgress(args, env, apiOverride);
+  if (name === 'relay_runner_resume') return callResume(args, env, apiOverride);
   if (name === 'relay_cloud_project') return projectCloudStatus(env, args.project, apiOverride);
   if (name === 'relay_cloud_deploy_project_version') {
     return deployProjectCloudVersion(env, args.project, args.version_id, args.message, { github: apiOverride });
