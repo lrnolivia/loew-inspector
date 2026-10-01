@@ -58,17 +58,24 @@ try {
       await page.locator(`[data-nav="${nav}"]`).click();
       await page.getByRole("heading", { name: label, exact: true, level: 1 }).waitFor();
       await page.locator('.operator-connection[data-tone="good"]').waitFor();
+      // The connection becomes live after the base snapshot; progress settles later.
+      await page.waitForFunction(() => !Array.from(document.querySelectorAll('[data-progress-notice] strong')).some(node => node.textContent.includes('Loading project activity')), null, { timeout: 75000 });
       assert.equal(new URL(page.url()).pathname, "/");
       assert.equal(new URL(page.url()).hash, "#/" + feature);
       assert.equal(await page.locator("#project-tabs").count(), 0);
       assert.equal(await page.locator(".signal-mark").count(), 4);
-      assert.ok(await page.locator(".signal-mark").evaluateAll(nodes => nodes.every(node => node.complete && node.naturalWidth > 0)));
+      assert.ok(await page.locator(".signal-mark").evaluateAll(nodes => nodes.every(node => {
+        const svg = node.querySelector('svg.relay-glyph');
+        return svg && svg.getBoundingClientRect().width > 0 && svg.getBoundingClientRect().height > 0;
+      })), "all semantic SVG glyphs must render");
+      assert.equal(await page.locator('.project-tab[aria-pressed="true"]').innerText(), 'all projects');
       assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
       assert.match(await page.locator(".react-brand strong").evaluate(node => getComputedStyle(node).fontFamily), /Momo Trust Display/);
       await capture(page, feature, viewport);
     }
     await page.getByRole("link", { name: /^inspector/ }).click();
     await page.locator(".chat-card-preview").waitFor();
+    await page.locator('#review-list[data-summary-state="ready"], #review-list[data-summary-state="error"]').waitFor({ timeout: 75000 });
     assert.equal(new URL(page.url()).pathname, "/inspector");
     await capture(page, "inspector", viewport);
     assert.deepEqual(errors, []);
@@ -88,7 +95,8 @@ async function capture(page, feature, viewport) {
     kind: "production_website_verification", target_url: canonicalUrl.toString(),
     context: { project: "relay", environment: "production", surface, commit_sha: expected },
     engine: "github-chromium", step_label: `Actual website ${surface}`, viewport,
-    trace: [{ action: "verify_actual_website", url: page.url() }]
+    dom: { summary: await page.locator('.signal-card').allTextContents(), connection: await page.locator('.operator-connection').innerText(), notice: await page.locator('[data-progress-notice]').allTextContents(), review_state: await page.evaluate(() => document.querySelector('#review-list')?.dataset.summaryState || null) },
+    trace: [{ action: "verify_actual_website", url: page.url(), initial_data_cycle: "settled success or explicitly labelled partial/error" }]
   };
   const form = new FormData();
   form.set("metadata", JSON.stringify(metadata));
@@ -96,5 +104,5 @@ async function capture(page, feature, viewport) {
   const response = await fetch(origin + "/evidence/ingest", { method: "POST", headers, body: form, signal: AbortSignal.timeout(30000) });
   assert.ok(response.ok, "production screenshot evidence must persist in Inspector: " + response.status);
   const evidence = await response.json();
-  captures.push({ surface, url: page.url(), evidence_id: evidence.evidence_id });
+  captures.push({ surface, url: page.url(), evidence_id: evidence.evidence_id, state: metadata.dom });
 }
