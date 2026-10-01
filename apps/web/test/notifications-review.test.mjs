@@ -63,6 +63,9 @@ test('Review navigation, exact notes, sequential saves, retry and authorized pre
     await page.goto(fixture.origin+'/inspector#review?evidence='+evidence.evidence_id);
     await page.locator('.qa-question').filter({hasText:'first step'}).waitFor();
     assert.equal(await page.locator('.qa-notes textarea').inputValue(),'Original human note');
+    assert.equal(await page.locator('.qa-verdict').count(),0);
+    const navigation=await page.locator('.qa-question-nav').evaluate(node=>({alignment:getComputedStyle(node).justifyContent,back:getComputedStyle(node.querySelector('[data-qa-previous]')).backgroundColor,primary:getComputedStyle(node.querySelector('[data-qa-next]')).backgroundColor}));
+    assert.equal(navigation.alignment,'flex-end');assert.notEqual(navigation.back,navigation.primary,'main action has a distinct accent');
     assert.equal(await page.locator('.qa-preview-picker select').inputValue(),'captured');
     assert.match(await page.locator('.qa-preview-state').innerText(),/unavailable/);
     await page.getByRole('button',{name:'Yes, clear',exact:true}).click();
@@ -70,7 +73,7 @@ test('Review navigation, exact notes, sequential saves, retry and authorized pre
     await page.getByRole('button',{name:'Next',exact:true}).click();await page.getByRole('button',{name:'Back',exact:true}).click();
     assert.equal(await page.locator('[data-qa-answer=yes]').getAttribute('aria-pressed'),'true');
     await page.getByRole('button',{name:'Next',exact:true}).click();await page.getByRole('button',{name:'Not sure',exact:true}).first().click();
-    await page.getByRole('button',{name:'Looks good',exact:true}).click();
+
     await page.locator('[data-qa-save-state]').filter({hasText:'Saved'}).waitFor();
     slow=true;await page.locator('.qa-notes textarea').fill('First edit');await page.locator('[data-qa-save-state]').filter({hasText:'Saving'}).waitFor();
     while(!release)await new Promise(resolve=>setTimeout(resolve,20));
@@ -116,7 +119,7 @@ test('A growing failed-save message keeps the desktop panel clear of floating co
   await page.route('**/api/visual/*/qa',route=>route.fulfill(route.request().method()==='POST'?{status:503,json:{error:'Fixture unavailable. Responses remain locally recoverable while the provider recovers.'}}:{json:{evidence,review:{answers:{},notes:'',overall:null},questions:[{id:'one',prompt:'Does the review remain usable after a failed save?'}]}}));
   await page.route('**/api/visual/*/live',route=>route.fulfill({json:{live:{active:false}}}));
   await page.goto(fixture.origin+'/inspector#review?evidence='+evidence.evidence_id);await page.locator('.qa-question').waitFor();
-  await page.getByRole('button',{name:'Yes, clear',exact:true}).click();await page.getByRole('button',{name:'Looks good',exact:true}).click();
+  await page.getByRole('button',{name:'Yes, clear',exact:true}).click();
   await page.getByRole('button',{name:'Retry save'}).waitFor();
   await page.locator('.qa-companion').evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
   const panel=await page.locator('.qa-companion').boundingBox(),toggle=await page.locator('.qa-panel-toggle').boundingBox();
@@ -140,7 +143,7 @@ test('Reopening during a save cannot replace confirmed responses with an older i
   });
   await page.route('**/api/visual/*/live',async route=>{if(holdLive){getStarted();await getGate;}return route.fulfill({json:{live:{active:false}}});});
   await page.goto(fixture.origin+'/inspector#review?evidence='+evidence.evidence_id);await page.locator('.qa-question').waitFor();
-  await page.getByRole('button',{name:'No, needs work',exact:true}).click();await page.getByRole('button',{name:'Needs work',exact:true}).click();await page.locator('.qa-notes textarea').fill('Newest confirmed note');
+  await page.getByRole('button',{name:'No, needs work',exact:true}).click();await page.locator('.qa-notes textarea').fill('Newest confirmed note');
   await page.getByRole('button',{name:'Exit review'}).click();await postSignal;
   // Exit traverses history asynchronously. Settle that transition before reopening.
   await page.waitForFunction(()=>!history.state?.relayQaToken);
@@ -149,7 +152,7 @@ test('Reopening during a save cannot replace confirmed responses with an older i
   releaseGet();await page.locator('.qa-notes textarea').waitFor();
   assert.equal(await page.locator('.qa-notes textarea').inputValue(),'Newest confirmed note');
   assert.equal(await page.locator('[data-qa-answer=no]').getAttribute('aria-pressed'),'true');
-  assert.equal(await page.locator('[data-qa-overall=needs_work]').getAttribute('aria-pressed'),'true');
+  assert.equal(await page.locator('.qa-verdict').count(),0);
   assert.equal(await page.locator('[data-qa-save-state]').innerText(),'Saved');
   await page.locator('[data-qa-answer=yes]').click();await page.locator('[data-qa-save-state]').filter({hasText:'Saved'}).waitFor();assert.equal(review.notes,'Newest confirmed note','the next write must preserve the confirmed note');
  }finally{releasePost();releaseGet();await browser.close();await fixture.close();}

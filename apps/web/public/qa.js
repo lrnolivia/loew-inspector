@@ -107,10 +107,9 @@ function handlers() {
   return {
     answer(id,answer){edited();state.review.answers={...(state.review.answers||{}),[id]:answer};state.review.overall=null;persistDraft(state);repaintPanel('[data-qa-answer="'+answer+'"]');queueSave(100);},
     notes(notes){state.humanNotes=notes;state.review.notes=joinReviewNotes(state.noteParts.prefix,notes);edited();queueSave(650);},
-    overall(value){state.review.overall=value;edited();repaintPanel('[data-qa-overall="'+value+'"]');queueSave(100);},
     navigate(direction){questionIndex=Math.max(0,Math.min((state.questions||[]).length-1,questionIndex+direction));repaintPanel('.qa-question');},
     retry(){void saveReview(state);},
-    async finish(){const active=state;const success=await saveReview(active);if(success && state===active){publishNotification({id:'qa:saved:'+active.evidence.evidence_id,feature:'inspector',project:active.evidence.context?.project||'',title:'Review saved',message:'Your answers, overall review and notes were saved.',severity:'info',href:'/inspector#review?evidence='+encodeURIComponent(active.evidence.evidence_id),action:'Open review'});closeQa();}}
+    async finish(){const active=state;const success=await saveReview(active);if(success && state===active){publishNotification({id:'qa:saved:'+active.evidence.evidence_id,feature:'inspector',project:active.evidence.context?.project||'',title:'Review saved',message:'Your answers and notes were saved.',severity:'info',href:'/inspector#review?evidence='+encodeURIComponent(active.evidence.evidence_id),action:'Open review'});closeQa();}}
   };
 }
 function repaintPanel(focusSelector) {

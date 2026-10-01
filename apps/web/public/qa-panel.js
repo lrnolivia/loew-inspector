@@ -93,10 +93,9 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
     (guidance ? '<details class="qa-guidance"><summary>Earlier review guidance</summary><p>This was prepared by an agent. Your notes are separate; the original packet is retained.</p><ul>' + guidanceQuestions.map(item => '<li>' + qaEscape(item) + '</li>').join('') + '</ul></details>' : '') +
     '<label class="qa-notes"><span>Your notes</span><textarea maxlength="' + Math.max(0,6000 - (state.noteParts?.prefix?.length || 0) - (state.noteParts?.prefix ? 16 : 0)) + '" placeholder="Add a note…">' +
       qaEscape(state.humanNotes ?? review.notes ?? '') + '</textarea></label>' +
-    (questionIndex >= questions.length - 1 ? '<fieldset class="qa-verdict"><legend>Overall review</legend>' + [['looks_good','Looks good'],['needs_work','Needs work'],['not_sure','Not sure']].map(([value,label]) => '<button type="button" data-qa-overall="' + value + '" aria-pressed="' + (review.overall === value) + '">' + label + '</button>').join('') + '</fieldset>' : '') +
     '<div class="qa-feedback"><span class="qa-save-state" data-qa-save-state role="status" aria-live="polite"></span><button type="button" data-qa-retry hidden>Retry save</button></div>' +
     '<nav class="qa-question-nav" aria-label="Review questions"><button type="button" data-qa-previous ' + (questionIndex === 0 ? 'disabled' : '') + '>Back</button>' +
-    (questionIndex < questions.length - 1 ? '<button type="button" data-qa-next>Next</button>' : '<button type="button" data-qa-finish ' + (!allAnswered || !review.overall ? 'disabled' : '') + '>Finish</button>') + '</nav>';
+    (questionIndex < questions.length - 1 ? '<button type="button" data-qa-next>Next</button>' : '<button type="button" data-qa-finish ' + (!allAnswered ? 'disabled' : '') + '>Finish</button>') + '</nav>';
 
 
   void hydrateProjectIcons(panel);
@@ -109,7 +108,6 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
   panel.querySelector('[data-qa-next]')?.addEventListener('click', () => handlers.navigate(1));
   panel.querySelector('[data-qa-finish]')?.addEventListener('click', () => handlers.finish());
   panel.querySelector('[data-qa-retry]')?.addEventListener('click', () => handlers.retry());
-  panel.querySelectorAll('[data-qa-overall]').forEach(button => button.addEventListener('click', () => handlers.overall(button.dataset.qaOverall)));
   const textarea = panel.querySelector("textarea");
   if (textarea) textarea.addEventListener("input", function () { handlers.notes(textarea.value); });
 }

@@ -330,11 +330,10 @@ test("preserved legacy components and Inspector review support mobile, deep link
         await page.screenshot({ path: "/tmp/relay-inspector-spatial-canvas.png" });
       }
       await view.getByRole("button", { name: "Yes, clear", exact: true }).click();
-      await view.getByRole("button", { name: "Looks good", exact: true }).click();
       await view.locator(".qa-save-state").filter({ hasText: "Saved" }).waitFor();
       assert.equal(review.evidence_id, evidence.evidence_id);
       assert.equal(review.answers.intent, "yes");
-      assert.equal(review.overall, "looks_good");
+      assert.equal(review.overall, null);
       await view.locator(".qa-notes textarea").fill("A durable note on this exact capture.");
       await view.locator(".qa-save-state").filter({ hasText: "Saved" }).waitFor();
       assert.equal(await view.locator(".qa-notes textarea").inputValue(), "A durable note on this exact capture.");

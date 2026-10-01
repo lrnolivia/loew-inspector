@@ -2,7 +2,7 @@
 
 Assignment: `relay-website-notification-center-20261001`, Julian-PM / julian.
 
-The review surface uses shared neutral tokens and visible touch/keyboard controls. Exit review remains separate from question Back and Next; the final question shows Finish. Answers do not automatically advance. Overall review is an explicit human choice. Finish requires all answers and an overall choice, awaits a confirmed save and then exits. It does not fabricate an approval or mark a project problem resolved.
+The review surface uses shared neutral tokens and visible touch/keyboard controls. Exit review remains separate from question Back and Next; the final question shows Finish. Answers do not automatically advance. Lauren requested a simpler panel: the Overall review section is removed. Back and Next/Finish align to the right; the main action uses the existing Inspector accent while Back stays neutral. Finish requires all answers, awaits a confirmed save and then exits. It does not fabricate an approval or mark a project problem resolved.
 
 The random code seen in the supplied screenshot is an older agent-prepared review packet stored in `review.notes`. Only that exact known envelope plus a valid title/questions JSON object is separated into read-only Earlier review guidance. JSON is parsed, never evaluated. The original envelope is retained unchanged in the existing record, and human notes retain whitespace and literal text. Unrecognized/malformed envelopes and arbitrary user JSON stay editable text. Guidance is labeled agent-prepared, not verified evidence or a human verdict.
 
