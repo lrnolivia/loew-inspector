@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T07:02:29.755Z",
+  "updated_at": "2026-10-01T07:03:42.144Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -8655,6 +8655,7 @@
       "paths": [
         "src/relay-chat-ui.js",
         "src/relay-chat-ui.test.js",
+        "src/relay-entry.test.js",
         "docs/relay/CHATGPT_INLINE_CARD_CLEANROOM.md"
       ],
       "resources": [
@@ -8665,7 +8666,7 @@
       ],
       "goal": "Rebuild Relay's inline ChatGPT context-card integration from the current official MCP Apps contract while preserving the already-approved card design, feature art, state mapping and canonical Relay data semantics.",
       "acceptance": "Replace the accumulated v6 card bootstrap/transport with a small standards-first MCP Apps bridge: the model-visible render tool points to one newly versioned text/html;profile=mcp-app resource; the widget always performs ui/initialize and ui/notifications/initialized regardless of whether window.openai exists; tool input/result arrive through standard UI notifications; widget helper calls use tools/call; window.openai is optional only for ChatGPT-specific enhancements. Preserve existing card visual CSS/art/state behavior and first-paint without depending on helper calls. Remove legacy openai:set_globals/toolOutput bootstrap and undocumented intrinsic-height dependency. Add a realistic iframe-host regression where window.openai exists but the host only sends tool-result after standard initialization, proving the prior blank-frame lifecycle cannot recur. Document that consumer acceptance requires a true direct Relay tool invocation in an ordinary ChatGPT chat; nested Code Mode/connector calls are not accepted as UI-mount proof. Pass exact-head tests/admission, merge/deploy, then run the direct consumer smoke.",
-      "next_action": "Rotate the card resource identity and replace only the transport/bootstrap with an always-initialize standards-first bridge; freeze visual CSS/art/state mapping; add the realistic current-host lifecycle regression.",
+      "next_action": "Update the shared Relay entry contract assertion to the new v7 card resource identity, then run exact-path preflight and publish the clean-room branch for CI.",
       "task_class": "architecture",
       "category": "implementation",
       "labels": [
@@ -8706,8 +8707,8 @@
       "base_sha": "a35be01cfc64ae3940b441b6b5dd81fbabcd8df2",
       "state": "active",
       "created_at": "2026-10-01T06:57:47.754Z",
-      "updated_at": "2026-10-01T06:57:47.754Z",
-      "lease_until": "2026-10-01T18:57:47.754Z"
+      "updated_at": "2026-10-01T07:03:42.144Z",
+      "lease_until": "2026-10-01T19:03:42.144Z"
     }
   ],
   "migrated_from": "loew-inspector"
