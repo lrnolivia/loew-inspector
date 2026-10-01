@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T04:35:05.840Z",
+  "updated_at": "2026-10-01T04:38:38.149Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3919,8 +3919,8 @@
       "id": "relay-1.9.9-chatgpt-native-experience-20261001",
       "owner": "relay-1.9.9-chatgpt-native-experience-20261001",
       "goal": "Ship Relay 1.9.9 as the unified ChatGPT-native experience release: a polished family of contextual in-chat response cards plus a rich opened-Relay app with interactive chat/workspace behavior, all sharing one visual language, one canonical state model and one progressive-disclosure path.",
-      "acceptance": "Relay 1.9.9 must make persistent interactive live-preview QA a first-class surface. The primary Inspector QA view is a real live page embedded behind the floating Inspector overlay, not a screenshot/video substitute: pointer, keyboard, scrolling, forms, navigation and responsive viewport changes must reach the page normally, while the Inspector overlay remains draggable/resizable and only captures input on its own visible surface. Preview identity must be durable across the QA session: Relay presents a stable QA/live-preview URL or resolver rather than exposing a fragile raw ephemeral deployment URL, keeps or renews the backing preview while the session is active when the hosting platform permits, preserves the selected project/work identity across reconnects, and reports reconnecting/stale/expired honestly when it cannot. Design and implementation must explicitly handle iframe viability (CSP frame-ancestors/X-Frame-Options), preview authentication/session cookies, same-origin/cross-origin constraints, HTTPS, navigation inside the frame, refresh/reload, crash/reconnect and preview replacement without losing the QA shell. The Inspector canvas may still pan/zoom captured images/video, but live preview is the priority path and must support true direct interaction. The QA shell must retain the simplified floating-card presentation, edge-docking/peek behavior and clear fullscreen exit path without adding a control-heavy chrome. This live-preview requirement joins the existing 1.9.9 contract: one canonical Runner/progress identity across compact ChatGPT card -> simplified in-app dashboard/QA -> optional full relay.loew.fi dashboard; honest evidence-based progress/freshness; readable activity/milestones; responsive/light/dark/reduced-motion/accessibility states; no invented percentages or duplicate state; and real host-capability verification before claiming auto-refresh or persistent embedding.",
-      "next_action": "Before broader 1.9.9 implementation, specify and prototype the live-preview QA architecture first. Define a Relay-managed stable preview identity/resolver that maps canonical project/work identity to the current preview target; lifecycle/heartbeat/renewal and reconnect semantics; iframe/embed headers and auth requirements; navigation/session persistence; pointer/keyboard pass-through; responsive resize behavior; and failure states for expired, forbidden, replaced or non-embeddable previews. Mock the target composition as the live page filling the QA canvas with the simplified draggable Inspector overlay above it, including edge-docked peek/idle wiggle/glow behavior and a reliable way back out of fullscreen. Validate this on a real loew.fi preview before treating screenshot/video QA as anything more than fallback evidence. Then fold the result into the existing compact card -> in-app dashboard/QA -> optional full dashboard 1.9.9 flow.",
+      "acceptance": "Relay 1.9.9 must not count any contextual card as shipped until a normal Relay tool call in an ordinary ChatGPT conversation visibly mounts the intended MCP App UI directly under that response in the user's real consumer. Source HTML existing, a ui:// resource being registered, `_meta.ui.resourceUri` / `openai/outputTemplate` being present server-side, or structuredContent being correct are necessary but insufficient. The host/mount path is P0: verify the installed ChatGPT app definition sees the current launcher-tool UI metadata, the resource is discoverable with `text/html;profile=mcp-app`, the consumer call is made through a path that preserves MCP Apps tool-descriptor metadata, and ChatGPT actually renders the component. If the ChatGPT connector/orchestration wrapper strips or fails to honor launcher metadata, record that as the blocker and either change the invocation/registration path or use a supported launcher surface; do not paper over it with more CSS. Visible fresh-consumer render evidence is required before card completion. The existing 1.9.9 live-preview QA, stable preview resolver, canonical progress identity, responsive/motion/accessibility, and visual-direction requirements remain in force.",
+      "next_action": "Before further card styling, isolate the MCP App launch path end-to-end. Compare Relay's direct `/mcp` tool descriptor and resource registration against ChatGPT's installed/refreshed app definition and current Apps SDK contract; verify `_meta.ui.resourceUri` on the actual launcher tool seen by the host, resource MIME and URI versioning, and whether the current connector/orchestration invocation path preserves that metadata. Run a minimal contextual tool call such as relay_runner_progress as the smoke case. Success means the user visibly sees the card in this chat. If not, capture the exact layer that drops the mount contract and fix or route around that layer before continuing 1.9.9 card CSS.",
       "paths": [
         "src/relay-chat-ui.js",
         "src/relay-card-ui.js",
@@ -3982,7 +3982,11 @@
         "relay-preview-auth-session",
         "relay-preview-reconnect",
         "relay-input-passthrough",
-        "relay-live-preview-first"
+        "relay-live-preview-first",
+        "relay-chatgpt-visible-card-gate",
+        "relay-mcp-host-mount-path",
+        "relay-launcher-tool-metadata",
+        "relay-fresh-consumer-render-proof"
       ],
       "task_class": "design",
       "ledger_refs": [
@@ -4024,7 +4028,7 @@
       ],
       "state": "queued",
       "created_at": "2026-10-01T02:57:33.950Z",
-      "amendment_count": 4,
+      "amendment_count": 5,
       "amendments": [
         {
           "at": "2026-10-01T03:02:32.261Z",
@@ -4326,9 +4330,73 @@
               "... +22 more"
             ]
           }
+        },
+        {
+          "at": "2026-10-01T04:38:38.149Z",
+          "by": "relay-1.9.9-chatgpt-native-experience-20261001",
+          "reason": "User confirmed that no Relay contextual card has ever visibly rendered in ordinary ChatGPT despite card HTML/resource work. Make consumer-visible host mounting the release gate and stop treating source/resource existence as success.",
+          "fields": [
+            "acceptance",
+            "next_action",
+            "resources"
+          ],
+          "before": {
+            "acceptance": "Relay 1.9.9 must make persistent interactive live-preview QA a first-class surface. The primary Inspector QA view is a real live page embedded behind the floating Inspector overlay, not a screenshot/video substitute: pointer, keyboard, scrolling, forms, navigation and responsive viewport changes must reach the page normally, while the Inspector overlay remains draggable/resizable and only captures input on its own visible surface. Preview identity must be durable across the QA session: Relay presents a stable QA/live-preview URL or resolver rather than exposing a fragile raw ephemeral deplo...",
+            "next_action": "Before broader 1.9.9 implementation, specify and prototype the live-preview QA architecture first. Define a Relay-managed stable preview identity/resolver that maps canonical project/work identity to the current preview target; lifecycle/heartbeat/renewal and reconnect semantics; iframe/embed headers and auth requirements; navigation/session persistence; pointer/keyboard pass-through; responsive resize behavior; and failure states for expired, forbidden, replaced or non-embeddable previews. Mock the target composition as the live page filling the QA canvas with the simplified draggable Insp...",
+            "resources": [
+              "relay-1.9.9-release",
+              "relay-inline-card-design-system",
+              "relay-context-card-families",
+              "relay-opened-app-workspace",
+              "relay-in-app-interactive-chat",
+              "relay-chat-workspace-continuity",
+              "relay-three-surface-ui-contract",
+              "relay-progressive-disclosure-ui",
+              "relay-operation-card",
+              "relay-project-card",
+              "relay-release-card",
+              "relay-staff-card",
+              "relay-blocker-card",
+              "relay-verification-card",
+              "relay-qa-card",
+              "relay-card-motion-status",
+              "relay-card-responsive-layout",
+              "relay-terra-prime-card-language",
+              "relay-human-first-result-contract",
+              "relay-operation-framework",
+              "... +22 more"
+            ]
+          },
+          "after": {
+            "acceptance": "Relay 1.9.9 must not count any contextual card as shipped until a normal Relay tool call in an ordinary ChatGPT conversation visibly mounts the intended MCP App UI directly under that response in the user's real consumer. Source HTML existing, a ui:// resource being registered, `_meta.ui.resourceUri` / `openai/outputTemplate` being present server-side, or structuredContent being correct are necessary but insufficient. The host/mount path is P0: verify the installed ChatGPT app definition sees the current launcher-tool UI metadata, the resource is discoverable with `text/html;profile=mcp-app...",
+            "next_action": "Before further card styling, isolate the MCP App launch path end-to-end. Compare Relay's direct `/mcp` tool descriptor and resource registration against ChatGPT's installed/refreshed app definition and current Apps SDK contract; verify `_meta.ui.resourceUri` on the actual launcher tool seen by the host, resource MIME and URI versioning, and whether the current connector/orchestration invocation path preserves that metadata. Run a minimal contextual tool call such as relay_runner_progress as the smoke case. Success means the user visibly sees the card in this chat. If not, capture the exact ...",
+            "resources": [
+              "relay-1.9.9-release",
+              "relay-inline-card-design-system",
+              "relay-context-card-families",
+              "relay-opened-app-workspace",
+              "relay-in-app-interactive-chat",
+              "relay-chat-workspace-continuity",
+              "relay-three-surface-ui-contract",
+              "relay-progressive-disclosure-ui",
+              "relay-operation-card",
+              "relay-project-card",
+              "relay-release-card",
+              "relay-staff-card",
+              "relay-blocker-card",
+              "relay-verification-card",
+              "relay-qa-card",
+              "relay-card-motion-status",
+              "relay-card-responsive-layout",
+              "relay-terra-prime-card-language",
+              "relay-human-first-result-contract",
+              "relay-operation-framework",
+              "... +26 more"
+            ]
+          }
         }
       ],
-      "updated_at": "2026-10-01T04:21:20.443Z"
+      "updated_at": "2026-10-01T04:38:38.149Z"
     },
     {
       "id": "relay-1.9.6.2-operational-staff-routing-20261001",
