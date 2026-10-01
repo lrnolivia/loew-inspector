@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T10:02:50.653Z",
+  "updated_at": "2026-10-01T10:03:05.077Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -9329,7 +9329,7 @@
     },
     {
       "id": "relay-2.0-control-center-resource-bust-20261001",
-      "owner": "relay-2.0-approved-visual-port-20261001",
+      "owner": "relay-2.0-control-center-resource-bust-retired-20261001",
       "branch": "relay/2.0-control-center-resource-bust-20261001",
       "paths": [
         "src/relay-ui.js",
@@ -9340,7 +9340,7 @@
       ],
       "goal": "Force ChatGPT to load the shipped Relay 2.0 React control center by rotating the MCP App resource identity away from the cached pre-2.0 URI.",
       "acceptance": "Relay control center uses a fresh ui:// resource URI; resource/read and tool outputTemplate/resourceUri all resolve to it; React mcpHtml remains unchanged; exact-head tests and Runner admission pass; merged exact commit is deployed and the old v2 resource is no longer advertised.",
-      "next_action": "Superseded by the approved visual port. Keep the resource-bust branch unmerged and do not resume it unless the approved React port later needs a fresh control-center resource identity.",
+      "next_action": "Retired/superseded. Keep this branch unmerged; do not resume unless a future approved control-center build explicitly needs a cache-key rotation.",
       "task_class": "maintenance",
       "category": "release",
       "primary_team": "release",
@@ -9350,8 +9350,8 @@
       "base_sha": "9fa0f90ecb3e423c9c27c069a602a9dcf6cd6633",
       "state": "held",
       "created_at": "2026-10-01T09:37:31.270Z",
-      "updated_at": "2026-10-01T09:56:38.760Z",
-      "lease_until": "2026-10-01T21:56:38.760Z"
+      "updated_at": "2026-10-01T10:03:05.077Z",
+      "lease_until": "2026-10-01T22:03:05.077Z"
     },
     {
       "id": "relay-inline-card-v2-final-20261001",
