@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T06:32:09.903Z",
+  "updated_at": "2026-10-01T06:33:20.314Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5449,6 +5449,70 @@
       ],
       "state": "claimed",
       "created_at": "2026-10-01T06:25:37.158Z"
+    },
+    {
+      "id": "relay-2.0-today-runner-react-slice-20261001",
+      "owner": "relay-2.0-today-runner-react-slice-20261001",
+      "goal": "Build Relay 2.0's first working React slice: Vite app shell plus Today and Runner views driven by canonical snapshots and live observed-state updates, without touching the ChatGPT inline-card host lane.",
+      "acceptance": "A clean checkout can build the new Vite React app without committing dist/generated bundle output; Today and Runner render canonical Relay data; a bounded live event contract updates progress/worker state without manual page refresh; dropped streams visibly enter reconnecting/stale states and reconcile from a canonical snapshot; project context is URL-addressable; existing 1.9.9 production UI remains available until a later cutover; no files owned by the ChatGPT card host assignment are modified.",
+      "next_action": "Claim immediately after the 2.0 architecture slice merges and frees a branch slot. Scaffold Vite + React + frontend contracts first, then implement canonical snapshot loading and the bounded UI event stream, and stop the first PR once Today + Runner live updates are proven end-to-end.",
+      "paths": [
+        "apps/web/package.json",
+        "apps/web/vite.config.ts",
+        "apps/web/tsconfig.json",
+        "apps/web/index.html",
+        "apps/web/src/",
+        "packages/runner/src/ui-events.mjs",
+        "packages/runner/src/cloudflare-worker.mjs",
+        "packages/shared-ui/react/",
+        "docs/relay/RELAY_2_0_TODAY_RUNNER_SLICE.md"
+      ],
+      "resources": [
+        "relay-2.0",
+        "relay-vite-react-dashboard",
+        "relay-live-state-stream",
+        "relay-today-react",
+        "relay-runner-react",
+        "relay-stale-reconnect-ui",
+        "relay-no-committed-generated-bundle"
+      ],
+      "task_class": "architecture",
+      "category": "implementation",
+      "labels": [
+        {
+          "key": "release",
+          "value": "2.0"
+        },
+        {
+          "key": "domain",
+          "value": "frontend-platform"
+        }
+      ],
+      "tags": [
+        "react",
+        "vite",
+        "today",
+        "runner",
+        "live-ui"
+      ],
+      "primary_role": "builder",
+      "supporting_roles": [
+        "architect",
+        "product-lead",
+        "verifier"
+      ],
+      "primary_team": "runner",
+      "supporting_teams": [
+        "inspector"
+      ],
+      "primary_staff": "nico",
+      "supporting_staff": [
+        "ellis",
+        "vivienne",
+        "roman"
+      ],
+      "state": "queued",
+      "created_at": "2026-10-01T06:33:20.314Z"
     }
   ],
   "claims": [
