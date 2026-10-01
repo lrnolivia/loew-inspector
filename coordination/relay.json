@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T00:21:08.588Z",
+  "updated_at": "2026-10-01T00:21:44.983Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -2066,42 +2066,6 @@
       "completed_at": "2026-10-01T00:03:58.032Z"
     },
     {
-      "id": "relay-1.9.3-resume-checkpoints-20260930",
-      "owner": "relay-1.9.3-resume-checkpoints-20260930",
-      "branch": "relay/1.9.3-resume-checkpoints-20260930",
-      "paths": [
-        "contracts/resume/",
-        "src/resume-checkpoints.js",
-        "src/resume-checkpoints.test.js",
-        "docs/relay/RELAY_1_9_3_RELEASE.md",
-        "src/runner-control.js",
-        "src/runner-control.test.js",
-        "src/relay-entry.js",
-        "src/relay-entry.test.js"
-      ],
-      "resources": [
-        "relay-1.9.3-release",
-        "relay-resume-checkpoints",
-        "relay-passive-snapshots",
-        "relay-worker-resumability",
-        "relay-runner-resume-read-contract"
-      ],
-      "goal": "Ship Relay 1.9.3 as the low-overhead durable resume/checkpoint release for interrupted workers and chats.",
-      "acceptance": "Derive compact checkpoints from canonical assignment/source/PR/check/deploy/evidence state at meaningful transitions and bounded cadence; include exact identities, current stage, last successful action, blocker/wait state, next action, QA context and ledger refs; dedupe unchanged snapshots; expose latest-valid resume/read contract; no model-authored long handoff required. Tests cover dedupe, stale evidence, external waits, exact identity and interrupted resume.",
-      "next_action": "Relay 1.9.3 is merged and deployed from PR #60 exact merge 774f95d13837270e261eeddc6d44d64c25c7de64 as Worker v52 version 1b7beef7-a799-41df-b30c-4f8ea453bc17 at 100% via deployment e47a0ab6-14d5-408c-b4a2-59725c09d26c. Runtime reports 1.9.3 and source main matched the exact merge before this coordination heartbeat. Current ChatGPT session still lacks relay_runner_resume in discovered MCP schema. Refresh Relay tools and reopen/refresh ChatGPT. First refreshed-session action: call relay_runner_resume for relay-1.9.3-resume-checkpoints-20260930, verify deterministic checkpoint identity/exact branch-PR-deploy state and passive cadence, then complete PR #60 assignment with consumer proof and begin queued Relay 1.9.4 skills-runtime core.",
-      "task_class": "architecture",
-      "ledger_refs": [
-        "RFS-006",
-        "RFS-020",
-        "RFS-021"
-      ],
-      "base_sha": "d3cbbd6135e7cd087388f986f38cb13d500b35e2",
-      "state": "active",
-      "created_at": "2026-10-01T00:02:42.510Z",
-      "updated_at": "2026-10-01T00:11:23.724Z",
-      "lease_until": "2026-10-01T12:11:23.724Z"
-    },
-    {
       "id": "relay-status-motion-ui-20260930",
       "owner": "relay-status-motion-ui-20260930",
       "branch": "relay/status-motion-ui-20260930",
@@ -2147,6 +2111,45 @@
       "evidence": "Design-only semantic status/motion UI completed on current Relay 1.9.3. Exact PR head 8c8755dff48708d9ee0563b069bb2c680b7b44dd passed Runner admission and repository CI; PR #61 squash-merged as 2b5053977ccd7eea1b0e31f08fa0c894160c4140. Human-facing feature identity is lowercase and aligned: today, runner, inspector, night shift; runner page no longer presents as Projects and inspector no longer presents as Review. Shared semantic status palette added for working/info, external wait, needs-human/action, warning/stale, failed/blocked, complete/healthy, and quiet. Runner overview metrics now stay neutral at zero and colorize/pulse when nonzero. Progress/Today/Inspector/night shift badges include visible status lights with bounded CSS liveness animation; failure is coral-red danger rather than flat gray. prefers-reduced-motion removes looping animation while preserving semantic color, label, and static indicator. No gradients remain in shipped Relay UI sources. Full npm test passed; web/MCP/mobile browser contract passed; compiled bundle includes relay-status-pulse and relay-status-danger keyframes. Exact merged source uploaded as Cloudflare Worker v53 version c8490ed2-9aa2-466f-aed8-1cd5afbac578 and deployed 100% via a920bd68-7a15-4279-a1f5-8a91e89eb1a2. Runtime readback reports Relay 1.9.3 and source main exactly 2b5053977ccd7eea1b0e31f08fa0c894160c4140 before completion receipt. Production desktop evidence vis_61ad87f5-4dc0-4983-affa-dd783c31e7e5 and mobile evidence vis_00c5067f-fe4a-4c63-856d-6bc69100db01 captured successfully. Historical root transport anomaly remains HTTP 522 while Browser Run renders full page/title relay; not introduced by this release.",
       "work_accounted": true,
       "completed_at": "2026-10-01T00:21:08.588Z"
+    },
+    {
+      "id": "relay-1.9.3-resume-checkpoints-20260930",
+      "owner": "relay-1.9.3-resume-checkpoints-20260930",
+      "branch": "relay/1.9.3-resume-checkpoints-20260930",
+      "paths": [
+        "contracts/resume/",
+        "src/resume-checkpoints.js",
+        "src/resume-checkpoints.test.js",
+        "docs/relay/RELAY_1_9_3_RELEASE.md",
+        "src/runner-control.js",
+        "src/runner-control.test.js",
+        "src/relay-entry.js",
+        "src/relay-entry.test.js",
+        "src/progress-observation.js",
+        "src/progress-observation.test.js"
+      ],
+      "resources": [
+        "relay-1.9.3-release",
+        "relay-resume-checkpoints",
+        "relay-passive-snapshots",
+        "relay-worker-resumability",
+        "relay-runner-resume-read-contract",
+        "relay-assignment-cloud-identity-pinning"
+      ],
+      "goal": "Ship Relay 1.9.3 as the low-overhead durable resume/checkpoint release for interrupted workers and chats.",
+      "acceptance": "Derive compact checkpoints from canonical assignment/source/PR/check/deploy/evidence state at meaningful transitions and bounded cadence; include exact identities, current stage, last successful action, blocker/wait state, next action, QA context and ledger refs; dedupe unchanged snapshots; expose latest-valid resume/read contract; no model-authored long handoff required. Tests cover dedupe, stale evidence, external waits, exact identity and interrupted resume.",
+      "next_action": "Fix fresh-consumer regression: pin assignment cloud version/deployment identities to the assignment's own merge/source commit rather than the latest global Relay deployment; add regression coverage, re-verify deterministic relay_runner_resume, then close 1.9.3 and start staff identity work.",
+      "task_class": "architecture",
+      "ledger_refs": [
+        "RFS-006",
+        "RFS-020",
+        "RFS-021"
+      ],
+      "base_sha": "d3cbbd6135e7cd087388f986f38cb13d500b35e2",
+      "state": "active",
+      "created_at": "2026-10-01T00:02:42.510Z",
+      "updated_at": "2026-10-01T00:21:44.983Z",
+      "lease_until": "2026-10-01T12:21:44.983Z"
     }
   ],
   "migrated_from": "loew-inspector"
