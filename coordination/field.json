@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-10-01T22:19:54.782Z",
+  "updated_at": "2026-10-01T23:15:54.749Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -427,12 +427,12 @@
       ],
       "goal": "Consolidate Dashboard and explicitly user-authorized Mobile recovery onto current main",
       "acceptance": "Existing Dashboard/create/refresh behavior and current-main Canvas semantics preserved; touch/mobile focused checks and runtime arbitration verified; current user removes Mobile protection, connected-panel follow-up remains deferred; original branches retained",
-      "next_action": "Lauren authorized Astra Medium successor for Dashboard recovery on 2026-10-01. Preserve existing branch/PR136 and all 26 unpublished Mobile files (recovery patches/hash inventory saved by successor). Reconcile against fresh main and finish reviewable Dashboard recovery with evidence. Supersedes stale immediate-merge next_action; no Field merge/deploy authorized for new changes. Refresh ownership/admission before edits, retain historical Mobile provenance and deferred geometry scope.",
+      "next_action": "Dashboard PR136 merged as bad3630cdcb6c52ca787ccbb94fc70978f8f2d05 and production exact SHA/version verified; authenticated hosted persistence QA gap explicitly accepted/documented, 58 baseline-shared failures remain. Broader consolidation is NOT complete: 26 unpublished Mobile files preserved in portable checkpoint libfile_4e2a1d2ad8388191bea18a0a0408d5f1 version2. Hold awaiting Lauren's next Mobile/consolidation or native Codex handoff decision; no further feature work launched. Preserve saved official Figma references docs/field/product/docs/FIGMA_BEHAVIOR_PARITY.md and docs/field/handoffs/figui3/CONTINUATION_2026-09-27.md. Existing historical Mobile provenance claim unchanged.",
       "base_sha": "854038a3e84f41cd590a4ad18b24fcd4127e2fba",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-09-30T10:21:02.409Z",
-      "updated_at": "2026-10-01T22:19:54.782Z",
-      "lease_until": "2026-10-02T10:19:54.782Z"
+      "updated_at": "2026-10-01T23:15:54.749Z",
+      "lease_until": "2026-10-02T11:15:54.749Z"
     },
     {
       "id": "field-ui-hotfix-20260930",
