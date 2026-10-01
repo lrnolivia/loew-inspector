@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T16:36:32.366Z",
+  "updated_at": "2026-10-01T16:37:08.264Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -9454,7 +9454,7 @@
     },
     {
       "id": "relay-2.0-approved-visual-port-20261001",
-      "owner": "relay-2.0-approved-visual-port-20261001",
+      "owner": "relay-2.0-generated-split-20261001",
       "branch": "relay/2.0-approved-visual-port-20261001",
       "paths": [
         "apps/web/src/",
@@ -9479,7 +9479,7 @@
       ],
       "goal": "Port the Relay React experience onto the exact approved 1.8/1.9 visual system while preserving the liked 2.0 Runner and Night Shift content layouts/flows, restoring the old Today flow, adding at least three useful universal header data cards to every primary page, and using Momo Trust Display for headings.",
       "acceptance": "React uses the preserved 1.8/1.9 CSS/tokens/navigation/surfaces/spacing as its presentation source of truth. Today restores needs-you, work-happening-now, and automatic-checks flow. Runner and Night Shift retain their approved 2.0 content architecture and detail flow but are rendered in the old visual system. Today, Runner, Night Shift, and Inspector each expose at least three meaningful universal header data cards. Major headings use Momo Trust Display; body/control text remains Inter. Before merge, desktop and mobile screenshots for every primary page and Runner detail are captured into Inspector and left pending human approval. Do not merge or deploy without that approval.",
-      "next_action": "User approved merge. Reconcile deterministic generated.js through a temporary exact-branch CI packager, remove the temporary packager, require all exact-head gates green, then mark PR #94 ready, squash merge, and deploy the exact merge commit.",
+      "next_action": "PR #94 is merged and visually approved. Deployment is blocked only by the >1 MiB generated.js source-read limit. Packaging successor relay-2.0-generated-split-20261001 owns the remaining build/deploy work; do not alter approved UI.",
       "task_class": "design",
       "category": "design",
       "primary_team": "inspector",
@@ -9497,8 +9497,8 @@
       "base_sha": "9809da5c2c0d2f32476a38b3fd7a05c95a5d98c5",
       "state": "active",
       "created_at": "2026-10-01T10:03:17.975Z",
-      "updated_at": "2026-10-01T16:10:47.427Z",
-      "lease_until": "2026-10-02T04:10:47.427Z"
+      "updated_at": "2026-10-01T16:37:08.264Z",
+      "lease_until": "2026-10-02T04:37:08.264Z"
     }
   ],
   "migrated_from": "loew-inspector"
