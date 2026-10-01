@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
-import { loadDashboard } from "./api";
+import { loadDashboard, projectLabel } from "./api";
+import { publishNotification, resolveNotification } from '../../../packages/shared-ui/notifications.js';
 import type { ConnectionState, DashboardSnapshot } from "./types";
 
 type LiveRelay = {
@@ -36,6 +37,20 @@ export function LiveRelayProvider({ children }: { children: ReactNode }) {
     if (lastSuccess.current) setState("reconnecting");
     try {
       await loadDashboard(next => {
+        resolveNotification('dashboard:connection');
+        for (const item of next.projects) {
+          const id = 'progress:' + item.id;
+          if (next.failedProgress?.includes(item.id)) publishNotification({ id, feature:'runner', project:projectLabel(item), title:'Project activity unavailable',
+            message:'Some activity could not refresh. Available information stays visible; Relay will retry.', severity:'warning',
+            href:'/#/runner?project=' + encodeURIComponent(item.id), action:'Open project' });
+          else if (!next.loadingProgress?.includes(item.id)) resolveNotification(id);
+        }
+        for (const worker of next.workers) {
+          const id = 'automatic:' + worker.id;
+          if (worker.runtime?.status === 'failed') publishNotification({id,feature:'night-shift',project:projectLabel(worker.id),title:'Automatic check needs attention',
+            message:worker.runtime.last_summary || 'The last automatic check reported a problem.',severity:'warning',href:'/#/night-shift?project=' + encodeURIComponent(worker.id),action:'Open check'});
+          else if (['completed','succeeded','success'].includes(worker.runtime?.status || '')) resolveNotification(id);
+        }
         lastSuccess.current = Date.now();
         latestSnapshot.current = next;
         setSnapshot(next);
@@ -44,6 +59,7 @@ export function LiveRelayProvider({ children }: { children: ReactNode }) {
       }, latestSnapshot.current);
     } catch (cause) {
       const message = cause instanceof Error ? cause.message : "Relay could not refresh.";
+      publishNotification({id:'dashboard:connection',feature:'relay',title:'Could not refresh Relay',message:'The connection is unavailable. Previously loaded information stays visible; Relay will retry.',severity:'error',href:'/#/today',action:'Open Today'});
       setError(message);
       setState(lastSuccess.current && Date.now() - lastSuccess.current < 30_000 ? "reconnecting" : "offline");
     } finally {

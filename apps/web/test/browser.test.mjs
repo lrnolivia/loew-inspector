@@ -311,7 +311,7 @@ test("preserved legacy components and Inspector review support mobile, deep link
       assert.equal(await view.locator(".qa-overall").count(), 0);
       assert.equal(await view.locator(".qa-details").count(), 0);
       assert.equal(await view.locator("[data-qa-close]").count(), 0);
-      assert.equal(await view.locator(".qa-companion").evaluate(node => getComputedStyle(node).backgroundColor), "rgb(52, 49, 46)");
+      assert.equal(await view.locator(".qa-companion").evaluate(node => getComputedStyle(node).backgroundColor), "rgb(33, 31, 29)");
       assert.equal(await view.locator(".qa-companion").evaluate(node => getComputedStyle(node).borderRadius), "28px");
       await view.locator(".qa-camera").waitFor();
       assert.notEqual(await view.locator(".qa-camera").evaluate(node => getComputedStyle(node).transform), "none");
@@ -330,6 +330,7 @@ test("preserved legacy components and Inspector review support mobile, deep link
         await page.screenshot({ path: "/tmp/relay-inspector-spatial-canvas.png" });
       }
       await view.getByRole("button", { name: "Yes, clear", exact: true }).click();
+      await view.getByRole("button", { name: "Looks good", exact: true }).click();
       await view.locator(".qa-save-state").filter({ hasText: "Saved" }).waitFor();
       assert.equal(review.evidence_id, evidence.evidence_id);
       assert.equal(review.answers.intent, "yes");
@@ -347,7 +348,7 @@ test("preserved legacy components and Inspector review support mobile, deep link
       assert.equal(await view.locator(".operator-brand strong").evaluate(node => getComputedStyle(node).color), "rgb(181, 71, 31)");
       await view.locator("[data-review-id]").click();
       await view.locator(".qa-project-pill strong").waitFor();
-      assert.equal(await view.locator(".qa-companion").evaluate(node => getComputedStyle(node).backgroundColor), "rgb(52, 49, 46)");
+      assert.equal(await view.locator(".qa-companion").evaluate(node => getComputedStyle(node).backgroundColor), "rgb(240, 239, 235)");
       await page.keyboard.press("Escape");
       await view.locator(".qa-stage").waitFor({ state: "detached" });
       await view.locator(".presentation-menu > summary").click();

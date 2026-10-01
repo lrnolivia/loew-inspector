@@ -29,9 +29,8 @@ export function renderQaPreview(stage, state, requestedMode) {
   const mode =
     requestedMode === "live" && canLive ? "live" :
     requestedMode === "video" && canVideo ? "video" :
-    canLive ? "live" :
-    canVideo ? "video" :
-    "captured";
+    requestedMode === "captured" ? "captured" :
+    canVideo ? "video" : "captured";
   const { width, height } = surfaceSize(evidence);
 
   let media = "";
@@ -73,6 +72,9 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
   const answer = q ? review.answers?.[q.id] : null;
   const progress = q ? "Review " + (questionIndex + 1) + " of " + questions.length : "Review";
 
+  const allAnswered = questions.every(question => ["yes", "no", "not_sure"].includes(review.answers?.[question.id]));
+  const guidance = state.noteParts?.guidance;
+  const guidanceQuestions = guidance?.questions?.map(item => typeof item === "string" ? item : item.prompt || item.question || "").filter(Boolean) || [];
   panel.innerHTML =
     '<div class="qa-review-head">' +
       '<div class="qa-review-progress"><span class="qa-review-dot" aria-hidden="true"></span><span>' + qaEscape(progress) + '</span></div>' +
@@ -83,15 +85,19 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
       '<h2 class="qa-question">' + qaEscape(q?.prompt || "Anything feel off?") + '</h2>' +
       '<p class="qa-question-reason">' + qaEscape(q?.reason || "Leave a note if there is anything you want changed.") + '</p>' +
       (q ? '<div class="qa-answer-stack" role="group" aria-label="Answer">' +
-        ["yes", "no"].map(function (value) {
+        ["yes", "no", "not_sure"].map(function (value) {
           return '<button type="button" class="qa-answer ' + (answer === value ? "selected" : "") +
-            '" data-qa-answer="' + value + '">' + answerLabel(value) + '</button>';
+            '" aria-pressed="' + (answer === value) + '" data-qa-answer="' + value + '">' + answerLabel(value) + '</button>';
         }).join("") + '</div>' : "") +
     '</section>' +
-    '<label class="qa-notes"><span class="sr-only">Notes</span><textarea maxlength="6000" placeholder="Add a note…">' +
-      qaEscape(review.notes || "") + '</textarea></label>' +
-    '<span class="qa-save-state sr-only" data-qa-save-state aria-live="polite">' +
-      qaEscape(review.updated_at ? "Saved" : "Not saved yet") + '</span>';
+    (guidance ? '<details class="qa-guidance"><summary>Earlier review guidance</summary><p>This was prepared by an agent. Your notes are separate; the original packet is retained.</p><ul>' + guidanceQuestions.map(item => '<li>' + qaEscape(item) + '</li>').join('') + '</ul></details>' : '') +
+    '<label class="qa-notes"><span>Your notes</span><textarea maxlength="' + Math.max(0,6000 - (state.noteParts?.prefix?.length || 0) - (state.noteParts?.prefix ? 16 : 0)) + '" placeholder="Add a note…">' +
+      qaEscape(state.humanNotes ?? review.notes ?? '') + '</textarea></label>' +
+    (questionIndex >= questions.length - 1 ? '<fieldset class="qa-verdict"><legend>Overall review</legend>' + [['looks_good','Looks good'],['needs_work','Needs work'],['not_sure','Not sure']].map(([value,label]) => '<button type="button" data-qa-overall="' + value + '" aria-pressed="' + (review.overall === value) + '">' + label + '</button>').join('') + '</fieldset>' : '') +
+    '<div class="qa-feedback"><span class="qa-save-state" data-qa-save-state role="status" aria-live="polite"></span><button type="button" data-qa-retry hidden>Retry save</button></div>' +
+    '<nav class="qa-question-nav" aria-label="Review questions"><button type="button" data-qa-previous ' + (questionIndex === 0 ? 'disabled' : '') + '>Back</button>' +
+    (questionIndex < questions.length - 1 ? '<button type="button" data-qa-next>Next</button>' : '<button type="button" data-qa-finish ' + (!allAnswered || !review.overall ? 'disabled' : '') + '>Finish</button>') + '</nav>';
+
 
   void hydrateProjectIcons(panel);
   if (q) {
@@ -99,6 +105,11 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
       button.addEventListener("click", function () { handlers.answer(q.id, button.dataset.qaAnswer); });
     });
   }
+  panel.querySelector('[data-qa-previous]')?.addEventListener('click', () => handlers.navigate(-1));
+  panel.querySelector('[data-qa-next]')?.addEventListener('click', () => handlers.navigate(1));
+  panel.querySelector('[data-qa-finish]')?.addEventListener('click', () => handlers.finish());
+  panel.querySelector('[data-qa-retry]')?.addEventListener('click', () => handlers.retry());
+  panel.querySelectorAll('[data-qa-overall]').forEach(button => button.addEventListener('click', () => handlers.overall(button.dataset.qaOverall)));
   const textarea = panel.querySelector("textarea");
   if (textarea) textarea.addEventListener("input", function () { handlers.notes(textarea.value); });
 }

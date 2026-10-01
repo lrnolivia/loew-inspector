@@ -1,5 +1,6 @@
 // A 24px family with deliberately heavy, rounded geometry. Motion is CSS-only.
 const shapes = {
+  bell: '<path d="M6 9a6 6 0 0 1 12 0v5l2 3H4l2-3Z"/><path d="M10 21h4"/>',
   today: '<rect x="4" y="5" width="16" height="16" rx="5"/><path d="M8 3v4m8-4v4M4 11h16"/><circle cx="12" cy="16" r="1.8" fill="currentColor" stroke="none"/>',
   projects: '<rect x="3" y="3" width="7" height="7" rx="2.5"/><rect x="14" y="3" width="7" height="7" rx="2.5"/><rect x="3" y="14" width="7" height="7" rx="2.5"/><rect x="14" y="14" width="7" height="7" rx="2.5"/>',
   review: '<path d="M3 12c4-8 14-8 18 0-4 8-14 8-18 0Z"/><circle class="glyph-detail" cx="12" cy="12" r="3"/>',

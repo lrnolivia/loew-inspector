@@ -2,7 +2,7 @@ const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
 function interactiveTarget(target) {
   return target instanceof Element &&
-    Boolean(target.closest("button, textarea, input, select, a, [contenteditable='true']"));
+    Boolean(target.closest("button, summary, textarea, input, select, a, [contenteditable='true']"));
 }
 
 function resizeEdge(event, rect, threshold = 10) {
@@ -41,7 +41,7 @@ export function createQaFloat(stage, { onDockChange } = {}) {
 
   const clampOpenPosition = (left, top, width, height) => ({
     left: clamp(left, 8, Math.max(8, innerWidth - width - 8)),
-    top: clamp(top, 8, Math.max(8, innerHeight - height - 8))
+    top: clamp(top, 76, Math.max(76, innerHeight - height - 76))
   });
 
   const placeDocked = () => {
@@ -54,7 +54,7 @@ export function createQaFloat(stage, { onDockChange } = {}) {
     if (dockEdge === "top") top = visibleDockEdge - rect.height;
     if (dockEdge === "bottom") top = innerHeight - visibleDockEdge;
     if (dockEdge === "left" || dockEdge === "right") {
-      top = clamp(top, 8, Math.max(8, innerHeight - rect.height - 8));
+      top = clamp(top, 76, Math.max(76, innerHeight - rect.height - 76));
     } else {
       left = clamp(left, 8, Math.max(8, innerWidth - rect.width - 8));
     }
@@ -107,7 +107,7 @@ export function createQaFloat(stage, { onDockChange } = {}) {
     requestAnimationFrame(() => {
       const rect = panel.getBoundingClientRect();
       panel.style.left = Math.max(12, innerWidth - rect.width - 24) + "px";
-      panel.style.top = Math.max(12, innerHeight - rect.height - 24) + "px";
+      panel.style.top = Math.max(76, innerHeight - rect.height - 76) + "px";
     });
   };
 
@@ -138,7 +138,7 @@ export function createQaFloat(stage, { onDockChange } = {}) {
     let left = action.rect.left;
     let top = action.rect.top;
     const maxWidth = Math.max(minWidth, innerWidth - 24);
-    const maxHeight = Math.max(minHeight, innerHeight - 24);
+    const maxHeight = Math.max(minHeight, innerHeight - 152);
     if (action.edge.includes("e")) width = clamp(action.rect.width + dx, minWidth, maxWidth);
     if (action.edge.includes("s")) height = clamp(action.rect.height + dy, minHeight, maxHeight);
     if (action.edge.includes("w")) {

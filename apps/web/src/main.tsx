@@ -7,6 +7,7 @@ import "../../../packages/shared-ui/components.css";
 import "../public/operator-1.8.css";
 import "./styles.css";
 import "../../../packages/shared-ui/telemetry.css";
+import "../../../packages/shared-ui/notifications.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

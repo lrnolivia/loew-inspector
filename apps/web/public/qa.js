@@ -3,33 +3,23 @@ import { qaEscape, renderQaPanel, renderQaPreview } from "./qa-panel.js";
 import { createQaFloat } from "./qa-float.js";
 import { createQaViewport } from "./qa-viewport.js";
 import { createQaContrast } from "./qa-contrast.js";
+import { splitReviewNotes, joinReviewNotes } from './qa-notes.js';
+import { publishNotification, resolveNotification } from '../../../packages/shared-ui/notifications.js';
 
-const visualContent = document.querySelector("#visual-content");
-const visualHeadingTools = document.querySelector(".visual-heading-tools");
-let stage = null;
-let state = null;
-let questionIndex = 0;
-let previewMode = "captured";
-let saveTimer = null;
-let viewportController = null;
-let floatController = null;
-let contrastController = null;
-let historyToken = null;
-const saving = new Set();
-
-async function api(url, options) {
-  const response = await fetch(url, {
-    headers: { "Content-Type": "application/json", Accept: "application/json" },
-    ...options
-  });
-  const text = await response.text();
-  let body;
-  try { body = text ? JSON.parse(text) : {}; }
-  catch { body = { error: text || "Unexpected " + response.status + " response." }; }
-  if (!response.ok) throw Object.assign(new Error(body.error || "Request failed"), { status: response.status });
+const visualContent = document.querySelector('#visual-content');
+const visualHeadingTools = document.querySelector('.visual-heading-tools');
+let stage=null, state=null, questionIndex=0, previewMode='captured';
+let viewportController=null, floatController=null, contrastController=null, historyToken=null;
+let returnFocus=null, background=[];
+const sessions = new Map();
+const draftKey = id => 'relay.qa.draft.v1.' + id;
+async function api(url, options = {}) {
+  const response=await fetch(url,{headers:{'Content-Type':'application/json',Accept:'application/json'},signal:AbortSignal.timeout(15000),...options});
+  const text=await response.text(); let body;
+  try { body=text ? JSON.parse(text) : {}; } catch { body={error:'Unexpected response.'}; }
+  if (!response.ok) throw new Error(body.error || 'Request failed (' + response.status + ').');
   return body;
 }
-
 function selectedEvidenceId() {
   const active = visualContent && visualContent.querySelector("[data-evidence-id].active");
   if (active && active.dataset.evidenceId) return active.dataset.evidenceId;
@@ -73,234 +63,141 @@ if (visualContent) {
 document.addEventListener("click", function () { setTimeout(syncLaunch, 0); });
 syncLaunch();
 
-function buildStage() {
-  const node = document.createElement("section");
-  node.className = "qa-stage";
-  node.setAttribute("aria-label", "Inspector review");
-  node.innerHTML =
-    '<div class="qa-preview">' + loadingMarkup("preview", "Loading review surface") + '</div>' +
-    '<button type="button" class="qa-exit" aria-label="Exit full screen review">Back</button>' +
-    '<aside class="qa-companion" role="dialog" aria-label="Inspector questions">' +
-      '<div class="qa-review-loading">Loading review…</div>' +
-    '</aside>';
-  document.body.appendChild(node);
-  document.body.classList.add("qa-open");
 
-  let exitTimer = null;
-  node.addEventListener("pointermove", event => {
-    const nearCorner = event.clientX <= 88 && event.clientY <= 88;
-    if (nearCorner) {
-      clearTimeout(exitTimer);
-      node.classList.add("qa-exit-visible");
-    } else if (node.classList.contains("qa-exit-visible")) {
-      clearTimeout(exitTimer);
-      exitTimer = setTimeout(() => node.classList.remove("qa-exit-visible"), 700);
-    }
+function buildStage() {
+  const node=document.createElement('section');
+  node.className='qa-stage'; node.setAttribute('role','dialog'); node.setAttribute('aria-modal','true'); node.setAttribute('aria-label','Inspector review');
+  node.innerHTML='<div class="qa-preview">' + loadingMarkup('preview','Loading review surface') + '</div>' +
+    '<button type="button" class="qa-exit">Exit review</button>' +
+    '<label class="qa-preview-picker"><span>Preview</span><select aria-label="Preview mode" disabled><option>Loading…</option></select></label>' +
+    '<span class="qa-preview-state" role="status"></span>' +
+    '<button type="button" class="qa-panel-toggle" aria-expanded="true">Hide questions</button>' +
+    '<aside class="qa-companion" aria-label="Review questions"><div class="qa-review-loading">Loading review…</div></aside>';
+  returnFocus=document.activeElement;
+  background=Array.from(document.body.children).map(element=>({element,inert:element.inert}));
+  background.forEach(({element})=>element.inert=true);
+  document.body.append(node);document.body.classList.add('qa-open');
+  node.querySelector('.qa-exit').addEventListener('click',()=>closeQa());
+  node.querySelector('.qa-preview-picker select').addEventListener('change',event=>setView(event.target.value));
+  node.querySelector('.qa-panel-toggle').addEventListener('click',event=>{
+    const panel=node.querySelector('.qa-companion');panel.hidden=!panel.hidden;
+    event.currentTarget.textContent=panel.hidden ? 'Show questions' : 'Hide questions';
+    event.currentTarget.setAttribute('aria-expanded',String(!panel.hidden));
+    if (!panel.hidden) requestAnimationFrame(()=>{floatController?.restore();floatController?.refresh();});
   });
-  node.querySelector(".qa-exit").addEventListener("click", () => closeQa());
+  node.querySelector('.qa-exit').focus();
   return node;
 }
-
-function pushQaHistory(evidenceId) {
-  historyToken = "relay-qa-" + Date.now().toString(36);
-  history.pushState({ ...(history.state || {}), relayQaToken: historyToken, evidenceId }, "", location.href);
+function persistDraft(s) {
+  try { sessionStorage.setItem(draftKey(s.evidence.evidence_id),JSON.stringify({review:s.review}));s.draftAvailable=true; }
+  catch { s.draftAvailable=false; }
 }
-
-function deriveOverall(review, questions) {
-  if (!questions.length) return review.overall || null;
-  const answers = questions.map(question => review.answers?.[question.id]);
-  if (answers.some(answer => answer === "no")) return "needs_work";
-  if (answers.every(answer => answer === "yes")) return "looks_good";
-  return null;
+function setSaveState(s, status, error='') {
+  s.saveStatus=status;s.saveError=error;
+  if (state!==s || !stage) return;
+  const output=stage.querySelector('[data-qa-save-state]');
+  const labels={unsaved:'Not saved yet',saving:'Saving…',saved:'Saved',failed:'Save failed. Your responses are still here.'};
+  if(output){output.textContent=labels[status] || status;output.dataset.state=status;if(error)output.textContent+=' '+error;if(s.dirty && s.draftAvailable===false)output.textContent+=' Reload recovery is unavailable in this browser. Keep this review open until saved.';}
+  const retry=stage.querySelector('[data-qa-retry]');if(retry)retry.hidden=status!=='failed';
 }
-
-function edited() {
-  state.revision += 1;
-  state.dirty = true;
-  state.saved = false;
-}
-
+function edited() { state.revision++;state.dirty=true;persistDraft(state);setSaveState(state,'saving'); }
 function handlers() {
   return {
-    answer(id, answer) {
-      edited();
-      if (!state.review.answers) state.review.answers = {};
-      state.review.answers[id] = answer;
-      state.review.overall = deriveOverall(state.review, state.questions || []);
-      repaintPanel();
-      queueSave(80);
-      if (questionIndex < (state.questions || []).length - 1) {
-        setTimeout(function () {
-          if (!stage || !state) return;
-          questionIndex += 1;
-          repaintPanel();
-        }, 180);
-      }
-    },
-    notes(notes) {
-      edited();
-      state.review.notes = notes;
-      queueSave(650);
-    }
+    answer(id,answer){edited();state.review.answers={...(state.review.answers||{}),[id]:answer};state.review.overall=null;persistDraft(state);repaintPanel('[data-qa-answer="'+answer+'"]');queueSave(100);},
+    notes(notes){state.humanNotes=notes;state.review.notes=joinReviewNotes(state.noteParts.prefix,notes);edited();queueSave(650);},
+    overall(value){state.review.overall=value;edited();repaintPanel('[data-qa-overall="'+value+'"]');queueSave(100);},
+    navigate(direction){questionIndex=Math.max(0,Math.min((state.questions||[]).length-1,questionIndex+direction));repaintPanel('.qa-question');},
+    retry(){void saveReview(state);},
+    async finish(){const active=state;const success=await saveReview(active);if(success && state===active){publishNotification({id:'qa:saved:'+active.evidence.evidence_id,feature:'inspector',project:active.evidence.context?.project||'',title:'Review saved',message:'Your answers, overall review and notes were saved.',severity:'info',href:'/inspector#review?evidence='+encodeURIComponent(active.evidence.evidence_id),action:'Open review'});closeQa();}}
   };
 }
-
-function repaintPanel() {
-  if (!stage || !state) return;
-  renderQaPanel(stage, state, questionIndex, handlers());
-  requestAnimationFrame(() => floatController?.refresh());
+function repaintPanel(focusSelector) {
+  if(!stage||!state)return;
+  renderQaPanel(stage,state,questionIndex,handlers());setSaveState(state,state.saveStatus,state.saveError);
+  if(focusSelector){const target=stage.querySelector(focusSelector);if(target){if(!target.matches('button,input,textarea'))target.tabIndex=-1;target.focus();}}
+  requestAnimationFrame(()=>{if(!stage?.querySelector('.qa-companion').hidden)floatController?.refresh();});
 }
-
 function setView(mode) {
-  viewportController?.destroy();
-  previewMode = renderQaPreview(stage, state, mode);
-  viewportController = createQaViewport(stage, { mode: previewMode });
+  if(!stage||!state)return;
+  viewportController?.destroy();previewMode=renderQaPreview(stage,state,mode);
+  viewportController=createQaViewport(stage,{mode:previewMode});
+  const select=stage.querySelector('.qa-preview-picker select'),canLive=Boolean(state.live?.active&&state.live?.embeddable&&state.live?.url);
+  select.innerHTML='<option value="captured">Captured</option>'+(state.evidence.video_url?'<option value="video">Recording</option>':'')+'<option value="live" '+(!canLive?'disabled':'')+'>'+(canLive?'Live':'Live unavailable')+'</option>';
+  select.value=previewMode;select.disabled=false;
+  stage.querySelector('.qa-preview-state').textContent=previewMode==='live'?'Live preview':previewMode==='video'?'Recorded evidence':'Captured evidence'+(!canLive?' · live preview unavailable':'');
+  const frame=stage.querySelector('[data-qa-live-preview]');
+  frame?.addEventListener('error',()=>{if(!stage)return;state.live={active:false,embeddable:false};setView('captured');stage.querySelector('.qa-preview-state').textContent='Live preview could not load · showing captured evidence';},{once:true});
 }
-
-function initialQuestionIndex() {
-  const questions = state.questions || [];
-  const index = questions.findIndex(question => !state.review.answers?.[question.id]);
-  return index >= 0 ? index : Math.max(0, questions.length - 1);
-}
-
 export async function openQa(evidenceId) {
-  if (stage) closeQa({ popHistory: false });
-  stage = buildStage();
-  pushQaHistory(evidenceId);
-
-  const openingStage = stage;
+  if(stage)closeQa({popHistory:false});
+  stage=buildStage();historyToken='relay-qa-'+Date.now().toString(36);history.pushState({...history.state,relayQaToken:historyToken,evidenceId},'',location.href);
+  const openingStage=stage;
   try {
-    const results = await Promise.all([
-      api("/api/visual/" + encodeURIComponent(evidenceId) + "/qa"),
-      api("/api/visual/" + encodeURIComponent(evidenceId) + "/live")
-    ]);
-    if (stage !== openingStage) return;
-
-    state = {
-      evidence: results[0].evidence,
-      questions: results[0].questions || [],
-      review: results[0].review || { answers: {}, notes: "", overall: null },
-      live: results[1].live || {},
-      saved: Boolean(results[0].review?.updated_at),
-      dirty: false,
-      revision: 0
-    };
-
-    questionIndex = initialQuestionIndex();
-    previewMode = state.live.active && state.live.embeddable
-      ? "live"
-      : state.evidence?.video_url
-        ? "video"
-        : "captured";
-
-    setView(previewMode);
-    repaintPanel();
-
-    contrastController = createQaContrast(stage);
-    floatController = createQaFloat(stage, {
-      onDockChange(edge) { void contrastController?.update(edge); }
-    });
-    requestAnimationFrame(() => floatController?.refresh());
-  } catch (error) {
-    if (stage !== openingStage) return;
-    stage.querySelector(".qa-preview").innerHTML =
-      '<div class="qa-surface-error">QA could not open: ' + qaEscape(error.message) + '</div>';
-    stage.querySelector(".qa-companion").innerHTML =
-      '<div class="qa-review-head"><div class="qa-review-progress"><span class="qa-review-dot"></span><span>Review</span></div></div>' +
-      '<section class="qa-question-card"><h2 class="qa-question">Could not open this review.</h2>' +
-      '<p class="qa-question-reason">' + qaEscape(error.message) + '</p></section>';
-    contrastController = createQaContrast(stage);
-    floatController = createQaFloat(stage, {
-      onDockChange(edge) { void contrastController?.update(edge); }
-    });
+    const [payload,livePayload]=await Promise.all([api('/api/visual/'+encodeURIComponent(evidenceId)+'/qa'),api('/api/visual/'+encodeURIComponent(evidenceId)+'/live').catch(()=>({live:{active:false,embeddable:false}}))]);
+    if(stage!==openingStage)return;
+    const pending=sessions.get(evidenceId);
+    let draft=null;try{draft=JSON.parse(sessionStorage.getItem(draftKey(evidenceId))||'null');}catch{}
+    state=pending?.dirty||pending?.promise ? pending : {evidence:payload.evidence,questions:payload.questions||[],review:draft?.review||payload.review||{answers:{},notes:'',overall:null},revision:0,dirty:Boolean(draft),saveStatus:draft?'failed':payload.review?.updated_at?'saved':'unsaved',saveError:draft?'Recovered unsaved responses. Retry to save them.':'',timer:null,promise:null};
+    state.evidence=payload.evidence;state.questions=payload.questions||[];state.live=livePayload.live||{};
+    state.noteParts=splitReviewNotes(state.review.notes||'');state.humanNotes=state.noteParts.notes;
+    sessions.set(evidenceId,state);
+    const unanswered=state.questions.findIndex(question=>!state.review.answers?.[question.id]);questionIndex=unanswered>=0?unanswered:Math.max(0,state.questions.length-1);
+    previewMode=state.live.active&&state.live.embeddable&&state.live.url?'live':state.evidence.video_url?'video':'captured';
+    setView(previewMode);repaintPanel();
+    contrastController=createQaContrast(stage);floatController=createQaFloat(stage,{onDockChange(edge){void contrastController?.update(edge);}});
+    requestAnimationFrame(()=>floatController?.refresh());
+  } catch(error) {
+    if(stage!==openingStage)return;
+    stage.querySelector('.qa-preview').innerHTML='<div class="qa-surface-error">Could not open this review. '+qaEscape(error.message)+'</div>';
+    stage.querySelector('.qa-companion').innerHTML='<h2 class="qa-question">Could not open this review.</h2><p>'+qaEscape(error.message)+'</p>';
+    publishNotification({id:'qa:open:'+evidenceId,feature:'inspector',title:'Review unavailable',message:'This review could not load. Try opening it again.',severity:'warning',href:'/inspector#review?evidence='+encodeURIComponent(evidenceId),action:'Open review'});
   }
 }
-
-function queueSave(delay) {
-  if (saveTimer) clearTimeout(saveTimer);
-  saveTimer = setTimeout(saveReview, delay || 500);
-  const message = stage?.querySelector("[data-qa-save-state]");
-  if (message) message.textContent = "Saving…";
+function queueSave(delay=500) {const active=state;clearTimeout(active.timer);active.timer=setTimeout(()=>saveReview(active),delay);setSaveState(active,'saving');}
+async function saveReview(active=state) {
+  if(!active?.evidence)return false;
+  clearTimeout(active.timer);active.timer=null;
+  if(active.promise){active.saveAgain=true;return active.promise;}
+  if(!active.dirty)return true;
+  active.promise=(async()=>{
+    do {
+      active.saveAgain=false;const revision=active.revision;
+      const review={answers:{...(active.review.answers||{})},notes:active.review.notes||'',overall:active.review.overall||null,disposition:active.review.disposition||null};
+      setSaveState(active,'saving');
+      try {
+        const payload=await api('/api/visual/'+encodeURIComponent(active.evidence.evidence_id)+'/qa',{method:'POST',body:JSON.stringify(review)});
+        if(!payload.review?.updated_at)throw new Error('The server did not confirm this save.');
+        if(active.revision===revision){active.review.updated_at=payload.review.updated_at;active.dirty=false;try{sessionStorage.removeItem(draftKey(active.evidence.evidence_id));}catch{}setSaveState(active,'saved');resolveNotification('qa:save:'+active.evidence.evidence_id);}
+        else active.saveAgain=true;
+      } catch(error) {
+        persistDraft(active);setSaveState(active,'failed',error.message);
+        publishNotification({id:'qa:save:'+active.evidence.evidence_id,feature:'inspector',project:active.evidence.context?.project||'',title:'Review was not saved',message:'Your responses are still here. Open the review and retry saving.',severity:'error',href:'/inspector#review?evidence='+encodeURIComponent(active.evidence.evidence_id),action:'Retry in review'});
+        return false;
+      }
+    } while(active.saveAgain&&active.dirty);
+    return !active.dirty;
+  })();
+  try{return await active.promise;}finally{active.promise=null;}
 }
-
-async function saveReview(snapshot = null) {
-  const activeState = snapshot || state;
-  if (!activeState?.evidence) return;
-  if (saveTimer) {
-    clearTimeout(saveTimer);
-    saveTimer = null;
-  }
-
-  if (saving.has(activeState)) {
-    activeState.saveAgain = true;
-    return;
-  }
-
-  saving.add(activeState);
-  const revision = activeState.revision;
-  const evidenceId = activeState.evidence.evidence_id;
-  const review = {
-    answers: { ...(activeState.review.answers || {}) },
-    notes: activeState.review.notes || "",
-    overall: deriveOverall(activeState.review, activeState.questions || []),
-    disposition: activeState.review.disposition || null
-  };
-  const message = stage?.querySelector("[data-qa-save-state]");
-  if (message) message.textContent = "Saving…";
-
-  try {
-    const payload = await api(
-      "/api/visual/" + encodeURIComponent(evidenceId) + "/qa",
-      { method: "POST", body: JSON.stringify(review) }
-    );
-
-    if (state === activeState && activeState.revision === revision) {
-      state.review = payload.review;
-      state.saved = true;
-      state.dirty = false;
-    }
-    if (message?.isConnected && activeState.revision === revision) message.textContent = "Saved";
-  } catch (error) {
-    if (message?.isConnected) message.textContent = "Could not save · " + error.message;
-  } finally {
-    saving.delete(activeState);
-    if (activeState.saveAgain) {
-      activeState.saveAgain = false;
-      setTimeout(() => saveReview(activeState), 80);
-    }
-  }
+function closeQa({popHistory=true}={}) {
+  const token=historyToken,active=state;
+  if(active?.dirty)void saveReview(active);
+  viewportController?.destroy();floatController?.destroy();contrastController?.destroy();
+  viewportController=floatController=contrastController=null;
+  stage?.remove();stage=null;state=null;historyToken=null;document.body.classList.remove('qa-open');
+  background.forEach(({element,inert})=>element.inert=inert);background=[];
+  if(returnFocus?.isConnected)returnFocus.focus();returnFocus=null;
+  if(popHistory&&token&&history.state?.relayQaToken===token)history.back();
 }
-
-function teardownQa() {
-  const activeState = state;
-  if (saveTimer) {
-    clearTimeout(saveTimer);
-    saveTimer = null;
-    if (activeState) void saveReview(activeState);
+window.addEventListener('popstate',()=>{if(stage)closeQa({popHistory:false});});
+window.addEventListener('keydown',event=>{
+  if(!stage)return;
+  if(event.key==='Escape'){event.preventDefault();event.stopPropagation();closeQa();}
+  if(event.key==='Tab'){
+    const nodes=Array.from(stage.querySelectorAll('button:not(:disabled),select:not(:disabled),textarea,a[href]')).filter(node=>!node.closest('[hidden]'));
+    if(!nodes.length)return;
+    if(event.shiftKey&&document.activeElement===nodes[0]){event.preventDefault();nodes.at(-1).focus();}
+    else if(!event.shiftKey&&document.activeElement===nodes.at(-1)){event.preventDefault();nodes[0].focus();}
   }
-  viewportController?.destroy();
-  floatController?.destroy();
-  contrastController?.destroy();
-  viewportController = null;
-  floatController = null;
-  contrastController = null;
-  stage?.remove();
-  stage = null;
-  state = null;
-  document.body.classList.remove("qa-open");
-}
-
-function closeQa({ popHistory = true } = {}) {
-  const token = historyToken;
-  teardownQa();
-  historyToken = null;
-  if (popHistory && token && history.state?.relayQaToken === token) history.back();
-}
-
-window.addEventListener("popstate", function () {
-  if (stage) closeQa({ popHistory: false });
 });
-
-window.addEventListener("keydown", function (event) {
-  if (stage && event.key === "Escape") closeQa();
-});
+window.addEventListener('pagehide',()=>{if(state?.dirty)persistDraft(state);});
