@@ -179,7 +179,8 @@ function openProject(id) {
   location.hash = "projects?project=" + encodeURIComponent(id);
 }
 
-async function openSettings() {
+async function openSettings(event) {
+  event?.preventDefault();
   const href = "https://chatgpt.com/settings/plugins-settings/plugin_asdk_app_6abe234861d881919e30db65d656492f";
   try {
     if (window.openai?.openExternal) await window.openai.openExternal({ href });

@@ -353,7 +353,7 @@ test("preserved legacy components and Inspector review support mobile, deep link
       await view.locator(".presentation-menu > summary").click();
       await view.getByRole("button", { name: "Switch to dark mode", exact: true }).click();
       assert.equal(await view.locator("html").getAttribute("data-theme"), "dark");
-      await view.locator("#app-settings").evaluate(node => { window.open = href => { window.__testExternal = href; }; node.click(); });
+      assert.equal(await view.locator("#app-settings").evaluate(node => { window.open = href => { window.__testExternal = href; }; const event = new MouseEvent("click", { bubbles: true, cancelable: true }); node.dispatchEvent(event); return event.defaultPrevented; }), true, "Inspector opens settings once through its existing host-aware handler");
       assert.equal(await view.locator("body").evaluate(() => window.__testExternal), "https://chatgpt.com/settings/plugins-settings/plugin_asdk_app_6abe234861d881919e30db65d656492f");
       assert.equal(await view.locator("#app-settings .glyph-refresh").count(), 1);
       assert.equal(await view.locator("#app-settings .relay-glyph").evaluate(node => getComputedStyle(node).width), "18px");
