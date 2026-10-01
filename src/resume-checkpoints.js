@@ -77,6 +77,8 @@ function checkpointCore({ project, assignment, progress, changedPaths, changedPa
       category: assignment?.category || null,
       labels: Array.isArray(assignment?.labels) ? assignment.labels : [],
       tags: Array.isArray(assignment?.tags) ? assignment.tags : [],
+      primary_team: assignment?.primary_team || null,
+      supporting_teams: assignment?.supporting_teams || [],
       primary_staff: assignment?.primary_staff || null,
       supporting_staff: Array.isArray(assignment?.supporting_staff) ? assignment.supporting_staff : [],
       primary_role: assignment?.primary_role || null,

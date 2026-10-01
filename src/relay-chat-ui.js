@@ -1,5 +1,5 @@
 import { STAFF } from './staff-registry.js';
-export const RELAY_CONTEXT_CARD_URI = 'ui://relay/context-card/v3.html';
+export const RELAY_CONTEXT_CARD_URI = 'ui://relay/context-card/v4.html';
 const CONTROL_URI = 'ui://relay/control-center/v2.html';
 const DIRECTORY = Object.fromEntries(STAFF.map(p => [p.id, p.display_name]));
 const CONTEXTUAL_TOOLS = new Set([
@@ -32,7 +32,7 @@ export function contextCardModel(data = {}, directory = DIRECTORY) {
   const name = id => directory[id] || 'Unassigned staff';
   const primary = human.responsible_staff?.display_name || (first.primary_staff ? name(first.primary_staff) : data.primary_staff ? name(data.primary_staff) : 'Relay');
   const supporting = human.supporting_staff?.map(x=>x.display_name) || (first.supporting_staff || data.supporting_staff || []).map(name);
-  const team = primary + (supporting.length ? ' with ' + supporting.join(', ') : '');
+  const team = (first.primary_team ? first.primary_team+" · " : "") + primary + (supporting.length ? ' with ' + supporting.join(', ') : '');
   const status = data.ok === false || data.isError ? 'blocked' : first.state || data.state || checkpoint.state || (human.health === 'blocked' ? 'blocked' : 'recorded');
   const error = typeof data.error === 'string' ? data.error : data.error?.message;
   const checks = Array.isArray(data.checks?.check_runs) ? data.checks.check_runs : Array.isArray(data.check_runs) ? data.check_runs : null;

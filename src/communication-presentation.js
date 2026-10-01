@@ -43,6 +43,8 @@ export function shapeCommunicationResult({
   const human=Object.freeze({
     health,
     outcome:bounded(outcome,"outcome",700),
+    primary_team:assignment?.primary_team||null,
+    supporting_teams:assignment?.supporting_teams||[],
     responsible_staff:assignment ? assignmentStaffView(assignment).primary_staff : staffView(staff_id),
     supporting_staff:assignment ? assignmentStaffView(assignment).supporting_staff : [],
     what_changed:what_changed==null?null:bounded(what_changed,"what_changed",700),

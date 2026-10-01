@@ -1,3 +1,4 @@
+import { TEAMS, staffTeamMetadata, normalizeAssignmentTeams } from './team-registry.js';
 export const STAFF_REGISTRY_VERSION = "1.0";
 
 export const STAFF_POLICY = Object.freeze({
@@ -14,6 +15,7 @@ const p = (voice, temperament, collaboration, humor_tolerance, strengths, quirks
 const s = (id, display_name, status, role, title, role_affinities, subnets, subsystems, personality, extra = {}) =>
   Object.freeze({
     id, display_name, status,
+    ...staffTeamMetadata(id),
     role: Object.freeze({ id: role, title }),
     role_affinities: Object.freeze([...role_affinities]),
     subnets: Object.freeze([...subnets]),
@@ -195,10 +197,11 @@ validateStaffRegistry(STAFF);
 export const staffDirectoryTool = Object.freeze({
   name: "relay_staff_directory",
   title: "Read Relay staff directory",
-  description: "Read the canonical sticky Relay staff identities, roles, subnets and presentation profiles. Staff identity never grants authorization; Runner owner ids remain canonical.",
+  description: "Read the canonical sticky Relay staff identities, roles, home teams and presentation profiles. Supply project to include live assignment bindings from canonical Runner state. Staff identity never grants authorization; Runner owner ids remain canonical.",
   inputSchema: {
     type: "object",
     properties: {
+      project: { type: "string", pattern: "^[a-z0-9][a-z0-9-]*$", maxLength: 80 },
       staff: { type: "string", minLength: 1, maxLength: 80 },
       status: { type: "string", enum: ["active","reserve","retired"] },
       subnet: { type: "string", minLength: 1, maxLength: 64 },
@@ -212,8 +215,9 @@ export const staffDirectoryTool = Object.freeze({
 
 export function validateStaffDirectoryArguments(args = {}) {
   if (!args || typeof args !== "object" || Array.isArray(args)) throw new Error("Staff directory arguments must be an object.");
-  const allowed = new Set(["staff","status","subnet","role","include_retired"]);
+  const allowed = new Set(["staff","status","subnet","role","include_retired","project"]);
   for (const key of Object.keys(args)) if (!allowed.has(key)) throw new Error(`Unsupported staff directory argument: ${key}`);
+  if (args.project !== undefined && (typeof args.project!=="string"||!/^[a-z0-9][a-z0-9-]{0,79}$/.test(args.project))) throw new Error("Invalid staff directory project.");
   if (args.status && !["active","reserve","retired"].includes(args.status)) throw new Error("Unsupported staff status.");
   for (const key of ["staff","subnet","role"]) {
     if (args[key] !== undefined && (typeof args[key] !== "string" || !args[key].trim() || args[key].length > 80)) {
@@ -224,7 +228,7 @@ export function validateStaffDirectoryArguments(args = {}) {
   return args;
 }
 
-export function callStaffDirectory(args = {}, registry = STAFF) {
+export function callStaffDirectory(args = {}, registry = STAFF, assignments = []) {
   validateStaffDirectoryArguments(args);
   validateStaffRegistry(registry);
   if (args.staff) {
@@ -232,7 +236,7 @@ export function callStaffDirectory(args = {}, registry = STAFF) {
     if (!person || (person.status === "retired" && !args.include_retired)) {
       return { ok: true, namespace: "relay.STAFF", version: STAFF_REGISTRY_VERSION, staff: null };
     }
-    return { ok: true, namespace: "relay.STAFF", version: STAFF_REGISTRY_VERSION, policy: STAFF_POLICY, staff: person };
+    return { ok: true, namespace: "relay.STAFF", version: STAFF_REGISTRY_VERSION, policy: STAFF_POLICY, teams:TEAMS, staff: withBindings(person, assignments) };
   }
   const staff = listStaff({
     status: args.status,
@@ -250,8 +254,12 @@ export function callStaffDirectory(args = {}, registry = STAFF) {
       reserve: staff.filter(person => person.status === "reserve").length,
       retired: staff.filter(person => person.status === "retired").length
     },
-    staff
+    teams:TEAMS,
+    staff:staff.map(person=>withBindings(person,assignments))
   };
+}
+function withBindings(person, assignments) {
+  return {...person,assignment_bindings:assignments.filter(a=>a.state!=='completed'&&(a.primary_staff===person.id||a.supporting_staff?.includes(person.id))).map(a=>({id:a.id,owner:a.owner,branch:a.branch,state:a.state,primary_team:a.primary_team||null,supporting_teams:a.supporting_teams||[],participation:a.primary_staff===person.id?'primary':'supporting'}))};
 }
 
 // Routing metadata never participates in owner, scope or authorization checks.
@@ -261,6 +269,8 @@ export function staffMatchesRole(person, role) {
   return !key || person.role.id === key || person.role_affinities.includes(key);
 }
 export function normalizeAssignmentStaff(input = {}, registry = STAFF) {
+  const explicitPerson=input.primary_staff ? getStaff(input.primary_staff,registry) : null;
+  const teams=normalizeAssignmentTeams({...input,...(input.primary_team===undefined&&explicitPerson?.home_team?{primary_team:explicitPerson.home_team}:{})});
   const resolve = (ref, role) => {
     const person = getStaff(ref, registry);
     if (!person) throw new Error(`Unknown assignment staff: ${ref}`);
@@ -268,13 +278,13 @@ export function normalizeAssignmentStaff(input = {}, registry = STAFF) {
     if (!staffMatchesRole(person, role)) throw new Error(`Staff ${person.id} is incompatible with role ${role}`);
     return person.id;
   };
-  const automatic = role => registry.find(p => p.status === "active" && staffMatchesRole(p, role))?.id || null;
+  const automatic = (role, allowedTeams) => registry.find(p => p.status === "active" && staffMatchesRole(p, role) && (!allowedTeams.length || allowedTeams.some(team=>p.team_memberships?.includes(team))))?.id || null;
   const primary = input.primary_staff === undefined
-    ? automatic(input.primary_role || ROLE_ALIASES[input.category] || "coordinator")
+    ? automatic(input.primary_role || ROLE_ALIASES[input.category] || (teams.primary_team==='inspector'?'art-director':teams.primary_team==='runner'?'builder':null), teams.primary_team?[teams.primary_team]:[])
     : input.primary_staff === null ? null : resolve(input.primary_staff, input.primary_role);
   let supporting;
   if (input.supporting_staff === undefined) {
-    supporting = [...new Set((input.supporting_roles || []).map(automatic).filter(id => id && id !== primary))];
+    supporting = [...new Set((input.supporting_roles || []).map(role=>automatic(role,[teams.primary_team,...teams.supporting_teams].filter(Boolean))).filter(id => id && id !== primary))];
   } else {
     if (!Array.isArray(input.supporting_staff) || input.supporting_staff.length > 8) throw new Error("Supporting staff must be a bounded array.");
     supporting = input.supporting_staff.map(ref => resolve(ref));
@@ -282,13 +292,13 @@ export function normalizeAssignmentStaff(input = {}, registry = STAFF) {
     const roles = input.supporting_roles || [];
     if (roles.length && supporting.some(id => !roles.some(role => staffMatchesRole(getStaff(id, registry), role)))) throw new Error("Supporting staff is incompatible with supporting roles.");
   }
-  return { primary_staff: primary, supporting_staff: supporting };
+  return { ...teams, primary_staff: primary, supporting_staff: supporting };
 }
 export function assignmentStaffView(assignment = {}, registry = STAFF) {
   const view = ref => {
     const person = getStaff(ref, registry);
-    return person ? { id: person.id, display_name: person.display_name, role: person.role.title, status: person.status } : null;
+    return person ? { id: person.id, display_name: person.display_name, role: person.role.title, status: person.status,home_team:person.home_team } : null;
   };
   // Reads never manufacture durable bindings for legacy records.
-  return { primary_staff: view(assignment.primary_staff), supporting_staff: (assignment.supporting_staff || []).map(view).filter(Boolean) };
+  return { primary_team:assignment.primary_team||null,supporting_teams:assignment.supporting_teams||[],primary_staff: view(assignment.primary_staff), supporting_staff: (assignment.supporting_staff || []).map(view).filter(Boolean) };
 }

@@ -1,7 +1,7 @@
 import { githubApiRequest } from './source.js';
 import { transition, evaluate, occupying, normalizeScope } from './coordination-engine.js';
 
-export const RUNNER_ENGINE_SHA = 'd124bb032f464260e2b8b8548a4d95ff8c11eee1';
+export const RUNNER_ENGINE_SHA = '21265cd09e4cc0e120be2e8f23676ce0053ee785';
 export const DEFAULT_RUNNER_CONTROL_REPOSITORY = 'lrnolivia/relay';
 
 export class ControlError extends Error {
@@ -153,9 +153,9 @@ async function mutate(api, control, controlRepository, context, args) {
   }
 
   const allowed = {
-    queue: ['id', 'owner', 'paths', 'resources', 'goal', 'acceptance', 'next_action', 'task_class', 'ledger_refs', 'category', 'labels', 'tags', 'primary_role', 'supporting_roles', 'primary_staff', 'supporting_staff'],
-    claim: ['id', 'owner', 'branch', 'paths', 'resources', 'goal', 'acceptance', 'next_action', 'task_class', 'ledger_refs', 'category', 'labels', 'tags', 'primary_role', 'supporting_roles', 'primary_staff', 'supporting_staff'],
-    amend: ['id', 'owner', 'paths', 'resources', 'goal', 'acceptance', 'next_action', 'task_class', 'ledger_refs', 'category', 'labels', 'tags', 'primary_role', 'supporting_roles', 'primary_staff', 'supporting_staff', 'reason'],
+    queue: ['id', 'owner', 'paths', 'resources', 'goal', 'acceptance', 'next_action', 'task_class', 'ledger_refs', 'category', 'labels', 'tags', 'primary_role', 'supporting_roles', 'primary_staff', 'supporting_staff', 'primary_team', 'supporting_teams'],
+    claim: ['id', 'owner', 'branch', 'paths', 'resources', 'goal', 'acceptance', 'next_action', 'task_class', 'ledger_refs', 'category', 'labels', 'tags', 'primary_role', 'supporting_roles', 'primary_staff', 'supporting_staff', 'primary_team', 'supporting_teams'],
+    amend: ['id', 'owner', 'paths', 'resources', 'goal', 'acceptance', 'next_action', 'task_class', 'ledger_refs', 'category', 'labels', 'tags', 'primary_role', 'supporting_roles', 'primary_staff', 'supporting_staff', 'primary_team', 'supporting_teams', 'reason'],
     rescope: ['id', 'owner', 'paths', 'resources', 'next_action'],
     heartbeat: ['id', 'owner', 'next_action'],
     hold: ['id', 'owner', 'next_action'],

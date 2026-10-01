@@ -197,6 +197,39 @@
             "type": "string",
             "minLength": 2,
             "maxLength": 240
+          },
+          "home_team": {
+            "type": [
+              "string",
+              "null"
+            ],
+            "enum": [
+              "inspector",
+              "runner",
+              "night-shift",
+              "source",
+              "cloud",
+              "release",
+              "skills",
+              null
+            ]
+          },
+          "team_memberships": {
+            "type": "array",
+            "maxItems": 7,
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "inspector",
+                "runner",
+                "night-shift",
+                "source",
+                "cloud",
+                "release",
+                "skills"
+              ]
+            }
           }
         }
       }
