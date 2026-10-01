@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T23:17:52.314Z",
+  "updated_at": "2026-10-01T23:22:05.616Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6843,6 +6843,44 @@
       "supporting_staff": [],
       "state": "claimed",
       "created_at": "2026-10-01T22:25:31.299Z"
+    },
+    {
+      "id": "relay-mcp-feedback-routing-20261001",
+      "owner": "01a0f914-aad0-71e4-8f0c-20c1bf0a2016",
+      "goal": "Authenticated durable assignment-bound text feedback using the existing QA journal, with read-only queries and explicit acknowledgement. Continue full MCP rebuild while preserving unresolved cross-client card proof.",
+      "acceptance": "Implement approved 16-file storage/explicit-ack iteration: four typed feedback tools, canonical routing/artifact checks, idempotent conditional writes, bounded pagination, no read-triggered ACK, pending feedback in explicit resume, legacy compatibility, all original capabilities/resources retained. No live feedback events/ACK outside fixtures; no claim that queueing wakes native Codex. Native push remains unverified; visual-review/event dual-write repair remains an explicit follow-up. Carry ALL outstanding PR112/PR110 card criteria: original ordinary Mac and Safari display unresolved; iOS original action pending; Work original action timed out; new action comparison actual Work/iOS/Safari all NOT RUN; same-build/app/tool client identity and host evidence required, local fixtures never native proof. PR112 merged/released and original five screenshots retained. Draft PR, exact-head CI/admission and independent review; serialized release clearance from Julian.",
+      "next_action": "Queue approved successor; verify held action-proof writer quiescence and branch absence, supersede via current CAS CLI preserving all evidence; then claim/preflight before code.",
+      "paths": [
+        "packages/runner/src/qa-feedback.mjs",
+        "packages/runner/test/qa-feedback.test.mjs",
+        "src/feedback-control.js",
+        "src/feedback-control.test.js",
+        "src/runner-control.js",
+        "src/runner-control.test.js",
+        "src/amendment-sync.js",
+        "src/amendment-sync.test.js",
+        "src/resume-checkpoints.js",
+        "src/resume-checkpoints.test.js",
+        "src/evidence.js",
+        "src/evidence.test.js",
+        "src/index.js",
+        "src/relay-host-probe.test.js",
+        "src/relay-entry.test.js",
+        "docs/relay/MCP_FEEDBACK_ROUTING_20261001.md"
+      ],
+      "resources": [
+        "relay-qa-feedback",
+        "runner-feedback-polling",
+        "runner-feedback-acknowledgement",
+        "relay-mcp-discovery-envelope"
+      ],
+      "category": "implementation",
+      "primary_team": "runner",
+      "supporting_teams": [],
+      "primary_staff": "ellis",
+      "supporting_staff": [],
+      "state": "queued",
+      "created_at": "2026-10-01T23:22:05.616Z"
     }
   ],
   "claims": [
