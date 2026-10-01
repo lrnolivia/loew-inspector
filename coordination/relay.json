@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T03:35:21.286Z",
+  "updated_at": "2026-10-01T03:44:17.507Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6050,7 +6050,7 @@
       ],
       "goal": "Finish canonical feature-team routing required by 1.9.7 creative skill resolution",
       "acceptance": "Add canonical assignment-level `primary_staff` plus bounded `supporting_staff` identity fields and expose them through Runner reads/resume/status without changing authorization. Resolve bindings deterministically from explicit override first, then assignment primary/supporting roles, category, labels/tags, resources, subsystem/subnet fit and canonical staff role affinities. Use only active approved staff; never invent names, reuse retired identities, or silently rename people. Persist bindings canonically so the same assignment resolves to the same people across chats, workers, resumes and UI. Explicit canonical amendment may reassign staff; automatic routing must preserve sticky identity and record why a binding changed. Staff may support multiple assignments; capacity is context for routing, not a hidden productivity score or authorization gate. The staff directory should surface live assignment bindings derived from canonical Runner state rather than remaining an empty presentation registry. Human-facing communication should use these bindings by default while retaining assignment/worker IDs underneath. Tests cover deterministic routing, explicit override, affinity ties, missing-fit fallback, retired/reserve exclusion, reassignment history, cross-session stickiness, staff-directory readback, resume/status projection and no authorization change. Feature-team layer: add a canonical lowercase team registry and assignment-level `primary_team` plus bounded `supporting_teams`. Routing order becomes assignment -> feature team -> role -> named staff. Initial canonical team ids are `inspector`, `runner`, `night-shift`, `source`, `cloud`, `release`, and `skills`; all user-facing team labels remain lowercase. Staff gain one sticky `home_team` plus optional team memberships so temporary cross-team work does not rewrite organizational identity. Initial home-team map: inspector = valentina, vivienne, margot, sabine, roman; runner = ellis, nico, adrian; night-shift = julian, naomi; source = rafael; cloud = gabriel; release = luca; skills = imani. Cross-team memberships support release/verification/integration/planning work without changing home team. Team routing uses explicit override first, then assignment category/roles/resources/subsystems and team affinities; staff resolution happens inside the selected team(s). Team identity is routing/presentation context only, never authorization.",
-      "next_action": "Implement canonical team/home-team routing in the declared integration paths; validate, exact-head publish and verify as the 1.9.7 prerequisite.",
+      "next_action": "USER PAUSE: usage is out; record checkpoint and stop. Retain wrap-up ownership through 1.9.9. Operational 1.9.6.2 completed and consumer-verified via PR75 merge 085d35ac00b57695b5089e78681504f7b7b8a6ee / Worker 54dafa9e-abf6-4ba9-abe1-1a1f8a2d675d / deployment c6f3bb27-0f53-4f14-92c6-4c1b787ef604. Current team prerequisite is clean, committed/pushed head 986be6d4f9f658dfd4aa410e9392cddad196d2e4 on relay/1.9.7-team-foundation-20261001 in /Users/lrnolivia/Repos/relay-wrapup; draft PR76. Full tests/build/preflight passed; CI test was in progress, admission success at last check. Not merged/deployed. NEW USER FEEDBACK: cards appeared in an old chat, are ugly and not truly transparent. Screenshot /var/folders/fp/nnkhn54j5m16sj4qkmppcq180000gn/T/codex-clipboard-1703bc5f-ca25-48b6-aa25-fc85da1575bc.jpg shows opaque gray wrapper, large bordered card, duplicate summary/next-action and stale instructions on Finished work. Rendering proof does not establish design acceptance. NEXT ON RESUME: re-read canonical state/checks; make embedded html/body/card genuinely transparent, tighten hierarchy/layout, remove duplicate/stale completed-work instructions; preserve explicit Open Relay and machine evidence. Repair is authorized but NOT implemented yet. Impeccable SKILL.md was read; setup context/playbook/craft-floor still needed before UI edits. Continue independent exact-head lifecycle for this team/card patch, then real 1.9.7 packs, 1.9.8 tool hardening, 1.9.9 native experience and final fresh-consumer closure; umbrella remains open. Rescope after handoff hit historical queue-owner mismatch; audited amend admitted integration paths safely. Do not restart or erase existing work.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-030",
@@ -6088,10 +6088,10 @@
         "roman"
       ],
       "base_sha": "fc80663333dd047facb3575af76b0c933e64dde1",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-10-01T03:34:00.700Z",
-      "updated_at": "2026-10-01T03:35:21.286Z",
-      "lease_until": "2026-10-01T15:35:21.286Z",
+      "updated_at": "2026-10-01T03:44:17.507Z",
+      "lease_until": "2026-10-01T15:44:17.507Z",
       "amendment_count": 1,
       "amendments": [
         {
