@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T07:36:51.397Z",
+  "updated_at": "2026-10-01T07:37:20.396Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -8717,7 +8717,8 @@
         "apps/web/test/react.test.mjs",
         "docs/relay/feedback/",
         "src/runner-control.js",
-        "src/runner-control.test.js"
+        "src/runner-control.test.js",
+        "src/resume-checkpoints.js"
       ],
       "resources": [
         "relay-2.0",
@@ -8745,7 +8746,7 @@
       ],
       "goal": "Ship the Relay 2.0 live React experience as the complete implementation lane for all discussed unowned release work: Today, Runner, night shift, shared card/signal-deck design, truthful telemetry/live progress, Inspector floating-QA polish, and the durable Inspector-to-worker feedback loop, while preserving the separate active ChatGPT inline-card clean-room lane.",
       "acceptance": "Relay 2.0 ships a Vite + React + TypeScript frontend boundary with ephemeral build output and the existing backend retained unless a bounded change is required. Momo Trust Display is the display/identity face for page titles, feature names and major card headings; Inter remains body/control/metadata type. Preserve lowercase feature identity, dark Terra Prime surfaces, chunky marks, rounded cards and no gradients. The corrected shared card family keeps a strong ~76px-scale mark, only modestly smaller feature name, tighter geometry, and no redundant small 'relay' eyebrow. Primary pages use a compact signal deck derived from that family: two cards side-by-side when space allows, horizontal pan/scroll-snap, restrained idle advance, pause on interaction, reduced-motion support, and no critical state hidden behind cycling. Today explains needs-you, moving, ready-to-review and freshness plus the most useful next action. Runner uses human-readable horizontal work cards with recognizable goals, plain-language state, responsible worker, next step, technical identity behind disclosure, and exact-work live progress views. Runner telemetry may include honest milestone-based percentage rings, bars, activity/milestone graphs, status/freshness lights and a latest-update ticker; numeric progress must expose its basis and never rise from elapsed time alone. Live progress shows meaningful timestamped updates, next milestone, blocker/request state, and explicit live/reconnecting/stale/offline semantics. Night shift immediately answers whether anything will happen tonight; before/during it shows schedule, next check, included projects and automation status; after a shift it becomes a while-you-were-away digest of results, changes, review needs and blockers, keeping project health, run history, monitoring state and model-credit availability distinct. Inspector remains the successful verification surface, but its floating QA instrument gains a visible autosave state icon, responsive/collapsible usable mode, smooth reliable edge docking/restore behavior, side-by-side binary response controls where space permits, reduced-motion behavior and viewport clamping. Inspector notes/answers/dispositions emit durable identity-bound feedback events with monotonic ordering; active and resuming workers fetch relevant unread feedback at normal synchronization points and acknowledge it so it is not repeatedly delivered; stale/mismatched assignment/branch/evidence identity must not be silently applied. Existing 1.9.9 production remains available until explicit cutover. Do not modify the active relay-inline-card-cleanroom-20261001 lane or its owned files.",
-      "next_action": "Expose durable feedback acknowledgement through the existing worker sync tool; implement canonical events/inbox and exact identity checks alongside live UI.",
+      "next_action": "Wire durable identity-bound Inspector feedback into existing progress/resume/sync responses and explicit acknowledgements; prove no lost concurrent writes or stale application.",
       "task_class": "architecture",
       "category": "implementation",
       "labels": [
@@ -8786,8 +8787,8 @@
       "base_sha": "0f0dc565dea89951e9d571b96d3771466d087b32",
       "state": "active",
       "created_at": "2026-10-01T06:45:18.694Z",
-      "updated_at": "2026-10-01T07:36:51.397Z",
-      "lease_until": "2026-10-01T19:36:51.397Z"
+      "updated_at": "2026-10-01T07:37:20.396Z",
+      "lease_until": "2026-10-01T19:37:20.396Z"
     }
   ],
   "migrated_from": "loew-inspector"
