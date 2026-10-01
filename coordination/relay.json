@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T01:41:31.328Z",
+  "updated_at": "2026-10-01T01:44:37.104Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3888,10 +3888,16 @@
         "RFS-027"
       ],
       "base_sha": "5bd1c6590c341690b7d1e8411b2d8c8bc2856841",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T01:35:01.771Z",
-      "updated_at": "2026-10-01T01:41:26.690Z",
-      "lease_until": "2026-10-01T13:41:26.690Z"
+      "updated_at": "2026-10-01T01:44:37.104Z",
+      "lease_until": "2026-10-01T13:44:37.104Z",
+      "pr": 66,
+      "merged_head_sha": "14958de8e651530a20b651ab3bdbd01ade22ae12",
+      "merge_commit_sha": "df0a3d53ec84a7786d2b31211ce13190172295f6",
+      "evidence": "Relay 1.9.5 shipped through PR #66. Exact head 14958de8e651530a20b651ab3bdbd01ade22ae12 passed Runner admission and full workspace/browser/build CI, squash-merged as df0a3d53ec84a7786d2b31211ce13190172295f6. Exact merge uploaded as Worker v58 version a971c504-f6a6-4608-bdbf-acd3d5e488f0 and deployed 100% via a9336b00-2e63-4fc1-8240-b12535d23047. Runtime readback reports Relay 1.9.5. Release includes portable manifest contract, provenance/license/integrity audit, deterministic registry/resolver/runtime, project-private overlays, upstream drift policy, context/tool/capability gating, and the RFS-027 exact-byte artifact-ingress law with focused tests.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T01:44:37.104Z"
     },
     {
       "id": "relay-feature-shell-accent-assets-20261001",
