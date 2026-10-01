@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T22:44:07.474Z",
+  "updated_at": "2026-10-01T22:47:58.411Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -10853,7 +10853,7 @@
       ],
       "goal": "Isolate observed ChatGPT Work card action timeout with a read-only data-only callback comparison, preserving the released host diagnostic and original Relay capabilities.",
       "acceptance": "Preserve all 51 original model tools, original app bridge and released host probe descriptor/resource bytes. Add explicitly requested render diagnostic plus app-only data callback without rendering metadata. Bounded request IDs/methods/response/error/timeout/late-response evidence without sensitive payloads. Verify correlation, cancellation, full server envelopes and actual packaged browser code; exact-head tests/build/typecheck/admission and independent review before serialized Git-native release. Record actual same-build Work/iOS/Safari outcomes without treating local fixtures as host proof. Carry forward failed/pending ordinary-chat parity and full MCP rebuild requirements. No auth, permissions, paid services, original card art/CSS or broad UI changes.",
-      "next_action": "Independent review APPROVED exacthead49fdd642242f70f02dbebb49176278e1929b733f; quality36936368595/admission36936368645 PASS. Julian granted next serialized release slot; refresh head/checks, guarded merge and verify Git-native Workers Build. No changes since review; comparison is not a proven client fix.",
+      "next_action": "Await real-client comparison, not infrastructure completion. PR112 reviewed49fdd642 merged e618648d8400f7d0a3c811abf25f23f9cde6b8a0; Build2e234da2-656e-4952-8d83-e78bda0a9a7f SUCCESS; active versionc36b9b70-8de3-457e-b4a8-1e54967bb57c100%; postmergeCI36936929892 SUCCESS; live health passes. Julian has one Mac Work test packet: relay_test_card_action, Action build20261001.1, Check data action once; record matched/late/unmatched/notification-only Technical details. All new actual-client results NOT RUN. Old Work timeout/Safari empty/ordinary Mac no visible card/iOS action pending retained. Originalcontrol unchanged. No broad rewrite while coreproof unresolved; full51-capability rebuild/ordinary-chat parity remain open.",
       "task_class": "maintenance",
       "category": "implementation",
       "primary_team": "runner",
@@ -10861,10 +10861,10 @@
       "primary_staff": "ellis",
       "supporting_staff": [],
       "base_sha": "a326159ca7d7565cd8ec3320c0cfa214f0e40814",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-10-01T22:27:03.282Z",
-      "updated_at": "2026-10-01T22:44:07.474Z",
-      "lease_until": "2026-10-02T10:44:07.474Z"
+      "updated_at": "2026-10-01T22:47:58.411Z",
+      "lease_until": "2026-10-02T10:47:58.411Z"
     }
   ],
   "migrated_from": "loew-inspector"
