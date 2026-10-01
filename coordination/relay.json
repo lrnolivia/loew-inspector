@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T18:16:26.077Z",
+  "updated_at": "2026-10-01T18:16:43.368Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -10114,10 +10114,16 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "3687d82392a30f1ed84ae4c384d9442730e4dd37",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T18:02:54.755Z",
-      "updated_at": "2026-10-01T18:14:58.190Z",
-      "lease_until": "2026-10-02T06:14:58.190Z"
+      "updated_at": "2026-10-01T18:16:43.368Z",
+      "lease_until": "2026-10-02T06:16:43.368Z",
+      "pr": 103,
+      "merged_head_sha": "fecb71a84fa6138d0c071217f286e7102725b78f",
+      "merge_commit_sha": "25b0d821c2d1e224d4d03d97088fb1ff83b5a863",
+      "evidence": "https://github.com/lrnolivia/relay/pull/103 — exact head fecb71a84fa6138d0c071217f286e7102725b78f passed quality/admission, merged as 25b0d821c2d1e224d4d03d97088fb1ff83b5a863. Native Workers Build 9b2150de-1474-41ef-8d3e-356aea1f090d succeeded for that exact merge; cloud policy readback reports manual_upload disabled. Four other web policies remain in web-family-git-release-20261001.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T18:16:43.368Z"
     },
     {
       "id": "relay-website-2.0-repair-20261001",
