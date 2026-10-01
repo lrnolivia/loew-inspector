@@ -153,3 +153,31 @@ test('feature identity drives the giant-notification header and pertinent metric
   assert.equal(verification.metric,'2/2');
   assert.equal(verification.metric_label,'checks reported');
 });
+
+
+test('card can reuse the latest stored Inspector QA screenshot and reports intrinsic height', async () => {
+  const {chromium}=await import('playwright');
+  const browser=await chromium.launch({headless:true});
+  try {
+    const page=await browser.newPage();
+    await page.addInitScript(() => {
+      window.openai={
+        toolInput:{project:'relay',show_qa:true},
+        toolOutput:{project:'relay',claim:{primary_staff:'julian',goal:'Visual proof is ready',state:'active'}},
+        notifyIntrinsicHeight:height=>{window.reportedHeight=height},
+        callTool:async(name,args)=>{
+          if(name!=='relay_ui_request') return {};
+          if(args.path==='/api/visual?project=relay') return {structuredContent:{status:200,body:{evidence:[{evidence_id:'vis_abcdefgh',step_label:'Relay card preview'}]}}};
+          if(args.path==='/api/visual/vis_abcdefgh/image') return {structuredContent:{status:200,content_type:'image/png',base64:'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9WlQZQAAAABJRU5ErkJggg=='}};
+          return {structuredContent:{status:404}};
+        }
+      };
+    });
+    await page.goto('data:text/html,'+encodeURIComponent(relayContextCardResource().text));
+    await page.locator('#qa-media').waitFor({state:'visible'});
+    assert.equal(await page.locator('#qa-media-id').textContent(),'vis_abcdefgh');
+    assert.equal(await page.locator('#qa-media-caption').textContent(),'Relay card preview');
+    assert.match(await page.locator('#qa-media-image').getAttribute('src'),/^data:image\/png;base64,/);
+    await page.waitForFunction(()=>Number(window.reportedHeight)>0);
+  } finally { await browser.close(); }
+});
