@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T06:54:00.908Z",
+  "updated_at": "2026-10-01T06:56:19.836Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -8385,10 +8385,10 @@
         "nico"
       ],
       "base_sha": "2ebe056b29cf7a333e9209cbd475ab9e68de1f55",
-      "state": "held",
+      "state": "completed",
       "created_at": "2026-10-01T06:28:06.664Z",
-      "updated_at": "2026-10-01T06:46:26.026Z",
-      "lease_until": "2026-10-01T18:46:26.026Z",
+      "updated_at": "2026-10-01T06:56:19.836Z",
+      "lease_until": "2026-10-01T18:56:19.836Z",
       "amendment_count": 2,
       "amendments": [
         {
@@ -8419,7 +8419,13 @@
             "next_action": "Fresh v73 native-registration smoke still produced no visible inline card in ChatGPT. Independent visual evidence from the user now sharply narrows the bug: the same card designs render correctly in Inspector and were judged visually excellent; only left-side spacing/alignment needs a later polish pass. Treat the Inspector rendering as proof that the card composition/CSS/resource itself is healthy. The remaining defect is ChatGPT host surfacing through the current connector/orchestration path. Do not alter card visuals to chase this. Next technical step is to prove whether direct MCP App in..."
           }
         }
-      ]
+      ],
+      "pr": 85,
+      "merged_head_sha": "62d85ffea0d66dd63e077b5a05d02f68c3c9e4bb",
+      "merge_commit_sha": "7de82e4b12e7f53c62c31bb7261e3deb8e934685",
+      "evidence": "PR #85 merged and deployed the native-registration experiment. It removed wrapper-injected registration as a Relay-side difference but did not produce a visible card through the current ChatGPT invocation path. Current OpenAI MCP Apps research and the user's observed blank-iframe history justify a clean-room successor: preserve approved card design/art/state semantics, replace the old card transport/bootstrap with the current standard bridge, and validate via a true direct normal-chat plugin invocation rather than nested connector execution.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T06:56:19.836Z"
     },
     {
       "id": "relay-2.0-today-runner-react-slice-20261001",
