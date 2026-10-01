@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T00:08:06.848Z",
+  "updated_at": "2026-10-01T00:09:17.684Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -2119,7 +2119,9 @@
         "apps/web/test/browser.test.mjs",
         "features/night-shift/view.js",
         "packages/shared-ui/",
-        "docs/relay/RELAY_STATUS_MOTION_UI.md"
+        "docs/relay/RELAY_STATUS_MOTION_UI.md",
+        "src/relay-operation-ui.js",
+        "apps/web/public/progress-ui.js"
       ],
       "resources": [
         "relay-design",
@@ -2132,13 +2134,13 @@
       ],
       "goal": "Ship a design-only Relay status/motion UI layer on top of current main: make feature naming consistently lowercase and aligned with actual feature names, and make observed status visually legible through semantic color, pulsing status lights, and restrained ambient motion that communicates liveness rather than decoration.",
       "acceptance": "Task class design. Preserve current 1.9.x architecture and observed-progress semantics. All human-facing feature/page identity is lowercase: today, runner, inspector, night shift. Runner pages must not fall back to Projects as the primary title; Inspector pages must not fall back to Review as the primary title. Semantic status colors must distinguish healthy/complete, working, external-system wait, needs-human/action, warning/possibly-stale/stale, and failure, with non-color cues retained. Failed badges must never render as flat neutral gray. Metric counts such as now, moving, external wait, and needs you must visually encode state: zero/inactive remains quiet; nonzero counts inherit the relevant semantic tone. Add purposeful ambient motion/status lights: working states use a subtle active pulse, external waits use a distinct breathing/activity signal, needs-human uses an attention pulse, stale/warning uses a slower caution signal, failure uses a strong but restrained alert signal, healthy/complete may use a calm steady or occasional confirmation shimmer. Motion must be CSS/transform/opacity/filter-based where possible, bounded to status indicators rather than large layout areas, and must not create latency or decorative churn. prefers-reduced-motion must stop looping/spatial motion while preserving color, shape, label and a static state indicator. Keep existing flat/no-gradient direction, project tab rail, repaired card geometry, and quiet ChatGPT settings control. No gradients. No fake bottom-border depth. Browser tests must assert lowercase feature titles/nav, semantic badge tones, nonzero metric tone behavior, failed-state non-neutral color, pulsing indicator classes/animations, reduced-motion fallback, and responsive desktop/mobile stability. Regenerate generated.js, pass full repo/browser gates, merge/deploy exact source, capture production evidence, and close the assignment.",
-      "next_action": "Claim from current main. Audit existing tokens and status-state mappings, then implement one shared semantic status/token layer used by Runner metrics, progress badges, Today attention states and connection/status lights. Rename human-facing feature/page labels to lowercase feature names. Add bounded liveness animations with reduced-motion fallbacks. Keep architecture untouched. Rebuild bundle, run exact browser tests and responsive QA, merge/deploy exact source, and close.",
+      "next_action": "Implement the shared semantic status/motion presentation layer on current main. Use relay-operation-ui.js only for presentation metadata (tone + signal), not backend semantics. Update progress-ui plus Runner/Today/Inspector/night shift rendering so lowercase feature/page/section headers are consistent and statuses use semantic color + bounded ambient status lights. Keep no-gradient flat direction and reduced-motion behavior. Rebuild, test, merge/deploy exact source, close.",
       "task_class": "design",
       "base_sha": "fa3b543c3d54045a01f5b41328a0418c1c478af4",
       "state": "active",
       "created_at": "2026-10-01T00:08:06.848Z",
-      "updated_at": "2026-10-01T00:08:06.848Z",
-      "lease_until": "2026-10-01T12:08:06.848Z"
+      "updated_at": "2026-10-01T00:09:17.684Z",
+      "lease_until": "2026-10-01T12:09:17.684Z"
     }
   ],
   "migrated_from": "loew-inspector"
