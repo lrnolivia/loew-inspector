@@ -112,7 +112,7 @@ jobs:
       - run: npx playwright install --with-deps chromium
       - run: node --test apps/web/test/browser.test.mjs
 
-  web-react-test:
+  web-react-shell-test:
     runs-on: ubuntu-latest
     timeout-minutes: 8
     steps:
@@ -124,7 +124,21 @@ jobs:
           node-version: '22'
       - run: npm ci
       - run: npx playwright install --with-deps chromium
-      - run: node --test apps/web/test/react.test.mjs
+      - run: node --test --test-name-pattern="Relay 2.0 React shell renders human-first live surfaces responsively" apps/web/test/react.test.mjs
+
+  web-react-mcp-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm ci
+      - run: npx playwright install --with-deps chromium
+      - run: node --test --test-name-pattern="generated cutover serves React at root and mounts the same React control center through MCP" apps/web/test/react.test.mjs
 
   typecheck-2-0:
     runs-on: ubuntu-latest
