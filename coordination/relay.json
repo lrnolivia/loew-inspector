@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T03:21:01.595Z",
+  "updated_at": "2026-10-01T03:21:45.211Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5885,6 +5885,35 @@
           }
         }
       ]
+    },
+    {
+      "id": "relay-sidebar-theme-refresh-20260930",
+      "owner": "codex-relay-sidebar-theme-20260930",
+      "branch": "relay/sidebar-theme-refresh-20260930",
+      "paths": [
+        "apps/web/public/operator-1.8.css",
+        "apps/web/public/index.html",
+        "apps/web/public/operator.js",
+        "apps/web/public/theme.js",
+        "apps/web/build.mjs",
+        "apps/web/generated.js",
+        "apps/web/test/browser.test.mjs",
+        "packages/shared-ui/glyphs.js",
+        "docs/relay/INSPECTOR_VISUAL_POLISH_20260930.md"
+      ],
+      "resources": [
+        "relay-design"
+      ],
+      "goal": "Sidebar theme toggle, smaller refresh-tools shortcut, near-white Relay dark title and roomier review cards.",
+      "acceptance": "Persisted manual theme covers all current light/dark styles; title remains sienna light and near-white dark; matching card/skeleton spacing; refresh icon opens actual plugin details honestly; required gates.",
+      "next_action": "Implement sidebar, theme and spacing polish; validate and publish.",
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "base_sha": "43c0dde2d1be6eb71ef4c6832eceb653ba33a80f",
+      "state": "active",
+      "created_at": "2026-10-01T03:21:45.211Z",
+      "updated_at": "2026-10-01T03:21:45.211Z",
+      "lease_until": "2026-10-01T15:21:45.211Z"
     }
   ],
   "migrated_from": "loew-inspector"
