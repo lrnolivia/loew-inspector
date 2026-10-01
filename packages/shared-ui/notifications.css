@@ -39,3 +39,5 @@
 html[data-presentation-motion="calm"] .notification-toasts .notification-message {animation:none}
 
 .notification-announcement {position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap;}
+
+@media(max-width:520px) { .notification-menu {position:fixed;right:16px;top:64px;max-height:calc(100dvh - 160px);} }

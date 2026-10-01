@@ -25,6 +25,7 @@ test('Notifications retain attention after dismiss/timeout and survive Inspector
     await page.getByRole('button',{name:/^Notifications/}).click();
     assert.match(await page.locator('.notification-menu').innerText(),/Toast dismissed/);
     assert.match(await page.locator('.notification-menu').innerText(),/Needs attention/);
+    const menuRect=await page.locator('.notification-menu').boundingBox();assert.ok(menuRect.x>=0 && menuRect.x+menuRect.width<=390,'mobile menu fits the viewport');
     await page.keyboard.press('Escape');assert.match(await page.locator(':focus').getAttribute('aria-label'),/^Notifications/);
     await page.goto(fixture.origin+'/inspector');await page.locator('#review-list[data-summary-state="ready"]').waitFor();
     await page.getByRole('button',{name:/^Notifications/}).click();assert.match(await page.locator('.notification-menu').innerText(),/field/);
@@ -34,7 +35,9 @@ test('Notifications retain attention after dismiss/timeout and survive Inspector
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
     const timeoutPage=await browser.newPage({viewport:{width:1440,height:900},colorScheme:'dark'});
     await timeoutPage.clock.install();await timeoutPage.goto(fixture.origin+'/#/today');await timeoutPage.locator('.notification-toasts .notification-message').waitFor();
-    await timeoutPage.clock.fastForward(11000);
+    await timeoutPage.locator('.notification-toasts a').focus();await timeoutPage.clock.fastForward(11000);
+    assert.equal(await timeoutPage.locator('.notification-toasts .notification-message').count(),1,'focused notification stays available');
+    await timeoutPage.locator('.notification-bell').focus();await timeoutPage.clock.fastForward(11000);
     assert.equal(await timeoutPage.locator('.notification-toasts .notification-message').count(),0);
     await timeoutPage.getByRole('button',{name:/^Notifications/}).click();assert.match(await timeoutPage.locator('.notification-menu').innerText(),/Needs attention/);
     await mkdir('/tmp/relay-next-evidence',{recursive:true});await timeoutPage.screenshot({path:'/tmp/relay-next-evidence/notifications-desktop.png'});
