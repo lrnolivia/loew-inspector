@@ -13,6 +13,14 @@
   --color-resolve: #ffca28;
   --color-good: #3bcb8d;
   --color-bad: #ff6f78;
+  --status-info: #18afc0;
+  --status-working: #18afc0;
+  --status-external: #6da8ff;
+  --status-attention: #f0643b;
+  --status-warning: #ffca28;
+  --status-danger: #ff6f78;
+  --status-success: #3bcb8d;
+  --status-quiet: #8f8982;
   --color-light-panel: var(--color-raised);
   --color-on-light: var(--color-text-primary);
   --color-on-light-secondary: var(--color-text-secondary);
@@ -33,6 +41,14 @@
     --color-text-secondary: #69635e;
     --color-good: #16794e;
     --color-bad: #b3283e;
+    --status-info: #087a88;
+    --status-working: #087a88;
+    --status-external: #356fc5;
+    --status-attention: #a94728;
+    --status-warning: #8d6900;
+    --status-danger: #b3283e;
+    --status-success: #16794e;
+    --status-quiet: #77716b;
     --color-link: #087a88;
   }
 }

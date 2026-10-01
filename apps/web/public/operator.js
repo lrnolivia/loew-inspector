@@ -22,10 +22,10 @@ let selectedProject = null;
 const projectCache = new Map();
 
 const navigation = {
-  today: ["Today", "Current focus", "today"],
-  projects: ["Runner", "Projects & coordination", "projects"],
-  review: ["Inspector", "Review & evidence", "review"],
-  "night-shift": ["night shift", "Unattended activity", "moon"]
+  today: ["today", "current focus", "today"],
+  projects: ["runner", "projects & coordination", "projects"],
+  review: ["inspector", "review & evidence", "review"],
+  "night-shift": ["night shift", "unattended activity", "moon"]
 };
 
 const overview = {
@@ -196,7 +196,7 @@ async function showPage(name) {
   }
   if (name === "projects") {
     setFlow("orient", "observed execution");
-    setConnection("Connected", "good");
+    setConnection("connected", "good");
     await loadProjects();
   }
   if (name === "review") {
@@ -220,4 +220,4 @@ nav.forEach(button => button.addEventListener("click", () => {
 appSettings?.addEventListener("click", openSettings);
 window.addEventListener("hashchange", () => showPage(route()));
 bindReviewFilters();
-showPage(route()).catch(error => { setConnection("Couldn’t connect", "bad"); notify(error.message, "bad"); });
+showPage(route()).catch(error => { setConnection("couldn’t connect", "bad"); notify(error.message, "bad"); });

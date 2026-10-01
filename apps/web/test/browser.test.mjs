@@ -17,16 +17,43 @@ test("shared interface works on web and MCP host transport, including mobile, de
   const workers = [{ id: "relay", enabled: false, name: "relay", runtime: { status: "idle", last_summary: "Latest canonical run" } }];
   const progress = {
     contract_version: "1.7.5", observed_progress: true, project: "relay",
-    progress: [{
-      assignment: "Complete consolidation", observed: true, state: "waiting-for-human", stage: "review",
-      worker: { heartbeat_at: "2026-09-30T15:00:00Z", freshness: "fresh" },
-      external: { active: false, system: null, detail: null },
-      last_meaningful_progress_at: "2026-09-30T15:00:00Z",
-      latest_event: { type: "source-commit", at: "2026-09-30T15:00:00Z" },
-      waiting_reason: "Review the exact current result.",
-      identities: { branch: "relay/test", head_sha: "c".repeat(40) },
-      next_action: "Keep implementing"
-    }],
+    progress: [
+      {
+        assignment: "Complete consolidation", observed: true, state: "waiting-for-human", stage: "review",
+        worker: { heartbeat_at: "2026-09-30T15:00:00Z", freshness: "fresh" },
+        external: { active: false, system: null, detail: null },
+        last_meaningful_progress_at: "2026-09-30T15:00:00Z",
+        latest_event: { type: "source-commit", at: "2026-09-30T15:00:00Z" },
+        waiting_reason: "Review the exact current result.",
+        identities: { branch: "relay/test", head_sha: "c".repeat(40) },
+        next_action: "Keep implementing"
+      },
+      {
+        assignment: "Broken release", observed: true, state: "failed", stage: "checks",
+        worker: { heartbeat_at: "2026-09-30T14:58:00Z", freshness: "fresh" },
+        external: { active: false, system: null, detail: null },
+        last_meaningful_progress_at: "2026-09-30T14:58:00Z",
+        latest_event: { type: "check-completed", at: "2026-09-30T14:58:00Z" },
+        waiting_reason: "checks failed",
+        identities: { branch: "relay/broken", head_sha: "d".repeat(40) }
+      },
+      {
+        assignment: "Active build", observed: true, state: "working", stage: "implementation",
+        worker: { heartbeat_at: "2026-09-30T14:57:00Z", freshness: "fresh" },
+        external: { active: false, system: null, detail: null },
+        last_meaningful_progress_at: "2026-09-30T14:57:00Z",
+        latest_event: { type: "source-commit", at: "2026-09-30T14:57:00Z" },
+        identities: { branch: "relay/active", head_sha: "e".repeat(40) }
+      },
+      {
+        assignment: "External wait", observed: true, state: "waiting-on-external-system", stage: "checks",
+        worker: { heartbeat_at: "2026-09-30T14:56:00Z", freshness: "fresh" },
+        external: { active: true, system: "github", detail: "CI is running" },
+        last_meaningful_progress_at: "2026-09-30T14:56:00Z",
+        latest_event: { type: "check-started", at: "2026-09-30T14:56:00Z" },
+        identities: { branch: "relay/wait", head_sha: "f".repeat(40) }
+      }
+    ],
     queue: []
   };
   const server = http.createServer(async (req, res) => {
@@ -83,7 +110,7 @@ test("shared interface works on web and MCP host transport, including mobile, de
         }, mcpHtml);
         view = page.frameLocator("#app");
       }
-      await view.locator("#operator-connection").filter({ hasText: "Connected" }).waitFor();
+      await view.locator("#operator-connection").filter({ hasText: "connected" }).waitFor();
       assert.equal(await view.locator(".page-statusline").first().evaluate(node => getComputedStyle(node).backgroundImage), "none");
       assert.equal(await view.locator("#app-settings").evaluate(node => getComputedStyle(node).borderBottomWidth), "0px");
       assert.equal(await view.locator("#app-settings").evaluate(node => getComputedStyle(node).backgroundColor), "rgba(0, 0, 0, 0)");
@@ -99,10 +126,21 @@ test("shared interface works on web and MCP host transport, including mobile, de
         } : { contained: false };
       });
       assert.equal(geometry.contained, true, mode + " attention action must stay inside its card");
-      await view.getByRole("button", { name: "Runner", exact: true }).click();
-      assert.equal(await view.getByRole("button", { name: "Runner", exact: true }).evaluate(node => getComputedStyle(node).borderBottomWidth), "0px");
+      await view.getByRole("button", { name: "runner", exact: true }).click();
+      assert.equal(await view.getByRole("heading", { name: "runner", level: 1, exact: true }).textContent(), "runner");
+      assert.equal(await view.getByRole("button", { name: "runner", exact: true }).evaluate(node => getComputedStyle(node).borderBottomWidth), "0px");
       await view.getByRole("tab", { name: "relay", exact: true }).click();
       await view.locator("#project-detail").filter({ hasText: "Complete consolidation" }).waitFor();
+      assert.equal(await view.locator('.overview-metric:has-text("moving")').getAttribute("data-tone"), "good");
+      assert.equal(await view.locator('.overview-metric:has-text("external wait")').getAttribute("data-tone"), "wait");
+      assert.equal(await view.locator('.overview-metric:has-text("needs you")').getAttribute("data-tone"), "act");
+      const failedBadge = view.locator('.progress-row[data-progress-state="failed"] .status-badge');
+      await failedBadge.waitFor();
+      assert.equal(await failedBadge.getAttribute("data-tone"), "bad");
+      assert.equal(await failedBadge.getAttribute("data-signal"), "danger");
+      const failedColor = await failedBadge.evaluate(node => getComputedStyle(node).color);
+      assert.notEqual(failedColor, "rgb(198, 191, 183)");
+      assert.notEqual(await failedBadge.locator(".status-light").evaluate(node => getComputedStyle(node, "::after").animationName), "none");
       await view.locator('#project-tabs [data-project-id="relay"] [data-repo-icon="relay"][data-icon-sha="' + "b".repeat(40) + '"] img').waitFor();
       assert.equal(await view.locator('#project-tabs [data-project-id="relay"] [data-repo-icon="relay"]').evaluate(node => getComputedStyle(node).backgroundColor), "rgba(0, 0, 0, 0)");
       for (const width of [560, 900, 1360]) {
@@ -111,6 +149,8 @@ test("shared interface works on web and MCP host transport, including mobile, de
       }
       await page.emulateMedia({ reducedMotion: "reduce" });
       assert.equal(await view.locator(".relay-glyph").first().evaluate(node => getComputedStyle(node).transitionDuration), "0s");
+      assert.equal(await failedBadge.locator(".status-light").evaluate(node => getComputedStyle(node, "::after").animationName), "none");
+      assert.equal(await failedBadge.evaluate(node => getComputedStyle(node).color), failedColor);
       await page.emulateMedia({ reducedMotion: "no-preference" });
       assert.equal(await view.locator(".flow-band").count(), 0);
       assert.equal(await view.locator(".page-overview").count(), 0);
@@ -118,8 +158,8 @@ test("shared interface works on web and MCP host transport, including mobile, de
       assert.equal(await view.locator(".project-tabs").count(), 1);
       await view.getByRole("button", { name: "night shift", exact: true }).click();
       await view.locator("#night-shift-work").filter({ hasText: "Latest canonical run" }).waitFor();
-      await view.getByRole("button", { name: "Inspector", exact: true }).click();
-      if (mode === "mcp") await view.getByRole("button", { name: "All", exact: true }).click();
+      await view.getByRole("button", { name: "inspector", exact: true }).click();
+      if (mode === "mcp") await view.getByRole("button", { name: "all", exact: true }).click();
       await view.locator("[data-review-id]").click();
       await view.getByRole("button", { name: "Yes", exact: true }).click();
       await view.getByRole("button", { name: "Looks good", exact: true }).click();
@@ -137,7 +177,7 @@ test("shared interface works on web and MCP host transport, including mobile, de
         await page.screenshot({ path: "/tmp/relay-b4-dark.png" });
         await page.setViewportSize({ width: 390, height: 844 });
         await page.emulateMedia({ colorScheme: "light" });
-        await page.getByRole("button", { name: "Today", exact: true }).click();
+        await page.getByRole("button", { name: "today", exact: true }).click();
         await page.locator("#operator-connection").filter({ hasText: "Connected" }).waitFor();
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
         assert.equal(overflow, false);

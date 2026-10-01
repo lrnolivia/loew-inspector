@@ -17,7 +17,10 @@ export async function loadNightShift(ui, projectId = "") {
       const error = /insufficient_quota|credit_balance_exhausted|no credits remaining/i.test(state.last_error || "")
         ? "Automatic model work is paused because its API credits are exhausted. Project state and manual controls remain available."
         : state.last_error;
-      return `<article class="task-row"><div class="task-state">${blocked ? "Needs attention" : worker.enabled ? "Watching" : "Paused"}</div>
+      const running = state.status === "running";
+      const tone = blocked ? "bad" : running ? "info" : worker.enabled ? "good" : "quiet";
+      const signal = blocked ? "danger" : running ? "working" : worker.enabled ? "steady" : "quiet";
+      return `<article class="task-row"><div class="task-state status-badge" data-tone="${tone}" data-signal="${signal}"><span class="status-light" aria-hidden="true"></span><span>${blocked ? "needs attention" : running ? "working" : worker.enabled ? "watching" : "paused"}</span></div>
         <div class="task-copy"><strong class="project-name">${iconSlot(worker.id)}${esc(projectName(worker.id))}</strong>
         <p>${esc(state.last_summary || "No run result recorded yet.")}</p>
         <small>${esc(state.last_run_at ? "Last run · " + new Date(state.last_run_at).toLocaleString() : "No run recorded")}</small>
@@ -25,9 +28,9 @@ export async function loadNightShift(ui, projectId = "") {
         <p><a href="#projects?project=${encodeURIComponent(worker.id)}">Open project</a> · <a href="#today">Manage automatic checks</a></p></div></article>`;
     }).join("") : '<div class="operator-empty">No unattended work matches this project context.</div>';
     hydrateProjectIcons(target);
-    ui.setConnection("Connected", "good");
+    ui.setConnection("connected", "good");
   } catch (error) {
     target.innerHTML = '<div class="operator-empty">' + esc(error.message) + '</div>';
-    ui.setConnection("Couldn’t connect", "bad");
+    ui.setConnection("couldn’t connect", "bad");
   }
 }

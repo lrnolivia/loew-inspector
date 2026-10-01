@@ -28,12 +28,21 @@ function relative(value) {
 }
 function plainStatus(worker) {
   const state = worker.runtime || {};
-  if (!worker.enabled) return "Paused";
-  if (["blocked","failed","waiting_credentials"].includes(state.status)) return "Needs attention";
-  if (state.status === "running") return "Checking now";
-  if (state.project_health === "healthy" && state.dependency_health === "healthy") return "All good";
-  if (state.dependency_health === "repairable") return "Fix available";
-  return "Watching";
+  if (!worker.enabled) return "paused";
+  if (["blocked","failed","waiting_credentials"].includes(state.status)) return "needs attention";
+  if (state.status === "running") return "checking now";
+  if (state.project_health === "healthy" && state.dependency_health === "healthy") return "all good";
+  if (state.dependency_health === "repairable") return "fix available";
+  return "watching";
+}
+function workerStatusMeta(worker) {
+  const state = worker.runtime || {};
+  if (!worker.enabled) return { tone:"quiet", signal:"quiet" };
+  if (["blocked","failed","waiting_credentials"].includes(state.status) || state.dependency_health === "failed") return { tone:"bad", signal:"danger" };
+  if (state.status === "running") return { tone:"info", signal:"working" };
+  if (["repairable","warning"].includes(state.dependency_health)) return { tone:"warn", signal:"caution" };
+  if (state.project_health === "healthy" && state.dependency_health === "healthy") return { tone:"good", signal:"steady" };
+  return { tone:"good", signal:"steady" };
 }
 function primaryAction(worker) {
   const state = worker.runtime || {}, dependency = state.dependency || {};
@@ -79,14 +88,14 @@ function renderAttention(ui) {
       const text = item.waiting_reason || item.recovery_action || item.latest_event?.type?.replaceAll("-", " ") || "Relay needs a decision here.";
       return `<article class="attention-card">
         <div class="attention-copy"><span class="attention-project">${iconSlot(projectId)}${esc(projectName(projectId))}</span><strong>${esc(text)}</strong><small>${esc(item.assignment || "")} · ${esc(relativeProgress(item.last_meaningful_progress_at))}</small></div>
-        <div class="attention-action"><span class="badge" data-tone="${esc(meta.tone)}">${esc(meta.label)}</span><button type="button" data-open-project="${esc(projectId)}">Open project ${glyph("next")}</button></div>
+        <div class="attention-action"><span class="badge status-badge" data-tone="${esc(meta.tone)}" data-signal="${esc(meta.signal || "quiet")}"><span class="status-light" aria-hidden="true"></span><span>${esc(meta.label)}</span></span><button type="button" data-open-project="${esc(projectId)}">Open project ${glyph("next")}</button></div>
       </article>`;
     }
     const worker = entry.worker, state = worker.runtime || {};
     const text = state.dependency_health === "repairable" ? "Runner found a setup problem it knows how to repair." : state.dependency_health === "failed" ? "Runner needs to re-check this project’s setup." : state.status === "waiting_credentials" ? "Runner needs access before it can keep going." : "The automatic check stopped and needs another look.";
     return `<article class="attention-card">
       <div class="attention-copy"><span class="attention-project">${iconSlot(worker.id)}${esc(projectName(worker.id))}</span><strong>${esc(text)}</strong></div>
-      <div class="attention-action"><span class="badge" data-tone="act">needs a decision</span><button type="button" data-jump-worker="${esc(worker.id)}">See the action ${glyph("next")}</button></div>
+      <div class="attention-action"><span class="badge status-badge" data-tone="act" data-signal="attention"><span class="status-light" aria-hidden="true"></span><span>needs a decision</span></span><button type="button" data-jump-worker="${esc(worker.id)}">See the action ${glyph("next")}</button></div>
     </article>`;
   }).join("");
   hydrateProjectIcons(target);
@@ -100,9 +109,9 @@ function renderAutomations(ui) {
   const target = document.querySelector("#today-automations"), visible = scopedWorkers();
   if (!visible.length) { target.innerHTML = '<div class="operator-empty">No automatic checks match this project context.</div>'; return; }
   target.innerHTML = visible.map(worker => {
-    const state = worker.runtime || {}, action = primaryAction(worker);
+    const state = worker.runtime || {}, action = primaryAction(worker), visual = workerStatusMeta(worker);
     return `<article class="automation-row" data-worker-id="${esc(worker.id)}">
-      <div class="automation-main"><div class="automation-title"><span class="project-name">${iconSlot(worker.id)}<strong>${esc(worker.name || projectName(worker.id))}</strong></span><span class="operator-state" data-tone="${["blocked","failed","waiting_credentials"].includes(state.status) ? "bad" : plainStatus(worker) === "All good" ? "good" : "quiet"}">${esc(plainStatus(worker))}</span></div>
+      <div class="automation-main"><div class="automation-title"><span class="project-name">${iconSlot(worker.id)}<strong>${esc(worker.name || projectName(worker.id))}</strong></span><span class="operator-state status-badge" data-tone="${esc(visual.tone)}" data-signal="${esc(visual.signal)}"><span class="status-light" aria-hidden="true"></span><span>${esc(plainStatus(worker))}</span></span></div>
       <p>Last checked ${esc(relative(state.last_run_at))} · ${worker.enabled ? "next " + esc(relative(state.next_run_at)) : "automatic checks are off"}</p></div>
       <button class="operator-button ${action.tone}" data-worker-action="${action.action}" type="button">${glyph(action.action === "repair" ? "repair" : "play")} ${esc(action.label)}</button>
       <details class="automation-more"><summary aria-label="More automatic check controls">${glyph("more")}</summary><div class="automation-menu">${worker.enabled && action.action !== "toggle" ? '<button type="button" data-worker-action="toggle">Pause automatic checks</button>' : ""}<div>Runner changes code only through its guarded branch and review flow.</div></div></details>
@@ -146,7 +155,7 @@ async function loadProjectWork(ui) {
       return `<button class="today-task" type="button" data-open-project="${esc(projectId)}">
         <span class="today-task-project">${iconSlot(projectId)}${esc(projectName(projectId))}</span>
         <span class="today-task-title">${esc(item.assignment || "work item")}<small class="today-task-meta">${esc(detail)} · ${esc(relativeProgress(item.last_meaningful_progress_at))}</small></span>
-        <span class="today-task-state" data-tone="${esc(meta.tone)}">${esc(meta.label)}</span>
+        <span class="today-task-state status-badge" data-tone="${esc(meta.tone)}" data-signal="${esc(meta.signal || "quiet")}"><span class="status-light" aria-hidden="true"></span><span>${esc(meta.label)}</span></span>
       </button>`;
     }).join("") : '<div class="operator-empty">No observed project work is active right now.</div>';
     hydrateProjectIcons(target);
@@ -159,15 +168,15 @@ async function loadProjectWork(ui) {
 
 export async function loadToday(ui, projectId = "") {
   projectScope = projectId || "";
-  ui.setConnection("Checking…");
+  ui.setConnection("checking…");
   try {
     workers = await api("/api/workers");
     projectAttention = [];
     renderAttention(ui); renderAutomations(ui);
     await loadProjectWork(ui);
-    ui.setConnection("Connected", "good");
+    ui.setConnection("connected", "good");
   } catch (error) {
-    ui.setConnection(error.status === 403 ? "Access needed" : "Couldn’t connect", "bad");
+    ui.setConnection(error.status === 403 ? "access needed" : "couldn’t connect", "bad");
     document.querySelector("#today-attention").innerHTML = '<div class="operator-empty">Relay could not load project status.</div>';
     document.querySelector("#today-automations").innerHTML = "";
   }

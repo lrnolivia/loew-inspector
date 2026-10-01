@@ -53,13 +53,13 @@ function renderReview() {
   const needs = reviewItems.filter(item => !item.qaReview?.overall);
   const visible = reviewMode === "needs" ? needs : reviewItems;
 
-  count.textContent = needs.length ? needs.length + " need" + (needs.length === 1 ? "s" : "") + " you" : "All caught up";
+  count.textContent = needs.length ? needs.length + " need" + (needs.length === 1 ? "s" : "") + " you" : "all caught up";
   filters.querySelectorAll("[data-review-mode]").forEach(button => {
     button.classList.toggle("active", button.dataset.reviewMode === reviewMode);
   });
 
   if (!visible.length) {
-    target.innerHTML = '<div class="clear-card review-clear"><strong>Nothing waiting for review.</strong><span>Switch to All if you want to revisit an earlier screen.</span></div>';
+    target.innerHTML = '<div class="clear-card review-clear"><strong>nothing waiting for review.</strong><span>switch to all if you want to revisit an earlier screen.</span></div>';
     return;
   }
 
@@ -74,7 +74,7 @@ function renderReview() {
           <strong>${esc(evidenceTitle(item))}</strong>
           <small>${esc(context.environment || "capture")} · ${esc(relative(item.captured_at))}</small>
         </span>
-        <span class="review-state ${reviewed ? "done" : ""}">${reviewed ? "Reviewed" : "Review"}</span>
+        <span class="review-state status-badge ${reviewed ? "done" : ""}" data-tone="${reviewed ? "done" : "act"}" data-signal="${reviewed ? "steady" : "attention"}"><span class="status-light" aria-hidden="true"></span><span>${reviewed ? "reviewed" : "needs review"}</span></span>
       </button>
     `;
   }).join("");
@@ -132,10 +132,10 @@ export async function loadReview(ui, projectId = "") {
     renderReview();
     const needs = reviewItems.filter(item => !item.qaReview?.overall).length;
     ui.setOverviewDetail(needs + " awaiting review · " + (reviewItems.length - needs) + " reviewed in this view");
-    ui.setConnection("Connected", "good");
+    ui.setConnection("connected", "good");
   } catch (error) {
     count.textContent = "";
     target.innerHTML = '<div class="operator-empty">Review items could not be loaded right now.</div>';
-    ui.setConnection(error.status === 403 ? "Access needed" : "Couldn’t connect", "bad");
+    ui.setConnection(error.status === 403 ? "access needed" : "couldn’t connect", "bad");
   }
 }

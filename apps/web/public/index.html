@@ -21,11 +21,11 @@
       <span>project control</span>
     </div>
 
-    <div class="nav-label">WORK</div>
+    <div class="nav-label">work</div>
     <nav class="operator-nav" aria-label="Relay">
-      <button type="button" data-nav="today">Today</button>
-      <button type="button" data-nav="projects">Projects</button>
-      <button type="button" data-nav="review">Review</button>
+      <button type="button" data-nav="today">today</button>
+      <button type="button" data-nav="projects">runner</button>
+      <button type="button" data-nav="review">inspector</button>
       <button type="button" data-nav="night-shift">night shift</button>
     </nav>
     <div class="operator-utility">
@@ -36,34 +36,34 @@
   <main class="operator-shell">
     <div class="workspace-context">
       <div class="workspace-left">
-        <span>Your workspace <span aria-hidden="true">/</span> <span id="workspace-page">Today</span></span>
+        <span>your workspace <span aria-hidden="true">/</span> <span id="workspace-page">today</span></span>
       </div>
       <div id="operator-connection" class="operator-connection" data-tone="quiet" aria-live="polite">Connecting…</div>
     </div>
     <nav id="project-tabs" class="project-tabs" role="tablist" aria-label="Project context"></nav>
     <section class="operator-page" data-page="today">
       <header class="page-heading">
-        <h1>Today</h1>
+        <h1>today</h1>
         <p>What needs you, what’s moving, and nothing else.</p>
       </header>
 
       <section class="operator-section">
-        <h2>Needs you</h2>
+        <h2>needs you</h2>
         <div id="today-attention"></div>
       </section>
 
       <section class="operator-section">
         <div class="section-heading">
-          <h2>Work happening now</h2>
-          <span>Across your projects</span>
+          <h2>work happening now</h2>
+          <span>across your projects</span>
         </div>
         <div id="today-work"></div>
       </section>
 
       <section class="operator-section">
         <div class="section-heading">
-          <h2>Automatic checks</h2>
-          <span>Relay watches these for you</span>
+          <h2>automatic checks</h2>
+          <span>relay watches these for you</span>
         </div>
         <div id="today-automations"></div>
       </section>
@@ -71,7 +71,7 @@
 
     <section class="operator-page" data-page="projects" hidden>
       <header class="page-heading">
-        <h1>Projects</h1>
+        <h1>runner</h1>
         <p>See what each project is doing now and what comes next.</p>
       </header>
 
@@ -83,15 +83,15 @@
     <section class="operator-page" data-page="review" hidden>
       <header class="page-heading review-heading">
         <div>
-          <h1>Review</h1>
+          <h1>inspector</h1>
           <p>Open a screen, answer a few questions, and move on.</p>
         </div>
         <strong id="review-count"></strong>
       </header>
 
-      <div id="review-filters" class="review-filters" role="group" aria-label="Review filter">
-        <button type="button" class="active" data-review-mode="needs">Needs review</button>
-        <button type="button" data-review-mode="all">All</button>
+      <div id="review-filters" class="review-filters" role="group" aria-label="inspector filter">
+        <button type="button" class="active" data-review-mode="needs">needs review</button>
+        <button type="button" data-review-mode="all">all</button>
       </div>
 
       <div id="review-list" class="review-list" aria-live="polite">
