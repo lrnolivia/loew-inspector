@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T07:14:40.064Z",
+  "updated_at": "2026-10-01T07:26:55.075Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -8636,10 +8636,16 @@
         "ellis"
       ],
       "base_sha": "a35be01cfc64ae3940b441b6b5dd81fbabcd8df2",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T06:57:47.754Z",
-      "updated_at": "2026-10-01T07:03:42.144Z",
-      "lease_until": "2026-10-01T19:03:42.144Z"
+      "updated_at": "2026-10-01T07:26:55.075Z",
+      "lease_until": "2026-10-01T19:26:55.075Z",
+      "pr": 86,
+      "merged_head_sha": "a941f931887f25060e3801a5aa97987117dd67e3",
+      "merge_commit_sha": "4240aeac88cb1e84c7bb49996e91a7d97d8c7322",
+      "evidence": "PR #86 merged exact tested head a941f931887f25060e3801a5aa97987117dd67e3 as 4240aeac88cb1e84c7bb49996e91a7d97d8c7322. Runner admission and full repo test/shared web+MCP build passed. Production Relay Worker v74 version deb20e35-357a-4874-a50c-62bf4befbc58 is deployed at 100% from that exact merge commit. Live source contract uses ui://relay/context-card/v7.html, always performs ui/initialize, and contains no v6 URI, openai:set_globals, preloaded window.openai.toolOutput bootstrap, or notifyIntrinsicHeight dependency. Nested relay_render_context_card execution against production succeeds; final visual mount acceptance must be a true direct Relay tool invocation in an ordinary ChatGPT conversation after client tool metadata refresh.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T07:26:55.075Z"
     },
     {
       "id": "relay-2.0-today-runner-react-slice-20261001",
