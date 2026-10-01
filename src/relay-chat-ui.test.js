@@ -1,10 +1,11 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { RELAY_CONTEXT_CARD_URI, relayContextCardDescriptor, relayContextCardResource, contextualizeRelayTool } from "./relay-chat-ui.js";
+import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, relayContextCardDescriptor, relayContextCardResource, relayContextCardTool, validateRelayContextCardArguments, contextualizeRelayTool } from "./relay-chat-ui.js";
 
-test("Relay 1.8 publishes one compact MCP card resource", () => {
+test("Relay publishes one versioned compact MCP card resource", () => {
   const descriptor = relayContextCardDescriptor();
   const resource = relayContextCardResource();
+  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v5.html");
   assert.equal(descriptor.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.mimeType, "text/html;profile=mcp-app");
@@ -23,6 +24,17 @@ test("contextual tool metadata is additive and keeps schemas intact", () => {
   assert.equal(decorated._meta.existing, true);
   assert.equal(decorated._meta.ui.resourceUri, RELAY_CONTEXT_CARD_URI);
   assert.equal(decorated._meta["openai/outputTemplate"], RELAY_CONTEXT_CARD_URI);
+});
+
+test("dedicated launcher owns the MCP Apps mount contract", () => {
+  const tool=relayContextCardTool();
+  assert.equal(tool.name,RELAY_CONTEXT_CARD_TOOL);
+  assert.equal(tool._meta.ui.resourceUri,RELAY_CONTEXT_CARD_URI);
+  assert.equal(tool._meta["openai/outputTemplate"],RELAY_CONTEXT_CARD_URI);
+  assert.equal(tool.annotations.readOnlyHint,true);
+  assert.equal(tool.inputSchema.additionalProperties,false);
+  assert.deepEqual(validateRelayContextCardArguments({project:"relay",assignment:"relay-1.9.9-chatgpt-native-experience-20261001"}),{project:"relay",assignment:"relay-1.9.9-chatgpt-native-experience-20261001"});
+  assert.throws(()=>validateRelayContextCardArguments({project:"relay",surprise:true}),/Unsupported card argument/);
 });
 
 test("unrelated tools are not forced into contextual UI", () => {

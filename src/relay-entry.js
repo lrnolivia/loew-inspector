@@ -9,9 +9,9 @@ import { cloudUploadTool, callCloudUpload, validateCloudUploadArguments } from "
 import { QA_SKILL_URI, qaSkillCatalogEntry, qaSkillResourceDescriptor, qaSkillResource } from "./qa-skill.js";
 import { LOEW_NAMING_SKILL_URI, loewNamingSkillCatalogEntry, loewNamingSkillResourceDescriptor, loewNamingSkillResource } from "./loew-naming-skill.js";
 import { EXECUTIVE_COMMUNICATION_SKILL_URI, executiveCommunicationSkillCatalogEntry, executiveCommunicationSkillResourceDescriptor, executiveCommunicationSkillResource } from "./executive-communication-skill.js";
-import { RELAY_CONTEXT_CARD_URI, relayContextCardDescriptor, relayContextCardResource, contextualizeRelayTool, contextualPresentation } from "./relay-chat-ui.js";
+import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, relayContextCardDescriptor, relayContextCardResource, relayContextCardTool, validateRelayContextCardArguments, contextualizeRelayTool, contextualPresentation } from "./relay-chat-ui.js";
 
-export const RELAY_EXTENSION_VERSION = "1.9.8";
+export const RELAY_EXTENSION_VERSION = "1.9.9";
 
 const createBranch = {
   name: "relay_source_create_branch",
@@ -78,7 +78,7 @@ export function augmentToolList(tools) {
     securitySchemes: schemes,
     _meta: { ...(old?._meta || {}), securitySchemes: schemes }
   };
-  const extensionTools = [...lifecycle, ...sourceTextMutationTools, staffDirectoryTool, runnerCleanupTool, cloudUploadTool, uiApiTool];
+  const extensionTools = [...lifecycle, ...sourceTextMutationTools, staffDirectoryTool, runnerCleanupTool, cloudUploadTool, uiApiTool, relayContextCardTool()];
   const names = new Set(extensionTools.map(tool => tool.name));
   const sourceDescriptions = {
     relay_source_file: "QUERY — read one UTF-8 repository file through relay.SOURCE. Safe to retry. Use its blob SHA as the expected identity before exact text mutation when applicable.",
@@ -186,7 +186,7 @@ function patchVersion(payload) {
 }
 
 function isExtensionTool(name) {
-  return name === uiApiTool.name || name === createBranch.name || lifecycle.some(tool => tool.name === name) || isSourceTextMutationTool(name) || name === staffDirectoryTool.name || name === runnerCleanupTool.name || name === cloudUploadTool.name;
+  return name === RELAY_CONTEXT_CARD_TOOL || name === uiApiTool.name || name === createBranch.name || lifecycle.some(tool => tool.name === name) || isSourceTextMutationTool(name) || name === staffDirectoryTool.name || name === runnerCleanupTool.name || name === cloudUploadTool.name;
 }
 async function authProbe(request, message, env) {
   const headers = new Headers(request.headers);
@@ -290,7 +290,10 @@ export default {
       try {
         const name = message.params.name;
         let result;
-        if (name === uiApiTool.name) {
+        if (name === RELAY_CONTEXT_CARD_TOOL) {
+          const args = validateRelayContextCardArguments(message.params?.arguments || {});
+          result = await callRunnerControlCore("relay_runner_assignments", args, env);
+        } else if (name === uiApiTool.name) {
           result = await callUiApi(message.params?.arguments || {}, env);
         } else if (name === runnerCleanupTool.name) {
           const args = validateRunnerCleanupArguments(message.params?.arguments || {});
