@@ -10,7 +10,7 @@ import { LOEW_NAMING_SKILL_URI, loewNamingSkillCatalogEntry, loewNamingSkillReso
 import { EXECUTIVE_COMMUNICATION_SKILL_URI, executiveCommunicationSkillCatalogEntry, executiveCommunicationSkillResourceDescriptor, executiveCommunicationSkillResource } from "./executive-communication-skill.js";
 import { RELAY_CONTEXT_CARD_URI, relayContextCardDescriptor, relayContextCardResource, contextualizeRelayTool } from "./relay-chat-ui.js";
 
-export const RELAY_EXTENSION_VERSION = "1.9.5";
+export const RELAY_EXTENSION_VERSION = "1.9.6";
 
 const createBranch = {
   name: "relay_source_create_branch",
