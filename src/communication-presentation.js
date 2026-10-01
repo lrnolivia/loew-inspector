@@ -1,4 +1,4 @@
-import { getStaff } from "./staff-registry.js";
+import { assignmentStaffView, getStaff } from "./staff-registry.js";
 
 const HEALTH=new Set(["healthy","degraded","blocked","waiting"]);
 
@@ -29,6 +29,7 @@ export function shapeCommunicationResult({
   health="healthy",
   outcome,
   staff_id=null,
+  assignment=null,
   what_changed=null,
   next_step=null,
   needs_user=false,
@@ -42,7 +43,8 @@ export function shapeCommunicationResult({
   const human=Object.freeze({
     health,
     outcome:bounded(outcome,"outcome",700),
-    responsible_staff:staffView(staff_id),
+    responsible_staff:assignment ? assignmentStaffView(assignment).primary_staff : staffView(staff_id),
+    supporting_staff:assignment ? assignmentStaffView(assignment).supporting_staff : [],
     what_changed:what_changed==null?null:bounded(what_changed,"what_changed",700),
     next_step:next_step==null?null:bounded(next_step,"next_step",700),
     needs_user,
@@ -53,13 +55,14 @@ export function shapeCommunicationResult({
 }
 export function shapeToolResult(tool_result,human={}){
   if(!tool_result||typeof tool_result!=="object"||Array.isArray(tool_result)) throw new Error("tool_result must be an object");
-  return shapeCommunicationResult({...human,technical_evidence:{tool_result}});
+  return shapeCommunicationResult({assignment:tool_result.claim || (typeof tool_result.assignment === "object" ? tool_result.assignment : null),...human,technical_evidence:{tool_result}});
 }
 export function renderHumanFirst(result){
   if(!result?.human) throw new Error("presentation result is missing human layer");
   const h=result.human;
   const owner=h.responsible_staff?.display_name||"Relay";
-  const parts=[owner+" — "+h.outcome];
+  const team=(h.supporting_staff||[]).map(person=>person.display_name);
+  const parts=[owner+(team.length?" with "+team.join(", "):"")+" — "+h.outcome];
   if(h.what_changed) parts.push(h.what_changed);
   if(h.blocker) parts.push("Blocker: "+h.blocker+".");
   if(h.qa){

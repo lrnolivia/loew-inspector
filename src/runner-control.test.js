@@ -195,11 +195,31 @@ test('claim and amend persist canonical taxonomy metadata', async () => {
     category: 'qa-verification',
     tags: ['verification'],
     primary_role: 'verifier',
-    supporting_roles: []
+    supporting_roles: [],
+    primary_staff: 'roman',
+    supporting_staff: []
   }, newSha);
   assert.equal(amended.assignment.category, 'qa-verification');
   assert.deepEqual(amended.assignment.tags, ['verification']);
   assert.equal(amended.assignment.primary_role, 'verifier');
   assert.equal(amended.assignment.amendment_count, 1);
-  assert.deepEqual(amended.assignment.amendments[0].fields, ['category', 'tags', 'primary_role', 'supporting_roles']);
+  assert.deepEqual(amended.assignment.amendments[0].fields, ['category', 'tags', 'primary_role', 'supporting_roles', 'primary_staff', 'supporting_staff']);
+});
+
+test('staff is canonical across queue claim amend and handoff, without staff authorization', async () => {
+  const f=fixture();
+  const {branch,...queueRequest}=defaultRequest;
+  const queued=await coordinate(f,'queue',{...queueRequest,primary_role:'coordinator',supporting_roles:['verifier'],primary_staff:'Julian',supporting_staff:['Roman']});
+  assert.equal(queued.assignment.primary_staff,'julian');
+  const claimed=await coordinate(f,'claim',defaultRequest,newSha);
+  assert.equal(claimed.assignment.primary_staff,'julian');
+  assert.deepEqual(claimed.assignment.supporting_staff,['roman']);
+  const amended=await coordinate(f,'amend',{id:'task',owner:'worker',primary_staff:'Julian',supporting_staff:[],reason:'Verifier finished this phase'},newSha);
+  assert.deepEqual(amended.assignment.amendments[0].before.supporting_staff,['roman']);
+  assert.deepEqual(amended.assignment.amendments[0].after.supporting_staff,[]);
+  await assert.rejects(coordinate(f,'amend',{id:'task',owner:'julian',goal:'Take over',reason:'Staff name is not ownership'},newSha),/another owner/);
+  const handed=await coordinate(f,'handoff',{id:'task',owner:'worker',successor:'successor-machine',next_action:'Resume the same team'},newSha);
+  assert.equal(handed.claim.owner,'successor-machine');
+  assert.equal(handed.claim.primary_staff,'julian');
+  assert.equal(handed.claim.branch,defaultRequest.branch);
 });

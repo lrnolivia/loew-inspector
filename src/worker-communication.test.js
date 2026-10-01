@@ -29,3 +29,11 @@ test("executive status leads with person and outcome while hiding technical inte
   });
   assert.match(detailed,/Technical: tool relay_runner_updates is not loaded/);
 });
+
+test('canonical teams survive connected messages and reject stale team context',()=>{
+  const input={kind:'handoff',sender:{machine_id:'worker'},machine:{project:'relay',assignment:'task',owner:'worker',branch:'relay/task'},impact:'Keep the verified source identity',summary:'Ready for release',assignment:{id:'task',owner:'worker',branch:'relay/task',primary_staff:'julian',supporting_staff:['roman']}};
+  const message=createWorkerMessage(input);
+  assert.match(narrateWorkerMessage(message),/^Julian supported by Roman/);
+  assert.equal(reconcileWorkerMessage(message,{primary_staff:'nico'}).safe_to_apply,false);
+  assert.throws(()=>createWorkerMessage({...input,assignment:{...input.assignment,owner:'other'}}),/canonical machine identity/);
+});

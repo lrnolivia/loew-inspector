@@ -208,3 +208,12 @@ test("completed work has no periodic refresh target", () => {
   assert.equal(got.cadence.target_ms, null);
   assert.equal(got.cadence.next_refresh_at, null);
 });
+
+test('resume binds durable staff and team changes invalidate the checkpoint',()=>{
+  const input={project:'relay',assignment:{...assignment,primary_staff:'julian',supporting_staff:['roman']},progress:progress(),changedPaths:[],recentCommits:[]};
+  const first=deriveResumeCheckpoint(input);
+  assert.equal(first.assignment.primary_staff,'julian');
+  assert.deepEqual(first.assignment.supporting_staff,['roman']);
+  const next=deriveResumeCheckpoint({...input,assignment:{...input.assignment,supporting_staff:[]}});
+  assert.notEqual(next.checkpoint_id,first.checkpoint_id);
+});

@@ -8,9 +8,9 @@ import { cloudUploadTool, callCloudUpload, validateCloudUploadArguments } from "
 import { QA_SKILL_URI, qaSkillCatalogEntry, qaSkillResourceDescriptor, qaSkillResource } from "./qa-skill.js";
 import { LOEW_NAMING_SKILL_URI, loewNamingSkillCatalogEntry, loewNamingSkillResourceDescriptor, loewNamingSkillResource } from "./loew-naming-skill.js";
 import { EXECUTIVE_COMMUNICATION_SKILL_URI, executiveCommunicationSkillCatalogEntry, executiveCommunicationSkillResourceDescriptor, executiveCommunicationSkillResource } from "./executive-communication-skill.js";
-import { RELAY_CONTEXT_CARD_URI, relayContextCardDescriptor, relayContextCardResource, contextualizeRelayTool } from "./relay-chat-ui.js";
+import { RELAY_CONTEXT_CARD_URI, relayContextCardDescriptor, relayContextCardResource, contextualizeRelayTool, contextualPresentation } from "./relay-chat-ui.js";
 
-export const RELAY_EXTENSION_VERSION = "1.9.6";
+export const RELAY_EXTENSION_VERSION = "1.9.6.2";
 
 const createBranch = {
   name: "relay_source_create_branch",
@@ -203,7 +203,8 @@ async function readMcp(request) {
   if (raw.length > 16384) return null;
   try { return JSON.parse(raw); } catch { return null; }
 }
-function toolResult(id, result) {
+function toolResult(id, result, name) {
+  if (contextualizeRelayTool({name})._meta) result = contextualPresentation(result);
   return responseJson({
     jsonrpc: "2.0",
     id,
@@ -253,7 +254,7 @@ export default {
           const args = validateLifecycleArguments(name, message.params?.arguments || {});
           result = await callSourceLifecycleTool(name, args, env);
         }
-        return toolResult(message.id ?? null, result);
+        return toolResult(message.id ?? null, result, name);
       } catch (error) {
         return toolError(message.id ?? null, error);
       }
@@ -294,6 +295,12 @@ export default {
       return rewrite(response, payload => {
         patchVersion(payload);
         if (payload?.result?.tools) payload.result.tools = augmentToolList(payload.result.tools);
+      });
+    }
+    if (message.method === "tools/call" && contextualizeRelayTool({ name: message.params?.name })._meta) {
+      return rewrite(response, payload => {
+        const data = payload?.result?.structuredContent;
+        if (data) payload.result.structuredContent = contextualPresentation(data);
       });
     }
     if (message.method === "tools/call" && ["relay_control_status", "relay_ui_control_center"].includes(message.params?.name)) {

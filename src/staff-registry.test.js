@@ -123,3 +123,15 @@ test("bounded staff directory read contract supports person and subnet lookup", 
   const retiredVisible = callStaffDirectory({ staff: "Felix", include_retired: true });
   assert.equal(retiredVisible.staff.status, "retired");
 });
+
+test('assignment routing chooses active staff deterministically and explicit reserve stays sticky', async () => {
+  const { normalizeAssignmentStaff } = await import('./staff-registry.js');
+  assert.deepEqual(normalizeAssignmentStaff({primary_role:'systems-architect',supporting_roles:['verifier']}),{primary_staff:'ellis',supporting_staff:['roman']});
+  assert.deepEqual(normalizeAssignmentStaff({primary_staff:'Mateo'}),{primary_staff:'mateo',supporting_staff:[]});
+  assert.throws(()=>normalizeAssignmentStaff({primary_staff:'felix'}),/Retired/);
+  assert.throws(()=>normalizeAssignmentStaff({primary_staff:'unknown'}),/Unknown/);
+  assert.throws(()=>normalizeAssignmentStaff({primary_staff:'roman',primary_role:'architect'}),/incompatible/);
+  assert.throws(()=>normalizeAssignmentStaff({primary_staff:'julian',supporting_staff:['Julian']}),/Duplicate/);
+  assert.throws(()=>normalizeAssignmentStaff({supporting_staff:['Roman','roman']}),/Duplicate/);
+  assert.equal(normalizeAssignmentStaff({primary_role:'unknown-specialty'}).primary_staff,null);
+});

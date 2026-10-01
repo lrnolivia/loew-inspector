@@ -253,3 +253,42 @@ export function callStaffDirectory(args = {}, registry = STAFF) {
     staff
   };
 }
+
+// Routing metadata never participates in owner, scope or authorization checks.
+const ROLE_ALIASES = Object.freeze({"systems-architect":"architect", "qa-verification":"verifier", "qa":"verifier", "maintenance":"caretaker", "design":"art-director", "architecture":"architect", "implementation":"builder", "research":"researcher", "release":"release-captain", "coordination":"coordinator"});
+export function staffMatchesRole(person, role) {
+  const key = ROLE_ALIASES[role] || role;
+  return !key || person.role.id === key || person.role_affinities.includes(key);
+}
+export function normalizeAssignmentStaff(input = {}, registry = STAFF) {
+  const resolve = (ref, role) => {
+    const person = getStaff(ref, registry);
+    if (!person) throw new Error(`Unknown assignment staff: ${ref}`);
+    if (person.status === "retired") throw new Error(`Retired staff cannot be assigned: ${person.id}`);
+    if (!staffMatchesRole(person, role)) throw new Error(`Staff ${person.id} is incompatible with role ${role}`);
+    return person.id;
+  };
+  const automatic = role => registry.find(p => p.status === "active" && staffMatchesRole(p, role))?.id || null;
+  const primary = input.primary_staff === undefined
+    ? automatic(input.primary_role || ROLE_ALIASES[input.category] || "coordinator")
+    : input.primary_staff === null ? null : resolve(input.primary_staff, input.primary_role);
+  let supporting;
+  if (input.supporting_staff === undefined) {
+    supporting = [...new Set((input.supporting_roles || []).map(automatic).filter(id => id && id !== primary))];
+  } else {
+    if (!Array.isArray(input.supporting_staff) || input.supporting_staff.length > 8) throw new Error("Supporting staff must be a bounded array.");
+    supporting = input.supporting_staff.map(ref => resolve(ref));
+    if (new Set(supporting).size !== supporting.length || supporting.includes(primary)) throw new Error("Duplicate assignment staff.");
+    const roles = input.supporting_roles || [];
+    if (roles.length && supporting.some(id => !roles.some(role => staffMatchesRole(getStaff(id, registry), role)))) throw new Error("Supporting staff is incompatible with supporting roles.");
+  }
+  return { primary_staff: primary, supporting_staff: supporting };
+}
+export function assignmentStaffView(assignment = {}, registry = STAFF) {
+  const view = ref => {
+    const person = getStaff(ref, registry);
+    return person ? { id: person.id, display_name: person.display_name, role: person.role.title, status: person.status } : null;
+  };
+  // Reads never manufacture durable bindings for legacy records.
+  return { primary_staff: view(assignment.primary_staff), supporting_staff: (assignment.supporting_staff || []).map(view).filter(Boolean) };
+}

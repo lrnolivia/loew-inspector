@@ -1,3 +1,4 @@
+import { normalizeAssignmentStaff } from "./staff-registry.js";
 const CATEGORIES=new Set(["architecture","design","implementation","research","qa-verification","maintenance","release","coordination"]);
 const ROLE=/^[a-z][a-z0-9-]{0,63}$/;
 const TAG=/^[a-z0-9][a-z0-9._-]{0,63}$/;
@@ -26,7 +27,7 @@ export function normalizeAssignmentTaxonomy(input={}){
   const supporting=uniq(input.supporting_roles||[],"supporting roles",8);
   if(supporting.some(x=>!ROLE.test(x))) throw new Error("invalid supporting role");
   if(primary&&supporting.includes(primary)) throw new Error("primary role cannot also be supporting");
-  return Object.freeze({category:input.category,labels:Object.freeze(normalizedLabels),tags:Object.freeze(tags),primary_role:primary,supporting_roles:Object.freeze(supporting)});
+  return Object.freeze({...normalizeAssignmentStaff(input),category:input.category,labels:Object.freeze(normalizedLabels),tags:Object.freeze(tags),primary_role:primary,supporting_roles:Object.freeze(supporting)});
 }
 export function mergeAssignmentTaxonomy(current,patch={}){
   return normalizeAssignmentTaxonomy({...current,...patch});
@@ -36,6 +37,8 @@ export function taxonomySkillContext(taxonomy){
   return Object.freeze({
     task_class:t.category,
     intent_tags:[t.category,...t.tags,...t.labels.map(x=>x.key+"."+String(x.value).toLowerCase().replace(/[^a-z0-9._-]+/g,"-")),...(t.primary_role?["role."+t.primary_role]:[]),...t.supporting_roles.map(role=>"role."+role)],
+    primary_staff:t.primary_staff,
+    supporting_staff:t.supporting_staff,
     primary_role:t.primary_role,
     supporting_roles:t.supporting_roles
   });
