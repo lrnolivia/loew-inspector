@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, relayContextCardDescriptor, relayContextCardResource, relayContextCardTool, validateRelayContextCardArguments, contextualizeRelayTool } from "./relay-chat-ui.js";
+import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, relayContextCardDescriptor, relayContextCardResource, relayContextCardTool, validateRelayContextCardArguments, contextualizeRelayTool, isContextualRelayTool } from "./relay-chat-ui.js";
 
 test("Relay publishes one versioned compact MCP card resource", () => {
   const descriptor = relayContextCardDescriptor();
@@ -16,17 +16,18 @@ test("Relay publishes one versioned compact MCP card resource", () => {
   assert.deepEqual(resource._meta.ui.csp.resourceDomains,['https://relay.loew.fi']);
 });
 
-test("contextual tool metadata is additive and keeps schemas intact", () => {
+test("data tools keep their schemas and do not claim the render template", () => {
   const original = {
     name: "relay_runner_progress",
     inputSchema: { type: "object", properties: { project: { type: "string" } } },
     _meta: { existing: true }
   };
   const decorated = contextualizeRelayTool(original);
+  assert.equal(decorated, original);
   assert.deepEqual(decorated.inputSchema, original.inputSchema);
   assert.equal(decorated._meta.existing, true);
-  assert.equal(decorated._meta.ui.resourceUri, RELAY_CONTEXT_CARD_URI);
-  assert.equal(decorated._meta["openai/outputTemplate"], RELAY_CONTEXT_CARD_URI);
+  assert.equal(decorated._meta.ui, undefined);
+  assert.equal(isContextualRelayTool(original.name), true);
 });
 
 test("dedicated launcher owns the MCP Apps mount contract", () => {
@@ -54,12 +55,15 @@ test("context card opens the fresh control-center resource identity", () => {
   assert.doesNotMatch(resource.text, /ui:\/\/relay\/control-center\/v1\.html/);
 });
 
-test('all conversational lifecycle tools select the compact resource, never the dashboard', () => {
+test('only the dedicated render tool owns the compact resource', () => {
   for(const name of ['relay_runner_coordinate','relay_runner_resume','relay_runner_updates','relay_runner_progress']) {
-    const decorated=contextualizeRelayTool({name});
-    assert.equal(decorated._meta.ui.resourceUri,RELAY_CONTEXT_CARD_URI);
-    assert.doesNotMatch(decorated._meta.ui.resourceUri,/control-center/);
+    const tool={name};
+    assert.equal(contextualizeRelayTool(tool),tool);
+    assert.equal(isContextualRelayTool(name),true);
   }
+  const renderer=contextualizeRelayTool(relayContextCardTool());
+  assert.equal(renderer._meta.ui.resourceUri,RELAY_CONTEXT_CARD_URI);
+  assert.doesNotMatch(renderer._meta.ui.resourceUri,/control-center/);
 });
 test('cards show named teams blockers handoffs QA and subordinate exact evidence', async () => {
   const {contextCardModel}=await import('./relay-chat-ui.js');
