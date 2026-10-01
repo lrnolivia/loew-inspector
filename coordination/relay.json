@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T04:45:22.552Z",
+  "updated_at": "2026-10-01T04:46:10.761Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -4001,7 +4001,7 @@
       "owner": "relay-1.9.9-chatgpt-native-experience-20261001",
       "goal": "Ship Relay 1.9.9 as the unified ChatGPT-native experience release: a polished family of contextual in-chat response cards plus a rich opened-Relay app with interactive chat/workspace behavior, all sharing one visual language, one canonical state model and one progressive-disclosure path.",
       "acceptance": "Relay 1.9.9 must not count any contextual card as shipped until a normal Relay tool call in an ordinary ChatGPT conversation visibly mounts the intended MCP App UI directly under that response in the user's real consumer. Source HTML existing, a ui:// resource being registered, `_meta.ui.resourceUri` / `openai/outputTemplate` being present server-side, or structuredContent being correct are necessary but insufficient. The host/mount path is P0: verify the installed ChatGPT app definition sees the current launcher-tool UI metadata, the resource is discoverable with `text/html;profile=mcp-app`, the consumer call is made through a path that preserves MCP Apps tool-descriptor metadata, and ChatGPT actually renders the component. If the ChatGPT connector/orchestration wrapper strips or fails to honor launcher metadata, record that as the blocker and either change the invocation/registration path or use a supported launcher surface; do not paper over it with more CSS. Visible fresh-consumer render evidence is required before card completion. The existing 1.9.9 live-preview QA, stable preview resolver, canonical progress identity, responsive/motion/accessibility, and visual-direction requirements remain in force.",
-      "next_action": "Before further card styling, isolate the MCP App launch path end-to-end. Compare Relay's direct `/mcp` tool descriptor and resource registration against ChatGPT's installed/refreshed app definition and current Apps SDK contract; verify `_meta.ui.resourceUri` on the actual launcher tool seen by the host, resource MIME and URI versioning, and whether the current connector/orchestration invocation path preserves that metadata. Run a minimal contextual tool call such as relay_runner_progress as the smoke case. Success means the user visibly sees the card in this chat. If not, capture the exact layer that drops the mount contract and fix or route around that layer before continuing 1.9.9 card CSS.",
+      "next_action": "P0 systems phase: implement one explicit MCP Apps context-card launcher on the active 1.9.9 branch, publish a fresh card resource URI, wire tool/resource handling, add contract tests, then exact-head CI and deployment. After deployment, refresh ChatGPT tools and smoke-test visible mounting. If direct launcher succeeds but Code Mode still suppresses UI, record the host forwarding boundary and stop CSS work until that layer is addressed.",
       "paths": [
         "src/relay-card-ui.js",
         "src/relay-card-view-model.js",
@@ -4067,13 +4067,13 @@
         "relay-launcher-tool-metadata",
         "relay-fresh-consumer-render-proof"
       ],
-      "task_class": "design",
+      "task_class": "architecture",
       "ledger_refs": [
         "RFS-031",
         "RFS-032",
         "RFS-033"
       ],
-      "category": "design",
+      "category": "architecture",
       "labels": [
         {
           "key": "release",
@@ -4097,17 +4097,15 @@
         "motion",
         "chatgpt"
       ],
-      "primary_role": "art-director",
+      "primary_role": "architect",
       "supporting_roles": [
-        "product-lead",
-        "design-editor",
-        "motion-director",
+        "art-director",
         "builder",
         "verifier"
       ],
       "state": "claimed",
       "created_at": "2026-10-01T02:57:33.950Z",
-      "amendment_count": 6,
+      "amendment_count": 7,
       "amendments": [
         {
           "at": "2026-10-01T03:02:32.261Z",
@@ -4521,9 +4519,81 @@
               "docs/relay/RELEASE_PLAN_1.9.9.md"
             ]
           }
+        },
+        {
+          "at": "2026-10-01T04:46:10.761Z",
+          "by": "relay-1.9.9-chatgpt-native-experience-20261001",
+          "reason": "Immediate phase is systems plumbing, per user: Runner implements the ChatGPT card mount path on behalf of Inspector.",
+          "fields": [
+            "next_action",
+            "task_class",
+            "category",
+            "primary_role",
+            "supporting_roles",
+            "primary_staff",
+            "supporting_staff",
+            "primary_team",
+            "supporting_teams"
+          ],
+          "before": {
+            "next_action": "P0: make one contextual Relay card visibly mount in the user's real ChatGPT conversation before further styling. Add a dedicated render/launcher tool following the current MCP Apps contract, publish the card under a fresh resource URI cache key, cover tool/resource metadata and fresh-client behavior in tests, then deploy and require a fresh ChatGPT tool refresh. If the direct Relay launcher mounts but Code Mode/nested connector invocation still does not, record that host forwarding boundary explicitly instead of changing CSS.",
+            "task_class": "design",
+            "category": "design",
+            "primary_role": "art-director",
+            "supporting_roles": [
+              "product-lead",
+              "design-editor",
+              "motion-director",
+              "builder",
+              "verifier"
+            ],
+            "primary_staff": "valentina",
+            "supporting_staff": [
+              "vivienne",
+              "margot",
+              "sabine",
+              "nico",
+              "roman"
+            ],
+            "primary_team": "inspector",
+            "supporting_teams": [
+              "runner"
+            ]
+          },
+          "after": {
+            "next_action": "P0 systems phase: implement one explicit MCP Apps context-card launcher on the active 1.9.9 branch, publish a fresh card resource URI, wire tool/resource handling, add contract tests, then exact-head CI and deployment. After deployment, refresh ChatGPT tools and smoke-test visible mounting. If direct launcher succeeds but Code Mode still suppresses UI, record the host forwarding boundary and stop CSS work until that layer is addressed.",
+            "task_class": "architecture",
+            "category": "architecture",
+            "primary_role": "architect",
+            "supporting_roles": [
+              "art-director",
+              "builder",
+              "verifier"
+            ],
+            "primary_staff": "ellis",
+            "supporting_staff": [
+              "valentina",
+              "nico",
+              "roman"
+            ],
+            "primary_team": "runner",
+            "supporting_teams": [
+              "inspector"
+            ]
+          }
         }
       ],
-      "updated_at": "2026-10-01T04:44:43.778Z"
+      "updated_at": "2026-10-01T04:46:10.761Z",
+      "primary_staff": "ellis",
+      "supporting_staff": [
+        "valentina",
+        "nico",
+        "roman"
+      ],
+      "primary_team": "runner",
+      "supporting_teams": [
+        "inspector"
+      ]
     },
     {
       "id": "relay-1.9.6.2-operational-staff-routing-20261001",
@@ -7102,14 +7172,14 @@
       ],
       "goal": "Ship Relay 1.9.9 as the unified ChatGPT-native experience release: a polished family of contextual in-chat response cards plus a rich opened-Relay app with interactive chat/workspace behavior, all sharing one visual language, one canonical state model and one progressive-disclosure path.",
       "acceptance": "Relay 1.9.9 must not count any contextual card as shipped until a normal Relay tool call in an ordinary ChatGPT conversation visibly mounts the intended MCP App UI directly under that response in the user's real consumer. Source HTML existing, a ui:// resource being registered, `_meta.ui.resourceUri` / `openai/outputTemplate` being present server-side, or structuredContent being correct are necessary but insufficient. The host/mount path is P0: verify the installed ChatGPT app definition sees the current launcher-tool UI metadata, the resource is discoverable with `text/html;profile=mcp-app`, the consumer call is made through a path that preserves MCP Apps tool-descriptor metadata, and ChatGPT actually renders the component. If the ChatGPT connector/orchestration wrapper strips or fails to honor launcher metadata, record that as the blocker and either change the invocation/registration path or use a supported launcher surface; do not paper over it with more CSS. Visible fresh-consumer render evidence is required before card completion. The existing 1.9.9 live-preview QA, stable preview resolver, canonical progress identity, responsive/motion/accessibility, and visual-direction requirements remain in force.",
-      "next_action": "P0: make one contextual Relay card visibly mount in the user's real ChatGPT conversation before further styling. Add a dedicated render/launcher tool following the current MCP Apps contract, publish the card under a fresh resource URI cache key, cover tool/resource metadata and fresh-client behavior in tests, then deploy and require a fresh ChatGPT tool refresh. If the direct Relay launcher mounts but Code Mode/nested connector invocation still does not, record that host forwarding boundary explicitly instead of changing CSS.",
-      "task_class": "design",
+      "next_action": "P0 systems phase: implement one explicit MCP Apps context-card launcher on the active 1.9.9 branch, publish a fresh card resource URI, wire tool/resource handling, add contract tests, then exact-head CI and deployment. After deployment, refresh ChatGPT tools and smoke-test visible mounting. If direct launcher succeeds but Code Mode still suppresses UI, record the host forwarding boundary and stop CSS work until that layer is addressed.",
+      "task_class": "architecture",
       "ledger_refs": [
         "RFS-031",
         "RFS-032",
         "RFS-033"
       ],
-      "category": "design",
+      "category": "architecture",
       "labels": [
         {
           "key": "release",
@@ -7133,31 +7203,92 @@
         "motion",
         "chatgpt"
       ],
-      "primary_role": "art-director",
+      "primary_role": "architect",
       "supporting_roles": [
-        "product-lead",
-        "design-editor",
-        "motion-director",
+        "art-director",
         "builder",
         "verifier"
       ],
-      "primary_team": "inspector",
+      "primary_team": "runner",
       "supporting_teams": [
-        "runner"
+        "inspector"
       ],
-      "primary_staff": "valentina",
+      "primary_staff": "ellis",
       "supporting_staff": [
-        "vivienne",
-        "margot",
-        "sabine",
+        "valentina",
         "nico",
         "roman"
       ],
       "base_sha": "544c5a358ce9fb6882e040cf9eff105c2333f72c",
       "state": "active",
       "created_at": "2026-10-01T04:43:37.777Z",
-      "updated_at": "2026-10-01T04:45:22.552Z",
-      "lease_until": "2026-10-01T16:45:22.552Z"
+      "updated_at": "2026-10-01T04:46:10.761Z",
+      "lease_until": "2026-10-01T16:46:10.761Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T04:46:10.761Z",
+          "by": "relay-1.9.9-chatgpt-native-experience-20261001",
+          "reason": "Immediate phase is systems plumbing, per user: Runner implements the ChatGPT card mount path on behalf of Inspector.",
+          "fields": [
+            "next_action",
+            "task_class",
+            "category",
+            "primary_role",
+            "supporting_roles",
+            "primary_staff",
+            "supporting_staff",
+            "primary_team",
+            "supporting_teams"
+          ],
+          "before": {
+            "next_action": "P0: make one contextual Relay card visibly mount in the user's real ChatGPT conversation before further styling. Add a dedicated render/launcher tool following the current MCP Apps contract, publish the card under a fresh resource URI cache key, cover tool/resource metadata and fresh-client behavior in tests, then deploy and require a fresh ChatGPT tool refresh. If the direct Relay launcher mounts but Code Mode/nested connector invocation still does not, record that host forwarding boundary explicitly instead of changing CSS.",
+            "task_class": "design",
+            "category": "design",
+            "primary_role": "art-director",
+            "supporting_roles": [
+              "product-lead",
+              "design-editor",
+              "motion-director",
+              "builder",
+              "verifier"
+            ],
+            "primary_staff": "valentina",
+            "supporting_staff": [
+              "vivienne",
+              "margot",
+              "sabine",
+              "nico",
+              "roman"
+            ],
+            "primary_team": "inspector",
+            "supporting_teams": [
+              "runner"
+            ]
+          },
+          "after": {
+            "next_action": "P0 systems phase: implement one explicit MCP Apps context-card launcher on the active 1.9.9 branch, publish a fresh card resource URI, wire tool/resource handling, add contract tests, then exact-head CI and deployment. After deployment, refresh ChatGPT tools and smoke-test visible mounting. If direct launcher succeeds but Code Mode still suppresses UI, record the host forwarding boundary and stop CSS work until that layer is addressed.",
+            "task_class": "architecture",
+            "category": "architecture",
+            "primary_role": "architect",
+            "supporting_roles": [
+              "art-director",
+              "builder",
+              "verifier"
+            ],
+            "primary_staff": "ellis",
+            "supporting_staff": [
+              "valentina",
+              "nico",
+              "roman"
+            ],
+            "primary_team": "runner",
+            "supporting_teams": [
+              "inspector"
+            ]
+          }
+        }
+      ]
     }
   ],
   "migrated_from": "loew-inspector"
