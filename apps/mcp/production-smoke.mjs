@@ -34,7 +34,7 @@ try {
   const app = await rpc("resources/read", { uri: "ui://relay/control-center/v2.html" });
   if (!app.contents[0].text.includes('data-page="night-shift"') || app.contents[0].text.includes(">Night Shift<")) throw new Error("Shared app missing or night shift copy is stale");
   const card = await rpc("resources/read", { uri: "ui://relay/context-card/v6.html" });
-  if (!card.contents[0].text.includes("observed progress")) throw new Error("Contextual card contract missing");
+  if (!card.contents[0].text.includes('id="open-relay"') || !card.contents[0].text.includes('id="qa-media"')) throw new Error("Contextual card v6 contract missing");
   await call("relay_source_status");
   await call("relay_source_repo", { repo: "relay" });
   await call("relay_runner_project", { project: "relay" });
