@@ -4,7 +4,7 @@ import { esc, projectName } from "../../apps/web/public/operator-projects.js";
 
 export async function loadNightShift(ui, projectId = "") {
   const target = document.querySelector("#night-shift-work");
-  showLoading(target, "rows", "Loading automatic work");
+  showLoading(target, "night", "Loading automatic work");
   try {
     const response = await fetch("/api/workers");
     if (!response.ok) throw new Error("Automatic work could not be loaded.");

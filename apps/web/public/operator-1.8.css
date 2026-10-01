@@ -1062,3 +1062,39 @@ body[data-page="night-shift"] { --page-feature-accent: var(--feature-night-shift
 .operator-connection[data-tone="loading"]::before { background: var(--status-working); animation: connection-checking 1.5s ease-in-out infinite; }
 @keyframes connection-checking { 0%, 100% { opacity: .45; box-shadow: 0 0 0 0 transparent; } 50% { opacity: 1; box-shadow: 0 0 0 4px color-mix(in srgb, var(--status-working) 16%, transparent); } }
 @media (prefers-reduced-motion: reduce) { .operator-connection[data-tone="loading"]::before { animation: none; } }
+
+/* Greige surfaces keep status colors in their indicators, not across whole cards. */
+.progress-row[data-tone], .today-task[data-tone], .automation-row[data-tone], .attention-card[data-tone], .review-row[data-tone], .task-row[data-tone] { background: var(--color-surface) !important; }
+.project-name, .attention-project, .today-task-project, .qa-product-badge { background: var(--color-raised); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text-secondary) 12%, transparent); }
+.review-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.review-list > .content-skeleton, .review-list > .review-clear, .review-list > .operator-empty { grid-column: 1 / -1; }
+.review-list .review-row { display: flex; flex-direction: column; align-items: stretch; gap: 0; padding: 0; overflow: hidden; border-radius: 20px; }
+.review-row > img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: contain; border-radius: 0; background: var(--color-canvas); }
+.review-row .review-copy { gap: 8px; padding: 18px 18px 12px; }
+.review-row .review-project { font-size: 12px; }
+.review-row .review-copy > strong { font-size: 17px; white-space: normal; line-height: 1.35; margin: 0; }
+.review-row .review-copy > small { margin: 0; font-size: 12px; }
+.review-row .review-state { margin: 0 18px 18px; align-self: flex-start; }
+.skeleton-review > div { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.skeleton-card { border-radius: 20px; }
+.skeleton-card .skeleton-copy { padding: 18px; gap: 10px; }
+.skeleton-badge { width: 92px; height: 32px; border-radius: 10px; }
+.skeleton-state { width: 114px; height: 32px; border-radius: 999px; margin-top: 4px; }
+.skeleton-attention .skeleton-row, .skeleton-automation .skeleton-row, .skeleton-night .skeleton-row { min-height: 132px; }
+.skeleton-work .skeleton-row { min-height: 80px; background: transparent; }
+.skeleton-action { width: 108px; height: 40px; flex: 0 0 108px; border-radius: 10px; }
+.skeleton-inspector > div { gap: 20px; }
+.skeleton-question { display: grid; gap: 12px; }
+.skeleton-question .skeleton-line { height: 21px; }
+.skeleton-answers { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.skeleton-answer { height: 40px; border-radius: 10px; }
+.skeleton-notes { height: 88px; border-radius: 10px; }
+@media (max-width: 1100px) { .review-list, .skeleton-review > div { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (max-width: 640px) { .review-list, .skeleton-review > div { grid-template-columns: minmax(0, 1fr); } .skeleton-action { width: 76px; flex-basis: 76px; } }
+@container (max-width: 380px) { .skeleton-answers { grid-template-columns: 1fr; } }
+.status-badge { background: var(--color-raised) !important; }
+
+.skeleton-progress { display: grid; gap: 20px; padding: 20px; min-height: 220px; border-radius: 20px; background: var(--color-surface); }
+.skeleton-work .skeleton-state { flex: 0 0 114px; }
+.skeleton-work .skeleton-badge { flex: 0 0 92px; }
+@media (max-width: 640px) { .skeleton-work .skeleton-row { flex-wrap: wrap; } .skeleton-work .skeleton-copy { flex-basis: calc(100% - 110px); } }

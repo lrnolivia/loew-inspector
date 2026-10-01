@@ -14,7 +14,7 @@ export const brand = Object.freeze({
 
 export const featureAccent = Object.freeze({
   relay: "#b5471f",
-  inspector: "#1c8c93",
+  inspector: "#18afc0",
   runner: "#3bcb8d",
   today: "#ff6f78",
   "night-shift": "#ffbf00"

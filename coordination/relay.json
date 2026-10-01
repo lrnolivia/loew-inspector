@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T03:05:06.380Z",
+  "updated_at": "2026-10-01T03:19:08.397Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -29,8 +29,8 @@
       "id": "relay-operation-framework-20260930",
       "owner": "relay-operation-framework-20260930",
       "goal": "Turn Relay's production primitives into a durable resumable operation framework so agents invoke policy-defined workflows instead of manually conducting every GitHub, Cloudflare, Runner and QA step.",
-      "acceptance": "Every substantial workflow can create a stable operation_id with persisted stage/state, exact source/head/PR/check/merge/version/deployment/runtime identities, timestamps, retry/reconciliation history, blocker/waiting-for-human state and recovery/rollback state; reconnecting agents can resume from the durable receipt without reconstructing chat history; server-side recipes cover at least ship-change, publish-worker, qa-then-merge and rollback-release; ambiguous mutations reconcile by readback before retry; event/webhook updates can advance operation state without chat polling; release policy supports bounded canary/verify/promote/rollback semantics without protection bypass; operation status/history is queryable for UI; tool-surface growth stays minimal by preferring recipes/resources/contracts over one tool per step.",
-      "next_action": "Define and test the operation/receipt schema and transition invariants first. Reuse existing Relay source/cloud/verify primitives; do not fork their auth or safety rules.",
+      "acceptance": "Every substantial workflow can create a stable operation_id with persisted stage/state, exact source/head/PR/check/merge/version/deployment/runtime identities, timestamps, retry/reconciliation history, blocker/waiting-for-human state and recovery/rollback state; reconnecting agents can resume from the durable receipt without reconstructing chat history; server-side recipes cover at least ship-change, publish-worker, qa-then-merge and rollback-release; ambiguous mutations reconcile by readback before retry; event/webhook updates can advance operation state without chat polling; release policy supports bounded canary/verify/promote/rollback semantics without protection bypass; operation status/history is queryable for UI; tool-surface growth stays minimal by preferring recipes/resources/contracts over one tool per step. Tool-pattern contract: operation recipes and their exposed tool interfaces consume the Relay 1.9.8 tool-design standard derived from Arcade's Agentic Tool Patterns. Recipes should prefer explicit task bundles/tool chains over forcing agents to manually orchestrate repetitive low-level calls, expose durable operation IDs and progressive status, classify failures with retry/user/auth/permanent semantics plus recovery guidance, preserve idempotent/readback/transaction boundaries, keep outputs structured/token-efficient, and enforce permission/secret/scope rules server-side. Deviations from applicable patterns must be explicit and justified; do not multiply tools merely to satisfy a pattern mechanically.",
+      "next_action": "Define the operation/receipt schema and transition invariants first, but consume the Relay 1.9.8 agentic-tool standard for recipe/tool boundaries, errors, discovery, output shaping and security. Reuse existing source/cloud/verify primitives and prefer durable high-level recipes where they eliminate fragile manual tool chains.",
       "paths": [
         "src/operations.js",
         "src/operation-receipts.js",
@@ -45,10 +45,56 @@
       "resources": [
         "relay-operation-framework",
         "relay-publication-receipts",
-        "relay-release-orchestration"
+        "relay-release-orchestration",
+        "relay-agentic-tool-standard",
+        "arcade-agentic-tool-patterns",
+        "relay-tool-conformance-evals"
       ],
       "state": "queued",
-      "created_at": "2026-09-30T13:25:45.579Z"
+      "created_at": "2026-09-30T13:25:45.579Z",
+      "ledger_refs": [
+        "RFS-034"
+      ],
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T03:16:27.124Z",
+          "by": "relay-operation-framework-20260930",
+          "reason": "Make durable operations conform to the same production-grade agentic-tool standard instead of treating tool-pattern hardening as a separate documentation exercise.",
+          "fields": [
+            "acceptance",
+            "next_action",
+            "resources",
+            "ledger_refs"
+          ],
+          "before": {
+            "acceptance": "Every substantial workflow can create a stable operation_id with persisted stage/state, exact source/head/PR/check/merge/version/deployment/runtime identities, timestamps, retry/reconciliation history, blocker/waiting-for-human state and recovery/rollback state; reconnecting agents can resume from the durable receipt without reconstructing chat history; server-side recipes cover at least ship-change, publish-worker, qa-then-merge and rollback-release; ambiguous mutations reconcile by readback before retry; event/webhook updates can advance operation state without chat polling; release polic...",
+            "next_action": "Define and test the operation/receipt schema and transition invariants first. Reuse existing Relay source/cloud/verify primitives; do not fork their auth or safety rules.",
+            "resources": [
+              "relay-operation-framework",
+              "relay-publication-receipts",
+              "relay-release-orchestration"
+            ],
+            "ledger_refs": null
+          },
+          "after": {
+            "acceptance": "Every substantial workflow can create a stable operation_id with persisted stage/state, exact source/head/PR/check/merge/version/deployment/runtime identities, timestamps, retry/reconciliation history, blocker/waiting-for-human state and recovery/rollback state; reconnecting agents can resume from the durable receipt without reconstructing chat history; server-side recipes cover at least ship-change, publish-worker, qa-then-merge and rollback-release; ambiguous mutations reconcile by readback before retry; event/webhook updates can advance operation state without chat polling; release polic...",
+            "next_action": "Define the operation/receipt schema and transition invariants first, but consume the Relay 1.9.8 agentic-tool standard for recipe/tool boundaries, errors, discovery, output shaping and security. Reuse existing source/cloud/verify primitives and prefer durable high-level recipes where they eliminate fragile manual tool chains.",
+            "resources": [
+              "relay-operation-framework",
+              "relay-publication-receipts",
+              "relay-release-orchestration",
+              "relay-agentic-tool-standard",
+              "arcade-agentic-tool-patterns",
+              "relay-tool-conformance-evals"
+            ],
+            "ledger_refs": [
+              "RFS-034"
+            ]
+          }
+        }
+      ],
+      "updated_at": "2026-10-01T03:16:27.124Z"
     },
     {
       "id": "relay-mcp-app-ui-20260930",
@@ -3471,53 +3517,73 @@
     {
       "id": "relay-1.9.8-inline-card-design-system-20261001",
       "owner": "relay-1.9.8-inline-card-design-system-20261001",
-      "goal": "Historical lineage only: the planned Relay 1.9.8 inline-card release was absorbed into Relay 1.9.9 so cards and the opened ChatGPT app experience ship as one coherent ChatGPT-native product release.",
-      "acceptance": "No independent implementation should start from this assignment. Its card-system intent, visual families, Terra Prime direction, motion/accessibility requirements and progressive-disclosure work are owned by successor assignment relay-1.9.9-chatgpt-native-experience-20261001.",
-      "next_action": "Do not claim independently. Continue all inline-card design and implementation under relay-1.9.9-chatgpt-native-experience-20261001.",
+      "goal": "Ship Relay 1.9.8 as the agentic-tool contract hardening release: audit and improve Relay's MCP/tool surface using the Arcade Agentic Tool Patterns as the normative review baseline for production-grade tool interface design, discovery, composition, execution, output shaping, context, resilience and security.",
+      "acceptance": "Use https://arcade.dev/patterns/llm.txt as the external tool-design review baseline, not as a blind checklist. For every Relay tool family and durable operation recipe, classify the applicable patterns and either satisfy them or record a concise deliberate deviation. Required baseline expectations include: LLM-optimized tool descriptions; clear query/command/discovery separation; constrained typed inputs with sensible defaults and human-friendly identifiers where safe; explicit dependency/call-order hints; layered discovery/capability matching/health checks; composable abstraction levels, task bundles/batching where they reduce agent loops, and explicit operation chains; idempotency/readback/transaction/timeout boundaries appropriate to mutation risk; token-efficient structured outputs with progressive detail and resource references instead of giant payloads; explicit context/identity boundaries; structured error classification with retryability, user/auth requirements and actionable recovery guidance; graceful degradation/fallback only when authority and truth are preserved; credentials injected server-side, permissions enforced in code, scopes declared, and auditable mutations. Preserve Relay's existing canonical authority model, exact-head/CAS safety, Runner ownership, SOURCE/CLOUD/VERIFY boundaries and no-standing-secret rules. Add a versioned Relay tool-design standard plus tests/evals that reject ambiguous descriptions, unconstrained dangerous inputs, raw opaque errors, hidden side effects, unauthorized fallback paths, oversized default responses and tools that duplicate an existing higher-level operation. Audit existing tools and operation recipes; fix high-value gaps without exploding the tool count. Arcade patterns are guidance: when two patterns are alternatives, choose the one appropriate to the tool's role and document why.",
+      "next_action": "Start after 1.9.7 creative/platform skills are stable and before 1.9.9 ChatGPT-native UI. First add the versioned Relay tool-design standard and an applicability matrix for every exposed MCP tool/tool family. Audit descriptions, schemas, discovery, errors, outputs, composition and security. Then patch the highest-impact gaps, add conformance tests/evals, and make the operation framework consume the same standard. Finish with a fresh-client tool-schema review proving agents can discover the right capability, recover from representative failures, and avoid unnecessary low-level tool chains.",
       "paths": [
-        "docs/relay/RELAY_1_9_8_RELEASE.md"
+        "docs/relay/TOOL_DESIGN_STANDARD.md",
+        "docs/relay/RELAY_1_9_8_RELEASE.md",
+        "contracts/tools/",
+        "src/relay-entry.js",
+        "src/runner-control.js",
+        "src/source-lifecycle.js",
+        "src/source-text-mutation.js",
+        "src/operations.js",
+        "src/operation-recipes.js",
+        "test/tools/",
+        "test/tool-evals/"
       ],
       "resources": [
-        "relay-superseded-lineage"
+        "relay-1.9.8-release",
+        "relay-agentic-tool-standard",
+        "arcade-agentic-tool-patterns",
+        "relay-tool-applicability-matrix",
+        "relay-tool-discovery",
+        "relay-tool-composition",
+        "relay-structured-errors",
+        "relay-recovery-guides",
+        "relay-token-efficient-results",
+        "relay-tool-security",
+        "relay-tool-conformance-evals"
       ],
-      "task_class": "design",
+      "task_class": "architecture",
       "ledger_refs": [
-        "RFS-031"
+        "RFS-034"
       ],
-      "category": "design",
+      "category": "architecture",
       "labels": [
         {
           "key": "release",
           "value": "1.9.8"
         },
         {
-          "key": "surface",
-          "value": "inline-chat"
+          "key": "domain",
+          "value": "agentic-tools"
         },
         {
-          "key": "domain",
-          "value": "card-system"
+          "key": "standard",
+          "value": "arcade-patterns"
         }
       ],
       "tags": [
-        "cards",
-        "mcp-app",
-        "terra-prime",
-        "motion",
-        "visual-system",
-        "chat"
+        "tools",
+        "mcp",
+        "discovery",
+        "composition",
+        "resilience",
+        "security",
+        "arcade"
       ],
-      "primary_role": "art-director",
+      "primary_role": "architect",
       "supporting_roles": [
-        "product-lead",
-        "design-editor",
-        "motion-director",
+        "integrator",
         "builder",
-        "verifier"
+        "verifier",
+        "knowledge-planner"
       ],
       "state": "queued",
       "created_at": "2026-10-01T02:56:35.886Z",
-      "amendment_count": 1,
+      "amendment_count": 2,
       "amendments": [
         {
           "at": "2026-10-01T02:58:34.331Z",
@@ -3572,9 +3638,140 @@
               "relay-superseded-lineage"
             ]
           }
+        },
+        {
+          "at": "2026-10-01T03:16:06.080Z",
+          "by": "relay-1.9.8-inline-card-design-system-20261001",
+          "reason": "Repurpose the now-free 1.9.8 slot into a production-grade agentic-tool hardening release using Arcade's published patterns as Relay's normative tool-development review baseline.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action",
+            "paths",
+            "resources",
+            "task_class",
+            "ledger_refs",
+            "category",
+            "labels",
+            "tags",
+            "primary_role",
+            "supporting_roles"
+          ],
+          "before": {
+            "goal": "Historical lineage only: the planned Relay 1.9.8 inline-card release was absorbed into Relay 1.9.9 so cards and the opened ChatGPT app experience ship as one coherent ChatGPT-native product release.",
+            "acceptance": "No independent implementation should start from this assignment. Its card-system intent, visual families, Terra Prime direction, motion/accessibility requirements and progressive-disclosure work are owned by successor assignment relay-1.9.9-chatgpt-native-experience-20261001.",
+            "next_action": "Do not claim independently. Continue all inline-card design and implementation under relay-1.9.9-chatgpt-native-experience-20261001.",
+            "paths": [
+              "docs/relay/RELAY_1_9_8_RELEASE.md"
+            ],
+            "resources": [
+              "relay-superseded-lineage"
+            ],
+            "task_class": "design",
+            "ledger_refs": [
+              "RFS-031"
+            ],
+            "category": "design",
+            "labels": [
+              {
+                "key": "release",
+                "value": "1.9.8"
+              },
+              {
+                "key": "surface",
+                "value": "inline-chat"
+              },
+              {
+                "key": "domain",
+                "value": "card-system"
+              }
+            ],
+            "tags": [
+              "cards",
+              "mcp-app",
+              "terra-prime",
+              "motion",
+              "visual-system",
+              "chat"
+            ],
+            "primary_role": "art-director",
+            "supporting_roles": [
+              "product-lead",
+              "design-editor",
+              "motion-director",
+              "builder",
+              "verifier"
+            ]
+          },
+          "after": {
+            "goal": "Ship Relay 1.9.8 as the agentic-tool contract hardening release: audit and improve Relay's MCP/tool surface using the Arcade Agentic Tool Patterns as the normative review baseline for production-grade tool interface design, discovery, composition, execution, output shaping, context, resilience and security.",
+            "acceptance": "Use https://arcade.dev/patterns/llm.txt as the external tool-design review baseline, not as a blind checklist. For every Relay tool family and durable operation recipe, classify the applicable patterns and either satisfy them or record a concise deliberate deviation. Required baseline expectations include: LLM-optimized tool descriptions; clear query/command/discovery separation; constrained typed inputs with sensible defaults and human-friendly identifiers where safe; explicit dependency/call-order hints; layered discovery/capability matching/health checks; composable abstraction levels, t...",
+            "next_action": "Start after 1.9.7 creative/platform skills are stable and before 1.9.9 ChatGPT-native UI. First add the versioned Relay tool-design standard and an applicability matrix for every exposed MCP tool/tool family. Audit descriptions, schemas, discovery, errors, outputs, composition and security. Then patch the highest-impact gaps, add conformance tests/evals, and make the operation framework consume the same standard. Finish with a fresh-client tool-schema review proving agents can discover the right capability, recover from representative failures, and avoid unnecessary low-level tool chains.",
+            "paths": [
+              "docs/relay/TOOL_DESIGN_STANDARD.md",
+              "docs/relay/RELAY_1_9_8_RELEASE.md",
+              "contracts/tools/",
+              "src/relay-entry.js",
+              "src/runner-control.js",
+              "src/source-lifecycle.js",
+              "src/source-text-mutation.js",
+              "src/operations.js",
+              "src/operation-recipes.js",
+              "test/tools/",
+              "test/tool-evals/"
+            ],
+            "resources": [
+              "relay-1.9.8-release",
+              "relay-agentic-tool-standard",
+              "arcade-agentic-tool-patterns",
+              "relay-tool-applicability-matrix",
+              "relay-tool-discovery",
+              "relay-tool-composition",
+              "relay-structured-errors",
+              "relay-recovery-guides",
+              "relay-token-efficient-results",
+              "relay-tool-security",
+              "relay-tool-conformance-evals"
+            ],
+            "task_class": "architecture",
+            "ledger_refs": [
+              "RFS-034"
+            ],
+            "category": "architecture",
+            "labels": [
+              {
+                "key": "release",
+                "value": "1.9.8"
+              },
+              {
+                "key": "domain",
+                "value": "agentic-tools"
+              },
+              {
+                "key": "standard",
+                "value": "arcade-patterns"
+              }
+            ],
+            "tags": [
+              "tools",
+              "mcp",
+              "discovery",
+              "composition",
+              "resilience",
+              "security",
+              "arcade"
+            ],
+            "primary_role": "architect",
+            "supporting_roles": [
+              "integrator",
+              "builder",
+              "verifier",
+              "knowledge-planner"
+            ]
+          }
         }
       ],
-      "updated_at": "2026-10-01T02:58:34.331Z"
+      "updated_at": "2026-10-01T03:16:06.080Z"
     },
     {
       "id": "relay-1.9.9-chatgpt-native-experience-20261001",
@@ -3751,7 +3948,7 @@
       "owner": "relay-1.9-wrapup-20261001",
       "goal": "Ship Relay 1.9.6.2 as operational staff routing plus the conversational contextual-card repair, then continue as the wrap-up worker for the remaining Relay 1.9 patch train through 1.9.9 under the umbrella mandate.",
       "acceptance": "Add durable assignment-level primary_staff and supporting_staff metadata resolved from the canonical sticky staff registry while preserving machine owner IDs and authorization underneath. Validate active/reserve/retired rules, duplicates, amend history, role/staff compatibility where appropriate, and deterministic fallback. Carry named teams through queue/claim/amend, resume/updates, worker communication, executive status and human-first presentation. Repair the normal in-chat MCP visual path: contextual Relay tools must attach and render the compact context-card surface from src/relay-chat-ui.js / ui://relay/context-card/...; do not substitute the full control-center/dashboard. Cards should represent staff ownership, status/progress, connected handoffs, blockers, QA and useful actions with technical evidence subordinate. The dashboard remains an explicit Open Relay destination. Preserve exact machine/evidence identity, no staff-based authorization, no productivity scoring. Add regression tests for staff routing and card descriptor/resource linkage, pass exact-head admission/CI, merge/deploy, refresh ChatGPT and verify the card renders in a fresh consumer. After 1.9.6.2 verification, continue owning coherent 1.9.7/1.9.8/1.9.9 successors from current canonical findings/state without stopping for reassignment or creating empty versions; close the umbrella only after final fresh-consumer verification.",
-      "next_action": "Claim from current main. First make primary_staff/supporting_staff canonical Runner metadata and project it through resume/updates/communication. Then repair and verify the contextual in-chat card descriptor/resource path, keeping the full dashboard separate. Ship 1.9.6.2 exact-head. After verification, read the 1.9 umbrella + open findings and continue through coherent 1.9.7, 1.9.8 and 1.9.9 work until the umbrella can close.",
+      "next_action": "PR #72 merged exact head a015761290cf86ada0c48e0537dbede1ce4e6cb2 as de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7; deployed Worker version 14b11840-1c72-4402-a5da-e47d33e2ac4d at 100% via 10961170-a08b-4074-936f-7189084bcbcb. Runtime/source readback reports 1.9.6.2 and context-card/v2. Refresh ChatGPT Relay metadata and verify named staff, updated coordinate schema and compact card in a fresh consumer before completing this slice and continuing successors.",
       "paths": [
         "contracts/staff-routing/",
         "contracts/assignments/",
@@ -3805,8 +4002,40 @@
         "systems-architect",
         "verifier"
       ],
-      "state": "queued",
-      "created_at": "2026-10-01T02:57:49.713Z"
+      "state": "claimed",
+      "created_at": "2026-10-01T02:57:49.713Z",
+      "primary_staff": "julian",
+      "supporting_staff": [
+        "ellis",
+        "roman"
+      ],
+      "updated_at": "2026-10-01T03:19:08.397Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T03:19:08.397Z",
+          "by": "relay-1.9-wrapup-20261001",
+          "reason": "Bind the wrap-up assignment to the deployed canonical staff resolver and record exact-source deployment before refreshed-consumer verification.",
+          "fields": [
+            "next_action",
+            "primary_staff",
+            "supporting_staff"
+          ],
+          "before": {
+            "next_action": "Complete canonical staff/card regression checks including release-version compatibility, then exact-head publication.",
+            "primary_staff": null,
+            "supporting_staff": null
+          },
+          "after": {
+            "next_action": "PR #72 merged exact head a015761290cf86ada0c48e0537dbede1ce4e6cb2 as de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7; deployed Worker version 14b11840-1c72-4402-a5da-e47d33e2ac4d at 100% via 10961170-a08b-4074-936f-7189084bcbcb. Runtime/source readback reports 1.9.6.2 and context-card/v2. Refresh ChatGPT Relay metadata and verify named staff, updated coordinate schema and compact card in a fresh consumer before completing this slice and continuing successors.",
+            "primary_staff": "julian",
+            "supporting_staff": [
+              "ellis",
+              "roman"
+            ]
+          }
+        }
+      ]
     }
   ],
   "claims": [
@@ -5548,10 +5777,114 @@
       "acceptance": "Remove brown and blue cast from neutral surfaces; retain approved icons; Inspector uses canonical bright cyan; desktop review cards and skeletons match in three columns with responsive two/one columns; loading shapes match actual content sections; normal checks and publication.",
       "next_action": "Implement targeted tokens/layout/loading corrections and verify browser before publishing.",
       "base_sha": "11461cfe2dd4432b381e60b258f5e633f079c419",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T03:05:06.380Z",
-      "updated_at": "2026-10-01T03:05:06.380Z",
-      "lease_until": "2026-10-01T15:05:06.380Z"
+      "updated_at": "2026-10-01T03:13:28.289Z",
+      "lease_until": "2026-10-01T15:13:28.289Z",
+      "pr": 71,
+      "merged_head_sha": "2d78794793131b6e70d4487b4b3b083d255e1344",
+      "merge_commit_sha": "0c9b6d4777f70697e892570ce2d5fea62f93d066",
+      "evidence": "PR https://github.com/lrnolivia/relay/pull/71; tested head 2d78794793131b6e70d4487b4b3b083d255e1344; full npm test, exact-head CI test and Runner admission passed. Merge 0c9b6d4777f70697e892570ce2d5fea62f93d066 deployed as version f0b5121e-008d-4055-b1ff-16f01d47516d at 100%, verified by deployment/version commit annotation. Browser proof covers matching three-column review/skeleton widths, neutral greige cards, Inspector-specific question/answer/notes skeletons, resize/mobile and durable review saves on web/simulated MCP. Bitmap icon preserved for user replacement. Accepted palette/cards/loading corrections in docs/relay/INSPECTOR_VISUAL_POLISH_20260930.md; prior behavioral backlog preserved. Authenticated live browser QA had HTTP 522 in preceding pass and was not re-looped; production visual inspection not claimed. Checkout clean and pushed.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T03:13:28.289Z"
+    },
+    {
+      "id": "relay-1.9.6.2-operational-staff-routing-20261001",
+      "owner": "relay-1.9-wrapup-20261001",
+      "branch": "relay/1.9.6.2-operational-staff-routing-20261001",
+      "paths": [
+        "contracts/staff-routing/",
+        "contracts/assignments/",
+        "src/staff-registry.js",
+        "src/staff-registry.test.js",
+        "src/assignment-taxonomy.js",
+        "src/assignment-taxonomy.test.js",
+        "src/coordination-engine.js",
+        "src/coordination.mjs",
+        "src/runner-control-core.js",
+        "src/runner-control.js",
+        "src/runner-control.test.js",
+        "src/resume-checkpoints.js",
+        "src/resume-checkpoints.test.js",
+        "src/amendment-sync.js",
+        "src/amendment-sync.test.js",
+        "src/worker-communication.js",
+        "src/worker-communication.test.js",
+        "src/communication-presentation.js",
+        "src/communication-presentation.test.js",
+        "src/executive-communication-skill.js",
+        "src/relay-chat-ui.js",
+        "src/relay-chat-ui.test.js",
+        "src/relay-entry.js",
+        "src/relay-entry.test.js",
+        "docs/relay/RELAY_1_9_6_2_RELEASE.md",
+        "src/runner-cleanup.test.js"
+      ],
+      "resources": [
+        "relay-1.9.6.2-release",
+        "relay-operational-staff-routing",
+        "relay-primary-supporting-staff",
+        "relay-contextual-chat-cards",
+        "relay-human-first-status",
+        "relay-mcp-context-card-rendering"
+      ],
+      "goal": "Ship Relay 1.9.6.2 as operational staff routing plus the conversational contextual-card repair, then continue as the wrap-up worker for the remaining Relay 1.9 patch train through 1.9.9 under the umbrella mandate.",
+      "acceptance": "Add durable assignment-level primary_staff and supporting_staff metadata resolved from the canonical sticky staff registry while preserving machine owner IDs and authorization underneath. Validate active/reserve/retired rules, duplicates, amend history, role/staff compatibility where appropriate, and deterministic fallback. Carry named teams through queue/claim/amend, resume/updates, worker communication, executive status and human-first presentation. Repair the normal in-chat MCP visual path: contextual Relay tools must attach and render the compact context-card surface from src/relay-chat-ui.js / ui://relay/context-card/...; do not substitute the full control-center/dashboard. Cards should represent staff ownership, status/progress, connected handoffs, blockers, QA and useful actions with technical evidence subordinate. The dashboard remains an explicit Open Relay destination. Preserve exact machine/evidence identity, no staff-based authorization, no productivity scoring. Add regression tests for staff routing and card descriptor/resource linkage, pass exact-head admission/CI, merge/deploy, refresh ChatGPT and verify the card renders in a fresh consumer. After 1.9.6.2 verification, continue owning coherent 1.9.7/1.9.8/1.9.9 successors from current canonical findings/state without stopping for reassignment or creating empty versions; close the umbrella only after final fresh-consumer verification.",
+      "next_action": "PR #72 merged exact head a015761290cf86ada0c48e0537dbede1ce4e6cb2 as de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7; deployed Worker version 14b11840-1c72-4402-a5da-e47d33e2ac4d at 100% via 10961170-a08b-4074-936f-7189084bcbcb. Runtime/source readback reports 1.9.6.2 and context-card/v2. Refresh ChatGPT Relay metadata and verify named staff, updated coordinate schema and compact card in a fresh consumer before completing this slice and continuing successors.",
+      "task_class": "architecture",
+      "ledger_refs": [
+        "RFS-024",
+        "RFS-025",
+        "RFS-028",
+        "RFS-030"
+      ],
+      "category": "coordination",
+      "tags": [
+        "staff-routing",
+        "context-card",
+        "1.9-wrapup"
+      ],
+      "primary_role": "coordinator",
+      "supporting_roles": [
+        "systems-architect",
+        "verifier"
+      ],
+      "base_sha": "f1241e913800349a7e6e415fa447ece86821fe8e",
+      "state": "active",
+      "created_at": "2026-10-01T03:05:53.991Z",
+      "updated_at": "2026-10-01T03:19:08.397Z",
+      "lease_until": "2026-10-01T15:19:08.397Z",
+      "primary_staff": "julian",
+      "supporting_staff": [
+        "ellis",
+        "roman"
+      ],
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T03:19:08.397Z",
+          "by": "relay-1.9-wrapup-20261001",
+          "reason": "Bind the wrap-up assignment to the deployed canonical staff resolver and record exact-source deployment before refreshed-consumer verification.",
+          "fields": [
+            "next_action",
+            "primary_staff",
+            "supporting_staff"
+          ],
+          "before": {
+            "next_action": "Complete canonical staff/card regression checks including release-version compatibility, then exact-head publication.",
+            "primary_staff": null,
+            "supporting_staff": null
+          },
+          "after": {
+            "next_action": "PR #72 merged exact head a015761290cf86ada0c48e0537dbede1ce4e6cb2 as de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7; deployed Worker version 14b11840-1c72-4402-a5da-e47d33e2ac4d at 100% via 10961170-a08b-4074-936f-7189084bcbcb. Runtime/source readback reports 1.9.6.2 and context-card/v2. Refresh ChatGPT Relay metadata and verify named staff, updated coordinate schema and compact card in a fresh consumer before completing this slice and continuing successors.",
+            "primary_staff": "julian",
+            "supporting_staff": [
+              "ellis",
+              "roman"
+            ]
+          }
+        }
+      ]
     }
   ],
   "migrated_from": "loew-inspector"

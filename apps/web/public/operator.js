@@ -190,9 +190,9 @@ async function showPage(name) {
     button.classList.toggle("active", active);
     button.setAttribute("aria-current", active ? "page" : "false");
   });
-  if (name === "today") ["today-attention", "today-work", "today-automations"].forEach(id => showLoading(document.getElementById(id), "rows", "Loading project activity"));
+  if (name === "today") [["today-attention", "attention"], ["today-work", "work"], ["today-automations", "automation"]].forEach(([id, kind]) => showLoading(document.getElementById(id), kind, "Loading project activity"));
   if (name === "review") showLoading(document.getElementById("review-list"), "review", "Loading captures");
-  if (name === "night-shift") showLoading(document.getElementById("night-shift-work"), "rows", "Loading automatic work");
+  if (name === "night-shift") showLoading(document.getElementById("night-shift-work"), "night", "Loading automatic work");
   if (name === "projects" && selectedProject) showLoading(projectDetail, "project", "Loading project");
   if (!projectIds.length) showLoading(projectTabs, "tabs", "Loading projects");
   await ensureProjects().catch(() => []);

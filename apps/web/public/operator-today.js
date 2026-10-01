@@ -127,7 +127,7 @@ function renderAutomations(ui) {
 
 async function loadProjectWork(ui) {
   const target = document.querySelector("#today-work");
-  showLoading(target, "rows", "Loading project work");
+  showLoading(target, "work", "Loading project work");
   try {
     if (!projectIds.length) projectIds = await loadProjectIndex();
     const ids = projectScope && projectIds.includes(projectScope) ? [projectScope] : projectIds;
@@ -170,7 +170,7 @@ async function loadProjectWork(ui) {
 export async function loadToday(ui, projectId = "") {
   projectScope = projectId || "";
   ui.setConnection("checking…", "loading");
-  ["today-attention", "today-work", "today-automations"].forEach(id => showLoading(document.getElementById(id), "rows", "Loading project activity"));
+  [["today-attention", "attention"], ["today-work", "work"], ["today-automations", "automation"]].forEach(([id, kind]) => showLoading(document.getElementById(id), kind, "Loading project activity"));
   try {
     workers = await api("/api/workers");
     projectAttention = [];
