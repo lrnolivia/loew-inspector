@@ -6,7 +6,7 @@ function blockedReason(checkpoint){
   if(checkpoint.state==="waiting-on-external-system") return "external-wait";
   if(checkpoint.state==="waiting-for-human") return "human-wait";
   const text=[checkpoint.wait?.reason,checkpoint.wait?.recovery_action,checkpoint.next_action].filter(Boolean).join(" ");
-  if(/\b(auth|permission|tool[- ]?schema|client|scope conflict|destructive|credential)\b/i.test(text)) return "explicit-blocker";
+  if(/\b(auth|authentication|authorization|authorize|permission|tool[- ]?schema|client|scope conflict|destructive|credential)\b/i.test(text)) return "explicit-blocker";
   return null;
 }
 function key(value){return createHash("sha256").update(JSON.stringify(value)).digest("hex").slice(0,24);}
