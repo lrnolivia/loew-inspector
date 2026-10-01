@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T23:22:05.616Z",
+  "updated_at": "2026-10-01T23:23:47.958Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6841,8 +6841,22 @@
       "supporting_teams": [],
       "primary_staff": "ellis",
       "supporting_staff": [],
-      "state": "claimed",
-      "created_at": "2026-10-01T22:25:31.299Z"
+      "state": "superseded",
+      "created_at": "2026-10-01T22:25:31.299Z",
+      "updated_at": "2026-10-01T23:23:47.958Z",
+      "retirement": {
+        "at": "2026-10-01T23:23:47.958Z",
+        "intent": {
+          "operation_id": "relay-action-to-feedback-20261001-2323",
+          "owner": "01a0f914-aad0-71e4-8f0c-20c1bf0a2016",
+          "disposition": "superseded",
+          "reason": "Approved sequential MCP rebuild batch while preserving every unresolved cross-client criterion; no claim of completed host proof.",
+          "evidence": "Owner confirms no active source writers or running edits; clean isolated checkout at49fdd642242f70f02dbebb49176278e1929b733f. Remote branch HTTP404 verified. PR112 merged e618648d8400f7d0a3c811abf25f23f9cde6b8a0, exact Workers build2e234da2-656e-4952-8d83-e78bda0a9a7f and deployment7e4f7927-c22e-4b09-900f-a9566076a6e7 recorded in docs/relay/MCP_HOST_ACTION_PROOF_20261001.md and local evidence/host-action-proof/CHECKPOINT.md. Original five Library screenshots preserved. New Lauren screenshot original connection build20261001.1 desktop Work PASS including action at23:21:37.734Z sample83db62cb-ab79-4bf0-96fd-e85f906d8e3e; prior timeout retained. Lauren reports ordinary chat still fails. iOS action, Safari/ordinary same-build proof and new action-comparison all clients remain unverified. Successor acceptance carries full MCP objective/all51 capabilities and all pending proof. No PR/branch deletion or native-worker action.",
+          "superseded_by": "relay-mcp-feedback-routing-20261001",
+          "branch": "relay/mcp-card-action-proof-20261001",
+          "head_sha": null
+        }
+      }
     },
     {
       "id": "relay-mcp-feedback-routing-20261001",
@@ -10852,10 +10866,23 @@
       "primary_staff": "ellis",
       "supporting_staff": [],
       "base_sha": "a326159ca7d7565cd8ec3320c0cfa214f0e40814",
-      "state": "held",
+      "state": "superseded",
       "created_at": "2026-10-01T22:27:03.282Z",
-      "updated_at": "2026-10-01T22:47:58.411Z",
-      "lease_until": "2026-10-02T10:47:58.411Z"
+      "updated_at": "2026-10-01T23:23:47.958Z",
+      "lease_until": "2026-10-02T10:47:58.411Z",
+      "retirement": {
+        "at": "2026-10-01T23:23:47.958Z",
+        "intent": {
+          "operation_id": "relay-action-to-feedback-20261001-2323",
+          "owner": "01a0f914-aad0-71e4-8f0c-20c1bf0a2016",
+          "disposition": "superseded",
+          "reason": "Approved sequential MCP rebuild batch while preserving every unresolved cross-client criterion; no claim of completed host proof.",
+          "evidence": "Owner confirms no active source writers or running edits; clean isolated checkout at49fdd642242f70f02dbebb49176278e1929b733f. Remote branch HTTP404 verified. PR112 merged e618648d8400f7d0a3c811abf25f23f9cde6b8a0, exact Workers build2e234da2-656e-4952-8d83-e78bda0a9a7f and deployment7e4f7927-c22e-4b09-900f-a9566076a6e7 recorded in docs/relay/MCP_HOST_ACTION_PROOF_20261001.md and local evidence/host-action-proof/CHECKPOINT.md. Original five Library screenshots preserved. New Lauren screenshot original connection build20261001.1 desktop Work PASS including action at23:21:37.734Z sample83db62cb-ab79-4bf0-96fd-e85f906d8e3e; prior timeout retained. Lauren reports ordinary chat still fails. iOS action, Safari/ordinary same-build proof and new action-comparison all clients remain unverified. Successor acceptance carries full MCP objective/all51 capabilities and all pending proof. No PR/branch deletion or native-worker action.",
+          "superseded_by": "relay-mcp-feedback-routing-20261001",
+          "branch": "relay/mcp-card-action-proof-20261001",
+          "head_sha": null
+        }
+      }
     },
     {
       "id": "relay-website-notification-center-20261001",
