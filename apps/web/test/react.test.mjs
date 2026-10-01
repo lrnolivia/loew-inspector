@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 import { createServer } from "vite";
+import { mcpHtml, webAssets } from "../generated.js";
 
 // This PR gate exercises the Vite/React boundary from the committed lockfile.
 const root = fileURLToPath(new URL("..", import.meta.url));
