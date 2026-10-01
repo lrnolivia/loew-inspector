@@ -38,8 +38,8 @@ export function stateLabel(state) { return progressStateMeta(state).label; }
 function queuedRow(item) {
   const state = progressStateMeta("queued");
   return `
-    <article class="task-row progress-row" data-progress-state="queued">
-      <div class="task-state" data-tone="${esc(state.tone)}">${esc(state.label)}</div>
+    <article class="task-row progress-row" data-progress-state="queued" data-tone="${esc(state.tone)}" data-signal="${esc(state.signal || "quiet")}">
+      <div class="task-state status-badge" data-tone="${esc(state.tone)}" data-signal="${esc(state.signal || "quiet")}"><span class="status-light" aria-hidden="true"></span><span>${esc(state.label)}</span></div>
       <div class="task-copy"><strong>${esc(item.assignment || item.id || "queued work")}</strong>
       <p>${esc(item.next_action || "Queued behind current work.")}</p></div>
     </article>`;
