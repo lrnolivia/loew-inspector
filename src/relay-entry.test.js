@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { RELAY_EXTENSION_VERSION, augmentToolList, augmentResourceList, augmentSkillList, validateLifecycleArguments } from "./relay-entry.js";
+import { RELAY_EXTENSION_VERSION, augmentToolList, augmentResourceList, augmentSkillList, validateLifecycleArguments, classifyExtensionError } from "./relay-entry.js";
 import { QA_SKILL_URI } from "./qa-skill.js";
 import { LOEW_NAMING_SKILL_URI } from "./loew-naming-skill.js";
 import { EXECUTIVE_COMMUNICATION_SKILL_URI } from "./executive-communication-skill.js";
@@ -33,7 +33,7 @@ test("Relay extension publishes source inventory and exact-head PR action", () =
   assert.ok(names.includes("relay_runner_cleanup"));
   assert.ok(names.includes("relay_cloud_upload_version"));
   assert.equal(tools.find(tool => tool.name === "relay_source_update_file").description.includes("GitHub App preferred"), true);
-  assert.equal(RELAY_EXTENSION_VERSION, "1.9.6.2");
+  assert.equal(RELAY_EXTENSION_VERSION, "1.9.8");
 });
 
 test("server validation rejects unsupported and cross-action PR fields", () => {
@@ -53,6 +53,24 @@ test("server validation rejects unsupported and cross-action PR fields", () => {
     }),
     /requires title, body, or base/
   );
+});
+
+test("extension errors classify retry and readback boundaries", () => {
+  const validation = classifyExtensionError(new Error("Invalid repository path"), "relay_source_edit_text");
+  assert.equal(validation.class, "validation");
+  assert.equal(validation.retryable, false);
+  assert.match(validation.recovery, /arguments|schema/i);
+
+  const conflict = classifyExtensionError(new Error("Branch head changed; refresh before mutating text"), "relay_source_edit_text");
+  assert.equal(conflict.class, "conflict");
+  assert.match(conflict.recovery, /re-read|reconcile/i);
+
+  const timeout = new Error("provider timed out");
+  timeout.name = "TimeoutError";
+  const uncertain = classifyExtensionError(timeout, "relay_source_edit_text");
+  assert.equal(uncertain.class, "uncertain_write");
+  assert.equal(uncertain.retryable, false);
+  assert.match(uncertain.recovery, /read back/i);
 });
 
 test("server validation accepts exact-head merge input", () => {

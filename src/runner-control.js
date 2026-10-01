@@ -71,32 +71,32 @@ const schema = (properties, required = []) => ({
 const DEFINITIONS = [
   {
     name: 'relay_runner_projects',
-    description: 'List current Runner project registrations. No model inference or fabricated runtime state.',
+    description: 'DISCOVERY QUERY — list canonical Runner project registrations. Safe to retry. Use this when the project id is unknown; do not infer projects from chat history or fabricate runtime state.',
     inputSchema: schema({})
   },
   {
     name: 'relay_runner_project',
-    description: 'Resolve one registered project with its current policy, ownership, queue and record revision.',
+    description: 'QUERY — resolve one registered project with current policy, ownership, queue and record revision. Safe to retry. Read this before a managed-project mutation when policy/record revision is not already current.',
     inputSchema: schema({ project: projectSchema }, ['project'])
   },
   {
     name: 'relay_runner_assignments',
-    description: 'Read claims and queued assignments, including held and expired owner reservations.',
+    description: 'QUERY — read canonical claims and queued assignments, including held and expired reservations. Safe to retry. Use this before relay_runner_coordinate to refresh ownership and expected_record_sha after any conflict or handoff.',
     inputSchema: schema({ project: projectSchema, assignment: identity }, ['project'])
   },
   {
     name: 'relay_runner_progress',
-    description: 'Read evidence-derived execution progress for current claims and queued work. Progress is derived from Runner, GitHub and configured Cloud evidence; claim state and next_action prose are context, not proof of execution.',
+    description: 'QUERY — read evidence-derived execution progress for current work. Safe to retry. Progress comes from Runner/GitHub/configured Cloud evidence; claim state and next_action prose are context, not proof. Use for human status instead of inferring execution from assignment text.',
     inputSchema: schema({ project: projectSchema, assignment: identity }, ['project'])
   },
   {
     name: 'relay_runner_resume',
-    description: 'Read compact deterministic resume checkpoints derived passively from canonical Runner, GitHub and Cloud evidence. Unchanged evidence reuses the same checkpoint id, so interrupted chats can resume without model-authored handoffs.',
+    description: 'QUERY — read compact deterministic resume checkpoints from canonical Runner/GitHub/Cloud evidence. Safe to retry. Call this first when resuming interrupted work; unchanged evidence reuses the checkpoint id so chat-history reconstruction is unnecessary.',
     inputSchema: schema({ project: projectSchema, assignment: identity }, ['project'])
   },
   {
     name: 'relay_runner_updates',
-    description: 'Read only assignment amendments newer than a monotonic cursor plus a bounded caught-up recovery signal derived from canonical resume evidence. No-change reads inject no amendment context; history gaps or scope changes require canonical reconciliation.',
+    description: 'QUERY — read only amendments newer than a monotonic cursor plus bounded caught-up recovery evidence. Safe to retry. Call at synchronization points after resume/external waits; no-change reads add no context, while history gaps or scope-changing updates require canonical reconciliation.',
     inputSchema: schema({
       project: projectSchema,
       assignment: identity,
@@ -107,18 +107,18 @@ const DEFINITIONS = [
   },
   {
     name: 'relay_cloud_project',
-    description: 'Resolve canonical project-to-Cloudflare Worker authority. A project is writable only when its registration allows writes and the Worker remains in Relay\'s runtime allowlist.',
+    description: 'DISCOVERY / PERMISSION QUERY — resolve canonical project-to-Cloudflare Worker authority. Safe to retry. Call before project-scoped deploys when authority is not already current; writes require both project registration and Relay\'s runtime allowlist.',
     inputSchema: schema({ project: projectSchema }, ['project'])
   },
   {
     name: 'relay_cloud_deploy_project_version',
-    description: 'Deploy an existing Cloudflare Worker version by canonical Relay project identity. Project registration and the runtime Worker allowlist must both authorize the mutation.',
+    description: 'COMMAND — deploy an existing Cloudflare Worker version by canonical Relay project identity. Call relay_cloud_project first when authority is not already current. This changes production deployment state; it does not prove runtime correctness, so verify afterward. Project registration and the runtime allowlist must both authorize the mutation.',
     inputSchema: schema({ project: projectSchema, version_id: text(128), message: text(1000) }, ['project', 'version_id']),
     mutation: true
   },
   {
     name: 'relay_runner_preflight',
-    description: 'Check live ownership, declared paths, branch/PR inventory and canonical policy before work. A pass is admission evidence only.',
+    description: 'QUERY / ADMISSION CHECK — validate live ownership, declared paths, branch/PR inventory and canonical policy before source work. Safe to retry. Call after claim/rescope and before implementation/PR publication. A pass is admission evidence only, not proof of tests or runtime correctness.',
     inputSchema: schema({ project: projectSchema, id: identity, owner: identity, paths: pathsSchema }, ['project', 'id', 'owner', 'paths'])
   },
   {
@@ -128,7 +128,7 @@ const DEFINITIONS = [
   },
   {
     name: 'relay_runner_coordinate',
-    description: 'Perform one SHA-checked Runner queue/claim/amend/rescope/heartbeat/hold/handoff/completion transaction. Amend updates queued or claimed intent with bounded audit history while preserving claimed branch/base identity. On claim, Relay resolves and pins base_sha from the live registered default branch; callers must omit base_sha. Completion requires a verified merged PR. No blind release or takeover.',
+    description: 'COMMAND / TRANSACTION — perform one CAS-protected Runner queue, claim, amend, rescope, heartbeat, hold, handoff, or completion mutation. Read relay_runner_assignments/project first to obtain the current expected_record_sha and ownership. Claim resolves base_sha server-side; callers must omit it. Completion requires a verified merged PR. On conflict/uncertain outcome, refresh canonical state before retrying; never replay blindly or take over ownership implicitly.',
     inputSchema: schema({
       project: projectSchema,
       action: { type: 'string', enum: MUTATIONS },
@@ -248,10 +248,18 @@ export function runnerControlError(error) {
       class: code,
       message: error instanceof ControlError ? error.message : 'Runner provider request failed',
       ...(error?.record_sha ? { record_sha: error.record_sha } : {}),
-      retryable: false,
+      retryable: code === 'capacity',
+      requires_auth: code === 'auth',
+      requires_user: false,
       recovery: code === 'uncertain_write'
         ? 'Inspect the current record and claim; never replay blindly.'
-        : 'Refresh project policy, record revision and ownership before retrying.'
+        : code === 'capacity'
+          ? 'Retry after provider capacity clears; refresh canonical state first if a mutation may have started.'
+          : code === 'auth'
+            ? 'Refresh the authorized Relay connection, then retry.'
+            : code === 'permission'
+              ? 'Refresh project policy/ownership and do not substitute an unauthorized control path.'
+              : 'Refresh project policy, record revision and ownership before retrying.'
     },
     checked_at: new Date().toISOString()
   };

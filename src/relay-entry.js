@@ -11,12 +11,12 @@ import { LOEW_NAMING_SKILL_URI, loewNamingSkillCatalogEntry, loewNamingSkillReso
 import { EXECUTIVE_COMMUNICATION_SKILL_URI, executiveCommunicationSkillCatalogEntry, executiveCommunicationSkillResourceDescriptor, executiveCommunicationSkillResource } from "./executive-communication-skill.js";
 import { RELAY_CONTEXT_CARD_URI, relayContextCardDescriptor, relayContextCardResource, contextualizeRelayTool, contextualPresentation } from "./relay-chat-ui.js";
 
-export const RELAY_EXTENSION_VERSION = "1.9.6.2";
+export const RELAY_EXTENSION_VERSION = "1.9.8";
 
 const createBranch = {
   name: "relay_source_create_branch",
   title: "Create a GitHub branch",
-  description: "Create a branch through relay.SOURCE from a branch name or exact 40-character commit SHA, with readback reconciliation.",
+  description: "COMMAND — create one non-default GitHub branch through relay.SOURCE from a branch name or exact 40-character commit SHA. Call relay_source_inventory first when the live base/head is not already known. Relay reads the created ref back before returning; on an uncertain/conflict error, refresh inventory instead of replaying blindly.",
   inputSchema: {
     type: "object",
     properties: {
@@ -35,7 +35,7 @@ const lifecycle = [
   {
     name: "relay_source_inventory",
     title: "Inspect GitHub branches and PR heads",
-    description: "Read bounded paginated branch and open-PR inventory with exact head SHAs through relay.SOURCE.",
+    description: "DISCOVERY QUERY — read bounded branch/open-PR inventory plus exact head SHAs through relay.SOURCE. Safe to retry. Use this before branch or pull-request mutations when the current head/base is not already known.",
     inputSchema: {
       type: "object",
       properties: { owner: { type: "string" }, repo: { type: "string" } },
@@ -47,7 +47,7 @@ const lifecycle = [
   {
     name: "relay_source_pull_request_action",
     title: "Act on an exact-head pull request",
-    description: "Update metadata, mark ready, or merge only while the PR head matches the supplied SHA. Merge requires green check runs and commit statuses and never requests a protection bypass.",
+    description: "COMMAND — mutate one pull request at an exact expected head: update metadata, mark ready, or merge. Read the PR/head first; merge also verifies green checks/statuses server-side and never bypasses protection. Side effects depend on action. If the head changes or outcome is uncertain, refresh the PR/check state before any retry.",
     inputSchema: {
       type: "object",
       properties: {
@@ -81,8 +81,13 @@ export function augmentToolList(tools) {
   const extensionTools = [...lifecycle, ...sourceTextMutationTools, staffDirectoryTool, runnerCleanupTool, cloudUploadTool, uiApiTool];
   const names = new Set(extensionTools.map(tool => tool.name));
   const sourceDescriptions = {
-    relay_source_update_file: "Create or replace one UTF-8 file on a non-default branch through relay.SOURCE using configured GitHub source auth (GitHub App preferred). Direct default-branch writes are intentionally blocked; coordination control state must use relay.RUNNER.",
-    relay_source_open_pull_request: "Open a pull request through relay.SOURCE using configured GitHub source auth (GitHub App preferred)."
+    relay_source_file: "QUERY — read one UTF-8 repository file through relay.SOURCE. Safe to retry. Use its blob SHA as the expected identity before exact text mutation when applicable.",
+    relay_source_checks: "QUERY — read check runs for one commit or branch through relay.SOURCE. Safe to retry. Read checks before a merge decision; relay_source_pull_request_action rechecks them server-side for merge.",
+    relay_source_update_file: "COMMAND — create or replace one UTF-8 file on a non-default branch through relay.SOURCE using configured GitHub source auth (GitHub App preferred). Direct default-branch writes are blocked. Read the current branch/file first and pass expected identities when available; refresh after conflicts instead of overwriting.",
+    relay_source_open_pull_request: "COMMAND — open a pull request through relay.SOURCE. Create/update the admitted non-default branch first. Draft is the normal safe default; opening a PR does not imply checks, merge, deployment, or runtime correctness.",
+    relay_runner_cleanup: "COMMAND — dry-run or delete only completed, accounted managed branches whose current heads and merged-PR identities still match Runner completion evidence. Use dry-run before execute; cleanup never deletes active/unaccounted work.",
+    relay_ui_request: "COMMAND / APP TRANSPORT — call one allowlisted Relay operator API route using the authenticated app identity. GET is read-only; POST can toggle/run/repair worker state or submit bounded QA. Route and method are validated server-side; this is not a generic HTTP escape hatch.",
+    relay_control_status: "DISCOVERY / HEALTH CHECK — report Relay namespace readiness, source/cloud auth mode, and bounded write capability. Safe to retry. Use this at the start of substantial Relay work when current capability/authority is not already known."
   };
   const kept = list
     .filter(tool => tool.name !== createBranch.name && !names.has(tool.name))
@@ -93,6 +98,7 @@ export function augmentToolList(tools) {
     contextualizeRelayTool(replacement),
     ...extensionTools.map(tool => contextualizeRelayTool({
       ...tool,
+      ...(sourceDescriptions[tool.name] ? { description: sourceDescriptions[tool.name] } : {}),
       securitySchemes: schemes,
       _meta: { ...(tool._meta || {}), securitySchemes: schemes }
     }))
@@ -215,12 +221,59 @@ function toolResult(id, result, name) {
     }
   });
 }
-function toolError(id, error) {
+export function classifyExtensionError(error, toolName = "") {
+  const message = error instanceof Error ? error.message : "Relay extension action failed";
+  const status = Number(error?.status || 0);
+  const lower = message.toLowerCase();
+  const mutation = /(_create_|_update_|_edit_|_append_|_open_|_action$|_cleanup$|_upload_|_deploy_)/.test(toolName);
+  let errorClass = "provider";
+  if (status === 401 || /auth|credential|token/.test(lower)) errorClass = "auth";
+  else if (status === 403 || /permission|restricted|not authorized|refuses direct/.test(lower)) errorClass = "permission";
+  else if (status === 404 || /not found|does not exist/.test(lower)) errorClass = "not_found";
+  else if (status === 409 || /changed; refresh|differs from|reconcile before retry|expected .* but found/.test(lower)) errorClass = "conflict";
+  else if (status === 429 || /capacity|rate limit/.test(lower)) errorClass = "capacity";
+  else if (error?.name === "TimeoutError" || /timed out|timeout/.test(lower)) errorClass = mutation ? "uncertain_write" : "timeout";
+  else if (/invalid |missing required|unsupported |does not accept|requires title|must be /.test(lower)) errorClass = "validation";
+  else if (mutation && /outcome cannot be verified|readback/.test(lower)) errorClass = "uncertain_write";
+
+  const retryable = ["capacity", "timeout"].includes(errorClass);
+  const recovery = errorClass === "validation"
+    ? "Correct the arguments from the tool schema; do not retry unchanged."
+    : errorClass === "auth"
+      ? "Restore/refresh the authorized Relay connection, then retry."
+      : errorClass === "permission"
+        ? "Refresh Relay authority/project policy. Do not substitute an unauthorized writer."
+        : errorClass === "conflict"
+          ? "Re-read the current resource/head and reconcile before retrying."
+          : errorClass === "uncertain_write"
+            ? "Read back the affected resource first; never replay the mutation blindly."
+            : errorClass === "not_found"
+              ? "Refresh discovery/inventory and confirm the identifier before retrying."
+              : errorClass === "capacity"
+                ? "Retry after the provider capacity/rate-limit condition clears."
+                : errorClass === "timeout"
+                  ? "The read-only request may be retried after a bounded delay."
+                  : mutation
+                    ? "Read back the affected resource before deciding whether another mutation is safe."
+                    : "Retry only after checking Relay/provider health.";
+  return {
+    class: errorClass,
+    message,
+    retryable,
+    requires_auth: errorClass === "auth",
+    requires_user: false,
+    recovery
+  };
+}
+function toolError(id, error, toolName = "") {
+  const classified = classifyExtensionError(error, toolName);
+  const structured = { ok: false, namespace: "relay", tool: toolName || null, error: classified, checked_at: new Date().toISOString() };
   return responseJson({
     jsonrpc: "2.0",
     id,
     result: {
-      content: [{ type: "text", text: error instanceof Error ? error.message : "Relay extension action failed" }],
+      content: [{ type: "text", text: classified.message }],
+      structuredContent: structured,
       isError: true
     }
   });
@@ -258,7 +311,7 @@ export default {
         }
         return toolResult(message.id ?? null, result, name);
       } catch (error) {
-        return toolError(message.id ?? null, error);
+        return toolError(message.id ?? null, error, message.params?.name || "");
       }
     }
 
