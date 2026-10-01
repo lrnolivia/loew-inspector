@@ -17,15 +17,15 @@ Cloudflare exposes `WORKERS_CI_COMMIT_SHA` and build metadata for the originatin
 
 ## What Relay should not do in the normal release path
 
-The following are recovery or diagnostic mechanisms, not the default publication path:
+The following are not part of the canonical Relay publication path:
 
 - downloading source files back out of GitHub through the Contents API in order to upload them to Cloudflare;
 - splitting generated application payloads solely to fit a source-read transport limit;
-- calling `relay_cloud_upload_version` for every ordinary release;
+- calling `relay_cloud_upload_version` for the canonical Relay Worker;
 - repeating the same full test matrix after an exact head has already passed the canonical quality gate;
 - holding branch capacity for completed, superseded, or missing-branch assignments.
 
-`relay_cloud_upload_version` and explicit version deployment remain useful for rollback, bisecting, emergency recovery, and isolated diagnostics.
+For Relay itself, recovery means deploying a known-good existing Worker version or rerunning the Git-native Workers Build for a known-good commit. `relay_cloud_upload_version` remains available only for other explicitly allowlisted Workers that still use direct source publication.
 
 ## CI contract
 
@@ -36,8 +36,9 @@ The Relay quality gate intentionally uses one runner for the normal test matrix:
 - one Chromium installation;
 - `npm run build`;
 - Relay 2.0 typecheck;
-- the existing workspace, Runner, Inspector, contract, API, browser, and React tests;
-- deterministic generated-bridge readback.
+- the existing workspace, Runner, Inspector, contract, API, browser, and React tests.
+
+Generated Relay web/MCP bundles are ephemeral build output. They are ignored by Git and recreated by `npm run build` in CI and Workers Builds.
 
 The Inspector visual-review job remains separate and only runs for the narrow review branch class that needs screenshot evidence.
 
@@ -53,6 +54,6 @@ Connect the existing Cloudflare Worker `relay` to GitHub repository `lrnolivia/r
 
 Cloudflare's Git integration should own normal production transport. Relay owns orchestration, status, verification, recovery and rollback.
 
-## Follow-up after the first successful Git-native production build
+## Build artifacts
 
-Once Workers Builds has deployed an exact `main` commit successfully, stop treating generated web payloads as publication artifacts. Move them fully to build time, remove them from version control, and ignore them in Git. That removes the remaining generated-file churn and permanently eliminates the file-size failure mode that exposed the old uploader bottleneck.
+The first Git-native production deployment is proven. Generated web payloads are build-time artifacts only and are not stored in Git. This permanently removes the source-file-size failure mode that exposed the old uploader bottleneck.
