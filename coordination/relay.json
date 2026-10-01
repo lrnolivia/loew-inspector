@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T07:30:42.708Z",
+  "updated_at": "2026-10-01T07:35:20.085Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -8758,6 +8758,34 @@
       "created_at": "2026-10-01T06:45:18.694Z",
       "updated_at": "2026-10-01T07:30:42.708Z",
       "lease_until": "2026-10-01T19:30:42.708Z"
+    },
+    {
+      "id": "relay-status-card-reset-20261001",
+      "owner": "relay-status-card-reset-20261001",
+      "branch": "relay/status-card-reset-20261001",
+      "paths": [
+        "src/index.js",
+        "src/relay-chat-ui.js",
+        "src/relay-entry.test.js",
+        "docs/relay/STATUS_CARD_RESET.md"
+      ],
+      "resources": [
+        "relay-status-card-new-identity"
+      ],
+      "goal": "Add fresh relay_show_status_card tool and ui://relay/status-card/v1.html identity preserving approved design/data and old renderer.",
+      "acceptance": "New tool/resource list/read regression; no sidebar entrypoint; old renderer unchanged; exact-head tests/admission merge deploy; ChatGPT mount pending.",
+      "next_action": "Inspect current main registration and add separate identity.",
+      "category": "implementation",
+      "primary_role": "builder",
+      "primary_team": "runner",
+      "supporting_teams": [],
+      "primary_staff": "nico",
+      "supporting_staff": [],
+      "base_sha": "f5cd793c1ce7945ed013382c0e0b1cfb3b07f200",
+      "state": "active",
+      "created_at": "2026-10-01T07:35:20.085Z",
+      "updated_at": "2026-10-01T07:35:20.085Z",
+      "lease_until": "2026-10-01T19:35:20.085Z"
     }
   ],
   "migrated_from": "loew-inspector"
