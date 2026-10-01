@@ -49,6 +49,15 @@ if (appSettings) {
   appSettings.querySelector(".utility-icon").innerHTML = glyph("settings");
 }
 
+function setFlow(phase) {
+  document.body.dataset.flow = phase || "orient";
+}
+
+function setOverviewDetail(label) {
+  const page = pages.find(item => !item.hidden);
+  if (page && label) page.dataset.overviewDetail = label;
+}
+
 function route() {
   const page = (location.hash || "#today").slice(1).split("?")[0];
   return ["today", "projects", "review", "night-shift"].includes(page) ? page : "today";
