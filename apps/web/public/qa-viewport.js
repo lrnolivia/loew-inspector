@@ -105,7 +105,7 @@ export function createQaViewport(stage, { mode = "captured" } = {}) {
   };
   const beginPan = (event, source) => {
     pan = { source, pointerId: event.pointerId, x: event.clientX, y: event.clientY };
-    try { gestureLayer.setPointerCapture(event.pointerId); } catch {}
+    try { viewport.setPointerCapture(event.pointerId); } catch {}
     stage.classList.add("qa-camera-panning");
   };
   const onPointerDown = event => {
@@ -122,7 +122,7 @@ export function createQaViewport(stage, { mode = "captured" } = {}) {
   };
   const endPan = event => {
     if (!pan || (event.pointerId != null && pan.pointerId !== event.pointerId)) return;
-    try { gestureLayer.releasePointerCapture(pan.pointerId); } catch {}
+    try { viewport.releasePointerCapture(pan.pointerId); } catch {}
     pan = null;
     stage.classList.remove("qa-camera-panning");
   };
@@ -155,10 +155,10 @@ export function createQaViewport(stage, { mode = "captured" } = {}) {
   };
 
   viewport.addEventListener("wheel", onWheel, { passive: false });
-  gestureLayer.addEventListener("pointerdown", onPointerDown);
-  gestureLayer.addEventListener("pointermove", onPointerMove);
-  gestureLayer.addEventListener("pointerup", endPan);
-  gestureLayer.addEventListener("pointercancel", endPan);
+  viewport.addEventListener("pointerdown", onPointerDown, true);
+  viewport.addEventListener("pointermove", onPointerMove, true);
+  viewport.addEventListener("pointerup", endPan, true);
+  viewport.addEventListener("pointercancel", endPan, true);
   window.addEventListener("keydown", onKeyDown, true);
   window.addEventListener("keyup", onKeyUp, true);
   window.addEventListener("message", onMessage);
@@ -173,10 +173,10 @@ export function createQaViewport(stage, { mode = "captured" } = {}) {
       cancelAnimationFrame(resizeFrame);
       resizeObserver?.disconnect();
       viewport.removeEventListener("wheel", onWheel);
-      gestureLayer.removeEventListener("pointerdown", onPointerDown);
-      gestureLayer.removeEventListener("pointermove", onPointerMove);
-      gestureLayer.removeEventListener("pointerup", endPan);
-      gestureLayer.removeEventListener("pointercancel", endPan);
+      viewport.removeEventListener("pointerdown", onPointerDown, true);
+      viewport.removeEventListener("pointermove", onPointerMove, true);
+      viewport.removeEventListener("pointerup", endPan, true);
+      viewport.removeEventListener("pointercancel", endPan, true);
       window.removeEventListener("keydown", onKeyDown, true);
       window.removeEventListener("keyup", onKeyUp, true);
       window.removeEventListener("message", onMessage);
