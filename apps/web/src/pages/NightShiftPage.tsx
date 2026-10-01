@@ -1,3 +1,4 @@
+import { statusLabel, summaryText } from "../../../../packages/shared-ui/presentation-copy.js";
 import { ProjectSwitcher } from "../components/ProjectSwitcher";
 import { FeatureHeader } from "../components/FeatureHeader";
 import { SignalDeck } from "../components/SignalDeck";
@@ -26,10 +27,10 @@ export function NightShiftPage() {
 
   const answer = !snapshot ? "pending" : !enabled.length ? "nothing scheduled" : next ? relative(next) : "schedule enabled";
   const cards = [
-    { id: "next", label: "will anything happen?", value: answer, detail: !snapshot ? "Waiting for Relay’s worker registry." : !enabled.length ? "Automatic checks are paused or unavailable." : next ? `next reported check ${new Date(next).toLocaleString()}` : "Automatic work is enabled, but Relay has no next-run time to show.", tone: enabled.length ? "good" : "quiet" },
-    { id: "projects", label: "included projects", value: snapshot ? String(enabled.length) : "pending", detail: !snapshot ? "Waiting for Relay’s worker registry." : enabled.length ? "Projects with automatic observation enabled." : "No project is currently scheduled.", tone: enabled.length ? "wait" : "quiet" },
-    { id: "attention", label: "needs attention", value: snapshot ? String(attention.length) : "pending", detail: !snapshot ? "Waiting for Relay’s worker registry." : attention.length ? "An unattended check reported a blocker or error." : "No unattended check currently reports an error.", tone: attention.length ? "act" : "quiet" },
-    { id: "monitoring", label: "monitoring", value: state, detail: snapshot ? `dashboard refreshed ${new Date(snapshot.fetchedAt).toLocaleTimeString()}` : "waiting for Relay", tone: state === "live" ? "good" : state === "stale" ? "warn" : "quiet" }
+    { id: "next", label: "will anything happen?", value: answer, detail: !snapshot ? "Checking your automatic schedules." : !enabled.length ? "Automatic checks are paused or unavailable." : next ? `next reported check ${new Date(next).toLocaleString()}` : "Automatic work is enabled, but Relay has no next-run time to show.", tone: enabled.length ? "good" : "quiet" },
+    { id: "projects", label: "included projects", value: snapshot ? String(enabled.length) : "pending", detail: !snapshot ? "Checking your automatic schedules." : enabled.length ? "Projects Relay checks for you." : "No project is currently scheduled.", tone: enabled.length ? "wait" : "quiet" },
+    { id: "attention", label: "needs attention", value: snapshot ? String(attention.length) : "pending", detail: !snapshot ? "Checking your automatic schedules." : attention.length ? "An automatic check needs help." : "No automatic check is reporting a problem.", tone: attention.length ? "act" : "quiet" },
+    { id: "monitoring", label: "monitoring", value: statusLabel(state), detail: snapshot ? `dashboard refreshed ${new Date(snapshot.fetchedAt).toLocaleTimeString()}` : "waiting for Relay", tone: state === "live" ? "good" : state === "stale" ? "warn" : "quiet" }
   ];
 
   return (
@@ -44,10 +45,11 @@ export function NightShiftPage() {
             const tone = worker.runtime?.last_error ? "bad" : worker.runtime?.status === "running" ? "good" : "quiet";
             return <article className="automation-row night-card" key={worker.id} data-tone={tone}>
               <div className="night-card-head"><strong>{projectLabel(worker.id)}</strong><StatusLight tone={tone} label={worker.runtime?.last_error ? "needs attention" : worker.runtime?.status === "running" ? "checking now" : "recorded"} /></div>
-              <p>{worker.runtime?.last_summary || worker.runtime?.last_error || "No result summary was recorded."}</p>
+              <p>{summaryText(worker.runtime?.last_summary || worker.runtime?.last_error, worker.runtime?.last_error ? "A check needs attention. Open Details for the reported problem." : "No result summary is available.") || "No result summary was recorded."}</p>
+              {(worker.runtime?.last_summary || worker.runtime?.last_error) && <details><summary>Details</summary><p>{worker.runtime?.last_summary}</p><p>{worker.runtime?.last_error}</p></details>}
               <small>last run {relative(worker.runtime?.last_run_at)} · {worker.enabled ? `next ${relative(worker.runtime?.next_run_at)}` : "automatic checks paused"}</small>
             </article>;
-          }) : <div className="empty-card"><strong>{snapshot ? "No unattended results yet." : "Checking unattended results."}</strong><p>{snapshot ? "Night shift will distinguish an empty history from a completed run with a problem." : "Waiting for Relay’s worker registry."}</p></div>}
+          }) : <div className="empty-card"><strong>{snapshot ? "No automatic results yet." : "Checking recent results."}</strong><p>{snapshot ? "Results appear here after an automatic check reports back." : "Checking your automatic schedules."}</p></div>}
         </div>
       </section>
     </div>

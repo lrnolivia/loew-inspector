@@ -96,3 +96,18 @@
   .react-page .automation-row > .operator-state { max-width: 100%; white-space: normal; overflow-wrap: anywhere; }
 }
 @media (max-width: 380px) { .operator-nav .nav-copy strong { font-size: 12px !important; white-space: nowrap; } }
+
+/* A single compact mobile brand/tools row, with either navigation placement. */
+@media (max-width: 900px) {
+  .operator-topbar { min-height: 0 !important; padding: 10px 16px !important; grid-template-columns: minmax(0,1fr) 40px; gap: 8px !important; align-items: center !important; }
+  .operator-topbar .operator-brand img { width: 36px !important; height: 36px !important; flex-basis: 36px; }
+  .presentation-menu > summary { width: 40px; height: 40px; }
+  .presentation-panel { top: 46px; }
+  .workspace-context { min-height: 36px; margin-bottom: 16px; font-size: 13px; gap: 8px; }
+  .operator-connection { font-size: 12px; line-height: 18px; padding: 6px 10px; margin-top: 0; align-self: center; }
+  .feature-heading { grid-template-columns: 48px minmax(0,1fr); gap: 12px !important; margin-top: 0 !important; margin-bottom: 20px !important; }
+  .feature-heading .feature-mark { width: 48px; height: 48px; }
+  .feature-heading h1 { font-size: 32px !important; line-height: 1 !important; }
+  .feature-heading p { font-size: 14px !important; margin-top: 4px !important; }
+  .project-context { margin-top: -4px; margin-bottom: 16px; }
+}

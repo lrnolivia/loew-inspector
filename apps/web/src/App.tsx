@@ -1,3 +1,4 @@
+import { bindMotion } from "../../../packages/shared-ui/motion.js";
 import { useEffect } from "react";
 import { presentationMenu, bindPresentation } from "../../../packages/shared-ui/presentation.js";
 import { bindTheme } from "../public/theme.js";
@@ -16,7 +17,7 @@ const navItems = [
 ];
 
 function Shell() {
-  useEffect(() => { const presentation = bindPresentation(); const theme = bindTheme(); return () => { presentation(); theme?.(); }; }, []);
+  useEffect(() => { const presentation = bindPresentation(); const theme = bindTheme(); const motion = bindMotion(); return () => { presentation(); theme?.(); motion(); }; }, []);
   const { state, project } = useLiveRelay();
   const location = useLocation();
   const pageLabel = location.pathname.startsWith("/runner") ? "runner" : location.pathname.startsWith("/night-shift") ? "night shift" : "today";

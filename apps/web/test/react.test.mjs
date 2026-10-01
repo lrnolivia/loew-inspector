@@ -120,7 +120,7 @@ test("Relay 2.0 React shell renders human-first live surfaces responsively", asy
     await page.setViewportSize({ width: 390, height: 844 });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
     const mobileMark = await page.locator(".feature-mark").boundingBox();
-    assert.ok(mobileMark && Math.abs(mobileMark.width - 60) < 2);
+    assert.ok(mobileMark && Math.abs(mobileMark.width - 48) < 2);
 
     await page.emulateMedia({ reducedMotion: "reduce" });
     assert.equal(await page.locator(".signal-track").evaluate(node => getComputedStyle(node).scrollBehavior), "auto");

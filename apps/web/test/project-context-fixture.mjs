@@ -1,7 +1,7 @@
 import http from 'node:http';
 import { webAssets } from '../generated.js';
 
-export async function contextFixture() {
+export async function contextFixture({ port = 0 } = {}) {
   const controls = { failField: false, failVisual: false, holdVisual: false, releaseVisual: null };
   const now = new Date().toISOString();
   const projects = [{ id: 'relay', name: 'relay' }, { id: 'field', name: 'field' }];
@@ -36,6 +36,6 @@ export async function contextFixture() {
     if (url.pathname.endsWith('/live')) return json({ live: { active: false } });
     return json({ error: 'fixture route unavailable' }, 404);
   });
-  await new Promise(resolve => server.listen(0, '127.0.0.1', resolve));
+  await new Promise(resolve => server.listen(port, '127.0.0.1', resolve));
   return { origin: 'http://127.0.0.1:' + server.address().port, controls, requests, close: () => new Promise(resolve => server.close(resolve)) };
 }

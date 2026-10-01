@@ -57,7 +57,7 @@ test('built website scopes every summary and preserves explicit project context 
       await select(page,'field'); assert.equal(await summary(page,'moving'),'0'); assert.equal(await summary(page,'automatic checks'),'1');
       assert.equal(await page.locator('.attention-card').count(),0); assert.equal(await page.locator('.automation-row').count(),1);
       await page.getByRole('link',{name:/^runner/}).click(); await page.getByRole('heading',{name:'runner',exact:true,level:1}).waitFor(); await settle(page);
-      assert.equal(await page.locator('.work-card').count(),1); assert.equal(await summary(page,'external wait'),'1');
+      assert.equal(await page.locator('.work-card').count(),1); assert.equal(await summary(page,'waiting for a response'),'1');
       await verifySurface(page,'runner',4); await page.getByRole('link',{name:'view live progress'}).click(); await page.locator('.work-detail').waitFor({timeout:5000}).catch(async e=>{throw new Error(JSON.stringify({width,url:page.url(),errors,text:await page.locator('body').innerText()}),{cause:e})});
       await page.getByRole('link',{name:'← runner'}).click(); await page.getByRole('heading',{name:'runner',exact:true,level:1}).waitFor(); await settle(page);
       assert.ok(page.url().endsWith('#/runner?project=field'));

@@ -15,3 +15,5 @@ createRoot(document.getElementById("root")!).render(
 );
 
 import "../../../packages/shared-ui/responsive-shell.css";
+
+import "../../../packages/shared-ui/motion.css";

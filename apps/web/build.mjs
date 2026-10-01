@@ -32,7 +32,8 @@ const legacyCss =
   await source("operator-1.8.css") + "\n" +
   await source("qa.css") + "\n" +
   await fs.readFile(path.join(here, "../../packages/shared-ui/telemetry.css"), "utf8") + "\n" +
-  await fs.readFile(path.join(here, "../../packages/shared-ui/responsive-shell.css"), "utf8");
+  await fs.readFile(path.join(here, "../../packages/shared-ui/responsive-shell.css"), "utf8") + "\n" +
+  await fs.readFile(path.join(here, "../../packages/shared-ui/motion.css"), "utf8");
 
 const legacyShellOverrides = `
 .operator-brand strong,

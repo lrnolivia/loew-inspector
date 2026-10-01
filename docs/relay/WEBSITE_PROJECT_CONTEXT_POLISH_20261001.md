@@ -30,7 +30,7 @@ the default; alternative presets test bottom mobile navigation, a roomier overvi
 and richer count visuals. Rich shows discrete markers from actual available counts
 (up to twelve), not invented timelines or progress. A finite spring entrance uses
 brief movement-bound blur and settles to sharp readings. Calm and system reduced
-motion disable that animation. The preset registry can accept future complete
+motion disable motion throughout the website, including controls and Inspector. The preset registry can accept future complete
 presentation themes without shipping unfinished theme choices or workflow flags.
 
 ## Verification and evidence
@@ -62,3 +62,26 @@ locally with supported helpers and inspected before implementation.
 Deferred work-item view architecture, notification replacement and Nico's MCP
 inline-card work remain outside this batch. No production deployment is created
 for testing.
+
+## Follow-up motion and mobile review
+
+Lauren positively reviewed bottom navigation, then requested a shorter mobile
+hero and natural paintbrush placement. The inherited 112px header minimum is
+removed; the brand/tools row is 60px with bottom navigation. Workspace/connection
+and title spacing are compact without moving or dropping their information.
+Bottom navigation and Simple/default remain available with existing local choices.
+
+`motion.css` and `bindMotion` apply one spring curve to moving controls, glyphs,
+sidebar reveals, presentation menus, small status rings and Inspector review
+layers. Brief blur follows transform/size transitions and finite moving effects;
+large rails/panels filter only a small identity/header layer. Mobile allows at
+most two simultaneous scripted blur layers, capped at 240ms and 0.6px; desktop
+allows four at 400ms and 1px. Effects release their filters at rest and cancel
+on Calm, reduced motion or backgrounding. Tiny existing semantic status rings
+have subpixel movement blur; opacity/color-only loading, caution and edge-glow
+pulses share the curve without smearing static text. Pointer-driven Inspector
+camera/docking layout remains direct and functional. Conversational card content
+and resources are unchanged. Motion tests and exact-head preview records cover
+these boundaries; earlier PR107 captures remain the before-review evidence.
+
+The latest copy refinement uses shared display mappings for status, phase and progress updates. Queued work is “waiting to start”; deployed and verified remain separate. Unknown states stay unreported. Infrastructure diagnostics stay available in Details, while preview review notes contain readable questions instead of a JSON packet. These are display changes and do not change execution or held MCP resources.

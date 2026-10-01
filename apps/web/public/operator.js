@@ -1,3 +1,4 @@
+import { bindMotion } from "../../../packages/shared-ui/motion.js";
 import { bindPresentation, countVisual } from "../../../packages/shared-ui/presentation.js";
 import { bindTheme } from "./theme.js";
 import { showLoading } from "./loading.js";
@@ -14,6 +15,7 @@ import { esc, loadProjectDetail, loadProjectIndex, projectName, renderProjectDet
 
 bindTheme();
 bindPresentation();
+bindMotion();
 
 const pages = [...document.querySelectorAll("[data-page]")];
 const nav = [...document.querySelectorAll("[data-nav]")];
