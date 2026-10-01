@@ -111,9 +111,34 @@ test("shared interface works on web and MCP host transport, including mobile, de
         view = page.frameLocator("#app");
       }
       await view.locator("#operator-connection").filter({ hasText: "connected" }).waitFor();
-      assert.equal(await view.locator(".page-statusline").first().evaluate(node => getComputedStyle(node).backgroundImage), "none");
+      assert.equal(await view.locator(".page-statusline").count(), 0);
+      const todayHeader = view.locator('.feature-heading[data-feature="today"]');
+      await todayHeader.locator(".feature-mark").waitFor();
+      assert.equal(await todayHeader.locator("p").textContent(), "focus");
+      assert.equal(await todayHeader.evaluate(node => getComputedStyle(node).getPropertyValue("--feature-accent").trim()), "#ff6f78");
+      const todayIcon = await todayHeader.locator(".feature-mark").evaluate(node => ({ src: node.getAttribute("src"), naturalWidth: node.naturalWidth, naturalHeight: node.naturalHeight }));
+      assert.match(todayIcon.src, /^data:image\/png;base64,/);
+      assert.equal(todayIcon.naturalWidth, 1024);
+      assert.equal(todayIcon.naturalHeight, 1024);
       assert.equal(await view.locator("#app-settings").evaluate(node => getComputedStyle(node).borderBottomWidth), "0px");
       assert.equal(await view.locator("#app-settings").evaluate(node => getComputedStyle(node).backgroundColor), "rgba(0, 0, 0, 0)");
+      assert.equal(await view.locator("#app-settings .utility-icon .relay-glyph").count(), 1);
+
+      const sidebar = view.locator(".operator-topbar");
+      const shell = view.locator(".operator-shell");
+      const collapsed = await sidebar.evaluate(node => ({ width: node.getBoundingClientRect().width, navOpacity: getComputedStyle(node.querySelector(".nav-copy")).opacity }));
+      assert.ok(collapsed.width >= 84 && collapsed.width <= 92, mode + " collapsed sidebar width");
+      assert.equal(collapsed.navOpacity, "0");
+      assert.ok(await view.locator('.operator-page[data-page="today"]').evaluate(node => node.getBoundingClientRect().width) <= 1121, mode + " centered content max-width");
+      assert.ok(parseFloat(await shell.evaluate(node => getComputedStyle(node).marginLeft)) >= 84);
+      await sidebar.hover();
+      await page.waitForTimeout(280);
+      const expanded = await sidebar.evaluate(node => ({ width: node.getBoundingClientRect().width, navOpacity: getComputedStyle(node.querySelector(".nav-copy")).opacity }));
+      assert.ok(expanded.width >= 330 && expanded.width <= 350, mode + " expanded sidebar width");
+      assert.equal(expanded.navOpacity, "1");
+      assert.ok(parseFloat(await shell.evaluate(node => getComputedStyle(node).marginLeft)) >= 330);
+      await shell.hover();
+      await page.waitForTimeout(280);
       const attention = view.locator(".attention-card").first();
       await attention.waitFor();
       const geometry = await attention.evaluate(node => {
@@ -127,8 +152,12 @@ test("shared interface works on web and MCP host transport, including mobile, de
       });
       assert.equal(geometry.contained, true, mode + " attention action must stay inside its card");
       await view.getByRole("button", { name: "runner", exact: true }).click();
+      const runnerButton = view.getByRole("button", { name: "runner", exact: true });
       assert.equal(await view.getByRole("heading", { name: "runner", level: 1, exact: true }).textContent(), "runner");
-      assert.equal(await view.getByRole("button", { name: "runner", exact: true }).evaluate(node => getComputedStyle(node).borderBottomWidth), "0px");
+      assert.equal(await view.locator('.feature-heading[data-feature="runner"] p').textContent(), "coordinate");
+      assert.equal(await view.locator('.feature-heading[data-feature="runner"]').evaluate(node => getComputedStyle(node).getPropertyValue("--feature-accent").trim()), "#3bcb8d");
+      assert.equal(await runnerButton.evaluate(node => getComputedStyle(node).getPropertyValue("--feature-accent").trim()), "#3bcb8d");
+      assert.ok(parseFloat(await runnerButton.evaluate(node => getComputedStyle(node).borderBottomWidth)) <= 1, "active nav must not use fake underline depth");
       await view.getByRole("tab", { name: "relay", exact: true }).click();
       await view.locator("#project-detail").filter({ hasText: "Complete consolidation" }).waitFor();
       assert.equal(await view.locator('.overview-metric:has-text("moving")').getAttribute("data-tone"), "good");
@@ -138,9 +167,14 @@ test("shared interface works on web and MCP host transport, including mobile, de
       await failedBadge.waitFor();
       assert.equal(await failedBadge.getAttribute("data-tone"), "bad");
       assert.equal(await failedBadge.getAttribute("data-signal"), "danger");
+      assert.equal(await failedBadge.locator(".status-light").count(), 1);
+      assert.equal(await failedBadge.evaluate(node => getComputedStyle(node, "::before").display), "none");
       const failedColor = await failedBadge.evaluate(node => getComputedStyle(node).color);
       assert.notEqual(failedColor, "rgb(198, 191, 183)");
       assert.notEqual(await failedBadge.locator(".status-light").evaluate(node => getComputedStyle(node, "::after").animationName), "none");
+      const failedRow = view.locator('.progress-row[data-progress-state="failed"]');
+      assert.equal(await failedRow.evaluate(node => getComputedStyle(node).borderLeftWidth), "4px");
+      assert.notEqual(await failedRow.evaluate(node => getComputedStyle(node).borderLeftColor), "rgb(198, 191, 183)");
       await view.locator('#project-tabs [data-project-id="relay"] [data-repo-icon="relay"][data-icon-sha="' + "b".repeat(40) + '"] img').waitFor();
       assert.equal(await view.locator('#project-tabs [data-project-id="relay"] [data-repo-icon="relay"]').evaluate(node => getComputedStyle(node).backgroundColor), "rgba(0, 0, 0, 0)");
       for (const width of [560, 900, 1360]) {
@@ -154,7 +188,7 @@ test("shared interface works on web and MCP host transport, including mobile, de
       await page.emulateMedia({ reducedMotion: "no-preference" });
       assert.equal(await view.locator(".flow-band").count(), 0);
       assert.equal(await view.locator(".page-overview").count(), 0);
-      assert.equal(await view.locator(".page-statusline").count() > 0, true);
+      assert.equal(await view.locator(".page-statusline").count(), 0);
       assert.equal(await view.locator(".project-tabs").count(), 1);
       await view.getByRole("button", { name: "night shift", exact: true }).click();
       await view.locator("#night-shift-work").filter({ hasText: "Latest canonical run" }).waitFor();
@@ -178,7 +212,8 @@ test("shared interface works on web and MCP host transport, including mobile, de
         await page.setViewportSize({ width: 390, height: 844 });
         await page.emulateMedia({ colorScheme: "light" });
         await page.getByRole("button", { name: "today", exact: true }).click();
-        await page.locator("#operator-connection").filter({ hasText: "Connected" }).waitFor();
+        await page.locator("#operator-connection").filter({ hasText: "connected" }).waitFor();
+        assert.equal(await page.locator(".operator-topbar").evaluate(node => getComputedStyle(node).position), "static");
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth > innerWidth);
         assert.equal(overflow, false);
         await page.screenshot({ path: "/tmp/relay-b4-mobile-light.png", fullPage: true });

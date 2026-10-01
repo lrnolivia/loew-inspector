@@ -53,7 +53,10 @@ function renderReview() {
   const needs = reviewItems.filter(item => !item.qaReview?.overall);
   const visible = reviewMode === "needs" ? needs : reviewItems;
 
-  count.textContent = needs.length ? needs.length + " need" + (needs.length === 1 ? "s" : "") + " you" : "all caught up";
+  count.innerHTML = '<span class="status-light" aria-hidden="true"></span><span>' + (needs.length ? needs.length + " need" + (needs.length === 1 ? "s" : "") + " you" : "all caught up") + '</span>';
+  count.className = "review-count status-badge";
+  count.dataset.tone = needs.length ? "act" : "done";
+  count.dataset.signal = needs.length ? "attention" : "steady";
   filters.querySelectorAll("[data-review-mode]").forEach(button => {
     button.classList.toggle("active", button.dataset.reviewMode === reviewMode);
   });
@@ -67,7 +70,7 @@ function renderReview() {
     const context = item.context || {};
     const reviewed = Boolean(item.qaReview?.overall);
     return `
-      <button class="review-row" type="button" data-review-id="${esc(item.evidence_id)}">
+      <button class="review-row" type="button" data-review-id="${esc(item.evidence_id)}" data-tone="${reviewed ? "done" : "act"}" data-signal="${reviewed ? "steady" : "attention"}">
         <img src="${esc(item.screenshot_url)}" alt="">
         <span class="review-copy">
           <span class="review-project project-name">${iconSlot(context.project)}${esc(projectName(context.project || "review"))}</span>

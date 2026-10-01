@@ -20,7 +20,7 @@ export async function loadNightShift(ui, projectId = "") {
       const running = state.status === "running";
       const tone = blocked ? "bad" : running ? "info" : worker.enabled ? "good" : "quiet";
       const signal = blocked ? "danger" : running ? "working" : worker.enabled ? "steady" : "quiet";
-      return `<article class="task-row"><div class="task-state status-badge" data-tone="${tone}" data-signal="${signal}"><span class="status-light" aria-hidden="true"></span><span>${blocked ? "needs attention" : running ? "working" : worker.enabled ? "watching" : "paused"}</span></div>
+      return `<article class="task-row" data-tone="${tone}" data-signal="${signal}"><div class="task-state status-badge" data-tone="${tone}" data-signal="${signal}"><span class="status-light" aria-hidden="true"></span><span>${blocked ? "needs attention" : running ? "working" : worker.enabled ? "watching" : "paused"}</span></div>
         <div class="task-copy"><strong class="project-name">${iconSlot(worker.id)}${esc(projectName(worker.id))}</strong>
         <p>${esc(state.last_summary || "No run result recorded yet.")}</p>
         <small>${esc(state.last_run_at ? "Last run · " + new Date(state.last_run_at).toLocaleString() : "No run recorded")}</small>
