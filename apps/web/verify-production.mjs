@@ -6,6 +6,7 @@ import { webBuildId } from "./generated.js";
 const expected = process.env.EXPECTED_SOURCE_SHA;
 const clientId = process.env.CF_ACCESS_CLIENT_ID;
 const clientSecret = process.env.CF_ACCESS_CLIENT_SECRET;
+const diagnoseOnly = process.env.DIAGNOSE_ONLY === "true";
 if (!expected || !clientId || !clientSecret) throw new Error("Production website verification environment is incomplete");
 const origin = "https://relay.loew.fi";
 const headers = {
@@ -13,10 +14,18 @@ const headers = {
   "CF-Access-Client-Id": clientId, "CF-Access-Client-Secret": clientSecret
 };
 await mkdir("qa-evidence/production", { recursive: true });
+const api = [];
+for (const path of ["/api/projects", "/api/workers"]) {
+  const response = await fetch(origin + path, { headers, signal: AbortSignal.timeout(45000) });
+  const body = await response.json().catch(() => null);
+  api.push({ path, status: response.status, error: body?.error || null, shape: Array.isArray(body) ? "array" : Object.keys(body || {}) });
+}
+await writeFile("qa-evidence/production/api.json", JSON.stringify(api, null, 2));
+console.log("WEBSITE_API=" + JSON.stringify(api));
 let ready = false;
 for (let attempt = 0; attempt < 12; attempt++) {
   const response = await fetch(origin + "/", { headers, signal: AbortSignal.timeout(15000) });
-  if (response.ok && response.headers.get("X-Relay-Source-Sha") === expected && response.headers.get("X-Relay-Web-Build") === webBuildId) { ready = true; break; }
+  if (response.ok && (diagnoseOnly || (response.headers.get("X-Relay-Source-Sha") === expected && response.headers.get("X-Relay-Web-Build") === webBuildId))) { ready = true; break; }
   await new Promise(resolve => setTimeout(resolve, 10000));
 }
 assert.ok(ready, "production must serve this exact source SHA and built website artifact");
@@ -28,6 +37,21 @@ try {
     await page.route(origin + "/**", route => route.continue({ headers: { ...route.request().headers(), ...headers } }));
     const errors = [];
     page.on("pageerror", error => errors.push(error.message));
+    if (diagnoseOnly) {
+      await page.goto(origin + "/#/today");
+      await page.waitForTimeout(12000);
+      const requests = await page.evaluate(async () => Promise.all(["/api/projects", "/api/workers"].map(async path => {
+        const response = await fetch(path);
+        const body = await response.json().catch(() => null);
+        return { path, status: response.status, error: body?.error || null, shape: Array.isArray(body) ? "array" : Object.keys(body || {}) };
+      })));
+      const diagnostic = { requests, connection: await page.locator(".operator-connection").innerText(), errors };
+      await writeFile(`qa-evidence/production/diagnostic-${viewport.width}.json`, JSON.stringify(diagnostic, null, 2));
+      await page.screenshot({ path: `qa-evidence/production/diagnostic-${viewport.width}.png`, fullPage: true });
+      console.log("WEBSITE_BROWSER=" + JSON.stringify(diagnostic));
+      await page.close();
+      continue;
+    }
     for (const [feature, label, nav] of [["today", "today", "today"], ["runner", "runner", "projects"], ["night-shift", "night shift", "night-shift"]]) {
       await page.goto(origin + "/inspector#review");
       await page.locator(".chat-card-preview").waitFor();
@@ -50,8 +74,8 @@ try {
     assert.deepEqual(errors, []);
     await page.close();
   }
-  await writeFile("qa-evidence/production/result.json", JSON.stringify({ ok: true, source_sha: expected, web_build: webBuildId, captures }, null, 2));
-  console.log(JSON.stringify({ ok: true, source_sha: expected, web_build: webBuildId, captures }));
+  await writeFile("qa-evidence/production/result.json", JSON.stringify({ ok: !diagnoseOnly, diagnostic: diagnoseOnly, source_sha: expected, web_build: webBuildId, captures }, null, 2));
+  console.log(JSON.stringify({ ok: !diagnoseOnly, diagnostic: diagnoseOnly, source_sha: expected, web_build: webBuildId, captures }));
 } finally { await browser.close(); }
 
 async function capture(page, feature, viewport) {
