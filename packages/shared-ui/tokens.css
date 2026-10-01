@@ -21,6 +21,11 @@
   --status-danger: #ff6f78;
   --status-success: #3bcb8d;
   --status-quiet: #8f8982;
+  --feature-relay: #b5471f;
+  --feature-inspector: #1c8c93;
+  --feature-runner: #3bcb8d;
+  --feature-today: #ff6f78;
+  --feature-night-shift: #ffbf00;
   --color-light-panel: var(--color-raised);
   --color-on-light: var(--color-text-primary);
   --color-on-light-secondary: var(--color-text-secondary);
