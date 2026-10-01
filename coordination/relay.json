@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T06:44:56.435Z",
+  "updated_at": "2026-10-01T06:45:18.694Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5532,7 +5532,7 @@
         "vivienne",
         "roman"
       ],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-10-01T06:33:20.314Z",
       "amendment_count": 1,
       "amendments": [
@@ -8361,6 +8361,78 @@
           }
         }
       ]
+    },
+    {
+      "id": "relay-2.0-today-runner-react-slice-20261001",
+      "owner": "relay-2.0-today-runner-react-slice-20261001",
+      "branch": "relay/2.0-today-runner-react-slice-20261001",
+      "paths": [
+        "apps/web/package.json",
+        "apps/web/vite.config.ts",
+        "apps/web/tsconfig.json",
+        "apps/web/index.html",
+        "apps/web/src/",
+        "packages/runner/src/ui-events.mjs",
+        "packages/runner/src/cloudflare-worker.mjs",
+        "packages/shared-ui/react/",
+        "docs/relay/RELAY_2_0_TODAY_RUNNER_SLICE.md"
+      ],
+      "resources": [
+        "relay-2.0",
+        "relay-vite-react-dashboard",
+        "relay-live-state-stream",
+        "relay-today-react",
+        "relay-runner-react",
+        "relay-night-shift-react",
+        "relay-1.9.9-runner-night-shift-carryforward",
+        "relay-stale-reconnect-ui",
+        "relay-no-committed-generated-bundle"
+      ],
+      "goal": "Build Relay 2.0's first working React/live-state proof across Today, Runner and night shift, explicitly carrying forward the Runner + night shift product work that did not actually ship in 1.9.9, without touching the separate ChatGPT inline-card host lane.",
+      "acceptance": "A clean checkout can build the new Vite React app without committing dist/generated bundle output; Today, Runner and night shift render canonical Relay data; the missing Runner/night shift experience intended for 1.9.9 is implemented here as an explicit 2.0 carry-forward rather than retroactively claimed as shipped; a bounded live event contract updates progress/worker/monitoring state without manual page refresh; dropped streams visibly enter reconnecting/stale states and reconcile from a canonical snapshot; project context is URL-addressable; Runner and night shift provide enough distinct live behavior to exercise the new state, routing, reconnect and component engines; existing 1.9.9 production UI remains available until later cutover; no files owned by the ChatGPT card host assignment are modified.",
+      "next_action": "Scaffold Vite + React + frontend contracts, implement canonical snapshot loading/live transport, then build Today + Runner followed immediately by night shift on the same engine. Stop before Inspector migration except for shared primitives needed by these three surfaces.",
+      "task_class": "architecture",
+      "category": "implementation",
+      "labels": [
+        {
+          "key": "release",
+          "value": "2.0"
+        },
+        {
+          "key": "domain",
+          "value": "frontend-platform"
+        }
+      ],
+      "tags": [
+        "react",
+        "vite",
+        "today",
+        "runner",
+        "night-shift",
+        "live-ui"
+      ],
+      "primary_role": "builder",
+      "supporting_roles": [
+        "architect",
+        "product-lead",
+        "verifier"
+      ],
+      "primary_team": "runner",
+      "supporting_teams": [
+        "inspector",
+        "night-shift"
+      ],
+      "primary_staff": "nico",
+      "supporting_staff": [
+        "ellis",
+        "vivienne",
+        "roman"
+      ],
+      "base_sha": "0f0dc565dea89951e9d571b96d3771466d087b32",
+      "state": "active",
+      "created_at": "2026-10-01T06:45:18.694Z",
+      "updated_at": "2026-10-01T06:45:18.694Z",
+      "lease_until": "2026-10-01T18:45:18.694Z"
     }
   ],
   "migrated_from": "loew-inspector"
