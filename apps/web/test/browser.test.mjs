@@ -6,6 +6,7 @@ import { webAssets, mcpHtml } from "../generated.js";
 import { fitTransform, wheelPanDelta, wheelZoomFactor } from "../public/qa-viewport.js";
 // Inspector deliberately reuses Field camera semantics without importing Field editor state.
 // Dashboard triage is reversible: stale review evidence is archived, never deleted.
+// Review disposition actions preserve the same evidence identity and QA record.
 
 const evidence = {
   evidence_id: "vis_12345678-abcd", captured_at: "2026-09-30T15:00:00Z", step_label: "Relay navigation",
