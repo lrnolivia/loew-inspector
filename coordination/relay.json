@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T02:57:49.713Z",
+  "updated_at": "2026-10-01T02:58:34.331Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3194,34 +3194,14 @@
     {
       "id": "relay-1.9.8-inline-card-design-system-20261001",
       "owner": "relay-1.9.8-inline-card-design-system-20261001",
-      "goal": "Ship Relay 1.9.8 as the dedicated in-chat card design-system release: replace the generic first-pass context card with a polished family of contextual Relay response cards that feel native to conversation, visually communicate state, and remain distinct from both the opened Relay app workspace and relay.loew.fi.",
-      "acceptance": "Design and ship a coherent Relay in-chat card system using the existing MCP card plumbing rather than rebuilding transport/state. Inline cards are contextual visual responses to the current turn and must not include global app navigation, project rails, dashboard shells, or unrelated workspace state. Create distinct but related visual families for operation/progress, project status, release/deployment, staff/team, blocker/recovery, verification/evidence and human-QA responses. Cards consume the 1.9.6 human-first result contract and keep technical evidence subordinate or progressively disclosed. Use canonical staff bindings when available. Preserve exact artifact/evidence identity where required without leading with machine IDs. Visual direction follows current Terra Prime: restrained neutral surfaces, strong typography/hierarchy, semantic accents, no gradients, no fake underline/bottom-border button depth, no generic SaaS-card styling. Status color and restrained ambient motion may convey meaningful working/waiting/attention/failure/verified states; motion must communicate information, respect reduced-motion preferences, and never become decoration. Cards support light/dark mode, mobile/desktop chat widths, keyboard/focus/accessibility, stale-state invalidation, refresh where meaningful, and a clear `open Relay`/expand path when more workspace is needed. Avoid one beige card with different data: card families should share tokens/components while having information architecture appropriate to their job. Tests/evals cover tool-to-card routing, state semantics, responsive layouts, reduced motion, accessibility basics, stale evidence, progressive disclosure and separation from opened-app/dashboard composition. The design pass should use the 1.9.7 creative/platform/motion skills once available, with Valentina-style art direction, Vivienne-style interaction clarity, Margot-style polish review and Sabine-style informational motion; staff names are presentation context, not authorization.",
-      "next_action": "Begin after Relay 1.9.7 creative/platform/performance skill packs land. First audit the current generic relay-context-card and define shared card tokens/anatomy plus the seven card families. Produce visual prototypes for review before broad implementation, then wire contextual tool results into the right family, add responsive/motion/accessibility behavior, run browser/MCP App QA, and ship 1.9.8 without altering the opened Relay app workspace or relay.loew.fi composition.",
+      "goal": "Historical lineage only: the planned Relay 1.9.8 inline-card release was absorbed into Relay 1.9.9 so cards and the opened ChatGPT app experience ship as one coherent ChatGPT-native product release.",
+      "acceptance": "No independent implementation should start from this assignment. Its card-system intent, visual families, Terra Prime direction, motion/accessibility requirements and progressive-disclosure work are owned by successor assignment relay-1.9.9-chatgpt-native-experience-20261001.",
+      "next_action": "Do not claim independently. Continue all inline-card design and implementation under relay-1.9.9-chatgpt-native-experience-20261001.",
       "paths": [
-        "src/relay-chat-ui.js",
-        "src/relay-card-ui.js",
-        "src/relay-card-view-model.js",
-        "src/relay-card-ui.test.js",
-        "apps/web/cards/",
-        "test/cards/",
         "docs/relay/RELAY_1_9_8_RELEASE.md"
       ],
       "resources": [
-        "relay-1.9.8-release",
-        "relay-inline-card-design-system",
-        "relay-context-card-families",
-        "relay-operation-card",
-        "relay-project-card",
-        "relay-release-card",
-        "relay-staff-card",
-        "relay-blocker-card",
-        "relay-verification-card",
-        "relay-qa-card",
-        "relay-card-progressive-disclosure",
-        "relay-card-motion-status",
-        "relay-card-responsive-layout",
-        "relay-terra-prime-card-language",
-        "relay-human-first-result-contract"
+        "relay-superseded-lineage"
       ],
       "task_class": "design",
       "ledger_refs": [
@@ -3259,7 +3239,65 @@
         "verifier"
       ],
       "state": "queued",
-      "created_at": "2026-10-01T02:56:35.886Z"
+      "created_at": "2026-10-01T02:56:35.886Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T02:58:34.331Z",
+          "by": "relay-1.9.8-inline-card-design-system-20261001",
+          "reason": "Absorb the planned 1.9.8 card-only release into the user's unified 1.9.9 ChatGPT-native experience release.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action",
+            "paths",
+            "resources"
+          ],
+          "before": {
+            "goal": "Ship Relay 1.9.8 as the dedicated in-chat card design-system release: replace the generic first-pass context card with a polished family of contextual Relay response cards that feel native to conversation, visually communicate state, and remain distinct from both the opened Relay app workspace and relay.loew.fi.",
+            "acceptance": "Design and ship a coherent Relay in-chat card system using the existing MCP card plumbing rather than rebuilding transport/state. Inline cards are contextual visual responses to the current turn and must not include global app navigation, project rails, dashboard shells, or unrelated workspace state. Create distinct but related visual families for operation/progress, project status, release/deployment, staff/team, blocker/recovery, verification/evidence and human-QA responses. Cards consume the 1.9.6 human-first result contract and keep technical evidence subordinate or progressively disclo...",
+            "next_action": "Begin after Relay 1.9.7 creative/platform/performance skill packs land. First audit the current generic relay-context-card and define shared card tokens/anatomy plus the seven card families. Produce visual prototypes for review before broad implementation, then wire contextual tool results into the right family, add responsive/motion/accessibility behavior, run browser/MCP App QA, and ship 1.9.8 without altering the opened Relay app workspace or relay.loew.fi composition.",
+            "paths": [
+              "src/relay-chat-ui.js",
+              "src/relay-card-ui.js",
+              "src/relay-card-view-model.js",
+              "src/relay-card-ui.test.js",
+              "apps/web/cards/",
+              "test/cards/",
+              "docs/relay/RELAY_1_9_8_RELEASE.md"
+            ],
+            "resources": [
+              "relay-1.9.8-release",
+              "relay-inline-card-design-system",
+              "relay-context-card-families",
+              "relay-operation-card",
+              "relay-project-card",
+              "relay-release-card",
+              "relay-staff-card",
+              "relay-blocker-card",
+              "relay-verification-card",
+              "relay-qa-card",
+              "relay-card-progressive-disclosure",
+              "relay-card-motion-status",
+              "relay-card-responsive-layout",
+              "relay-terra-prime-card-language",
+              "relay-human-first-result-contract"
+            ]
+          },
+          "after": {
+            "goal": "Historical lineage only: the planned Relay 1.9.8 inline-card release was absorbed into Relay 1.9.9 so cards and the opened ChatGPT app experience ship as one coherent ChatGPT-native product release.",
+            "acceptance": "No independent implementation should start from this assignment. Its card-system intent, visual families, Terra Prime direction, motion/accessibility requirements and progressive-disclosure work are owned by successor assignment relay-1.9.9-chatgpt-native-experience-20261001.",
+            "next_action": "Do not claim independently. Continue all inline-card design and implementation under relay-1.9.9-chatgpt-native-experience-20261001.",
+            "paths": [
+              "docs/relay/RELAY_1_9_8_RELEASE.md"
+            ],
+            "resources": [
+              "relay-superseded-lineage"
+            ]
+          }
+        }
+      ],
+      "updated_at": "2026-10-01T02:58:34.331Z"
     },
     {
       "id": "relay-1.9.9-chatgpt-native-experience-20261001",
