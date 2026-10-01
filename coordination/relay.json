@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T03:16:06.080Z",
+  "updated_at": "2026-10-01T03:16:27.124Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -29,8 +29,8 @@
       "id": "relay-operation-framework-20260930",
       "owner": "relay-operation-framework-20260930",
       "goal": "Turn Relay's production primitives into a durable resumable operation framework so agents invoke policy-defined workflows instead of manually conducting every GitHub, Cloudflare, Runner and QA step.",
-      "acceptance": "Every substantial workflow can create a stable operation_id with persisted stage/state, exact source/head/PR/check/merge/version/deployment/runtime identities, timestamps, retry/reconciliation history, blocker/waiting-for-human state and recovery/rollback state; reconnecting agents can resume from the durable receipt without reconstructing chat history; server-side recipes cover at least ship-change, publish-worker, qa-then-merge and rollback-release; ambiguous mutations reconcile by readback before retry; event/webhook updates can advance operation state without chat polling; release policy supports bounded canary/verify/promote/rollback semantics without protection bypass; operation status/history is queryable for UI; tool-surface growth stays minimal by preferring recipes/resources/contracts over one tool per step.",
-      "next_action": "Define and test the operation/receipt schema and transition invariants first. Reuse existing Relay source/cloud/verify primitives; do not fork their auth or safety rules.",
+      "acceptance": "Every substantial workflow can create a stable operation_id with persisted stage/state, exact source/head/PR/check/merge/version/deployment/runtime identities, timestamps, retry/reconciliation history, blocker/waiting-for-human state and recovery/rollback state; reconnecting agents can resume from the durable receipt without reconstructing chat history; server-side recipes cover at least ship-change, publish-worker, qa-then-merge and rollback-release; ambiguous mutations reconcile by readback before retry; event/webhook updates can advance operation state without chat polling; release policy supports bounded canary/verify/promote/rollback semantics without protection bypass; operation status/history is queryable for UI; tool-surface growth stays minimal by preferring recipes/resources/contracts over one tool per step. Tool-pattern contract: operation recipes and their exposed tool interfaces consume the Relay 1.9.8 tool-design standard derived from Arcade's Agentic Tool Patterns. Recipes should prefer explicit task bundles/tool chains over forcing agents to manually orchestrate repetitive low-level calls, expose durable operation IDs and progressive status, classify failures with retry/user/auth/permanent semantics plus recovery guidance, preserve idempotent/readback/transaction boundaries, keep outputs structured/token-efficient, and enforce permission/secret/scope rules server-side. Deviations from applicable patterns must be explicit and justified; do not multiply tools merely to satisfy a pattern mechanically.",
+      "next_action": "Define the operation/receipt schema and transition invariants first, but consume the Relay 1.9.8 agentic-tool standard for recipe/tool boundaries, errors, discovery, output shaping and security. Reuse existing source/cloud/verify primitives and prefer durable high-level recipes where they eliminate fragile manual tool chains.",
       "paths": [
         "src/operations.js",
         "src/operation-receipts.js",
@@ -45,10 +45,56 @@
       "resources": [
         "relay-operation-framework",
         "relay-publication-receipts",
-        "relay-release-orchestration"
+        "relay-release-orchestration",
+        "relay-agentic-tool-standard",
+        "arcade-agentic-tool-patterns",
+        "relay-tool-conformance-evals"
       ],
       "state": "queued",
-      "created_at": "2026-09-30T13:25:45.579Z"
+      "created_at": "2026-09-30T13:25:45.579Z",
+      "ledger_refs": [
+        "RFS-034"
+      ],
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T03:16:27.124Z",
+          "by": "relay-operation-framework-20260930",
+          "reason": "Make durable operations conform to the same production-grade agentic-tool standard instead of treating tool-pattern hardening as a separate documentation exercise.",
+          "fields": [
+            "acceptance",
+            "next_action",
+            "resources",
+            "ledger_refs"
+          ],
+          "before": {
+            "acceptance": "Every substantial workflow can create a stable operation_id with persisted stage/state, exact source/head/PR/check/merge/version/deployment/runtime identities, timestamps, retry/reconciliation history, blocker/waiting-for-human state and recovery/rollback state; reconnecting agents can resume from the durable receipt without reconstructing chat history; server-side recipes cover at least ship-change, publish-worker, qa-then-merge and rollback-release; ambiguous mutations reconcile by readback before retry; event/webhook updates can advance operation state without chat polling; release polic...",
+            "next_action": "Define and test the operation/receipt schema and transition invariants first. Reuse existing Relay source/cloud/verify primitives; do not fork their auth or safety rules.",
+            "resources": [
+              "relay-operation-framework",
+              "relay-publication-receipts",
+              "relay-release-orchestration"
+            ],
+            "ledger_refs": null
+          },
+          "after": {
+            "acceptance": "Every substantial workflow can create a stable operation_id with persisted stage/state, exact source/head/PR/check/merge/version/deployment/runtime identities, timestamps, retry/reconciliation history, blocker/waiting-for-human state and recovery/rollback state; reconnecting agents can resume from the durable receipt without reconstructing chat history; server-side recipes cover at least ship-change, publish-worker, qa-then-merge and rollback-release; ambiguous mutations reconcile by readback before retry; event/webhook updates can advance operation state without chat polling; release polic...",
+            "next_action": "Define the operation/receipt schema and transition invariants first, but consume the Relay 1.9.8 agentic-tool standard for recipe/tool boundaries, errors, discovery, output shaping and security. Reuse existing source/cloud/verify primitives and prefer durable high-level recipes where they eliminate fragile manual tool chains.",
+            "resources": [
+              "relay-operation-framework",
+              "relay-publication-receipts",
+              "relay-release-orchestration",
+              "relay-agentic-tool-standard",
+              "arcade-agentic-tool-patterns",
+              "relay-tool-conformance-evals"
+            ],
+            "ledger_refs": [
+              "RFS-034"
+            ]
+          }
+        }
+      ],
+      "updated_at": "2026-10-01T03:16:27.124Z"
     },
     {
       "id": "relay-mcp-app-ui-20260930",
