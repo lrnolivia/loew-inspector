@@ -60,3 +60,26 @@ export function reconcileWorkerMessage(message,canonical={}){
     action:conflicts.length?"refresh-canonical-state":message.requires_runner_action?"use-runner-transaction":"apply-context"
   });
 }
+
+
+export function narrateExecutiveStatus({
+  owner_staff_id=null,
+  outcome,
+  health="healthy",
+  next_action=null,
+  blocker=null,
+  validation=null,
+  technical_detail=null,
+  include_technical=false
+}={}){
+  const staff=owner_staff_id?getStaff(owner_staff_id):null;
+  const owner=staff&&staff.status!=="retired"?staff.display_name:"Relay";
+  const status=requiredText(outcome,"outcome",600);
+  const parts=[owner+" — "+status];
+  if(health&&health!=="healthy") parts.push("Status: "+health+".");
+  if(blocker) parts.push("Blocker: "+requiredText(blocker,"blocker",500)+".");
+  if(next_action) parts.push("Next: "+requiredText(next_action,"next_action",500));
+  if(validation) parts.push("Validated: "+requiredText(validation,"validation",500)+".");
+  if(include_technical&&technical_detail) parts.push("Technical: "+requiredText(technical_detail,"technical_detail",1000));
+  return parts.join(" ").replace(/\s+/g," ").trim();
+}
