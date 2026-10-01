@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T03:14:04.118Z",
+  "updated_at": "2026-10-01T03:16:06.080Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3471,53 +3471,73 @@
     {
       "id": "relay-1.9.8-inline-card-design-system-20261001",
       "owner": "relay-1.9.8-inline-card-design-system-20261001",
-      "goal": "Historical lineage only: the planned Relay 1.9.8 inline-card release was absorbed into Relay 1.9.9 so cards and the opened ChatGPT app experience ship as one coherent ChatGPT-native product release.",
-      "acceptance": "No independent implementation should start from this assignment. Its card-system intent, visual families, Terra Prime direction, motion/accessibility requirements and progressive-disclosure work are owned by successor assignment relay-1.9.9-chatgpt-native-experience-20261001.",
-      "next_action": "Do not claim independently. Continue all inline-card design and implementation under relay-1.9.9-chatgpt-native-experience-20261001.",
+      "goal": "Ship Relay 1.9.8 as the agentic-tool contract hardening release: audit and improve Relay's MCP/tool surface using the Arcade Agentic Tool Patterns as the normative review baseline for production-grade tool interface design, discovery, composition, execution, output shaping, context, resilience and security.",
+      "acceptance": "Use https://arcade.dev/patterns/llm.txt as the external tool-design review baseline, not as a blind checklist. For every Relay tool family and durable operation recipe, classify the applicable patterns and either satisfy them or record a concise deliberate deviation. Required baseline expectations include: LLM-optimized tool descriptions; clear query/command/discovery separation; constrained typed inputs with sensible defaults and human-friendly identifiers where safe; explicit dependency/call-order hints; layered discovery/capability matching/health checks; composable abstraction levels, task bundles/batching where they reduce agent loops, and explicit operation chains; idempotency/readback/transaction/timeout boundaries appropriate to mutation risk; token-efficient structured outputs with progressive detail and resource references instead of giant payloads; explicit context/identity boundaries; structured error classification with retryability, user/auth requirements and actionable recovery guidance; graceful degradation/fallback only when authority and truth are preserved; credentials injected server-side, permissions enforced in code, scopes declared, and auditable mutations. Preserve Relay's existing canonical authority model, exact-head/CAS safety, Runner ownership, SOURCE/CLOUD/VERIFY boundaries and no-standing-secret rules. Add a versioned Relay tool-design standard plus tests/evals that reject ambiguous descriptions, unconstrained dangerous inputs, raw opaque errors, hidden side effects, unauthorized fallback paths, oversized default responses and tools that duplicate an existing higher-level operation. Audit existing tools and operation recipes; fix high-value gaps without exploding the tool count. Arcade patterns are guidance: when two patterns are alternatives, choose the one appropriate to the tool's role and document why.",
+      "next_action": "Start after 1.9.7 creative/platform skills are stable and before 1.9.9 ChatGPT-native UI. First add the versioned Relay tool-design standard and an applicability matrix for every exposed MCP tool/tool family. Audit descriptions, schemas, discovery, errors, outputs, composition and security. Then patch the highest-impact gaps, add conformance tests/evals, and make the operation framework consume the same standard. Finish with a fresh-client tool-schema review proving agents can discover the right capability, recover from representative failures, and avoid unnecessary low-level tool chains.",
       "paths": [
-        "docs/relay/RELAY_1_9_8_RELEASE.md"
+        "docs/relay/TOOL_DESIGN_STANDARD.md",
+        "docs/relay/RELAY_1_9_8_RELEASE.md",
+        "contracts/tools/",
+        "src/relay-entry.js",
+        "src/runner-control.js",
+        "src/source-lifecycle.js",
+        "src/source-text-mutation.js",
+        "src/operations.js",
+        "src/operation-recipes.js",
+        "test/tools/",
+        "test/tool-evals/"
       ],
       "resources": [
-        "relay-superseded-lineage"
+        "relay-1.9.8-release",
+        "relay-agentic-tool-standard",
+        "arcade-agentic-tool-patterns",
+        "relay-tool-applicability-matrix",
+        "relay-tool-discovery",
+        "relay-tool-composition",
+        "relay-structured-errors",
+        "relay-recovery-guides",
+        "relay-token-efficient-results",
+        "relay-tool-security",
+        "relay-tool-conformance-evals"
       ],
-      "task_class": "design",
+      "task_class": "architecture",
       "ledger_refs": [
-        "RFS-031"
+        "RFS-034"
       ],
-      "category": "design",
+      "category": "architecture",
       "labels": [
         {
           "key": "release",
           "value": "1.9.8"
         },
         {
-          "key": "surface",
-          "value": "inline-chat"
+          "key": "domain",
+          "value": "agentic-tools"
         },
         {
-          "key": "domain",
-          "value": "card-system"
+          "key": "standard",
+          "value": "arcade-patterns"
         }
       ],
       "tags": [
-        "cards",
-        "mcp-app",
-        "terra-prime",
-        "motion",
-        "visual-system",
-        "chat"
+        "tools",
+        "mcp",
+        "discovery",
+        "composition",
+        "resilience",
+        "security",
+        "arcade"
       ],
-      "primary_role": "art-director",
+      "primary_role": "architect",
       "supporting_roles": [
-        "product-lead",
-        "design-editor",
-        "motion-director",
+        "integrator",
         "builder",
-        "verifier"
+        "verifier",
+        "knowledge-planner"
       ],
       "state": "queued",
       "created_at": "2026-10-01T02:56:35.886Z",
-      "amendment_count": 1,
+      "amendment_count": 2,
       "amendments": [
         {
           "at": "2026-10-01T02:58:34.331Z",
@@ -3572,9 +3592,140 @@
               "relay-superseded-lineage"
             ]
           }
+        },
+        {
+          "at": "2026-10-01T03:16:06.080Z",
+          "by": "relay-1.9.8-inline-card-design-system-20261001",
+          "reason": "Repurpose the now-free 1.9.8 slot into a production-grade agentic-tool hardening release using Arcade's published patterns as Relay's normative tool-development review baseline.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action",
+            "paths",
+            "resources",
+            "task_class",
+            "ledger_refs",
+            "category",
+            "labels",
+            "tags",
+            "primary_role",
+            "supporting_roles"
+          ],
+          "before": {
+            "goal": "Historical lineage only: the planned Relay 1.9.8 inline-card release was absorbed into Relay 1.9.9 so cards and the opened ChatGPT app experience ship as one coherent ChatGPT-native product release.",
+            "acceptance": "No independent implementation should start from this assignment. Its card-system intent, visual families, Terra Prime direction, motion/accessibility requirements and progressive-disclosure work are owned by successor assignment relay-1.9.9-chatgpt-native-experience-20261001.",
+            "next_action": "Do not claim independently. Continue all inline-card design and implementation under relay-1.9.9-chatgpt-native-experience-20261001.",
+            "paths": [
+              "docs/relay/RELAY_1_9_8_RELEASE.md"
+            ],
+            "resources": [
+              "relay-superseded-lineage"
+            ],
+            "task_class": "design",
+            "ledger_refs": [
+              "RFS-031"
+            ],
+            "category": "design",
+            "labels": [
+              {
+                "key": "release",
+                "value": "1.9.8"
+              },
+              {
+                "key": "surface",
+                "value": "inline-chat"
+              },
+              {
+                "key": "domain",
+                "value": "card-system"
+              }
+            ],
+            "tags": [
+              "cards",
+              "mcp-app",
+              "terra-prime",
+              "motion",
+              "visual-system",
+              "chat"
+            ],
+            "primary_role": "art-director",
+            "supporting_roles": [
+              "product-lead",
+              "design-editor",
+              "motion-director",
+              "builder",
+              "verifier"
+            ]
+          },
+          "after": {
+            "goal": "Ship Relay 1.9.8 as the agentic-tool contract hardening release: audit and improve Relay's MCP/tool surface using the Arcade Agentic Tool Patterns as the normative review baseline for production-grade tool interface design, discovery, composition, execution, output shaping, context, resilience and security.",
+            "acceptance": "Use https://arcade.dev/patterns/llm.txt as the external tool-design review baseline, not as a blind checklist. For every Relay tool family and durable operation recipe, classify the applicable patterns and either satisfy them or record a concise deliberate deviation. Required baseline expectations include: LLM-optimized tool descriptions; clear query/command/discovery separation; constrained typed inputs with sensible defaults and human-friendly identifiers where safe; explicit dependency/call-order hints; layered discovery/capability matching/health checks; composable abstraction levels, t...",
+            "next_action": "Start after 1.9.7 creative/platform skills are stable and before 1.9.9 ChatGPT-native UI. First add the versioned Relay tool-design standard and an applicability matrix for every exposed MCP tool/tool family. Audit descriptions, schemas, discovery, errors, outputs, composition and security. Then patch the highest-impact gaps, add conformance tests/evals, and make the operation framework consume the same standard. Finish with a fresh-client tool-schema review proving agents can discover the right capability, recover from representative failures, and avoid unnecessary low-level tool chains.",
+            "paths": [
+              "docs/relay/TOOL_DESIGN_STANDARD.md",
+              "docs/relay/RELAY_1_9_8_RELEASE.md",
+              "contracts/tools/",
+              "src/relay-entry.js",
+              "src/runner-control.js",
+              "src/source-lifecycle.js",
+              "src/source-text-mutation.js",
+              "src/operations.js",
+              "src/operation-recipes.js",
+              "test/tools/",
+              "test/tool-evals/"
+            ],
+            "resources": [
+              "relay-1.9.8-release",
+              "relay-agentic-tool-standard",
+              "arcade-agentic-tool-patterns",
+              "relay-tool-applicability-matrix",
+              "relay-tool-discovery",
+              "relay-tool-composition",
+              "relay-structured-errors",
+              "relay-recovery-guides",
+              "relay-token-efficient-results",
+              "relay-tool-security",
+              "relay-tool-conformance-evals"
+            ],
+            "task_class": "architecture",
+            "ledger_refs": [
+              "RFS-034"
+            ],
+            "category": "architecture",
+            "labels": [
+              {
+                "key": "release",
+                "value": "1.9.8"
+              },
+              {
+                "key": "domain",
+                "value": "agentic-tools"
+              },
+              {
+                "key": "standard",
+                "value": "arcade-patterns"
+              }
+            ],
+            "tags": [
+              "tools",
+              "mcp",
+              "discovery",
+              "composition",
+              "resilience",
+              "security",
+              "arcade"
+            ],
+            "primary_role": "architect",
+            "supporting_roles": [
+              "integrator",
+              "builder",
+              "verifier",
+              "knowledge-planner"
+            ]
+          }
         }
       ],
-      "updated_at": "2026-10-01T02:58:34.331Z"
+      "updated_at": "2026-10-01T03:16:06.080Z"
     },
     {
       "id": "relay-1.9.9-chatgpt-native-experience-20261001",
