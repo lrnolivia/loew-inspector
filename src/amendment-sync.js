@@ -8,7 +8,7 @@ export function classifyAmendment(entry={}){
   if(entry.classification&&PRIORITY[entry.classification]) return entry.classification;
   const fields=new Set(entry.fields||[]);
   if(fields.has("paths")||fields.has("resources")) return "scope-changing";
-  if(fields.has("goal")||fields.has("acceptance")||fields.has("next_action")||fields.has("task_class")) return "plan-adjusting";
+  if(["goal","acceptance","next_action","task_class","category","labels","tags","primary_role","supporting_roles"].some(field=>fields.has(field))) return "plan-adjusting";
   return "informational";
 }
 export function amendmentWindow(assignment,cursor=0){
