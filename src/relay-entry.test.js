@@ -106,3 +106,67 @@ test("Relay extension preserves native card resources and appends skills once", 
     assert.equal(skillsAgain.filter(item => item.uri === uri).length, 1);
   }
 });
+
+test("fresh inline status card is listed and readable through the authenticated MCP endpoint", async t => {
+  const { generateKeyPairSync, sign } = await import("node:crypto");
+  const { default: worker } = await import("./relay-entry.js");
+  const { relayContextCardResource } = await import("./relay-chat-ui.js");
+  const { publicKey, privateKey } = generateKeyPairSync("rsa", { modulusLength: 2048 });
+  const kid = "status-card-regression";
+  const encode = value => Buffer.from(JSON.stringify(value)).toString("base64url");
+  const payload = encode({ alg: "RS256", kid }) + "." + encode({
+    iss: "https://loewfi.cloudflareaccess.com",
+    aud: ["7d90e5b24c6c74b4bd0fb36699e0a65a3aa25057763986ca1b8ce1a52d528819"],
+    exp: Math.floor(Date.now() / 1000) + 600
+  });
+  const token = payload + "." + sign("RSA-SHA256", Buffer.from(payload), privateKey).toString("base64url");
+  t.mock.method(globalThis, "fetch", async url => {
+    assert.equal(String(url), "https://loewfi.cloudflareaccess.com/cdn-cgi/access/certs");
+    return Response.json({ keys: [{ ...publicKey.export({ format: "jwk" }), kid }] });
+  });
+  const rpc = async (method, params = {}) => {
+    const response = await worker.fetch(new Request("https://relay.loew.fi/mcp", {
+      method: "POST",
+      headers: { "content-type": "application/json", "cf-access-jwt-assertion": token },
+      body: JSON.stringify({ jsonrpc: "2.0", id: 1, method, params })
+    }), {});
+    assert.equal(response.status, 200);
+    const body = await response.json();
+    assert.equal(body.error, undefined);
+    return body.result;
+  };
+  const uri = "ui://relay/status-card/v1.html";
+  const { tools } = await rpc("tools/list");
+  const fresh = tools.filter(tool => tool.name === "relay_show_status_card");
+  assert.equal(fresh.length, 1);
+  const tool = fresh[0];
+  const control = tools.find(tool => tool.name === "relay_ui_control_center");
+  const old = tools.find(tool => tool.name === "relay_render_context_card");
+  assert.equal(tool._meta.ui.resourceUri, uri);
+  assert.equal(tool._meta["openai/outputTemplate"], uri);
+  assert.deepEqual(tool._meta.ui.visibility, control._meta.ui.visibility);
+  assert.deepEqual(tool.securitySchemes, control.securitySchemes);
+  assert.deepEqual(tool._meta.securitySchemes, control._meta.securitySchemes);
+  assert.equal(tool._meta["openai/ui"], undefined);
+  assert.deepEqual(tool.inputSchema, old.inputSchema);
+  assert.deepEqual(tool.annotations, old.annotations);
+  assert.equal(old._meta.ui.resourceUri, "ui://relay/context-card/v7.html");
+  const { resources } = await rpc("resources/list");
+  assert.equal(resources.filter(resource => resource.uri === uri).length, 1);
+  assert.equal(resources.find(resource => resource.uri === uri).mimeType, "text/html;profile=mcp-app");
+  assert.equal(resources.filter(resource => resource.uri === RELAY_CONTEXT_CARD_URI).length, 1);
+  const { contents } = await rpc("resources/read", { uri });
+  assert.equal(contents.length, 1);
+  assert.equal(contents[0].uri, uri);
+  assert.equal(contents[0].mimeType, "text/html;profile=mcp-app");
+  const original = relayContextCardResource();
+  assert.equal(contents[0].text, original.text);
+  assert.deepEqual(contents[0]._meta, original._meta);
+  assert.deepEqual(contents[0]._meta["openai/ui"].availableDisplayModes, ["inline"]);
+  assert.equal(contents[0]._meta["openai/ui"].entrypoints, undefined);
+  const oldResource = await rpc("resources/read", { uri: RELAY_CONTEXT_CARD_URI });
+  assert.deepEqual(oldResource.contents[0], original);
+  const invalid = await rpc("tools/call", { name: "relay_show_status_card", arguments: { project: "../relay" } });
+  assert.equal(invalid.isError, true);
+  assert.match(invalid.content[0].text, /Invalid card project/);
+});

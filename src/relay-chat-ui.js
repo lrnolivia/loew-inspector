@@ -1,13 +1,15 @@
 import { STAFF } from './staff-registry.js';
 export const RELAY_CONTEXT_CARD_URI = 'ui://relay/context-card/v7.html';
 export const RELAY_CONTEXT_CARD_TOOL = 'relay_render_context_card';
+export const RELAY_STATUS_CARD_URI = 'ui://relay/status-card/v1.html';
+export const RELAY_STATUS_CARD_TOOL = 'relay_show_status_card';
 const CONTROL_URI = 'ui://relay/control-center/v2.html';
 const DIRECTORY = Object.fromEntries(STAFF.map(p => [p.id, p.display_name]));
 const CONTEXTUAL_TOOLS = new Set([
   'relay_runner_project','relay_runner_assignments','relay_runner_progress','relay_runner_resume','relay_runner_updates','relay_runner_coordinate','relay_runner_preflight',
   'relay_source_inventory','relay_source_pull_request','relay_source_checks','relay_source_pull_request_action',
   'relay_cloud_worker','relay_cloud_project','relay_cloud_deploy_version','relay_cloud_deploy_project_version',
-  'relay_verify_browser_snapshot','relay_verify_browser_screenshot','relay_verify_evidence_plan','relay_verify_browser_capture',RELAY_CONTEXT_CARD_TOOL
+  'relay_verify_browser_snapshot','relay_verify_browser_screenshot','relay_verify_evidence_plan','relay_verify_browser_capture',RELAY_CONTEXT_CARD_TOOL,RELAY_STATUS_CARD_TOOL
 ]);
 export function relayContextCardDescriptor() {
   return { uri: RELAY_CONTEXT_CARD_URI, name: 'relay-context-card', title: 'Relay contextual status card', description: 'Compact staff, progress, handoff, blocker and QA context.', mimeType: 'text/html;profile=mcp-app' };
@@ -142,4 +144,19 @@ ready.catch(error=>{if(!lastData){el.summary.textContent='Relay is waiting for t
 }
 export function relayContextCardResource() {
   return { uri:RELAY_CONTEXT_CARD_URI, mimeType:'text/html;profile=mcp-app', text:cardHtml(), _meta:{ui:{prefersBorder:false,csp:{connectDomains:['https://relay.loew.fi'],resourceDomains:['https://relay.loew.fi']}},'openai/widgetDescription':'Compact staff-aware Relay context. Can reuse existing Inspector QA screenshots when requested. Open Relay for the full control center.','openai/ui':{availableDisplayModes:['inline']}} };
+}
+
+// Fresh mount identity; keep the approved v7 renderer and resource intact.
+export function relayStatusCardDescriptor() {
+  return { ...relayContextCardDescriptor(), uri: RELAY_STATUS_CARD_URI, name: 'relay-status-card' };
+}
+export function relayStatusCardTool() {
+  const tool = relayContextCardTool();
+  return { ...tool, name: RELAY_STATUS_CARD_TOOL, _meta: { ...tool._meta,
+    ui: { resourceUri: RELAY_STATUS_CARD_URI, visibility: ['model', 'app'] },
+    'openai/outputTemplate': RELAY_STATUS_CARD_URI
+  } };
+}
+export function relayStatusCardResource() {
+  return { ...relayContextCardResource(), uri: RELAY_STATUS_CARD_URI };
 }
