@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T17:25:44.395Z",
+  "updated_at": "2026-10-01T17:26:15.760Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6050,6 +6050,7 @@
         "apps/web/src/styles.css",
         "apps/web/build.mjs",
         "apps/web/public/brand.js",
+        "apps/web/public/operator-1.8.css",
         "apps/web/generated-react.js",
         "apps/web/generated-inspector.js"
       ],
@@ -6067,8 +6068,8 @@
       "supporting_staff": [],
       "state": "claimed",
       "created_at": "2026-10-01T09:36:40.990Z",
-      "updated_at": "2026-10-01T17:25:44.395Z",
-      "amendment_count": 2,
+      "updated_at": "2026-10-01T17:26:15.760Z",
+      "amendment_count": 3,
       "amendments": [
         {
           "at": "2026-10-01T17:21:10.724Z",
@@ -6142,6 +6143,37 @@
               "apps/web/src/styles.css",
               "apps/web/build.mjs",
               "apps/web/public/brand.js",
+              "apps/web/generated-react.js",
+              "apps/web/generated-inspector.js"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T17:26:15.760Z",
+          "by": "relay-2.0-control-center-resource-bust-retired-20261001",
+          "reason": "Apply the same owner-requested Momo Relay/nav typography to the preserved Inspector shell so the two 2.0 surfaces do not diverge.",
+          "fields": [
+            "paths"
+          ],
+          "before": {
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js",
+              "apps/web/src/styles.css",
+              "apps/web/build.mjs",
+              "apps/web/public/brand.js",
+              "apps/web/generated-react.js",
+              "apps/web/generated-inspector.js"
+            ]
+          },
+          "after": {
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js",
+              "apps/web/src/styles.css",
+              "apps/web/build.mjs",
+              "apps/web/public/brand.js",
+              "apps/web/public/operator-1.8.css",
               "apps/web/generated-react.js",
               "apps/web/generated-inspector.js"
             ]
@@ -9515,6 +9547,7 @@
         "apps/web/src/styles.css",
         "apps/web/build.mjs",
         "apps/web/public/brand.js",
+        "apps/web/public/operator-1.8.css",
         "apps/web/generated-react.js",
         "apps/web/generated-inspector.js"
       ],
@@ -9536,9 +9569,9 @@
       "base_sha": "9fa0f90ecb3e423c9c27c069a602a9dcf6cd6633",
       "state": "active",
       "created_at": "2026-10-01T09:37:31.270Z",
-      "updated_at": "2026-10-01T17:25:44.395Z",
-      "lease_until": "2026-10-02T05:25:44.395Z",
-      "amendment_count": 2,
+      "updated_at": "2026-10-01T17:26:15.760Z",
+      "lease_until": "2026-10-02T05:26:15.760Z",
+      "amendment_count": 3,
       "amendments": [
         {
           "at": "2026-10-01T17:21:10.724Z",
@@ -9612,6 +9645,37 @@
               "apps/web/src/styles.css",
               "apps/web/build.mjs",
               "apps/web/public/brand.js",
+              "apps/web/generated-react.js",
+              "apps/web/generated-inspector.js"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T17:26:15.760Z",
+          "by": "relay-2.0-control-center-resource-bust-retired-20261001",
+          "reason": "Apply the same owner-requested Momo Relay/nav typography to the preserved Inspector shell so the two 2.0 surfaces do not diverge.",
+          "fields": [
+            "paths"
+          ],
+          "before": {
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js",
+              "apps/web/src/styles.css",
+              "apps/web/build.mjs",
+              "apps/web/public/brand.js",
+              "apps/web/generated-react.js",
+              "apps/web/generated-inspector.js"
+            ]
+          },
+          "after": {
+            "paths": [
+              "src/relay-ui.js",
+              "src/relay-ui.test.js",
+              "apps/web/src/styles.css",
+              "apps/web/build.mjs",
+              "apps/web/public/brand.js",
+              "apps/web/public/operator-1.8.css",
               "apps/web/generated-react.js",
               "apps/web/generated-inspector.js"
             ]
