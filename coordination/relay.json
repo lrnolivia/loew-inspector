@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T00:32:09.418Z",
+  "updated_at": "2026-10-01T00:32:53.635Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -2254,7 +2254,9 @@
         "contracts/staff/",
         "src/staff-registry.js",
         "src/staff-registry.test.js",
-        "docs/relay/staff/"
+        "docs/relay/staff/",
+        "src/relay-entry.js",
+        "src/relay-entry.test.js"
       ],
       "resources": [
         "relay-1.9.4-release",
@@ -2266,11 +2268,12 @@
         "relay-sticky-staff-identity",
         "relay-staff-personality-profiles",
         "relay-subnet-membership",
-        "relay-worker-personas"
+        "relay-worker-personas",
+        "relay-staff-directory-tool"
       ],
       "goal": "Ship Relay 1.9.4 as the staff-identity and skills-runtime foundation, with the canonical named staff directory implemented first so later skill resolution, routing and communication have stable human identities to attach to.",
       "acceptance": "Implement a canonical staff registry with sticky approved names, active/reserve/retired lifecycle, role affinities, subsystem/subnet memberships, optional worker bindings, and compact durable personality profiles. Names are presentation/routing metadata only and never authorization; canonical owner ids remain authoritative. Initial active staff: Julian (central lead/coordination), Valentina (creative direction), Vivienne (product/interaction), Naomi (research/strategy), Ellis (systems architecture), Luca (release/deploy), Nico (implementation), Margot (design review/polish), Roman (verification/evidence), Imani (planning/skills/knowledge), Rafael (SOURCE/integration/rescue), Adrian (Runner/infrastructure/maintenance), Gabriel (Cloud/reliability), Sabine (motion/visual systems). Reserve: Mateo (integrations/connectors), Bianca (product/brand/launch), Dominique (program strategy/operations). Felix is retired and must not be auto-reused. Staff identity is sticky across assignments/workers/subnets until explicitly renamed/retired. Personality profiles may shape voice, collaboration style, humor tolerance, strengths and quirks, but never technical truth, authority or sensitive inference; no canned jokes. Add validation/resolution tests and a bounded read contract for directory lookup. Then continue the original skills-runtime foundation: manifest validation, provenance/license/integrity, deterministic JIT resolution, bounded context, dependency/capability gating, overlays and auditable upstream policy.",
-      "next_action": "Build the staff registry first: durable schema + initial cast + resolver/read contract + tests. Then connect staff role affinities into the skills runtime foundation without making names an authorization mechanism.",
+      "next_action": "Wire relay_staff_directory into the MCP surface and bump Relay to 1.9.4; validate the canonical staff registry and directory tool end-to-end, then continue the skills-runtime foundation on the same admitted branch.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-019",
@@ -2280,8 +2283,8 @@
       "base_sha": "0936dd8e8ebedc521935027445de4cf3c7d7bf27",
       "state": "active",
       "created_at": "2026-10-01T00:24:38.073Z",
-      "updated_at": "2026-10-01T00:24:38.073Z",
-      "lease_until": "2026-10-01T12:24:38.073Z"
+      "updated_at": "2026-10-01T00:32:53.635Z",
+      "lease_until": "2026-10-01T12:32:53.635Z"
     }
   ],
   "migrated_from": "loew-inspector"
