@@ -472,7 +472,7 @@ button:hover .tool-mark,
   max-width:100%;
   color:var(--status-color) !important;
   background:var(--status-surface);
-  border:1px solid color-mix(in srgb,var(--status-color) 18%,transparent);
+  border:0;
   border-radius:999px;
   padding:6px 10px;
   font-weight:600;
@@ -676,22 +676,68 @@ body[data-page="night-shift"] { --page-feature-accent: var(--feature-night-shift
 .attention-card[data-tone],
 .review-row[data-tone],
 .task-row[data-tone] {
-  border:1px solid color-mix(in srgb,var(--status-color) 24%,transparent) !important;
-  border-left:4px solid color-mix(in srgb,var(--status-color) 88%,transparent) !important;
-  background:color-mix(in srgb,var(--status-color) 5%,var(--color-surface)) !important;
+  border:0 !important;
+  box-shadow:none !important;
+  background:var(--color-surface) !important;
+}
+.progress-row[data-tone="bad"],
+.today-task[data-tone="bad"],
+.automation-row[data-tone="bad"],
+.attention-card[data-tone="bad"],
+.review-row[data-tone="bad"],
+.task-row[data-tone="bad"],
+.progress-row[data-tone="act"],
+.today-task[data-tone="act"],
+.automation-row[data-tone="act"],
+.attention-card[data-tone="act"],
+.review-row[data-tone="act"],
+.task-row[data-tone="act"] {
+  background:color-mix(in srgb,var(--status-color) 6%,var(--color-surface)) !important;
+}
+.progress-row[data-tone="warn"],
+.today-task[data-tone="warn"],
+.automation-row[data-tone="warn"],
+.attention-card[data-tone="warn"],
+.review-row[data-tone="warn"],
+.task-row[data-tone="warn"],
+.progress-row[data-tone="wait"],
+.today-task[data-tone="wait"],
+.automation-row[data-tone="wait"],
+.attention-card[data-tone="wait"],
+.review-row[data-tone="wait"],
+.task-row[data-tone="wait"] {
+  background:color-mix(in srgb,var(--status-color) 4%,var(--color-surface)) !important;
+}
+.progress-row[data-tone="info"],
+.today-task[data-tone="info"],
+.automation-row[data-tone="info"],
+.attention-card[data-tone="info"],
+.review-row[data-tone="info"],
+.task-row[data-tone="info"],
+.progress-row[data-tone="good"],
+.today-task[data-tone="good"],
+.automation-row[data-tone="good"],
+.attention-card[data-tone="good"],
+.review-row[data-tone="good"],
+.task-row[data-tone="good"],
+.progress-row[data-tone="done"],
+.today-task[data-tone="done"],
+.automation-row[data-tone="done"],
+.attention-card[data-tone="done"],
+.review-row[data-tone="done"],
+.task-row[data-tone="done"] {
+  background:color-mix(in srgb,var(--status-color) 3%,var(--color-surface)) !important;
 }
 .progress-row[data-tone="quiet"],
 .today-task[data-tone="quiet"],
 .automation-row[data-tone="quiet"],
 .task-row[data-tone="quiet"] {
-  border-color:color-mix(in srgb,var(--status-quiet) 15%,transparent) !important;
-  border-left-color:color-mix(in srgb,var(--status-quiet) 44%,transparent) !important;
   background:var(--color-surface) !important;
 }
 .clear-card {
-  border:1px solid color-mix(in srgb,var(--status-success) 20%,transparent) !important;
-  border-left:4px solid var(--status-success) !important;
-  background:color-mix(in srgb,var(--status-success) 4%,var(--color-surface)) !important;
+  border:0 !important;
+  box-shadow:none !important;
+  background:color-mix(in srgb,var(--status-success) 3%,var(--color-surface)) !important;
 }
 
 .operator-nav button {
@@ -703,7 +749,7 @@ body[data-page="night-shift"] { --page-feature-accent: var(--feature-night-shift
 .operator-nav button[data-feature="night-shift"] { --feature-accent:var(--feature-night-shift); }
 .operator-nav button.active {
   background:color-mix(in srgb,var(--feature-accent) 14%,var(--color-raised)) !important;
-  border:1px solid color-mix(in srgb,var(--feature-accent) 30%,transparent) !important;
+  border:0 !important;
   color:var(--color-text-primary) !important;
 }
 .operator-nav button.active .nav-copy small {
@@ -740,7 +786,7 @@ body[data-page="night-shift"] { --page-feature-accent: var(--feature-night-shift
     padding:28px 12px !important;
     gap:24px !important;
     overflow-x:hidden !important;
-    transition:width .24s cubic-bezier(.2,.8,.2,1),padding .24s cubic-bezier(.2,.8,.2,1);
+    transition:width 220ms cubic-bezier(.16,.9,.28,1.08),padding 220ms cubic-bezier(.16,.9,.28,1.08);
     z-index:1000;
   }
   .operator-topbar:hover,
@@ -754,7 +800,7 @@ body[data-page="night-shift"] { --page-feature-accent: var(--feature-night-shift
     max-width:none !important;
     margin-left:var(--relay-sidebar-collapsed) !important;
     padding:24px 32px 88px !important;
-    transition:width .24s cubic-bezier(.2,.8,.2,1),margin-left .24s cubic-bezier(.2,.8,.2,1);
+    transition:width 220ms cubic-bezier(.16,.9,.28,1.08),margin-left 220ms cubic-bezier(.16,.9,.28,1.08);
   }
   .operator-topbar:hover + .operator-shell,
   .operator-topbar:focus-within + .operator-shell {
