@@ -129,7 +129,7 @@ test("shared interface works on web and MCP host transport, including mobile, de
       const collapsed = await sidebar.evaluate(node => ({ width: node.getBoundingClientRect().width, navOpacity: getComputedStyle(node.querySelector(".nav-copy")).opacity }));
       assert.ok(collapsed.width >= 84 && collapsed.width <= 92, mode + " collapsed sidebar width");
       assert.equal(collapsed.navOpacity, "0");
-      assert.ok(await view.locator('[data-page="today"]').evaluate(node => node.getBoundingClientRect().width) <= 1121, mode + " centered content max-width");
+      assert.ok(await view.locator('.operator-page[data-page="today"]').evaluate(node => node.getBoundingClientRect().width) <= 1121, mode + " centered content max-width");
       assert.ok(parseFloat(await shell.evaluate(node => getComputedStyle(node).marginLeft)) >= 84);
       await sidebar.hover();
       await page.waitForTimeout(280);
