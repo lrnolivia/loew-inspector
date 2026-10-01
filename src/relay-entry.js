@@ -7,6 +7,7 @@ import { runnerCleanupTool, callRunnerCleanup, validateRunnerCleanupArguments } 
 import { cloudUploadTool, callCloudUpload, validateCloudUploadArguments } from "./cloud-upload.js";
 import { QA_SKILL_URI, qaSkillCatalogEntry, qaSkillResourceDescriptor, qaSkillResource } from "./qa-skill.js";
 import { LOEW_NAMING_SKILL_URI, loewNamingSkillCatalogEntry, loewNamingSkillResourceDescriptor, loewNamingSkillResource } from "./loew-naming-skill.js";
+import { EXECUTIVE_COMMUNICATION_SKILL_URI, executiveCommunicationSkillCatalogEntry, executiveCommunicationSkillResourceDescriptor, executiveCommunicationSkillResource } from "./executive-communication-skill.js";
 import { RELAY_CONTEXT_CARD_URI, relayContextCardDescriptor, relayContextCardResource, contextualizeRelayTool } from "./relay-chat-ui.js";
 
 export const RELAY_EXTENSION_VERSION = "1.9.5";
@@ -102,6 +103,7 @@ export function augmentResourceList(resources) {
   if (!list.some(resource => resource?.uri === RELAY_CONTEXT_CARD_URI)) list.push(relayContextCardDescriptor());
   if (!list.some(resource => resource?.uri === QA_SKILL_URI)) list.push(qaSkillResourceDescriptor());
   if (!list.some(resource => resource?.uri === LOEW_NAMING_SKILL_URI)) list.push(loewNamingSkillResourceDescriptor());
+  if (!list.some(resource => resource?.uri === EXECUTIVE_COMMUNICATION_SKILL_URI)) list.push(executiveCommunicationSkillResourceDescriptor());
   return list;
 }
 
@@ -109,6 +111,7 @@ export function augmentSkillList(skills) {
   const list = Array.isArray(skills) ? [...skills] : [];
   if (!list.some(skill => skill?.uri === QA_SKILL_URI)) list.push(qaSkillCatalogEntry());
   if (!list.some(skill => skill?.uri === LOEW_NAMING_SKILL_URI)) list.push(loewNamingSkillCatalogEntry());
+  if (!list.some(skill => skill?.uri === EXECUTIVE_COMMUNICATION_SKILL_URI)) list.push(executiveCommunicationSkillCatalogEntry());
   return list;
 }
 
@@ -274,6 +277,7 @@ export default {
       if (message.params?.uri === RELAY_CONTEXT_CARD_URI) return rpcResult(message.id ?? null, { contents: [relayContextCardResource()] }, response.headers);
       if (message.params?.uri === QA_SKILL_URI) return rpcResult(message.id ?? null, { contents: [qaSkillResource()] }, response.headers);
       if (message.params?.uri === LOEW_NAMING_SKILL_URI) return rpcResult(message.id ?? null, { contents: [loewNamingSkillResource()] }, response.headers);
+      if (message.params?.uri === EXECUTIVE_COMMUNICATION_SKILL_URI) return rpcResult(message.id ?? null, { contents: [executiveCommunicationSkillResource()] }, response.headers);
     }
     if (message.method === "skills/list") {
       return rewrite(response, payload => {
@@ -284,6 +288,7 @@ export default {
     if (message.method === "skills/get" && response.status === 200) {
       if (message.params?.uri === QA_SKILL_URI) return rpcResult(message.id ?? null, { skill: qaSkillCatalogEntry() }, response.headers);
       if (message.params?.uri === LOEW_NAMING_SKILL_URI) return rpcResult(message.id ?? null, { skill: loewNamingSkillCatalogEntry() }, response.headers);
+      if (message.params?.uri === EXECUTIVE_COMMUNICATION_SKILL_URI) return rpcResult(message.id ?? null, { skill: executiveCommunicationSkillCatalogEntry() }, response.headers);
     }
     if (message.method === "tools/list") {
       return rewrite(response, payload => {
