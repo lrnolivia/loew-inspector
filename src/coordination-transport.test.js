@@ -109,3 +109,37 @@ test('CLI preserves a large coordination record whose base64 response exceeds th
   assert.equal(state.record.retained_history.length, 820000);
   assert.equal(state.record.claims[0].state, 'cancelled');
 });
+
+test('CLI cleanup protects a shared retired branch at both eligibility and pre-delete reread', async t => {
+  for (const disposition of ['cancelled', 'superseded']) {
+    for (const phase of ['initial', 'reread']) {
+      const dir = await mkdtemp(join(tmpdir(), 'relay-retired-cleanup-'));
+      t.after(() => rm(dir, { recursive: true, force: true }));
+      const statePath = join(dir, 'state.json');
+      await writeFile(statePath, JSON.stringify({ reads: 0, deletes: 0, disposition, phase }));
+      await writeFile(join(dir, 'gh'), `#!${process.execPath}
+const fs = require('node:fs');
+const file = process.env.RELAY_CLEANUP_STATE, s = JSON.parse(fs.readFileSync(file));
+const path = process.argv[3], method = process.argv[process.argv.indexOf('--method') + 1];
+const head = '${sha}', merge = '${revision}';
+const old = { id:'old', owner:'old-owner', state:'completed', branch:'relay/reused', work_accounted:true, pr:9, merged_head_sha:head, merge_commit_sha:merge };
+const retired = { id:'new', owner:'new-owner', state:s.disposition, branch:'relay/reused', paths:['src/file.js'],resources:[] };
+const blob = value => ({sha:head,content:Buffer.from(JSON.stringify(value)).toString('base64')});
+let result;
+if(path.includes('projects/relay.json')) result=blob({repository:'lrnolivia/relay',default_branch:'main',implementation:{branch_prefixes:['relay/'],excluded_branches:['main']},coordination:{max_active_branches:4,lease_hours:12}});
+else if(path.includes('coordination/relay.json')) { s.reads++; result=blob({claims:s.phase==='initial'||s.reads>1?[old,retired]:[old],queue:[],legacy_branches:['main']}); }
+else if(path.includes('/branches?')) result=s.deletes?[]:[{name:'relay/reused',commit:{sha:head}}];
+else if(path.includes('/pulls?state=open')) result=[];
+else if(path.endsWith('/pulls/9')) result={merged:true,base:{ref:'main',repo:{full_name:'lrnolivia/relay'}},head:{ref:'relay/reused',sha:head,repo:{full_name:'lrnolivia/relay'}},merge_commit_sha:merge};
+else if(path.includes('/git/ref/heads/')) result={object:{sha:head}};
+else if(path.includes('/git/refs/heads/')&&method==='DELETE') {s.deletes++;result=null;}
+else {process.stderr.write('Unexpected endpoint '+path);process.exit(1);}
+fs.writeFileSync(file,JSON.stringify(s));process.stdout.write(JSON.stringify(result));
+`, { mode: 0o755 });
+      const run = spawnSync(process.execPath, ['scripts/coordinate.mjs', 'cleanup', 'relay'], { cwd: root, encoding: 'utf8', env: { ...process.env, PATH: `${dir}:${process.env.PATH}`, RELAY_CLEANUP_STATE: statePath, RELAY_RUNNER_CONTROL_REPOSITORY: 'lrnolivia/relay' } });
+      assert.equal(JSON.parse(await readFile(statePath, 'utf8')).deletes, 0, `${disposition} at ${phase}`);
+      if (phase === 'initial') { assert.equal(run.status, 0, run.stderr); assert.deepEqual(JSON.parse(run.stdout).deleted, []); }
+      else { assert.notEqual(run.status, 0); assert.match(run.stderr, /Ownership changed/); }
+    }
+  }
+});

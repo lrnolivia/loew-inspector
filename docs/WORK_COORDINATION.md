@@ -104,3 +104,18 @@ Progress/reconciliation/resume keep `cancelled` or `superseded` terminal despite
 `src/coordination.mjs` is canonical. `src/coordination-engine.js` is its byte-exact runtime mirror; `RUNNER_ENGINE_SHA` lives in `src/runner-control-core.js` and identifies the Git blob. `node scripts/sync-coordination-engine.mjs --local` synchronizes a reviewed local candidate's mirror/pin before tests; without `--local` it reads and verifies canonical main. Neither mode deploys or disables drift checks.
 
 Review/merge, runtime publication, and individual live retirement transactions are separate authorization gates. After a canonical engine merge and before the matching runtime is published, the old runtime's drift guard will intentionally block mutations. Verify the deployed build, discovered schema and exact engine pin before live retirement. Preserve completion/cleanup guards throughout the cutover. This batch has not merged, deployed, or retired any live assignment.
+
+### First-retirement cutover checklist
+
+MCP runtime publication alone is insufficient. Older standalone CLI code evaluates its local engine and can write a fresh Contents CAS without checking the deployed runtime pin. The pre-retirement engine treats unknown states, including `cancelled` and `superseded`, as reserved; its heartbeat can reactivate them. The same risk applies to workflow jobs already checked out before cutover. CAS prevents revision loss, not stale program semantics.
+
+Before the first live retirement, the operator must:
+
+1. Inventory every authorized writer: MCP runtimes, local CLI checkouts, automation/service wrappers, and queued or running `coordination.yml` / `runner-coordination.yml` jobs. Account for other workflows that invoke the CLI. Include scheduled cleanup writers.
+2. Quiesce those writers and preserve unpublished work. Drain or cancel pre-cutover runs through an authorized operator; an in-flight job retains its old checkout even when its workflow normally checks out main. Do not infer quiescence from a held claim or an expired lease.
+3. Integrate/release only through the separately approved Git-native process. Refresh each CLI/service checkout to the accepted source and restart it. Verify canonical source, runtime mirror, deployed pin and discovered tool schema. Do not change protection or credentials to evade a denied writer.
+4. Verify the new engine refuses terminal heartbeat/rescope and both cleanup implementations retain a branch referenced by any retired claim, including when an older completed claim uses that same branch name. Check initial eligibility and the pre-delete record reread.
+5. Confirm old runtimes, local scripts and in-flight jobs can no longer commit. A guard added to a new client cannot retrofit an already distributed unguarded client. If writer inventory or quiescence cannot be established, **do not perform live retirement**.
+6. Only then obtain the separately authorized owner/record/head retirement transaction. Observe canonical terminal status afterward; release scheduling only onto verified upgraded writers.
+
+The branch-head read and branch deletion still cannot be made atomic with GitHub's deletion API. Retired references block cleanup at both available record checks; authorized writers must remain quiescent during deletion as required by the existing cleanup contract. Never describe those checks as a cross-resource lock.

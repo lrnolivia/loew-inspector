@@ -1,5 +1,5 @@
 import { githubApiRequest } from "./source.js";
-import { occupying } from "./coordination-engine.js";
+import { occupying, retired } from "./coordination-engine.js";
 import { RUNNER_ENGINE_SHA, runnerControlBase } from "./runner-control.js";
 
 const SHA = /^[a-f0-9]{40}$/;
@@ -105,6 +105,12 @@ function activeOnBranch(record, branch) {
   return record.claims.some(claim => occupying(claim) && claim.branch === branch);
 }
 
+// Retirement releases reservations, but preserves every referenced branch.
+// A historical completion for a reused name must not make that branch deletable.
+function retiredOnBranch(record, branch) {
+  return record.claims.some(claim => retired(claim) && claim.branch === branch);
+}
+
 function protectedByPolicy(ctx, claim) {
   return (
     ctx.registration.implementation.excluded_branches.includes(claim.branch) ||
@@ -130,6 +136,10 @@ async function eligibleClaims(api, ctx) {
     if (!evidenceReady(claim)) continue;
     if (protectedByPolicy(ctx, claim)) {
       retained.push({ branch: claim.branch, assignment: claim.id, reason: "protected_policy" });
+      continue;
+    }
+    if (retiredOnBranch(ctx.record, claim.branch)) {
+      retained.push({ branch: claim.branch, assignment: claim.id, reason: "retired_branch" });
       continue;
     }
     if (activeOnBranch(ctx.record, claim.branch)) {
@@ -167,7 +177,8 @@ async function rereadClaim(api, control, project, candidate) {
     claim.pr !== candidate.pr ||
     claim.merged_head_sha !== candidate.merged_head_sha ||
     claim.merge_commit_sha !== candidate.merge_commit_sha ||
-    activeOnBranch(record.value, candidate.branch)
+    activeOnBranch(record.value, candidate.branch) ||
+    retiredOnBranch(record.value, candidate.branch)
   ) {
     throw new Error(`Ownership or evidence changed for ${candidate.branch}; cleanup stopped`);
   }

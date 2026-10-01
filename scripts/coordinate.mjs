@@ -1,7 +1,7 @@
 import fs from 'node:fs/promises';
 import { callRunnerControl } from '../src/runner-control.js';
 import { execFileSync } from 'node:child_process';
-import { transition, evaluate, occupying } from '../src/coordination.mjs';
+import { transition, evaluate, occupying, retired } from '../src/coordination.mjs';
 
 const [action, project, inputFile] = process.argv.slice(2);
 if (!['queue', 'claim', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete', 'retire', 'audit', 'cleanup', 'preflight', 'pr-gate'].includes(action) || !/^[a-z0-9-]+$/.test(project ?? '')) throw new Error('Usage: node scripts/coordinate.mjs <action> <project> [request.json]');
@@ -131,14 +131,14 @@ if (action === 'retire') {
     report.deleted = [];
     for (const claim of snapshot.value.claims.filter((c) => c.state === 'completed' && c.work_accounted)) {
       if (policy.excluded_branches.includes(claim.branch) || snapshot.value.legacy_branches.includes(claim.branch)) continue;
-      if (snapshot.value.claims.some((c) => occupying(c) && c.branch === claim.branch)) continue;
+      if (snapshot.value.claims.some((c) => (occupying(c) || retired(c)) && c.branch === claim.branch)) continue;
       if (!branches.some((b) => b.name === claim.branch)) continue;
       const pr = mergedProof(claim, claim.pr);
       if (pr.head.sha !== claim.merged_head_sha || pr.merge_commit_sha !== claim.merge_commit_sha) throw new Error('Merged evidence changed; cleanup stopped.');
       // Re-read ownership and head just before deletion. Protected branches remain protected by GitHub.
       const current = read(recordPath).value;
       const currentClaim = current.claims.find((c) => c.id === claim.id);
-      if (!currentClaim || currentClaim.state !== 'completed' || !currentClaim.work_accounted || current.claims.some((c) => occupying(c) && c.branch === claim.branch)) throw new Error('Ownership changed; cleanup stopped.');
+      if (!currentClaim || currentClaim.state !== 'completed' || !currentClaim.work_accounted || current.claims.some((c) => (occupying(c) || retired(c)) && c.branch === claim.branch)) throw new Error('Ownership changed; cleanup stopped.');
       const ref = api(`repos/${policy.repository}/git/ref/heads/${encodeURIComponent(claim.branch)}`);
       if (ref.object.sha !== claim.merged_head_sha) { report.findings.push({ type: 'post_merge_commits', branch: claim.branch }); continue; }
       api(`repos/${policy.repository}/git/refs/heads/${encodeURIComponent(claim.branch)}`, 'DELETE');
