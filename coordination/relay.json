@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T10:12:43.384Z",
+  "updated_at": "2026-10-01T10:19:11.811Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -9415,7 +9415,7 @@
       ],
       "goal": "Ship the Relay card v9 non-blocking bootstrap and size-reporting fixes without redesigning the card; preserve the legacy bridge card exactly as the control.",
       "acceptance": "Rotate the contextual card URI to v9; patch the v8 HTML only at serve time so cardHtml() and the legacy bridge remain unchanged; paint immediately from window.openai globals; run ui/initialize in parallel with a 4s timeout; prefer window.openai.callTool; report ui/notifications/size-changed and notifyIntrinsicHeight; show the host diagnostic line; add immediate-paint and height-reporting regression tests; update the relay-entry v9 URI pins; add docs/relay/CHATGPT_CARD_V9_BOOTSTRAP.md; npm test passes; open one draft PR; do not merge before desktop and browser consumer tests unless the owner overrides.",
-      "next_action": "Owner explicitly authorized resolving the duplicate literal guard by applying v9 only to the generated cardHtml output path. Preserve cardHtml() and the legacy bridge control unchanged; implement v9, test, and open the required draft PR.",
+      "next_action": "Draft PR #95 is green on exact head 844842c31c63aaaabd01345d6990bf8ea4bb3943. Temporary Worker v81 bb649fdd-773c-42bf-96e8-d99013e6bc6e is deployed at 100% from that exact commit; prior v80 db38cf73-31b7-41f8-beaf-8d0c87d65757 is the rollback target. Direct relay_render_context_card and relay_show_legacy_bridge_card calls were fired in the current iPhone chat. Await client observations for iPhone, browser, and native desktop; do not merge until those results are recorded unless the owner explicitly overrides.",
       "task_class": "architecture",
       "category": "implementation",
       "tags": [
@@ -9431,10 +9431,10 @@
       "primary_staff": "nico",
       "supporting_staff": [],
       "base_sha": "3b1e855e9486a3c034f59db3b53797f45314b2fe",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-10-01T09:43:34.029Z",
-      "updated_at": "2026-10-01T10:12:43.384Z",
-      "lease_until": "2026-10-01T22:12:43.384Z"
+      "updated_at": "2026-10-01T10:19:11.811Z",
+      "lease_until": "2026-10-01T22:19:11.811Z"
     }
   ],
   "migrated_from": "loew-inspector"
