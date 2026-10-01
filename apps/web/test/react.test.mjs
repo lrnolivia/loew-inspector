@@ -4,6 +4,7 @@ import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
 import { createServer } from "vite";
 
+// This PR gate exercises the Vite/React boundary from the committed lockfile.
 const root = fileURLToPath(new URL("..", import.meta.url));
 
 const progress = {
