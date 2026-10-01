@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T05:27:51.796Z",
+  "updated_at": "2026-10-01T05:28:54.013Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5026,8 +5026,8 @@
       "id": "relay-2.0-live-react-dashboard-20261001",
       "owner": "relay-2.0-live-react-dashboard-20261001",
       "goal": "Rebuild Relay 2.0's dashboard as a modern Vite + React application with live-updating canonical Runner/Relay state, replacing the current generated/static dashboard architecture without changing Relay's underlying authority model.",
-      "acceptance": "Relay 2.0 ships one modern React dashboard for Today, Runner, Inspector and night shift; canonical state updates appear live without manual page refresh; navigation and project context persist; live status/progress/evidence changes stream into the UI with explicit reconnecting/stale states; Inspector card previews and QA surfaces are first-class React components; the opened ChatGPT MCP app workspace reuses the same view-model/component system where appropriate; inline chat cards remain their own compact composition but share tokens/models; no duplicated business truth in the client; accessibility, responsive behavior, reduced motion and performance are release gates; no gradients unless explicitly introduced later; build/deploy is Vite-based and eliminates the giant generated.js source artifact as a hand-maintained release concern.",
-      "next_action": "Start only after Relay 1.9.9 is closed. First write the 2.0 frontend architecture: Vite + React app shell, routing/state boundaries, live transport contract (prefer server-sent events or another bounded server-push channel over blind polling where supported), reconnect/stale semantics, shared component/token package, MCP-app embedding boundary, and migration plan from current apps/web/public + generated.js. Then prototype Today + Runner live updates before migrating Inspector/night shift.",
+      "acceptance": "Relay 2.0 ships one modern React dashboard for Today, Runner, Inspector and night shift; canonical state updates appear live without manual page refresh; navigation and project context persist; live status/progress/evidence changes stream into the UI with explicit reconnecting/stale states; Inspector card previews and QA surfaces are first-class React components; the opened ChatGPT MCP app workspace reuses the same view-model/component system where appropriate; inline chat cards remain their own compact composition but share tokens/models; no duplicated business truth in the client; accessibility, responsive behavior, reduced motion and performance are release gates; no gradients unless explicitly introduced later; build/deploy is Vite-based and eliminates the giant generated.js source artifact as a hand-maintained release concern. The Vite build output is ephemeral CI/deploy output, not a giant committed generated source file: CI must prove `vite build` succeeds and deployment must consume that exact built artifact, while Git stores authored source and small manifests only. Remove the `git diff --exit-code -- apps/web/generated.js` class of gate once the runtime/deploy path no longer imports committed generated.js.",
+      "next_action": "Start only after Relay 1.9.9 is closed. First write the 2.0 frontend architecture and explicitly remove committed generated.js from the runtime contract: Vite emits an ephemeral dist artifact, CI validates/builds it, Relay deployment consumes that exact build output, and source control keeps authored React/CSS/assets plus small manifests only. Then define routing/state boundaries, live transport contract (prefer SSE or another bounded server-push channel over blind polling where supported), reconnect/stale semantics, shared component/token package, MCP-app embedding boundary, and migration plan from current apps/web/public + generated.js. Prototype Today + Runner live updates before migrating Inspector/night shift.",
       "paths": [
         "docs/relay/RELAY_2_0_FRONTEND_ARCHITECTURE.md"
       ],
@@ -5036,7 +5036,9 @@
         "relay-vite-react-dashboard",
         "relay-live-state-stream",
         "relay-shared-ui-components",
-        "relay-mcp-app-workspace"
+        "relay-mcp-app-workspace",
+        "relay-ephemeral-vite-build-artifact",
+        "relay-no-committed-generated-bundle"
       ],
       "task_class": "architecture",
       "category": "architecture",
@@ -5074,7 +5076,45 @@
         "roman"
       ],
       "state": "queued",
-      "created_at": "2026-10-01T05:25:50.523Z"
+      "created_at": "2026-10-01T05:25:50.523Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T05:28:54.013Z",
+          "by": "relay-2.0-live-react-dashboard-20261001",
+          "reason": "The current committed apps/web/generated.js + diff gate creates huge diffs and tool/deploy friction. Preserve build reproducibility in 2.0 without committing the giant generated bundle.",
+          "fields": [
+            "acceptance",
+            "next_action",
+            "resources"
+          ],
+          "before": {
+            "acceptance": "Relay 2.0 ships one modern React dashboard for Today, Runner, Inspector and night shift; canonical state updates appear live without manual page refresh; navigation and project context persist; live status/progress/evidence changes stream into the UI with explicit reconnecting/stale states; Inspector card previews and QA surfaces are first-class React components; the opened ChatGPT MCP app workspace reuses the same view-model/component system where appropriate; inline chat cards remain their own compact composition but share tokens/models; no duplicated business truth in the client; accessi...",
+            "next_action": "Start only after Relay 1.9.9 is closed. First write the 2.0 frontend architecture: Vite + React app shell, routing/state boundaries, live transport contract (prefer server-sent events or another bounded server-push channel over blind polling where supported), reconnect/stale semantics, shared component/token package, MCP-app embedding boundary, and migration plan from current apps/web/public + generated.js. Then prototype Today + Runner live updates before migrating Inspector/night shift.",
+            "resources": [
+              "relay-2.0",
+              "relay-vite-react-dashboard",
+              "relay-live-state-stream",
+              "relay-shared-ui-components",
+              "relay-mcp-app-workspace"
+            ]
+          },
+          "after": {
+            "acceptance": "Relay 2.0 ships one modern React dashboard for Today, Runner, Inspector and night shift; canonical state updates appear live without manual page refresh; navigation and project context persist; live status/progress/evidence changes stream into the UI with explicit reconnecting/stale states; Inspector card previews and QA surfaces are first-class React components; the opened ChatGPT MCP app workspace reuses the same view-model/component system where appropriate; inline chat cards remain their own compact composition but share tokens/models; no duplicated business truth in the client; accessi...",
+            "next_action": "Start only after Relay 1.9.9 is closed. First write the 2.0 frontend architecture and explicitly remove committed generated.js from the runtime contract: Vite emits an ephemeral dist artifact, CI validates/builds it, Relay deployment consumes that exact build output, and source control keeps authored React/CSS/assets plus small manifests only. Then define routing/state boundaries, live transport contract (prefer SSE or another bounded server-push channel over blind polling where supported), reconnect/stale semantics, shared component/token package, MCP-app embedding boundary, and migration ...",
+            "resources": [
+              "relay-2.0",
+              "relay-vite-react-dashboard",
+              "relay-live-state-stream",
+              "relay-shared-ui-components",
+              "relay-mcp-app-workspace",
+              "relay-ephemeral-vite-build-artifact",
+              "relay-no-committed-generated-bundle"
+            ]
+          }
+        }
+      ],
+      "updated_at": "2026-10-01T05:28:54.013Z"
     }
   ],
   "claims": [
