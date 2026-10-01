@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T18:10:09.482Z",
+  "updated_at": "2026-10-01T18:14:00.745Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6495,6 +6495,33 @@
       "supporting_staff": [],
       "state": "claimed",
       "created_at": "2026-10-01T18:02:38.781Z"
+    },
+    {
+      "id": "web-family-git-release-20261001",
+      "owner": "codex-web-family-release-20261001",
+      "goal": "Align the four existing Git-native Cloudflare release paths with canonical Relay policy and restrict manual source uploads to explicit recovery/diagnostic purposes.",
+      "acceptance": "All four registrations match proven Workers Builds commands; ordinary manual uploads are rejected before source reads; existing build triggers are scoped/cached with exact-commit verification and recovery retained.",
+      "next_action": "Queue until the existing manual-upload lane merges and releases ownership, then claim current main and finish one policy/enforcement PR.",
+      "paths": [
+        "projects/field.json",
+        "projects/loewfi.json",
+        "projects/loewtorials.json",
+        "projects/thetake.json",
+        "src/cloud-upload.js",
+        "src/cloud-upload.test.js",
+        "docs/relay/WEB_FAMILY_RELEASE_20261001.md"
+      ],
+      "resources": [
+        "web-family-release-policy"
+      ],
+      "task_class": "architecture",
+      "category": "release",
+      "primary_team": "release",
+      "supporting_teams": [],
+      "primary_staff": "luca",
+      "supporting_staff": [],
+      "state": "queued",
+      "created_at": "2026-10-01T18:14:00.745Z"
     }
   ],
   "claims": [
