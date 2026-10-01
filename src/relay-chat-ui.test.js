@@ -29,3 +29,10 @@ test("unrelated tools are not forced into contextual UI", () => {
   const tool = { name: "relay_control_status", inputSchema: { type: "object" } };
   assert.equal(contextualizeRelayTool(tool), tool);
 });
+
+
+test("context card opens the fresh control-center resource identity", () => {
+  const resource = relayContextCardResource();
+  assert.match(resource.text, /ui:\/\/relay\/control-center\/v2\.html/);
+  assert.doesNotMatch(resource.text, /ui:\/\/relay\/control-center\/v1\.html/);
+});
