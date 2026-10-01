@@ -28,7 +28,7 @@ test("initialize advertises the exact shipped embedded PNG and preserves protoco
   const bytes = Buffer.from(relayIcon.src.split(",")[1], "base64");
   assert.equal(bytes.readUInt32BE(16), 1024);
   assert.equal(bytes.readUInt32BE(20), 1024);
-  const expectedHash = "3a1effe91b1670275d4b908f29a1a3c68729df4aa9f0da2d695401869ed8b676";
+  const expectedHash = "e1c4eee7c4a3579dd6142c076068d3e36f9292bbdbc6edce1f062d94588eea02";
   assert.equal(createHash("sha256").update(bytes).digest("hex"), expectedHash);
 });
 
