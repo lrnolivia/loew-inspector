@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T01:26:12.108Z",
+  "updated_at": "2026-10-01T01:28:22.026Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3458,10 +3458,10 @@
         "RFS-021"
       ],
       "base_sha": "0936dd8e8ebedc521935027445de4cf3c7d7bf27",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T00:24:38.073Z",
-      "updated_at": "2026-10-01T00:39:46.294Z",
-      "lease_until": "2026-10-01T12:39:46.294Z",
+      "updated_at": "2026-10-01T01:28:22.026Z",
+      "lease_until": "2026-10-01T13:28:22.026Z",
       "amendment_count": 1,
       "amendments": [
         {
@@ -3544,7 +3544,13 @@
             ]
           }
         }
-      ]
+      ],
+      "pr": 64,
+      "merged_head_sha": "4a784a691e5e0014bcfc916abc802bf5e2e1b64a",
+      "merge_commit_sha": "932bf4c96d38b206460461125d290d6d1b734e60",
+      "evidence": "Relay 1.9.4 shipped through PR #64 exact merge 932bf4c96d38b206460461125d290d6d1b734e60 as Worker v56 version 133a9f84-7fb9-45cd-8476-59dc758a2bc8 via deployment 936ce037-fde0-490f-8cb4-ec0d8b646b49 at 100%. Refreshed-session relay_staff_directory consumer proof verified Roman = The Verifier, subnet source returns Rafael, active count = 14, reserve count = 3, and Felix returns retired with explicit non-reuse policy.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T01:28:22.026Z"
     },
     {
       "id": "relay-feature-shell-accent-assets-20261001",
