@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T18:14:00.745Z",
+  "updated_at": "2026-10-01T18:14:58.190Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -10085,7 +10085,7 @@
     },
     {
       "id": "relay-retire-manual-upload-20261001",
-      "owner": "normal-chat-retire-upload-20261001",
+      "owner": "codex-web-family-release-20261001",
       "branch": "relay/retire-manual-upload-20261001",
       "paths": [
         "projects/relay.json",
@@ -10099,7 +10099,7 @@
       ],
       "goal": "Retire direct source reconstruction/upload for the canonical Relay Worker now that generated bundles are build-only; recovery must use known-good version rollback or Cloudflare Workers Builds.",
       "acceptance": "projects/relay.json reports manual_upload disabled; relay_cloud_upload_version rejects relay/relay regardless of purpose before GitHub source reads; other allowlisted Workers retain existing upload behavior; tests pin the invariant.",
-      "next_action": "Create branch, disable canonical Relay manual source upload in policy/code, run quality/admission, merge, and verify Git-native deployment.",
+      "next_action": "User's fix-it instruction continues the release-path repair in Codex. Finalize already-green prerequisite PR #103 without code changes, verify Git build/readback, complete this claim, then claim the queued web-family policy task.",
       "task_class": "architecture",
       "category": "architecture",
       "tags": [
@@ -10116,8 +10116,8 @@
       "base_sha": "3687d82392a30f1ed84ae4c384d9442730e4dd37",
       "state": "active",
       "created_at": "2026-10-01T18:02:54.755Z",
-      "updated_at": "2026-10-01T18:02:54.755Z",
-      "lease_until": "2026-10-02T06:02:54.755Z"
+      "updated_at": "2026-10-01T18:14:58.190Z",
+      "lease_until": "2026-10-02T06:14:58.190Z"
     },
     {
       "id": "relay-website-2.0-repair-20261001",
