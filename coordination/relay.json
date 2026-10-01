@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T16:37:08.264Z",
+  "updated_at": "2026-10-01T16:37:38.464Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -9495,10 +9495,16 @@
         "ellis"
       ],
       "base_sha": "9809da5c2c0d2f32476a38b3fd7a05c95a5d98c5",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T10:03:17.975Z",
-      "updated_at": "2026-10-01T16:37:08.264Z",
-      "lease_until": "2026-10-02T04:37:08.264Z"
+      "updated_at": "2026-10-01T16:37:38.464Z",
+      "lease_until": "2026-10-02T04:37:38.464Z",
+      "pr": 94,
+      "merged_head_sha": "2edfcb22caacdb59fdbb1237aa88c03f62a55a62",
+      "merge_commit_sha": "75b805fca8fbf089449e8aebbbc64f5f36e6fb1d",
+      "evidence": "User visually approved the Inspector review set. PR #94 merged successfully from exact head 2edfcb22caacdb59fdbb1237aa88c03f62a55a62 as squash merge 75b805fca8fbf089449e8aebbbc64f5f36e6fb1d after all substantive exact-head gates passed. The approved UI work is complete. Production deployment is delegated to packaging successor relay-2.0-generated-split-20261001 because the merged generated.js exceeds GitHub Contents API's 1 MiB per-file source-read limit; successor must not alter approved UI.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T16:37:38.464Z"
     }
   ],
   "migrated_from": "loew-inspector"
