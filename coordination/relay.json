@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T02:55:32.511Z",
+  "updated_at": "2026-10-01T02:55:59.313Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -53,32 +53,28 @@
     {
       "id": "relay-mcp-app-ui-20260930",
       "owner": "relay-mcp-app-ui-20260930",
-      "goal": "Make Relay's primary product experience an interactive in-chat MCP App rather than a prose wrapper around headless tools.",
-      "acceptance": "ChatGPT can render compact live operation cards, project status, release/deployment state and human-QA requests directly in conversation; human-QA UI consumes the canonical Runner QA-helper contract and Visuals IDs, supports targeted questions/checklists/notes/verdicts, and can expand into a full-screen review experience without creating a parallel store; render surfaces reuse durable Relay operation receipts and existing bounded mutation tools; headless production tools remain mostly headless; UI can send bounded follow-up actions/messages, refresh state, and preserve exact artifact identity; stale artifact/evidence state is visibly invalidated; mobile/desktop layouts remain useful; picture-in-picture/persistent mini-status may be explored where supported but is not required for correctness. Three-surface UI contract: (1) in-chat surfaces are compact contextual visual responses bound to the current tool result/turn; they do not carry global navigation or a dashboard shell. (2) Relay opened as a ChatGPT app is a separate persistent workspace/control-center experience with richer navigation, cross-project context, Today/operations/history and sustained interaction; it may reuse dashboard components but is designed for the ChatGPT app container. (3) relay.loew.fi is the standalone web dashboard with the broadest workspace shell and deep-link/navigation affordances. All three consume the same canonical Relay state and receipts but may compose that state differently. Do not render the full app workspace for an ordinary inline response card, and do not cripple the opened-app experience into a tiny card. Progressive disclosure may move from inline card to opened-app detail/full-screen when useful.",
-      "next_action": "Design Relay as three coordinated surfaces sharing one state model: compact contextual in-chat response cards; a rich persistent Relay app workspace when the app is opened inside ChatGPT; and the standalone relay.loew.fi web dashboard. Build inline cards first for operation/project/release/staff/blocker/verification/QA responses, while preserving a separate app-shell/navigation experience for opened-app use.",
+      "goal": "Build Relay's persistent ChatGPT app workspace as a rich control-center experience distinct from inline conversational response cards.",
+      "acceptance": "When Relay is opened as an app inside ChatGPT, it provides a persistent workspace/control-center experience with cross-project navigation, Today, operations, release/deployment state, history, QA/review flows, and sustained interaction. It consumes canonical Runner/Source/Cloud/Verify state and durable receipts without creating parallel state. Human-QA uses the canonical QA-helper/Visuals contracts and may expand into focused review surfaces. The opened-app workspace is optimized for the ChatGPT app container and may reuse shared Relay components/view-models, but it does not own the inline conversational card visual system. Inline cards are delegated to the dedicated 1.9.8 card-system release. Mobile/desktop remain useful; exact artifact identity and stale-state invalidation are preserved.",
+      "next_action": "Begin after the durable operation framework is stable enough to consume. Focus on the opened Relay app workspace/control-center shell and sustained workflows; consume the 1.9.8 inline card system rather than designing or owning inline conversational cards here.",
       "paths": [
-        "src/relay-chat-ui.js",
-        "src/relay-operation-ui.js",
-        "src/relay-qa-ui.js",
+        "src/relay-app-ui.js",
         "src/relay-project-ui.js",
         "src/relay-release-ui.js",
+        "src/relay-qa-ui.js",
         "src/relay-ui.js",
         "src/relay-entry.js",
-        "src/relay-chat-ui.test.js"
+        "src/relay-app-ui.test.js"
       ],
       "resources": [
-        "relay-mcp-app-ui",
+        "relay-opened-app-workspace",
         "relay-operation-framework",
         "runner-human-qa",
         "relay-publication-receipts",
-        "relay-inline-response-cards",
-        "relay-opened-app-workspace",
-        "relay-three-surface-ui-contract",
-        "relay-progressive-disclosure-ui"
+        "relay-three-surface-ui-contract"
       ],
       "state": "queued",
       "created_at": "2026-09-30T13:25:51.183Z",
-      "amendment_count": 1,
+      "amendment_count": 2,
       "amendments": [
         {
           "at": "2026-10-01T02:51:08.664Z",
@@ -113,9 +109,67 @@
               "relay-progressive-disclosure-ui"
             ]
           }
+        },
+        {
+          "at": "2026-10-01T02:55:59.313Z",
+          "by": "relay-mcp-app-ui-20260930",
+          "reason": "Separate opened-app workspace ownership from the inline conversational card design system so Relay 1.9.8 can own cards without path/contract collision.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action",
+            "paths",
+            "resources"
+          ],
+          "before": {
+            "goal": "Make Relay's primary product experience an interactive in-chat MCP App rather than a prose wrapper around headless tools.",
+            "acceptance": "ChatGPT can render compact live operation cards, project status, release/deployment state and human-QA requests directly in conversation; human-QA UI consumes the canonical Runner QA-helper contract and Visuals IDs, supports targeted questions/checklists/notes/verdicts, and can expand into a full-screen review experience without creating a parallel store; render surfaces reuse durable Relay operation receipts and existing bounded mutation tools; headless production tools remain mostly headless; UI can send bounded follow-up actions/messages, refresh state, and preserve exact artifact identi...",
+            "next_action": "Design Relay as three coordinated surfaces sharing one state model: compact contextual in-chat response cards; a rich persistent Relay app workspace when the app is opened inside ChatGPT; and the standalone relay.loew.fi web dashboard. Build inline cards first for operation/project/release/staff/blocker/verification/QA responses, while preserving a separate app-shell/navigation experience for opened-app use.",
+            "paths": [
+              "src/relay-chat-ui.js",
+              "src/relay-operation-ui.js",
+              "src/relay-qa-ui.js",
+              "src/relay-project-ui.js",
+              "src/relay-release-ui.js",
+              "src/relay-ui.js",
+              "src/relay-entry.js",
+              "src/relay-chat-ui.test.js"
+            ],
+            "resources": [
+              "relay-mcp-app-ui",
+              "relay-operation-framework",
+              "runner-human-qa",
+              "relay-publication-receipts",
+              "relay-inline-response-cards",
+              "relay-opened-app-workspace",
+              "relay-three-surface-ui-contract",
+              "relay-progressive-disclosure-ui"
+            ]
+          },
+          "after": {
+            "goal": "Build Relay's persistent ChatGPT app workspace as a rich control-center experience distinct from inline conversational response cards.",
+            "acceptance": "When Relay is opened as an app inside ChatGPT, it provides a persistent workspace/control-center experience with cross-project navigation, Today, operations, release/deployment state, history, QA/review flows, and sustained interaction. It consumes canonical Runner/Source/Cloud/Verify state and durable receipts without creating parallel state. Human-QA uses the canonical QA-helper/Visuals contracts and may expand into focused review surfaces. The opened-app workspace is optimized for the ChatGPT app container and may reuse shared Relay components/view-models, but it does not own the inline ...",
+            "next_action": "Begin after the durable operation framework is stable enough to consume. Focus on the opened Relay app workspace/control-center shell and sustained workflows; consume the 1.9.8 inline card system rather than designing or owning inline conversational cards here.",
+            "paths": [
+              "src/relay-app-ui.js",
+              "src/relay-project-ui.js",
+              "src/relay-release-ui.js",
+              "src/relay-qa-ui.js",
+              "src/relay-ui.js",
+              "src/relay-entry.js",
+              "src/relay-app-ui.test.js"
+            ],
+            "resources": [
+              "relay-opened-app-workspace",
+              "relay-operation-framework",
+              "runner-human-qa",
+              "relay-publication-receipts",
+              "relay-three-surface-ui-contract"
+            ]
+          }
         }
       ],
-      "updated_at": "2026-10-01T02:51:08.664Z"
+      "updated_at": "2026-10-01T02:55:59.313Z"
     },
     {
       "id": "relay-web-dashboard-20260930",
