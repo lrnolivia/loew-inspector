@@ -932,13 +932,34 @@ html[data-theme="light"] .chat-card-staff {
 }
 
 .chat-card-avatar {
+  position: relative;
   width: 24px;
   height: 24px;
+  overflow: hidden;
   border-radius: 999px;
-  background:
-    radial-gradient(circle at 50% 34%, var(--card-accent) 0 22%, transparent 24%),
-    radial-gradient(ellipse at 50% 92%, var(--card-accent) 0 41%, transparent 43%),
-    color-mix(in srgb, var(--card-accent) 13%, #33312e);
+  background: color-mix(in srgb, var(--card-accent) 13%, #33312e);
+}
+
+.chat-card-avatar::before {
+  content: "";
+  position: absolute;
+  left: 8px;
+  top: 5px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--card-accent);
+}
+
+.chat-card-avatar::after {
+  content: "";
+  position: absolute;
+  left: 5px;
+  bottom: 1px;
+  width: 14px;
+  height: 9px;
+  border-radius: 9px 9px 3px 3px;
+  background: var(--card-accent);
 }
 
 .chat-card-insight {
