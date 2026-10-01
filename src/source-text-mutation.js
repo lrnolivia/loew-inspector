@@ -78,7 +78,7 @@ export const sourceTextMutationTools=[
   {
     name:"relay_source_edit_text",
     title:"Edit text by exact fragments",
-    description:"Edit an existing UTF-8 file on a non-default branch by sending only bounded exact search/replace fragments. Relay loads the current Git blob server-side, requires exact branch-head and file-blob SHAs, commits, and returns deterministic readback identities.",
+    description:"COMMAND — edit an existing UTF-8 file on a non-default branch using 1-20 bounded exact replacements. Read the file and branch head first; pass both expected blob SHA and expected branch-head SHA. Relay commits and verifies readback. On conflict or uncertain outcome, refresh file/head identities before retrying; never replay a mutation against stale SHAs.",
     inputSchema:{
       type:"object",
       properties:{
@@ -104,7 +104,7 @@ export const sourceTextMutationTools=[
   {
     name:"relay_source_append_text",
     title:"Append bounded text",
-    description:"Append one bounded UTF-8 chunk to an existing file on a non-default branch. Relay loads the existing blob server-side, requires exact branch-head and file-blob SHAs, commits, and returns the next identities for chained chunk-safe appends.",
+    description:"COMMAND — append one bounded UTF-8 chunk to an existing file on a non-default branch. Read the file and branch head first; pass both expected blob SHA and expected branch-head SHA. Relay verifies readback and returns the next identities for safe chaining. On conflict/uncertain outcome, refresh before retrying.",
     inputSchema:{
       type:"object",
       properties:{
