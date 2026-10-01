@@ -85,6 +85,8 @@ export function augmentToolList(tools) {
     relay_source_checks: "QUERY — read check runs for one commit or branch through relay.SOURCE. Safe to retry. Read checks before a merge decision; relay_source_pull_request_action rechecks them server-side for merge.",
     relay_source_update_file: "COMMAND — create or replace one UTF-8 file on a non-default branch through relay.SOURCE using configured GitHub source auth (GitHub App preferred). Direct default-branch writes are blocked. Read the current branch/file first and pass expected identities when available; refresh after conflicts instead of overwriting.",
     relay_source_open_pull_request: "COMMAND — open a pull request through relay.SOURCE. Create/update the admitted non-default branch first. Draft is the normal safe default; opening a PR does not imply checks, merge, deployment, or runtime correctness.",
+    relay_runner_cleanup: "COMMAND — dry-run or delete only completed, accounted managed branches whose current heads and merged-PR identities still match Runner completion evidence. Use dry-run before execute; cleanup never deletes active/unaccounted work.",
+    relay_ui_request: "COMMAND / APP TRANSPORT — call one allowlisted Relay operator API route using the authenticated app identity. GET is read-only; POST can toggle/run/repair worker state or submit bounded QA. Route and method are validated server-side; this is not a generic HTTP escape hatch.",
     relay_control_status: "DISCOVERY / HEALTH CHECK — report Relay namespace readiness, source/cloud auth mode, and bounded write capability. Safe to retry. Use this at the start of substantial Relay work when current capability/authority is not already known."
   };
   const kept = list
