@@ -110,7 +110,7 @@ test("Relay extension preserves native card resources and appends skills once", 
 test("fresh inline status card is listed and readable through the authenticated MCP endpoint", async t => {
   const { generateKeyPairSync, sign } = await import("node:crypto");
   const { default: worker } = await import("./relay-entry.js");
-  const { relayContextCardResource } = await import("./relay-chat-ui.js");
+  const { relayContextCardResource, relayStatusCardResource } = await import("./relay-chat-ui.js");
   const { publicKey, privateKey } = generateKeyPairSync("rsa", { modulusLength: 2048 });
   const kid = "status-card-regression";
   const encode = value => Buffer.from(JSON.stringify(value)).toString("base64url");
@@ -135,9 +135,9 @@ test("fresh inline status card is listed and readable through the authenticated 
     assert.equal(body.error, undefined);
     return body.result;
   };
-  const uri = "ui://relay/status-card/v2.html";
+  const uri = "ui://relay/status-card/v3-legacy-bridge.html";
   const { tools } = await rpc("tools/list");
-  const fresh = tools.filter(tool => tool.name === "relay_show_status_card");
+  const fresh = tools.filter(tool => tool.name === "relay_show_legacy_bridge_card");
   assert.equal(fresh.length, 1);
   const tool = fresh[0];
   const control = tools.find(tool => tool.name === "relay_ui_control_center");
@@ -159,14 +159,14 @@ test("fresh inline status card is listed and readable through the authenticated 
   assert.equal(contents.length, 1);
   assert.equal(contents[0].uri, uri);
   assert.equal(contents[0].mimeType, "text/html;profile=mcp-app");
-  const original = relayContextCardResource();
+  const original = relayStatusCardResource();
   assert.equal(contents[0].text, original.text);
   assert.deepEqual(contents[0]._meta, original._meta);
   assert.deepEqual(contents[0]._meta["openai/ui"].availableDisplayModes, ["inline"]);
   assert.equal(contents[0]._meta["openai/ui"].entrypoints, undefined);
   const oldResource = await rpc("resources/read", { uri: RELAY_CONTEXT_CARD_URI });
-  assert.deepEqual(oldResource.contents[0], original);
-  const invalid = await rpc("tools/call", { name: "relay_show_status_card", arguments: { project: "../relay" } });
+  assert.deepEqual(oldResource.contents[0], relayContextCardResource());
+  const invalid = await rpc("tools/call", { name: "relay_show_legacy_bridge_card", arguments: { project: "../relay" } });
   assert.equal(invalid.isError, true);
   assert.match(invalid.content[0].text, /Invalid card project/);
 });

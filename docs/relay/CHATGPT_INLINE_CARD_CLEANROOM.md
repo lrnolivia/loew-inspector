@@ -44,3 +44,11 @@ This reset intentionally preserves the approved card CSS, feature marks/art, sta
 ## Consumer gate
 
 After merge/deploy and plugin refresh, acceptance requires direct ordinary-ChatGPT tool invocations, not nested orchestration evidence. In browser: render at least three cards in one conversation, reload or leave/revisit that same conversation, and verify the historical cards repaint rather than becoming blank frames. In native desktop: directly invoke the Relay render tool and verify an inline MCP App surface mounts; desktop non-mount is tracked as a separate client compatibility gate rather than treated as unsupported by definition. A successful server call observed only inside an outer orchestration tool is insufficient.
+
+## Native desktop known-good bisect
+
+The 2026-09-30 23:42:42 ET native macOS screenshot is a production known-good point. Worker version 67 had deployed commit `085d35ac00b57695b5089e78681504f7b7b8a6ee` at 23:31:23 ET with `ui://relay/context-card/v3.html`. That v3 resource rendered synchronously from `window.openai.toolOutput`, seeded `toolInput` from `window.openai.toolInput`, subscribed to `openai:set_globals`, preferred `window.openai.callTool`/`requestModal`, and skipped `ui/initialize` when the ChatGPT compatibility host was already present.
+
+For an isolated consumer bisect, the normal `relay_render_context_card` + `ui://relay/context-card/v8.html` path stays unchanged as the standards-first control. The temporary `relay_show_legacy_bridge_card` tool uses the fresh immutable resource `ui://relay/status-card/v3-legacy-bridge.html`. It reuses the current v8 visual/data model but restores the known-good v3 host/bootstrap decision: compatibility globals render immediately when present; otherwise the widget falls back to the standard MCP Apps initialize/notification bridge. This temporary identity exists only to distinguish host-mount/bootstrap behavior from card design/data behavior.
+
+Consumer test: refresh ChatGPT tools, invoke `relay_show_legacy_bridge_card` directly in an ordinary chat, and compare the same conversation across native macOS desktop, browser, and mobile. If the temporary legacy bridge mounts on desktop while `relay_render_context_card` does not, the regression is in the post-v3 host/bootstrap path rather than the current card UI/data model.

@@ -1,8 +1,8 @@
 import { STAFF } from './staff-registry.js';
 export const RELAY_CONTEXT_CARD_URI = 'ui://relay/context-card/v8.html';
 export const RELAY_CONTEXT_CARD_TOOL = 'relay_render_context_card';
-export const RELAY_STATUS_CARD_URI = 'ui://relay/status-card/v2.html';
-export const RELAY_STATUS_CARD_TOOL = 'relay_show_status_card';
+export const RELAY_STATUS_CARD_URI = 'ui://relay/status-card/v3-legacy-bridge.html';
+export const RELAY_STATUS_CARD_TOOL = 'relay_show_legacy_bridge_card';
 const CONTROL_URI = 'ui://relay/control-center/v2.html';
 const DIRECTORY = Object.fromEntries(STAFF.map(p => [p.id, p.display_name]));
 const CONTEXTUAL_TOOLS = new Set([
@@ -147,21 +147,45 @@ ready.catch(error=>{hydrateOpenAiGlobals();if(!lastData){el.summary.textContent=
 
 </script></body></html>`;
 }
+
+// Temporary consumer bisect: keep the v8 visual/data model byte-for-byte, but restore
+// the known-good v3 ChatGPT host bridge used by the native macOS card seen at 23:42 ET.
+// The normal context-card/v8 resource remains the standards-first control.
+function legacyBridgeCardHtml() {
+  let html = cardHtml();
+  html = html.replace(
+    "let toolInput={};let lastData=null;",
+    "let toolInput=window.openai?.toolInput||{};let lastData=null;"
+  );
+  html = html.replace(
+    "async function callTool(name,args){await ready;return rpc('tools/call',{name,arguments:args})}",
+    "async function callTool(name,args){if(window.openai?.callTool)return window.openai.callTool(name,args);await ready;return rpc('tools/call',{name,arguments:args})}"
+  );
+  html = html.replace(
+    "const ready=rpc('ui/initialize',{appInfo:{name:'relay-context-card',version:'1.9.9'},appCapabilities:{},protocolVersion:'2026-01-26'}).then(()=>{window.parent.postMessage({jsonrpc:'2.0',method:'ui/notifications/initialized',params:{}},'*');hydrateOpenAiGlobals();setTimeout(()=>{void recoverCanonicalState()},350)});\nready.catch(error=>{hydrateOpenAiGlobals();if(!lastData){el.summary.textContent='Relay is waiting for the chat connection.';el['state-label'].textContent='Connection pending'}});",
+    "const ready=window.openai?Promise.resolve():rpc('ui/initialize',{appInfo:{name:'relay-legacy-bridge-card',version:'1.9.9-bisect'},appCapabilities:{},protocolVersion:'2026-01-26'}).then(()=>window.parent.postMessage({jsonrpc:'2.0',method:'ui/notifications/initialized',params:{}},'*'));\nready.catch(error=>{if(!lastData){el.summary.textContent='Relay is waiting for the chat connection.';el['state-label'].textContent='Connection pending'}});\nif(window.openai?.toolOutput)render(window.openai.toolOutput);"
+  );
+  return html;
+}
+
 export function relayContextCardResource() {
   return { uri:RELAY_CONTEXT_CARD_URI, mimeType:'text/html;profile=mcp-app', text:cardHtml(), _meta:{ui:{prefersBorder:false,csp:{connectDomains:['https://relay.loew.fi'],resourceDomains:['https://relay.loew.fi']}},'openai/widgetDescription':'Compact staff-aware Relay context. Can reuse existing Inspector QA screenshots when requested. Open Relay for the full control center.','openai/ui':{availableDisplayModes:['inline']}} };
 }
 
 // Fresh cache identities: rotate whenever card HTML, JS, or CSS changes.
 export function relayStatusCardDescriptor() {
-  return { ...relayContextCardDescriptor(), uri: RELAY_STATUS_CARD_URI, name: 'relay-status-card' };
+  return { ...relayContextCardDescriptor(), uri: RELAY_STATUS_CARD_URI, name: 'relay-legacy-bridge-card', title: 'Relay legacy bridge card test', description: 'Temporary consumer bisect using the known-good v3 ChatGPT host bridge with the current Relay card UI.' };
 }
 export function relayStatusCardTool() {
   const tool = relayContextCardTool();
-  return { ...tool, name: RELAY_STATUS_CARD_TOOL, _meta: { ...tool._meta,
+  return { ...tool, name: RELAY_STATUS_CARD_TOOL, title: 'Show Relay legacy bridge test card', description: 'TEMPORARY RENDER TEST — mount the current Relay status card using the historical v3 ChatGPT compatibility bridge so desktop mount behavior can be compared against context-card/v8. Read-only and safe to retry.', _meta: { ...tool._meta,
     ui: { resourceUri: RELAY_STATUS_CARD_URI, visibility: ['model', 'app'] },
-    'openai/outputTemplate': RELAY_STATUS_CARD_URI
+    'openai/outputTemplate': RELAY_STATUS_CARD_URI,
+    'openai/toolInvocation/invoking': 'Opening Relay legacy bridge test…',
+    'openai/toolInvocation/invoked': 'Relay legacy bridge test ready.'
   } };
 }
 export function relayStatusCardResource() {
-  return { ...relayContextCardResource(), uri: RELAY_STATUS_CARD_URI };
+  const resource = relayContextCardResource();
+  return { ...resource, uri: RELAY_STATUS_CARD_URI, text: legacyBridgeCardHtml(), _meta: { ...resource._meta, 'openai/widgetDescription':'Temporary Relay consumer bisect: current card UI with the known-good v3 ChatGPT host bridge.' } };
 }
