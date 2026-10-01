@@ -230,3 +230,35 @@ test("cleanup reads policy and coordination from configured Relay control author
   assert.equal(result.ok, true);
   assert.ok(f.calls.some(call => call.path.startsWith("/repos/lrnolivia/relay/contents/projects/relay.json")));
 });
+test('retired claims never qualify for cleanup even with inherited completion-like evidence', async () => {
+  for (const state of ['cancelled', 'superseded']) {
+    const f = fixture({ claims: [completed({ state })] });
+    const result = await callRunnerCleanup({ project: 'relay', mode: 'execute' }, {}, f.api);
+    assert.deepEqual(result.eligible, []);
+    assert.deepEqual(result.deleted, []);
+    assert.deepEqual(f.deletes, []);
+    assert.equal(f.branches.has('relay/done-task'), true);
+  }
+});
+
+test('an older completion cannot delete a branch referenced by a newer retired claim', async () => {
+  for (const state of ['cancelled', 'superseded']) {
+    const f = fixture({ claims: [completed(), active({ id: 'newer-task', state, branch: 'relay/done-task' })] });
+    const result = await callRunnerCleanup({ project: 'relay', mode: 'execute' }, {}, f.api);
+    assert.deepEqual(result.eligible, []);
+    assert.deepEqual(result.deleted, []);
+    assert.deepEqual(f.deletes, []);
+    assert.ok(result.retained.some(item => item.reason === 'retired_branch'));
+  }
+});
+test('a retired reference appearing only on the pre-delete reread stops an older completion', async () => {
+  for (const state of ['cancelled', 'superseded']) {
+    const f = fixture({ recordOnReread(record, calls) {
+      const reads = calls.filter(call => call.path.includes('/contents/coordination/relay.json')).length;
+      return reads > 1 ? { ...record, claims: [...record.claims, active({ id: 'newer-task', state, branch: 'relay/done-task' })] } : record;
+    } });
+    await assert.rejects(callRunnerCleanup({ project: 'relay', mode: 'execute' }, {}, f.api), /Ownership or evidence changed/);
+    assert.deepEqual(f.deletes, []);
+    assert.equal(f.branches.has('relay/done-task'), true);
+  }
+});

@@ -1,6 +1,7 @@
 import { normalizeAssignmentStaff } from "./staff-registry.js";
 // Deterministic admission rules; expired leases retain ownership until reconciliation.
-export const occupying = (claim) => claim.state !== 'completed';
+export const retired = (claim) => ['cancelled', 'superseded'].includes(claim?.state);
+export const occupying = (claim) => claim.state !== 'completed' && !retired(claim);
 
 export function normalizeScope(value) {
   if (typeof value !== 'string' || !value || value.startsWith('/') || value.includes('\\') || value.split('/').some((p, i, parts) => p === '..' || p === '.' || (!p && i < parts.length - 1)) || value.includes('*')) {
@@ -108,6 +109,45 @@ export function transition(record, request, policy, now = new Date()) {
   const current = claims.find((c) => c.id === request.id);
   const queued = next.queue.find((q) => q.id === request.id);
   if (!request.id || !request.owner) throw new Error('Stable assignment id and owner id are required.');
+  if (request.action === 'retire') {
+    const target = current || queued;
+    if (!target || target.owner !== request.owner) throw new Error('Retirement requires the current assignment owner.');
+    if (!['cancelled', 'superseded'].includes(request.disposition)) throw new Error('Retirement requires cancelled or superseded disposition.');
+    for (const [key, max] of [['reason', 1000], ['evidence', 4000], ['operation_id', 100]]) {
+      if (typeof request[key] !== 'string' || !request[key].trim() || request[key].length > max) throw new Error(`Retirement requires bounded ${key}.`);
+    }
+    if (!/^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$/.test(request.operation_id)) throw new Error('Invalid retirement operation identity.');
+    if (request.disposition === 'cancelled' && request.superseded_by !== undefined) throw new Error('Cancellation cannot name a successor.');
+    if (request.disposition === 'superseded' && (!request.superseded_by || request.superseded_by === request.id)) throw new Error('Supersession requires a distinct successor assignment.');
+    if (current) {
+      if (!Object.hasOwn(request, 'expected_head_sha') || (request.expected_head_sha !== null && !/^[a-f0-9]{40}$/.test(request.expected_head_sha))) throw new Error('Retirement requires an expected branch head or explicit null for a missing branch.');
+    } else if (Object.hasOwn(request, 'expected_head_sha')) throw new Error('Queued retirement has no branch head.');
+    const intent = { operation_id: request.operation_id, owner: request.owner, disposition: request.disposition,
+      reason: request.reason, evidence: request.evidence, superseded_by: request.superseded_by || null,
+      branch: current?.branch || null, head_sha: current ? request.expected_head_sha : null };
+    const previous = [...claims, ...next.queue].find(item => item.retirement?.intent?.operation_id === request.operation_id);
+    if (previous) {
+      if (previous.id !== request.id || JSON.stringify(previous.retirement.intent) !== JSON.stringify(intent)) throw new Error('Retirement operation identity already has different intent.');
+      if (!retired(target) || target.state !== request.disposition) throw new Error('Retirement receipt conflicts with assignment state.');
+      return next;
+    }
+    if ((current && !occupying(current)) || (!current && queued.state !== 'queued')) throw new Error('Only reserved claims or queued assignments can be retired.');
+    if (current && (!Object.hasOwn(request, 'verified_head_sha') || request.verified_head_sha !== request.expected_head_sha)) throw new Error('Retirement requires server-verified current branch identity.');
+    if (request.disposition === 'superseded') {
+      const successor = claims.find(item => item.id === request.superseded_by) || next.queue.find(item => item.id === request.superseded_by);
+      if (!successor || !occupying(successor) || (!claims.includes(successor) && successor.state !== 'queued')) throw new Error('Supersession requires an existing nonterminal successor assignment.');
+    }
+    target.retirement = { at: now.toISOString(), intent };
+    target.state = request.disposition;
+    target.updated_at = now.toISOString();
+    if (current && queued) {
+      queued.state = request.disposition;
+      queued.updated_at = target.updated_at;
+      queued.retirement = structuredClone(target.retirement);
+    }
+    next.updated_at = now.toISOString();
+    return next;
+  }
   if (request.action === 'queue') {
     if (current || queued) throw new Error('Assignment already exists; resume it.');
     if (!request.goal || !request.acceptance || !request.next_action || !request.paths?.length) throw new Error('Queue requires goal, acceptance, next action and proposed paths.');
@@ -123,7 +163,7 @@ export function transition(record, request, policy, now = new Date()) {
   }
   if (request.action === 'amend') {
     if (typeof request.reason !== 'string' || !request.reason.trim() || request.reason.length > 1000) throw new Error('Amendment requires a concise reason.');
-    if (current && !occupying(current)) throw new Error('Completed assignments cannot be amended.');
+    if (current && !occupying(current)) throw new Error(current.state === 'completed' ? 'Completed assignments cannot be amended.' : 'Retired assignments cannot be amended.');
     const target = current || (queued?.state === 'queued' ? queued : null);
     if (!target) throw new Error('Amendment requires a queued or active assignment.');
     if (target.owner !== request.owner) throw new Error('Assignment belongs to another owner; use an authorized handoff.');
@@ -178,13 +218,16 @@ export function transition(record, request, policy, now = new Date()) {
   if (request.action === 'rescope') {
     if (!current || !occupying(current) || !request.paths || !request.resources) throw new Error('Rescope requires the current owner, full paths and full resources.');
     if ((request.branch && request.branch !== current.branch) || (request.base_sha && request.base_sha !== current.base_sha)) throw new Error('Rescope cannot replace the existing task branch or baseline.');
-    const reduced = { ...next, claims: claims.filter((c) => c.id !== current.id) };
+    const reduced = { ...next, claims: claims.filter((c) => c.id !== current.id), queue: next.queue.filter(q => q.id !== current.id) };
     const admitted = transition(reduced, { ...current, ...request, action: 'claim' }, policy, now);
     admitted.claims.find((c) => c.id === current.id).created_at = current.created_at;
+    admitted.queue = next.queue;
     return admitted;
   }
   if (request.action === 'claim') {
     if (current) throw new Error('Assignment already exists. Resume/heartbeat the existing claim instead of making another branch.');
+    if (queued && queued.state !== 'queued') throw new Error('Terminal or claimed queue identities cannot be reused.');
+    if (claims.some(c => retired(c) && c.branch === request.branch)) throw new Error('Retired branch remains preserved for recovery and cannot be reused.');
     if (!request.branch || !policy.branch_prefixes.some((prefix) => request.branch.startsWith(prefix)) || policy.excluded_branches.includes(request.branch)) throw new Error('Branch is not an allowed implementation branch.');
     if (!request.goal || !request.acceptance || !request.next_action || !request.base_sha) throw new Error('Goal, acceptance, next action and live main SHA are required.');
     const paths = (request.paths ?? []).map(normalizeScope);

@@ -80,3 +80,62 @@ test('audit distinguishes frozen legacy from unregistered new work and scope dri
   assert.deepEqual(findings.map((f) => f.type), ['expired', 'unregistered_branch', 'scope_drift']);
   assert.equal(findings[1].branch, 'field/new');
 });
+
+const retireRequest = (extra = {}) => ({ action: 'retire', id: 'a', owner: 'a', disposition: 'cancelled', reason: 'Abandoned experiment', evidence: 'Writers stopped; branch and PR retained for inspection', operation_id: 'retire-a-1', expected_head_sha: 'a'.repeat(40), verified_head_sha: 'a'.repeat(40), ...extra });
+test('retirement releases budget, scope and owner while retaining all work and intent', () => {
+  const original = claim(claim(empty(), 'a'), 'b');
+  Object.assign(original.claims[0], { state: 'held', pr: 92, amendments: [{ reason: 'Original feedback' }] });
+  const result = transition(original, retireRequest(), policy, now);
+  const { state, updated_at, retirement, ...preserved } = result.claims[0];
+  const { state: oldState, updated_at: oldUpdated, ...before } = original.claims[0];
+  assert.deepEqual(preserved, before);
+  assert.equal(state, 'cancelled');
+  assert.equal(original.claims[0].state, 'held');
+  assert.equal(retirement.intent.head_sha, 'a'.repeat(40));
+  const fresh = transition(result, { ...request('c', ['src/a/']), owner: 'a' }, policy, now);
+  assert.equal(fresh.claims.length, 3);
+  assert.deepEqual(evaluate(result, policy, [{ name: 'field/a' }, { name: 'field/b' }], [], now), []);
+  for (const action of ['heartbeat', 'hold', 'handoff', 'rescope', 'complete', 'amend']) {
+    assert.throws(() => transition(result, { ...request('a'), action, reason: 'Try restoring', successor: 'x' }, policy, now));
+  }
+  assert.throws(() => transition(result, request('a'), policy, now), /already exists/);
+  assert.throws(() => transition(result, { ...request('c'), branch: 'field/a' }, policy, now), /Retired branch/);
+});
+test('retirement fails closed for owner, head, evidence and successor errors', () => {
+  const record = claim(empty(), 'a');
+  for (const patch of [{ owner: 'other' }, { verified_head_sha: 'b'.repeat(40) }, { expected_head_sha: undefined }, { evidence: ' ' }, { reason: 'x'.repeat(1001) }, { operation_id: 'bad id' }, { disposition: 'completed' }, { superseded_by: 'b' }, { disposition: 'superseded', superseded_by: 'a' }, { disposition: 'superseded', superseded_by: 'missing' }]) {
+    assert.throws(() => transition(record, retireRequest(patch), policy, now));
+  }
+  assert.throws(() => transition({ ...record, migration_frozen: { canonical_repository: 'new' } }, retireRequest(), policy, now), /migrated/);
+  const completed = structuredClone(record); completed.claims[0].state = 'completed';
+  assert.throws(() => transition(completed, retireRequest(), policy, now), /Only reserved/);
+  assert.equal(transition(record, retireRequest({ expected_head_sha: null, verified_head_sha: null }), policy, now).claims[0].state, 'cancelled');
+});
+test('retirement replay preserves timestamps and rejects operation-id reuse with different intent', () => {
+  const record = transition(claim(empty(), 'a'), retireRequest(), policy, now);
+  assert.deepEqual(transition(record, retireRequest({ verified_head_sha: 'b'.repeat(40) }), policy, new Date('2030-01-01')), record);
+  assert.throws(() => transition(record, retireRequest({ reason: 'Changed' }), policy, now), /different intent/);
+  assert.throws(() => transition(record, retireRequest({ operation_id: 'new-id' }), policy, now), /Only reserved/);
+});
+test('queued cancellation and supersession remain terminal and supersession requires a live successor', () => {
+  let record = transition(empty(), { ...request('a'), action: 'queue' }, policy, now);
+  record = transition(record, { ...request('b'), action: 'queue' }, policy, now);
+  const { expected_head_sha, verified_head_sha, ...requestWithoutHead } = retireRequest({ disposition: 'superseded', superseded_by: 'b' });
+  const retired = transition(record, requestWithoutHead, policy, now);
+  assert.equal(retired.queue[0].state, 'superseded');
+  assert.equal(retired.queue[1].state, 'queued');
+  assert.throws(() => claim(retired, 'a'), /Terminal/);
+  assert.deepEqual(transition(retired, requestWithoutHead, policy, now), retired);
+  assert.throws(() => transition(record, retireRequest(), policy, now), /no branch head/);
+  retired.queue[1].state = 'cancelled';
+  assert.throws(() => transition({ ...retired, queue: [record.queue[0], retired.queue[1]] }, requestWithoutHead, policy, now), /nonterminal successor/);
+});
+test('claimed queue mirrors retire atomically and retain queue history through rescope', () => {
+  let record = transition(empty(), { ...request('a'), action: 'queue' }, policy, now);
+  record = claim(record, 'a');
+  record = transition(record, { ...request('a'), action: 'rescope', resources: [], paths: ['src/new/'] }, policy, now);
+  assert.equal(record.queue[0].state, 'claimed');
+  const result = transition(record, retireRequest(), policy, now);
+  assert.equal(result.queue[0].state, 'cancelled');
+  assert.deepEqual(result.queue[0].retirement, result.claims[0].retirement);
+});
