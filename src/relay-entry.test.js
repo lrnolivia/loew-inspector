@@ -20,6 +20,13 @@ test("Relay extension publishes source inventory and exact-head PR action", () =
     inputSchema: { type: "object" },
     annotations: {},
     securitySchemes: [{ type: "oauth2", scopes: [] }]
+  }, {
+    name: "relay_runner_progress",
+    description: "Read Relay progress",
+    inputSchema: { type: "object", properties: { project: { type: "string" } }, required: ["project"] },
+    annotations: { readOnlyHint: true },
+    securitySchemes: [{ type: "oauth2", scopes: [] }],
+    _meta: { existing: true }
   }, relayContextCardTool()]);
   const names = tools.map(tool => tool.name);
   assert.ok(names.includes("relay_source_inventory"));
@@ -31,6 +38,10 @@ test("Relay extension publishes source inventory and exact-head PR action", () =
   const renderer=tools.find(tool=>tool.name==="relay_render_context_card");
   assert.equal(renderer._meta.ui.resourceUri,"ui://relay/context-card/v8.html");
   assert.equal(renderer._meta["openai/outputTemplate"],"ui://relay/context-card/v8.html");
+  const progress=tools.find(tool=>tool.name==="relay_runner_progress");
+  assert.equal(progress._meta.ui.resourceUri,"ui://relay/status-card/v3-legacy-bridge.html");
+  assert.equal(progress._meta["openai/outputTemplate"],"ui://relay/status-card/v3-legacy-bridge.html");
+  assert.deepEqual(progress.inputSchema,{ type: "object", properties: { project: { type: "string" } }, required: ["project"] });
   const branch = tools.find(tool => tool.name === "relay_source_create_branch");
   assert.match(branch.description, /exact 40-character commit SHA/);
   assert.equal(branch._meta.existing, true);
