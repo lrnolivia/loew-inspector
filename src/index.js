@@ -13,6 +13,7 @@ import { sourceAuthStatus, githubApiRequest as sourceGithubApiRequest, commitSou
 import { runnerControlTools, callRunnerControl, runnerControlError } from "./runner-control.js";
 import { cloudStatus, listCloudScripts, cloudWorkerSummary, cloudBuilds, deployCloudVersion } from "./cloud.js";
 import { HOST_PROBE_URI, HOST_PROBE_TOOL, hostProbeDescriptor, hostProbeResource, hostProbeTool, hostProbeResult } from "./relay-host-probe.js";
+import { ACTION_PROBE_URI, ACTION_PROBE_TOOL, ACTION_SAMPLE_TOOL, actionProbeDescriptor, actionProbeResource, actionProbeTools, actionProbeResult } from "./relay-host-action-probe.js";
 
 const VERSION = "1.2.0";
 const EVIDENCE_CONTEXT_SCHEMA = {
@@ -383,6 +384,7 @@ async function mcp(request, access, env) {
         relayContextCardDescriptor(),
         relayStatusCardDescriptor(),
         hostProbeDescriptor(),
+        actionProbeDescriptor(),
         ...relaySkillResourceDescriptors()
       ]
     });
@@ -391,6 +393,7 @@ async function mcp(request, access, env) {
   if (message.method === "resources/read") {
     const uri = message.params?.uri;
     if (uri === HOST_PROBE_URI) return rpc(id, { contents: [hostProbeResource()] });
+    if (uri === ACTION_PROBE_URI) return rpc(id, { contents: [actionProbeResource()] });
     if (uri === RELAY_CONTROL_CENTER_URI) {
       return rpc(id, { contents: [relayControlCenterResource()] });
     }
@@ -448,6 +451,7 @@ async function mcp(request, access, env) {
         relayContextCardTool(),
         relayStatusCardTool(),
         hostProbeTool(),
+        ...actionProbeTools(),
 
         {
           name: "relay_control_status",
@@ -935,6 +939,7 @@ async function mcp(request, access, env) {
       const args = message.params?.arguments || {};
 
       if (name === HOST_PROBE_TOOL) return rpc(id, hostProbeResult(message.params?.arguments ?? {}, request, message.params?._meta));
+      if (name === ACTION_PROBE_TOOL || name === ACTION_SAMPLE_TOOL) return rpc(id, actionProbeResult(message.params?.arguments ?? {}, name === ACTION_PROBE_TOOL ? "initial" : "action"));
 
 
       if (runnerControlTools.some(tool => tool.name === name)) {
