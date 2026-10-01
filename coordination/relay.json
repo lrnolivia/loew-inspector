@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T06:28:06.664Z",
+  "updated_at": "2026-10-01T06:29:14.766Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5180,7 +5180,7 @@
         "nico",
         "roman"
       ],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-10-01T05:25:50.523Z",
       "amendment_count": 1,
       "amendments": [
@@ -8138,6 +8138,66 @@
       "created_at": "2026-10-01T06:28:06.664Z",
       "updated_at": "2026-10-01T06:28:06.664Z",
       "lease_until": "2026-10-01T18:28:06.664Z"
+    },
+    {
+      "id": "relay-2.0-live-react-dashboard-20261001",
+      "owner": "relay-2.0-live-react-dashboard-20261001",
+      "branch": "relay/2.0-live-react-dashboard-20261001",
+      "paths": [
+        "docs/relay/RELAY_2_0_FRONTEND_ARCHITECTURE.md"
+      ],
+      "resources": [
+        "relay-2.0",
+        "relay-vite-react-dashboard",
+        "relay-live-state-stream",
+        "relay-shared-ui-components",
+        "relay-mcp-app-workspace",
+        "relay-ephemeral-vite-build-artifact",
+        "relay-no-committed-generated-bundle"
+      ],
+      "goal": "Rebuild Relay 2.0's dashboard as a modern Vite + React application with live-updating canonical Runner/Relay state, replacing the current generated/static dashboard architecture without changing Relay's underlying authority model.",
+      "acceptance": "Relay 2.0 ships one modern React dashboard for Today, Runner, Inspector and night shift; canonical state updates appear live without manual page refresh; navigation and project context persist; live status/progress/evidence changes stream into the UI with explicit reconnecting/stale states; Inspector card previews and QA surfaces are first-class React components; the opened ChatGPT MCP app workspace reuses the same view-model/component system where appropriate; inline chat cards remain their own compact composition but share tokens/models; no duplicated business truth in the client; accessibility, responsive behavior, reduced motion and performance are release gates; no gradients unless explicitly introduced later; build/deploy is Vite-based and eliminates the giant generated.js source artifact as a hand-maintained release concern. The Vite build output is ephemeral CI/deploy output, not a giant committed generated source file: CI must prove `vite build` succeeds and deployment must consume that exact built artifact, while Git stores authored source and small manifests only. Remove the `git diff --exit-code -- apps/web/generated.js` class of gate once the runtime/deploy path no longer imports committed generated.js.",
+      "next_action": "Write the frontend architecture first, with an explicit no-committed-generated-bundle contract and a Today + Runner live-update prototype as the first implementation slice.",
+      "task_class": "architecture",
+      "category": "architecture",
+      "labels": [
+        {
+          "key": "release",
+          "value": "2.0"
+        },
+        {
+          "key": "domain",
+          "value": "frontend-platform"
+        }
+      ],
+      "tags": [
+        "react",
+        "vite",
+        "live-ui",
+        "dashboard",
+        "mcp-app"
+      ],
+      "primary_role": "architect",
+      "supporting_roles": [
+        "art-director",
+        "builder",
+        "verifier"
+      ],
+      "primary_team": "runner",
+      "supporting_teams": [
+        "inspector"
+      ],
+      "primary_staff": "ellis",
+      "supporting_staff": [
+        "valentina",
+        "nico",
+        "roman"
+      ],
+      "base_sha": "85171e07f0e3d075281f708c04453bc429df48cb",
+      "state": "active",
+      "created_at": "2026-10-01T06:29:14.766Z",
+      "updated_at": "2026-10-01T06:29:14.766Z",
+      "lease_until": "2026-10-01T18:29:14.766Z"
     }
   ],
   "migrated_from": "loew-inspector"
