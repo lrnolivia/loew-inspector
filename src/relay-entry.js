@@ -9,7 +9,8 @@ import { cloudUploadTool, callCloudUpload, validateCloudUploadArguments } from "
 import { QA_SKILL_URI, qaSkillCatalogEntry, qaSkillResourceDescriptor, qaSkillResource } from "./qa-skill.js";
 import { LOEW_NAMING_SKILL_URI, loewNamingSkillCatalogEntry, loewNamingSkillResourceDescriptor, loewNamingSkillResource } from "./loew-naming-skill.js";
 import { EXECUTIVE_COMMUNICATION_SKILL_URI, executiveCommunicationSkillCatalogEntry, executiveCommunicationSkillResourceDescriptor, executiveCommunicationSkillResource } from "./executive-communication-skill.js";
-import { isContextualRelayTool, contextualizeRelayTool, contextualPresentation } from "./relay-chat-ui.js";
+import { RELAY_STATUS_CARD_URI, relayStatusCardDescriptor, relayStatusCardResource, isContextualRelayTool, contextualizeRelayTool, contextualPresentation } from "./relay-chat-ui.js";
+import { RELAY_V2_PROBE_URI, relayV2ProbeDescriptor, relayV2ProbeResource, contextualizeRelayV2ProbeTool } from "./relay-v2-probe.js";
 
 export const RELAY_EXTENSION_VERSION = "1.9.9";
 
@@ -92,7 +93,8 @@ export function augmentToolList(tools) {
   const kept = list
     .filter(tool => tool.name !== createBranch.name && !names.has(tool.name))
     .map(tool => sourceDescriptions[tool.name] ? { ...tool, description: sourceDescriptions[tool.name] } : tool)
-    .map(contextualizeRelayTool);
+    .map(contextualizeRelayTool)
+    .map(contextualizeRelayV2ProbeTool);
   return [
     ...kept,
     contextualizeRelayTool(replacement),
@@ -107,6 +109,8 @@ export function augmentToolList(tools) {
 
 export function augmentResourceList(resources) {
   const list = Array.isArray(resources) ? [...resources] : [];
+  if (!list.some(resource => resource?.uri === RELAY_STATUS_CARD_URI)) list.push(relayStatusCardDescriptor());
+  if (!list.some(resource => resource?.uri === RELAY_V2_PROBE_URI)) list.push(relayV2ProbeDescriptor());
   if (!list.some(resource => resource?.uri === QA_SKILL_URI)) list.push(qaSkillResourceDescriptor());
   if (!list.some(resource => resource?.uri === LOEW_NAMING_SKILL_URI)) list.push(loewNamingSkillResourceDescriptor());
   if (!list.some(resource => resource?.uri === EXECUTIVE_COMMUNICATION_SKILL_URI)) list.push(executiveCommunicationSkillResourceDescriptor());
@@ -329,6 +333,8 @@ export default {
       });
     }
     if (message.method === "resources/read" && response.status === 200) {
+      if (message.params?.uri === RELAY_STATUS_CARD_URI) return rpcResult(message.id ?? null, { contents: [relayStatusCardResource()] }, response.headers);
+      if (message.params?.uri === RELAY_V2_PROBE_URI) return rpcResult(message.id ?? null, { contents: [relayV2ProbeResource()] }, response.headers);
       if (message.params?.uri === QA_SKILL_URI) return rpcResult(message.id ?? null, { contents: [qaSkillResource()] }, response.headers);
       if (message.params?.uri === LOEW_NAMING_SKILL_URI) return rpcResult(message.id ?? null, { contents: [loewNamingSkillResource()] }, response.headers);
       if (message.params?.uri === EXECUTIVE_COMMUNICATION_SKILL_URI) return rpcResult(message.id ?? null, { contents: [executiveCommunicationSkillResource()] }, response.headers);
