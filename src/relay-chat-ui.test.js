@@ -5,14 +5,16 @@ import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, relayContextCardDescri
 test("Relay publishes one versioned compact MCP card resource", () => {
   const descriptor = relayContextCardDescriptor();
   const resource = relayContextCardResource();
-  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v6.html");
+  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v7.html");
   assert.equal(descriptor.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.mimeType, "text/html;profile=mcp-app");
   assert.match(resource.text, /observed progress|runner/i);
   assert.match(resource.text, /open relay/i);
   assert.match(resource.text, /qa-media/);
-  assert.match(resource.text, /notifyIntrinsicHeight/);
+  assert.match(resource.text, /ui\/initialize/);
+  assert.match(resource.text, /ui\/notifications\/initialized/);
+  assert.doesNotMatch(resource.text, /notifyIntrinsicHeight|openai:set_globals|window\.openai\?\.toolOutput/);
   assert.deepEqual(resource._meta.ui.csp.resourceDomains,['https://relay.loew.fi']);
 });
 
