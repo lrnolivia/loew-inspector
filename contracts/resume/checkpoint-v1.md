@@ -24,3 +24,12 @@ The canonical checkpoint model will be appended below.
 - created_at, freshness and superseded/deduped state
 
 Resume consumers should prefer the latest valid checkpoint over reconstructing intent from chat history.
+
+## Passive snapshot policy
+
+- active work target: refresh from canonical evidence every 5 minutes when a consumer is watching;
+- external-system wait target: 10 minutes, while external activity remains visible separately from worker activity;
+- waiting-for-human target: 30 minutes;
+- unchanged canonical evidence reuses the same deterministic `checkpoint_id` rather than creating noisy duplicate snapshots;
+- checkpoints are derived on read from durable Runner/GitHub/Cloud evidence, so workers do not spend model context authoring repetitive handoffs;
+- `relay_runner_resume` is the canonical resume/read contract for a fresh chat or worker.
