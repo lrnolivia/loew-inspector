@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T01:57:10.037Z",
+  "updated_at": "2026-10-01T01:57:46.142Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -2544,7 +2544,7 @@
         "relay-card-material",
         "relay-responsive-layout"
       ],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-10-01T01:57:10.037Z"
     }
   ],
@@ -4058,6 +4058,33 @@
       "created_at": "2026-10-01T01:45:02.465Z",
       "updated_at": "2026-10-01T01:48:25.046Z",
       "lease_until": "2026-10-01T13:48:25.046Z"
+    },
+    {
+      "id": "relay-fast-shell-motion-neutral-cards-20261001",
+      "owner": "relay-fast-shell-motion-neutral-cards-20261001",
+      "branch": "relay/fast-shell-motion-neutral-cards-20261001",
+      "paths": [
+        "apps/web/public/operator.js",
+        "apps/web/public/operator-1.8.css",
+        "apps/web/generated.js",
+        "apps/web/test/browser.test.mjs",
+        "docs/relay/RELAY_FAST_SHELL_MOTION.md"
+      ],
+      "resources": [
+        "relay-design",
+        "relay-shell-motion",
+        "relay-card-material",
+        "relay-responsive-layout"
+      ],
+      "goal": "Refine the current Relay feature shell by removing status-colored card borders/tints and making desktop sidebar/content movement feel fast, inertial, and springy without becoming floaty.",
+      "acceptance": "Task class design. Preserve Relay 1.9.5 architecture, final feature icons, feature accent mapping, semantic status labels/lights, project tabs, and current mobile/tablet layout. Remove all status-colored card borders, left-edge stripes, and large state-tinted card backgrounds from progress, Today, Inspector, night shift, attention, automation, and clear-state surfaces; cards must return to flat neutral Terra Prime surfaces with spacing rather than outline decoration. No gradients. Keep semantic color only in compact badges/status lights and small inline status elements. Desktop sidebar expansion/collapse must remain 88px↔340px and content must still shift/max-width center, but movement should be FAST: about 180–260ms, one small overshoot, quick settle, and a subtle directional blur visible only during movement. Avoid floaty easing, long delays, or looping page motion. Implement pointer + keyboard focus transitions; reduced-motion must switch instantly with no blur/overshoot. Mobile/tablet <=900px remain static and must not depend on hover. Browser tests must assert neutral card backgrounds/no semantic borders, existing sidebar geometry, fast transition duration, expansion/collapse motion state, blur keyframes present/active under normal motion, and reduced-motion disabling transition/animation. Rebuild generated.js, pass full repo/browser tests, merge/deploy exact source, capture production evidence, close assignment.",
+      "next_action": "Claim current main. Remove the semantic-card border/tint override from the feature-shell CSS. Add a small JS sidebar motion state hook for pointer/focus expand/collapse and fast CSS spring/blur animations around the existing 88px/340px layout transition. Keep status-light animation unchanged. Rebuild, test desktop/MCP/mobile and reduced-motion, merge/deploy exact source, close.",
+      "task_class": "design",
+      "base_sha": "8c2ffd935490bcbd439ed58feeaeac537fdaa5a0",
+      "state": "active",
+      "created_at": "2026-10-01T01:57:46.142Z",
+      "updated_at": "2026-10-01T01:57:46.142Z",
+      "lease_until": "2026-10-01T13:57:46.142Z"
     }
   ],
   "migrated_from": "loew-inspector"
