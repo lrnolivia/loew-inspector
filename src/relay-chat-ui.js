@@ -16,12 +16,14 @@ export function relayContextCardTool() {
   return {
     name: RELAY_CONTEXT_CARD_TOOL,
     title: 'Show Relay status card',
-    description: 'RENDER TOOL — visibly mount a compact Relay status card in ChatGPT for one managed project or assignment. Use this when the user should see the card, not just receive structured Relay data. Relay re-reads canonical Runner state server-side so the card is not based on model-authored progress. This is read-only and safe to retry.',
+    description: 'RENDER TOOL — visibly mount a compact Relay status card in ChatGPT for one managed project or assignment. Optionally show an existing Inspector QA screenshot by exact evidence id, or the latest stored QA screenshot for the project. Relay re-reads canonical Runner state server-side and reuses canonical Inspector evidence; it never invents progress or captures a second image. This is read-only and safe to retry.',
     inputSchema: {
       type: 'object',
       properties: {
         project: { type: 'string', minLength: 1, maxLength: 80, pattern: '^[a-z0-9-]+$' },
-        assignment: { type: 'string', minLength: 1, maxLength: 100, pattern: '^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$' }
+        assignment: { type: 'string', minLength: 1, maxLength: 100, pattern: '^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$' },
+        evidence_id: { type: 'string', minLength: 12, maxLength: 132, pattern: '^vis_[a-zA-Z0-9-]{8,128}$', description: 'Optional existing Inspector visual-evidence id to show inside the card.' },
+        show_qa: { type: 'boolean', description: 'When true and no evidence_id is supplied, show the latest existing Inspector QA screenshot for the project when available.' }
       },
       required: ['project'],
       additionalProperties: false
@@ -38,9 +40,11 @@ export function relayContextCardTool() {
 }
 export function validateRelayContextCardArguments(args) {
   if (!args || typeof args !== 'object' || Array.isArray(args)) throw new Error('Card arguments must be an object');
-  for (const key of Object.keys(args)) if (!['project','assignment'].includes(key)) throw new Error('Unsupported card argument: '+key);
+  for (const key of Object.keys(args)) if (!['project','assignment','evidence_id','show_qa'].includes(key)) throw new Error('Unsupported card argument: '+key);
   if (typeof args.project !== 'string' || !/^[a-z0-9-]{1,80}$/.test(args.project)) throw new Error('Invalid card project');
   if (args.assignment !== undefined && (typeof args.assignment !== 'string' || !/^[a-zA-Z0-9][a-zA-Z0-9_.:-]{0,99}$/.test(args.assignment))) throw new Error('Invalid card assignment');
+  if (args.evidence_id !== undefined && (typeof args.evidence_id !== 'string' || !/^vis_[a-zA-Z0-9-]{8,128}$/.test(args.evidence_id))) throw new Error('Invalid card evidence id');
+  if (args.show_qa !== undefined && typeof args.show_qa !== 'boolean') throw new Error('Invalid card show_qa flag');
   return args;
 }
 export function contextualizeRelayTool(tool) {
