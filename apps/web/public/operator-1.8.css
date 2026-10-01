@@ -1232,3 +1232,110 @@ body[data-page="night-shift"] { --page-feature-accent: var(--feature-night-shift
   .review-bulk-actions button,
   .review-action { transition:none; }
 }
+
+
+/* Shared Relay dashboard data cards + display type.
+   Used by both the preserved 1.8/1.9 Inspector shell and the React control center. */
+body {
+  font-family: Inter, system-ui, sans-serif;
+}
+
+.page-heading h1,
+.operator-section > h2,
+.section-heading h2,
+.project-work-section h3,
+.signal-card > strong,
+.work-card h2,
+.night-card-head > strong,
+.work-detail-head h1,
+.empty-card strong {
+  font-family: "Momo Trust Display", Inter, system-ui, sans-serif;
+  font-weight: 400;
+}
+
+.signal-deck {
+  min-width: 0;
+  margin: -8px 0 38px;
+}
+
+.signal-track {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: minmax(220px, calc((100% - 24px) / 3));
+  gap: 12px;
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+  scroll-snap-type: inline proximity;
+  scrollbar-width: none;
+  padding: 2px 1px 8px;
+}
+
+.signal-track::-webkit-scrollbar { display: none; }
+
+.signal-card {
+  --status-color: var(--status-quiet);
+  min-height: 132px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  scroll-snap-align: start;
+  overflow: hidden;
+  padding: 18px 20px;
+  border: 0;
+  border-radius: 20px;
+  background: var(--color-surface);
+  color: var(--color-text-primary);
+  box-shadow: none;
+}
+
+.signal-card::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto 0 0;
+  width: 3px;
+  background: var(--status-color);
+  opacity: .9;
+}
+
+.signal-card[data-tone="good"],
+.signal-card[data-tone="done"] { --status-color: var(--status-success); }
+.signal-card[data-tone="act"] { --status-color: var(--status-attention); }
+.signal-card[data-tone="wait"] { --status-color: var(--status-external); }
+.signal-card[data-tone="warn"] { --status-color: var(--status-warning); }
+.signal-card[data-tone="bad"] { --status-color: var(--status-danger); }
+.signal-card[data-tone="quiet"] { --status-color: var(--status-quiet); }
+
+.signal-label {
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1.2;
+  text-transform: lowercase;
+}
+
+.signal-card > strong {
+  display: block;
+  margin-top: 8px;
+  font-size: clamp(28px, 3vw, 38px);
+  line-height: 1;
+  letter-spacing: -.02em;
+}
+
+.signal-card p {
+  max-width: 42ch;
+  margin: 8px 0 0;
+  color: var(--color-text-secondary);
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+@media (max-width: 900px) {
+  .signal-track { grid-auto-columns: minmax(240px, 72%); }
+}
+
+@media (max-width: 640px) {
+  .signal-deck { margin-bottom: 30px; }
+  .signal-track { grid-auto-columns: 86%; }
+  .signal-card { min-height: 122px; padding: 16px 18px; }
+}

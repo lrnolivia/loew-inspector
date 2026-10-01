@@ -1,7 +1,7 @@
 import type { ProgressEvent } from "../types";
 
 export function StatusLight({ tone = "quiet", label }: { tone?: string; label: string }) {
-  return <span className="status-chip" data-tone={tone}><span className="status-light" aria-hidden="true" />{label}</span>;
+  return <span className="status-badge status-chip" data-tone={tone}><span className="status-light" aria-hidden="true" />{label}</span>;
 }
 
 export function ProgressRing({ percent, label }: { percent?: number; label: string }) {

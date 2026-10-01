@@ -22,7 +22,7 @@ export function WorkCard({ project, item }: { project: string; item: ObservedPro
   const percent = item.state === "complete" ? 100 : undefined;
   const phase = item.state === "complete" ? "delivery" : (item.stage || "in progress").replaceAll("-", " ");
   return (
-    <article className="work-card" data-tone={stateTone(item.state)}>
+    <article className="progress-row work-card" data-tone={stateTone(item.state)}>
       <div className="work-card-main">
         <div className="work-card-copy">
           <div className="work-card-meta">

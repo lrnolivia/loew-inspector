@@ -21,11 +21,13 @@ export function RunnerPage() {
     { id: "fresh", label: "freshness", value: state, detail: stale ? `${stale} work item${stale === 1 ? "" : "s"} may be stale.` : "Current work has no stale warning.", tone: stale ? "warn" : state === "live" ? "good" : "quiet" }
   ];
   return (
-    <div className="page">
-      <FeatureHeader feature="runner" title="runner" subtitle="what is happening, what changed, and what comes next" />
+    <div className="page operator-page react-page">
+      <FeatureHeader feature="runner" title="runner" subtitle="coordinate" />
       <SignalDeck cards={cards} />
-      <div className="section-heading"><h2>meaningful work</h2><span>{all.length} current</span></div>
-      <div className="work-list">{all.length ? all.map(({ project, item }) => <WorkCard project={project} item={item} key={`${project}:${item.assignment}`} />) : <div className="empty-card"><strong>Nothing is moving right now.</strong><p>Runner will show work here when Relay has current execution evidence.</p></div>}</div>
+      <section className="operator-section">
+        <div className="section-heading"><h2>meaningful work</h2><span>{all.length} current</span></div>
+        <div className="work-list">{all.length ? all.map(({ project, item }) => <WorkCard project={project} item={item} key={`${project}:${item.assignment}`} />) : <div className="empty-card"><strong>Nothing is moving right now.</strong><p>Runner will show work here when Relay has current execution evidence.</p></div>}</div>
+      </section>
     </div>
   );
 }

@@ -175,7 +175,7 @@ function openProject(id) {
 }
 
 async function openSettings() {
-  const href = "https://chatgpt.com/settings/plugins-settings/plugin_asdk_app_6abdbca7c98c819187cc153d781b0faf";
+  const href = "https://chatgpt.com/settings/plugins-settings/plugin_asdk_app_6abe234861d881919e30db65d656492f";
   try {
     if (window.openai?.openExternal) await window.openai.openExternal({ href });
     else window.open(href, "_blank", "noopener,noreferrer");
@@ -185,6 +185,29 @@ async function openSettings() {
 }
 
 const ui = { setConnection, notify, openProject, setFlow, setOverviewDetail, contextProject };
+
+function updateInspectorSignals() {
+  const rows = [...document.querySelectorAll("#review-list .review-row")];
+  const visible = rows.filter(row => !row.hidden && getComputedStyle(row).display !== "none");
+  const needs = rows.filter(row => {
+    const disposition = row.dataset.reviewDisposition || "";
+    return !["completed", "archived"].includes(disposition);
+  });
+  const previews = document.querySelectorAll("#chat-card-tabs [role='tab'], #chat-card-tabs button").length;
+  const set = (id, value) => {
+    const node = document.getElementById(id);
+    if (node) node.textContent = String(value);
+  };
+  set("inspector-signal-needs", needs.length);
+  set("inspector-signal-visible", visible.length);
+  set("inspector-signal-previews", previews);
+}
+
+const inspectorSignalObserver = new MutationObserver(updateInspectorSignals);
+["review-list", "chat-card-tabs"].forEach(id => {
+  const node = document.getElementById(id);
+  if (node) inspectorSignalObserver.observe(node, { childList: true, subtree: true, attributes: true });
+});
 
 async function showPage(name) {
   pages.forEach(page => { page.hidden = page.dataset.page !== name; });
@@ -214,6 +237,7 @@ async function showPage(name) {
   if (name === "review") {
     setFlow("orient", "evidence queue");
     await loadReview(ui, contextProject());
+    updateInspectorSignals();
     const evidence = new URLSearchParams(location.hash.split("?")[1] || "").get("evidence");
     if (evidence && /^vis_[a-zA-Z0-9-]{8,128}$/.test(evidence)) await openQa(evidence);
   }

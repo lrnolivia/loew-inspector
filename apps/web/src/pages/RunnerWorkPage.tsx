@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { loadAssignment } from "../api";
+import { SignalDeck } from "../components/SignalDeck";
 import { ActivitySparkline, ProgressRing, StatusLight } from "../components/Telemetry";
 import type { ObservedProgress } from "../types";
 
@@ -36,9 +37,16 @@ export function RunnerWorkPage() {
   const title = item?.goal || assignment.replace(/[-_]+/g, " ");
   const events = useMemo(() => item?.events || [], [item]);
   const percent = item?.state === "complete" ? 100 : undefined;
+  const cards = [
+    { id: "state", label: "state", value: (item?.state || status).replaceAll("-", " "), detail: item?.waiting_reason || "Current canonical work state.", tone: item?.state === "failed" || item?.state === "blocked" ? "bad" : status === "live" ? "good" : "quiet" },
+    { id: "phase", label: "current phase", value: (item?.stage || "working").replaceAll("-", " "), detail: item?.next_action || "No next action reported.", tone: "quiet" },
+    { id: "events", label: "observed updates", value: String(events.length), detail: item?.last_meaningful_progress_at ? `latest ${new Date(item.last_meaningful_progress_at).toLocaleString()}` : "No timestamp reported.", tone: events.length ? "good" : "quiet" }
+  ];
+
   return (
-    <div className="page work-detail">
+    <div className="page operator-page react-page work-detail">
       <Link className="back-link" to="/runner">← runner</Link>
+      <SignalDeck cards={cards} />
       <div className="work-detail-head">
         <div>
           <div className="work-card-meta"><StatusLight tone={status === "live" ? "good" : status === "stale" ? "warn" : "quiet"} label={status} />{item?.primary_staff && <span>{item.primary_staff}</span>}</div>
@@ -52,7 +60,7 @@ export function RunnerWorkPage() {
         <div><span>next</span><strong>{item?.next_action || "No next action reported."}</strong></div>
         <ActivitySparkline events={events} />
       </section>
-      <section>
+      <section className="operator-section">
         <div className="section-heading"><h2>live updates</h2><span>{events.length} observed</span></div>
         <ol className="event-stream">
           {events.map((event, index) => <li key={event.id || index}><time>{event.at ? new Date(event.at).toLocaleTimeString() : "time unknown"}</time><strong>{(event.type || "update").replaceAll("-", " ")}</strong><span>{index === 0 ? "latest confirmed update" : "observed by Relay"}</span></li>)}
