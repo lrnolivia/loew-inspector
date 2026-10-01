@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T01:03:47.694Z",
+  "updated_at": "2026-10-01T01:04:02.031Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -1671,6 +1671,26 @@
       ],
       "state": "claimed",
       "created_at": "2026-10-01T00:52:30.812Z"
+    },
+    {
+      "id": "relay-findings-rfs-023-20260930",
+      "owner": "relay-findings-rfs-023-20260930",
+      "goal": "Document RFS-023: Relay should reduce manual release-contract propagation friction across umbrella/child assignments.",
+      "acceptance": "Append RFS-023 to the canonical findings ledger with the observed sequence from the 1.9 staff-aware narration change: requirement existed in a child slice but not the umbrella; manual promotion hit the 4,000-character acceptance ceiling; a follow-up attempt hit legitimate ownership overlap; the worker then compacted/reframed scope to record the integration contract. Capture impact and suggest automatic parent/child contract propagation or reconciliation that preserves ownership boundaries, summarizes instead of duplicating long acceptance text, and routes changed release-level requirements without manual multi-step restatement. Link the finding to Relay 1.9 for consideration.",
+      "next_action": "Claim a docs-only maintenance branch, append RFS-023, open and merge the docs PR, then complete the assignment. No Worker deployment.",
+      "paths": [
+        "docs/relay/findings/suggestions.md"
+      ],
+      "resources": [
+        "relay-publishing-findings",
+        "relay-maintenance"
+      ],
+      "task_class": "maintenance",
+      "ledger_refs": [
+        "RFS-023"
+      ],
+      "state": "queued",
+      "created_at": "2026-10-01T01:04:02.031Z"
     }
   ],
   "claims": [
