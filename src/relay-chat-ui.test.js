@@ -5,7 +5,7 @@ import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, relayContextCardDescri
 test("Relay publishes one versioned compact MCP card resource", () => {
   const descriptor = relayContextCardDescriptor();
   const resource = relayContextCardResource();
-  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v7.html");
+  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v8.html");
   assert.equal(descriptor.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.mimeType, "text/html;profile=mcp-app");
@@ -14,7 +14,10 @@ test("Relay publishes one versioned compact MCP card resource", () => {
   assert.match(resource.text, /qa-media/);
   assert.match(resource.text, /ui\/initialize/);
   assert.match(resource.text, /ui\/notifications\/initialized/);
-  assert.doesNotMatch(resource.text, /notifyIntrinsicHeight|openai:set_globals|window\.openai\?\.toolOutput/);
+  assert.doesNotMatch(resource.text, /notifyIntrinsicHeight/);
+  assert.match(resource.text, /openai:set_globals/);
+  assert.match(resource.text, /toolOutput/);
+  assert.match(resource.text, /relay_runner_progress/);
   assert.deepEqual(resource._meta.ui.csp.resourceDomains,['https://relay.loew.fi']);
 });
 
@@ -202,4 +205,67 @@ test('card can reuse the latest stored Inspector QA screenshot through standard 
     assert.equal(await frame.locator('#qa-media-caption').textContent(),'Relay card preview');
     assert.match(await frame.locator('#qa-media-image').getAttribute('src'),/^data:image\/png;base64,/);
   } finally { await browser.close(); }
+});
+
+
+test('historical ChatGPT remount hydrates from compatibility globals without a replayed tool-result', async () => {
+  const {chromium}=await import('playwright');
+  const browser=await chromium.launch({headless:true});
+  try {
+    const page=await browser.newPage();
+    await page.addInitScript(()=>{
+      window.openai={
+        toolInput:{project:'relay'},
+        toolOutput:{project:'relay',claim:{primary_staff:'nico',goal:'Historical card restored',state:'active'}}
+      };
+    });
+    const widgetUrl='data:text/html,'+encodeURIComponent(relayContextCardResource().text);
+    await page.setContent(`<!doctype html><script>
+      window.toolCalls=0;
+      window.addEventListener('message',event=>{
+        const frame=document.getElementById('widget');
+        const message=event.data;
+        if(event.source!==frame?.contentWindow||message?.jsonrpc!=='2.0')return;
+        if(message.method==='ui/initialize'){
+          frame.contentWindow.postMessage({jsonrpc:'2.0',id:message.id,result:{protocolVersion:'2026-01-26'}},'*');
+        } else if(message.method==='tools/call'){
+          window.toolCalls+=1;
+          frame.contentWindow.postMessage({jsonrpc:'2.0',id:message.id,result:{structuredContent:{ok:false,error:'unexpected fallback call'}}},'*');
+        }
+      });
+    <\/script><iframe id="widget" src="${widgetUrl}"></iframe>`);
+    const frame=page.frameLocator('#widget');
+    await frame.locator('#title').filter({hasText:'Historical card restored'}).waitFor();
+    assert.equal(await page.evaluate(()=>window.toolCalls),0);
+  } finally {await browser.close()}
+});
+
+test('historical remount self-recovers once from canonical progress when the host replays input but not output', async () => {
+  const {chromium}=await import('playwright');
+  const browser=await chromium.launch({headless:true});
+  try {
+    const page=await browser.newPage();
+    await page.addInitScript(()=>{window.openai={toolInput:{project:'relay'}}});
+    const widgetUrl='data:text/html,'+encodeURIComponent(relayContextCardResource().text);
+    await page.setContent(`<!doctype html><script>
+      window.calls=[];
+      window.addEventListener('message',event=>{
+        const frame=document.getElementById('widget');
+        const message=event.data;
+        if(event.source!==frame?.contentWindow||message?.jsonrpc!=='2.0')return;
+        if(message.method==='ui/initialize'){
+          frame.contentWindow.postMessage({jsonrpc:'2.0',id:message.id,result:{protocolVersion:'2026-01-26'}},'*');
+        } else if(message.method==='tools/call'){
+          window.calls.push(message.params);
+          frame.contentWindow.postMessage({jsonrpc:'2.0',id:message.id,result:{structuredContent:{project:'relay',claim:{primary_staff:'nico',goal:'Recovered from canonical progress',state:'working'}}}},'*');
+        }
+      });
+    <\/script><iframe id="widget" src="${widgetUrl}"></iframe>`);
+    const frame=page.frameLocator('#widget');
+    await frame.locator('#title').filter({hasText:'Recovered from canonical progress'}).waitFor();
+    const calls=await page.evaluate(()=>window.calls);
+    assert.equal(calls.length,1);
+    assert.equal(calls[0].name,'relay_runner_progress');
+    assert.deepEqual(calls[0].arguments,{project:'relay'});
+  } finally {await browser.close()}
 });
