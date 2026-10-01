@@ -28,3 +28,22 @@ test("project deploy resolves Worker from registration and preserves runtime saf
   assert.deepEqual(called,{worker:"field",version:"11111111-2222-3333-4444-555555555555",message:"ship"});
   assert.equal(result.project,"field");
 });
+
+test("project cloud status exposes canonical Git-native transport policy", async () => {
+  const cloud={
+    provider:"cloudflare",
+    worker:"field",
+    write:true,
+    transport:"workers-builds",
+    production_branch:"main",
+    build_command:"npm run build",
+    deploy_command:"npx wrangler deploy",
+    manual_upload:"recovery-only"
+  };
+  const status=await projectCloudStatus({RELAY_CLOUDFLARE_WRITE_SCRIPTS:"field"},"field",apiFor(registration(cloud)));
+  assert.equal(status.transport,"workers-builds");
+  assert.equal(status.production_branch,"main");
+  assert.equal(status.build_command,"npm run build");
+  assert.equal(status.deploy_command,"npx wrangler deploy");
+  assert.equal(status.manual_upload,"recovery-only");
+});

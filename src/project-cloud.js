@@ -11,6 +11,11 @@ function validateRegistration(value, project) {
   if (cloud.provider !== "cloudflare" || typeof cloud.worker !== "string" || !/^[A-Za-z0-9_][A-Za-z0-9_-]{0,127}$/.test(cloud.worker) || typeof cloud.write !== "boolean") {
     throw new Error("Invalid project Cloud registration");
   }
+  if (cloud.transport !== undefined && !["workers-builds", "manual"].includes(cloud.transport)) throw new Error("Invalid project Cloud transport");
+  if (cloud.manual_upload !== undefined && !["allowed", "recovery-only", "disabled"].includes(cloud.manual_upload)) throw new Error("Invalid project manual upload policy");
+  if (cloud.production_branch !== undefined && (typeof cloud.production_branch !== "string" || !cloud.production_branch)) throw new Error("Invalid project production branch");
+  if (cloud.build_command !== undefined && typeof cloud.build_command !== "string") throw new Error("Invalid project build command");
+  if (cloud.deploy_command !== undefined && typeof cloud.deploy_command !== "string") throw new Error("Invalid project deploy command");
   return cloud;
 }
 
@@ -30,6 +35,11 @@ export async function projectCloudStatus(env, project, apiOverride) {
     repository: registration.repository,
     provider: cloud?.provider || null,
     worker: cloud?.worker || null,
+    transport: cloud?.transport || "manual",
+    production_branch: cloud?.production_branch || registration.default_branch || "main",
+    build_command: cloud?.build_command || null,
+    deploy_command: cloud?.deploy_command || null,
+    manual_upload: cloud?.manual_upload || "allowed",
     project_write: cloud?.write === true,
     runtime_allowlisted: runtimeAllowed,
     writable: Boolean(cloud?.write === true && runtimeAllowed),
