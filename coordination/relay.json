@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T20:23:19.113Z",
+  "updated_at": "2026-10-01T20:34:31.454Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -10586,7 +10586,7 @@
       ],
       "goal": "MCP rebuild stage 1: add truthful, reversible cancellation/supersession of obsolete assignments so user-requested retirement releases stale reservations without faking successful completion or deleting history.",
       "acceptance": "One bounded draft PR implements explicit retire with cancelled/superseded disposition, preserving original objectives, acceptance/history, branch and PR identity; owner/revision/head safeguards and idempotent reconciliation; retired reservations release capacity and their branches cannot be reused or automatically deleted. Progress/resume report truthful terminal state. Preserve verified-completion rules and existing cleanup safety. Synchronize engine source/mirror/provenance pin and MCP/CLI/workflow behavior. Required unit/regression tests, exact-head preflight and CI pass. No website/shared-UI/probe/card/auth/deployment edits. This completes only the lifecycle prerequisite, NOT the entire MCP rebuild; clean cross-client card proof is the next bounded stage. No merge/deploy or live retirement transactions before their separate verified authorization/gates.",
-      "next_action": "Create isolated admitted branch from fresh main, integrate the already-passing scratch retirement design into the exact declared paths, test, and open a draft PR. Coordinate with Julian; preserve active website fixes and old branch/PR history. Do not adopt obsolete probe code. Keep remaining 51-capability MCP program in the same lead task but outside this first branch until separately admitted.",
+      "next_action": "Lifecycle retirement implemented only in admitted checkout/paths. Finish regressions, review and draft PR; no merge/deploy/live retirement. Preserve old branch/PR evidence; clean cross-client proof remains separately gated next stage.",
       "task_class": "maintenance",
       "category": "maintenance",
       "labels": [
@@ -10610,8 +10610,8 @@
       "base_sha": "80abcd05325155ec42e0c7582bb82b1001e3634a",
       "state": "active",
       "created_at": "2026-10-01T20:23:19.113Z",
-      "updated_at": "2026-10-01T20:23:19.113Z",
-      "lease_until": "2026-10-02T08:23:19.113Z"
+      "updated_at": "2026-10-01T20:34:31.454Z",
+      "lease_until": "2026-10-02T08:34:31.454Z"
     }
   ],
   "migrated_from": "loew-inspector"
