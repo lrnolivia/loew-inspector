@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T10:01:16.992Z",
+  "updated_at": "2026-10-01T10:01:31.805Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6046,9 +6046,9 @@
     {
       "id": "relay-inline-card-v2-final-20261001",
       "owner": "relay-inline-card-v2-final-20261001",
-      "goal": "Rebuild and ship the exact historical Relay v2 contextual card probe from current main so native macOS, web and iPhone can be compared without PR #92 merge conflicts.",
-      "acceptance": "Current main is the base. Historical v2 card from de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7 is restored faithfully under isolated symbols; relay_runner_progress alone carries v2 metadata; resource is served through the pre-#85 relay-entry list/read path; current v8 and v3 controls remain unchanged; embedded MCP icon matches canonical PNG; exact-head CI and Runner admission pass; merged source is deployed before consumer testing.",
-      "next_action": "Claim relay/inline-card-v2-final-20261001 from current main, replay only the final isolated v2 probe plus icon parity sync, open a fresh PR, pass CI/admission, merge and deploy.",
+      "goal": "Ship the Relay card v9 non-blocking bootstrap and size-reporting fixes without redesigning the card; preserve the legacy bridge card exactly as the control.",
+      "acceptance": "Rotate the contextual card URI to v9; patch the v8 HTML only at serve time so cardHtml() and the legacy bridge remain unchanged; paint immediately from window.openai globals; run ui/initialize in parallel with a 4s timeout; prefer window.openai.callTool; report ui/notifications/size-changed and notifyIntrinsicHeight; show the host diagnostic line; add immediate-paint and height-reporting regression tests; update the relay-entry v9 URI pins; add docs/relay/CHATGPT_CARD_V9_BOOTSTRAP.md; npm test passes; open one draft PR; do not merge before desktop and browser consumer tests unless the owner overrides.",
+      "next_action": "Read every target from current main, verify each exact replacement target occurs exactly once, create the policy-valid branch recorded on this claim if needed, apply only the v9 handoff edits, run preflight and tests, open a draft PR, then render v9 and legacy controls for consumer testing.",
       "paths": [
         "src/relay-v2-probe.js",
         "src/relay-entry.js",
@@ -6077,7 +6077,31 @@
       "primary_staff": "nico",
       "supporting_staff": [],
       "state": "claimed",
-      "created_at": "2026-10-01T09:41:30.796Z"
+      "created_at": "2026-10-01T09:41:30.796Z",
+      "updated_at": "2026-10-01T10:01:31.805Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T10:01:31.805Z",
+          "by": "relay-inline-card-v2-final-20261001",
+          "reason": "Owner supplied a newer card-v9 execution handoff that supersedes the unstarted v2 replay in this same reserved card lane.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "goal": "Rebuild and ship the exact historical Relay v2 contextual card probe from current main so native macOS, web and iPhone can be compared without PR #92 merge conflicts.",
+            "acceptance": "Current main is the base. Historical v2 card from de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7 is restored faithfully under isolated symbols; relay_runner_progress alone carries v2 metadata; resource is served through the pre-#85 relay-entry list/read path; current v8 and v3 controls remain unchanged; embedded MCP icon matches canonical PNG; exact-head CI and Runner admission pass; merged source is deployed before consumer testing.",
+            "next_action": "Apply the owner-requested v9 nonblocking bootstrap handoff on this held card lane; preserve the legacy bridge control; update only the contextual card, its tests, relay-entry URI pins, and the v9 bootstrap doc; then run exact-head validation and open a draft PR."
+          },
+          "after": {
+            "goal": "Ship the Relay card v9 non-blocking bootstrap and size-reporting fixes without redesigning the card; preserve the legacy bridge card exactly as the control.",
+            "acceptance": "Rotate the contextual card URI to v9; patch the v8 HTML only at serve time so cardHtml() and the legacy bridge remain unchanged; paint immediately from window.openai globals; run ui/initialize in parallel with a 4s timeout; prefer window.openai.callTool; report ui/notifications/size-changed and notifyIntrinsicHeight; show the host diagnostic line; add immediate-paint and height-reporting regression tests; update the relay-entry v9 URI pins; add docs/relay/CHATGPT_CARD_V9_BOOTSTRAP.md; npm test passes; open one draft PR; do not merge before desktop and browser consumer tests unless the owner...",
+            "next_action": "Read every target from current main, verify each exact replacement target occurs exactly once, create the policy-valid branch recorded on this claim if needed, apply only the v9 handoff edits, run preflight and tests, open a draft PR, then render v9 and legacy controls for consumer testing."
+          }
+        }
+      ]
     },
     {
       "id": "relay-2.0-approved-visual-port-20261001",
@@ -9338,9 +9362,9 @@
         "relay-chatgpt-bootstrap",
         "relay-card-size-reporting"
       ],
-      "goal": "Rebuild and ship the exact historical Relay v2 contextual card probe from current main so native macOS, web and iPhone can be compared without PR #92 merge conflicts.",
-      "acceptance": "Current main is the base. Historical v2 card from de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7 is restored faithfully under isolated symbols; relay_runner_progress alone carries v2 metadata; resource is served through the pre-#85 relay-entry list/read path; current v8 and v3 controls remain unchanged; embedded MCP icon matches canonical PNG; exact-head CI and Runner admission pass; merged source is deployed before consumer testing.",
-      "next_action": "Apply the owner-requested v9 nonblocking bootstrap handoff on this held card lane; preserve the legacy bridge control; update only the contextual card, its tests, relay-entry URI pins, and the v9 bootstrap doc; then run exact-head validation and open a draft PR.",
+      "goal": "Ship the Relay card v9 non-blocking bootstrap and size-reporting fixes without redesigning the card; preserve the legacy bridge card exactly as the control.",
+      "acceptance": "Rotate the contextual card URI to v9; patch the v8 HTML only at serve time so cardHtml() and the legacy bridge remain unchanged; paint immediately from window.openai globals; run ui/initialize in parallel with a 4s timeout; prefer window.openai.callTool; report ui/notifications/size-changed and notifyIntrinsicHeight; show the host diagnostic line; add immediate-paint and height-reporting regression tests; update the relay-entry v9 URI pins; add docs/relay/CHATGPT_CARD_V9_BOOTSTRAP.md; npm test passes; open one draft PR; do not merge before desktop and browser consumer tests unless the owner overrides.",
+      "next_action": "Read every target from current main, verify each exact replacement target occurs exactly once, create the policy-valid branch recorded on this claim if needed, apply only the v9 handoff edits, run preflight and tests, open a draft PR, then render v9 and legacy controls for consumer testing.",
       "task_class": "architecture",
       "category": "implementation",
       "tags": [
@@ -9358,8 +9382,31 @@
       "base_sha": "3b1e855e9486a3c034f59db3b53797f45314b2fe",
       "state": "active",
       "created_at": "2026-10-01T09:43:34.029Z",
-      "updated_at": "2026-10-01T10:01:00.770Z",
-      "lease_until": "2026-10-01T22:01:00.770Z"
+      "updated_at": "2026-10-01T10:01:31.805Z",
+      "lease_until": "2026-10-01T22:01:31.805Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T10:01:31.805Z",
+          "by": "relay-inline-card-v2-final-20261001",
+          "reason": "Owner supplied a newer card-v9 execution handoff that supersedes the unstarted v2 replay in this same reserved card lane.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "goal": "Rebuild and ship the exact historical Relay v2 contextual card probe from current main so native macOS, web and iPhone can be compared without PR #92 merge conflicts.",
+            "acceptance": "Current main is the base. Historical v2 card from de5d8d6e8b6b1a3026e4f52feefe5121958a6ac7 is restored faithfully under isolated symbols; relay_runner_progress alone carries v2 metadata; resource is served through the pre-#85 relay-entry list/read path; current v8 and v3 controls remain unchanged; embedded MCP icon matches canonical PNG; exact-head CI and Runner admission pass; merged source is deployed before consumer testing.",
+            "next_action": "Apply the owner-requested v9 nonblocking bootstrap handoff on this held card lane; preserve the legacy bridge control; update only the contextual card, its tests, relay-entry URI pins, and the v9 bootstrap doc; then run exact-head validation and open a draft PR."
+          },
+          "after": {
+            "goal": "Ship the Relay card v9 non-blocking bootstrap and size-reporting fixes without redesigning the card; preserve the legacy bridge card exactly as the control.",
+            "acceptance": "Rotate the contextual card URI to v9; patch the v8 HTML only at serve time so cardHtml() and the legacy bridge remain unchanged; paint immediately from window.openai globals; run ui/initialize in parallel with a 4s timeout; prefer window.openai.callTool; report ui/notifications/size-changed and notifyIntrinsicHeight; show the host diagnostic line; add immediate-paint and height-reporting regression tests; update the relay-entry v9 URI pins; add docs/relay/CHATGPT_CARD_V9_BOOTSTRAP.md; npm test passes; open one draft PR; do not merge before desktop and browser consumer tests unless the owner...",
+            "next_action": "Read every target from current main, verify each exact replacement target occurs exactly once, create the policy-valid branch recorded on this claim if needed, apply only the v9 handoff edits, run preflight and tests, open a draft PR, then render v9 and legacy controls for consumer testing."
+          }
+        }
+      ]
     }
   ],
   "migrated_from": "loew-inspector"
