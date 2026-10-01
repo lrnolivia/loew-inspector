@@ -393,7 +393,7 @@ body.qa-open { overflow: hidden; }
 .qa-stage select:focus-visible { outline:2px solid var(--color-focus); outline-offset:3px; }
 .qa-preview-picker { position:absolute; right:16px; top:16px; z-index:7; display:flex; align-items:center; gap:8px; color:var(--qa-muted); font-size:12px; }
 .qa-preview-picker select { min-height:44px; max-width:170px; padding:8px 12px; border:0; border-radius:16px; font:inherit; color:var(--qa-text); background:var(--qa-raised); }
-.qa-preview-state { position:absolute; bottom:18px; left:16px; max-width:calc(100vw - 180px); color:var(--qa-muted); font-size:12px; }
+.qa-preview-state { position:absolute; bottom:18px; left:16px; max-width:calc(100vw - 196px); color:var(--qa-muted); font-size:12px; line-height:1.4; }
 .qa-panel-toggle { position:absolute; bottom:12px; right:16px; z-index:7; min-height:44px; padding:8px 14px; border:0; border-radius:16px; background:var(--qa-raised); color:var(--qa-text); font:inherit; cursor:pointer; }
 .qa-companion { max-height:calc(100dvh - 152px); }
 .qa-notes > span { display:block; margin-bottom:8px; font-size:13px; }

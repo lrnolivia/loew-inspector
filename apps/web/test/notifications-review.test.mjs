@@ -157,7 +157,7 @@ test('Authorized iframe HTTP, framing and network failures fall back without rel
  const fixture=await contextFixture(),other=await contextFixture(),browser=await chromium.launch();
  try{
   for(const failure of ['http','framing','network','unverified']){
-   const page=await browser.newPage({colorScheme:'dark'});await page.clock.install();
+   const page=await browser.newPage({colorScheme:'dark',viewport:{width:320,height:740}});await page.clock.install();
    await page.addInitScript(()=>{window.__iframeErrors=0;new MutationObserver(()=>{const frame=document.querySelector('[data-qa-live-preview]');if(frame&&!frame.dataset.observed){frame.dataset.observed='true';frame.addEventListener('error',()=>window.__iframeErrors++);}}).observe(document,{subtree:true,childList:true});});
    const evidence={evidence_id:'vis_context-capture-relay',screenshot_url:'/api/visual/vis_context-capture-relay/image',context:{project:'relay'}};
    await page.route('**/api/visual/*/qa',route=>route.fulfill({json:{evidence,review:{answers:{},notes:'',overall:null},questions:[{id:'one',prompt:'Review this capture'}]}}));
@@ -167,6 +167,7 @@ test('Authorized iframe HTTP, framing and network failures fall back without rel
    await page.clock.fastForward(9000);
    assert.equal(await page.locator('.qa-preview-picker select').inputValue(),'captured',failure+' must fall back');
    assert.match(await page.locator('.qa-preview-state').innerText(),/unconfirmed/);
+   const caption=await page.locator('.qa-preview-state').boundingBox(),panel=await page.locator('.qa-companion').boundingBox(),toggle=await page.locator('.qa-panel-toggle').boundingBox();assert.ok(caption.y>=panel.y+panel.height,'fallback caption stays below the panel');assert.ok(caption.x+caption.width<=toggle.x,'fallback caption stays beside Hide questions');
    assert.equal(await page.evaluate(()=>window.__iframeErrors),0,'browser failure does not provide iframe error proof');
    await page.close();
   }
