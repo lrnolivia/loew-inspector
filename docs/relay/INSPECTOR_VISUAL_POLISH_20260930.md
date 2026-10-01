@@ -11,11 +11,12 @@ The user asked for a less brown, less chunky floating Inspector; stronger produc
 ## Visual changes
 
 - Neutral charcoal review canvas and floating panel, with a matching neutral light theme.
-- Canonical project icon/name in a compact product badge; lowercase inspector is secondary tool identity.
+- Inspector is the primary tool identity, with its approved icon and visible name at every panel size. The current project is a separate secondary icon/name badge. Project names throughout the interface are paired with their icons in contained badges.
 - A quieter header with comfortable 21px question type, 14px supporting copy, 20px content inset and 40–44px controls; existing approved Inspector glyph remains. The user rejected both excessive compression and an oversized alternative; the final pass uses a deliberate midpoint.
 - Desktop floating panel resizes from the corner facing the canvas. Narrow panels stack answers; wider panels place notes alongside the question. Header and save footer stay visible while content scrolls.
 - Mobile keeps an overflow-safe bottom sheet and appropriate touch targets.
-- Main-interface layout, status rhythm and semantic colors remain intact.
+- Main-interface layout, status rhythm and semantic colors remain intact. The connection dot aligns in the text row; checking uses a subtle pulse, disabled for reduced motion.
+- Content-shaped loading skeletons hold space for project tabs, Today sections, project detail, review captures, night shift, Inspector questions and captured images. They announce loading without exposing decorative shapes, stop on completion/error, and disable motion under reduced-motion settings.
 - ChatGPT settings points at the exact user-supplied URL: https://chatgpt.com/settings/plugins-settings/plugin_asdk_app_6abdbca7c98c819187cc153d781b0faf
 
 ## Deferred behavior — explicit next-session backlog
@@ -31,6 +32,8 @@ The user asked for a less brown, less chunky floating Inspector; stronger produc
 Continue Relay's Inspector and operator usability work from docs/relay/INSPECTOR_VISUAL_POLISH_20260930.md. Read current Relay authority, coordination and source/runtime state first. Acquire a non-overlapping claim. Implement captured-image zoom/pan and image-relative comment pins that agents can read through the canonical QA/evidence contracts. Make failure reports explain the user's next action and provide a complete Copy prompt bound to current project, assignment, owner, branch, PR, exact artifact SHA and real failure evidence. Group connected work using the existing canonical relationship context. Diagnose the blank contextual card in the actual ChatGPT host rather than treating a simulated MCP test as client proof. Preserve the newly polished Inspector, approved icons, exact evidence identity, existing state ownership and bounded QA rules. Ship coherent batches without introducing a parallel store or inferring status from stale screenshots.
 
 ## Validation
+
+The MCP HTML builder uses literal callback replacements so minified JavaScript containing dollar-sign replacement patterns cannot corrupt the embedded app. This fixes an evidenced build failure, separate from the deferred contextual ChatGPT card.
 
 Full repository tests passed. Browser checks cover web and MCP-host transport, native resize, narrow/wide composition, mobile overflow, fixed save footer and durable exact-capture review saves. Final publication identities are recorded below when available.
 

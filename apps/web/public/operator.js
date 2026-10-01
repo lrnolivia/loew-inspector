@@ -1,3 +1,4 @@
+import { showLoading } from "./loading.js";
 import { glyph } from "../../../packages/shared-ui/glyphs.js";
 import { brand, featureAccent } from "./brand.js";
 import { iconSlot, hydrateProjectIcons } from "./project-icons.js";
@@ -146,7 +147,7 @@ async function selectProject(id) {
     projectDetail.innerHTML = '<div class="project-empty-state"><strong>Choose a project</strong><span>The project tabs above control Runner, Inspector, Today and night shift.</span></div>';
     return;
   }
-  projectDetail.innerHTML = '<div class="operator-loading">Opening ' + esc(projectName(id)) + "…</div>";
+  showLoading(projectDetail, "project", "Loading project");
   try {
     if (!projectCache.has(id)) projectCache.set(id, await loadProjectDetail(id));
     renderProjectDetail(projectDetail, id, projectCache.get(id));
@@ -183,13 +184,18 @@ async function openSettings() {
 const ui = { setConnection, notify, openProject, setFlow, setOverviewDetail, contextProject };
 
 async function showPage(name) {
-  await ensureProjects().catch(() => []);
   pages.forEach(page => { page.hidden = page.dataset.page !== name; });
   nav.forEach(button => {
     const active = button.dataset.nav === name;
     button.classList.toggle("active", active);
     button.setAttribute("aria-current", active ? "page" : "false");
   });
+  if (name === "today") ["today-attention", "today-work", "today-automations"].forEach(id => showLoading(document.getElementById(id), "rows", "Loading project activity"));
+  if (name === "review") showLoading(document.getElementById("review-list"), "review", "Loading captures");
+  if (name === "night-shift") showLoading(document.getElementById("night-shift-work"), "rows", "Loading automatic work");
+  if (name === "projects" && selectedProject) showLoading(projectDetail, "project", "Loading project");
+  if (!projectIds.length) showLoading(projectTabs, "tabs", "Loading projects");
+  await ensureProjects().catch(() => []);
   document.body.dataset.page = name;
   document.querySelector("#workspace-page").textContent = navigation[name][0];
 

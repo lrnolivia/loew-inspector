@@ -450,7 +450,7 @@ body.qa-open { overflow: hidden; }
   background: var(--color-floating);
   backdrop-filter: none;
 }
-.qa-panel-identity { min-width: 0; display: flex; align-items: center; gap: 12px; }
+.qa-panel-identity { min-width: 0; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; }
 .qa-product-badge {
   min-width: 0;
   display: inline-flex;
@@ -460,11 +460,11 @@ body.qa-open { overflow: hidden; }
   border-radius: 7px;
   background: var(--color-raised);
 }
-.qa-product-badge strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 600; }
-.qa-product-badge .project-icon { width: 22px; height: 22px; flex: 0 0 22px; }
-.qa-product-badge .project-icon img { width: 22px; height: 22px; object-fit: contain; filter: none; }
-.qa-tool-identity { display: inline-flex; align-items: center; gap: 5px; color: var(--color-text-secondary); font-size: 12px; }
-.qa-tool-identity img { width: 20px; height: 20px; object-fit: contain; }
+.qa-product-badge strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13px; font-weight: 500; }
+.qa-product-badge .project-icon { width: 20px; height: 20px; flex: 0 0 20px; }
+.qa-product-badge .project-icon img { width: 20px; height: 20px; object-fit: contain; filter: none; }
+.qa-tool-identity { display: inline-flex; align-items: center; gap: 8px; color: var(--color-text-primary); font-size: 17px; font-weight: 600; flex-shrink: 0; }
+.qa-tool-identity img { width: 28px; height: 28px; object-fit: contain; }
 .qa-panel-tools { flex: 0 0 auto; gap: 2px; }
 .qa-stage .qa-icon-button { width: 36px; height: 36px; min-height: 36px; border-radius: 8px; }
 .qa-icon-button .relay-glyph { width: 20px; height: 20px; }
@@ -500,7 +500,6 @@ body.qa-open { overflow: hidden; }
 .qa-view-toggle.active { background: var(--color-raised); }
 .qa-preview-message { padding: 7px 10px; font-size: 11px; border: 0; border-radius: 7px; }
 @container (max-width: 380px) {
-  .qa-tool-identity span { display: none; }
   .qa-panel-identity { gap: 8px; }
   .qa-panel-head { padding: 12px; }
   .qa-panel-body { padding: 20px; }
@@ -538,3 +537,6 @@ body.qa-open { overflow: hidden; }
   .qa-question { font-size: 21px; }
   .qa-save-row { padding: 14px 20px; }
 }
+
+.qa-preview > .content-skeleton { position: absolute; inset: 64px 24px 48px; width: auto; height: auto; }
+.qa-preview img.qa-image-pending { visibility: hidden; }

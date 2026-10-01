@@ -1,3 +1,4 @@
+import { showLoading } from "./loading.js";
 import { iconSlot, hydrateProjectIcons } from "./project-icons.js";
 
 import { openQa } from "./qa.js";
@@ -101,7 +102,7 @@ export function bindReviewFilters() {
 export async function loadReview(ui, projectId = "") {
   const target = document.querySelector("#review-list");
   const count = document.querySelector("#review-count");
-  target.innerHTML = '<div class="operator-loading">Checking what needs your eyes…</div>';
+  showLoading(target, "review", "Loading captures");
 
   try {
     const payload = await api("/api/visual" + (projectId ? "?project=" + encodeURIComponent(projectId) : ""));

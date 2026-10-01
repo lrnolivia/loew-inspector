@@ -13,6 +13,10 @@ const pixel = Buffer.from("iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQ
 
 test("shared interface works on web and MCP host transport, including mobile, deep links and exact review saves", async () => {
   let review = null;
+  let heldPath = "";
+  let releaseLoading;
+  let loadingGate;
+  const hold = path => { heldPath = path; loadingGate = new Promise(resolve => { releaseLoading = () => { heldPath = ""; resolve(); }; }); };
   const project = { id: "relay", name: "relay", managed: true };
   const workers = [{ id: "relay", enabled: false, name: "relay", runtime: { status: "idle", last_summary: "Latest canonical run" } }];
   const progress = {
@@ -62,6 +66,7 @@ test("shared interface works on web and MCP host transport, including mobile, de
     const asset = webAssets[url.pathname];
     if (asset) { res.setHeader("Content-Type", asset.type); return res.end(asset.text); }
     if (url.pathname === "/host") { res.setHeader("Content-Type", "text/html"); return res.end('<iframe id="app" style="width:100%;height:900px;border:0"></iframe>'); }
+    if (url.pathname === heldPath) await loadingGate;
     if (url.pathname === "/api/projects") return send({ projects: [project] });
     if (url.pathname === "/api/projects/relay/icon") return send({ status: "found", icon: { data_url: "data:image/png;base64," + pixel.toString("base64"), repository: "lrnolivia/relay", path: "apps/web/public/brand/relay-loop.png", blob_sha: "b".repeat(40) } });
     if (url.pathname === "/api/projects/relay") return send({ project, coordination: { claims: [{ id: "work", state: "active", goal: "Legacy claim context" }] } });
@@ -87,7 +92,20 @@ test("shared interface works on web and MCP host transport, including mobile, de
       const page = await browser.newPage({ viewport: { width: 1360, height: 1000 }, colorScheme: "dark" });
       const errors = []; page.on("pageerror", error => errors.push(error.message));
       let view = page;
-      if (mode === "web") await page.goto(origin);
+      if (mode === "web") {
+        hold("/api/workers");
+        await page.goto(origin);
+        await view.locator("#today-work .content-skeleton").waitFor();
+        assert.equal(await view.locator("#today-attention .content-skeleton").getAttribute("role"), "status");
+        assert.equal(await view.locator("#operator-connection").evaluate(node => getComputedStyle(node, "::before").position), "static");
+        assert.equal(await view.locator("#operator-connection").evaluate(node => getComputedStyle(node, "::before").animationName), "connection-checking");
+        await page.emulateMedia({ reducedMotion: "reduce" });
+        assert.equal(await view.locator("#operator-connection").evaluate(node => getComputedStyle(node, "::before").animationName), "none");
+        assert.equal(await view.locator("#today-work .skeleton-block").first().evaluate(node => getComputedStyle(node).animationName), "none");
+        await page.screenshot({ path: "/tmp/relay-loading-skeletons.png" });
+        releaseLoading();
+        await page.emulateMedia({ reducedMotion: "no-preference" });
+      }
       else {
         await page.goto(origin + "/host");
         await page.evaluate(html => {
@@ -110,7 +128,7 @@ test("shared interface works on web and MCP host transport, including mobile, de
         }, mcpHtml);
         view = page.frameLocator("#app");
       }
-      await view.locator("#operator-connection").filter({ hasText: "connected" }).waitFor();
+      await view.locator("#operator-connection").filter({ hasText: "connected" }).waitFor({ timeout: 10000 }).catch(error => { throw new Error(mode + " connection failed: " + JSON.stringify(errors), { cause: error }); });
       assert.equal(await view.locator(".page-statusline").count(), 0);
       const todayHeader = view.locator('.feature-heading[data-feature="today"]');
       await todayHeader.locator(".feature-mark").waitFor();
@@ -209,9 +227,16 @@ test("shared interface works on web and MCP host transport, including mobile, de
       await view.locator("#night-shift-work").filter({ hasText: "Latest canonical run" }).waitFor();
       await view.getByRole("button", { name: "inspector", exact: true }).click();
       if (mode === "mcp") await view.getByRole("button", { name: "all", exact: true }).click();
+      if (mode === "web") hold("/api/visual/vis_12345678-abcd/image");
       await view.locator("[data-review-id]").click();
       await view.locator(".qa-product-badge strong").filter({ hasText: "relay" }).waitFor();
       assert.equal(await view.locator(".qa-tool-identity").textContent(), "inspector");
+      assert.equal(await view.locator(".qa-panel-identity > :first-child").getAttribute("class"), "qa-tool-identity");
+      if (mode === "web") {
+        await view.locator(".qa-preview .content-skeleton").waitFor();
+        releaseLoading();
+        await view.locator(".qa-preview .content-skeleton").waitFor({ state: "detached" });
+      }
       assert.equal(await view.locator(".qa-panel-head").evaluate(node => getComputedStyle(node).backgroundColor), "rgb(32, 35, 39)");
       assert.equal(await view.locator(".qa-save-row").evaluate(node => node.parentElement.className), "qa-companion");
       if (mode === "web") {
@@ -231,6 +256,7 @@ test("shared interface works on web and MCP host transport, including mobile, de
         const footer = await view.locator(".qa-save-row").boundingBox();
         const narrow = await panel.boundingBox();
         const closeButton = await view.locator("[data-qa-close]").boundingBox();
+        assert.equal(await view.locator(".qa-tool-identity span").evaluate(node => getComputedStyle(node).display), "block");
         assert.ok(closeButton.x + closeButton.width <= narrow.x + narrow.width, "Window controls remain inside the narrowed panel");
         assert.ok(footer.y + footer.height <= narrow.y + narrow.height + 1, "Save stays visible in a short panel");
         await page.screenshot({ path: "/tmp/relay-inspector-polish-narrow.png" });
@@ -268,5 +294,5 @@ test("shared interface works on web and MCP host transport, including mobile, de
       assert.deepEqual(errors, []);
       await page.close();
     }
-  } finally { await browser.close(); await new Promise(resolve => server.close(resolve)); }
+  } finally { releaseLoading?.(); await browser.close(); await new Promise(resolve => server.close(resolve)); }
 });

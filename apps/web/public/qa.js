@@ -1,3 +1,5 @@
+import { loadingMarkup } from "./loading.js";
+import { brand } from "./brand.js";
 
 import { qaEscape, renderQaPanel, renderQaPreview, renderQaToolbar } from "./qa-panel.js";
 
@@ -69,12 +71,12 @@ syncLaunch();
 function buildStage() {
   const node = document.createElement("section");
   node.className = "qa-stage";
-  node.setAttribute("aria-label", "Relay QA review");
+  node.setAttribute("aria-label", "Inspector review");
   node.innerHTML =
     '<div class="qa-preview"></div>' +
     '<div class="qa-preview-toolbar" aria-label="Preview controls"></div>' +
-    '<aside class="qa-companion" role="dialog" aria-label="Relay QA questions"></aside>' +
-    '<button type="button" class="qa-mini">relay review · reopen</button>';
+    '<aside class="qa-companion" role="dialog" aria-label="Inspector questions"></aside>' +
+    '<button type="button" class="qa-mini">inspector · reopen</button>';
   document.body.appendChild(node);
   document.body.classList.add("qa-open");
   node.querySelector(".qa-mini").addEventListener("click", function () {
@@ -143,14 +145,18 @@ function setView(mode) {
 export async function openQa(evidenceId) {
   if (stage) closeQa();
   stage = buildStage();
-  stage.querySelector(".qa-preview").innerHTML =
-    '<div class="qa-preview-message">Opening QA workspace…</div>';
+  stage.querySelector(".qa-preview").innerHTML = loadingMarkup("preview", "Loading captured evidence");
+  const panel = stage.querySelector(".qa-companion");
+  panel.innerHTML = '<div class="qa-panel-head"><span class="qa-tool-identity"><img src="' + brand.inspector + '" alt=""><span>inspector</span></span><button type="button" class="qa-icon-button" data-qa-close aria-label="Close QA">×</button></div><div class="qa-panel-body">' + loadingMarkup("project", "Loading review") + '</div>';
+  panel.querySelector("[data-qa-close]").addEventListener("click", closeQa);
 
+  const openingStage = stage;
   try {
     const results = await Promise.all([
       api("/api/visual/" + encodeURIComponent(evidenceId) + "/qa"),
       api("/api/visual/" + encodeURIComponent(evidenceId) + "/live")
     ]);
+    if (stage !== openingStage) return;
     state = {
       evidence: results[0].evidence,
       questions: results[0].questions || [],
@@ -162,11 +168,12 @@ export async function openQa(evidenceId) {
     setView(previewMode);
     repaintPanel();
   } catch (error) {
+    if (stage !== openingStage) return;
     stage.querySelector(".qa-preview").innerHTML =
       '<div class="qa-preview-message">QA could not open: ' + qaEscape(error.message) + "</div>";
     const panel = stage.querySelector(".qa-companion");
     panel.innerHTML =
-      '<div class="qa-panel-head"><div class="qa-panel-brand"><strong>relay review</strong><small>could not load</small></div>' +
+      '<div class="qa-panel-head"><span class="qa-tool-identity"><img src="' + brand.inspector + '" alt=""><span>inspector</span></span>' +
       '<button type="button" class="qa-icon-button" data-qa-close aria-label="Close QA">×</button></div>' +
       '<div class="qa-panel-body"><p class="qa-question-reason">' + qaEscape(error.message) + "</p></div>";
     panel.querySelector("[data-qa-close]").addEventListener("click", closeQa);

@@ -1,3 +1,4 @@
+import { loadingMarkup } from "./loading.js";
 import { glyph } from "../../../packages/shared-ui/glyphs.js";
 import { brand } from "./brand.js";
 import { iconSlot, hydrateProjectIcons } from "./project-icons.js";
@@ -42,8 +43,17 @@ export function renderQaPreview(stage, state, requestedMode) {
     if (live.active && live.embeddable) message = "Exact captured evidence.";
     if (live.active && !live.embeddable) message = "The environment is still active, but it cannot be embedded here. Use Open preview to interact with it.";
     preview.innerHTML =
-      '<img src="' + qaEscape(evidence.screenshot_url) + '" alt="Exact captured QA evidence">' +
+      loadingMarkup("preview", "Loading captured image") + '<img class="qa-image-pending" src="' + qaEscape(evidence.screenshot_url) + '" alt="Exact captured QA evidence">' +
       '<div class="qa-preview-message">' + qaEscape(message) + "</div>";
+    const image = preview.querySelector("img");
+    const finish = () => {
+      preview.querySelector(".content-skeleton")?.remove();
+      image.classList.remove("qa-image-pending");
+      if (!image.naturalWidth) preview.querySelector(".qa-preview-message").textContent = "The captured image could not load. Close this review and try opening it again.";
+    };
+    image.addEventListener("load", finish, { once: true });
+    image.addEventListener("error", finish, { once: true });
+    if (image.complete) finish();
   }
   return mode;
 }
@@ -106,9 +116,9 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
   panel.innerHTML =
     '<div class="qa-panel-head">' +
       '<div class="qa-panel-identity">' +
-        '<span class="qa-product-badge">' + (context.project ? iconSlot(context.project) : "") +
-          '<strong>' + qaEscape(context.project ? projectName(context.project) : evidence.title || "capture") + '</strong></span>' +
         '<span class="qa-tool-identity"><img src="' + brand.inspector + '" alt=""><span>inspector</span></span>' +
+        (context.project ? '<span class="qa-product-badge">' + iconSlot(context.project) +
+          '<strong>' + qaEscape(projectName(context.project)) + '</strong></span>' : "") +
       '</div>' +
       '<div class="qa-panel-tools">' +
         '<button type="button" class="qa-icon-button" data-qa-side aria-label="Move review to the other side" title="Move panel">' + glyph("move") + '</button>' +

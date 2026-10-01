@@ -1,9 +1,10 @@
+import { showLoading } from "../../apps/web/public/loading.js";
 import { iconSlot, hydrateProjectIcons } from "../../apps/web/public/project-icons.js";
 import { esc, projectName } from "../../apps/web/public/operator-projects.js";
 
 export async function loadNightShift(ui, projectId = "") {
   const target = document.querySelector("#night-shift-work");
-  target.innerHTML = '<div class="operator-loading">Opening automatic work…</div>';
+  showLoading(target, "rows", "Loading automatic work");
   try {
     const response = await fetch("/api/workers");
     if (!response.ok) throw new Error("Automatic work could not be loaded.");
