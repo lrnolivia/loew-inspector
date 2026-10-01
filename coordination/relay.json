@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T05:45:40.514Z",
+  "updated_at": "2026-10-01T05:57:24.146Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7571,7 +7571,9 @@
         "apps/web/public/operator-review.js",
         "apps/web/public/operator.css",
         "apps/web/generated.js",
-        ".github/workflows/rebuild-generated-1.9.9.yml"
+        ".github/workflows/rebuild-generated-1.9.9.yml",
+        "packages/runner/src/human-qa.mjs",
+        "packages/runner/test/human-qa.test.mjs"
       ],
       "resources": [
         "relay-1.9.9-release",
@@ -7642,11 +7644,12 @@
         "relay-card-resource-csp",
         "relay-widget-intrinsic-height",
         "relay-mounted-blank-card-regression",
-        "relay-1.9.9-generated-bundle-rebuild-helper"
+        "relay-1.9.9-generated-bundle-rebuild-helper",
+        "inspector-review-disposition-controls"
       ],
       "goal": "Ship Relay 1.9.9 as the unified ChatGPT-native experience release: a polished family of contextual in-chat response cards plus a rich opened-Relay app with interactive chat/workspace behavior, all sharing one visual language, one canonical state model and one progressive-disclosure path.",
       "acceptance": "Relay 1.9.9 must still pass the existing consumer-visible MCP App card gate: a normal Relay tool call in an ordinary ChatGPT conversation must visibly mount the intended UI, not merely register resources/metadata or return structuredContent. Separately, the Inspector QA surface must implement the user-approved Figma node 59:115 review instrument as the visible card: ~450px default width, compact single-column composition, project pill, progress, one question/reason, binary answer surfaces, note field, and no persistent chrome (no inspector masthead, move/minimize/close buttons, preview/capture status rows, flow badge, previous/next row, separate Overall UI, technical details, save footer, or visible resize handle). The card must autosave, be draggable from non-interactive card regions, resize responsively through invisible edge/corner hit zones, remain clamped on viewport resize, and dock to any viewport edge leaving only a thin real card edge visible. A docked edge gives a restrained occasional idle wiggle plus one return wiggle after meaningful pointer inactivity; prefers-reduced-motion removes the wiggle. The docked edge adapts contrast to the content beneath it: soft off-white glow over dark content, near-black shadow over light content, and a conservative dual-contrast fallback when tone cannot be known. Captured image/video surfaces may sample luminance when safe; live cross-origin previews use an optional postMessage tone handshake and must degrade safely if unavailable. Inspector's review surface behaves like Field's canvas without importing Field's editor runtime: regular wheel/two-finger pan, Ctrl/Cmd+wheel or trackpad pinch zoom at the pointer, middle-mouse pan, Space+drag pan, initial fit-to-view, GPU transforms, and responsive reclamping. Live embeddable previews are the primary QA surface; video then image are fallbacks/evidence. The live page must receive pointer, keyboard, forms, scrolling and navigation normally, with Inspector camera gestures not stealing ordinary page interaction. Full-screen exit is owned by the viewport, not the review card: Escape, browser Back/history state, and a small viewport-only reveal affordance near the safe corner provide exit paths. Existing evidence identity, autosave persistence, deterministic QA gates and live-preview resolver/session contracts remain canonical; do not create a second evidence store. Inline ChatGPT cards must also be able to show existing Inspector QA evidence that Relay already captured: when a verification result or selected evidence record has an authorized screenshot URL/evidence ID, the compact card may render that screenshot directly inside the card with a clear QA/evidence caption and exact evidence identity. This is reuse of canonical stored evidence, not a new capture and not a second evidence store. The card must not invent or substitute images; it must degrade cleanly to the text/status card when no image is available or the host cannot load it. The MCP App resource CSP must explicitly allow only the Relay-controlled image origins required for these QA screenshots, following the current Apps SDK resource-domain contract.",
-      "next_action": "Ship 1.9.9 now. Preserve all current card/Inspector acceptance. Because Relay SOURCE cannot transport the ~1MB generated.js payload and the connected GitHub app cannot write it, temporarily add a branch-only GitHub Actions rebuild helper that runs the canonical web build and commits apps/web/generated.js back to the admitted 1.9.9 branch. Remove the helper immediately after the generated artifact is committed, then require exact-head CI/admission, merge/deploy, capture Inspector screenshot evidence, refresh tools and run the final visible consumer card smoke.",
+      "next_action": "Add Inspector dashboard triage controls on the active 1.9.9 branch without changing evidence identity: review dispositions (pending/completed/stale/archived), per-card mark completed / mark stale / reopen actions, a reversible clear stale bulk action that archives stale cards, and status filters including archived recovery. Preserve existing QA review answers/notes/verdict and use the existing /api/visual/:evidence_id/qa POST transport.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-031",
@@ -7700,8 +7703,8 @@
       "base_sha": "544c5a358ce9fb6882e040cf9eff105c2333f72c",
       "state": "active",
       "created_at": "2026-10-01T04:43:37.777Z",
-      "updated_at": "2026-10-01T05:45:40.514Z",
-      "lease_until": "2026-10-01T17:45:40.514Z"
+      "updated_at": "2026-10-01T05:57:24.146Z",
+      "lease_until": "2026-10-01T17:57:24.146Z"
     }
   ],
   "migrated_from": "loew-inspector"
