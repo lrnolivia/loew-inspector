@@ -88,7 +88,10 @@ async function mount(browser, mode = "normal", width = 390) {
           hostInfo:{name:'Synthetic host',version:'1'},hostContext:{platform:'web',displayMode:'inline'},
           hostCapabilities:mode==='no-tools'?{}:{serverTools:{}}}});
       }
-      if (m.method === 'ui/notifications/initialized' && !['early-result','no-result'].includes(mode)) {
+      if (m.method === 'ui/notifications/initialized' && mode === 'cancelled') {
+        window.reply({jsonrpc:'2.0',method:'ui/notifications/tool-cancelled',params:{reason:'Cancelled in synthetic host'}});
+      }
+      if (m.method === 'ui/notifications/initialized' && !['early-result','no-result','cancelled'].includes(mode)) {
         window.reply({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:initial});
       }
       if (m.method === 'tools/call') {
@@ -106,11 +109,18 @@ async function mount(browser, mode = "normal", width = 390) {
 test("actual resource script separates lifecycle milestones, errors and host limitations", async t => {
   const browser = await chromium.launch({ headless: true });
   t.after(() => browser.close());
-  for (const mode of ['normal','early-result','no-tools','action-error','init-error','wrong-protocol','timeout','no-result']) {
+  for (const mode of ['normal','early-result','no-tools','action-error','init-error','wrong-protocol','timeout','no-result','cancelled']) {
     await t.test(mode, async () => {
       const { page, frame, context } = await mount(browser, mode);
       try {
-        if (mode === 'timeout') {
+        if (mode === 'cancelled') {
+          await frame.locator('#result').filter({hasText:'The host cancelled this result.'}).waitFor();
+          await page.clock.fastForward(16000);
+          assert.equal(await frame.locator('#result').innerText(), 'The host cancelled this result.');
+          await page.evaluate(result => window.reply({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:result}), sample());
+          await page.clock.runFor(1);
+          assert.equal(await frame.locator('#result').innerText(), 'The host cancelled this result.');
+        } else if (mode === 'timeout') {
           await page.clock.fastForward(16000);
           assert.match(await frame.locator('#init').innerText(), /did not answer/);
           assert.equal(await frame.locator('#result').innerText(), 'Still waiting for data');

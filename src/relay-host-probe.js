@@ -52,7 +52,7 @@ export function startHostProbe(config) {
   };
   let connected = false, stopped = false, nextId = 0, resizeObserver;
   const pending = new Map();
-  let resultTimer;
+  let resultTimer, resultState = "waiting";
   const post = message => window.parent.postMessage({ jsonrpc: "2.0", ...message }, "*");
   const request = (method, params) => new Promise((resolve, reject) => {
     const id = `relay-proof-${++nextId}`;
@@ -69,14 +69,15 @@ export function startHostProbe(config) {
     return data;
   }
   function receiveResult(result) {
+    if (resultState === "cancelled") return;
     clearTimeout(resultTimer);
     try {
       const data = sample(result);
       byId("sample").textContent = `${data.observed_at} · ${data.sample_id}`;
       details.request_hints = { http_user_agent: text(data.request_hints?.http_user_agent),
         openai_user_agent: text(data.request_hints?.openai_user_agent) };
-      mark("result", "Data arrived"); record("tool-result");
-    } catch (error) { mark("result", error.message, "error"); record("tool-result-invalid"); }
+      resultState = "received"; mark("result", "Data arrived"); record("tool-result");
+    } catch (error) { resultState = "invalid"; mark("result", error.message, "error"); record("tool-result-invalid"); }
   }
   function measure() {
     if (stopped) return;
@@ -106,14 +107,19 @@ export function startHostProbe(config) {
       return;
     }
     if (message.method === "ui/notifications/tool-result") receiveResult(message.params);
-    if (message.method === "ui/notifications/tool-cancelled") { mark("result", "The host cancelled this result.", "error"); record("tool-cancelled"); }
+    if (message.method === "ui/notifications/tool-cancelled") {
+      clearTimeout(resultTimer); resultState = "cancelled";
+      mark("result", "The host cancelled this result.", "error"); record("tool-cancelled");
+    }
     if (message.method === "ui/resource-teardown" && message.id !== undefined) { post({ id: message.id, result: {} }); stop(); }
   }
   mark("script", "Script started"); record("script-started");
   window.addEventListener("message", onMessage);
   window.addEventListener("resize", measure);
   if (typeof ResizeObserver === "function") { resizeObserver = new ResizeObserver(measure); resizeObserver.observe(byId("card")); }
-  resultTimer = setTimeout(() => { mark("result", "Still waiting for data", "waiting"); record("tool-result-waiting"); }, 15000);
+  resultTimer = setTimeout(() => {
+    if (resultState === "waiting") { mark("result", "Still waiting for data", "waiting"); record("tool-result-waiting"); }
+  }, 15000);
   measure();
   byId("check").addEventListener("click", async () => {
     if (!connected || stopped || byId("check").disabled) return;
