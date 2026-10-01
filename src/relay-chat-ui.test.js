@@ -5,12 +5,15 @@ import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, relayContextCardDescri
 test("Relay publishes one versioned compact MCP card resource", () => {
   const descriptor = relayContextCardDescriptor();
   const resource = relayContextCardResource();
-  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v5.html");
+  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v6.html");
   assert.equal(descriptor.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.mimeType, "text/html;profile=mcp-app");
   assert.match(resource.text, /observed progress|runner/i);
   assert.match(resource.text, /open relay/i);
+  assert.match(resource.text, /qa-media/);
+  assert.match(resource.text, /notifyIntrinsicHeight/);
+  assert.deepEqual(resource._meta.ui.csp.resourceDomains,['https://relay.loew.fi']);
 });
 
 test("contextual tool metadata is additive and keeps schemas intact", () => {
@@ -34,6 +37,8 @@ test("dedicated launcher owns the MCP Apps mount contract", () => {
   assert.equal(tool.annotations.readOnlyHint,true);
   assert.equal(tool.inputSchema.additionalProperties,false);
   assert.deepEqual(validateRelayContextCardArguments({project:"relay",assignment:"relay-1.9.9-chatgpt-native-experience-20261001"}),{project:"relay",assignment:"relay-1.9.9-chatgpt-native-experience-20261001"});
+  assert.deepEqual(validateRelayContextCardArguments({project:"relay",evidence_id:"vis_abcdefgh",show_qa:true}),{project:"relay",evidence_id:"vis_abcdefgh",show_qa:true});
+  assert.throws(()=>validateRelayContextCardArguments({project:"relay",evidence_id:"bad"}),/Invalid card evidence id/);
   assert.throws(()=>validateRelayContextCardArguments({project:"relay",surprise:true}),/Unsupported card argument/);
 });
 
@@ -73,6 +78,7 @@ test('card actually initializes and receives results without browser-global elem
       await page.goto('data:text/html,'+encodeURIComponent(relayContextCardResource().text));
       if(bridge==='mcp') await page.evaluate(()=>window.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-result',params:{structuredContent:{project:'relay',claim:{primary_staff:'julian',supporting_staff:['roman'],goal:'Staff routing is ready',state:'active'}}}},'*'));
       await assert.doesNotReject(page.locator('#title').filter({hasText:'Staff routing is ready'}).waitFor());
+      assert.equal(await page.locator('#qa-media').isHidden(),true);
       assert.equal(await page.locator('#team').textContent(),'Julian');
       assert.equal(await page.locator('#staff').getAttribute('title'),'Julian with Roman');
       assert.deepEqual(errors,[]);
