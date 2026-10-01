@@ -170,3 +170,36 @@ test('Runner control authority is configurable for Relay migration and validates
     /Invalid Runner control repository binding/
   );
 });
+
+
+test('claim and amend persist canonical taxonomy metadata', async () => {
+  const f = fixture();
+  const claimed = await coordinate(f, 'claim', {
+    ...defaultRequest,
+    category: 'architecture',
+    labels: [{ key: 'area', value: 'Runner' }],
+    tags: ['recovery'],
+    primary_role: 'architect',
+    supporting_roles: ['verifier']
+  });
+  assert.equal(claimed.claim.category, 'architecture');
+  assert.deepEqual(claimed.claim.labels, [{ key: 'area', value: 'Runner' }]);
+  assert.deepEqual(claimed.claim.tags, ['recovery']);
+  assert.equal(claimed.claim.primary_role, 'architect');
+  assert.deepEqual(claimed.claim.supporting_roles, ['verifier']);
+
+  const amended = await coordinate(f, 'amend', {
+    id: 'task',
+    owner: 'worker',
+    reason: 'route verification work',
+    category: 'qa-verification',
+    tags: ['verification'],
+    primary_role: 'verifier',
+    supporting_roles: []
+  }, newSha);
+  assert.equal(amended.assignment.category, 'qa-verification');
+  assert.deepEqual(amended.assignment.tags, ['verification']);
+  assert.equal(amended.assignment.primary_role, 'verifier');
+  assert.equal(amended.assignment.amendment_count, 1);
+  assert.deepEqual(amended.assignment.amendments[0].fields, ['category', 'tags', 'primary_role', 'supporting_roles']);
+});
