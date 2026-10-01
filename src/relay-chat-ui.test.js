@@ -96,9 +96,9 @@ test("legacy bridge still initializes standard MCP Apps when ChatGPT globals are
   } finally { await browser.close(); }
 });
 
-test("unprobed data tools keep their schemas and do not claim the render template", () => {
+test("data tools keep their schemas and do not claim the render template", () => {
   const original = {
-    name: "relay_runner_project",
+    name: "relay_runner_progress",
     inputSchema: { type: "object", properties: { project: { type: "string" } } },
     _meta: { existing: true }
   };
@@ -108,23 +108,6 @@ test("unprobed data tools keep their schemas and do not claim the render templat
   assert.equal(decorated._meta.existing, true);
   assert.equal(decorated._meta.ui, undefined);
   assert.equal(isContextualRelayTool(original.name), true);
-});
-
-test("ordinary Runner progress tool carries the temporary pre-85 legacy mount contract without schema changes", () => {
-  const original = {
-    name: "relay_runner_progress",
-    inputSchema: { type: "object", properties: { project: { type: "string" } }, required: ["project"] },
-    annotations: { readOnlyHint: true },
-    _meta: { existing: true }
-  };
-  const decorated = contextualizeRelayTool(original);
-  assert.notEqual(decorated, original);
-  assert.deepEqual(decorated.inputSchema, original.inputSchema);
-  assert.deepEqual(decorated.annotations, original.annotations);
-  assert.equal(decorated._meta.existing, true);
-  assert.equal(decorated._meta.ui.resourceUri, RELAY_STATUS_CARD_URI);
-  assert.equal(decorated._meta["openai/outputTemplate"], RELAY_STATUS_CARD_URI);
-  assert.equal(decorated._meta["openai/widgetAccessible"], true);
 });
 
 test("dedicated launcher owns the MCP Apps mount contract", () => {
@@ -152,14 +135,12 @@ test("context card opens the fresh control-center resource identity", () => {
   assert.doesNotMatch(resource.text, /ui:\/\/relay\/control-center\/v1\.html/);
 });
 
-test('only the dedicated renderer plus the temporary progress probe own compact UI metadata', () => {
-  for(const name of ['relay_runner_coordinate','relay_runner_resume','relay_runner_updates']) {
+test('only the dedicated render tool owns the compact resource', () => {
+  for(const name of ['relay_runner_coordinate','relay_runner_resume','relay_runner_updates','relay_runner_progress']) {
     const tool={name};
     assert.equal(contextualizeRelayTool(tool),tool);
     assert.equal(isContextualRelayTool(name),true);
   }
-  const progress=contextualizeRelayTool({name:'relay_runner_progress'});
-  assert.equal(progress._meta.ui.resourceUri,RELAY_STATUS_CARD_URI);
   const renderer=contextualizeRelayTool(relayContextCardTool());
   assert.equal(renderer._meta.ui.resourceUri,RELAY_CONTEXT_CARD_URI);
   assert.doesNotMatch(renderer._meta.ui.resourceUri,/control-center/);
