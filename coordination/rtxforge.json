@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "rtxforge",
-  "updated_at": "2026-09-30T09:12:55.001Z",
+  "updated_at": "2026-10-01T21:59:59.674Z",
   "legacy_branches": [
     "backup/github-main-before-0.5.8",
     "backup/main-0.5.8-ada",
@@ -36,6 +36,41 @@
       "evidence": "https://github.com/lrnolivia/rtxForge/pull/4",
       "work_accounted": true,
       "completed_at": "2026-09-30T09:12:55.001Z"
+    },
+    {
+      "id": "rtxforge-bazzite-4070-install-package-20261001",
+      "owner": "rtxforge-install-package-chat-7b3354eebff7",
+      "branch": "rtxforge/bazzite-4070-install-package",
+      "paths": [
+        "packaging/",
+        "scripts/setup.py",
+        "scripts/hardware.py",
+        "scripts/packages.py",
+        "scripts/desktop_install.py",
+        "tests/test_setup.py",
+        "tests/test_package_download.py",
+        "README.md",
+        "docs/INSTALLATION.md"
+      ],
+      "resources": [
+        "bazzite-installation-package",
+        "provider-preparation",
+        "appimage-installation"
+      ],
+      "goal": "Deliver a reproducible Bazzite GNOME x86_64 RTX 4070 installation package using the existing rtxForge UI and pinned DLSS-Unlocked runtime options, local file writes and guarded GitHub sync.",
+      "acceptance": "Verified AppImage and installer; read-only host checks; explicit selectable MFG/NR modes; preserve existing settings/backups; verified downloads and repeatable recovery tests. Actual NVIDIA/game/HDR behavior remains unverified until exercised on the user's PC.",
+      "next_action": "Implement and test installation bundle from local clone matching main 4156ec1; document cloud workspace versus unavailable Bazzite host.",
+      "category": "implementation",
+      "primary_role": "implementation",
+      "primary_team": "release",
+      "supporting_teams": [],
+      "primary_staff": null,
+      "supporting_staff": [],
+      "base_sha": "4156ec19515f10af519564699aaebe6adf75c850",
+      "state": "active",
+      "created_at": "2026-10-01T21:59:59.674Z",
+      "updated_at": "2026-10-01T21:59:59.674Z",
+      "lease_until": "2026-10-02T09:59:59.674Z"
     }
   ]
 }

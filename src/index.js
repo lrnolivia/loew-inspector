@@ -12,6 +12,7 @@ import { RELAY_SKILL_EXTENSION, relaySkillCatalog, relaySkillByUri, relaySkillRe
 import { sourceAuthStatus, githubApiRequest as sourceGithubApiRequest, commitSourceFiles } from "./source.js";
 import { runnerControlTools, callRunnerControl, runnerControlError } from "./runner-control.js";
 import { cloudStatus, listCloudScripts, cloudWorkerSummary, cloudBuilds, deployCloudVersion } from "./cloud.js";
+import { HOST_PROBE_URI, HOST_PROBE_TOOL, hostProbeDescriptor, hostProbeResource, hostProbeTool, hostProbeResult } from "./relay-host-probe.js";
 
 const VERSION = "1.2.0";
 const EVIDENCE_CONTEXT_SCHEMA = {
@@ -381,6 +382,7 @@ async function mcp(request, access, env) {
         },
         relayContextCardDescriptor(),
         relayStatusCardDescriptor(),
+        hostProbeDescriptor(),
         ...relaySkillResourceDescriptors()
       ]
     });
@@ -388,6 +390,7 @@ async function mcp(request, access, env) {
 
   if (message.method === "resources/read") {
     const uri = message.params?.uri;
+    if (uri === HOST_PROBE_URI) return rpc(id, { contents: [hostProbeResource()] });
     if (uri === RELAY_CONTROL_CENTER_URI) {
       return rpc(id, { contents: [relayControlCenterResource()] });
     }
@@ -444,6 +447,7 @@ async function mcp(request, access, env) {
         },
         relayContextCardTool(),
         relayStatusCardTool(),
+        hostProbeTool(),
 
         {
           name: "relay_control_status",
@@ -929,6 +933,8 @@ async function mcp(request, access, env) {
       const rawName = message.params?.name;
       const name = relayToolName(rawName);
       const args = message.params?.arguments || {};
+
+      if (name === HOST_PROBE_TOOL) return rpc(id, hostProbeResult(message.params?.arguments ?? {}, request, message.params?._meta));
 
 
       if (runnerControlTools.some(tool => tool.name === name)) {
