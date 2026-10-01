@@ -1,6 +1,8 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createHash } from "node:crypto";
+import { readFile } from "node:fs/promises";
+import { fileURLToPath } from "node:url";
 import { brandInitializeResponse, relayIcon } from "../apps/mcp/branding.js";
 
 const request = (method) => new Request("https://relay.loew.fi/mcp", {
@@ -9,7 +11,7 @@ const request = (method) => new Request("https://relay.loew.fi/mcp", {
 const result = { protocolVersion: "2025-03-26", capabilities: { tools: {} },
   serverInfo: { name: "relay", version: "1.6.0" }, instructions: "Existing guidance" };
 
-test("initialize advertises exact supplied PNG and preserves protocol identity", async () => {
+test("initialize advertises exact final PNG and preserves protocol identity", async () => {
   const response = await brandInitializeResponse(request("initialize"), new Response(
     JSON.stringify({ jsonrpc: "2.0", id: 7, result }),
     { headers: { "Content-Type": "application/json", "Content-Length": "1", "X-Test": "retained" } }
@@ -28,7 +30,12 @@ test("initialize advertises exact supplied PNG and preserves protocol identity",
   const bytes = Buffer.from(relayIcon.src.split(",")[1], "base64");
   assert.equal(bytes.readUInt32BE(16), 1024);
   assert.equal(bytes.readUInt32BE(20), 1024);
-  assert.equal(createHash("sha256").update(bytes).digest("hex"), "3a1effe91b1670275d4b908f29a1a3c68729df4aa9f0da2d695401869ed8b676");
+  const expectedHash = "3a1effe91b1670275d4b908f29a1a3c68729df4aa9f0da2d695401869ed8b676";
+  assert.equal(createHash("sha256").update(bytes).digest("hex"), expectedHash);
+  const repoBytes = await readFile(fileURLToPath(new URL("../apps/mcp/relay-icon.png", import.meta.url)));
+  assert.equal(repoBytes.length, bytes.length);
+  assert.equal(createHash("sha256").update(repoBytes).digest("hex"), expectedHash);
+  assert.deepEqual(repoBytes, bytes);
 });
 
 test("tool responses and authentication failures pass through unchanged", async () => {
