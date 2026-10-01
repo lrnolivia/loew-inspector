@@ -252,8 +252,34 @@ test("shared interface works on web and MCP host transport, including mobile, de
       if (mode === "web") {
         assert.ok(Math.abs((await view.locator(".review-row").first().boundingBox()).width - skeletonWidth) < 1, "Review skeleton and loaded card have matching widths");
         await page.screenshot({ path: "/tmp/relay-greige-review-cards.png" });
-        hold("/api/visual/vis_12345678-abcd/qa");
       }
+      assert.equal(await view.getByRole("button", { name: "completed", exact: true }).count(), 1);
+      assert.equal(await view.getByRole("button", { name: "stale", exact: true }).count(), 1);
+      assert.equal(await view.getByRole("button", { name: "archived", exact: true }).count(), 1);
+      assert.equal(await view.getByRole("button", { name: "clear stale", exact: true }).count(), 1);
+      await view.getByRole("button", { name: "all", exact: true }).click();
+      await view.getByRole("button", { name: "mark completed", exact: true }).click();
+      assert.equal(review.disposition, "completed");
+      await view.getByRole("button", { name: "completed", exact: true }).click();
+      await view.locator('.review-row[data-review-disposition="completed"]').waitFor();
+      await view.getByRole("button", { name: "reopen", exact: true }).click();
+      assert.equal(review.disposition, "pending");
+      await view.getByRole("button", { name: "needs review", exact: true }).click();
+      await view.getByRole("button", { name: "mark stale", exact: true }).click();
+      assert.equal(review.disposition, "stale");
+      await view.getByRole("button", { name: "stale", exact: true }).click();
+      await view.locator('.review-row[data-review-disposition="stale"]').waitFor();
+      await view.getByRole("button", { name: "clear stale", exact: true }).click();
+      assert.equal(review.disposition, "archived");
+      await view.getByRole("button", { name: "archived", exact: true }).click();
+      await view.getByRole("button", { name: "restore", exact: true }).click();
+      assert.equal(review.disposition, "stale");
+      await view.getByRole("button", { name: "stale", exact: true }).click();
+      await view.getByRole("button", { name: "reopen", exact: true }).click();
+      assert.equal(review.disposition, "pending");
+      await view.getByRole("button", { name: "needs review", exact: true }).click();
+      await view.locator("[data-review-id]").waitFor();
+      if (mode === "web") hold("/api/visual/vis_12345678-abcd/qa");
       assert.equal(await view.locator(".review-list").evaluate(node => getComputedStyle(node).gridTemplateColumns.split(" ").length), 3);
       assert.equal(await view.locator(".review-row").first().evaluate(node => getComputedStyle(node).flexDirection), "column");
       await view.locator("[data-review-id]").click();
