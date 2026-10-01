@@ -150,8 +150,10 @@ test('Reopening during a save cannot replace confirmed responses with an older i
   // Wait for the popstate event, not just its earlier history-state update.
   await page.waitForFunction(()=>window.__exitPopped,null,{timeout:5000});
   holdLive=true;const reopen=page.locator('[data-review-id="'+evidence.evidence_id+'"]');
-  // Center the fixture opener below Inspector's sticky header before a normal click.
-  await reopen.evaluate(button=>button.scrollIntoView({block:'center',behavior:'instant'}));
+  // Exit's pointer position can hover-expand the desktop sidebar over the opener.
+  // Move away and focus the ordinary opener so neither hover nor nav focus holds it open.
+  await page.mouse.move(1200,680);await reopen.focus();
+  await page.waitForFunction(()=>document.querySelector('.operator-topbar').getBoundingClientRect().width<100,null,{timeout:5000});
   await reopen.click({timeout:5000});await signal(Promise.all([getSignal,qaReadSignal]),'reopened live read and stale QA snapshot');
   releasePost();await page.waitForFunction(id=>sessionStorage.getItem('relay.qa.draft.v1.'+id)===null,evidence.evidence_id,{timeout:5000});
   releaseGet();await page.locator('.qa-notes textarea').waitFor();
