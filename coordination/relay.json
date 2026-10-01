@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T22:25:31.299Z",
+  "updated_at": "2026-10-01T22:26:36.798Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -10771,10 +10771,23 @@
       "primary_staff": "ellis",
       "supporting_staff": [],
       "base_sha": "be058177e95d08db85719dcb20f402b6e4dd21db",
-      "state": "held",
+      "state": "superseded",
       "created_at": "2026-10-01T21:33:22.416Z",
-      "updated_at": "2026-10-01T22:03:57.781Z",
-      "lease_until": "2026-10-02T10:03:57.781Z"
+      "updated_at": "2026-10-01T22:26:36.798Z",
+      "lease_until": "2026-10-02T10:03:57.781Z",
+      "retirement": {
+        "at": "2026-10-01T22:26:36.798Z",
+        "intent": {
+          "operation_id": "relay-host-proof-to-data-action-20261001-2226",
+          "owner": "01a0f914-aad0-71e4-8f0c-20c1bf0a2016",
+          "disposition": "superseded",
+          "reason": "Released diagnostic produced actual client evidence but full parity did not pass. Parent authorized a separately admitted data-only callback experiment; preserve failures and remaining acceptance, not completed proof.",
+          "evidence": "Owner quiescent: no product-writing process or pending write; checkout clean at603bbe54f294c53f78460d906323dde73f93cff3. Fresh GitHub old-branch lookup404. Canonical/local coordination engine00d3aa78fac5bbe38b101ca87e8f3c0b72dcef59 and CLI6603f980f07a247e63ca916e50b0cfd03b4c2dcb match; existing writer cutover preserved. PR110 https://github.com/lrnolivia/relay/pull/110 merged6583a9f75424439fd255dafd5faf9dd81e50f0b2, active version4f3897d4-1cf1-4fbb-ba9d-332d6f01d58a. Five screenshot Library IDs: libfile_aebe1d67d09c8191820d40cb5ff440b6 (Mac ordinary no visible card; assistant empty-result claim not raw receipt); libfile_d5d7d22eb55c8191b3f266ab6d2927a9 (Safari two empty frames); libfile_001ad349f50081919e294cab23798f48 (iOS build20261001.1 initial shell/script/init/data pass, action pending); libfile_58c3179fe5188191a501553322d70244 (Mac Work samebuild initial pass); libfile_1ff46a04b4248191be03c3c09c9772cd (same Work sample action10s timeout). Consumer-local bytes/identity/hash manifest and observations preserved at /Users/lrnolivia/Codex/2026-10-01/task-2/evidence/host-proof/. Original51 model tools, app bridge, cards/art, ordinary-chat parity, supported execution, feedback/objective continuity and full staged rebuild requirements transfer to queued successor; no assertion of host proof completion. No other assignment retired or branch deleted.",
+          "superseded_by": "relay-mcp-card-action-proof-20261001",
+          "branch": "relay/mcp-host-proof-20261001",
+          "head_sha": null
+        }
+      }
     },
     {
       "id": "relay-website-notification-center-20261001",
