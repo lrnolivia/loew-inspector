@@ -127,22 +127,24 @@ test('A growing failed-save message keeps the desktop panel clear of floating co
 
 test('Reopening during a save cannot replace confirmed responses with an older in-flight GET', {timeout:20000},async()=>{
  const fixture=await contextFixture(),browser=await chromium.launch();
- let review={answers:{},notes:'Old note',overall:null,updated_at:'2026-10-01T00:00:00Z'},holdLive=false,releasePost,releaseGet,postStarted,getStarted;
+ let review={answers:{},notes:'Old note',overall:null,updated_at:'2026-10-01T00:00:00Z'},holdLive=false,releasePost,releaseGet,postStarted,getStarted,qaReadStarted;
  const postGate=new Promise(resolve=>releasePost=resolve),getGate=new Promise(resolve=>releaseGet=resolve);
- const postSignal=new Promise(resolve=>postStarted=resolve),getSignal=new Promise(resolve=>getStarted=resolve);
+ const postSignal=new Promise(resolve=>postStarted=resolve),getSignal=new Promise(resolve=>getStarted=resolve),qaReadSignal=new Promise(resolve=>qaReadStarted=resolve);
  try{
   const page=await browser.newPage({colorScheme:'dark'});
   const evidence={evidence_id:'vis_context-capture-relay',screenshot_url:'/api/visual/vis_context-capture-relay/image',context:{project:'relay'}};
   await page.route('**/api/visual/*/qa',async route=>{
    if(route.request().method()==='POST'){const payload=route.request().postDataJSON();postStarted();await postGate;review={...payload,updated_at:new Date().toISOString()};return route.fulfill({json:{review}});}
-   const snapshot=structuredClone(review);
+   const snapshot=structuredClone(review);if(holdLive)qaReadStarted();
    return route.fulfill({json:{evidence,review:snapshot,questions:[{id:'one',prompt:'Is the result clear?'}]}});
   });
   await page.route('**/api/visual/*/live',async route=>{if(holdLive){getStarted();await getGate;}return route.fulfill({json:{live:{active:false}}});});
   await page.goto(fixture.origin+'/inspector#review?evidence='+evidence.evidence_id);await page.locator('.qa-question').waitFor();
   await page.getByRole('button',{name:'No, needs work',exact:true}).click();await page.getByRole('button',{name:'Needs work',exact:true}).click();await page.locator('.qa-notes textarea').fill('Newest confirmed note');
   await page.getByRole('button',{name:'Exit review'}).click();await postSignal;
-  holdLive=true;await page.locator('[data-review-id="'+evidence.evidence_id+'"]').click();await getSignal;
+  // Exit traverses history asynchronously. Settle that transition before reopening.
+  await page.waitForFunction(()=>!history.state?.relayQaToken);
+  holdLive=true;await page.locator('[data-review-id="'+evidence.evidence_id+'"]').click();await Promise.all([getSignal,qaReadSignal]);
   releasePost();await page.waitForFunction(id=>sessionStorage.getItem('relay.qa.draft.v1.'+id)===null,evidence.evidence_id);
   releaseGet();await page.locator('.qa-notes textarea').waitFor();
   assert.equal(await page.locator('.qa-notes textarea').inputValue(),'Newest confirmed note');
