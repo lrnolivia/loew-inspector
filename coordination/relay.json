@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T07:29:14.380Z",
+  "updated_at": "2026-10-01T07:30:42.708Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -8684,7 +8684,10 @@
         "src/amendment-sync.test.js",
         "contracts/qa-feedback/",
         "docs/relay/RELAY_2_0_TODAY_RUNNER_SLICE.md",
-        "docs/relay/RELAY_2_0_RELEASE.md"
+        "docs/relay/RELAY_2_0_RELEASE.md",
+        "packages/runner/test/ui-events.test.mjs",
+        "apps/web/test/react.test.mjs",
+        "docs/relay/feedback/"
       ],
       "resources": [
         "relay-2.0",
@@ -8712,7 +8715,7 @@
       ],
       "goal": "Ship the Relay 2.0 live React experience as the complete implementation lane for all discussed unowned release work: Today, Runner, night shift, shared card/signal-deck design, truthful telemetry/live progress, Inspector floating-QA polish, and the durable Inspector-to-worker feedback loop, while preserving the separate active ChatGPT inline-card clean-room lane.",
       "acceptance": "Relay 2.0 ships a Vite + React + TypeScript frontend boundary with ephemeral build output and the existing backend retained unless a bounded change is required. Momo Trust Display is the display/identity face for page titles, feature names and major card headings; Inter remains body/control/metadata type. Preserve lowercase feature identity, dark Terra Prime surfaces, chunky marks, rounded cards and no gradients. The corrected shared card family keeps a strong ~76px-scale mark, only modestly smaller feature name, tighter geometry, and no redundant small 'relay' eyebrow. Primary pages use a compact signal deck derived from that family: two cards side-by-side when space allows, horizontal pan/scroll-snap, restrained idle advance, pause on interaction, reduced-motion support, and no critical state hidden behind cycling. Today explains needs-you, moving, ready-to-review and freshness plus the most useful next action. Runner uses human-readable horizontal work cards with recognizable goals, plain-language state, responsible worker, next step, technical identity behind disclosure, and exact-work live progress views. Runner telemetry may include honest milestone-based percentage rings, bars, activity/milestone graphs, status/freshness lights and a latest-update ticker; numeric progress must expose its basis and never rise from elapsed time alone. Live progress shows meaningful timestamped updates, next milestone, blocker/request state, and explicit live/reconnecting/stale/offline semantics. Night shift immediately answers whether anything will happen tonight; before/during it shows schedule, next check, included projects and automation status; after a shift it becomes a while-you-were-away digest of results, changes, review needs and blockers, keeping project health, run history, monitoring state and model-credit availability distinct. Inspector remains the successful verification surface, but its floating QA instrument gains a visible autosave state icon, responsive/collapsible usable mode, smooth reliable edge docking/restore behavior, side-by-side binary response controls where space permits, reduced-motion behavior and viewport clamping. Inspector notes/answers/dispositions emit durable identity-bound feedback events with monotonic ordering; active and resuming workers fetch relevant unread feedback at normal synchronization points and acknowledge it so it is not repeatedly delivered; stale/mismatched assignment/branch/evidence identity must not be silently applied. Existing 1.9.9 production remains available until explicit cutover. Do not modify the active relay-inline-card-cleanroom-20261001 lane or its owned files.",
-      "next_action": "User-authorized handoff continuation in isolated Codex checkout: regenerate Node 22 lockfile, remove temporary workflow, implement canonical live state and remaining 2.0 release work; preserve cleanroom and production-smoke ownership.",
+      "next_action": "Implement and verify bounded live-state and durable feedback contracts with dedicated contract/browser tests; keep protected lanes untouched.",
       "task_class": "architecture",
       "category": "implementation",
       "labels": [
@@ -8753,31 +8756,8 @@
       "base_sha": "0f0dc565dea89951e9d571b96d3771466d087b32",
       "state": "active",
       "created_at": "2026-10-01T06:45:18.694Z",
-      "updated_at": "2026-10-01T07:29:14.380Z",
-      "lease_until": "2026-10-01T19:29:14.380Z",
-      "amendment_count": 1,
-      "amendments": [
-        {
-          "at": "2026-10-01T07:14:40.064Z",
-          "by": "relay-2.0-today-runner-react-slice-20261001",
-          "reason": "User explicitly wants every discussed 2.0 item that is not already being actively implemented by another worker to ship in this release. Broaden the canonical goal from a proof slice to the actual 2.0 release implementation lane.",
-          "fields": [
-            "goal",
-            "acceptance",
-            "next_action"
-          ],
-          "before": {
-            "goal": "Build Relay 2.0's first working React/live-state proof across Today, Runner and night shift, explicitly carrying forward the Runner + night shift product work that did not actually ship in 1.9.9, without touching the separate ChatGPT inline-card host lane.",
-            "acceptance": "A clean checkout can build the new Vite React app without committing dist/generated bundle output. Preserve the original Relay product hierarchy: Relay is the human-facing product; Runner is the execution/coordination subsystem surfaced through human-readable progress and useful controls; Inspector verifies; night shift is the 'what happened while you weren't looking' briefing. Today, Runner and night shift must explain what is happening, why it matters and the next useful action within seconds. Keep visually rich telemetry as a first-class supporting layer: circular progress indicators wit...",
-            "next_action": "Treat this as the main Relay 2.0 implementation lane for all discussed unowned release work. Build the Vite/React live app with Momo Trust Display for display/header identity and Inter for body/controls; corrected shared card scale and no redundant relay eyebrow; two-up/pannable signal deck; human-first Today, Runner and night shift; rich truthful telemetry and exact-work live progress; explicit reconnect/stale/offline states; Inspector floaty autosave/collapse/docking/button polish; and durable Inspector feedback events that active/resuming workers can poll and acknowledge. Preserve 1.9.9 ..."
-          },
-          "after": {
-            "goal": "Ship the Relay 2.0 live React experience as the complete implementation lane for all discussed unowned release work: Today, Runner, night shift, shared card/signal-deck design, truthful telemetry/live progress, Inspector floating-QA polish, and the durable Inspector-to-worker feedback loop, while preserving the separate active ChatGPT inline-card clean-room lane.",
-            "acceptance": "Relay 2.0 ships a Vite + React + TypeScript frontend boundary with ephemeral build output and the existing backend retained unless a bounded change is required. Momo Trust Display is the display/identity face for page titles, feature names and major card headings; Inter remains body/control/metadata type. Preserve lowercase feature identity, dark Terra Prime surfaces, chunky marks, rounded cards and no gradients. The corrected shared card family keeps a strong ~76px-scale mark, only modestly smaller feature name, tighter geometry, and no redundant small 'relay' eyebrow. Primary pages use a ...",
-            "next_action": "Implement this as the main 2.0 release lane in coherent commits: React/Vite shell and shared card/typography system; canonical snapshot/live transport; Today; Runner cards + exact-work live progress + telemetry; night shift schedule/digest; Inspector floaty polish; Inspector feedback events/poll/ack; then full responsive/accessibility/reduced-motion/browser tests and cutover planning. Keep the clean-room inline-card worker isolated."
-          }
-        }
-      ]
+      "updated_at": "2026-10-01T07:30:42.708Z",
+      "lease_until": "2026-10-01T19:30:42.708Z"
     }
   ],
   "migrated_from": "loew-inspector"
