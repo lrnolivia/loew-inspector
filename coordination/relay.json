@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T02:44:56.442Z",
+  "updated_at": "2026-10-01T02:49:40.413Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -4677,55 +4677,6 @@
       "completed_at": "2026-10-01T02:44:49.224Z"
     },
     {
-      "id": "relay-inspector-visual-polish-20260930",
-      "owner": "codex-relay-inspector-visual-polish-20260930",
-      "branch": "relay/inspector-visual-polish-20260930",
-      "paths": [
-        "apps/web/public/qa.css",
-        "apps/web/public/qa-panel.js",
-        "apps/web/public/operator.css",
-        "apps/web/public/operator-1.8.css",
-        "apps/web/public/operator.js",
-        "apps/web/generated.js",
-        "apps/web/test/browser.test.mjs",
-        ".superdesign/",
-        "docs/relay/INSPECTOR_VISUAL_POLISH_20260930.md"
-      ],
-      "resources": [
-        "relay-design",
-        "relay-inspector-companion-presentation"
-      ],
-      "goal": "Refine Relay floating Inspector and compact dashboard presentation from user screenshots: neutral charcoal, product badge, responsive resizing, smaller chrome/status, updated ChatGPT settings URL. Record image zoom/pan, anchored comments, actionable reports and relationship simplification as deferred behavior.",
-      "acceptance": "Direct website design per user instruction 'just design it', refined to a midpoint after user rejected over-dense and oversized alternatives: neutral floating Inspector, comfortable type/spacing, canonical product badge, responsive native resize and persistent header/save footer; corrected settings URL; review identity/save behavior and main-interface design preserved. Required tests and exact-head browser/admission gates pass; behavioral requests and blank ChatGPT card remain documented for a later session.",
-      "next_action": "Publish the midpoint visual refinement through normal exact-head PR gates and deploy/read back exact merged source.",
-      "task_class": "design",
-      "base_sha": "f183508d4f03d39d9a08021e0a4772058cb991cf",
-      "state": "active",
-      "created_at": "2026-10-01T02:25:26.503Z",
-      "updated_at": "2026-10-01T02:41:29.571Z",
-      "lease_until": "2026-10-01T14:41:29.571Z",
-      "amendment_count": 1,
-      "amendments": [
-        {
-          "at": "2026-10-01T02:41:29.571Z",
-          "by": "codex-relay-inspector-visual-polish-20260930",
-          "reason": "Explicit user chose direct website design and requested midpoint density; mockup/canvas review was waived.",
-          "fields": [
-            "acceptance",
-            "next_action"
-          ],
-          "before": {
-            "acceptance": "Concrete reviewed design uses existing identity/icons, neutral floating panel and compact hierarchy at narrow and wide sizes; settings URL matches user-supplied plugin; production implementation proceeds after Superdesign preview review; behavioral backlog is durable.",
-            "next_action": "Prepare a Superdesign visual preview and durable behavioral backlog using current main; present exact design for user review before production UI edits."
-          },
-          "after": {
-            "acceptance": "Direct website design per user instruction 'just design it', refined to a midpoint after user rejected over-dense and oversized alternatives: neutral floating Inspector, comfortable type/spacing, canonical product badge, responsive native resize and persistent header/save footer; corrected settings URL; review identity/save behavior and main-interface design preserved. Required tests and exact-head browser/admission gates pass; behavioral requests and blank ChatGPT card remain documented for a later session.",
-            "next_action": "Publish the midpoint visual refinement through normal exact-head PR gates and deploy/read back exact merged source."
-          }
-        }
-      ]
-    },
-    {
       "id": "relay-1.9.6-mcp-ui-cache-hotfix-20261001",
       "owner": "relay-1.9.6-mcp-ui-cache-hotfix-20261001",
       "branch": "relay/1.9.6-mcp-ui-cache-hotfix-20261001",
@@ -4754,6 +4705,40 @@
       "evidence": "Cache-key hotfix shipped as an independently verified slice. Exact tested PR #69 head ac2198f9a688637522bf36faf58fd7fac08cb394 passed Runner admission and full workspace/build CI; squash merge 570ecf2ae6a3d6f46be6cf03a2ecd8c750c5c476 deployed as Worker v62 version d8edb8f6-e6af-4400-beb1-1c42f1485503 at 100% via deployment df30978f-1005-4bfe-ac27-06b51329f8ac. Main now references ui://relay/control-center/v2.html and not v1. Remaining inline first-paint/bootstrap resilience and client visual verification are deliberately transferred into Relay 1.9.6.2 operational staff routing per user direction.",
       "work_accounted": true,
       "completed_at": "2026-10-01T02:44:56.442Z"
+    },
+    {
+      "id": "relay-inspector-visual-polish-20260930",
+      "owner": "codex-relay-inspector-visual-polish-20260930",
+      "branch": "relay/inspector-visual-polish-20260930",
+      "paths": [
+        "apps/web/public/qa.css",
+        "apps/web/public/qa-panel.js",
+        "apps/web/public/operator.css",
+        "apps/web/public/operator-1.8.css",
+        "apps/web/public/operator.js",
+        "apps/web/generated.js",
+        "apps/web/test/browser.test.mjs",
+        ".superdesign/",
+        "docs/relay/INSPECTOR_VISUAL_POLISH_20260930.md",
+        "apps/web/public/loading.js",
+        "apps/web/public/operator-today.js",
+        "apps/web/public/operator-review.js",
+        "apps/web/public/index.html",
+        "features/night-shift/view.js"
+      ],
+      "resources": [
+        "relay-design",
+        "relay-inspector-companion-presentation"
+      ],
+      "goal": "Refine Relay floating Inspector and compact dashboard presentation from user screenshots: neutral charcoal, product badge, responsive resizing, smaller chrome/status, updated ChatGPT settings URL. Record image zoom/pan, anchored comments, actionable reports and relationship simplification as deferred behavior.",
+      "acceptance": "Direct website design per user instruction 'just design it', refined to a midpoint after user rejected over-dense and oversized alternatives: neutral floating Inspector, comfortable type/spacing, canonical product badge, responsive native resize and persistent header/save footer; corrected settings URL; review identity/save behavior and main-interface design preserved. Required tests and exact-head browser/admission gates pass; behavioral requests and blank ChatGPT card remain documented for a later session.",
+      "next_action": "Add content loading skeletons and Inspector primary branding with universal project icon badges per user direction; verify and publish.",
+      "task_class": "design",
+      "base_sha": "f183508d4f03d39d9a08021e0a4772058cb991cf",
+      "state": "active",
+      "created_at": "2026-10-01T02:25:26.503Z",
+      "updated_at": "2026-10-01T02:49:40.413Z",
+      "lease_until": "2026-10-01T14:49:40.413Z"
     }
   ],
   "migrated_from": "loew-inspector"
