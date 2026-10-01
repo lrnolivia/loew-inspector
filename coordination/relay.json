@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T06:50:22.921Z",
+  "updated_at": "2026-10-01T06:53:28.944Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -8420,6 +8420,7 @@
         "apps/web/tsconfig.json",
         "apps/web/index.html",
         "apps/web/src/",
+        "apps/web/public/operator.css",
         "packages/runner/src/ui-events.mjs",
         "packages/runner/src/cloudflare-worker.mjs",
         "packages/shared-ui/react/",
@@ -8435,11 +8436,13 @@
         "relay-1.9.9-runner-night-shift-carryforward",
         "relay-stale-reconnect-ui",
         "relay-no-committed-generated-bundle",
-        "relay-one-shot-lockfile-helper"
+        "relay-one-shot-lockfile-helper",
+        "relay-card-scale-system",
+        "relay-inspector-preview-density"
       ],
       "goal": "Build Relay 2.0's first working React/live-state proof across Today, Runner and night shift, explicitly carrying forward the Runner + night shift product work that did not actually ship in 1.9.9, without touching the separate ChatGPT inline-card host lane.",
       "acceptance": "A clean checkout can build the new Vite React app without committing dist/generated bundle output; Today, Runner and night shift render canonical Relay data; the missing Runner/night shift experience intended for 1.9.9 is implemented here as an explicit 2.0 carry-forward rather than retroactively claimed as shipped; a bounded live event contract updates progress/worker/monitoring state without manual page refresh; dropped streams visibly enter reconnecting/stale states and reconcile from a canonical snapshot; project context is URL-addressable; each primary page uses a compact top-of-page signal deck that mirrors the Inspector chat-card preview family rather than a separate dashboard panel language: cards are shorter/tighter than the Inspector preview, show distinct live information, render two side-by-side when space allows, and support horizontal pan/scroll-snap with restrained idle auto-advance that pauses on hover/focus/pointer interaction and is disabled under prefers-reduced-motion; the deck must remain keyboard/touch usable and must not hide important state behind animation; Runner and night shift provide enough distinct live behavior to exercise the new state, routing, reconnect and component engines; existing 1.9.9 production UI remains available until later cutover; no files owned by the ChatGPT card host assignment are modified.",
-      "next_action": "Land the Vite/React shell and compact signal deck on the admitted branch. Use the temporary branch-only lockfile workflow once to refresh package-lock.json, then remove the helper in its own generated commit. Continue with live-state transport after the shell builds cleanly.",
+      "next_action": "First calibrate the existing Inspector preview CSS into the corrected full-card scale: reduce left-side dominance, mark/title scale and dead air while preserving information hierarchy. Use those proportions as the full-card reference for the React shared card system, then derive the shorter two-up dashboard signal-card variant from it.",
       "task_class": "architecture",
       "category": "implementation",
       "labels": [
@@ -8480,8 +8483,8 @@
       "base_sha": "0f0dc565dea89951e9d571b96d3771466d087b32",
       "state": "active",
       "created_at": "2026-10-01T06:45:18.694Z",
-      "updated_at": "2026-10-01T06:50:22.921Z",
-      "lease_until": "2026-10-01T18:50:22.921Z"
+      "updated_at": "2026-10-01T06:53:28.944Z",
+      "lease_until": "2026-10-01T18:53:28.944Z"
     }
   ],
   "migrated_from": "loew-inspector"
