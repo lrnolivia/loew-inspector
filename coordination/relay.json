@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T18:14:58.190Z",
+  "updated_at": "2026-10-01T18:16:26.077Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -10126,6 +10126,7 @@
       "paths": [
         "apps/web/",
         "apps/mcp/index.js",
+        ".github/workflows/ci.yml",
         "docs/relay/WEBSITE_2_0_REPAIR_20261001.md"
       ],
       "resources": [
@@ -10133,7 +10134,7 @@
       ],
       "goal": "Repair the actual Relay website Today/Runner/Night Shift delivery and navigation, preserve Inspector visual canon, verify Momo and canonical icons on deployed pages.",
       "acceptance": "The actual relay.loew.fi website renders React Today/Runner/Night Shift and preserves Inspector; navigation from Inspector returns to React routes; website title/navigation use Momo and canonical /icons; compact signal cards inherit approved preview visuals; desktop and narrow screenshots and route checks verify the exact deployed source. No inline-card or MCP resource changes.",
-      "next_action": "Clone current main and trace website entrypoints and Inspector navigation; reproduce the route defect before editing.",
+      "next_action": "Repair Inspector-to-React navigation and compact cards; preserve legacy component QA in an explicitly isolated fixture; add actual website route round-trip coverage and CI screenshot artifacts.",
       "category": "implementation",
       "primary_team": "source",
       "supporting_teams": [],
@@ -10142,8 +10143,8 @@
       "base_sha": "69e349cfc57cba4074dabdce2fd7806f788a0b56",
       "state": "active",
       "created_at": "2026-10-01T18:10:09.482Z",
-      "updated_at": "2026-10-01T18:10:09.482Z",
-      "lease_until": "2026-10-02T06:10:09.482Z"
+      "updated_at": "2026-10-01T18:16:26.077Z",
+      "lease_until": "2026-10-02T06:16:26.077Z"
     }
   ],
   "migrated_from": "loew-inspector"
