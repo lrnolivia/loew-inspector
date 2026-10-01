@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T00:24:38.073Z",
+  "updated_at": "2026-10-01T00:32:09.418Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -2226,10 +2226,16 @@
         "RFS-021"
       ],
       "base_sha": "d3cbbd6135e7cd087388f986f38cb13d500b35e2",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T00:02:42.510Z",
-      "updated_at": "2026-10-01T00:21:44.983Z",
-      "lease_until": "2026-10-01T12:21:44.983Z"
+      "updated_at": "2026-10-01T00:32:09.418Z",
+      "lease_until": "2026-10-01T12:32:09.418Z",
+      "pr": 63,
+      "merged_head_sha": "3b257dc8194c9055da822f57591ace1bcee25e60",
+      "merge_commit_sha": "9c0c9addf27bbe52956b8872f0868626d3420990",
+      "evidence": "Relay 1.9.3 shipped through PR #60 and was hardened by same-branch hotfix PRs #62 and #63. Final exact hotfix head 3b257dc8194c9055da822f57591ace1bcee25e60 passed Runner admission and workspace/browser/build CI, squash-merged as 9c0c9addf27bbe52956b8872f0868626d3420990, uploaded as Worker v55 version 3b38d573-b1ed-42cd-a481-993177d8c6bf and deployed 100% via de54b57f-56dc-4961-a2bd-e933f01056c1. Fresh-session relay_runner_resume readback pinned PR #63 head/merge and matching Cloud version/deployment. Two consecutive resume reads returned identical checkpoint_id 4ac852f94ce49708bd329abc while observation.worker_age_ms changed, proving deterministic dedupe across transient age ticks and unrelated global deployments.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T00:32:09.418Z"
     },
     {
       "id": "relay-1.9.4-skills-runtime-core-20260930",
