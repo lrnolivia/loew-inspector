@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T06:17:01.602Z",
+  "updated_at": "2026-10-01T06:19:35.602Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5319,6 +5319,51 @@
       ],
       "state": "queued",
       "created_at": "2026-10-01T06:02:23.499Z"
+    },
+    {
+      "id": "relay-1.9.9.1-production-smoke-sync-20261001",
+      "owner": "relay-1.9.9.1-production-smoke-sync-20261001",
+      "goal": "Repair the canonical external Relay production smoke so it verifies the shipped 1.9.9 resource versions and current dashboard navigation instead of failing on removed v1 UI resources.",
+      "acceptance": "The production smoke uses the current Relay context-card/control-center resource URIs exported by 1.9.9, verifies the current horizontal project-tab navigation rather than retired #project-list markup, preserves exact deployed-source verification and authenticated web/MCP checks, and passes against the currently deployed 1.9.9 Worker without weakening any assertion.",
+      "next_action": "Claim from current main, update apps/mcp/production-smoke.mjs only, run exact-head tests/admission, merge, then dispatch the production smoke against deployed source 197f43801ac2298efa3a99aebc3159240350cd34 and require success.",
+      "paths": [
+        "apps/mcp/production-smoke.mjs"
+      ],
+      "resources": [
+        "relay-production-smoke",
+        "relay-1.9.9-release-verification"
+      ],
+      "task_class": "maintenance",
+      "category": "qa-verification",
+      "labels": [
+        {
+          "key": "release",
+          "value": "1.9.9.1"
+        },
+        {
+          "key": "domain",
+          "value": "production-qa"
+        }
+      ],
+      "tags": [
+        "production-smoke",
+        "inspector",
+        "mcp-app"
+      ],
+      "primary_role": "verifier",
+      "supporting_roles": [
+        "builder"
+      ],
+      "primary_team": "runner",
+      "supporting_teams": [
+        "inspector"
+      ],
+      "primary_staff": "roman",
+      "supporting_staff": [
+        "nico"
+      ],
+      "state": "queued",
+      "created_at": "2026-10-01T06:19:35.602Z"
     }
   ],
   "claims": [
