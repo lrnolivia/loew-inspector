@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T01:35:23.045Z",
+  "updated_at": "2026-10-01T01:35:35.052Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -385,7 +385,7 @@
       "owner": "relay-1.9-skills-runtime-creative-20260930",
       "goal": "Ship Relay 1.9 as the skills-runtime and creative-intelligence release: add a first-class relay.SKILLS system that discovers, validates, versions, resolves and loads portable expertise on demand, then use it to make Relay substantially stronger at aesthetic direction, interaction/flow, motion, platform-native UI craft and performance across web, macOS, Windows, Android and Linux/GNOME while expanding its engineering, GitHub and Cloudflare expertise without bloating the permanent MCP/tool surface.",
       "acceptance": "Relay 1.9 ships as a patch train with these canonical capabilities:\n\n- relay.SKILLS: deterministic JIT resolution, bounded context, provenance/license/integrity metadata, capability gating, project-private overlays, safe upstream audit/update, and composable creative/platform/performance/GitHub/Cloudflare skills. Creative coverage includes aesthetic direction, IA/flow, motion, visual QA, optimization, web, macOS, Windows, Android and GNOME; Figma-bound skills use the real dependency when available.\n- worker communication: inspect sibling live state first; classify FYI/request/blocker/decision/handoff/scope-change; cite exact project/assignment/branch/PR/evidence identity; communicate context, impact and requested action; reconcile received messages against canonical state before acting; avoid duplicate/no-op chatter. Messages never silently change ownership/scope: Runner amend/rescope/handoff remains authoritative.\n- organization-first narration: later coordination successors must consume canonical staff identity and describe people + ownership + outcome + validation by default; preserve machine IDs/evidence underneath and keep low-level transport/tool/SHA detail subordinate unless directly relevant. Relationship adaptation stays Julian/lead-managed; no canned joke bank.\n- assignment taxonomy: durable amendable category, labels, tags and designated role metadata. Controlled categories include architecture, design, implementation, research, QA/verification, maintenance, release and coordination. Labels are structured cross-cutting metadata; tags are bounded freeform discovery/context metadata. One primary role plus optional supporting roles may drive skill selection/communication posture but never authorization. Role metadata is separate from sticky staff identity; names come from the canonical staff directory. Expose taxonomy/roles to routing, filtering, UI and resume checkpoints.\n- live amendment sync: active workers/chats consume only new relevant canonical amendments from a monotonic cursor at bounded synchronization points; unchanged checks inject nothing, and scope-changing/blocking updates reconcile before conflicting work continues.\n- safe assignment amendments: stable identity/ownership, immutable claimed branch/base, CAS/readback, conflict-safe scope changes, bounded who/when/what/why history. Planning skills amend canonical state rather than hand-edit it.\n- findings-ledger routing: classify adopt/defer/reject/supersede; route adopted findings into the safest existing assignment or deliberate successor; maintain RFS linkage/status. Ledger is planning input, not automatic backlog.\n- low-overhead resume checkpoints from canonical evidence: assignment/branch/base/head, changed paths, commits, PR/check/deploy stage, last successful action, blockers/waits, next action, QA context, ledger refs and exact evidence identities; dedupe unchanged state and expose latest-valid resume.\n- universal meaningful x.x.# cadence: test/admit exact source; merge; deploy if applicable; verify runtime/readback; refresh integrations/consumer when needed; verify the new surface; continue from canonical state.\n- valid work must not be blocked by file/document/context/request-size ceilings: switch automatically to patch/edit, append, bounded chunks, indexed/sharded logical docs and deterministic reassembly while preserving ownership/provenance/CAS safety.\n- preserve Relay 1.8 UI contracts: human headline + short description, subordinate technical detail, specific QA asks, live previews when viable with exact identity.\n\nTests cover taxonomy/roles, communication/handoffs, amendments, ledger routing, resume, size-safe transport, skill gating and UI/QA. No parallel state store, giant permanent prompt dump, one-tool-per-skill explosion or new standing credentials.",
-      "next_action": "Umbrella coordinates the patch train. Track sticky staff identity, staff-aware narration, live amendment sync, caught-up recovery/learning, and RFS-027 direct-GitHub intake for large binary assets so workers ask for uploads at the exact admitted location instead of routing bulky bytes through chat.",
+      "next_action": "Umbrella coordinates the patch train. Track sticky staff identity, staff-aware narration, live amendment sync, caught-up recovery/learning, direct-GitHub large-asset intake, and RFS-028 workflow-time telemetry so Relay can identify systemic bottlenecks from canonical evidence and improve the workflow rather than rank people.",
       "paths": [
         "packages/skills/",
         "skills/",
@@ -437,10 +437,11 @@
         "RFS-022",
         "RFS-024",
         "RFS-025",
-        "RFS-027"
+        "RFS-027",
+        "RFS-028"
       ],
-      "updated_at": "2026-10-01T01:26:12.108Z",
-      "amendment_count": 7,
+      "updated_at": "2026-10-01T01:35:35.052Z",
+      "amendment_count": 8,
       "amendments": [
         {
           "at": "2026-09-30T23:32:05.259Z",
@@ -700,6 +701,42 @@
               "RFS-024",
               "RFS-025",
               "RFS-027"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T01:35:35.052Z",
+          "by": "relay-1.9-skills-runtime-creative-20260930",
+          "reason": "Promote workflow-time bottleneck telemetry to the Relay 1.9 release-level learning contract.",
+          "fields": [
+            "next_action",
+            "ledger_refs"
+          ],
+          "before": {
+            "next_action": "Umbrella coordinates the patch train. Track sticky staff identity, staff-aware narration, live amendment sync, caught-up recovery/learning, and RFS-027 direct-GitHub intake for large binary assets so workers ask for uploads at the exact admitted location instead of routing bulky bytes through chat.",
+            "ledger_refs": [
+              "RFS-018",
+              "RFS-019",
+              "RFS-020",
+              "RFS-021",
+              "RFS-022",
+              "RFS-024",
+              "RFS-025",
+              "RFS-027"
+            ]
+          },
+          "after": {
+            "next_action": "Umbrella coordinates the patch train. Track sticky staff identity, staff-aware narration, live amendment sync, caught-up recovery/learning, direct-GitHub large-asset intake, and RFS-028 workflow-time telemetry so Relay can identify systemic bottlenecks from canonical evidence and improve the workflow rather than rank people.",
+            "ledger_refs": [
+              "RFS-018",
+              "RFS-019",
+              "RFS-020",
+              "RFS-021",
+              "RFS-022",
+              "RFS-024",
+              "RFS-025",
+              "RFS-027",
+              "RFS-028"
             ]
           }
         }
@@ -3352,7 +3389,7 @@
       ],
       "goal": "Ship Relay 1.9 as the skills-runtime and creative-intelligence release, including a first-class assignment-amendment workflow and planning skills that use the findings ledger to route worthwhile discoveries into the right existing or future assignment instead of leaving them as inert notes or spawning unnecessary parallel work.",
       "acceptance": "Relay 1.9 ships as a patch train with these canonical capabilities:\n\n- relay.SKILLS: deterministic JIT resolution, bounded context, provenance/license/integrity metadata, capability gating, project-private overlays, safe upstream audit/update, and composable creative/platform/performance/GitHub/Cloudflare skills. Creative coverage includes aesthetic direction, IA/flow, motion, visual QA, optimization, web, macOS, Windows, Android and GNOME; Figma-bound skills use the real dependency when available.\n- worker communication: inspect sibling live state first; classify FYI/request/blocker/decision/handoff/scope-change; cite exact project/assignment/branch/PR/evidence identity; communicate context, impact and requested action; reconcile received messages against canonical state before acting; avoid duplicate/no-op chatter. Messages never silently change ownership/scope: Runner amend/rescope/handoff remains authoritative.\n- organization-first narration: later coordination successors must consume canonical staff identity and describe people + ownership + outcome + validation by default; preserve machine IDs/evidence underneath and keep low-level transport/tool/SHA detail subordinate unless directly relevant. Relationship adaptation stays Julian/lead-managed; no canned joke bank.\n- assignment taxonomy: durable amendable category, labels, tags and designated role metadata. Controlled categories include architecture, design, implementation, research, QA/verification, maintenance, release and coordination. Labels are structured cross-cutting metadata; tags are bounded freeform discovery/context metadata. One primary role plus optional supporting roles may drive skill selection/communication posture but never authorization. Role metadata is separate from sticky staff identity; names come from the canonical staff directory. Expose taxonomy/roles to routing, filtering, UI and resume checkpoints.\n- live amendment sync: active workers/chats consume only new relevant canonical amendments from a monotonic cursor at bounded synchronization points; unchanged checks inject nothing, and scope-changing/blocking updates reconcile before conflicting work continues.\n- safe assignment amendments: stable identity/ownership, immutable claimed branch/base, CAS/readback, conflict-safe scope changes, bounded who/when/what/why history. Planning skills amend canonical state rather than hand-edit it.\n- findings-ledger routing: classify adopt/defer/reject/supersede; route adopted findings into the safest existing assignment or deliberate successor; maintain RFS linkage/status. Ledger is planning input, not automatic backlog.\n- low-overhead resume checkpoints from canonical evidence: assignment/branch/base/head, changed paths, commits, PR/check/deploy stage, last successful action, blockers/waits, next action, QA context, ledger refs and exact evidence identities; dedupe unchanged state and expose latest-valid resume.\n- universal meaningful x.x.# cadence: test/admit exact source; merge; deploy if applicable; verify runtime/readback; refresh integrations/consumer when needed; verify the new surface; continue from canonical state.\n- valid work must not be blocked by file/document/context/request-size ceilings: switch automatically to patch/edit, append, bounded chunks, indexed/sharded logical docs and deterministic reassembly while preserving ownership/provenance/CAS safety.\n- preserve Relay 1.8 UI contracts: human headline + short description, subordinate technical detail, specific QA asks, live previews when viable with exact identity.\n\nTests cover taxonomy/roles, communication/handoffs, amendments, ledger routing, resume, size-safe transport, skill gating and UI/QA. No parallel state store, giant permanent prompt dump, one-tool-per-skill explosion or new standing credentials.",
-      "next_action": "Umbrella coordinates the patch train. Track sticky staff identity, staff-aware narration, live amendment sync, caught-up recovery/learning, and RFS-027 direct-GitHub intake for large binary assets so workers ask for uploads at the exact admitted location instead of routing bulky bytes through chat.",
+      "next_action": "Umbrella coordinates the patch train. Track sticky staff identity, staff-aware narration, live amendment sync, caught-up recovery/learning, direct-GitHub large-asset intake, and RFS-028 workflow-time telemetry so Relay can identify systemic bottlenecks from canonical evidence and improve the workflow rather than rank people.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-018",
@@ -3362,14 +3399,15 @@
         "RFS-022",
         "RFS-024",
         "RFS-025",
-        "RFS-027"
+        "RFS-027",
+        "RFS-028"
       ],
       "base_sha": "47fb7b4f73afc3407977503fb706c4935711aee5",
       "state": "active",
       "created_at": "2026-09-30T22:49:27.571Z",
-      "updated_at": "2026-10-01T01:26:12.108Z",
-      "lease_until": "2026-10-01T13:26:12.108Z",
-      "amendment_count": 4,
+      "updated_at": "2026-10-01T01:35:35.052Z",
+      "lease_until": "2026-10-01T13:35:35.052Z",
+      "amendment_count": 5,
       "amendments": [
         {
           "at": "2026-10-01T01:02:17.850Z",
@@ -3484,6 +3522,42 @@
               "RFS-024",
               "RFS-025",
               "RFS-027"
+            ]
+          }
+        },
+        {
+          "at": "2026-10-01T01:35:35.052Z",
+          "by": "relay-1.9-skills-runtime-creative-20260930",
+          "reason": "Promote workflow-time bottleneck telemetry to the Relay 1.9 release-level learning contract.",
+          "fields": [
+            "next_action",
+            "ledger_refs"
+          ],
+          "before": {
+            "next_action": "Umbrella coordinates the patch train. Track sticky staff identity, staff-aware narration, live amendment sync, caught-up recovery/learning, and RFS-027 direct-GitHub intake for large binary assets so workers ask for uploads at the exact admitted location instead of routing bulky bytes through chat.",
+            "ledger_refs": [
+              "RFS-018",
+              "RFS-019",
+              "RFS-020",
+              "RFS-021",
+              "RFS-022",
+              "RFS-024",
+              "RFS-025",
+              "RFS-027"
+            ]
+          },
+          "after": {
+            "next_action": "Umbrella coordinates the patch train. Track sticky staff identity, staff-aware narration, live amendment sync, caught-up recovery/learning, direct-GitHub large-asset intake, and RFS-028 workflow-time telemetry so Relay can identify systemic bottlenecks from canonical evidence and improve the workflow rather than rank people.",
+            "ledger_refs": [
+              "RFS-018",
+              "RFS-019",
+              "RFS-020",
+              "RFS-021",
+              "RFS-022",
+              "RFS-024",
+              "RFS-025",
+              "RFS-027",
+              "RFS-028"
             ]
           }
         }
