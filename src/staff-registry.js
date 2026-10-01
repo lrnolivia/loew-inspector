@@ -190,3 +190,66 @@ export function staffDirectorySnapshot(registry = STAFF) {
 }
 
 validateStaffRegistry(STAFF);
+
+
+export const staffDirectoryTool = Object.freeze({
+  name: "relay_staff_directory",
+  title: "Read Relay staff directory",
+  description: "Read the canonical sticky Relay staff identities, roles, subnets and presentation profiles. Staff identity never grants authorization; Runner owner ids remain canonical.",
+  inputSchema: {
+    type: "object",
+    properties: {
+      staff: { type: "string", minLength: 1, maxLength: 80 },
+      status: { type: "string", enum: ["active","reserve","retired"] },
+      subnet: { type: "string", minLength: 1, maxLength: 64 },
+      role: { type: "string", minLength: 1, maxLength: 64 },
+      include_retired: { type: "boolean", default: false }
+    },
+    additionalProperties: false
+  },
+  annotations: { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false }
+});
+
+export function validateStaffDirectoryArguments(args = {}) {
+  if (!args || typeof args !== "object" || Array.isArray(args)) throw new Error("Staff directory arguments must be an object.");
+  const allowed = new Set(["staff","status","subnet","role","include_retired"]);
+  for (const key of Object.keys(args)) if (!allowed.has(key)) throw new Error(`Unsupported staff directory argument: ${key}`);
+  if (args.status && !["active","reserve","retired"].includes(args.status)) throw new Error("Unsupported staff status.");
+  for (const key of ["staff","subnet","role"]) {
+    if (args[key] !== undefined && (typeof args[key] !== "string" || !args[key].trim() || args[key].length > 80)) {
+      throw new Error(`Invalid staff directory ${key}.`);
+    }
+  }
+  if (args.include_retired !== undefined && typeof args.include_retired !== "boolean") throw new Error("include_retired must be boolean.");
+  return args;
+}
+
+export function callStaffDirectory(args = {}, registry = STAFF) {
+  validateStaffDirectoryArguments(args);
+  validateStaffRegistry(registry);
+  if (args.staff) {
+    const person = getStaff(args.staff, registry);
+    if (!person || (person.status === "retired" && !args.include_retired)) {
+      return { ok: true, namespace: "relay.STAFF", version: STAFF_REGISTRY_VERSION, staff: null };
+    }
+    return { ok: true, namespace: "relay.STAFF", version: STAFF_REGISTRY_VERSION, policy: STAFF_POLICY, staff: person };
+  }
+  const staff = listStaff({
+    status: args.status,
+    subnet: args.subnet,
+    role: args.role,
+    include_retired: Boolean(args.include_retired)
+  }, registry);
+  return {
+    ok: true,
+    namespace: "relay.STAFF",
+    version: STAFF_REGISTRY_VERSION,
+    policy: STAFF_POLICY,
+    counts: {
+      active: staff.filter(person => person.status === "active").length,
+      reserve: staff.filter(person => person.status === "reserve").length,
+      retired: staff.filter(person => person.status === "retired").length
+    },
+    staff
+  };
+}
