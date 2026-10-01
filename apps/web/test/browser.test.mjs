@@ -251,6 +251,9 @@ test("preserved Inspector surface works at /inspector, including mobile, deep li
       }
       if (mode === "mcp") await view.getByRole("button", { name: "all", exact: true }).click();
       await view.locator("[data-review-id]").waitFor();
+      assert.equal(await view.locator(".inspector-signal-deck .signal-card").count(), 3);
+      assert.notEqual(await view.locator("#inspector-signal-visible").textContent(), "—");
+      assert.match(await view.getByRole("heading", { name: "inspector", level: 1 }).evaluate(node => getComputedStyle(node).fontFamily), /Momo Trust Display/);
       if (mode === "web") {
         assert.ok(Math.abs((await view.locator(".review-row").first().boundingBox()).width - skeletonWidth) < 1, "Review skeleton and loaded card have matching widths");
         await page.screenshot({ path: "/tmp/relay-greige-review-cards.png" });
@@ -343,7 +346,7 @@ test("preserved Inspector surface works at /inspector, including mobile, deep li
       await view.getByRole("button", { name: "Switch to dark mode", exact: true }).click();
       assert.equal(await view.locator("html").getAttribute("data-theme"), "dark");
       await view.locator("#app-settings").evaluate(node => { window.open = href => { window.__testExternal = href; }; node.click(); });
-      assert.equal(await view.locator("body").evaluate(() => window.__testExternal), "https://chatgpt.com/settings/plugins-settings/plugin_asdk_app_6abdbca7c98c819187cc153d781b0faf");
+      assert.equal(await view.locator("body").evaluate(() => window.__testExternal), "https://chatgpt.com/settings/plugins-settings/plugin_asdk_app_6abe234861d881919e30db65d656492f");
       assert.equal(await view.locator("#app-settings .glyph-refresh").count(), 1);
       assert.equal(await view.locator("#app-settings .relay-glyph").evaluate(node => getComputedStyle(node).width), "18px");
       if (mode === "web") {
