@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T22:47:58.411Z",
+  "updated_at": "2026-10-01T23:17:52.314Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -10790,53 +10790,6 @@
       }
     },
     {
-      "id": "relay-website-notification-center-20261001",
-      "owner": "Julian-PM",
-      "branch": "relay/website-notifications-review-20261001",
-      "paths": [
-        "apps/web/",
-        "packages/shared-ui/",
-        "docs/relay/WEBSITE_NOTIFICATION_CENTER_20261001.md",
-        "docs/relay/WEBSITE_REVIEW_OVERLAY_20261001.md",
-        ".github/workflows/ci.yml"
-      ],
-      "resources": [
-        "relay-website-notifications",
-        "relay-project-identity",
-        "relay-qa-feedback",
-        "relay-inspector-review-overlay",
-        "relay-website-preview-ci"
-      ],
-      "goal": "Next website round: implement compact actionable notification center/toasts and repair Inspector review overlay, preserving approved released website design and original notification acceptance.",
-      "acceptance": "After full verified completion of current website fixes, place a notification bell/menu near the existing Live pill without moving the approved top workspace/connection line. Design compact message-notification-like pop-up toasts that can be dismissed and time out, with differing importance levels, source-feature accent colors, source identity badge and contextual supported actions. Preserve important notifications in the bell menu after toast timeout so alerts are not lost; dismissal does not mark a problem resolved. Use accessible text/severity indicators in addition to color, keyboard/focus support, sensible motion/reduced-motion, and avoid decorative card-edge strips. Avoid oversized error banners. Feature accent and severity are separate concepts. Origin badges must identify actual known project/actor/source without invented senders. Action buttons must use supported guarded operations or useful links and expose results; do not fake execution or approvals. Toast timing, grouping, retention and exact identity schema are design decisions to specify; no live message sends, notification subscriptions or external actions authorized by this backlog entry.\nCurrent website fixes are now verified complete. User explicitly moved Inspector panel work into this round: shared approved neutral palette; reproduce/fix random code in notes entry without losing notes; sequential Back and Next (Finish on last step), distinct from exit/back; truthful durable autosave Saving/Saved/Failed and retry across navigation; discreet opposite-corner static/live preview selector, live prioritized only when actual authorized preview exists and honest fallback. All controls touch/keyboard/focus accessible; floating UI must never permanently obscure content. Keep modular List/Visual viewer/filter/bulk-action project separate. Preserve readable identities and plain language. Implement only admitted paths; report backend scope needed before extending. Exact-head tests/rendered evidence/review required; coordinated serialized release under user's current finish-and-merge authorization.",
-      "next_action": "Both independent review blockers reproduced and fixed on 70def2210405e157ca362c60256aff9b4e0886b9; 334 local tests pass, coordination PR gate passes, exact-head CI and 24 evidence registration pending. Await focused independent review; merge held until MCP PR112 healthy receipt and Julian clearance.",
-      "task_class": "design",
-      "category": "implementation",
-      "labels": [
-        {
-          "key": "backlog",
-          "value": "new-features"
-        },
-        {
-          "key": "depends-on",
-          "value": "relay-website-project-context-polish-20261001"
-        },
-        {
-          "key": "source",
-          "value": "Lauren message Sentinel_b7f6b2c449588191a1a6b2a9f3c5f1dd"
-        }
-      ],
-      "primary_team": "inspector",
-      "supporting_teams": [],
-      "primary_staff": "julian",
-      "supporting_staff": [],
-      "base_sha": "2718c97d28871d2f86e3348dac281712ddcae9a5",
-      "state": "active",
-      "created_at": "2026-10-01T21:54:24.434Z",
-      "updated_at": "2026-10-01T22:43:47.357Z",
-      "lease_until": "2026-10-02T10:43:47.357Z"
-    },
-    {
       "id": "relay-mcp-card-action-proof-20261001",
       "owner": "01a0f914-aad0-71e4-8f0c-20c1bf0a2016",
       "branch": "relay/mcp-card-action-proof-20261001",
@@ -10865,6 +10818,52 @@
       "created_at": "2026-10-01T22:27:03.282Z",
       "updated_at": "2026-10-01T22:47:58.411Z",
       "lease_until": "2026-10-02T10:47:58.411Z"
+    },
+    {
+      "id": "relay-website-notification-center-20261001",
+      "owner": "Julian-PM",
+      "branch": "relay/website-notifications-review-20261001",
+      "paths": [
+        "apps/web/",
+        "packages/shared-ui/",
+        "docs/relay/WEBSITE_NOTIFICATION_CENTER_20261001.md",
+        "docs/relay/WEBSITE_REVIEW_OVERLAY_20261001.md",
+        ".github/workflows/ci.yml"
+      ],
+      "resources": [
+        "relay-website-notifications",
+        "relay-project-identity",
+        "relay-inspector-review-overlay",
+        "relay-website-preview-ci"
+      ],
+      "goal": "Next website round: implement compact actionable notification center/toasts and repair Inspector review overlay, preserving approved released website design and original notification acceptance.",
+      "acceptance": "After full verified completion of current website fixes, place a notification bell/menu near the existing Live pill without moving the approved top workspace/connection line. Design compact message-notification-like pop-up toasts that can be dismissed and time out, with differing importance levels, source-feature accent colors, source identity badge and contextual supported actions. Preserve important notifications in the bell menu after toast timeout so alerts are not lost; dismissal does not mark a problem resolved. Use accessible text/severity indicators in addition to color, keyboard/focus support, sensible motion/reduced-motion, and avoid decorative card-edge strips. Avoid oversized error banners. Feature accent and severity are separate concepts. Origin badges must identify actual known project/actor/source without invented senders. Action buttons must use supported guarded operations or useful links and expose results; do not fake execution or approvals. Toast timing, grouping, retention and exact identity schema are design decisions to specify; no live message sends, notification subscriptions or external actions authorized by this backlog entry.\nCurrent website fixes are now verified complete. User explicitly moved Inspector panel work into this round: shared approved neutral palette; reproduce/fix random code in notes entry without losing notes; sequential Back and Next (Finish on last step), distinct from exit/back; truthful durable autosave Saving/Saved/Failed and retry across navigation; discreet opposite-corner static/live preview selector, live prioritized only when actual authorized preview exists and honest fallback. All controls touch/keyboard/focus accessible; floating UI must never permanently obscure content. Keep modular List/Visual viewer/filter/bulk-action project separate. Preserve readable identities and plain language. Implement only admitted paths; report backend scope needed before extending. Exact-head tests/rendered evidence/review required; coordinated serialized release under user's current finish-and-merge authorization.",
+      "next_action": "Lauren requested circular truthful bright-count badge with reduced-motion-aware pulse and a much smaller mobile Inspector question panel. Frontend-only apps/web/shared-ui/docs/tests; no backend journal/writer/source paths edited or reserved. Release relay-qa-feedback for the admitted backend feedback executor while retaining relay-inspector-review-overlay and notification resources. Fresh exact-head checks/rendered evidence and focused UI review before merge.",
+      "task_class": "design",
+      "category": "implementation",
+      "labels": [
+        {
+          "key": "backlog",
+          "value": "new-features"
+        },
+        {
+          "key": "depends-on",
+          "value": "relay-website-project-context-polish-20261001"
+        },
+        {
+          "key": "source",
+          "value": "Lauren message Sentinel_b7f6b2c449588191a1a6b2a9f3c5f1dd"
+        }
+      ],
+      "primary_team": "inspector",
+      "supporting_teams": [],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "base_sha": "2718c97d28871d2f86e3348dac281712ddcae9a5",
+      "state": "active",
+      "created_at": "2026-10-01T21:54:24.434Z",
+      "updated_at": "2026-10-01T23:17:52.314Z",
+      "lease_until": "2026-10-02T11:17:52.314Z"
     }
   ],
   "migrated_from": "loew-inspector"
