@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T07:48:36.658Z",
+  "updated_at": "2026-10-01T07:55:22.704Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5784,6 +5784,64 @@
       ],
       "state": "claimed",
       "created_at": "2026-10-01T06:57:20.167Z"
+    },
+    {
+      "id": "relay-inline-card-browser-remount-hotfix-20261001",
+      "owner": "relay-inline-card-browser-remount-hotfix-20261001",
+      "goal": "Fix Relay inline cards that mount as visible ChatGPT MCP App frames in the browser but remain blank on later/remounted renders in the same ordinary chat, despite earlier successful renders.",
+      "acceptance": "Reproduce the exact observed browser failure: ordinary ChatGPT browser chat creates the Relay MCP App frame ('Opening Show Relay status card', CSP off) but the card body remains blank, including multiple renders in the same chat after earlier successful cards. Treat visible empty iframe as a lifecycle/runtime failure, not a mount failure. Identify whether the failure is resource fetch/cache identity, ui/initialize sequencing, tool-result delivery timing, host remount/replay behavior, or an unhandled widget JS exception. Add regression coverage for repeated/remounted cards in one conversation and reload/revisit behavior. Card must render approved UI from canonical result on first mount and after browser revisit/remount, without relying on a one-time host notification. Preserve approved design. Rotate resource identity if caching requires it. Ship exact-head tests, deploy, refresh tool metadata, and verify at least three direct ordinary-chat renders plus reopening the same chat still paint.",
+      "next_action": "Reopen the inline-card lane as a hotfix. Start from the user's new evidence: the browser is definitely mounting three card frames, so stop debugging tool selection/mount metadata. Instrument/bootstrap the widget for initialization, resource load, result receipt and render exceptions; reproduce repeated renders and chat revisit; then fix the lifecycle/cache/replay path and rotate the resource URI if needed.",
+      "paths": [
+        "src/relay-chat-ui.js",
+        "src/relay-chat-ui.test.js",
+        "src/relay-entry.test.js",
+        "docs/relay/CHATGPT_INLINE_CARD_CLEANROOM.md"
+      ],
+      "resources": [
+        "relay-inline-card-browser-remount",
+        "relay-mcp-app-host-lifecycle",
+        "relay-context-card-v7"
+      ],
+      "task_class": "architecture",
+      "category": "implementation",
+      "labels": [
+        {
+          "key": "domain",
+          "value": "chatgpt-mcp-apps"
+        },
+        {
+          "key": "priority",
+          "value": "p0"
+        },
+        {
+          "key": "surface",
+          "value": "inline-card"
+        }
+      ],
+      "tags": [
+        "chatgpt",
+        "mcp-apps",
+        "inline-card",
+        "blank-frame",
+        "remount",
+        "hotfix"
+      ],
+      "primary_role": "builder",
+      "supporting_roles": [
+        "verifier",
+        "architect"
+      ],
+      "primary_team": "runner",
+      "supporting_teams": [
+        "inspector"
+      ],
+      "primary_staff": "nico",
+      "supporting_staff": [
+        "roman",
+        "ellis"
+      ],
+      "state": "queued",
+      "created_at": "2026-10-01T07:55:22.704Z"
     }
   ],
   "claims": [
