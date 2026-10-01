@@ -106,3 +106,20 @@ test('Authorized Live is preferred while an explicit Captured choice survives qu
   await page.keyboard.press('Escape');await page.locator('.qa-stage').waitFor({state:'detached'});
  }finally{await browser.close();await fixture.close();}
 });
+
+test('A growing failed-save message keeps the desktop panel clear of floating controls', {timeout:15000},async()=>{
+ const fixture=await contextFixture(),browser=await chromium.launch();
+ try{
+  const page=await browser.newPage({viewport:{width:1440,height:900},colorScheme:'dark'});
+  const evidence={evidence_id:'vis_context-capture-relay',screenshot_url:'/api/visual/vis_context-capture-relay/image',context:{project:'relay'}};
+  await page.route('**/api/visual/*/qa',route=>route.fulfill(route.request().method()==='POST'?{status:503,json:{error:'Fixture unavailable. Responses remain locally recoverable while the provider recovers.'}}:{json:{evidence,review:{answers:{},notes:'',overall:null},questions:[{id:'one',prompt:'Does the review remain usable after a failed save?'}]}}));
+  await page.route('**/api/visual/*/live',route=>route.fulfill({json:{live:{active:false}}}));
+  await page.goto(fixture.origin+'/inspector#review?evidence='+evidence.evidence_id);await page.locator('.qa-question').waitFor();
+  await page.getByRole('button',{name:'Yes, clear',exact:true}).click();await page.getByRole('button',{name:'Looks good',exact:true}).click();
+  await page.getByRole('button',{name:'Retry save'}).waitFor();
+  await page.locator('.qa-companion').evaluate(()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve))));
+  const panel=await page.locator('.qa-companion').boundingBox(),toggle=await page.locator('.qa-panel-toggle').boundingBox();
+  assert.ok(panel.y+panel.height<=toggle.y,'failed-save feedback cannot grow beneath Hide questions');
+  await page.getByRole('button',{name:'Retry save'}).click();await page.locator('[data-qa-save-state]').filter({hasText:'failed'}).waitFor();
+ }finally{await browser.close();await fixture.close();}
+});

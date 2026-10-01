@@ -99,6 +99,7 @@ function setSaveState(s, status, error='') {
   const labels={unsaved:'Not saved yet',saving:'Saving…',saved:'Saved',failed:'Save failed. Your responses are still here.'};
   if(output){output.textContent=labels[status] || status;output.dataset.state=status;if(error)output.textContent+=' '+error;if(s.dirty && s.draftAvailable===false)output.textContent+=' Reload recovery is unavailable in this browser. Keep this review open until saved.';}
   const retry=stage.querySelector('[data-qa-retry]');if(retry)retry.hidden=status!=='failed';
+  requestAnimationFrame(()=>{if(state===s && stage && !stage.querySelector('.qa-companion').hidden)floatController?.refresh();});
 }
 function edited() { state.revision++;state.dirty=true;persistDraft(state);setSaveState(state,'saving'); }
 function handlers() {
