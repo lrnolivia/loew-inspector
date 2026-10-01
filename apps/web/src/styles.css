@@ -581,6 +581,11 @@ a { color: inherit; }
   font-size: 13px;
   line-height: 1.4;
 }
+.react-page .signal-card > strong[data-value-kind="text"] {
+  font-size: 14px;
+  line-height: 1.35;
+  overflow-wrap: normal;
+}
 .react-page .signal-card:focus-visible {
   outline: 2px solid var(--color-orient);
   outline-offset: -3px;
