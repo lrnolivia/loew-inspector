@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "rtxforge",
-  "updated_at": "2026-10-01T22:23:36.942Z",
+  "updated_at": "2026-10-01T22:31:47.287Z",
   "legacy_branches": [
     "backup/github-main-before-0.5.8",
     "backup/main-0.5.8-ada",
@@ -39,7 +39,7 @@
     },
     {
       "id": "rtxforge-bazzite-4070-install-package-20261001",
-      "owner": "rtxforge-install-package-chat-7b3354eebff7",
+      "owner": "01a0f997-7f61-7e62-9b39-ae49f311792d",
       "branch": "rtxforge/bazzite-4070-install-package",
       "paths": [
         "packaging/",
@@ -60,7 +60,7 @@
       ],
       "goal": "Deliver a reproducible Bazzite GNOME x86_64 RTX 4070 installation package using the existing rtxForge UI and pinned DLSS-Unlocked runtime options, local file writes and guarded GitHub sync.",
       "acceptance": "Verified AppImage and installer; read-only host checks; explicit selectable MFG/NR modes; preserve existing settings/backups; verified downloads and repeatable recovery tests. Actual NVIDIA/game/HDR behavior remains unverified until exercised on the user's PC.",
-      "next_action": "STOPPED BY USER; handoff to real local Codex. Read full handoff in https://github.com/lrnolivia/rtxForge/pull/5 and RTXFORGE_LOCAL_CODEX_HANDOFF.md. Existing branch at 0ffe216e510295998274aa633c969f19f7e996ee; cloud checkout clean and synced. Transfer this same assignment to actual successor owner before edits. 249 local tests pass. CI build 36934058892: missing cairo typelib; admission 36934057467: legacy control record frozen for migration. Fix only after scope/authority refresh; verify actual Bazzite/4070. No merge/release; no running writer or CI job.",
+      "next_action": "User explicitly resumed in local Codex chat 01a0f997-7f61-7e62-9b39-ae49f311792d. Preserve dirty main; resume same branch in isolated local worktree, fix Cairo harness dependency and canonical Relay gate after rescope, run read-only Bazzite host check.",
       "category": "implementation",
       "primary_role": "implementation",
       "primary_team": "release",
@@ -70,8 +70,8 @@
       "base_sha": "4156ec19515f10af519564699aaebe6adf75c850",
       "state": "held",
       "created_at": "2026-10-01T21:59:59.674Z",
-      "updated_at": "2026-10-01T22:23:36.942Z",
-      "lease_until": "2026-10-02T10:23:36.942Z"
+      "updated_at": "2026-10-01T22:31:47.287Z",
+      "lease_until": "2026-10-02T10:31:47.287Z"
     }
   ]
 }
