@@ -15,7 +15,7 @@ function Shell() {
         <nav aria-label="Relay">
           <NavLink to="/today">today</NavLink>
           <NavLink to="/runner">runner</NavLink>
-          <a href="/#review">inspector</a>
+          <a href="/inspector#review">inspector</a>
           <NavLink to="/night-shift">night shift</NavLink>
         </nav>
         <span className="connection-state" data-state={state}><span aria-hidden="true"/>{state}</span>

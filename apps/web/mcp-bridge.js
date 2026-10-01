@@ -18,7 +18,7 @@ window.addEventListener("message", event => {
   else waiter.resolve(event.data.result);
 });
 const ready = rpc("ui/initialize", {
-  appInfo: { name: "relay", version: "1.0.0" }, appCapabilities: {}, protocolVersion: "2026-01-26"
+  appInfo: { name: "relay", version: "2.0.0" }, appCapabilities: {}, protocolVersion: "2026-01-26"
 }).then(() => window.parent.postMessage({ jsonrpc: "2.0", method: "ui/notifications/initialized", params: {} }, "*"));
 const nativeFetch = window.fetch.bind(window);
 window.fetch = async (input, options = {}) => {
@@ -33,6 +33,20 @@ window.fetch = async (input, options = {}) => {
   const body = data.base64 ? Uint8Array.from(atob(data.base64), char => char.charCodeAt(0)) : JSON.stringify(data.body);
   return new Response(body, { status: data.status, headers: { "Content-Type": data.content_type } });
 };
+document.addEventListener("click", event => {
+  const anchor = event.target instanceof Element ? event.target.closest('a[href^="/inspector"]') : null;
+  if (!anchor) return;
+  event.preventDefault();
+  const href = new URL(anchor.getAttribute("href"), "https://relay.loew.fi").href;
+  void (async () => {
+    try {
+      if (window.openai?.openExternal) await window.openai.openExternal({ href });
+      else { await ready; await rpc("ui/open-link", { url: href }); }
+    } catch {
+      window.open(href, "_blank", "noopener,noreferrer");
+    }
+  })();
+});
 const images = new Map();
 new MutationObserver(() => {
   document.querySelectorAll('img[src^="/api/"]').forEach(async img => {
