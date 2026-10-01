@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T00:03:58.032Z",
+  "updated_at": "2026-10-01T00:05:21.429Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -2039,17 +2039,22 @@
         "contracts/resume/",
         "src/resume-checkpoints.js",
         "src/resume-checkpoints.test.js",
-        "docs/relay/RELAY_1_9_3_RELEASE.md"
+        "docs/relay/RELAY_1_9_3_RELEASE.md",
+        "src/runner-control.js",
+        "src/runner-control.test.js",
+        "src/relay-entry.js",
+        "src/relay-entry.test.js"
       ],
       "resources": [
         "relay-1.9.3-release",
         "relay-resume-checkpoints",
         "relay-passive-snapshots",
-        "relay-worker-resumability"
+        "relay-worker-resumability",
+        "relay-runner-resume-read-contract"
       ],
       "goal": "Ship Relay 1.9.3 as the low-overhead durable resume/checkpoint release for interrupted workers and chats.",
       "acceptance": "Derive compact checkpoints from canonical assignment/source/PR/check/deploy/evidence state at meaningful transitions and bounded cadence; include exact identities, current stage, last successful action, blocker/wait state, next action, QA context and ledger refs; dedupe unchanged snapshots; expose latest-valid resume/read contract; no model-authored long handoff required. Tests cover dedupe, stale evidence, external waits, exact identity and interrupted resume.",
-      "next_action": "Create the 1.9.3 branch from server-pinned main, prove Relay 1.9.2 edit/append tools on the new resume contract file using exact head/blob SHAs, then implement passive checkpoint derivation/dedupe/latest-valid resume and ship as 1.9.3.",
+      "next_action": "Implement passive checkpoint derivation on top of observed progress, expose relay_runner_resume through Runner/MCP, test deterministic dedupe/freshness/external waits/exact identities, then ship 1.9.3 and refresh tools.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-006",
@@ -2059,8 +2064,8 @@
       "base_sha": "d3cbbd6135e7cd087388f986f38cb13d500b35e2",
       "state": "active",
       "created_at": "2026-10-01T00:02:42.510Z",
-      "updated_at": "2026-10-01T00:02:42.510Z",
-      "lease_until": "2026-10-01T12:02:42.510Z"
+      "updated_at": "2026-10-01T00:05:21.429Z",
+      "lease_until": "2026-10-01T12:05:21.429Z"
     }
   ],
   "migrated_from": "loew-inspector"
