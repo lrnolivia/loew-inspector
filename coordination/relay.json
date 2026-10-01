@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T01:45:29.815Z",
+  "updated_at": "2026-10-01T01:48:25.046Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3961,7 +3961,17 @@
         "src/runner-control-core.js",
         "src/coordination-engine.js",
         "src/coordination.mjs",
-        "docs/relay/RELAY_1_9_6_RELEASE.md"
+        "docs/relay/RELAY_1_9_6_RELEASE.md",
+        "src/amendment-sync.js",
+        "src/amendment-sync.test.js",
+        "src/recovery-signals.js",
+        "src/recovery-signals.test.js",
+        "src/workflow-telemetry.js",
+        "src/workflow-telemetry.test.js",
+        "src/relationship-context.js",
+        "src/relationship-context.test.js",
+        "src/relay-entry.js",
+        "src/relay-entry.test.js"
       ],
       "resources": [
         "relay-1.9.6-release",
@@ -3996,11 +4006,13 @@
         "relay-workflow-time-telemetry",
         "relay-bottleneck-analytics",
         "relay-phase-timing",
-        "relay-wait-classification"
+        "relay-wait-classification",
+        "relay-runner-updates-read-contract",
+        "relay-relationship-context-primitives"
       ],
       "goal": "Ship Relay 1.9.6 as the planning/coordination intelligence release that consumes the 1.9.4 staff directory and 1.9.5 skills runtime.",
       "acceptance": "Planning/coordination skills consult latest resume state and relevant findings before reconstructing work; classify adopt/defer/reject/supersede; prefer canonical amend/rescope/handoff; avoid duplicate successors. Add structured assignment category, bounded labels/tags, one primary role plus optional supporting roles, and expose them to routing, filtering, checkpoints and skill selection without changing authorization. Worker messages classify FYI/request/blocker/decision/handoff/scope-change, cite exact assignment/branch/PR/evidence identity, state impact/requested action, and reconcile against canonical state before acting. Consume the canonical 1.9.4 staff identities instead of recreating names. Add Julian-managed relationship context per sticky staff identity from explicit feedback/repeated collaboration patterns; no autonomous relationship engine, hidden affinity scores, inferred sensitive traits or canned jokes. Staff workers emit bounded interaction signals; the lead curates durable notes. Tests cover taxonomy validation/amendment history, duplicate avoidance, communication classification/reconciliation, checkpoint-first resume, role-driven skill selection and relationship-context controls. Worker communication is staff-aware: resolve sender, recipient and referenced collaborators through the canonical sticky staff directory when a binding exists; render/use the approved human name in worker messages, handoffs, status surfaces and resume context while preserving canonical assignment/worker/branch/PR/evidence IDs underneath. Never invent a replacement name when no binding exists; fall back to the machine identity until Julian/lead assigns an approved staff identity. Cross-worker messages addressed to Margot, Roman, Imani, etc. must resolve to the same durable person across subnets and sessions. Human-facing narration is organization-first: default to people + ownership + outcome + validation, with machine evidence preserved underneath; low-level transport/tool/SHA detail is subordinate unless directly relevant. Live amendment delivery: active workers/chats maintain a monotonic amendment cursor and perform a bounded relevant-change check at synchronization points such as start/resume, before major source mutations or commit/PR/deploy transitions, after external waits, and on the normal heartbeat cadence. No-change checks add no model context. New amendments are classified informational, plan-adjusting, scope-changing or blocking; informational/plan-adjusting changes merge into the next safe step, while scope-changing/blocking changes force canonical reconciliation before further conflicting work. Never repeatedly replay full amendment history. Expose exact consumed revision so resumes and handoffs know what instructions the worker has seen. Stall recovery: add a caught-up/self-recovery skill plus Relay-side no-progress detection. Worker-side recovery detects repeated/no-op actions, stale heartbeat with no external wait, unchanged canonical progress across expected transition points, repeated identical tool failures, or circular replanning; it reconstructs from the latest valid resume checkpoint + canonical assignment/source/PR/deploy state, identifies the last successful action and precise stall point, emits a concise \"caught up here\" status, and resumes from the next safe action without user prompting. Relay-side detection records a bounded recovery signal/checkpoint when observed progress stalls so an active/resumed chat can consume it through live amendment/instruction sync. Do not self-recover through genuine external waits, unresolved authorization/tool-schema/client failures, destructive ambiguity, or scope conflicts; those surface as explicit blockers. Limit retries and prevent recovery loops.",
-      "next_action": "Batch 1.9.6 in three coherent slices: (A) assignment taxonomy + staff-aware worker communication + organization-first narration; (B) live amendment cursor/sync + caught-up recovery/recovery learning; (C) workflow-time telemetry + bottleneck analytics + release identity. Keep exact machine IDs authoritative under human staff names and never turn telemetry into staff rankings.",
+      "next_action": "A-slice landed. B-slice now: monotonic amendment cursor/read contract + bounded caught-up recovery/recovery learning. C-slice: workflow-time telemetry/bottleneck analytics + Julian-managed relationship-context primitives + 1.9.6 runtime identity. Then exact-head preflight/CI/release.",
       "task_class": "architecture",
       "ledger_refs": [
         "RFS-001",
@@ -4022,8 +4034,8 @@
       "base_sha": "3b4659551bad0fdcf5310f4cb3c5ade7403409af",
       "state": "active",
       "created_at": "2026-10-01T01:45:02.465Z",
-      "updated_at": "2026-10-01T01:45:02.465Z",
-      "lease_until": "2026-10-01T13:45:02.465Z"
+      "updated_at": "2026-10-01T01:48:25.046Z",
+      "lease_until": "2026-10-01T13:48:25.046Z"
     }
   ],
   "migrated_from": "loew-inspector"
