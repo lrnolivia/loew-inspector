@@ -194,8 +194,8 @@ async function lookupVersion(cloud, path, commitSha) {
 
 export const cloudUploadTool = {
   name: "relay_cloud_upload_version",
-  title: "Recovery upload exact-source Worker version",
-  description: "Recovery/diagnostic escape hatch for exact-source Cloudflare Worker uploads. Canonical Relay production releases use GitHub -> Cloudflare Workers Builds; relay/relay uploads require an explicit recovery or diagnostic purpose.",
+  title: "Upload exact-source Worker version",
+  description: "Exact-source upload path for allowlisted Workers that still use direct source publication. Canonical relay/relay publication is disabled here; Relay production and recovery use Cloudflare Workers Builds or known-good version rollback.",
   inputSchema: {
     type: "object",
     properties: {
@@ -225,8 +225,8 @@ export function validateCloudUploadArguments(args) {
 export async function uploadCloudSourceVersion(args, env, deps = {}) {
   validateCloudUploadArguments(args);
   if (!cloudWriteScripts(env).includes(args.script)) throw new Error("relay.CLOUD writes are not allowed for " + args.script);
-  if (args.script === "relay" && args.repo === "relay" && !["recovery", "diagnostic"].includes(args.purpose)) {
-    throw new Error("Canonical Relay production transport is Cloudflare Workers Builds; manual relay/relay upload requires explicit recovery or diagnostic purpose");
+  if (args.script === "relay" && args.repo === "relay") {
+    throw new Error("Canonical Relay source upload is disabled; use Cloudflare Workers Builds for publication or deploy a known-good Worker version for rollback");
   }
 
   const owner = sourceOwner(env);
