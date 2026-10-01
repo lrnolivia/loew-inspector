@@ -22,7 +22,15 @@ const resourcesSchema = { type: 'array', maxItems: 100, items: text(200), unique
 const ledgerRefsSchema = { type: 'array', maxItems: 50, items: identity, uniqueItems: true };
 const taskClassSchema = { type: 'string', enum: ['design', 'architecture', 'maintenance'] };
 const categorySchema = { type: 'string', enum: ['architecture', 'design', 'implementation', 'research', 'qa-verification', 'maintenance', 'release', 'coordination'] };
-const labelSchema = schema({ key: { type: 'string', minLength: 1, maxLength: 64, pattern: '^[a-z][a-z0-9.-]{0,63}$' }, value: text(120) }, ['key', 'value']);
+const labelSchema = {
+  type: 'object',
+  properties: {
+    key: { type: 'string', minLength: 1, maxLength: 64, pattern: '^[a-z][a-z0-9.-]{0,63}$' },
+    value: text(120)
+  },
+  required: ['key', 'value'],
+  additionalProperties: false
+};
 const labelsSchema = { type: 'array', maxItems: 32, items: labelSchema };
 const tagsSchema = { type: 'array', maxItems: 32, uniqueItems: true, items: { type: 'string', minLength: 1, maxLength: 64, pattern: '^[a-z0-9][a-z0-9._-]{0,63}$' } };
 const roleSchema = { type: 'string', minLength: 0, maxLength: 64, pattern: '^(?:|[a-z][a-z0-9-]{0,63})$' };
