@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T00:02:42.510Z",
+  "updated_at": "2026-10-01T00:03:58.032Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -2020,10 +2020,16 @@
       "acceptance": "Add exact-SHA bounded edit and append operations with deterministic readback, stale-state rejection, default-branch protection, and focused tests. Ship through normal admission, merge, deploy, runtime verification, and client refresh.",
       "next_action": "Relay 1.9.2 is merged and deployed from PR #58 exact merge 6c2aae6e0324aa1164f059f94d40ab5309f3667a as Worker v50 version 654b42f4-9fe8-4320-984a-959e8a70c57c at 100% via deployment df4d9438-426a-4d95-a947-e447fbe8a856. Current ChatGPT session still lacks relay_source_edit_text and relay_source_append_text in discovered MCP schema. Refresh Relay tools and reopen/refresh ChatGPT. First refreshed-session action: verify both tools are visible and run one bounded safe mutation on a non-default branch using exact expected head/blob SHAs. If readback succeeds, complete 1.9.2 with PR/deployment/client evidence, then begin 1.9.3 resume checkpoints.",
       "base_sha": "5dc5242da630a1c0bed534423b408418394fb757",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-09-30T23:37:56.654Z",
-      "updated_at": "2026-09-30T23:46:45.728Z",
-      "lease_until": "2026-10-01T11:46:45.728Z"
+      "updated_at": "2026-10-01T00:03:58.032Z",
+      "lease_until": "2026-10-01T12:03:58.032Z",
+      "pr": 58,
+      "merged_head_sha": "bb6f6a6b49f1681f38455d5b1da1c9f4422066b3",
+      "merge_commit_sha": "6c2aae6e0324aa1164f059f94d40ab5309f3667a",
+      "evidence": "Relay 1.9.2 shipped through PR #58. Exact tested head bb6f6a6b49f1681f38455d5b1da1c9f4422066b3 passed workspace tests/build and Runner admission, squash-merged as 6c2aae6e0324aa1164f059f94d40ab5309f3667a, uploaded as Worker v50 version 654b42f4-9fe8-4320-984a-959e8a70c57c and deployed 100% via df4d9438-426a-4d95-a947-e447fbe8a856. Runtime reports 1.9.2 and source main matched the exact merge before coordination-only advances. After ChatGPT tool refresh, relay_source_edit_text was proven live on the 1.9.3 branch: cf6598bd872e405d5f62aab503abc599106d2756/e954e3e6e17294cb3db06b3febd94a4f9a9bedd2 -> 5881f11ff8f5d58e3b2dbc6b0e5e06f5adb4e6f4/b695812e3956c7f8d4db4fbd52ab7219c397ccbb. relay_source_append_text then chained from those returned identities to d4a39ff8e6ee4b48e3f77977bdd678fc0ef1987e/a74846fdea01f96b30bcbb263e0515962a98da5f with deterministic readback. File/document payload ceilings now have a canonical bounded mutation path.",
+      "work_accounted": true,
+      "completed_at": "2026-10-01T00:03:58.032Z"
     },
     {
       "id": "relay-1.9.3-resume-checkpoints-20260930",
