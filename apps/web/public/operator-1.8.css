@@ -1098,3 +1098,13 @@ body[data-page="night-shift"] { --page-feature-accent: var(--feature-night-shift
 .skeleton-work .skeleton-state { flex: 0 0 114px; }
 .skeleton-work .skeleton-badge { flex: 0 0 92px; }
 @media (max-width: 640px) { .skeleton-work .skeleton-row { flex-wrap: wrap; } .skeleton-work .skeleton-copy { flex-basis: calc(100% - 110px); } }
+
+/* Roomier review gutters and small sidebar utilities. */
+.review-list, .skeleton-review > div { gap: 28px; }
+.operator-brand strong { color: #fbfaf7 !important; }
+:root[data-theme="light"] .operator-brand strong { color: var(--feature-relay) !important; }
+.operator-utility { display: flex; flex-direction: column; gap: 8px; }
+.utility-icon .relay-glyph { width: 18px; height: 18px; stroke-width: 2.4; }
+@media (max-width: 640px) { .review-list, .skeleton-review > div { gap: 24px; } }
+
+@media (max-width: 900px) { .operator-utility { flex-direction: row; flex-wrap: wrap; } }

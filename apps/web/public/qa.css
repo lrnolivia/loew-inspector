@@ -512,8 +512,7 @@ body.qa-open { overflow: hidden; }
   .qa-question-card { grid-column: 1; grid-row: span 2; }
   .qa-notes, .qa-overall { grid-column: 2; margin-top: 0; margin-bottom: 24px; }
 }
-@media (prefers-color-scheme: light) {
-  .qa-stage {
+:root[data-theme="light"] .qa-stage {
     --color-canvas: #f3f3f0;
     --color-surface: #fafaf7;
     --color-raised: #e8e8e2;
@@ -523,7 +522,7 @@ body.qa-open { overflow: hidden; }
     --color-neutral: #6b6b63;
     --color-border: #deded6;
   }
-}
+
 @media (pointer: coarse) {
   .qa-stage .qa-icon-button { width: 44px; height: 44px; min-height: 44px; }
   .qa-stage .qa-answer, .qa-stage .qa-overall-button, .qa-stage .qa-save-button, .qa-stage .qa-text-button, .qa-stage .qa-view-toggle { min-height: 44px; }

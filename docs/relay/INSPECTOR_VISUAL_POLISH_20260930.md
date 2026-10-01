@@ -42,3 +42,7 @@ Impeccable's detector found three pre-existing sidebar width/padding/margin anim
 ## Greige and visual-card follow-up
 
 User correction: neutral greige surfaces replace both the brown status-card washes and the blue-grey Inspector panel. Project badges have raised greige fills and a subtle inset edge. Inspector heading uses the shared bright cyan #18afc0; the approved bitmap icon is preserved pending the user's replacement. Review uses visual cards in three desktop columns, two medium columns and one mobile column. Skeletons follow these same card dimensions and responsive grid, and section-specific work/attention/automation/Inspector placeholders replace the generic rows.
+
+## Sidebar theme and spacing follow-up
+
+Review cards and their skeletons use 28px desktop gutters and 24px mobile gutters. Relay's sidebar title is near-white in dark mode and sienna in light mode. A sidebar sun/moon toggle follows the system until a choice is saved, persists the user's light/dark choice, and initializes before paint. All existing light styles, including Inspector, follow that theme. A smaller refresh glyph replaces the gear and opens the user's exact Relay plugin settings link. Its tooltip directs the user to select Refresh there; no undocumented automatic refresh endpoint is invoked. OpenAI's documented flow: https://developers.openai.com/plugins/deploy/connect-chatgpt#refresh-metadata
