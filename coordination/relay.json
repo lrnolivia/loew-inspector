@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-01T06:53:28.944Z",
+  "updated_at": "2026-10-01T06:54:00.908Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5487,7 +5487,7 @@
       "owner": "relay-2.0-today-runner-react-slice-20261001",
       "goal": "Build Relay 2.0's first working React/live-state proof across Today, Runner and night shift, explicitly carrying forward the Runner + night shift product work that did not actually ship in 1.9.9, without touching the separate ChatGPT inline-card host lane.",
       "acceptance": "A clean checkout can build the new Vite React app without committing dist/generated bundle output; Today, Runner and night shift render canonical Relay data; the missing Runner/night shift experience intended for 1.9.9 is implemented here as an explicit 2.0 carry-forward rather than retroactively claimed as shipped; a bounded live event contract updates progress/worker/monitoring state without manual page refresh; dropped streams visibly enter reconnecting/stale states and reconcile from a canonical snapshot; project context is URL-addressable; each primary page uses a compact top-of-page signal deck that mirrors the Inspector chat-card preview family rather than a separate dashboard panel language: cards are shorter/tighter than the Inspector preview, show distinct live information, render two side-by-side when space allows, and support horizontal pan/scroll-snap with restrained idle auto-advance that pauses on hover/focus/pointer interaction and is disabled under prefers-reduced-motion; the deck must remain keyboard/touch usable and must not hide important state behind animation; Runner and night shift provide enough distinct live behavior to exercise the new state, routing, reconnect and component engines; existing 1.9.9 production UI remains available until later cutover; no files owned by the ChatGPT card host assignment are modified.",
-      "next_action": "Scaffold the Vite/React shell, shared card/view-model primitives and live transport. Build the compact two-up signal deck first so Today, Runner and night shift all exercise one shared component family; then wire canonical snapshots and live event updates through those cards and the deeper page content.",
+      "next_action": "Calibrate the full Inspector card with a slightly larger mark than the current 64px treatment, a feature name only modestly smaller than the current maximum, and materially tighter surrounding spacing. Reduce left-column dominance through grid proportions and whitespace, not by making the brand identity timid. Then derive the denser dashboard signal-card variant from those corrected proportions.",
       "paths": [
         "apps/web/package.json",
         "apps/web/vite.config.ts",
@@ -5548,7 +5548,7 @@
       ],
       "state": "claimed",
       "created_at": "2026-10-01T06:33:20.314Z",
-      "amendment_count": 2,
+      "amendment_count": 3,
       "amendments": [
         {
           "at": "2026-10-01T06:43:57.215Z",
@@ -5615,9 +5615,23 @@
             "acceptance": "A clean checkout can build the new Vite React app without committing dist/generated bundle output; Today, Runner and night shift render canonical Relay data; the missing Runner/night shift experience intended for 1.9.9 is implemented here as an explicit 2.0 carry-forward rather than retroactively claimed as shipped; a bounded live event contract updates progress/worker/monitoring state without manual page refresh; dropped streams visibly enter reconnecting/stale states and reconcile from a canonical snapshot; project context is URL-addressable; each primary page uses a compact top-of-page s...",
             "next_action": "Scaffold the Vite/React shell, shared card/view-model primitives and live transport. Build the compact two-up signal deck first so Today, Runner and night shift all exercise one shared component family; then wire canonical snapshots and live event updates through those cards and the deeper page content."
           }
+        },
+        {
+          "at": "2026-10-01T06:54:00.908Z",
+          "by": "relay-2.0-today-runner-react-slice-20261001",
+          "reason": "User clarified the density fix: preserve a strong oversized identity mark and only slightly reduce the feature-name scale; remove excess perceived size by tightening hero width, padding, gaps and left/right balance instead of shrinking the identity.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "First calibrate the existing Inspector preview CSS into the corrected full-card scale: reduce left-side dominance, mark/title scale and dead air while preserving information hierarchy. Use those proportions as the full-card reference for the React shared card system, then derive the shorter two-up dashboard signal-card variant from it."
+          },
+          "after": {
+            "next_action": "Calibrate the full Inspector card with a slightly larger mark than the current 64px treatment, a feature name only modestly smaller than the current maximum, and materially tighter surrounding spacing. Reduce left-column dominance through grid proportions and whitespace, not by making the brand identity timid. Then derive the denser dashboard signal-card variant from those corrected proportions."
+          }
         }
       ],
-      "updated_at": "2026-10-01T06:49:25.942Z"
+      "updated_at": "2026-10-01T06:54:00.908Z"
     }
   ],
   "claims": [
@@ -8442,7 +8456,7 @@
       ],
       "goal": "Build Relay 2.0's first working React/live-state proof across Today, Runner and night shift, explicitly carrying forward the Runner + night shift product work that did not actually ship in 1.9.9, without touching the separate ChatGPT inline-card host lane.",
       "acceptance": "A clean checkout can build the new Vite React app without committing dist/generated bundle output; Today, Runner and night shift render canonical Relay data; the missing Runner/night shift experience intended for 1.9.9 is implemented here as an explicit 2.0 carry-forward rather than retroactively claimed as shipped; a bounded live event contract updates progress/worker/monitoring state without manual page refresh; dropped streams visibly enter reconnecting/stale states and reconcile from a canonical snapshot; project context is URL-addressable; each primary page uses a compact top-of-page signal deck that mirrors the Inspector chat-card preview family rather than a separate dashboard panel language: cards are shorter/tighter than the Inspector preview, show distinct live information, render two side-by-side when space allows, and support horizontal pan/scroll-snap with restrained idle auto-advance that pauses on hover/focus/pointer interaction and is disabled under prefers-reduced-motion; the deck must remain keyboard/touch usable and must not hide important state behind animation; Runner and night shift provide enough distinct live behavior to exercise the new state, routing, reconnect and component engines; existing 1.9.9 production UI remains available until later cutover; no files owned by the ChatGPT card host assignment are modified.",
-      "next_action": "First calibrate the existing Inspector preview CSS into the corrected full-card scale: reduce left-side dominance, mark/title scale and dead air while preserving information hierarchy. Use those proportions as the full-card reference for the React shared card system, then derive the shorter two-up dashboard signal-card variant from it.",
+      "next_action": "Calibrate the full Inspector card with a slightly larger mark than the current 64px treatment, a feature name only modestly smaller than the current maximum, and materially tighter surrounding spacing. Reduce left-column dominance through grid proportions and whitespace, not by making the brand identity timid. Then derive the denser dashboard signal-card variant from those corrected proportions.",
       "task_class": "architecture",
       "category": "implementation",
       "labels": [
@@ -8483,8 +8497,25 @@
       "base_sha": "0f0dc565dea89951e9d571b96d3771466d087b32",
       "state": "active",
       "created_at": "2026-10-01T06:45:18.694Z",
-      "updated_at": "2026-10-01T06:53:28.944Z",
-      "lease_until": "2026-10-01T18:53:28.944Z"
+      "updated_at": "2026-10-01T06:54:00.908Z",
+      "lease_until": "2026-10-01T18:54:00.908Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-01T06:54:00.908Z",
+          "by": "relay-2.0-today-runner-react-slice-20261001",
+          "reason": "User clarified the density fix: preserve a strong oversized identity mark and only slightly reduce the feature-name scale; remove excess perceived size by tightening hero width, padding, gaps and left/right balance instead of shrinking the identity.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "First calibrate the existing Inspector preview CSS into the corrected full-card scale: reduce left-side dominance, mark/title scale and dead air while preserving information hierarchy. Use those proportions as the full-card reference for the React shared card system, then derive the shorter two-up dashboard signal-card variant from it."
+          },
+          "after": {
+            "next_action": "Calibrate the full Inspector card with a slightly larger mark than the current 64px treatment, a feature name only modestly smaller than the current maximum, and materially tighter surrounding spacing. Reduce left-column dominance through grid proportions and whitespace, not by making the brand identity timid. Then derive the denser dashboard signal-card variant from those corrected proportions."
+          }
+        }
+      ]
     }
   ],
   "migrated_from": "loew-inspector"
