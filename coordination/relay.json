@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T13:43:18.003Z",
+  "updated_at": "2026-10-02T14:02:10.825Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -11887,10 +11887,16 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "7a9721097e9653835888aa74341753b177b1c0f0",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-02T13:43:18.003Z",
-      "updated_at": "2026-10-02T13:43:18.003Z",
-      "lease_until": "2026-10-03T01:43:18.003Z"
+      "updated_at": "2026-10-02T14:02:10.825Z",
+      "lease_until": "2026-10-03T02:02:10.825Z",
+      "pr": 130,
+      "merged_head_sha": "73d7e60fdb2836274bdb6e1f0cbf0b34d0097a84",
+      "merge_commit_sha": "30adae6b63273e7285527a8baf4683f1d702ec52",
+      "evidence": "PR130 merged30adae6b63273e7285527a8baf4683f1d702ec52. Exact candidate and postmerge fullCI37015519721 pass, actual production+retained job110868134885 pass. Cloud Inspector live route /inspector#review?project=field independently shows50Fieldcaptures at13:52UTC, including final portrait Tools/Inspector after source filtering. No human verdict or evidence deleted. One previously mislabeled own capture vis_08591e19-44d9-4cc6-b99e-0ce3ef03d357 separately markedStale throughsingle-item reversible reviewUI; Saved correctionnote retained, UI1reviewitemupdated verified.",
+      "work_accounted": true,
+      "completed_at": "2026-10-02T14:02:10.825Z"
     }
   ],
   "migrated_from": "loew-inspector"
