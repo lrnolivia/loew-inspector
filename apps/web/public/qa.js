@@ -127,14 +127,14 @@ function setView(mode) {
   viewportController?.destroy();previewMode=renderQaPreview(stage,state,mode);
   viewportController=createQaViewport(stage,{mode:previewMode==='retained'?'live':previewMode});
   const select=stage.querySelector('.qa-preview-picker select'),canLive=Boolean(state.live?.active&&state.live?.embeddable&&state.live?.url);
-  select.innerHTML='<option value="captured">Captured</option>'+(state.live.retained?'<option value="retained" '+(!state.live.retained.available?'disabled':'')+'>'+ (state.live.retained.available?'Retained interactive · sample data':'Retained · review window ended')+'</option>':'')+(state.evidence.video_url?'<option value="video">Recording</option>':'')+'<option value="live" '+(!canLive?'disabled':'')+'>'+(canLive?'Live':state.live.renderUnconfirmed?'Live unconfirmed':'Live unavailable')+'</option>';
+  select.innerHTML='<option value="captured">Captured</option>'+(state.live.retained?'<option value="retained" '+(!state.live.retained.available?'disabled':'')+'>'+ (state.live.retained.available?'Retained build':'Retained · expired')+'</option>':'')+(state.evidence.video_url?'<option value="video">Recording</option>':'')+'<option value="live" '+(!canLive?'disabled':'')+'>'+(canLive?'Live':state.live.renderUnconfirmed?'Live unconfirmed':'Live unavailable')+'</option>';
   select.value=previewMode;select.disabled=false;
   stage.querySelector('.qa-preview-state').textContent=previewMode==='retained'?'Checking retained build · sample data…':previewMode==='live'?'Checking live preview…':previewMode==='video'?'Recorded evidence':'Captured evidence'+(state.live.renderUnconfirmed?' · live preview unconfirmed':!canLive?' · live preview unavailable':'');
   let direct=stage.querySelector('.qa-open-live');
   if(!direct){direct=document.createElement('a');direct.className='qa-open-live';direct.textContent='Open interactive preview';direct.target='_blank';direct.rel='noopener noreferrer';stage.append(direct);}
   let target;try{target=new URL(state.live?.retained?.available?state.live.retained.url:state.live?.url,location.origin);}catch{}
   const allowed=Boolean((state.live?.active||state.live?.retained?.available)&&target?.protocol==='https:'&&(target.hostname==='loew.fi'||target.hostname.endsWith('.loew.fi')));
-  direct.hidden=!allowed;if(allowed)direct.href=target.href;else direct.removeAttribute('href');
+  direct.hidden=!allowed||Boolean(state.live.retained);if(allowed)direct.href=target.href;else direct.removeAttribute('href');
   const frame=stage.querySelector('[data-qa-live-preview]');
   if(frame) checkLiveFrame(frame);
 }
