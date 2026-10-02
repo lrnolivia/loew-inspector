@@ -63,7 +63,7 @@ const SCRIPT = String.raw`<script>
   window.addEventListener("message",onMessage);
   post({id:initId,method:"ui/initialize",params:{appInfo:{name:"relay-mount-variant",version:"20261002.1"},appCapabilities:{},protocolVersion:"2026-01-26"}});
 })();
-<\/script>`;
+</script>`;
 export function cardVariantResource(uri) {
   const v=variants.find(v=>v.uri===uri);if(!v)throw new Error("Unknown card variant resource");
   return {uri,mimeType:"text/html;profile=mcp-app",text:SHELL.replace("<!--PROGRAM-->",v.id==="lifecycle-standard"?SCRIPT:""),
