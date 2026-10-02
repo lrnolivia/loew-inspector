@@ -5,7 +5,7 @@ import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, RELAY_STATUS_CARD_URI,
 test("Relay publishes one versioned compact MCP card resource", () => {
   const descriptor = relayContextCardDescriptor();
   const resource = relayContextCardResource();
-  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v10.html");
+  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v11.html");
   assert.equal(descriptor.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.mimeType, "text/html;profile=mcp-app");
@@ -386,6 +386,8 @@ test('v9 card reports its height with ui/notifications/size-changed and shows ha
     const frame=page.frameLocator('#widget');
     await frame.locator('#title').filter({hasText:'Height report proof'}).waitFor();
     await page.waitForFunction(()=>window.sizes.some(size=>size.height>0));
+    assert.equal(await frame.locator('#diag').isVisible(),false);
+    await frame.locator('#details > summary').click();
     await frame.locator('#diag').filter({hasText:/handshake ok/}).waitFor();
   } finally {await browser.close()}
 });

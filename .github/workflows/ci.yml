@@ -94,6 +94,21 @@ jobs:
         run: npm run typecheck:2.0 --workspace @relay/web
       - name: Run workspace, contract, API, browser and React tests
         run: npm test
+      - name: Verify contextual card visuals and preserve Inspector evidence
+        if: startsWith(github.head_ref, 'relay/context-card-visual-parity-') || (github.event_name == 'push' && contains(github.event.head_commit.message, 'contextual card visual parity'))
+        env:
+          CF_ACCESS_CLIENT_ID: ${{ vars.CF_ACCESS_CLIENT_ID }}
+          CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF }}
+          EXPECTED_SOURCE_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+          PREVIEW_PR: ${{ github.event.pull_request.number }}
+        run: node scripts/verify-context-card-visuals.mjs
+      - name: Preserve contextual card captures
+        if: always() && (startsWith(github.head_ref, 'relay/context-card-visual-parity-') || (github.event_name == 'push' && contains(github.event.head_commit.message, 'contextual card visual parity')))
+        uses: actions/upload-artifact@v4
+        with:
+          name: relay-context-cards-${{ github.event.pull_request.number || github.sha }}
+          path: qa-evidence/context-cards/
+          if-no-files-found: error
       - name: Preserve actual website route screenshots
         if: always() && (startsWith(github.head_ref, 'relay/retained-interactive-previews-') || startsWith(github.head_ref, 'relay/website-work-queue-views-') || startsWith(github.head_ref, 'relay/website-post-release-polish-') || startsWith(github.head_ref, 'relay/website-2.0-repair-') || startsWith(github.head_ref, 'relay/website-project-context-polish-') || startsWith(github.head_ref, 'relay/website-notifications-review-'))
         uses: actions/upload-artifact@v4
@@ -141,4 +156,3 @@ jobs:
           name: relay-visual-review-${{ github.event.pull_request.number }}
           path: qa-evidence/
           if-no-files-found: ignore
-
