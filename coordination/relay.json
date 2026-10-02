@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T01:02:14.110Z",
+  "updated_at": "2026-10-02T01:03:23.262Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6895,6 +6895,30 @@
       "supporting_staff": [],
       "state": "claimed",
       "created_at": "2026-10-01T23:22:05.616Z"
+    },
+    {
+      "id": "relay-context-card-packaging-20261002",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "goal": "Repair production contextual card browser packaging while preserving design and capabilities, directly in Julian chat using Relay with no workers.",
+      "acceptance": "Reproduce bundled browser model failure and fix without helper shims or function serialization. Preserve original51 capabilities, card art and diagnostic controls; rotate changed resource URI. Add bundled-program parity and actual-script regression tests; exact-head CI/admission, browser proof where available. No claim native ordinary-chat mount solved without actual user/client evidence. Carry all unresolved predecessor criteria unchanged: Implement approved 16-file storage/explicit-ack iteration: four typed feedback tools, canonical routing/artifact checks, idempotent conditional writes, bounded pagination, no read-triggered ACK, pending feedback in explicit resume, legacy compatibility, all original capabilities/resources retained. No live feedback events/ACK outside fixtures; no claim that queueing wakes native Codex. Native push remains unverified; visual-review/event dual-write repair remains an explicit follow-up. Carry ALL outstanding PR112/PR110 card criteria: original ordinary Mac and Safari display unresolved; iOS original action pending; Work original action timeout preserved historically, new Lauren desktop Work screenshot proves original six-step connection/action PASS at23:21:37.734Z sample83db62cb-ab79-4bf0-96fd-e85f906d8e3e; Lauren explicitly reports normal chat still fails; new action comparison actual Work/iOS/Safari all NOT RUN; same-build/app/tool client identity and host evidence required, local fixtures never native proof. PR112 merged/released and original five screenshots retained. Draft PR, exact-head CI/admission and independent review; serialized release clearance from Julian.",
+      "next_action": "Verify stopped previous writer and preserved PR113; supersede previous merged-branch lane without false completion, claim bounded successor, publish regression before fix using Relay. Existing website lane remains separate.",
+      "paths": [
+        "src/relay-chat-ui.js",
+        "src/relay-chat-ui.test.js",
+        "src/relay-host-probe.test.js",
+        "docs/relay/CONTEXT_CARD_PACKAGING_20261002.md"
+      ],
+      "resources": [
+        "relay-mcp-discovery-envelope",
+        "relay-context-card-runtime"
+      ],
+      "category": "implementation",
+      "primary_team": "runner",
+      "supporting_teams": [],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "state": "queued",
+      "created_at": "2026-10-02T01:03:23.262Z"
     }
   ],
   "claims": [
