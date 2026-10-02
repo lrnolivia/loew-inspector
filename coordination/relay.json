@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T05:41:29.657Z",
+  "updated_at": "2026-10-02T05:50:04.496Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -11419,12 +11419,11 @@
         "apps/web/public/",
         "apps/web/test/",
         "packages/shared-ui/",
-        "src/work-review.js",
-        "src/work-review.test.js",
-        "src/relay-entry.js",
-        "src/relay-entry.test.js",
         "docs/relay/WEBSITE_WORK_VIEWS_20261002.md",
-        ".github/workflows/ci.yml"
+        ".github/workflows/ci.yml",
+        "packages/runner/src/cloudflare-worker.mjs",
+        "packages/runner/src/work-review.mjs",
+        "packages/runner/test/work-review.test.mjs"
       ],
       "resources": [
         "relay-website-notifications",
@@ -11437,7 +11436,7 @@
       ],
       "goal": "Finish earlier Mac polish and modular website work views together before retained previews and cards.",
       "acceptance": "User order 2026-10-02 Sentinel_023b7a5341e88191b2e80a5dfcf2aad5: finish FIRST earlier Mac polish+work viewer together; SECOND frozen interactive previews; LAST MCP cards. This supersedes older separation gates. Preserve every earlier requirement in original queued amendments and predecessor relay-website-post-release-polish-20261002; reconstruct unavailable Mac source against current main, never claim byte recovery. Preserve PR117 mobile fixes.\nWORK VIEWER: shared modular query/filter/sort/selection/action model for List and Visual across relevant work sections, retaining page defaults and existing actions. Inspector keeps screenshots; other items semantic glyphs. Unified project pill/icon/prominent name. Need Review/Completed/Stale/Archived/All; Clear Stale/Complete, Mark Stale/Complete, restore and undo. Per-item checkboxes; explicit selected/current-filter/all-project scopes and exact counts, partial feeds never imply full scope. Retain filter/sort/selection/item anchor across views. Show next action/blocker, source state separately. Time uses meaningful source activity with labeled fallbacks; priority only explicit mapped source value, unranked unknowns. Prove adding one filter works both views. User Sentinel_74f7881674ac8191830da3e4bd12505d approved Clear=reversible archive and Complete=review handled without closing underlying task/PR; no existing records mutated by tests. Persist review state using existing bounded architecture, handle new revisions/conflicts/undo safely.\nPOLISH: preserve default sidebar, approved neutrals/Momo/header/mosaic. Red whole notification badge pulse with readable count and reduced-motion/Calm. Wider mobile four-button pill nav, safe clearance; permanent optional shorter aligned desktop branded bottom pill. Remove Roomy Mobile Overview/Desktop Compact Header with safe preference migration. Gear Settings. Real meaningful labeled Rich circular telemetry and changing numbers, Simple default, honest partial/error. New-work arrivals only genuine new identities after successful baselines; no reload/recovery/route repeats. All notifications/toasts reveal exact project/item with focus/scroll, save-safe navigation, explicit missing target. Chat previews collapsed by default, art unchanged, no dedicated telemetry counter; horizontal cards/mobile readability.\nPROJECT BAR Sentinel_445eebe19d7c819192da876f1727eac0: alphabetical; recent meaningful updates promoted into front raised highlighted row with changed color. Routine polling must not reshuffle.\nVerify all four pages desktop/narrow, interrupted/repeated/Back flows, migration, new work, exact navigation and saves. Full exact-head CI/preflight plus settled screenshots. Address available-preview false fallback using strict origin/source/nonce or honest open-preview action; frozen hosting remains second batch. No auth/protection/paid-service expansion. Direct parent work, no stopped workers resumed. Draft PR then required release authorization and exact deployed verification.\nLatest nav clarification Sentinel_c0b6031ac35081918bcb5faf3c6c3f90: BOTH mobile and desktop floating bottom bars must be less thick with corrected alignment; keep comfortable mobile tap targets.",
-      "next_action": "Same Julian dot consolidates historical PM alias into persistent parent identity. Direct-chat combined polish/viewer implementation; no workers. Preserve ordered preview/card follow-ups.",
+      "next_action": "Implement combined first website batch. Existing /api gateway auth retained; add bounded CAS review-state store without changing source task state. User explicitly authorizes completion, product decisions, blocker fixes and tested releases05:46; retain rollback. Then frozen previews, complete Field preview, MCP cards last.",
       "category": "implementation",
       "labels": [
         {
@@ -11460,8 +11459,8 @@
       "base_sha": "08dd73c373c11f9ee5424af7b8b1de6b639b2fe4",
       "state": "active",
       "created_at": "2026-10-02T05:41:04.299Z",
-      "updated_at": "2026-10-02T05:41:29.657Z",
-      "lease_until": "2026-10-02T17:41:29.657Z"
+      "updated_at": "2026-10-02T05:50:04.496Z",
+      "lease_until": "2026-10-02T17:50:04.496Z"
     }
   ],
   "migrated_from": "loew-inspector"
