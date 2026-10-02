@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T01:50:02.476Z",
+  "updated_at": "2026-10-02T01:53:53.229Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6933,6 +6933,32 @@
       "supporting_staff": [],
       "state": "claimed",
       "created_at": "2026-10-02T01:03:23.262Z"
+    },
+    {
+      "id": "relay-card-mount-variants-20261002",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "goal": "Prepare three isolated read-only card mount variants directly through Relay with no workers, preserving current cards and unresolved native rendering evidence.",
+      "acceptance": "A: static HTML with standard ui.resourceUri only. B: same static HTML with documented OpenAI outputTemplate compatibility alias only. C: standard metadata plus bounded minimal script/init/result lifecycle. All resources use supported MCP Apps MIME, unique versioned URIs, output schemas, no network/assets/writes. Preserve 59 existing server tools and current production designs/diagnostic controls. Authenticated endpoint and bundled actual-browser tests cover each variant and original inventory. Repair only reproduced action-probe teardown test synchronization without weakening timeout/cancel assertions. Exact-head full checks and release evidence required; server/browser fixtures never native client proof. Preserve all predecessor card/full-MCP unresolved criteria and user no-frame failure. Provide short ordered client test matrix; no workers or local machine actions.",
+      "next_action": "Queue successor, preserve merged PR114 code/evidence and held native-proof criteria, supersede merged-branch lane truthfully, claim and preflight, implement isolated variants and tests. Field/website remain separate later work after variants ready.",
+      "paths": [
+        "src/index.js",
+        "src/relay-card-variants.js",
+        "src/relay-card-variants.test.js",
+        "src/relay-host-probe.test.js",
+        "src/relay-host-action-probe.test.js",
+        "docs/relay/CARD_MOUNT_VARIANTS_20261002.md"
+      ],
+      "resources": [
+        "relay-mcp-discovery-envelope",
+        "relay-context-card-runtime"
+      ],
+      "category": "implementation",
+      "primary_team": "runner",
+      "supporting_teams": [],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "state": "queued",
+      "created_at": "2026-10-02T01:53:53.229Z"
     }
   ],
   "claims": [
