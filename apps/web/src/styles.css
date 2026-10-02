@@ -531,3 +531,8 @@ a { color: inherit; }
   font-family: "Momo Trust Display", Inter, system-ui, sans-serif;
   font-weight: 400;
 }
+
+/* Grid children must be allowed to shrink around long work IDs and next steps. */
+.react-stack,.work-list,.night-list {grid-template-columns:minmax(0,1fr);}
+.work-card,.work-card-main,.work-card-copy,.next-step,.work-detail,.react-operator-shell {min-width:0;}
+.work-card :is(h2,p,strong),.next-step strong,.work-detail :is(h1,p) {overflow-wrap:anywhere;}

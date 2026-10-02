@@ -72,7 +72,7 @@ function buildStage() {
     '<button type="button" class="qa-exit">Exit review</button>' +
     '<label class="qa-preview-picker"><span>Preview</span><select aria-label="Preview mode" disabled><option>Loading…</option></select></label>' +
     '<span class="qa-preview-state" role="status"></span>' +
-    '<button type="button" class="qa-panel-toggle" aria-expanded="true">Hide questions</button>' +
+    '<button type="button" class="qa-fit" aria-label="Fit preview" title="Fit preview">↔</button><button type="button" class="qa-panel-toggle" aria-label="Hide questions" title="Hide questions" aria-expanded="true">−</button>' +
     '<aside class="qa-companion" aria-label="Review questions"><div class="qa-review-loading">Loading review…</div></aside>';
   returnFocus=document.activeElement;
   background=Array.from(document.body.children).map(element=>({element,inert:element.inert}));
@@ -80,9 +80,12 @@ function buildStage() {
   document.body.append(node);document.body.classList.add('qa-open');
   node.querySelector('.qa-exit').addEventListener('click',()=>closeQa());
   node.querySelector('.qa-preview-picker select').addEventListener('change',event=>setView(event.target.value));
+  node.querySelector('.qa-fit').addEventListener('click',()=>viewportController?.fit());
   node.querySelector('.qa-panel-toggle').addEventListener('click',event=>{
     const panel=node.querySelector('.qa-companion');panel.hidden=!panel.hidden;
-    event.currentTarget.textContent=panel.hidden ? 'Show questions' : 'Hide questions';
+    event.currentTarget.textContent=panel.hidden ? '?' : '−';
+    event.currentTarget.setAttribute('aria-label',panel.hidden ? 'Show questions' : 'Hide questions');
+    event.currentTarget.title=panel.hidden ? 'Show questions' : 'Hide questions';
     event.currentTarget.setAttribute('aria-expanded',String(!panel.hidden));
     if (!panel.hidden) requestAnimationFrame(()=>{floatController?.restore();floatController?.refresh();});
   });

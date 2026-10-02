@@ -112,11 +112,11 @@ test('Authorized Live is preferred while an explicit Captured choice survives qu
   await page.route('**/authorized-preview',route=>route.fulfill({contentType:'text/html',body:'<main>Actual fixture live preview</main>'}));
   await page.goto(fixture.origin+'/inspector#review?evidence='+evidence.evidence_id);await page.locator('.qa-question').waitFor();
   assert.equal(await page.locator('.qa-preview-picker select').inputValue(),'live');
-  const compact=await page.locator('.qa-companion').boundingBox();assert.ok(compact.width<=208 && compact.height<=360);assert.ok(compact.width*compact.height<320*740/3,'mobile questions leave most of the preview visible');
+  const compact=await page.locator('.qa-companion').boundingBox();assert.ok(compact.width>=280 && compact.width<=296 && compact.height<=360);assert.ok(compact.width*compact.height<320*740/3,'mobile questions leave most of the preview visible');
   for(const selector of ['[data-qa-answer=yes]','[data-qa-answer=no]','[data-qa-answer=not_sure]','[data-qa-next]']){const control=await page.locator(selector).boundingBox();assert.ok(control.height>=44,'compact controls retain touch height');assert.ok(control.y>=compact.y && control.y+control.height<=compact.y+compact.height,'compact primary controls remain fully visible');}
   await page.locator('.qa-preview-state').filter({hasText:/^Live preview$/}).waitFor();
-  const firstChoice=await page.locator('[data-qa-answer=yes]').boundingBox(),secondChoice=await page.locator('[data-qa-answer=no]').boundingBox();assert.equal(firstChoice.x,secondChoice.x);assert.ok(secondChoice.y>=firstChoice.y+firstChoice.height,'mobile choices stack instead of squeezing into a row');
-  const footer=await page.locator('.qa-question-nav').boundingBox();await page.locator('.qa-question-content').evaluate(node=>node.scrollTop=node.scrollHeight);assert.equal((await page.locator('.qa-question-nav').boundingBox()).y,footer.y,'question scrolling leaves main navigation visible');await page.locator('.qa-question-content').evaluate(node=>node.scrollTop=0);
+  const firstChoice=await page.locator('[data-qa-answer=yes]').boundingBox(),secondChoice=await page.locator('[data-qa-answer=no]').boundingBox();assert.equal(firstChoice.y,secondChoice.y);assert.ok(secondChoice.x>=firstChoice.x+firstChoice.width,'mobile choices share a visible row while retaining 44px touch targets');
+  assert.equal(await page.locator('.qa-question-content').evaluate(node=>node.scrollHeight<=node.clientHeight+1),true,'ordinary questions require no internal scrolling');
   await page.getByRole('button',{name:'Notes',exact:true}).click();
   assert.equal(await page.locator('.qa-notes-popout').getAttribute('open'),'');
   assert.equal(await page.locator('.qa-notes textarea').evaluate(node=>document.activeElement===node),true);
