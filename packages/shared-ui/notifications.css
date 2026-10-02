@@ -3,7 +3,7 @@
 .notification-center button,.notification-toasts button { font:inherit; cursor:pointer; border:0; color:var(--color-text-primary); background:var(--color-raised); }
 .notification-bell { width:44px; height:44px; border-radius:50%; position:relative; display:grid; place-items:center; }
 .notification-bell .relay-glyph { width:21px; height:21px; }
-[data-notification-count] { position:absolute; top:-3px; right:-3px; width:22px; height:22px; padding:0; display:grid; place-items:center; box-sizing:border-box; border:1px solid var(--status-attention); border-radius:50%; background:var(--color-raised); color:var(--color-text-primary); font-size:12px; line-height:1; font-weight:800; animation:notification-count-pulse 2.8s ease-in-out infinite; }
+[data-notification-count] { position:absolute; top:-3px; right:-3px; width:22px; height:22px; padding:0; display:grid; place-items:center; box-sizing:border-box; border:0; border-radius:50%; background:#d82c36; color:#fff; font-size:12px; line-height:1; font-weight:800; animation:notification-count-pulse 2.8s ease-in-out infinite; }
 [data-notification-count][hidden] { display:none; }
 .notification-menu { position:absolute; right:0; top:52px; z-index:200; width:min(380px,calc(100vw - 32px)); max-height:min(70vh,620px); overflow:auto; overscroll-behavior:contain; background:var(--color-floating); border-radius:24px; padding:16px; box-sizing:border-box; box-shadow:0 18px 50px #0006; }
 .notification-menu-head { display:flex; align-items:center; justify-content:space-between; }
@@ -46,3 +46,4 @@ html[data-presentation-motion="calm"] .notification-toasts .notification-message
 @keyframes notification-count-pulse { 0%,100% {box-shadow:0 0 0 0 color-mix(in srgb,var(--status-attention) 35%,transparent);transform:scale(1)} 50% {box-shadow:0 0 0 4px transparent;transform:scale(1.08)} }
 @media(prefers-reduced-motion:reduce) { [data-notification-count] {animation:none} }
 html[data-presentation-motion="calm"] [data-notification-count] {animation:none}
+

@@ -4,6 +4,8 @@ import { projectIcon } from "./project-icons.mjs";
 import { applyWorkerSettings, publicWorkerSettings } from "./settings.mjs";
 import { listVisualEvidence, getVisualEvidence, getVisualImage, compareVisualEvidence, listVisualRuns, reviewVisualRun } from "./visual-evidence.mjs";
 import { getQaReview, saveQaReview, qaQuestionsForEvidence, inspectLivePreview } from "./human-qa.mjs";
+import { reviewBatch } from "./work-review.mjs";
+import { workerSource } from "../../shared-ui/work-view-model.js";
 import { recordQaFeedback } from "./qa-feedback.mjs";
 const GITHUB_API = "https://api.github.com";
 const OWNER = "lrnolivia";
@@ -250,6 +252,28 @@ export async function handleApi(request, env, { authenticatedMcp = false } = {})
     const origin = request.headers.get("Origin");
     if (origin && origin !== url.origin) return json({ error: "Cross-origin control writes are blocked." }, 403);
   }
+  if (request.method === "POST" && url.pathname === "/api/work-review") {
+    const guard=humanQaGuard(request,authenticatedMcp);
+    if(guard) return guard;
+    if(!request.headers.get('Content-Type')?.startsWith('application/json')) return json({error:'JSON is required.'},415);
+    const reader=request.body?.getReader(); let size=0, chunks=[];
+    if(reader) while(true) {const part=await reader.read();if(part.done)break;size+=part.value.byteLength;if(size>131072){await reader.cancel();return json({error:'Review request exceeds 128 KiB.'},413);}chunks.push(part.value);}
+    const bytes=new Uint8Array(size);let offset=0;for(const chunk of chunks){bytes.set(chunk,offset);offset+=chunk.byteLength;}
+    let input;try{input=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));}catch{return json({error:'Invalid JSON.'},400);}
+    const registrations=new Map(), progress=new Map();
+    const registration=project=>{if(!registrations.has(project))registrations.set(project,readJsonFile(env,'projects/'+project+'.json'));return registrations.get(project);};
+    // Validate registered identity for both reads and writes without touching source task state.
+    if(!Array.isArray(input?.items) || input.items.length>100 || input.items.some(item=>!item || !/^[a-zA-Z0-9][a-zA-Z0-9._-]{0,159}$/.test(item.project||''))) return json({error:'Invalid review identities.'},400);
+    for(const project of new Set(input.items.map(item=>item.project))) {const entry=await registration(project);if(entry.value.alias_of || entry.value.id!==project)return json({error:'Use a registered canonical project.'},400);}
+    const resolveSource=async item=>{
+      if(item.kind==='evidence'){const evidence=await getVisualEvidence(env.EVIDENCE,item.id);return evidence?.context?.project===item.project?evidence:null;}
+      if(item.kind==='check'){if(item.id!==item.project)return null;return workerSource(await workerView(env,item.id));}
+      const key=item.project+':'+item.id;
+      if(!progress.has(key))progress.set(key,callProgress({project:item.project,assignment:item.id},env));
+      const result=await progress.get(key);return result.progress?.find(source=>source.assignment===item.id)||null;
+    };
+    return json(await reviewBatch(env.EVIDENCE,input,resolveSource));
+  }
   if (request.method === "GET" && url.pathname === "/api/projects") {
     const entries = await githubRequest(env, `/repos/${OWNER}/${REPOSITORY}/contents/projects?ref=main`);
     const projects = await Promise.all(entries.filter(item => item.type === "file" && item.name.endsWith(".json"))
@@ -426,3 +450,4 @@ export default {
     }
   }
 };
+
