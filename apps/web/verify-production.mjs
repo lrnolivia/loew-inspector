@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
 import { chromium } from "playwright";
@@ -29,6 +30,13 @@ for (let attempt = 0; attempt < 12; attempt++) {
   await new Promise(resolve => setTimeout(resolve, 10000));
 }
 assert.ok(ready, "production must serve this exact source SHA and built website artifact");
+// Exercise an existing capture before adding new evidence so legacy lookup is
+// verified independently of the new direct index.
+const previousResponse=await fetch(origin+"/api/visual?limit=1",{headers,signal:AbortSignal.timeout(45000)});
+assert.ok(previousResponse.ok,"existing evidence list must be readable");
+const previousPayload=await previousResponse.json();
+const previousId=previousPayload.evidence?.[0]?.evidence_id;
+if(previousId) console.log("EXISTING_EVIDENCE_READBACK="+JSON.stringify(await verifyEvidenceReadback(previousId)));
 const browser = await chromium.launch({ headless: true });
 const captures = [];
 try {
@@ -104,5 +112,18 @@ async function capture(page, feature, viewport) {
   const response = await fetch(origin + "/evidence/ingest", { method: "POST", headers, body: form, signal: AbortSignal.timeout(30000) });
   assert.ok(response.ok, "production screenshot evidence must persist in Inspector: " + response.status);
   const evidence = await response.json();
-  captures.push({ surface, url: page.url(), evidence_id: evidence.evidence_id, state: metadata.dom });
+  const readback=await verifyEvidenceReadback(evidence.evidence_id,screenshot);
+  captures.push({ surface, url: page.url(), evidence_id: evidence.evidence_id, state: metadata.dom, readback });
+}
+
+async function verifyEvidenceReadback(id,expectedBytes) {
+  const path=origin+"/api/visual/"+encodeURIComponent(id);
+  const qa=await fetch(path+"/qa",{headers,signal:AbortSignal.timeout(45000)});
+  assert.ok(qa.ok,"saved evidence QA must resolve: "+id+" "+qa.status);
+  const image=await fetch(path+"/image",{headers,signal:AbortSignal.timeout(45000)});
+  assert.ok(image.ok,"saved evidence image must resolve: "+id+" "+image.status);
+  const bytes=new Uint8Array(await image.arrayBuffer());assert.ok(bytes.length,"stored capture is nonempty");
+  const hash=createHash("sha256").update(bytes).digest("hex");
+  if(expectedBytes)assert.equal(hash,createHash("sha256").update(expectedBytes).digest("hex"),"stored capture matches exact emitted bytes");
+  return {evidence_id:id,qa_status:qa.status,image_status:image.status,bytes:bytes.length,sha256:hash};
 }
