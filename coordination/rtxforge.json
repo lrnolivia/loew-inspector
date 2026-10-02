@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "rtxforge",
-  "updated_at": "2026-10-02T00:09:24.187Z",
+  "updated_at": "2026-10-02T00:15:25.709Z",
   "legacy_branches": [
     "backup/github-main-before-0.5.8",
     "backup/main-0.5.8-ada",
@@ -123,7 +123,7 @@
       ],
       "goal": "Deliver a reproducible Bazzite GNOME x86_64 RTX 4070 installation package using the existing rtxForge UI and pinned DLSS-Unlocked runtime options, local file writes and guarded GitHub sync.",
       "acceptance": "Verified AppImage and installer; read-only host checks; explicit selectable MFG/NR modes; preserve existing settings/backups; verified downloads and repeatable recovery tests. Actual NVIDIA/game/HDR behavior remains unverified until exercised on the user's PC.",
-      "next_action": "Implement full verified NR-v0.9.33 pin and Ada kernels; expose game-controlled automatic native MFG ratio, retain existing explicit user overrides and rollback.",
+      "next_action": "Full NR-v0.9.33 archive SHA and known-good MFG core verified; 238 relevant checks and GTK smoke passed. Commit coherent native Ada/auto-ratio package changes, build/install app and full scoped four-game upgrade with rollback.",
       "category": "implementation",
       "primary_role": "implementation",
       "primary_team": "release",
@@ -133,8 +133,8 @@
       "base_sha": "4156ec19515f10af519564699aaebe6adf75c850",
       "state": "active",
       "created_at": "2026-10-01T21:59:59.674Z",
-      "updated_at": "2026-10-02T00:07:25.868Z",
-      "lease_until": "2026-10-02T12:07:25.868Z"
+      "updated_at": "2026-10-02T00:15:25.709Z",
+      "lease_until": "2026-10-02T12:15:25.709Z"
     }
   ]
 }
