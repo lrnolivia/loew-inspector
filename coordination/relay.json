@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T06:43:17.279Z",
+  "updated_at": "2026-10-02T07:17:32.381Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7085,6 +7085,34 @@
         }
       ],
       "updated_at": "2026-10-02T03:54:27.306Z"
+    },
+    {
+      "id": "relay-retained-interactive-previews-20261002",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "goal": "Preserve exact isolated interactive review builds after the first combined website release, directly in this chat without coding workers.",
+      "acceptance": "Immutable exact-commit bundled UI assets and explicit synthetic fixture data; no mutable live URL treated as retained evidence. Interactive sandbox cannot access production data, credentials, storage or mutation APIs; no browser security-policy bypass. Pending approval retained indefinitely; approval starts 30-day availability, reopening restores pending retention. Expiry is reversible metadata, never automatic irreversible bucket purge. Inspector opens retained build linked to exact evidence/build with readiness and truthful labels. Tests cover immutable upload identity, sandbox boundaries, malicious paths/HTML, retention/approval changes, interrupted navigation, mobile/desktop interactions, and exact stored/readback hashes. No new credentials or persistent grants. Existing screenshots and live-preview paths preserved.",
+      "next_action": "Wait for PR118 first batch to be merged and production verified; then claim this queued scope, inspect gateway/QA contracts, implement and verify exact-head retained preview pipeline. Do not launch coding workers.",
+      "paths": [
+        "src/retained-preview.js",
+        "src/retained-preview.test.js",
+        "apps/mcp/index.js",
+        "apps/web/build.mjs",
+        "apps/web/test/",
+        "apps/web/public/qa.js",
+        "scripts/retain-web-preview.mjs",
+        "packages/runner/src/human-qa.mjs",
+        "packages/runner/src/cloudflare-worker.mjs",
+        ".github/workflows/ci.yml",
+        "docs/relay/RETAINED_PREVIEWS_20261002.md"
+      ],
+      "resources": [],
+      "category": "implementation",
+      "primary_team": "inspector",
+      "supporting_teams": [],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "state": "queued",
+      "created_at": "2026-10-02T07:17:32.381Z"
     }
   ],
   "claims": [
