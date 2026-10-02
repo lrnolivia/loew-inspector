@@ -1068,7 +1068,7 @@ body[data-page="night-shift"] { --page-feature-accent: var(--feature-night-shift
 .project-name, .attention-project, .today-task-project, .qa-product-badge { background: var(--color-raised); box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-text-secondary) 12%, transparent); }
 .review-list { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 .review-list > .content-skeleton, .review-list > .review-clear, .review-list > .operator-empty { grid-column: 1 / -1; }
-.review-list .review-row { display: flex; flex-direction: column; align-items: stretch; gap: 0; padding: 0; overflow: hidden; border-radius: 20px; }
+.review-list .review-row:not(.work-item) { display: flex; flex-direction: column; align-items: stretch; gap: 0; padding: 0; overflow: hidden; border-radius: 20px; }
 .review-row > img { width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: contain; border-radius: 0; background: var(--color-canvas); }
 .review-row .review-copy { gap: 8px; padding: 18px 18px 12px; }
 .review-row .review-project { font-size: 12px; }
@@ -1155,7 +1155,7 @@ body[data-page="night-shift"] { --page-feature-accent: var(--feature-night-shift
   opacity:.38;
   cursor:default;
 }
-.review-list .review-row {
+.review-list .review-row:not(.work-item) {
   position:relative;
 }
 .review-open {
@@ -1252,3 +1252,4 @@ body {
   font-family: "Momo Trust Display", Inter, system-ui, sans-serif;
   font-weight: 400;
 }
+

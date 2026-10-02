@@ -1,6 +1,6 @@
 import { statusLabel, phaseLabel, eventLabel, summaryText } from "../../../../packages/shared-ui/presentation-copy.js";
 import { projectHref } from "../../../../packages/shared-ui/project-context.js";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import { Link, useParams } from "react-router-dom";
 import { useLiveRelay } from "../live";
 import { loadAssignment } from "../api";
@@ -11,6 +11,7 @@ import type { ObservedProgress } from "../types";
 export function RunnerWorkPage() {
   const { project: contextProject } = useLiveRelay();
   const { project = "", assignment = "" } = useParams();
+  const heading=useRef<HTMLHeadingElement>(null);
   const [item, setItem] = useState<ObservedProgress | null>(null);
   const [status, setStatus] = useState<"connecting" | "live" | "reconnecting" | "stale" | "offline">("connecting");
 
@@ -22,7 +23,7 @@ export function RunnerWorkPage() {
         if (last) setStatus("reconnecting");
         const payload = await loadAssignment(project, assignment);
         if (!alive) return;
-        setItem(payload.progress?.[0] || null);
+        setItem(payload.progress?.find(candidate=>candidate.assignment===assignment) || null);
         last = Date.now();
         setStatus("live");
       } catch {
@@ -38,6 +39,7 @@ export function RunnerWorkPage() {
     return () => { alive = false; window.clearInterval(timer); };
   }, [project, assignment]);
 
+  useEffect(()=>{if(status==='live')heading.current?.focus({preventScroll:true});},[assignment,status]);
   const title = item?.goal || assignment.replace(/[-_]+/g, " ");
   const events = useMemo(() => item?.events || [], [item]);
   const percent = item?.state === "complete" ? 100 : undefined;
@@ -54,7 +56,8 @@ export function RunnerWorkPage() {
       <div className="work-detail-head">
         <div>
           <div className="work-card-meta"><StatusLight tone={status === "live" ? "good" : status === "stale" ? "warn" : "quiet"} label={statusLabel(status)} />{item?.primary_staff && <span>{item.primary_staff}</span>}</div>
-          <h1>{title}</h1>
+          <h1 ref={heading} tabIndex={-1}>{title}</h1>
+          {status==="live"&&!item&&<p role="status">This work item is no longer available. Return to Runner to see current work.</p>}
           <p>{summaryText(item?.waiting_reason || item?.recovery_action, item ? eventLabel(item.latest_event?.type) : "Waiting for a progress update.")}</p>
         </div>
         <ProgressRing percent={percent} label={phaseLabel(item?.stage)} />
@@ -74,3 +77,4 @@ export function RunnerWorkPage() {
     </div>
   );
 }
+

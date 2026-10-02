@@ -19,6 +19,7 @@ export async function loadDashboard(onSnapshot?: (snapshot: DashboardSnapshot) =
   onSnapshot?.(snapshot);
   await Promise.all(projects.map(async project => {
     try {
+      if(project.managed===false){snapshot={...snapshot,progress:{...snapshot.progress,[project.id]:{project:project.id,progress:[],queue:[]}},loadingProgress:snapshot.loadingProgress!.filter(id=>id!==project.id)};onSnapshot?.(snapshot);return;}
       const metadata = await json<{ coordination: { claims: Array<{ id: string; state: string }>; queue?: Array<NonNullable<ProgressPayload["queue"]>[number] & { state: string }> } | null }>(`/api/projects/${encodeURIComponent(project.id)}`);
       if (!metadata.coordination) throw new Error("Current project coordination is unavailable");
       const active = metadata.coordination.claims.filter(claim => ["active", "held"].includes(claim.state));
@@ -67,3 +68,4 @@ export function projectLabel(project: ProjectRegistration | string): string {
   };
   return known[id] || raw.replace(/[-_]+/g, " ");
 }
+

@@ -125,28 +125,40 @@ function setView(mode) {
   previewCheck?.abort();previewCheck=null;
   viewportController?.destroy();previewMode=renderQaPreview(stage,state,mode);
   viewportController=createQaViewport(stage,{mode:previewMode});
-  const select=stage.querySelector('.qa-preview-picker select'),canLive=Boolean(state.live?.active&&state.live?.embeddable&&state.live?.url&&!state.live.renderUnconfirmed);
+  const select=stage.querySelector('.qa-preview-picker select'),canLive=Boolean(state.live?.active&&state.live?.embeddable&&state.live?.url);
   select.innerHTML='<option value="captured">Captured</option>'+(state.evidence.video_url?'<option value="video">Recording</option>':'')+'<option value="live" '+(!canLive?'disabled':'')+'>'+(canLive?'Live':state.live.renderUnconfirmed?'Live unconfirmed':'Live unavailable')+'</option>';
   select.value=previewMode;select.disabled=false;
   stage.querySelector('.qa-preview-state').textContent=previewMode==='live'?'Checking live preview…':previewMode==='video'?'Recorded evidence':'Captured evidence'+(state.live.renderUnconfirmed?' · live preview unconfirmed':!canLive?' · live preview unavailable':'');
+  let direct=stage.querySelector('.qa-open-live');
+  if(!direct){direct=document.createElement('a');direct.className='qa-open-live';direct.textContent='Open interactive preview';direct.target='_blank';direct.rel='noopener noreferrer';stage.append(direct);}
+  let target;try{target=new URL(state.live?.url);}catch{}
+  const allowed=Boolean(state.live?.active&&target?.protocol==='https:'&&(target.hostname==='loew.fi'||target.hostname.endsWith('.loew.fi')));
+  direct.hidden=!allowed;if(allowed)direct.href=target.href;else direct.removeAttribute('href');
   const frame=stage.querySelector('[data-qa-live-preview]');
   if(frame) checkLiveFrame(frame);
 }
 function checkLiveFrame(frame) {
   const currentStage=stage,currentState=state,check=new AbortController();previewCheck=check;
   const current=()=>stage===currentStage && state===currentState && frame.isConnected && !check.signal.aborted;
-  const fallback=()=>{
+  const fallback=(hard=false)=>{
     if(!current())return;
-    currentState.live={...currentState.live,renderUnconfirmed:true};setView('captured');
-    currentStage.querySelector('.qa-preview-state').textContent='Live preview unconfirmed · captured evidence';
+    currentState.live={...currentState.live,renderUnconfirmed:true};
+    if(hard||expectedOrigin===location.origin){setView('captured');currentStage.querySelector('.qa-preview-state').textContent='Live preview unconfirmed · captured evidence';}
+    else currentStage.querySelector('.qa-preview-state').textContent='Live unconfirmed · open directly or choose Captured.';
   };
   // A browser may fire load for an error page and never fire iframe error.
-  // Cross-origin frames without a readiness protocol remain unverified and
-  // fall back; no guessed sender/message can assert that they are healthy.
-  let timer,navigation=0;
+  // Cross-origin frames without a readiness protocol remain explicitly unverified.
+  // Keep the user's selected frame; never replace an available preview just because DOM access is blocked.
+  let timer,navigation=0,nonce='';
+  const expectedOrigin=new URL(currentState.live.url,location.origin).origin;
+  window.addEventListener('message',event=>{
+    if(!current()||event.source!==frame.contentWindow||event.origin!==expectedOrigin||!nonce||event.data?.type!=='relay-preview-ready'||event.data?.nonce!==nonce)return;
+    clearTimeout(timer);currentState.live={...currentState.live,renderUnconfirmed:false};currentStage.querySelector('.qa-preview-state').textContent='Interactive preview ready';
+  },{signal:check.signal});
   const waitForFrame=()=>{
     if(!current())return;
-    navigation++;clearTimeout(timer);currentStage.querySelector('.qa-preview-state').textContent='Checking live preview…';
+    navigation++;nonce=crypto.randomUUID();clearTimeout(timer);currentStage.querySelector('.qa-preview-state').textContent='Checking live preview…';
+    frame.contentWindow?.postMessage({type:'relay-preview-check',nonce},expectedOrigin);
     timer=setTimeout(fallback,8000);
   };
   waitForFrame();
@@ -164,11 +176,11 @@ function checkLiveFrame(frame) {
     try {
       const response=await fetch(target.href,{credentials:'same-origin',redirect:'error',cache:'no-store',signal:check.signal});
       if(!current() || navigation!==confirmingNavigation || frame.contentDocument!==documentInFrame)return;
-      if(!response.ok){fallback();return;}
+      if(!response.ok){fallback(true);return;}
       // Confirm both an accessible rendered document and a successful HTTP
       // response. This is embedding readiness, not application-health proof.
       clearTimeout(timer);currentStage.querySelector('.qa-preview-state').textContent='Live preview';
-    } catch { if(current() && navigation===confirmingNavigation)fallback(); }
+    } catch { if(current() && navigation===confirmingNavigation)fallback(true); }
   };
   frame.addEventListener('load',()=>{waitForFrame();void confirm();},{signal:check.signal});
   frame.addEventListener('error',fallback,{signal:check.signal});
@@ -254,3 +266,4 @@ window.addEventListener('keydown',event=>{
   }
 });
 window.addEventListener('pagehide',()=>{if(state?.dirty)persistDraft(state);});
+
