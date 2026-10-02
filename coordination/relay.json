@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T03:52:30.194Z",
+  "updated_at": "2026-10-02T03:54:27.306Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7035,7 +7035,7 @@
       "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
       "goal": "Resolve remaining actual desktop card absence while preserving proven original connection test browser/iPhone operation.",
       "acceptance": "Record actual 20261001.1 original connection test observations independently of new PR115 A/B/C. Browser screenshot libfile_34ed2f317b808191a485a9dab4035f13 at03:47 shows all6 milestones including read-only button, size768x457; initialsampleecf246b4-3fb1-4c9f-bd02-19049a978c60, actionsample353800ec-c46e-4a9b-a9b0-105e10a4ced4. iPhone screenshot libfile_c46865be55d081918c1ba11092cc95da at03:49 shows all6 including action, size388x509; initialsampleb55a8509-71d4-4a06-aa59-4e38b31757ed, actionsamplebc9e491b-bf63-4676-abe2-0e0427195e43. Desktop screenshot libfile_56e4993e235081919c895c83be35ba3e shows textual successful build20261001.1/sampleb4c53209-7c01-4100-828d-70020cc1cfbb but no visible card. User says nothing in desktop; OS/app exact version pending clarification. Preserve historical Mac Work PASS and ordinary Mac failures, don't generalize one app/mode. Original diagnostic unchanged; do not attribute these passes to unrelated upload repair. New A/B/C native tests still pending, production contextual v10 card proof and full MCP ordinary-chat parity remain open. No workers or card art redesign.",
-      "next_action": "Await desktop OS/app clarification. If needed use already deployed static A/B and lifecycle C on failing desktop to isolate mounting metadata from script issues; do not repeatedly retest passing browser/iPhone. Direct read-only investigation first; admit any source fixes separately.",
+      "next_action": "Confirmed user Sentinel_71ee7b0d350481918a99930e1be8d204: failed desktop test is Linux app. Same OS Linux browser passes original connection test; iPhone original passes. Await requested Linux desktop standard static card test A (no scripts) to distinguish mount from lifecycle. App build/mode exact values remain unknown. No source edits or worker launch.",
       "paths": [
         "docs/relay/CARD_MOUNT_VARIANTS_20261002.md"
       ],
@@ -7046,7 +7046,25 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "state": "queued",
-      "created_at": "2026-10-02T03:52:30.194Z"
+      "created_at": "2026-10-02T03:52:30.194Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-02T03:54:27.306Z",
+          "by": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "reason": "User explicitly identifies failed desktop as Linux.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Await desktop OS/app clarification. If needed use already deployed static A/B and lifecycle C on failing desktop to isolate mounting metadata from script issues; do not repeatedly retest passing browser/iPhone. Direct read-only investigation first; admit any source fixes separately."
+          },
+          "after": {
+            "next_action": "Confirmed user Sentinel_71ee7b0d350481918a99930e1be8d204: failed desktop test is Linux app. Same OS Linux browser passes original connection test; iPhone original passes. Await requested Linux desktop standard static card test A (no scripts) to distinguish mount from lifecycle. App build/mode exact values remain unknown. No source edits or worker launch."
+          }
+        }
+      ],
+      "updated_at": "2026-10-02T03:54:27.306Z"
     }
   ],
   "claims": [
