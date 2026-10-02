@@ -16,6 +16,7 @@ import { HOST_PROBE_URI, HOST_PROBE_TOOL, hostProbeDescriptor, hostProbeResource
 import { ACTION_PROBE_URI, ACTION_PROBE_TOOL, ACTION_SAMPLE_TOOL, actionProbeDescriptor, actionProbeResource, actionProbeTools, actionProbeResult } from "./relay-host-action-probe.js";
 
 import { feedbackActor } from "./feedback-control.js";
+import { cardVariantDescriptors, cardVariantTools, cardVariantResource, cardVariantResult, isCardVariantTool, isCardVariantUri } from "./relay-card-variants.js";
 
 const VERSION = "1.2.0";
 const EVIDENCE_CONTEXT_SCHEMA = {
@@ -390,6 +391,7 @@ async function mcp(request, access, env) {
         relayStatusCardDescriptor(),
         hostProbeDescriptor(),
         actionProbeDescriptor(),
+        ...cardVariantDescriptors(),
         ...relaySkillResourceDescriptors()
       ]
     });
@@ -399,6 +401,7 @@ async function mcp(request, access, env) {
     const uri = message.params?.uri;
     if (uri === HOST_PROBE_URI) return rpc(id, { contents: [hostProbeResource()] });
     if (uri === ACTION_PROBE_URI) return rpc(id, { contents: [actionProbeResource()] });
+    if (isCardVariantUri(uri)) return rpc(id, { contents: [cardVariantResource(uri)] });
     if (uri === RELAY_CONTROL_CENTER_URI) {
       return rpc(id, { contents: [relayControlCenterResource()] });
     }
@@ -457,6 +460,7 @@ async function mcp(request, access, env) {
         relayStatusCardTool(),
         hostProbeTool(),
         ...actionProbeTools(),
+        ...cardVariantTools(),
 
         {
           name: "relay_control_status",
@@ -943,6 +947,7 @@ async function mcp(request, access, env) {
       const name = relayToolName(rawName);
       const args = message.params?.arguments || {};
 
+      if (isCardVariantTool(name)) return rpc(id, cardVariantResult(name, message.params?.arguments ?? {}));
       if (name === HOST_PROBE_TOOL) return rpc(id, hostProbeResult(message.params?.arguments ?? {}, request, message.params?._meta));
       if (name === ACTION_PROBE_TOOL || name === ACTION_SAMPLE_TOOL) return rpc(id, actionProbeResult(message.params?.arguments ?? {}, name === ACTION_PROBE_TOOL ? "initial" : "action"));
 
