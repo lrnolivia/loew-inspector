@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T00:11:04.389Z",
+  "updated_at": "2026-10-02T00:23:28.381Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -10957,27 +10957,34 @@
         "src/relay-host-probe.test.js",
         "src/relay-entry.test.js",
         "docs/relay/MCP_FEEDBACK_ROUTING_20261001.md",
-        "src/relay-host-action-probe.test.js"
+        "src/relay-host-action-probe.test.js",
+        "src/source.js",
+        "src/source.test.js",
+        "src/runner-control-core.js",
+        "docs/relay/AUTHENTICATED_REF_ERRORS_20261002.md"
       ],
       "resources": [
         "relay-qa-feedback",
         "runner-feedback-polling",
         "runner-feedback-acknowledgement",
-        "relay-mcp-discovery-envelope"
+        "relay-mcp-discovery-envelope",
+        "relay-source-authenticated-reads",
+        "runner-retirement-verification",
+        "relay-provider-error-provenance"
       ],
       "goal": "Authenticated durable assignment-bound text feedback using the existing QA journal, with read-only queries and explicit acknowledgement. Continue full MCP rebuild while preserving unresolved cross-client card proof.",
       "acceptance": "Implement approved 16-file storage/explicit-ack iteration: four typed feedback tools, canonical routing/artifact checks, idempotent conditional writes, bounded pagination, no read-triggered ACK, pending feedback in explicit resume, legacy compatibility, all original capabilities/resources retained. No live feedback events/ACK outside fixtures; no claim that queueing wakes native Codex. Native push remains unverified; visual-review/event dual-write repair remains an explicit follow-up. Carry ALL outstanding PR112/PR110 card criteria: original ordinary Mac and Safari display unresolved; iOS original action pending; Work original action timeout preserved historically, new Lauren desktop Work screenshot proves original six-step connection/action PASS at23:21:37.734Z sample83db62cb-ab79-4bf0-96fd-e85f906d8e3e; Lauren explicitly reports normal chat still fails; new action comparison actual Work/iOS/Safari all NOT RUN; same-build/app/tool client identity and host evidence required, local fixtures never native proof. PR112 merged/released and original five screenshots retained. Draft PR, exact-head CI/admission and independent review; serialized release clearance from Julian.",
-      "next_action": "PR113 review correction ready at exactheadcd9c607baf5d41c4672c638bcf53ea1c0b7ed829. Reproduced omitted-runtime applicability bug; artifact.kind source/runtime now explicit, omittedkind and unknownruntime unverified while saved/queued/seen remain valid. All361tests/build/typecheck andpackagedWorkerproof pass. Exactheadquality36944153989 andadmission36944153984 SUCCESS; PRmergeable. Julian: requestfocusedre-review of5-file correction; awaitwebsite111healthyreceipt/serializedclearance before release. No merge/deploy/livefeedback/ACK/nativepush. OrdinaryChatGPTfailure remainsopen; originalMacWorkPASS andallunresolvedclientcriteria preserved. Legacyvisualdualwrite/futuredispositions remainfollowups. Freshpreflightbeforenextchanges.",
+      "next_action": "Add a separately committed authenticated-provider-response repair within this owner’s existing branch: preserve authenticated resource 404 without anonymous retry, distinguish installation/token failure from confirmed branch absence, bounded redacted status/phase diagnostics, tests for zero writes on denied/unknown lookup and unchanged owner/head/CAS guards. Preserve all feedback and unresolved cross-client acceptance. Fresh exact-head independent review and release approval required; no live Field retirement retry before verified release.",
       "category": "implementation",
       "primary_team": "runner",
       "supporting_teams": [],
       "primary_staff": "ellis",
       "supporting_staff": [],
       "base_sha": "29410ee5d8b17d1d0916618b65c6687ddb3ca444",
-      "state": "held",
+      "state": "active",
       "created_at": "2026-10-01T23:24:32.666Z",
-      "updated_at": "2026-10-02T00:07:30.701Z",
-      "lease_until": "2026-10-02T12:07:30.701Z"
+      "updated_at": "2026-10-02T00:23:28.381Z",
+      "lease_until": "2026-10-02T12:23:28.381Z"
     }
   ],
   "migrated_from": "loew-inspector"
