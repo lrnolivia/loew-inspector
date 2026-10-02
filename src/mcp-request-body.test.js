@@ -32,6 +32,10 @@ test("complete source payloads over 16 KB reach guarded tool validation in both 
     const body = await response.json();
     assert.equal(body.result?.isError, true, "invalid write arguments remain refused");
   }
+  const malformed = await worker.fetch(new Request("https://relay.loew.fi/mcp", {
+    method: "POST", headers: { "content-type": "application/json", "cf-access-jwt-assertion": token }, body: "{"
+  }), {});
+  assert.equal((await malformed.json()).error.code, -32700);
   assert.equal(providerCalls, 0);
 });
 
