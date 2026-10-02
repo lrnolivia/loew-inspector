@@ -1,3 +1,4 @@
+import {projectMembers} from '../../../packages/shared-ui/project-groups.js';
 import {bindWorkViewer} from "../../../packages/shared-ui/work-viewer.js";
 import {evidenceItem} from "../../../packages/shared-ui/work-view-model.js";
 import { showLoading } from "./loading.js";
@@ -178,7 +179,9 @@ export async function loadReview(ui,projectId='') {
  const root=document.querySelector('#review-list'),count=document.querySelector('#review-count');
  root.dataset.summaryState='loading';showLoading(root,'review','Loading captures');
  try {
-  const payload=await api('/api/visual');
+  const scope=projectMembers(projectId);
+  const results=await Promise.all((scope.length?scope:['']).map(id=>api('/api/visual'+(id?'?project='+encodeURIComponent(id):''))));
+  const payload={evidence:results.flatMap(result=>result.evidence||[]),partial:results.some(result=>result.partial||result.truncated||result.cursor)};
   const raw=Array.isArray(payload.evidence)?payload.evidence:[],seen=new Set(),sources=[];
   for(const item of raw){const key=evidenceKey(item);if(seen.has(key))continue;seen.add(key);sources.push(item);}
   const prepared=[];

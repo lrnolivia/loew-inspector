@@ -177,3 +177,9 @@ test('spring motion is finite and ends with sharp readable telemetry', async () 
   } finally {await browser.close();await fixture.close();}
 });
 
+import {projectMembers} from '../../../packages/shared-ui/project-groups.js';
+test('Inspector scopes evidence before the API result limit and preserves child identities',async()=>{
+ assert.deepEqual(projectMembers('field'),['field']);assert.deepEqual(projectMembers('bazzite-custom'),['bazzite-custom','loew-shell']);assert.deepEqual(projectMembers('rtxforge'),['rtxforge','rtxforge-mfg']);
+ const fixture=await contextFixture(),browser=await chromium.launch({headless:true});
+ try{const page=await browser.newPage({viewport:{width:390,height:844},reducedMotion:'reduce'});await page.goto(fixture.origin+'/inspector#review?project=field');await settle(page,true);assert.ok(fixture.requests.includes('/api/visual?project=field'));assert.equal(await page.locator('[data-work-key]').count(),1);assert.match(await page.locator('[data-work-key]').getAttribute('data-work-key'),/^field\//);await page.close();}finally{await browser.close();await fixture.close();}
+});
