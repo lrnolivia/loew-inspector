@@ -415,4 +415,18 @@ test('production context card model remains executable after Worker keepNames bu
     assert.deepEqual(JSON.parse(JSON.stringify(actual)), JSON.parse(JSON.stringify(bundled.contextCardModel(input))));
   }
   assert.doesNotMatch(prefix, /\b__name\b/, 'browser code must not depend on a Worker-only helper');
+  const { chromium } = await import('playwright');
+  const browser = await chromium.launch({headless:true});
+  try {
+    const page = await browser.newPage();
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.addInitScript(() => { window.openai = {
+      toolInput:{project:'relay'},
+      toolOutput:{project:'relay',claim:{primary_staff:'julian',state:'active',goal:'Bundled card is alive'}}
+    }; });
+    await page.goto('data:text/html,' + encodeURIComponent(html));
+    await page.locator('#title').filter({hasText:'Bundled card is alive'}).waitFor();
+    assert.deepEqual(errors, []);
+  } finally { await browser.close(); }
 });
