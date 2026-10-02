@@ -64,7 +64,8 @@ try {
   if(name==='runner'){
    await frame.locator('#refresh').click();await frame.locator('#title').filter({hasText:'Refreshed canonical state'}).waitFor();await frame.locator('#open-relay').click();
    const calls=await frame.locator('body').evaluate(()=>window.__calls);assert.deepEqual(calls.map(call=>call.name),['relay_runner_progress','relay_ui_control_center']);
-   await frame.locator('#refresh').focus();
+   await page.keyboard.press('Shift+Tab');
+   assert.equal(await frame.locator('#refresh').evaluate(el=>document.activeElement===el),true);
    assert.equal(await frame.locator('#refresh').evaluate(el=>getComputedStyle(el).outlineStyle),'solid');
   }
   await page.close();
