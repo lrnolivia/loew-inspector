@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "ctrl",
-  "updated_at": "2026-10-02T16:23:13.541Z",
+  "updated_at": "2026-10-02T17:14:02.519Z",
   "legacy_branches": [
     "main"
   ],
@@ -77,6 +77,29 @@
       "evidence": "Requested two-circle treatment implemented in Figma component89:19 by editing only halo89:43: foreground64px100%, halo102.0833px50% with copied Now soft shadow. Export PNG41038bytes SHA256217ba79a5e96c6f2476f99638126177ff5d8c662a7940128a5cbf6ce8854913d; Library same item version1 delivered. PR2 exact head908fe3b passed quality/browser and admission, merged ce4fd828cff9811c54cda3d25c00d785a579d525. Workers Builds succeeded. Protected production build.json confirms exact merge SHA/build45a2204c7f1b8fac041321825ef189a2f919b316d8d5727d3fe5d89f0c872f9e; /brand/ctrl.png returns200 image/png41038bytes. Source asset hash verified; binary live-response hash is not exposed by readback tool and is not claimed independently measured. Prior source/Library version preserved. User notified Sentinel_25dcd7c2ef448191889cd92dc9b3782e.",
       "work_accounted": true,
       "completed_at": "2026-10-02T16:23:13.541Z"
+    },
+    {
+      "id": "ctrl-icon-family-20261002",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "branch": "ctrl/icon-family-20261002",
+      "paths": [
+        "apps/web/public/brand-assets.json"
+      ],
+      "resources": [
+        "ctrl-brand-icon"
+      ],
+      "goal": "Install approved optically aligned icon family, refined Relay circles and Now clock.",
+      "acceptance": "Figma final exports match source assets; ctrl unchanged; all quality and browser gates pass; verified live build. Prior source retained for rollback.",
+      "next_action": "Export final Figma icon candidates and commit data assets with normal CI.",
+      "primary_team": "night-shift",
+      "supporting_teams": [],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "base_sha": "ce4fd828cff9811c54cda3d25c00d785a579d525",
+      "state": "active",
+      "created_at": "2026-10-02T17:14:02.519Z",
+      "updated_at": "2026-10-02T17:14:02.519Z",
+      "lease_until": "2026-10-03T05:14:02.519Z"
     }
   ]
 }
