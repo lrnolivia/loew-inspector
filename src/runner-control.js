@@ -255,12 +255,15 @@ export function runnerControlError(error) {
     error: {
       class: code,
       message: error instanceof ControlError ? error.message : 'Runner provider request failed',
+      ...(safeGithubFailure(error?.github) ? { upstream: safeGithubFailure(error.github) } : {}),
       ...(error?.record_sha ? { record_sha: error.record_sha } : {}),
       retryable: code === 'capacity',
       requires_auth: code === 'auth',
       requires_user: false,
       recovery: code === 'uncertain_write'
         ? 'Inspect the current record and claim; never replay blindly.'
+        : code === 'rate_limit'
+          ? 'Wait for the recorded GitHub rate-limit window, then refresh canonical state and reconcile any uncertain write before another operation. Do not switch identity.'
         : code === 'capacity'
           ? 'Retry after provider capacity clears; refresh canonical state first if a mutation may have started.'
           : code === 'auth'
@@ -271,4 +274,19 @@ export function runnerControlError(error) {
     },
     checked_at: new Date().toISOString()
   };
+}
+
+function safeGithubFailure(value) {
+  if (value?.provider !== 'github') return null;
+  const result = { provider: 'github' };
+  if (Number.isInteger(value.status) && value.status >= 100 && value.status <= 599) result.status = value.status;
+  if (['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'].includes(value.method)) result.method = value.method;
+  if (typeof value.endpoint === 'string' && value.endpoint.length <= 500 &&
+      /^\/[A-Za-z0-9._%\/-]+$/.test(value.endpoint)) result.endpoint = value.endpoint;
+  if (['resource_request', 'installation_discovery', 'token_mint', 'auth_selection'].includes(value.phase)) result.phase = value.phase;
+  if (['github_app_installation', 'github_app_jwt', 'legacy_token', 'authenticated', 'public_read', 'none'].includes(value.auth_mode)) result.auth_mode = value.auth_mode;
+  for (const key of ['rate_limit_remaining', 'rate_limit_reset', 'retry_after_seconds']) {
+    if (Number.isSafeInteger(value[key]) && value[key] >= 0 && value[key] <= 9999999999) result[key] = value[key];
+  }
+  return result;
 }
