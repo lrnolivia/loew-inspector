@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "rtxforge",
-  "updated_at": "2026-10-02T01:46:27.944Z",
+  "updated_at": "2026-10-02T01:52:39.110Z",
   "legacy_branches": [
     "backup/github-main-before-0.5.8",
     "backup/main-0.5.8-ada",
@@ -63,8 +63,8 @@
       "id": "rtxforge-post-release-mfg-nr-qa-20261002",
       "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
       "goal": "Preserve Lauren's post-release game QA for the shipped rtxForge package; record only, no worker launch.",
-      "acceptance": "Verbatim Lauren report2026-10-02T01:44UTC messageSentinel_59276d1506748191aa0803178189589e: \"record that Avatar's MFG worked, Witcher 3 MFG worked. Crimson Desert loaded and MFG worked. NR didn't work anywhere it's installed yet. but this is crazy great progress.\" These are user-observed runtime MFG passes for3games and NRfailure in testedinstallations, no automated verification or diagnosedcause. Package reference PR5 testedhead28cb6a10b4d44236037eaba5512e37b45d957cf2 mergedacd71e9a3da59a86c04794247ac8ead60fdbb95a; exactruntimebinaryhash/settings not supplied. PriorOW2userMFGpass is inPR5.",
-      "next_action": "Saved QA only. Remain queued, no claim/branch/worker/systemchanges. Prior terminalinstallassignment is preserved; terminalfeedback mutation was refused. Future user-authorized investigation must reconcile exactgame/build/profile/NRsymptoms. This is not delivery or acknowledgement by a nativeworker. docs/INSTALLATION.md is reference scope only, not a requested edit.",
+      "acceptance": "Verbatim Lauren report2026-10-02T01:44UTC messageSentinel_59276d1506748191aa0803178189589e: \"record that Avatar's MFG worked, Witcher 3 MFG worked. Crimson Desert loaded and MFG worked. NR didn't work anywhere it's installed yet. but this is crazy great progress.\" These are user-observed runtime MFG passes for3games and NRfailure in testedinstallations, no automated verification or diagnosedcause. Package reference PR5 testedhead28cb6a10b4d44236037eaba5512e37b45d957cf2 mergedacd71e9a3da59a86c04794247ac8ead60fdbb95a; exactruntimebinaryhash/settings not supplied. PriorOW2userMFGpass is inPR5.\nLauren's final verdict at 2026-10-02 01:51 UTC, message Sentinel_9386434786d48191bb5e919277c37ea5, verbatim: \"MFG is just working officially. that’s the call it’s working on Cyberpunk too. and NR is not working, that’s the other call lol.\" MFG is confirmed working by Lauren across Cyberpunk, Avatar, Witcher 3, Crimson Desert and previously The Outer Worlds 2. NR is confirmed not working in her tested installations. Preserve these as human runtime results; exact binary hashes/settings remain unspecified and no cause is inferred.",
+      "next_action": "Saved human QA verdict: MFG WORKS; NR DOES NOT WORK. Keep queued without a worker, branch, claim or automatic execution. Preserve package history. Do not mark this as native-worker delivery or independent automated verification.",
       "paths": [
         "docs/INSTALLATION.md"
       ],
@@ -77,7 +77,28 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "state": "queued",
-      "created_at": "2026-10-02T01:46:27.944Z"
+      "created_at": "2026-10-02T01:46:27.944Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-02T01:52:39.110Z",
+          "by": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "reason": "Lauren supplied a final human QA verdict and added Cyberpunk to the passing MFG games.",
+          "fields": [
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "acceptance": "Verbatim Lauren report2026-10-02T01:44UTC messageSentinel_59276d1506748191aa0803178189589e: \"record that Avatar's MFG worked, Witcher 3 MFG worked. Crimson Desert loaded and MFG worked. NR didn't work anywhere it's installed yet. but this is crazy great progress.\" These are user-observed runtime MFG passes for3games and NRfailure in testedinstallations, no automated verification or diagnosedcause. Package reference PR5 testedhead28cb6a10b4d44236037eaba5512e37b45d957cf2 mergedacd71e9a3da59a86c04794247ac8ead60fdbb95a; exactruntimebinaryhash/settings not supplied. PriorOW2userMFGpass is inPR5.",
+            "next_action": "Saved QA only. Remain queued, no claim/branch/worker/systemchanges. Prior terminalinstallassignment is preserved; terminalfeedback mutation was refused. Future user-authorized investigation must reconcile exactgame/build/profile/NRsymptoms. This is not delivery or acknowledgement by a nativeworker. docs/INSTALLATION.md is reference scope only, not a requested edit."
+          },
+          "after": {
+            "acceptance": "Verbatim Lauren report2026-10-02T01:44UTC messageSentinel_59276d1506748191aa0803178189589e: \"record that Avatar's MFG worked, Witcher 3 MFG worked. Crimson Desert loaded and MFG worked. NR didn't work anywhere it's installed yet. but this is crazy great progress.\" These are user-observed runtime MFG passes for3games and NRfailure in testedinstallations, no automated verification or diagnosedcause. Package reference PR5 testedhead28cb6a10b4d44236037eaba5512e37b45d957cf2 mergedacd71e9a3da59a86c04794247ac8ead60fdbb95a; exactruntimebinaryhash/settings not supplied. PriorOW2userMFGpass is inPR5....",
+            "next_action": "Saved human QA verdict: MFG WORKS; NR DOES NOT WORK. Keep queued without a worker, branch, claim or automatic execution. Preserve package history. Do not mark this as native-worker delivery or independent automated verification."
+          }
+        }
+      ],
+      "updated_at": "2026-10-02T01:52:39.110Z"
     }
   ],
   "claims": [
