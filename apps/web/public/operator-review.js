@@ -1,3 +1,5 @@
+import {bindWorkViewer} from "../../../packages/shared-ui/work-viewer.js";
+import {evidenceItem} from "../../../packages/shared-ui/work-view-model.js";
 import { showLoading } from "./loading.js";
 import { brand, featureAccent } from "./brand.js";
 import { iconSlot, hydrateProjectIcons } from "./project-icons.js";
@@ -164,231 +166,29 @@ function evidenceTitle(item) {
   return item.step_label || context.surface || "Screen review";
 }
 
-function reviewDisposition(item) {
-  const explicit = item.qaReview?.disposition;
-  if (["pending", "completed", "stale", "archived"].includes(explicit)) return explicit;
-  return item.qaReview?.overall ? "completed" : "pending";
-}
 
-function reviewStats() {
-  const stats = { pending: 0, completed: 0, stale: 0, archived: 0 };
-  reviewItems.forEach(item => { stats[reviewDisposition(item)] += 1; });
-  return stats;
-}
-
-function updateReviewOverview() {
-  const stats = reviewStats();
-  reviewUi?.setOverviewDetail(
-    stats.pending + " awaiting review · " +
-    stats.stale + " stale · " +
-    stats.completed + " completed"
-  );
-}
-
-function visibleReviews() {
-  if (reviewMode === "all") return reviewItems.filter(item => reviewDisposition(item) !== "archived");
-  const wanted = reviewMode === "needs" ? "pending" : reviewMode;
-  return reviewItems.filter(item => reviewDisposition(item) === wanted);
-}
-
-function dispositionMeta(disposition) {
-  if (disposition === "completed") return { label: "completed", tone: "done", signal: "steady" };
-  if (disposition === "stale") return { label: "stale", tone: "warn", signal: "steady" };
-  if (disposition === "archived") return { label: "archived", tone: "quiet", signal: "steady" };
-  return { label: "needs review", tone: "act", signal: "attention" };
-}
-
-function reviewActions(disposition) {
-  if (disposition === "completed") return [
-    ["pending", "reopen"],
-    ["stale", "mark stale"]
-  ];
-  if (disposition === "stale") return [["pending", "reopen"]];
-  if (disposition === "archived") return [["stale", "restore"]];
-  return [
-    ["completed", "mark completed"],
-    ["stale", "mark stale"]
-  ];
-}
-
-async function setReviewDisposition(item, disposition, { render = true } = {}) {
-  const current = item.qaReview || {};
-  const payload = {
-    answers: { ...(current.answers || {}) },
-    notes: current.notes || "",
-    overall: current.overall || null,
-    disposition
-  };
-  const result = await api(
-    "/api/visual/" + encodeURIComponent(item.evidence_id) + "/qa",
-    { method: "POST", body: JSON.stringify(payload) }
-  );
-  item.qaReview = result.review || { ...payload, evidence_id: item.evidence_id };
-  if (render) {
-    renderReview();
-    updateReviewOverview();
-  }
-  reviewUi?.setConnection("connected", "good");
-}
-
-async function clearStaleReviews(button) {
-  const stale = reviewItems.filter(item => reviewDisposition(item) === "stale");
-  if (!stale.length) return;
-  button.disabled = true;
-  const label = button.textContent;
-  button.textContent = "clearing…";
-  try {
-    await Promise.all(stale.map(item => setReviewDisposition(item, "archived", { render: false })));
-    renderReview();
-    updateReviewOverview();
-  } catch (error) {
-    reviewUi?.setConnection("couldn’t update review", "bad");
-  } finally {
-    button.textContent = label;
-    button.disabled = reviewStats().stale === 0;
-  }
-}
-
-function renderReview() {
-  const target = document.querySelector("#review-list");
-  const count = document.querySelector("#review-count");
-  const filters = document.querySelector("#review-filters");
-  const bulk = document.querySelector('[data-review-bulk="clear-stale"]');
-  const stats = reviewStats();
-  const visible = visibleReviews();
-  target.dataset.summaryState = "ready";
-  target.dataset.summaryNeeds = String(stats.pending);
-  target.dataset.summaryVisible = String(Math.min(visible.length, 18));
-
-  count.innerHTML = '<span class="status-light" aria-hidden="true"></span><span>' +
-    (stats.pending ? stats.pending + " need" + (stats.pending === 1 ? "s" : "") + " you" : "all caught up") +
-    '</span>';
-  count.className = "review-count status-badge";
-  count.dataset.tone = stats.pending ? "act" : "done";
-  count.dataset.signal = stats.pending ? "attention" : "steady";
-
-  filters?.querySelectorAll("[data-review-mode]").forEach(button => {
-    button.classList.toggle("active", button.dataset.reviewMode === reviewMode);
-  });
-  if (bulk) {
-    bulk.disabled = stats.stale === 0;
-    bulk.title = stats.stale ? "Archive " + stats.stale + " stale review" + (stats.stale === 1 ? "" : "s") : "No stale reviews";
-  }
-
-  if (!visible.length) {
-    const empty = {
-      needs: ["nothing waiting for review.", "completed and stale captures stay out of your active queue."],
-      completed: ["nothing completed yet.", "mark a capture completed when you are done with it."],
-      stale: ["no stale captures.", "mark outdated evidence stale, then clear it when you are ready."],
-      archived: ["archive is empty.", "clear stale moves old captures here so they can still be restored."],
-      all: ["no active review evidence.", "archived captures remain available in the archived filter."]
-    }[reviewMode] || ["nothing here.", ""];
-    target.innerHTML = '<div class="clear-card review-clear"><strong>' + esc(empty[0]) + '</strong><span>' + esc(empty[1]) + '</span></div>';
-    return;
-  }
-
-  target.innerHTML = visible.slice(0, 18).map(item => {
-    const context = item.context || {};
-    const disposition = reviewDisposition(item);
-    const meta = dispositionMeta(disposition);
-    const actions = reviewActions(disposition).map(([next, label]) =>
-      '<button type="button" class="review-action" data-review-action="' + esc(next) +
-      '" data-evidence-action-id="' + esc(item.evidence_id) + '">' + esc(label) + '</button>'
-    ).join("");
-    return `
-      <article class="review-row" data-tone="${esc(meta.tone)}" data-signal="${esc(meta.signal)}" data-review-disposition="${esc(disposition)}">
-        <button class="review-open" type="button" data-review-id="${esc(item.evidence_id)}" aria-label="Open ${esc(evidenceTitle(item))}">
-          <img src="${esc(item.screenshot_url)}" alt="">
-          <span class="review-copy">
-            <span class="review-project project-name">${iconSlot(context.project)}${esc(projectName(context.project || "review"))}</span>
-            <strong>${esc(evidenceTitle(item))}</strong>
-            <small>${esc(context.environment || "capture")} · ${esc(relative(item.captured_at))}</small>
-          </span>
-        </button>
-        <div class="review-card-footer">
-          <span class="review-state status-badge ${disposition === "completed" ? "done" : ""}" data-tone="${esc(meta.tone)}" data-signal="${esc(meta.signal)}"><span class="status-light" aria-hidden="true"></span><span>${esc(meta.label)}</span></span>
-          <div class="review-actions">${actions}</div>
-        </div>
-      </article>
-    `;
-  }).join("");
-
-  hydrateProjectIcons(target);
-  target.querySelectorAll("[data-review-id]").forEach(button => {
-    button.addEventListener("click", () => openQa(button.dataset.reviewId));
-  });
-  target.querySelectorAll("[data-review-action]").forEach(button => {
-    button.addEventListener("click", async () => {
-      const item = reviewItems.find(candidate => candidate.evidence_id === button.dataset.evidenceActionId);
-      if (!item) return;
-      button.disabled = true;
-      try {
-        await setReviewDisposition(item, button.dataset.reviewAction);
-      } catch (error) {
-        button.disabled = false;
-        reviewUi?.setConnection("couldn’t update review", "bad");
-      }
-    });
-  });
-}
-
+let viewer=null,loadGeneration=0;
 export function bindReviewFilters() {
-  renderChatCardPreview();
-  const filters = document.querySelector("#review-filters");
-  filters?.addEventListener("click", event => {
-    const button = event.target.closest("[data-review-mode]");
-    if (!button) return;
-    reviewMode = button.dataset.reviewMode;
-    renderReview();
-  });
-  document.querySelector('[data-review-bulk="clear-stale"]')?.addEventListener("click", event => {
-    void clearStaleReviews(event.currentTarget);
-  });
+ renderChatCardPreview();
+ const root=document.querySelector('#review-list');
+ if(root)viewer=bindWorkViewer(root,{id:'inspector',defaultView:'visual',onOpen:item=>item&&openQa(item.id)});
 }
+export async function loadReview(ui,projectId='') {
+ reviewUi=ui;const gen=++loadGeneration;
+ const root=document.querySelector('#review-list'),count=document.querySelector('#review-count');
+ root.dataset.summaryState='loading';showLoading(root,'review','Loading captures');
+ try {
+  const payload=await api('/api/visual');
+  const raw=Array.isArray(payload.evidence)?payload.evidence:[],seen=new Set(),sources=[];
+  for(const item of raw){const key=evidenceKey(item);if(seen.has(key))continue;seen.add(key);sources.push(item);}
+  const prepared=[];
+  for(let index=0;index<sources.length;index+=4)prepared.push(...await Promise.all(sources.slice(index,index+4).map(async item=>{
+   try{const qa=await api('/api/visual/'+encodeURIComponent(item.evidence_id)+'/qa');return {...item,qaReview:qa.review||null};}catch{return item;}
+  })));
+  const models=await Promise.all(prepared.map(evidenceItem));if(gen!==loadGeneration)return;
+  reviewItems=prepared;viewer?.update(models,{project:projectId,incomplete:raw.length>=60||Boolean(payload.truncated||payload.cursor)});
+  count.textContent=String(models.filter(item=>!projectId||item.project===projectId).length)+' loaded captures';
+  ui.setConnection('connected','good');
 
-export async function loadReview(ui, projectId = "") {
-  reviewUi = ui;
-  const target = document.querySelector("#review-list");
-  const count = document.querySelector("#review-count");
-  target.dataset.summaryState = "loading";
-  showLoading(target, "review", "Loading captures");
-
-  try {
-    const payload = await api("/api/visual" + (projectId ? "?project=" + encodeURIComponent(projectId) : ""));
-    const raw = Array.isArray(payload.evidence) ? payload.evidence : [];
-    const deduped = [];
-    const seen = new Set();
-
-    for (const item of raw) {
-      const context = item.context || {};
-      const internalRunnerAudit =
-        context.project === "loew-runner" &&
-        (String(item.request_id || "").startsWith("runner-ui-audit") ||
-          String(context.surface || "").toLowerCase().includes("audit"));
-      if (internalRunnerAudit) continue;
-      const key = evidenceKey(item);
-      if (seen.has(key)) continue;
-      seen.add(key);
-      deduped.push(item);
-      if (deduped.length >= 30) break;
-    }
-
-    reviewItems = await Promise.all(deduped.map(async item => {
-      try {
-        const qa = await api("/api/visual/" + encodeURIComponent(item.evidence_id) + "/qa");
-        return { ...item, qaReview: qa.review || null };
-      } catch {
-        return { ...item, qaReview: null };
-      }
-    }));
-
-    renderReview();
-    updateReviewOverview();
-    ui.setConnection("connected", "good");
-  } catch (error) {
-    target.dataset.summaryState = "error";
-    count.textContent = "";
-    target.innerHTML = '<div class="operator-empty">Review items could not be loaded right now.</div>';
-    ui.setConnection(error.status === 403 ? "access needed" : "couldn’t connect", "bad");
-  }
+ }catch(error){if(gen!==loadGeneration)return;root.dataset.summaryState='error';root.innerHTML='<div class="operator-empty">Review items could not load. Refresh to try again.</div>';ui.setConnection(error.status===403?'access needed':'couldn’t connect','bad');}
 }

@@ -1,11 +1,14 @@
+import {projectInGroup} from "../../../packages/shared-ui/project-groups.js";
 import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
 import { loadDashboard, projectLabel } from "./api";
 import { publishNotification, resolveNotification } from '../../../packages/shared-ui/notifications.js';
+import { advanceArrivalBaseline } from "../../../packages/shared-ui/work-activity.js";
 import type { ConnectionState, DashboardSnapshot } from "./types";
 
 type LiveRelay = {
   snapshot: DashboardSnapshot | null;
+  allSnapshot: DashboardSnapshot | null;
   state: ConnectionState;
   error: string | null;
   refresh: () => Promise<void>;
@@ -31,12 +34,25 @@ export function LiveRelayProvider({ children }: { children: ReactNode }) {
   const busy = useRef(false);
   const latestSnapshot = useRef<DashboardSnapshot | null>(null);
 
+  const arrivals = useRef<Record<string,{ids:string[]}> | null>(null);
+  if (arrivals.current === null) {
+    try { const stored=JSON.parse(sessionStorage.getItem('relay.arrivals.v1') || '{}'); arrivals.current=stored && typeof stored==='object' && !Array.isArray(stored)?stored:{}; } catch { arrivals.current={}; }
+  }
   async function refresh() {
     if (busy.current) return;
     busy.current = true;
     if (lastSuccess.current) setState("reconnecting");
     try {
       await loadDashboard(next => {
+        const observed=advanceArrivalBaseline(arrivals.current || {},next);
+        arrivals.current=observed.next;
+        if(observed.arrivals.length)window.dispatchEvent(new CustomEvent('relay:work-arrivals',{detail:observed.arrivals.map(({project,item})=>({project,kind:'assignment',id:item.assignment}))}));
+        try { sessionStorage.setItem('relay.arrivals.v1',JSON.stringify(observed.next)); } catch {}
+        for(const {project:itemProject,item} of observed.arrivals) publishNotification({
+          id:'new-work:'+itemProject+':'+item.assignment, feature:'runner',project:projectLabel(itemProject),
+          title:'New work',message:item.goal || item.assignment,severity:'info',
+          href:'/#/runner/'+encodeURIComponent(itemProject)+'/'+encodeURIComponent(item.assignment)+'?project='+encodeURIComponent(itemProject),action:'Open work'
+        });
         resolveNotification('dashboard:connection');
         for (const item of next.projects) {
           const id = 'progress:' + item.id;
@@ -48,7 +64,7 @@ export function LiveRelayProvider({ children }: { children: ReactNode }) {
         for (const worker of next.workers) {
           const id = 'automatic:' + worker.id;
           if (worker.runtime?.status === 'failed') publishNotification({id,feature:'night-shift',project:projectLabel(worker.id),title:'Automatic check needs attention',
-            message:worker.runtime.last_summary || 'The last automatic check reported a problem.',severity:'warning',href:'/#/night-shift?project=' + encodeURIComponent(worker.id),action:'Open check'});
+            message:worker.runtime.last_summary || 'The last automatic check reported a problem.',severity:'warning',href:'/#/night-shift?project=' + encodeURIComponent(worker.id)+'&item='+encodeURIComponent(worker.id),action:'Open check'});
           else if (['completed','succeeded','success'].includes(worker.runtime?.status || '')) resolveNotification(id);
         }
         lastSuccess.current = Date.now();
@@ -88,12 +104,12 @@ export function LiveRelayProvider({ children }: { children: ReactNode }) {
 
   const scopedSnapshot = useMemo(() => snapshot && project ? {
     ...snapshot,
-    progress: Object.fromEntries(Object.entries(snapshot.progress).filter(([id]) => id === project)),
-    workers: snapshot.workers.filter(worker => worker.id === project),
-    loadingProgress: snapshot.loadingProgress?.filter(id => id === project),
-    failedProgress: snapshot.failedProgress?.filter(id => id === project)
+    progress: Object.fromEntries(Object.entries(snapshot.progress).filter(([id]) => projectInGroup(id,project))),
+    workers: snapshot.workers.filter(worker => projectInGroup(worker.id,project)),
+    loadingProgress: snapshot.loadingProgress?.filter(id => projectInGroup(id,project)),
+    failedProgress: snapshot.failedProgress?.filter(id => projectInGroup(id,project))
   } : snapshot, [snapshot, project]);
-  const value = { snapshot: scopedSnapshot, state, error, refresh, project, selectProject };
+  const value = { snapshot: scopedSnapshot, allSnapshot: snapshot, state, error, refresh, project, selectProject };
   return <LiveRelayContext.Provider value={value}>{children}</LiveRelayContext.Provider>;
 }
 
@@ -102,3 +118,4 @@ export function useLiveRelay() {
   if (!value) throw new Error("useLiveRelay must be inside LiveRelayProvider");
   return value;
 }
+
