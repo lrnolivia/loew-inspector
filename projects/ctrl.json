@@ -75,7 +75,7 @@
   "cloud": {
     "provider": "cloudflare",
     "worker": "ctrl",
-    "write": false,
+    "write": true,
     "transport": "workers-builds",
     "production_branch": "main",
     "build_command": "npm run build",
