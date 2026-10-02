@@ -129,9 +129,9 @@ test('compact navigation, full-height rail and local presentation presets remain
       const menu = page.locator('.presentation-menu'); await menu.locator('> summary').click();
       await page.locator('[name=preset]').selectOption('rich');
       assert.equal(await page.locator('html').getAttribute('data-presentation-richness'),'rich');
-      assert.equal(await page.locator('[data-signal-id=moving] .signal-data-visual i').count(),1);
-      assert.equal(await page.locator('[data-signal-id=automatic] .signal-data-visual i').count(),2);
-      assert.equal(await page.locator('.signal-data-visual i').first().evaluate(n=>getComputedStyle(n).animationName),'none');
+      assert.match(await page.locator('[data-signal-id=moving] .signal-ratio').innerText(),/1 of 3 current work items/);
+      assert.match(await page.locator('[data-signal-id=automatic] .signal-ratio').innerText(),/2 of 2 automatic checks/);
+      assert.equal(await page.locator('.signal-ratio .ratio-value').first().evaluate(n=>getComputedStyle(n).transitionDuration),'0s');
       await page.locator('.presentation-customize > summary').click();
       await page.locator('[name=motion]').selectOption('calm');
       assert.equal(await page.locator('[data-presentation-state]').textContent(),'Custom');

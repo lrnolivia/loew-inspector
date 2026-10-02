@@ -26,9 +26,9 @@ test('shared viewer keeps selection and source identity through views, reversibl
    const row=viewer.locator('[data-work-key]').filter({has:page.locator('[data-select="'+key+'"]')});assert.match(await row.innerText(),/Review: Completed/);
    assert.equal(fixture.progress.relay[0].state,'working');
    await viewer.locator('[data-bulk=clear-complete]').click();await viewer.locator('[data-confirm]').click();await viewer.locator('.work-message').filter({hasText:'1 review item(s) updated.'}).waitFor();assert.match(await row.innerText(),/Archived/);
-   await viewer.locator('[data-undo]').click();await viewer.locator('.work-message').filter({hasText:'1 review item(s) updated.'}).waitFor();assert.doesNotMatch(await row.innerText(),/Archived/);
+   await viewer.locator('[data-undo]').click();await viewer.locator('.work-message').filter({hasText:'1 review item(s) updated.'}).waitFor();assert.match(await row.innerText(),/Review: Completed/,JSON.stringify([...fixture.reviews.values]));
    await page.reload();await page.locator('.work-viewer[data-summary-state=ready]').waitFor();assert.equal(await viewer.getAttribute('data-view'),'visual');assert.equal(await viewer.locator('[data-select]:checked').count(),0);
-   assert.match(await viewer.locator('[data-work-key]').filter({has:page.locator('[data-select="'+key+'"]')}).innerText(),/Review: Completed/);
+   assert.match(await viewer.locator('[data-work-key]').filter({has:page.locator('[data-select="'+key+'"]')}).innerText(),/Review: Completed/,JSON.stringify([...fixture.reviews.values]));
    await viewer.locator('[data-filter=all]').click();await viewer.locator('input[type=search]').fill('saved project');assert.equal(await viewer.locator('.work-item').count(),1);
    await viewer.locator('[data-view=list]').click();assert.equal(await viewer.locator('input[type=search]').inputValue(),'saved project');assert.equal(await viewer.locator('.work-item').count(),1);
    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);

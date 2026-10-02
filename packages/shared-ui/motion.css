@@ -28,3 +28,10 @@
 
 .qa-companion.qa-edge-wiggle[data-docked] { animation-timing-function: var(--motion-spring) !important; }
 .signal-card, .signal-data-visual i { animation-timing-function: var(--motion-spring); }
+
+
+/* Field owns semantic glyph feedback; avoid stacking older hover transitions. */
+[data-loew-glyph] { transform-box:fill-box; transform-origin:center; transition:none !important; }
+[data-loew-spring=true].presentation-panel { animation:none; }
+@media(prefers-reduced-motion:reduce){[data-loew-glyph]{transform:none !important;}}
+:root[data-presentation-motion=calm] [data-loew-glyph]{transform:none !important;}
