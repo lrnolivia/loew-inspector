@@ -1,3 +1,4 @@
+import { LOEW_INTERFACE_SKILL_URI } from "./loew-interface-skill.js";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { RELAY_EXTENSION_VERSION, augmentToolList, augmentResourceList, augmentSkillList, validateLifecycleArguments, classifyExtensionError } from "./relay-entry.js";
@@ -107,7 +108,7 @@ test("Relay extension preserves native card resources and appends skills once", 
   assert.equal(resources.filter(item => item.uri === RELAY_CONTEXT_CARD_URI).length, 1);
   assert.equal(resources.filter(item => item.uri === RELAY_V2_PROBE_URI).length, 1);
   assert.deepEqual(resources.find(item => item.uri === RELAY_V2_PROBE_URI), relayV2ProbeDescriptor());
-  for (const uri of [QA_SKILL_URI, LOEW_NAMING_SKILL_URI, EXECUTIVE_COMMUNICATION_SKILL_URI]) {
+  for (const uri of [QA_SKILL_URI, LOEW_NAMING_SKILL_URI, EXECUTIVE_COMMUNICATION_SKILL_URI, LOEW_INTERFACE_SKILL_URI]) {
     assert.equal(resources.filter(item => item.uri === uri).length, 1);
     assert.equal(skills.filter(item => item.uri === uri).length, 1);
   }
@@ -116,7 +117,7 @@ test("Relay extension preserves native card resources and appends skills once", 
   const skillsAgain = augmentSkillList(skills);
   assert.equal(resourcesAgain.filter(item => item.uri === RELAY_CONTEXT_CARD_URI).length, 1);
   assert.equal(resourcesAgain.filter(item => item.uri === RELAY_V2_PROBE_URI).length, 1);
-  for (const uri of [QA_SKILL_URI, LOEW_NAMING_SKILL_URI, EXECUTIVE_COMMUNICATION_SKILL_URI]) {
+  for (const uri of [QA_SKILL_URI, LOEW_NAMING_SKILL_URI, EXECUTIVE_COMMUNICATION_SKILL_URI, LOEW_INTERFACE_SKILL_URI]) {
     assert.equal(resourcesAgain.filter(item => item.uri === uri).length, 1);
     assert.equal(skillsAgain.filter(item => item.uri === uri).length, 1);
   }
@@ -230,3 +231,4 @@ test("fresh inline status card is listed and readable through the authenticated 
     assert.ok(raced.structuredContent.report.report_id);
   });
 });
+
