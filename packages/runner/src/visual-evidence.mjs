@@ -1,3 +1,4 @@
+import { readEvidenceIndex, readRecentEvidenceIndex } from "../../../src/evidence-index.js";
 const EVIDENCE_ID = /^vis_[a-zA-Z0-9-]{8,128}$/;
 const RUN_ID = /^run_[a-zA-Z0-9._-]{8,128}$/;
 const VISUAL_PREFIX = "visual/";
@@ -14,8 +15,10 @@ async function listAllObjects(bucket, prefix = VISUAL_PREFIX, maxObjects = 1000)
   do {
     const page = await bucket.list({ prefix, limit: Math.min(1000, maxObjects - objects.length), cursor });
     objects.push(...(page.objects || []));
+    if(page.truncated && (!page.cursor || page.cursor===cursor)) throw Object.assign(Error("Invalid evidence catalog cursor"),{status:503});
     cursor = page.truncated ? page.cursor : undefined;
   } while (cursor && objects.length < maxObjects);
+  if(cursor) throw Object.assign(new Error("Evidence catalog scan budget exceeded; no absence is inferred."),{status:503});
   return objects;
 }
 
@@ -34,9 +37,17 @@ async function readJsonObject(bucket, key) {
 
 async function findEvidenceMetadataKey(bucket, evidenceId) {
   if (!isEvidenceId(evidenceId)) return null;
-  const objects = await listAllObjects(bucket);
-  const suffix = "/" + evidenceId + ".json";
-  return metadataKeys(objects).find(key => key.endsWith(suffix)) || null;
+  const indexed=await readEvidenceIndex(bucket,evidenceId);
+  if(indexed)return indexed.metadata_key;
+  const suffix="/"+evidenceId+".json";let cursor;
+  for(let pageNumber=0;pageNumber<20;pageNumber++){
+    const page=await bucket.list({prefix:VISUAL_PREFIX,limit:1000,cursor});
+    const key=metadataKeys(page.objects||[]).find(key=>key.endsWith(suffix));if(key)return key;
+    if(!page.truncated)return null;
+    if(!page.cursor||page.cursor===cursor)throw Object.assign(Error("Invalid evidence catalog cursor"),{status:503});
+    cursor=page.cursor;
+  }
+  throw Object.assign(Error("Evidence lookup scan budget exceeded; no absence is inferred."),{status:503});
 }
 
 export function normalizeVisualFilters(input = {}) {
@@ -64,9 +75,16 @@ export function normalizeVisualFilters(input = {}) {
 
 export async function listVisualEvidence(bucket, limit = 60, filters = {}) {
   const selected = normalizeVisualFilters(filters);
-  const objects = await listAllObjects(bucket);
-  const keys = metadataKeys(objects);
-  const records = (await Promise.all(keys.map(key => readJsonObject(bucket, key))))
+  const indexed=await readRecentEvidenceIndex(bucket);
+  const objects=await listAllObjects(bucket,VISUAL_PREFIX,20000);
+  const indexedIds=new Set(indexed.records.map(record=>record.evidence_id));
+  const keys=metadataKeys(objects).filter(key=>!indexedIds.has(key.split('/').at(-1).slice(0,-5))).sort().reverse();
+  // Old captures predate the index. Keep the response bounded and disclose its
+  // legacy window; exact-ID lookup still paginates the full catalog.
+  const legacyKeys=keys.slice(0,650),legacy=[];
+  for(let offset=0;offset<legacyKeys.length;offset+=20)legacy.push(...await Promise.all(legacyKeys.slice(offset,offset+20).map(key=>readJsonObject(bucket,key))));
+  const partial=indexed.truncated||keys.length>legacyKeys.length;
+  const records = [...indexed.records,...legacy]
     .filter(record => record && isEvidenceId(record.evidence_id))
     .filter(record => !selected.project || record.context?.project === selected.project)
     .filter(record => !selected.environment || record.context?.environment === selected.environment)
@@ -78,14 +96,14 @@ export async function listVisualEvidence(bucket, limit = 60, filters = {}) {
       ...record,
       screenshot_url: "/api/visual/" + encodeURIComponent(record.evidence_id) + "/image"
     }));
-  return { ok: true, count: records.length, filters: selected, evidence: records };
+  return { ok: true, count: records.length, filters: selected, evidence: records, partial, coverage: partial ? "bounded-index-and-legacy-window" : "complete-catalog" };
 }
 
 export async function getVisualEvidence(bucket, evidenceId) {
   const key = await findEvidenceMetadataKey(bucket, evidenceId);
   if (!key) return null;
   const record = await readJsonObject(bucket, key);
-  if (!record) return null;
+  if (!record || record.evidence_id !== evidenceId) return null;
   return { ...record, screenshot_url: "/api/visual/" + encodeURIComponent(evidenceId) + "/image" };
 }
 
@@ -297,10 +315,12 @@ export async function reviewVisualRun(bucket, runId) {
   if (!runObject) return null;
   let run;
   try { run = await runObject.json(); } catch { return null; }
-  const objects = await listAllObjects(bucket);
+  const objects = await listAllObjects(bucket,VISUAL_PREFIX,20000);
   const keys = metadataKeys(objects);
+  if(keys.length>850)throw Object.assign(Error("Run comparison requires paginated historical indexing; no complete verdict is inferred."),{status:503});
   const records = (await Promise.all(keys.map(key => readJsonObject(bucket, key))))
     .filter(record => record && isEvidenceId(record.evidence_id))
     .map(record => ({ ...record, screenshot_url: "/api/visual/" + encodeURIComponent(record.evidence_id) + "/image" }));
   return { ok: true, run, review: reviewRunRecords(run, records) };
 }
+
