@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "ctrl",
-  "updated_at": "2026-10-02T16:16:47.354Z",
+  "updated_at": "2026-10-02T16:23:13.541Z",
   "legacy_branches": [
     "main"
   ],
@@ -67,10 +67,16 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "887d31efa085f878a21837b906079b2f7169371a",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-02T16:16:47.354Z",
-      "updated_at": "2026-10-02T16:16:47.354Z",
-      "lease_until": "2026-10-03T04:16:47.354Z"
+      "updated_at": "2026-10-02T16:23:13.541Z",
+      "lease_until": "2026-10-03T04:23:13.541Z",
+      "pr": 2,
+      "merged_head_sha": "908fe3b2c53a06a91c7171ccd5dfb72bfcdca518",
+      "merge_commit_sha": "ce4fd828cff9811c54cda3d25c00d785a579d525",
+      "evidence": "Requested two-circle treatment implemented in Figma component89:19 by editing only halo89:43: foreground64px100%, halo102.0833px50% with copied Now soft shadow. Export PNG41038bytes SHA256217ba79a5e96c6f2476f99638126177ff5d8c662a7940128a5cbf6ce8854913d; Library same item version1 delivered. PR2 exact head908fe3b passed quality/browser and admission, merged ce4fd828cff9811c54cda3d25c00d785a579d525. Workers Builds succeeded. Protected production build.json confirms exact merge SHA/build45a2204c7f1b8fac041321825ef189a2f919b316d8d5727d3fe5d89f0c872f9e; /brand/ctrl.png returns200 image/png41038bytes. Source asset hash verified; binary live-response hash is not exposed by readback tool and is not claimed independently measured. Prior source/Library version preserved. User notified Sentinel_25dcd7c2ef448191889cd92dc9b3782e.",
+      "work_accounted": true,
+      "completed_at": "2026-10-02T16:23:13.541Z"
     }
   ]
 }
