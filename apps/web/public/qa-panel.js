@@ -25,8 +25,10 @@ export function renderQaPreview(stage, state, requestedMode) {
   const live = state.live || {};
   const evidence = state.evidence || {};
   const canLive = Boolean(live.active && live.embeddable && live.url && !live.renderUnconfirmed);
+  const retained=live.retained||{},canRetained=Boolean(retained.available&&retained.url);
   const canVideo = Boolean(evidence.video_url);
   const mode =
+    requestedMode === "retained" && canRetained ? "retained" :
     requestedMode === "live" && canLive ? "live" :
     requestedMode === "video" && canVideo ? "video" :
     requestedMode === "captured" ? "captured" :
@@ -34,7 +36,12 @@ export function renderQaPreview(stage, state, requestedMode) {
   const { width, height } = surfaceSize(evidence);
 
   let media = "";
-  if (mode === "live") {
+  if(mode==='retained') {
+    const entry=state.retainedNav?.entry||evidence.dom?.retained_preview?.entry||'app';
+    const route=state.retainedNav?.hash||evidence.dom?.retained_preview?.hash||(entry==='inspector'?'#review':'#/today');
+    const url=new URL(retained.url,location.origin);url.searchParams.set('entry',entry==='inspector'?'inspector':'app');url.hash=String(route).slice(0,1000);
+    media='<iframe class="qa-surface-media" src="'+qaEscape(url.href)+'" title="Retained interactive preview using sample data" sandbox="allow-scripts" data-qa-live-preview data-qa-retained-preview></iframe>';
+  } else if (mode === "live") {
     media = '<iframe class="qa-surface-media" src="' + qaEscape(live.url) + '" title="Live QA preview" data-qa-live-preview></iframe>';
   } else if (mode === "video") {
     media = '<video class="qa-surface-media" src="' + qaEscape(evidence.video_url) + '" controls playsinline preload="metadata" aria-label="Recorded QA evidence"></video>';
@@ -96,6 +103,12 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
     (questionIndex < questions.length - 1 ? '<button type="button" data-qa-next>Next</button>' : '<button type="button" data-qa-finish ' + (!allAnswered ? 'disabled' : '') + '>Finish</button>') + '</nav>';
 
 
+  const retained=state.live?.retained;
+  if(retained){
+    const section=document.createElement('section');section.className='qa-retained-review';
+    section.innerHTML='<p style="font-size:12px;line-height:1.4;margin:10px 0">Retained '+qaEscape(retained.source_sha.slice(0,7))+' · sample data. '+qaEscape(retained.state==='pending'?'Kept pending approval. Approval starts a 30-day review window.':retained.state==='expired'?'Review window ended. Reopen to restore this copy.':'Available until '+new Date(retained.expires_at).toLocaleDateString()+'.')+'</p><button type="button" class="qa-answer" style="width:100%;min-height:44px;font-size:13px" data-retained-review '+(state.retainedBusy?'disabled':'')+'>'+(state.retainedBusy?'Saving…':retained.state==='pending'?'Approve this build':'Reopen build review')+'</button>';
+    panel.append(section);section.querySelector('button').addEventListener('click',()=>handlers.retained?.());
+  }
   void hydrateProjectIcons(panel);
   if (q) {
     panel.querySelectorAll("[data-qa-answer]").forEach(function (button) {
@@ -136,3 +149,4 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
   const textarea = notes.querySelector('textarea');
   textarea.addEventListener('input', () => handlers.notes(textarea.value));
 }
+

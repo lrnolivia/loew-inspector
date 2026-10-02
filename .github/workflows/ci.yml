@@ -55,12 +55,21 @@ jobs:
       - run: WORKERS_CI_COMMIT_SHA=${{ github.event.pull_request.head.sha || github.sha }} npm run build
       - name: Verify exact live source and capture actual website pages
         run: node apps/web/verify-production.mjs
+      - name: Retain and verify exact interactive sample build
+        run: node scripts/retain-web-preview.mjs
       - name: Preserve production screenshots and receipt
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: relay-website-production-${{ github.sha }}
           path: qa-evidence/production/
+          if-no-files-found: error
+      - name: Preserve retained build evidence and receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relay-retained-preview-${{ github.sha }}
+          path: qa-evidence/retained/
           if-no-files-found: error
   quality:
     name: quality
@@ -86,7 +95,7 @@ jobs:
       - name: Run workspace, contract, API, browser and React tests
         run: npm test
       - name: Preserve actual website route screenshots
-        if: always() && (startsWith(github.head_ref, 'relay/website-work-queue-views-') || startsWith(github.head_ref, 'relay/website-post-release-polish-') || startsWith(github.head_ref, 'relay/website-2.0-repair-') || startsWith(github.head_ref, 'relay/website-project-context-polish-') || startsWith(github.head_ref, 'relay/website-notifications-review-'))
+        if: always() && (startsWith(github.head_ref, 'relay/retained-interactive-previews-') || startsWith(github.head_ref, 'relay/website-work-queue-views-') || startsWith(github.head_ref, 'relay/website-post-release-polish-') || startsWith(github.head_ref, 'relay/website-2.0-repair-') || startsWith(github.head_ref, 'relay/website-project-context-polish-') || startsWith(github.head_ref, 'relay/website-notifications-review-'))
         uses: actions/upload-artifact@v4
         with:
           name: relay-website-${{ github.event.pull_request.number }}
@@ -94,7 +103,7 @@ jobs:
           if-no-files-found: error
   visual-review-preview:
     needs: quality
-    if: github.event_name == 'pull_request' && github.event.pull_request.draft == true && (startsWith(github.head_ref, 'relay/website-work-queue-views-') || startsWith(github.head_ref, 'relay/2.0-approved-visual-port-') || startsWith(github.head_ref, 'relay/website-project-context-polish-') || startsWith(github.head_ref, 'relay/website-notifications-review-'))
+    if: github.event_name == 'pull_request' && github.event.pull_request.draft == true && (startsWith(github.head_ref, 'relay/retained-interactive-previews-') || startsWith(github.head_ref, 'relay/website-work-queue-views-') || startsWith(github.head_ref, 'relay/2.0-approved-visual-port-') || startsWith(github.head_ref, 'relay/website-project-context-polish-') || startsWith(github.head_ref, 'relay/website-notifications-review-'))
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
