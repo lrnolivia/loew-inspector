@@ -1,3 +1,4 @@
+import { readMcpBody, mcpBodyErrorResponse } from "./mcp-request-body.js";
 import { handleApi as runnerApi } from "../packages/runner/src/cloudflare-worker.mjs";
 import { browserRequestOptions, runQuickAction } from "./browser.js";
 import { storeEvidence, decodeBase64Bytes, summarizeSnapshot, normalizeEvidenceContext } from "./evidence.js";
@@ -341,12 +342,9 @@ async function mcp(request, access, env) {
   if (!request.headers.get("content-type")?.startsWith("application/json")) {
     return json({ error: "JSON required" }, 415);
   }
-  if (Number(request.headers.get("content-length") || 0) > 16384) {
-    return json({ error: "Request too large" }, 413);
-  }
-
-  const raw = await request.text();
-  if (raw.length > 16384) return json({ error: "Request too large" }, 413);
+  let raw;
+  try { raw = await readMcpBody(request); }
+  catch (error) { return mcpBodyErrorResponse(error); }
 
   let message;
   try { message = JSON.parse(raw); }
