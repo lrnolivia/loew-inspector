@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "rtxforge",
-  "updated_at": "2026-10-02T00:44:02.000Z",
+  "updated_at": "2026-10-02T00:46:51.952Z",
   "legacy_branches": [
     "backup/github-main-before-0.5.8",
     "backup/main-0.5.8-ada",
@@ -131,10 +131,16 @@
       "primary_staff": null,
       "supporting_staff": [],
       "base_sha": "4156ec19515f10af519564699aaebe6adf75c850",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T21:59:59.674Z",
-      "updated_at": "2026-10-02T00:44:02.000Z",
-      "lease_until": "2026-10-02T12:44:02.000Z"
+      "updated_at": "2026-10-02T00:46:51.952Z",
+      "lease_until": "2026-10-02T12:46:51.952Z",
+      "pr": 5,
+      "merged_head_sha": "28cb6a10b4d44236037eaba5512e37b45d957cf2",
+      "merge_commit_sha": "acd71e9a3da59a86c04794247ac8ead60fdbb95a",
+      "evidence": "https://github.com/lrnolivia/rtxForge/pull/5 — squashed and independently verified merged at acd71e9a3da59a86c04794247ac8ead60fdbb95a from tested head 28cb6a10b4d44236037eaba5512e37b45d957cf2; both trees c1e11e3fb0c85e6727d4bcaa9c2ecef6e8e08aab. Exact-head AppImage build 36947032197 and admission 36946947192 succeeded; local engine/package/setup/GTK checks and installed-artifact verification recorded in PR. Full v0.9.33 deployed to five authorized games with native files/backups preserved. User confirmed MFG in OW2 and current runtime records 3x. NR rendering remains unexercised/unproven, and separate machine-specific HDR diagnosis is not a package acceptance claim. Existing local history/worktrees retained; no force/reset/cleanup. Deferred KDE/Hyprland and Figma work untouched. Package delivered; do not resume implementation on the completed branch.",
+      "work_accounted": true,
+      "completed_at": "2026-10-02T00:46:51.952Z"
     }
   ]
 }
