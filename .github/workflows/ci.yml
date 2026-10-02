@@ -5,6 +5,7 @@ on:
   pull_request:
     paths:
       - 'apps/**'
+      - 'icons/**'
       - 'packages/**'
       - 'features/**'
       - 'package-lock.json'
@@ -17,6 +18,7 @@ on:
     branches: [main]
     paths:
       - 'apps/**'
+      - 'icons/**'
       - 'packages/**'
       - 'features/**'
       - 'package-lock.json'
@@ -37,7 +39,7 @@ jobs:
   website-production:
     name: verify actual deployed website
     needs: quality
-    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
+    if: github.event_name == 'workflow_dispatch' || needs.quality.outputs.production_required == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
@@ -73,6 +75,8 @@ jobs:
           if-no-files-found: error
   quality:
     name: quality
+    outputs:
+      production_required: ${{ steps.production-scope.outputs.required }}
     runs-on: ubuntu-latest
     timeout-minutes: 25
     steps:
@@ -84,6 +88,26 @@ jobs:
         with:
           node-version: '22'
           cache: npm
+      - name: Resolve deploying source scope
+        id: production-scope
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          BEFORE_SHA: ${{ github.event.before }}
+          HEAD_SHA: ${{ github.sha }}
+        run: |
+          node --input-type=module <<'JS'
+          import {execFileSync} from 'node:child_process';
+          import {appendFileSync} from 'node:fs';
+          import {needsProductionVerification} from './apps/web/production-scope.mjs';
+          let required=false;
+          if(process.env.EVENT_NAME==='push'){
+            const before=process.env.BEFORE_SHA,head=process.env.HEAD_SHA;
+            if(!/^[a-f0-9]{40}$/.test(before||'')||!/^([a-f0-9]{40})$/.test(head||''))throw Error('Missing exact push identities');
+            const files=/^0+$/.test(before)?execFileSync('git',['ls-tree','-r','--name-only','-z',head]):execFileSync('git',['diff','--name-only','-z',before,head]);
+            required=needsProductionVerification(files.toString().split('\0').filter(Boolean));
+          }
+          appendFileSync(process.env.GITHUB_OUTPUT,'required='+required+'\n');
+          JS
       - name: Install workspace
         run: npm ci
       - name: Install browser runtime once
