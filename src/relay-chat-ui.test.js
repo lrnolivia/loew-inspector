@@ -386,6 +386,8 @@ test('v9 card reports its height with ui/notifications/size-changed and shows ha
     const frame=page.frameLocator('#widget');
     await frame.locator('#title').filter({hasText:'Height report proof'}).waitFor();
     await page.waitForFunction(()=>window.sizes.some(size=>size.height>0));
+    assert.equal(await frame.locator('#diag').isVisible(),false);
+    await frame.locator('#details > summary').click();
     await frame.locator('#diag').filter({hasText:/handshake ok/}).waitFor();
   } finally {await browser.close()}
 });

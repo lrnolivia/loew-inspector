@@ -40,6 +40,8 @@ export function styleContextCard(source, assets) {
   html = replaceRequired(html, '<div id="feature-kicker" class="feature-kicker">', '<div id="feature-kicker" class="feature-kicker" hidden aria-hidden="true">');
   html = replaceRequired(html, '<p class="micro" id="diag" style="grid-column:1/-1;margin:0 4px"></p>', '');
   html = replaceRequired(html, '<pre id="evidence">', '<p class="micro" id="diag"></p><pre id="evidence">');
+  html = replaceRequired(html, '<details id="details" hidden>', '<details id="details">');
+  html = replaceRequired(html, 'el.details.hidden=!Object.keys(m.evidence).length;', 'el.details.hidden=false;');
   html = replaceRequired(html, '</script></body>', 'document.addEventListener("visibilitychange",()=>{document.documentElement.dataset.cardHidden=String(document.hidden)});\n</script></body>');
   return html;
 }
