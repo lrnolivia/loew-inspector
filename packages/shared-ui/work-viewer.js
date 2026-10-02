@@ -1,3 +1,4 @@
+import {captureMotionLayout,settleMotionLayout} from "./field-springs.js";
 import {projectInGroup} from "./project-groups.js";
 import {glyph} from './glyphs.js';
 import {reviewKey,effectiveReview,selectWork,reviewTransition} from './work-view-model.js';
@@ -23,11 +24,12 @@ export function bindWorkViewer(root,{id,defaultView='list',onOpen,initialFilter=
  const changedTargets=action=>targets().filter(item=>action==='clear-stale'?effectiveReview(item,records[reviewKey(item)]).status==='stale'&&!effectiveReview(item,records[reviewKey(item)]).archived:action==='clear-complete'?effectiveReview(item,records[reviewKey(item)]).status==='completed'&&!effectiveReview(item,records[reviewKey(item)]).archived:true);
  function render(){
   if(disposed)return;
+  const motionBefore=captureMotionLayout(root);
   const focus=root.contains(document.activeElement)?document.activeElement:null,focusName=focus?.getAttribute('data-focus'),start=focus?.selectionStart,end=focus?.selectionEnd;
   const anchor=[...root.querySelectorAll('[data-work-key]')].find(node=>node.getBoundingClientRect().bottom>0);
   const anchorKey=anchor?.dataset.workKey,anchorY=anchor?.getBoundingClientRect().top;
   const rows=visible(),visibleKeys=new Set(rows.map(reviewKey)),hidden=[...selection].filter(key=>!visibleKeys.has(key)).length;
-  root.removeAttribute('aria-live');root.className='work-viewer'+(root.id==='review-list'?' review-list':'');root.dataset.summaryState=loaded?'ready':'loading';root.dataset.summaryNeeds=String(items.filter(item=>projectInGroup(item.project,project)&&!effectiveReview(item,records[reviewKey(item)]).archived&&effectiveReview(item,records[reviewKey(item)]).status==='pending').length);root.dataset.summaryVisible=String(rows.length);root.dataset.view=view;root.setAttribute('aria-busy',String(busy));
+  root.removeAttribute('aria-live');root.className='work-viewer'+(root.id==='review-list'?' review-list':'');root.dataset.summaryState=loaded&&(items.length||!incomplete)?'ready':'loading';root.dataset.summaryNeeds=String(items.filter(item=>projectInGroup(item.project,project)&&!effectiveReview(item,records[reviewKey(item)]).archived&&effectiveReview(item,records[reviewKey(item)]).status==='pending').length);root.dataset.summaryVisible=String(rows.length);root.dataset.view=view;root.setAttribute('aria-busy',String(busy));
   root.innerHTML=`<div class="work-view-controls">
    <div class="work-filter-bar" role="group" aria-label="Review status">${Object.entries(labels).map(([value,label])=>`<button type="button" data-filter="${value}" data-focus="filter-${value}" aria-pressed="${query.filter===value}">${label}</button>`).join('')}</div>
    <div class="work-query-bar"><label>Search<input data-focus="search" name="search" type="search" value="${escape(query.search)}" placeholder="Find work"></label>
@@ -52,7 +54,8 @@ export function bindWorkViewer(root,{id,defaultView='list',onOpen,initialFilter=
     <div class="work-item-copy">${projectBadge(item.project)}<h3>${title}</h3><p>${escape(item.detail)}</p><p class="work-next"><span>${item.detail&&['blocked','failed'].includes(item.sourceState)?'Blocked':'Next'}</span> ${escape(item.next)}</p>
     <div class="work-item-meta"><span>Review: ${review.archived?'Archived · ':''}${labels[review.status]}</span><span>Source: ${escape(item.sourceState)}</span><time ${item.time==null?'':`datetime="${new Date(item.time).toISOString()}"`}>${item.time==null?'Time unknown':new Date(item.time).toLocaleString()}</time><span>${escape(item.priority||'Unranked')}</span></div>
     <details><summary>Details</summary><div class="work-source-detail"><code>${escape(item.id)}</code>${item.source?.identities?.branch?`<p>Branch: ${escape(item.source.identities.branch)}</p>`:''}${item.source?.identities?.head_sha?`<p>Head: ${escape(item.source.identities.head_sha)}</p>`:''}${item.source?.identities?.pr?`<p>PR: ${escape(item.source.identities.pr)}</p>`:''}<p>${escape(item.source?.next_action||item.source?.runtime?.last_summary||'')}</p></div></details></div></article>`;
-  }).join(''):`<div class="empty-card"><strong>${items.length?'No matching work.':'No work to show yet.'}</strong><p>${items.length?'Try All or change your search.':'Work appears when Relay receives source activity.'}</p></div>`}</div>`;
+  }).join(''):`<div class="empty-card"><strong>${items.length?'No matching work.':incomplete?'Waiting for source results.':'No work to show yet.'}</strong><p>${items.length?'Try All or change your search.':'Work appears when Relay receives source activity.'}</p></div>`}</div>`;
+  settleMotionLayout(root,motionBefore);
   for(const item of rows)fresh.delete(reviewKey(item));
   void hydrateProjectIcons(root);
   if(focusName){const next=[...root.querySelectorAll('[data-focus]')].find(node=>node.dataset.focus===focusName);next?.focus({preventScroll:true});if(start!=null&&typeof next?.setSelectionRange==='function')try{next.setSelectionRange(start,end);}catch{}}
@@ -60,7 +63,7 @@ export function bindWorkViewer(root,{id,defaultView='list',onOpen,initialFilter=
  }
  async function loadRecords(){
   if(busy){loaded=false;return;}
-  const gen=++generation;loaded=false;
+  const gen=++generation;loaded=false;render();
   try{
    const found={};
    for(let start=0;start<items.length;start+=100){const response=await request('read',items.slice(start,start+100).map(({project,kind,id})=>({project,kind,id})));if(response.results.some(row=>!row.ok))throw new Error('Some review states could not load. Refresh before changing them.');for(const row of response.results){const item=items.find(candidate=>reviewKey(candidate)===row.key),legacy=item?.source?.qaReview;found[row.key]=row.record?{...row.record,etag:row.etag}:legacy?{etag:null,source_revision:item.revision,status:legacy.disposition==='archived'?'stale':['completed','stale'].includes(legacy.disposition)?legacy.disposition:legacy.overall?'completed':'pending',archived:legacy.disposition==='archived'}:{etag:null};}}
@@ -108,7 +111,7 @@ export function bindWorkViewer(root,{id,defaultView='list',onOpen,initialFilter=
  function input(event){if(event.target.name==='search'){query.search=event.target.value;pending=null;save();render();}}
  window.addEventListener('relay:work-arrivals',newWork);window.addEventListener('hashchange',reveal);root.addEventListener('click',click);root.addEventListener('change',change);root.addEventListener('input',input);
  return {
-  update(next,{project:nextProject='',incomplete:partial=false}={}){const identity=next.map(item=>reviewKey(item)+':'+item.revision).join('|'),old=items.map(item=>reviewKey(item)+':'+item.revision).join('|');items=next;project=nextProject;incomplete=partial;if(identity!==old)pending=null;render();if(identity!==old||!loaded)void loadRecords();if(!anchorRestored&&items.length){anchorRestored=true;let saved;try{saved=sessionStorage.getItem(storageKey+'.anchor');}catch{}const requested=new URLSearchParams(location.hash.split('?')[1]||'').get('item');const node=[...root.querySelectorAll('[data-work-key]')].find(node=>requested?items.find(item=>item.id===requested&&reviewKey(item)===node.dataset.workKey):node.dataset.workKey===saved);if(node){node.focus({preventScroll:true});node.scrollIntoView({block:'center'});}}},
+  update(next,{project:nextProject='',incomplete:partial=false}={}){const identity=next.map(item=>reviewKey(item)+':'+item.revision).join('|'),old=items.map(item=>reviewKey(item)+':'+item.revision).join('|');items=next;project=nextProject;incomplete=partial;if(identity!==old){pending=null;loaded=false;}render();if(identity!==old||!loaded)void loadRecords();if(!anchorRestored&&items.length){anchorRestored=true;let saved;try{saved=sessionStorage.getItem(storageKey+'.anchor');}catch{}const requested=new URLSearchParams(location.hash.split('?')[1]||'').get('item');const node=[...root.querySelectorAll('[data-work-key]')].find(node=>requested?items.find(item=>item.id===requested&&reviewKey(item)===node.dataset.workKey):node.dataset.workKey===saved);if(node){node.focus({preventScroll:true});node.scrollIntoView({block:'center'});}}},
   refresh(){void loadRecords();},
   destroy(){window.removeEventListener('relay:work-arrivals',newWork);window.removeEventListener('hashchange',reveal);disposed=true;generation++;root.removeEventListener('click',click);root.removeEventListener('change',change);root.removeEventListener('input',input);}
  };
