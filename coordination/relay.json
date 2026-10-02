@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T03:54:27.306Z",
+  "updated_at": "2026-10-02T04:18:39.311Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -11171,7 +11171,7 @@
     },
     {
       "id": "relay-website-post-release-polish-20261002",
-      "owner": "Julian-PM",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
       "branch": "relay/website-post-release-polish-20261002",
       "paths": [
         "packages/shared-ui/presentation.js",
@@ -11222,7 +11222,7 @@
       ],
       "goal": "Implement Lauren's confirmed post-release website QA: filled red badge pulse, improved retained bottom navigation, understandable real-data Rich telemetry, simplified Settings, truthful new-work arrivals and exact-item notification navigation.",
       "acceptance": "Preserve the perfect default sidebar, approved neutral palette/Momo/header identity and all useful functions. Fill circular notification count bright red and pulse the whole badge with readable truthful count and Calm/reduced-motion suppression. Widen mobile bottom navigation and make all four individual buttons pill-shaped with accessible touch targets and safe-area/content clearance. Keep desktop branded bottom pill as permanent optional layout, shorten and align it. Remove Roomy Mobile Overview and Desktop Compact Header options and safely migrate obsolete saved preferences while retaining other valid options. Replace paintbrush with existing shared settings gear and accessible Settings labeling. Explain Rich real-data telemetry via meaningful labeled animated circular charts and changing numbers where appropriate, without fabricated percentage/trend/progress; preserve Simple/default and honest partial/error states. Reuse existing notification/presentation systems for distinct NEW WORK arrival toasts and new-card entry animation; successful feed baselines, stable identities and bounded existing polling, no initial-load/refresh/route-change/recovery duplicate alerts or false freshness. BOTH existing item-specific menu/toasts and new-work toasts resolve actual project+assignment/evidence identity and reveal exact destination despite current project/filter; focus/scroll visibly, preserve unsaved human work and explain unavailable/removed targets; no unrelated generic fallback. Connection-wide notices retain honest context rather than inventing an item. Validate all four routes desktop/narrow, preference migration, data/motion/arrival/navigation/save journeys and registered exact-head screenshots after settled data; scoped and full repository checks, coordination preflight and exact-head CI. Draft PR only; no merge/deploy in this new batch without further explicit authorization. No MCP/backend-feedback resources, work-viewer redesign or hosting infrastructure changes. Additional confirmed QA: Inspector chat-card previews are temporary, collapsed by default with accessible expand/collapse and unchanged art; remove their dedicated top telemetry box/counter. Preserve horizontal composition for chat previews and relevant work cards including mobile, readable content and usable controls; no tall portrait cards, no change to approved telemetry mosaic/default sidebar.",
-      "next_action": "Continue the explicitly authorized website UI fixes first. Update existing browser/evidence checks for collapsed chat previews and removal of retired presentation options. No live-preview availability/retention scope added; no MCP or Field Mobile work. Additional user QA 2026-10-02 03:32 UTC, Sentinel_a2544b4f5fd48191b622719be9bf1e6d: the multicolor accent bar must scroll with document content, not remain pinned while scrolling; Runner must not permit whole-page horizontal scrolling on mobile. Actual screenshot pixels inspected: IMG_0102 shows accent strip fixed across scrolled Today; IMG_0103 shows Runner content horizontally displaced/cut off. Evidence Library libfile_2701bf8881188191ac4cc3bebd70bfb7 and libfile_1ace023fd02c8191927ee65d439351ad. Tested build identity not embedded, do not invent it. Fix overflow at its layout source, preserve deliberate project-tab scrolling, prevent navigation/content clipping and test iPhone portrait widths. Stopped worker stays stopped; preserve unpublished Mac changes before direct continuation. Additional Inspector QA 03:36-03:37 UTC: floating question panel must show answer options and navigation without forcing internal scroll; revise responsive shape/spacing rather than clipping options, keep long notes accessible. Hide/show questions should be a compact accessible toggle rather than a separate oversized bar. Screenshot libfile_86f5f03b8ec88191b37d4f5b4c7b5a05 inspected: narrow tall lower-right panel clips Not sure behind footer, large Hide questions control beneath. Add touch panning and pinch-to-zoom for mobile Inspector preview, with reset/fit and separation from panel interactions and intentional live-page gestures. User messages Sentinel_9bff39162edc819193ec9e6ec8aa5f5a and Sentinel_67ca53cc514c8191ac65a1b9e0a54009. No release or implementation claimed.",
+      "next_action": "Lauren authorized direct Relay website work without workers. Stopped website task01a0f904 latestturnfailed usage and has no source writer resumed; read-only checkpoint reports unpublished Mac polish/arrival logic with narrow Runner fix unfinished. Preserve those local files untouched; remote claimed branch does not yet exist. Parent will implement current explicitly requested mobile scrolling/Inspector touch fixes from fresh shipped main on this claimed branch, retaining all broader queued polish goals and acknowledging old local polish reconciliation remains pending. Do not falsely claim unpublished changes recovered. No new worker. Carry existing QA notes and evidence screenshots unchanged.",
       "task_class": "design",
       "category": "design",
       "primary_team": "source",
@@ -11232,8 +11232,8 @@
       "base_sha": "c5cd616af7a0b177c5f7f077c327010db1ccad32",
       "state": "active",
       "created_at": "2026-10-02T00:38:21.522Z",
-      "updated_at": "2026-10-02T03:39:58.029Z",
-      "lease_until": "2026-10-02T15:39:58.029Z",
+      "updated_at": "2026-10-02T04:18:39.311Z",
+      "lease_until": "2026-10-02T16:18:39.311Z",
       "amendment_count": 2,
       "amendments": [
         {
