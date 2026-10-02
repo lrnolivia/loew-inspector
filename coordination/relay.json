@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T11:11:59.777Z",
+  "updated_at": "2026-10-02T11:22:06.554Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -11742,14 +11742,15 @@
         "scripts/verify-context-card-visuals.mjs",
         ".github/workflows/ci.yml",
         "docs/relay/CONTEXT_CARD_VISUAL_PARITY_20261002.md",
-        "src/relay-entry.test.js"
+        "src/relay-entry.test.js",
+        "src/relay-host-probe.test.js"
       ],
       "resources": [
         "relay-context-card-visual-parity"
       ],
       "goal": "Finish contextual MCP card visual parity with the user-approved Inspector card previews, after the shipped website polish and retained interactive previews.",
       "acceptance": "Preserve the canonical card composition and product artwork, Momo feature typography, larger mark, compact spacing, no redundant Relay eyebrow, at most two actions, readable narrow and wide/light and dark states. Preserve the v10 stable model and host bootstrap; legacy bridge and diagnostic/probe resources stay byte-identical. Rotate only the changed contextual resource URI. Test real browser rendering, host fixture hydration/refresh/open actions, no overflow, reduced motion and code/build gates. Actual Linux native ChatGPT card mount remains separately unverified; never describe visual fixtures as a host-client fix. Publish through GitHub CI and Workers Builds with exact-source readback; keep the previously shipped Relay fallback recoverable.",
-      "next_action": "Implement isolated v11 visual parity, update entry contract cache identity, and fix absent/blank/non-numeric percentages being coerced to fabricated 0%. Preserve the original legacy model as a byte-exact frozen control; no host transport changes. CI must validate unknown percentages, self-contained Momo/artwork, hydration and browser screenshots.",
+      "next_action": "CI found two stale tests: v10 endpoint URI expectation and diagnostics expected visible by default. Update only the host-probe test assertion to v11; keep actual probe implementation unchanged. Make Technical evidence consistently reachable and test explicit disclosure before reading handshake diagnostics. Full source/build passed.",
       "primary_team": "inspector",
       "supporting_teams": [],
       "primary_staff": "julian",
@@ -11757,8 +11758,8 @@
       "base_sha": "ecedc50d751c8b5220f930115d41ba60b6b87e1e",
       "state": "active",
       "created_at": "2026-10-02T11:01:37.756Z",
-      "updated_at": "2026-10-02T11:11:59.777Z",
-      "lease_until": "2026-10-02T23:11:59.777Z"
+      "updated_at": "2026-10-02T11:22:06.554Z",
+      "lease_until": "2026-10-02T23:22:06.554Z"
     }
   ],
   "migrated_from": "loew-inspector"
