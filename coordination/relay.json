@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T14:02:10.825Z",
+  "updated_at": "2026-10-02T14:05:22.235Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -11897,6 +11897,31 @@
       "evidence": "PR130 merged30adae6b63273e7285527a8baf4683f1d702ec52. Exact candidate and postmerge fullCI37015519721 pass, actual production+retained job110868134885 pass. Cloud Inspector live route /inspector#review?project=field independently shows50Fieldcaptures at13:52UTC, including final portrait Tools/Inspector after source filtering. No human verdict or evidence deleted. One previously mislabeled own capture vis_08591e19-44d9-4cc6-b99e-0ce3ef03d357 separately markedStale throughsingle-item reversible reviewUI; Saved correctionnote retained, UI1reviewitemupdated verified.",
       "work_accounted": true,
       "completed_at": "2026-10-02T14:02:10.825Z"
+    },
+    {
+      "id": "relay-ctrl-worker-events-20261002",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "branch": "relay/ctrl-worker-events-20261002",
+      "paths": [
+        "src/relay-events.js",
+        "src/relay-events.test.js",
+        "docs/ctrl/REALTIME_20261002.md"
+      ],
+      "resources": [
+        "relay-ctrl-worker-event-coverage"
+      ],
+      "goal": "Match worker event invalidation to the actual existing guarded control routes before ctrl integration activation.",
+      "acceptance": "Classify actual toggle/settings/run/doctor/repair routes, reject invented enable/disable/delete actions, keep read-only requests from producing events, and pass exact fullCI. This is source-only preparation; no binding, Access, domain, credential or deployment integration change.",
+      "next_action": "Commit the bounded route classifier correction and its tests; verify normal Relay release while the separately requested ctrl security approval is pending.",
+      "primary_team": "source",
+      "supporting_teams": [],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "base_sha": "9780a4f664e38dc1a53dcf0434ff16712fd5f781",
+      "state": "active",
+      "created_at": "2026-10-02T14:05:22.235Z",
+      "updated_at": "2026-10-02T14:05:22.235Z",
+      "lease_until": "2026-10-03T02:05:22.235Z"
     }
   ],
   "migrated_from": "loew-inspector"
