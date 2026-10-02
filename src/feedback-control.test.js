@@ -157,6 +157,27 @@ test('resume includes pending feedback for an explicit assignment without acknow
   assert.equal(f.state.puts, writes);
 });
 
+test('MCP report classification preserves unknown runtime across submit, peek, status and acknowledgement', async () => {
+  const f = fixture();
+  const unspecified = (await f.call('submit', f.args)).feedback;
+  assert.equal(unspecified.status.applicability.safe_to_apply, false);
+  assert.deepEqual(unspecified.status.applicability.unverified, ['artifact_kind']);
+  const runtime = (await f.call('submit', { ...f.args, operation_id: 'runtime-report',
+    artifact: { ...f.args.artifact, kind: 'runtime' } })).feedback;
+  assert.deepEqual(runtime.status.applicability.unverified, ['runtime_identity']);
+  const source = (await f.call('submit', { ...f.args, operation_id: 'source-report',
+    artifact: { ...f.args.artifact, kind: 'source' } })).feedback;
+  assert.equal(source.status.applicability.safe_to_apply, true);
+  const peek = (await f.call('peek', f.scope)).feedback;
+  assert.equal(peek.events.find(x => x.report_id === runtime.report_id).status.applicability.safe_to_apply, false);
+  const seen = (await f.call('ack', { ...f.scope, expected_owner: f.state.owner, expected_branch: f.state.branch,
+    expected_head_sha: f.state.head, report_id: runtime.report_id, operation_id: 'runtime-seen', expected_revision: 1 })).feedback;
+  assert.ok(seen.status.seen);
+  assert.equal(seen.status.applicability.safe_to_apply, false);
+  assert.equal((await f.call('status', { ...f.scope, report_id: runtime.report_id })).feedback.status.verified, null);
+  await assert.rejects(f.call('submit', { ...f.args, artifact: { ...f.args.artifact, kind: 'invented' } }), /unsupported/);
+});
+
 test('terminal and unknown assignment states reject writes; historical reports remain readable', async () => {
   const f = fixture(); const created = (await f.call('submit', f.args)).feedback;
   for (const state of ['completed', 'cancelled', 'superseded', 'unexpected']) {

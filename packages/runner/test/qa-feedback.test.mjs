@@ -83,11 +83,47 @@ test('new read path paginates legacy events without consuming or relabelling leg
 });
 
 test('artifact matching distinguishes stale identity from unavailable native evidence', () => {
-  const identity = { ...evidence.context, repository: 'lrnolivia/relay', deployment_id: 'old', runtime_sha256: 'c'.repeat(64) };
+  const identity = { ...evidence.context, kind: 'runtime', repository: 'lrnolivia/relay', deployment_id: 'old', runtime_sha256: 'c'.repeat(64) };
   const unavailable = feedbackApplicability(identity, { ...evidence.context, repository: 'lrnolivia/relay' });
   assert.equal(unavailable.routing_matches, true);
   assert.equal(unavailable.safe_to_apply, false);
-  assert.deepEqual(unavailable.unverified, ['deployment_id', 'runtime_sha256']);
+  assert.deepEqual(unavailable.unverified, ['runtime_identity', 'deployment_id', 'runtime_sha256']);
   const stale = feedbackApplicability(identity, { ...identity, commit_sha: 'b'.repeat(40), deployment_id: 'new' });
   assert.deepEqual(stale.conflicts, ['commit_sha', 'deployment_id']);
+});
+
+test('omitted runtime metadata cannot create applicability while explicit source feedback remains usable', () => {
+  const target = { ...evidence.context, repository: 'lrnolivia/relay' };
+  const unspecified = feedbackApplicability(target, target);
+  assert.equal(unspecified.routing_matches, true);
+  assert.equal(unspecified.safe_to_apply, false);
+  assert.deepEqual(unspecified.unverified, ['artifact_kind']);
+  const runtime = feedbackApplicability({ ...target, kind: 'runtime' }, target);
+  assert.equal(runtime.safe_to_apply, false);
+  assert.deepEqual(runtime.unverified, ['runtime_identity']);
+  assert.equal(feedbackApplicability({ ...target, kind: 'source' }, target).safe_to_apply, true);
+  const verifiedRuntime = { ...target, runtime_sha256: 'd'.repeat(64) };
+  assert.equal(feedbackApplicability({ ...verifiedRuntime, kind: 'runtime' }, verifiedRuntime).safe_to_apply, true);
+});
+
+test('runtime applicability handles each missing field, caller-only values, mismatches and verified matches', () => {
+  const base = { ...evidence.context, repository: 'lrnolivia/relay', kind: 'runtime' };
+  for (const field of ['deployment_id', 'runtime_sha256']) {
+    const value = field === 'deployment_id' ? 'verified-deployment' : 'e'.repeat(64);
+    const callerOnly = feedbackApplicability({ ...base, [field]: value }, base);
+    assert.equal(callerOnly.safe_to_apply, false);
+    assert.deepEqual(callerOnly.unverified, ['runtime_identity', field]);
+    const targetOnly = feedbackApplicability(base, { ...base, [field]: value });
+    assert.equal(targetOnly.safe_to_apply, false);
+    assert.deepEqual(targetOnly.unverified, ['runtime_identity']);
+    const mismatch = feedbackApplicability({ ...base, [field]: value }, { ...base, [field]: 'different' });
+    assert.equal(mismatch.safe_to_apply, false);
+    assert.ok(mismatch.conflicts.includes(field));
+    assert.equal(feedbackApplicability({ ...base, [field]: value }, { ...base, [field]: value }).safe_to_apply, true);
+  }
+  const both = { ...base, deployment_id: 'verified-deployment', runtime_sha256: 'e'.repeat(64) };
+  assert.equal(feedbackApplicability(both, both).safe_to_apply, true);
+  const partlyUnknown = feedbackApplicability(both, { ...base, deployment_id: both.deployment_id });
+  assert.equal(partlyUnknown.safe_to_apply, false);
+  assert.deepEqual(partlyUnknown.unverified, ['runtime_sha256']);
 });

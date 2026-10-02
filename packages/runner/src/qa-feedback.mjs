@@ -178,6 +178,13 @@ export function feedbackApplicability(identity, target) {
     else if (identity[field] !== target[field]) conflicts.push(field);
   }
   const unverified = [];
+  // A source SHA does not identify a tested native/web runtime. Historical
+  // reports without a declared kind remain readable, but cannot imply this.
+  if (!['source', 'runtime'].includes(identity?.kind)) unverified.push('artifact_kind');
+  if (identity?.kind === 'runtime' && !['deployment_id', 'runtime_sha256'].some(field =>
+    identity?.[field] && target?.[field] && identity[field] === target[field])) {
+    unverified.push('runtime_identity');
+  }
   for (const field of ['deployment_id', 'runtime_sha256']) {
     if (identity?.[field] && !target?.[field]) unverified.push(field);
     else if (identity?.[field] && identity[field] !== target[field]) conflicts.push(field);

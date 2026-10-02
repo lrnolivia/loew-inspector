@@ -10,13 +10,14 @@ const object = (properties, required) => ({ type: 'object', properties, required
 const scope = { project: string(80, '^[a-z0-9-]+$'), assignment: identifier };
 const reportId = string(68, '^fbr_[a-f0-9]{64}$');
 const artifact = object({ repository: string(160, '^lrnolivia/[A-Za-z0-9_.-]+$'), commit_sha: sha,
+  kind: { type: 'string', enum: ['source', 'runtime'], description: 'source: observations about the source at this SHA; runtime: observations about a tested running artifact. Omission remains unverified. A source SHA alone never identifies a tested runtime.' },
   pr: { type: 'integer', minimum: 1, maximum: 1000000 }, deployment_id: string(128),
   runtime_sha256: string(64, '^[a-f0-9]{64}$') }, ['repository', 'commit_sha']);
 const expected = { expected_owner: identifier, expected_branch: string(240) };
 
 export const feedbackToolDefinitions = [
   { name: 'relay_runner_feedback_submit', mutation: true, idempotent: true,
-    description: 'COMMAND — durably save verbatim text feedback for an explicit assignment and tested artifact using an operation id. Identical retries reuse the receipt; changed intent conflicts. Does not wake, message or prove delivery to a native worker. Keep unknown runtime identity explicit.',
+    description: 'COMMAND — durably save verbatim text feedback for an explicit assignment and tested artifact using an operation id. Declare artifact.kind source or runtime; omitted kind and runtime without independently matched identity remain unverified. Identical retries reuse the receipt; changed intent conflicts. Does not wake, message or prove delivery to a native worker.',
     inputSchema: object({ ...scope, ...expected, operation_id: identifier, original_text: string(8192), artifact,
       related_report_id: reportId }, [...Object.keys(scope), ...Object.keys(expected), 'operation_id', 'original_text', 'artifact']) },
   { name: 'relay_runner_feedback_peek', description: 'QUERY — read one bounded pending-feedback page for an explicit assignment. Never acknowledges or marks delivered. Follow next_cursor while truncated; restart completed scans to catch new reports.',
