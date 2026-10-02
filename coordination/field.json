@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-10-02T11:42:17.924Z",
+  "updated_at": "2026-10-02T15:53:26.389Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -658,10 +658,16 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "bad3630cdcb6c52ca787ccbb94fc70978f8f2d05",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-02T00:48:40.339Z",
-      "updated_at": "2026-10-02T11:42:17.924Z",
-      "lease_until": "2026-10-02T23:42:17.924Z"
+      "updated_at": "2026-10-02T15:53:26.389Z",
+      "lease_until": "2026-10-03T03:53:26.389Z",
+      "pr": 138,
+      "merged_head_sha": "1ec9fa0a289eff50d1b70e86456a1859fd2ed0c3",
+      "merge_commit_sha": "b1fe860f224414b3ba928fb20761485f9cffb455",
+      "evidence": "User explicitly requested merging ready work on October 2 at 15:37 UTC. PR138 exact head1ec9fa0a passed baseline comparison, focused tests, both production builds and eight browser flows. Squash merged b1fe860f224414b3ba928fb20761485f9cffb455; Workers Build fe7c99c8 succeeded; live field.loew.fi/build.json confirms exact merged SHA; production Worker version42e86316-0cf0-4497-8428-f57102af6503 at100%. Original artifacts and prior production bad3630 preserved for rollback. Gallery design remains an explicit unfinished follow-up, not covered by functional ordering/removal/undo work. Physical iPhone keyboard/rotation and real-project persistence remain unverified; no claim otherwise.",
+      "work_accounted": true,
+      "completed_at": "2026-10-02T15:53:26.389Z"
     }
   ]
 }
