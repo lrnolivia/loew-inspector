@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T11:50:06.369Z",
+  "updated_at": "2026-10-02T12:03:11.175Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -11774,14 +11774,15 @@
       "paths": [
         "apps/web/verify-production.mjs",
         "apps/web/readback.mjs",
-        "apps/web/test/readback.test.mjs"
+        "apps/web/test/readback.test.mjs",
+        ".github/workflows/ci.yml"
       ],
       "resources": [
         "relay-production-readback-recovery"
       ],
       "goal": "Finish postdeployment Relay verification after a transient read connection reset without replaying writes.",
       "acceptance": "Add bounded transient retries only for safe idempotent evidence GET/readback operations; never retry uploads/mutations or auth/permission failures. Preserve exact-source/build checks and all evidence hash assertions. Full tests pass, then normal GitHub Workers release verifies complete production captures and retained interactive build. No denied rerun API workaround, manual deploy, or dummy commit.",
-      "next_action": "Fix the evidenced GET ECONNRESET at verifyEvidenceReadback with bounded read-only retry and test failure classification; publish a small normal source PR and verify the new full postdeploy receipt.",
+      "next_action": "PR123 merged 1b069f132b45be4ebca9c0c3fec8f5bc07b3edac and quality passes. Production verification unexpectedly skipped: workflow gates on a magic commit-message phrase, but GitHub single-commit squash used the original commit title instead of PR title. Fix that evidenced trigger to run on every production source push, keeping normal source-path filters and exact-SHA validation. Resume same active branch; no dummy commit, no rerun bypass.",
       "primary_team": "release",
       "supporting_teams": [],
       "primary_staff": "julian",
@@ -11789,8 +11790,8 @@
       "base_sha": "98e9a110b9b9bf3884d58e9ae92964ee9318644e",
       "state": "active",
       "created_at": "2026-10-02T11:50:06.369Z",
-      "updated_at": "2026-10-02T11:50:06.369Z",
-      "lease_until": "2026-10-02T23:50:06.369Z"
+      "updated_at": "2026-10-02T12:03:11.175Z",
+      "lease_until": "2026-10-03T00:03:11.175Z"
     }
   ],
   "migrated_from": "loew-inspector"
