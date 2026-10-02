@@ -37,7 +37,7 @@ jobs:
   website-production:
     name: verify actual deployed website
     needs: quality
-    if: github.event_name == 'workflow_dispatch' || (github.event_name == 'push' && contains(github.event.head_commit.message, 'Repair actual Relay website'))
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'push'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
