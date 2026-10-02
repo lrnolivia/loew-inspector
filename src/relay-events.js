@@ -6,7 +6,7 @@ export function operatorTopics(path,body){
  if(path==='/api/work-review')return body?.action==='set'?['reviews']:null;
  if(/^\/api\/visual\/vis_[a-zA-Z0-9-]+\/qa$/.test(path))return ['evidence','reviews'];
  if(/^\/api\/retained-preview\/rp_[a-f0-9]+\/review$/.test(path))return ['evidence','reviews'];
- if(/^\/api\/workers\/[a-zA-Z0-9_-]+\/(enable|disable|run)$/.test(path))return ['workers'];
+ if(/^\/api\/workers\/[a-zA-Z0-9_-]+\/(toggle|settings|run|doctor|repair)$/.test(path))return ['workers'];
  return null;
 }
 export function successfulRpc(body){return Boolean(body&&body.result&&!body.error&&!body.result.isError&&body.result.structuredContent?.ok!==false);}

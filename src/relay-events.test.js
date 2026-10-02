@@ -7,3 +7,5 @@ test('stream enforces browser origin, optional binding and bounded identity expi
 test('event publication failure does not turn a committed canonical write into a retryable failure',async()=>{assert.equal(await publishInvalidation({},['work']),false);assert.equal(await publishInvalidation({RELAY_EVENTS:{idFromName:()=>1,get:()=>({fetch:async()=>{throw Error('offline')}})}},['work']),false);});
 
 test('snapshot review reads cannot cause event refresh loops',()=>{assert.equal(operatorTopics('/api/work-review',{action:'get'}),null);assert.equal(operatorTopics('/api/work-review',{action:'read'}),null);assert.deepEqual(operatorTopics('/api/work-review',{action:'set'}),['reviews']);assert.equal(operatorTopics('/api/projects',{}),null);});
+
+test('actual worker control actions invalidate worker snapshots',()=>{for(const action of ['toggle','settings','run','doctor','repair'])assert.deepEqual(operatorTopics('/api/workers/field/'+action,{}),['workers']);assert.equal(operatorTopics('/api/workers/field/delete',{}),null);});
