@@ -10,7 +10,7 @@ import {retainedStorageFixture} from './retained-storage-fixture.mjs';
 
 test('retained exact builds remain interactive, isolated, navigable and human-reviewable', {timeout:120000},async()=>{
  const sourceSha='a'.repeat(40),bucket=retainedStorageFixture();
- const {bundle,sha256}=await createRetainedBundle({webAssets,sourceSha,buildId:webBuildId,fontCss:'',createdAt:'2026-10-02T08:00:00.000Z'});
+ const {bundle,sha256}=await createRetainedBundle({webAssets,sourceSha,buildId:webBuildId,createdAt:'2026-10-02T08:00:00.000Z'});
  const stored=await storeRetainedBundle(bucket,bundle);assert.equal(stored.sha256,sha256);
  let currentPage;const pageErrors=[];
  const fixture=await contextFixture({retained:{bucket,id:stored.id,source_sha:sourceSha}}),browser=await chromium.launch();
@@ -22,6 +22,7 @@ test('retained exact builds remain interactive, isolated, navigable and human-re
    const frame=page.frameLocator('[data-qa-retained-preview]');await frame.locator('.feature-heading h1').filter({hasText:'today'}).waitFor();
    await page.locator('.qa-preview-state').filter({hasText:'sample data · ready'}).waitFor();
    assert.equal(await page.locator('[data-qa-retained-preview]').getAttribute('sandbox'),'allow-scripts');
+   await mkdir('qa-evidence/website',{recursive:true});await page.screenshot({path:'qa-evidence/website/retained-review-'+width+'.png'});
    const isolation=await frame.locator('body').evaluate(async()=>{
     const violations=[];let resolveViolations;const observed=new Promise(resolve=>{resolveViolations=resolve;});
     const onViolation=event=>{violations.push(event.effectiveDirective);if(violations.includes('connect-src')&&violations.includes('img-src'))resolveViolations();};
@@ -49,6 +50,7 @@ test('retained exact builds remain interactive, isolated, navigable and human-re
    assert.match(await page.locator('[data-qa-retained-preview]').getAttribute('src'),/entry=inspector/);
    await page.locator('[data-retained-review]').click();await page.locator('[data-retained-review]').filter({hasText:'Reopen build review'}).waitFor();
    assert.equal((await getRetainedBundle(bucket,stored.id)).state,'approved');
+   await page.locator('.qa-preview-state').filter({hasText:'sample data · ready'}).waitFor();await page.screenshot({path:'qa-evidence/website/retained-approved-'+width+'.png'});
    await page.locator('[data-retained-review]').click();await page.locator('[data-retained-review]').filter({hasText:'Approve this build'}).waitFor();assert.equal((await getRetainedBundle(bucket,stored.id)).state,'pending');
    await page.locator('.qa-exit').click();await page.locator('.qa-stage').waitFor({state:'detached'});await open();
    await frame.locator('.work-viewer[data-summary-state=ready]').waitFor();assert.equal(await frame.locator('body').evaluate(()=>window.__retainedFixture.reviewRecordCount()),0,'preview changes reset when reopened');
