@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T00:23:28.381Z",
+  "updated_at": "2026-10-02T00:25:00.314Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -10974,7 +10974,7 @@
       ],
       "goal": "Authenticated durable assignment-bound text feedback using the existing QA journal, with read-only queries and explicit acknowledgement. Continue full MCP rebuild while preserving unresolved cross-client card proof.",
       "acceptance": "Implement approved 16-file storage/explicit-ack iteration: four typed feedback tools, canonical routing/artifact checks, idempotent conditional writes, bounded pagination, no read-triggered ACK, pending feedback in explicit resume, legacy compatibility, all original capabilities/resources retained. No live feedback events/ACK outside fixtures; no claim that queueing wakes native Codex. Native push remains unverified; visual-review/event dual-write repair remains an explicit follow-up. Carry ALL outstanding PR112/PR110 card criteria: original ordinary Mac and Safari display unresolved; iOS original action pending; Work original action timeout preserved historically, new Lauren desktop Work screenshot proves original six-step connection/action PASS at23:21:37.734Z sample83db62cb-ab79-4bf0-96fd-e85f906d8e3e; Lauren explicitly reports normal chat still fails; new action comparison actual Work/iOS/Safari all NOT RUN; same-build/app/tool client identity and host evidence required, local fixtures never native proof. PR112 merged/released and original five screenshots retained. Draft PR, exact-head CI/admission and independent review; serialized release clearance from Julian.",
-      "next_action": "Add a separately committed authenticated-provider-response repair within this owner’s existing branch: preserve authenticated resource 404 without anonymous retry, distinguish installation/token failure from confirmed branch absence, bounded redacted status/phase diagnostics, tests for zero writes on denied/unknown lookup and unchanged owner/head/CAS guards. Preserve all feedback and unresolved cross-client acceptance. Fresh exact-head independent review and release approval required; no live Field retirement retry before verified release.",
+      "next_action": "Implement separately admitted authenticated-ref response repair in6files after21pathpreflight. Preserve authenticated404 and403, requireauthenticatedretirementlookup, distinguishacquisitionerrors, bounded diagnostics. Isolated tests only, no live retirement retry/release; fullMCP/feedback/card acceptance preserved.",
       "category": "implementation",
       "primary_team": "runner",
       "supporting_teams": [],
@@ -10983,8 +10983,8 @@
       "base_sha": "29410ee5d8b17d1d0916618b65c6687ddb3ca444",
       "state": "active",
       "created_at": "2026-10-01T23:24:32.666Z",
-      "updated_at": "2026-10-02T00:23:28.381Z",
-      "lease_until": "2026-10-02T12:23:28.381Z"
+      "updated_at": "2026-10-02T00:25:00.314Z",
+      "lease_until": "2026-10-02T12:25:00.314Z"
     }
   ],
   "migrated_from": "loew-inspector"
