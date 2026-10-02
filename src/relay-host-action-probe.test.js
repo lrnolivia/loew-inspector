@@ -23,7 +23,7 @@ test("production entrypoint exposes a separate app-only data callback and preser
     assert.equal(response.status, 200); const body = await response.json(); assert.equal(body.id, id); return body.result;
   };
   const { tools } = await rpc("tools/list");
-  assert.equal(tools.length, 59);
+  assert.equal(tools.length, 62);
   assert.deepEqual(tools.filter(t => t.name.startsWith('relay_runner_feedback_')).map(t => t.name).sort(),
     ['relay_runner_feedback_ack', 'relay_runner_feedback_peek', 'relay_runner_feedback_status', 'relay_runner_feedback_submit']);
   const control = tools.find(t => t.name === "relay_test_card_connection");
@@ -120,6 +120,8 @@ test("actual comparison script separates correlated, late, notification-only, er
           await page.clock.runFor(1);
           assert.equal(await frame.locator('#action').innerText(), 'Cancelled'); assert.equal(await frame.locator('#check').isDisabled(), true);
         } else if (mode === 'teardown') {
+          // postMessage crosses documents asynchronously; observe disposal before advancing fake timers.
+          await page.waitForFunction(() => received.some(m => m.id === 'teardown-test' && m.result));
           await page.clock.runFor(1); await page.clock.fastForward(16000);
           assert.equal(await frame.locator('#check').isDisabled(), true);
           assert.ok((await page.evaluate(() => received)).some(m => m.id === 'teardown-test' && m.result));
