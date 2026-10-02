@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { mkdir, writeFile } from "node:fs/promises";
 import { chromium } from "playwright";
 import { webBuildId } from "./generated.js";
+import { readback } from "./readback.mjs";
 
 const expected = process.env.EXPECTED_SOURCE_SHA;
 const clientId = process.env.CF_ACCESS_CLIENT_ID;
@@ -17,24 +18,23 @@ const headers = {
 await mkdir("qa-evidence/production", { recursive: true });
 const api = [];
 for (const path of ["/api/projects", "/api/workers"]) {
-  const response = await fetch(origin + path, { headers, signal: AbortSignal.timeout(45000) });
-  const body = await response.json().catch(() => null);
+  const {response,value:body} = await readback(origin + path, { headers });
   api.push({ path, status: response.status, error: body?.error || null, shape: Array.isArray(body) ? "array" : Object.keys(body || {}) });
 }
 await writeFile("qa-evidence/production/api.json", JSON.stringify(api, null, 2));
 console.log("WEBSITE_API=" + JSON.stringify(api));
 let ready = false;
 for (let attempt = 0; attempt < 12; attempt++) {
-  const response = await fetch(origin + "/", { headers, signal: AbortSignal.timeout(15000) });
+  const {response} = await readback(origin + "/", { headers, parse:'text' }, {timeout:15000});
+  assert.ok(![401,403].includes(response.status), 'production identity must be authorized before verification');
   if (response.ok && (diagnoseOnly || (response.headers.get("X-Relay-Source-Sha") === expected && response.headers.get("X-Relay-Web-Build") === webBuildId))) { ready = true; break; }
   await new Promise(resolve => setTimeout(resolve, 10000));
 }
 assert.ok(ready, "production must serve this exact source SHA and built website artifact");
 // Exercise an existing capture before adding new evidence so legacy lookup is
 // verified independently of the new direct index.
-const previousResponse=await fetch(origin+"/api/visual?limit=1",{headers,signal:AbortSignal.timeout(45000)});
+const {response:previousResponse,value:previousPayload}=await readback(origin+"/api/visual?limit=1",{headers});
 assert.ok(previousResponse.ok,"existing evidence list must be readable");
-const previousPayload=await previousResponse.json();
 const previousId=previousPayload.evidence?.[0]?.evidence_id;
 if(previousId) console.log("EXISTING_EVIDENCE_READBACK="+JSON.stringify(await verifyEvidenceReadback(previousId)));
 const browser = await chromium.launch({ headless: true });
@@ -118,13 +118,12 @@ async function capture(page, feature, viewport) {
 
 async function verifyEvidenceReadback(id,expectedBytes) {
   const path=origin+"/api/visual/"+encodeURIComponent(id);
-  const qa=await fetch(path+"/qa",{headers,signal:AbortSignal.timeout(45000)});
+  const {response:qa}=await readback(path+"/qa",{headers});
   assert.ok(qa.ok,"saved evidence QA must resolve: "+id+" "+qa.status);
-  const image=await fetch(path+"/image",{headers,signal:AbortSignal.timeout(45000)});
+  const {response:image,value:bytes}=await readback(path+"/image",{headers,parse:'bytes'});
   assert.ok(image.ok,"saved evidence image must resolve: "+id+" "+image.status);
-  const bytes=new Uint8Array(await image.arrayBuffer());assert.ok(bytes.length,"stored capture is nonempty");
+  assert.ok(bytes.length,"stored capture is nonempty");
   const hash=createHash("sha256").update(bytes).digest("hex");
   if(expectedBytes)assert.equal(hash,createHash("sha256").update(expectedBytes).digest("hex"),"stored capture matches exact emitted bytes");
   return {evidence_id:id,qa_status:qa.status,image_status:image.status,bytes:bytes.length,sha256:hash};
 }
-
