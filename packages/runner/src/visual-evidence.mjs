@@ -15,6 +15,7 @@ async function listAllObjects(bucket, prefix = VISUAL_PREFIX, maxObjects = 1000)
   do {
     const page = await bucket.list({ prefix, limit: Math.min(1000, maxObjects - objects.length), cursor });
     objects.push(...(page.objects || []));
+    if(page.truncated && (!page.cursor || page.cursor===cursor)) throw Object.assign(Error("Invalid evidence catalog cursor"),{status:503});
     cursor = page.truncated ? page.cursor : undefined;
   } while (cursor && objects.length < maxObjects);
   if(cursor) throw Object.assign(new Error("Evidence catalog scan budget exceeded; no absence is inferred."),{status:503});
@@ -314,8 +315,9 @@ export async function reviewVisualRun(bucket, runId) {
   if (!runObject) return null;
   let run;
   try { run = await runObject.json(); } catch { return null; }
-  const objects = await listAllObjects(bucket);
+  const objects = await listAllObjects(bucket,VISUAL_PREFIX,20000);
   const keys = metadataKeys(objects);
+  if(keys.length>850)throw Object.assign(Error("Run comparison requires paginated historical indexing; no complete verdict is inferred."),{status:503});
   const records = (await Promise.all(keys.map(key => readJsonObject(bucket, key))))
     .filter(record => record && isEvidenceId(record.evidence_id))
     .map(record => ({ ...record, screenshot_url: "/api/visual/" + encodeURIComponent(record.evidence_id) + "/image" }));
