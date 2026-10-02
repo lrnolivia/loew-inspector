@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T00:07:30.701Z",
+  "updated_at": "2026-10-02T00:11:04.389Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -10925,10 +10925,16 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "2718c97d28871d2f86e3348dac281712ddcae9a5",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-01T21:54:24.434Z",
-      "updated_at": "2026-10-01T23:17:52.314Z",
-      "lease_until": "2026-10-02T11:17:52.314Z"
+      "updated_at": "2026-10-02T00:11:04.389Z",
+      "lease_until": "2026-10-02T12:11:04.389Z",
+      "pr": 111,
+      "merged_head_sha": "f8f64dc6b99b1cf5dec8eb8e7cfd8630b121b012",
+      "merge_commit_sha": "45321375945b53dd4d8d73c953b4fd4efea00d84",
+      "evidence": "https://github.com/lrnolivia/relay/pull/111 — Final independent Julian review approved head f8f64dc6b99b1cf5dec8eb8e7cfd8630b121b012; Lauren authorized merge+deploy. Acceptance implemented: compact truthful persistent notifications, circle/pulse/reducedmotion count, simplified accessible Inspector review navigation, tiny mobile panel/stacked44px controls, separate Notes popout with exact notes/serialized confirmed save/retry/recovery, stale-save ordering and bounded truthful iframe fallback. Exacthead350 tests/build/typecheck+27 registered preview screenshots passed and inspected. Squashmerge45321375945b53dd4d8d73c953b4fd4efea00d84. Git-native Cloudflare build9c60d2c7-a9f8-482f-8aef-49f8a3c347a2 success; deploymentf5ef6210-f0d1-4bf8-8389-7d4b90095059 versione08dbe63-7ec2-4a21-8e83-5df189f6e55b100%. Exact source/build production checks+8 registered desktop/mobile settled route screenshots passed and inspected: https://github.com/lrnolivia/relay/actions/runs/36943751822 . Real readonly mobile Notes open/Escape and notification menu traces captured (vis_a77e56d0-eede-44ca-a98b-1de0e5ef73ec,vis_4d4a60d7-68ef-4c21-a4a1-bc62dafd67c5,vis_2b9b5815-c451-499c-bd44-cc2ef486cf70); session closed, no human response writes. Backend QAfeedback resource released previously and separately owned; no backend files changed. External project activity remains honestly partial; no remaining implementation blockers. PRbody contains all exact evidence links and pixel-review limits.",
+      "work_accounted": true,
+      "completed_at": "2026-10-02T00:11:04.389Z"
     },
     {
       "id": "relay-mcp-feedback-routing-20261001",
