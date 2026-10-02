@@ -5,7 +5,7 @@ import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, RELAY_STATUS_CARD_URI,
 test("Relay publishes one versioned compact MCP card resource", () => {
   const descriptor = relayContextCardDescriptor();
   const resource = relayContextCardResource();
-  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v9.html");
+  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v10.html");
   assert.equal(descriptor.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.mimeType, "text/html;profile=mcp-app");
@@ -388,4 +388,45 @@ test('v9 card reports its height with ui/notifications/size-changed and shows ha
     await page.waitForFunction(()=>window.sizes.some(size=>size.height>0));
     await frame.locator('#diag').filter({hasText:/handshake ok/}).waitFor();
   } finally {await browser.close()}
+});
+
+test('production context card model remains executable after Worker keepNames bundling', async () => {
+  const { build } = await import('esbuild');
+  const { runInNewContext } = await import('node:vm');
+  const built = await build({
+    entryPoints: [new URL('./relay-chat-ui.js', import.meta.url).pathname],
+    bundle: true, write: false, format: 'esm', platform: 'neutral', keepNames: true
+  });
+  const bundled = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
+  const html = bundled.relayContextCardResource().text;
+  const script = html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
+  assert.ok(script, 'actual shipped resource includes its browser program');
+  const prefix = script.slice(0, script.indexOf('const FEATURES='));
+  assert.ok(prefix.includes('const model='), 'test executes the actual embedded model');
+  const cases = [
+    {project:'relay',claim:{primary_staff:'julian',state:'active',goal:'Bundled card is alive'}},
+    {ok:false,error:{message:'Readable failure'}},
+    {checks:{check_runs:[]}},
+    {claim:{primary_staff:'nico',state:'completed',goal:'Finished',next_action:'Old action'}},
+    {project:'relay',claim:{primary_team:'runner',state:'working',progress_percent:50}}
+  ];
+  for (const input of cases) {
+    const actual = runInNewContext(prefix + ';model(input,DIRECTORY)', {input});
+    assert.deepEqual(JSON.parse(JSON.stringify(actual)), JSON.parse(JSON.stringify(bundled.contextCardModel(input))));
+  }
+  assert.doesNotMatch(prefix, /\b__name\b/, 'browser code must not depend on a Worker-only helper');
+  const { chromium } = await import('playwright');
+  const browser = await chromium.launch({headless:true});
+  try {
+    const page = await browser.newPage();
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.addInitScript(() => { window.openai = {
+      toolInput:{project:'relay'},
+      toolOutput:{project:'relay',claim:{primary_staff:'julian',state:'active',goal:'Bundled card is alive'}}
+    }; });
+    await page.goto('data:text/html,' + encodeURIComponent(html));
+    await page.locator('#title').filter({hasText:'Bundled card is alive'}).waitFor();
+    assert.deepEqual(errors, []);
+  } finally { await browser.close(); }
 });
