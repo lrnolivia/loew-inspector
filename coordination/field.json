@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-10-02T00:08:33.200Z",
+  "updated_at": "2026-10-02T00:48:16.991Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -474,10 +474,23 @@
       "acceptance": "Existing Dashboard/create/refresh behavior and current-main Canvas semantics preserved; touch/mobile focused checks and runtime arbitration verified; current user removes Mobile protection, connected-panel follow-up remains deferred; original branches retained",
       "next_action": "Dashboard PR136 merged as bad3630cdcb6c52ca787ccbb94fc70978f8f2d05 and production exact SHA/version verified; authenticated hosted persistence QA gap explicitly accepted/documented, 58 baseline-shared failures remain. Broader consolidation is NOT complete: 26 unpublished Mobile files preserved in portable checkpoint libfile_4e2a1d2ad8388191bea18a0a0408d5f1 version2. Hold awaiting Lauren's next Mobile/consolidation or native Codex handoff decision; no further feature work launched. Preserve saved official Figma references docs/field/product/docs/FIGMA_BEHAVIOR_PARITY.md and docs/field/handoffs/figui3/CONTINUATION_2026-09-27.md. Existing historical Mobile provenance claim unchanged.",
       "base_sha": "854038a3e84f41cd590a4ad18b24fcd4127e2fba",
-      "state": "held",
+      "state": "superseded",
       "created_at": "2026-09-30T10:21:02.409Z",
-      "updated_at": "2026-10-01T23:15:54.749Z",
-      "lease_until": "2026-10-02T11:15:54.749Z"
+      "updated_at": "2026-10-02T00:48:16.991Z",
+      "lease_until": "2026-10-02T11:15:54.749Z",
+      "retirement": {
+        "at": "2026-10-02T00:48:16.991Z",
+        "intent": {
+          "operation_id": "field-dashboard-to-mobile-20261002-0008",
+          "owner": "01a0f989-2e52-701b-a57c-009bedceb014",
+          "disposition": "superseded",
+          "reason": "Lauren explicitly resumed next Mobile stage; parent approved this bounded same-owner transition. Dashboard PR136 is merged and its managed branch absent. Broader old consolidation is not falsely completed; unfinished Mobile is transferred to the queued bounded successor.",
+          "evidence": "Dashboard PR136 merged bad3630cdcb6c52ca787ccbb94fc70978f8f2d05; automatic build 29fefc73-c9b8-4325-a782-c5a0abd3cc64 succeeded; Worker version409 2a3facdd-62b7-4050-b554-2ecec1787634 at100%, runtime exact SHA verified. Authenticated QA gap accepted and 58 shared baseline failures disclosed. Portable Library libfile_4e2a1d2ad8388191bea18a0a0408d5f1 version2 (5732450bytes SHA256 e32f58b9448e092239f626ca1fc77bfb8fe8fe10d1a5b68f4363f0e92aea6bd8) retains all26 unfinished Mobile working files, per-file hashes and staged91589byte patch b919b0f67e9d39db9f45a3029200809731d4a6164555ba9e913951d0dbba8974 / unstaged16971byte patch42b2bace677cfdc38ee006de6211b214457f549d191954cc73e6ead2986ba791. Original /private/tmp/field-consolidation-dashboard-20260930 head9fd1357 preserved unchanged, hashes and bothpatches reverified. Actual owner confirms no active task writers; read-only process inventory found none; provider404 confirms old remote branch absence. Parent coordinates other Relay writers and explicitly authorized supported retirement. Historical Mobile claim/PR123 retained; connected panels stay deferred. Successor remains queued until fresh claim/admission, draft PR only; no new Mobile merge/deploy authorization.",
+          "superseded_by": "field-mobile-integration-20261002",
+          "branch": "field/consolidation-workspace-20260930",
+          "head_sha": null
+        }
+      }
     },
     {
       "id": "field-ui-hotfix-20260930",
