@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T03:39:58.029Z",
+  "updated_at": "2026-10-02T03:50:05.479Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -11338,10 +11338,10 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "eda61568beda04632e997f0453346b580e02919e",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-02T03:21:25.415Z",
-      "updated_at": "2026-10-02T03:23:02.894Z",
-      "lease_until": "2026-10-02T15:23:02.894Z",
+      "updated_at": "2026-10-02T03:50:05.479Z",
+      "lease_until": "2026-10-02T15:50:05.479Z",
       "amendment_count": 1,
       "amendments": [
         {
@@ -11358,7 +11358,13 @@
             "acceptance": "Use a shared streaming UTF-8 byte-bounded MCP reader capped at 8 MiB to accommodate up to 1,000,000 source characters including worst-case JSON escaping and envelope in legacy and extension entry paths. Preserve authentication, tool schemas, file/path/head guards and all existing tools/cards. Test over-16KB complete source payloads reaching original validators, byte boundaries, misleading/missing Content-Length, multibyte text, malformed JSON and oversized early cancellation; exact-head full CI and guarded release. Preserve deployed PR115 A/B/C resources and all unresolved actual-client car..."
           }
         }
-      ]
+      ],
+      "pr": 116,
+      "merged_head_sha": "946245cc94d1bde8ad56048eef6719eb9900373d",
+      "merge_commit_sha": "23443a71e8907e94c43ea8c92179b5a115e41080",
+      "evidence": "PR116 head946245cc94d1bde8ad56048eef6719eb9900373d quality110693203423+admission110693192819 pass; merged23443a71e8907e94c43ea8c92179b5a115e41080. Buildfaf7f014-e02c-4085-ae44-f55bc4e338c5 SUCCESS, deploymented8dc8a9-cc01-4b89-9a6b-7dd611136590/version428c3ebf-b505-4369-9468-86022303e0e0 at100%, postmerge quality110694641351 pass. Live formerly413 Field complete file now committed96597239f87d5ca2bca123017c0c1b7a044b5ade and exactbytesverified; all26savedGitblobs match. Upload scope delivered only; full MCP/card parity unresolved, PR115 A/B/C pending. New actual original connection test Linux browser all6stepsPASS03:47, desktop no-card failure03:49, screenshots retained separately. No native success inferred from CI.",
+      "work_accounted": true,
+      "completed_at": "2026-10-02T03:50:05.479Z"
     }
   ],
   "migrated_from": "loew-inspector"
