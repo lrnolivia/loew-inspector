@@ -1,3 +1,4 @@
+import { writeEvidenceIndex } from "./evidence-index.js";
 const SAFE_REQUEST_ID = /^[a-zA-Z0-9._-]{1,80}$/;
 const SAFE_CONTEXT_TEXT = /^[a-zA-Z0-9._:/-]{1,240}$/;
 const RETENTION_DAYS = 30;
@@ -132,5 +133,7 @@ export async function storeEvidence(bucket, {
       customMetadata: { evidenceId: id, kind, capturedAt }
     })
   ]);
+  await writeEvidenceIndex(bucket, metadata);
   return metadata;
 }
+
