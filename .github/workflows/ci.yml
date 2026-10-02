@@ -86,7 +86,7 @@ jobs:
       - name: Run workspace, contract, API, browser and React tests
         run: npm test
       - name: Preserve actual website route screenshots
-        if: always() && (startsWith(github.head_ref, 'relay/website-2.0-repair-') || startsWith(github.head_ref, 'relay/website-project-context-polish-'))
+        if: always() && (startsWith(github.head_ref, 'relay/website-2.0-repair-') || startsWith(github.head_ref, 'relay/website-project-context-polish-') || startsWith(github.head_ref, 'relay/website-notifications-review-'))
         uses: actions/upload-artifact@v4
         with:
           name: relay-website-${{ github.event.pull_request.number }}
@@ -94,7 +94,7 @@ jobs:
           if-no-files-found: error
   visual-review-preview:
     needs: quality
-    if: github.event_name == 'pull_request' && github.event.pull_request.draft == true && (startsWith(github.head_ref, 'relay/2.0-approved-visual-port-') || startsWith(github.head_ref, 'relay/website-project-context-polish-'))
+    if: github.event_name == 'pull_request' && github.event.pull_request.draft == true && (startsWith(github.head_ref, 'relay/2.0-approved-visual-port-') || startsWith(github.head_ref, 'relay/website-project-context-polish-') || startsWith(github.head_ref, 'relay/website-notifications-review-'))
     runs-on: ubuntu-latest
     timeout-minutes: 10
     env:
@@ -102,6 +102,7 @@ jobs:
       CF_ACCESS_CLIENT_SECRET: ${{ secrets.CF }}
       PREVIEW_COMMIT: ${{ github.event.pull_request.head.sha }}
       PREVIEW_PR: ${{ github.event.pull_request.number }}
+      PREVIEW_BRANCH: ${{ github.head_ref }}
     steps:
       - uses: actions/checkout@v4
         with:
@@ -118,7 +119,12 @@ jobs:
       - name: Build exact Relay web assets
         run: WORKERS_CI_COMMIT_SHA="$PREVIEW_COMMIT" npm run build --workspace @relay/web
       - name: Capture and ingest Inspector preview evidence
-        run: node apps/web/test/visual-review.mjs
+        run: |
+          if [[ "$PREVIEW_BRANCH" == relay/website-notifications-review-* ]]; then
+            node apps/web/test/notifications-visual-review.mjs
+          else
+            node apps/web/test/visual-review.mjs
+          fi
       - name: Preserve preview captures
         if: always()
         uses: actions/upload-artifact@v4

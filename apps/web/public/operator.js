@@ -4,6 +4,7 @@ import { bindTheme } from "./theme.js";
 import { showLoading } from "./loading.js";
 import { projectFromHash, projectHref } from "../../../packages/shared-ui/project-context.js";
 import { glyph, telemetryGlyph } from "../../../packages/shared-ui/glyphs.js";
+import { bindNotifications, publishNotification } from '../../../packages/shared-ui/notifications.js';
 import { brand, featureAccent } from "./brand.js";
 import { iconSlot, hydrateProjectIcons } from "./project-icons.js";
 import { openQa } from "./qa.js";
@@ -16,17 +17,17 @@ import { esc, loadProjectDetail, loadProjectIndex, projectName, renderProjectDet
 bindTheme();
 bindPresentation();
 bindMotion();
+const notificationRoot = document.querySelector('#notification-center');
+if (notificationRoot) bindNotifications(notificationRoot);
 
 const pages = [...document.querySelectorAll("[data-page]")];
 const nav = [...document.querySelectorAll("[data-nav]")];
 const connection = document.querySelector("#operator-connection");
-const toast = document.querySelector("#operator-toast");
 const projectTabs = document.querySelector("#project-tabs");
 const projectDetail = document.querySelector("#project-detail");
 const appSettings = document.querySelector("#app-settings");
 const sidebar = document.querySelector(".operator-topbar");
 
-let toastTimer = null;
 let projectIds = [];
 let selectedProject = projectFromHash(location.hash) || null;
 const projectCache = new Map();
@@ -96,12 +97,11 @@ function setConnection(label, tone = "quiet") {
 }
 
 function notify(message, tone = "good") {
-  if (!toast) return;
-  toast.textContent = message;
-  toast.dataset.tone = tone;
-  toast.hidden = false;
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(() => { toast.hidden = true; }, 4200);
+  const feature = navigation[route()]?.[2] || 'inspector';
+  publishNotification({ id: feature + ':' + (selectedProject || 'all') + ':' + message,
+    feature, project: selectedProject || '', title: tone === 'bad' ? 'Could not finish this step' : 'Update',
+    message, severity: tone === 'bad' ? 'error' : tone === 'warn' ? 'warning' : 'info',
+    href: projectHref('/inspector#review', selectedProject), action: 'Open Inspector' });
 }
 
 async function ensureProjects() {

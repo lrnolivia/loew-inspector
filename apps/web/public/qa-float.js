@@ -2,7 +2,7 @@ const clamp = (value, min, max) => Math.min(max, Math.max(min, value));
 
 function interactiveTarget(target) {
   return target instanceof Element &&
-    Boolean(target.closest("button, textarea, input, select, a, [contenteditable='true']"));
+    Boolean(target.closest("button, summary, textarea, input, select, a, [contenteditable='true']"));
 }
 
 function resizeEdge(event, rect, threshold = 10) {
@@ -25,8 +25,8 @@ export function createQaFloat(stage, { onDockChange } = {}) {
   const panel = stage.querySelector(".qa-companion");
   if (!panel) return { destroy() {}, refresh() {}, restore() {} };
 
-  const minWidth = 300;
-  const minHeight = 250;
+  const isNarrow = () => innerWidth <= 520;
+  const minimumSize = () => ({ minWidth:isNarrow()?180:300, minHeight:isNarrow()?220:250 });
   const visibleDockEdge = 14;
   const dockThreshold = 12;
   let action = null;
@@ -41,7 +41,7 @@ export function createQaFloat(stage, { onDockChange } = {}) {
 
   const clampOpenPosition = (left, top, width, height) => ({
     left: clamp(left, 8, Math.max(8, innerWidth - width - 8)),
-    top: clamp(top, 8, Math.max(8, innerHeight - height - 8))
+    top: clamp(top, 76, Math.max(76, innerHeight - height - 76))
   });
 
   const placeDocked = () => {
@@ -54,7 +54,7 @@ export function createQaFloat(stage, { onDockChange } = {}) {
     if (dockEdge === "top") top = visibleDockEdge - rect.height;
     if (dockEdge === "bottom") top = innerHeight - visibleDockEdge;
     if (dockEdge === "left" || dockEdge === "right") {
-      top = clamp(top, 8, Math.max(8, innerHeight - rect.height - 8));
+      top = clamp(top, 76, Math.max(76, innerHeight - rect.height - 76));
     } else {
       left = clamp(left, 8, Math.max(8, innerWidth - rect.width - 8));
     }
@@ -102,12 +102,13 @@ export function createQaFloat(stage, { onDockChange } = {}) {
   };
 
   const initialize = () => {
-    panel.style.width = Math.min(450, Math.max(minWidth, innerWidth - 24)) + "px";
+    const {minWidth}=minimumSize();
+    panel.style.width = Math.min(isNarrow()?208:450, Math.max(minWidth, innerWidth - 24)) + "px";
     panel.style.height = "";
     requestAnimationFrame(() => {
       const rect = panel.getBoundingClientRect();
       panel.style.left = Math.max(12, innerWidth - rect.width - 24) + "px";
-      panel.style.top = Math.max(12, innerHeight - rect.height - 24) + "px";
+      panel.style.top = Math.max(76, innerHeight - rect.height - 76) + "px";
     });
   };
 
@@ -137,8 +138,9 @@ export function createQaFloat(stage, { onDockChange } = {}) {
     let height = action.rect.height;
     let left = action.rect.left;
     let top = action.rect.top;
+    const {minWidth,minHeight}=minimumSize();
     const maxWidth = Math.max(minWidth, innerWidth - 24);
-    const maxHeight = Math.max(minHeight, innerHeight - 24);
+    const maxHeight = Math.max(minHeight, innerHeight - 152);
     if (action.edge.includes("e")) width = clamp(action.rect.width + dx, minWidth, maxWidth);
     if (action.edge.includes("s")) height = clamp(action.rect.height + dy, minHeight, maxHeight);
     if (action.edge.includes("w")) {
@@ -196,7 +198,7 @@ export function createQaFloat(stage, { onDockChange } = {}) {
   // Catch those invisible edge/corner zones on the stage so resize still works
   // from the full rectangular card bounds without adding visible handles.
   const onStagePointerDown = event => {
-    if (action || dockEdge || panel.contains(event.target)) return;
+    if (action || dockEdge || panel.contains(event.target) || stage.querySelector('.qa-notes-popout[open]')) return;
     const rect = panel.getBoundingClientRect();
     const insideBounds =
       event.clientX >= rect.left && event.clientX <= rect.right &&
@@ -232,6 +234,8 @@ export function createQaFloat(stage, { onDockChange } = {}) {
   }, 1000);
 
   const onResize = () => {
+    const {minWidth,minHeight}=minimumSize();
+    if(isNarrow()) panel.style.width=Math.min(208,innerWidth-24)+"px";
     if (dockEdge) return placeDocked();
     const rect = panel.getBoundingClientRect();
     if (rect.width > innerWidth - 24) panel.style.width = Math.max(minWidth, innerWidth - 24) + "px";

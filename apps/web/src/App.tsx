@@ -9,6 +9,7 @@ import { TodayPage } from "./pages/TodayPage";
 import { RunnerPage } from "./pages/RunnerPage";
 import { RunnerWorkPage } from "./pages/RunnerWorkPage";
 import { NightShiftPage } from "./pages/NightShiftPage";
+import { NotificationCenter } from './components/NotificationCenter';
 
 const navItems = [
   { to: "/today", label: "today", detail: "focus", feature: "today", icon: "/brand/today.png" },
@@ -60,7 +61,7 @@ function Shell() {
       <main className="operator-shell react-operator-shell">
         <div className="workspace-context">
           <div className="workspace-left"><span>your workspace <span aria-hidden="true">/</span> {pageLabel}</span></div>
-          <div className="operator-connection" data-tone={tone}>{state}</div>
+          <div className="connection-tools"><NotificationCenter /><div className="operator-connection" data-tone={tone}>{state}</div></div>
         </div>
         <Routes>
           <Route path="/today" element={<TodayPage />} />

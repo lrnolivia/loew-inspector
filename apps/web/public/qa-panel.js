@@ -24,14 +24,13 @@ export function renderQaPreview(stage, state, requestedMode) {
   const preview = stage.querySelector(".qa-preview");
   const live = state.live || {};
   const evidence = state.evidence || {};
-  const canLive = Boolean(live.active && live.embeddable && live.url);
+  const canLive = Boolean(live.active && live.embeddable && live.url && !live.renderUnconfirmed);
   const canVideo = Boolean(evidence.video_url);
   const mode =
     requestedMode === "live" && canLive ? "live" :
     requestedMode === "video" && canVideo ? "video" :
-    canLive ? "live" :
-    canVideo ? "video" :
-    "captured";
+    requestedMode === "captured" ? "captured" :
+    canVideo ? "video" : "captured";
   const { width, height } = surfaceSize(evidence);
 
   let media = "";
@@ -73,25 +72,29 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
   const answer = q ? review.answers?.[q.id] : null;
   const progress = q ? "Review " + (questionIndex + 1) + " of " + questions.length : "Review";
 
+  const allAnswered = questions.every(question => ["yes", "no", "not_sure"].includes(review.answers?.[question.id]));
+  const guidance = state.noteParts?.guidance;
+  const guidanceQuestions = guidance?.questions?.map(item => typeof item === "string" ? item : item.prompt || item.question || "").filter(Boolean) || [];
   panel.innerHTML =
     '<div class="qa-review-head">' +
       '<div class="qa-review-progress"><span class="qa-review-dot" aria-hidden="true"></span><span>' + qaEscape(progress) + '</span></div>' +
       (context.project ? '<span class="qa-project-pill">' + iconSlot(context.project) +
         '<strong>' + qaEscape(projectName(context.project)) + '</strong></span>' : "") +
     '</div>' +
-    '<section class="qa-question-card">' +
+    '<div class="qa-question-content"><section class="qa-question-card">' +
       '<h2 class="qa-question">' + qaEscape(q?.prompt || "Anything feel off?") + '</h2>' +
       '<p class="qa-question-reason">' + qaEscape(q?.reason || "Leave a note if there is anything you want changed.") + '</p>' +
       (q ? '<div class="qa-answer-stack" role="group" aria-label="Answer">' +
-        ["yes", "no"].map(function (value) {
+        ["yes", "no", "not_sure"].map(function (value) {
           return '<button type="button" class="qa-answer ' + (answer === value ? "selected" : "") +
-            '" data-qa-answer="' + value + '">' + answerLabel(value) + '</button>';
+            '" aria-pressed="' + (answer === value) + '" data-qa-answer="' + value + '">' + answerLabel(value) + '</button>';
         }).join("") + '</div>' : "") +
     '</section>' +
-    '<label class="qa-notes"><span class="sr-only">Notes</span><textarea maxlength="6000" placeholder="Add a note…">' +
-      qaEscape(review.notes || "") + '</textarea></label>' +
-    '<span class="qa-save-state sr-only" data-qa-save-state aria-live="polite">' +
-      qaEscape(review.updated_at ? "Saved" : "Not saved yet") + '</span>';
+    (guidance ? '<details class="qa-guidance"><summary>Earlier review guidance</summary><p>This was prepared by an agent. Your notes are separate; the original packet is retained.</p><ul>' + guidanceQuestions.map(item => '<li>' + qaEscape(item) + '</li>').join('') + '</ul></details>' : '') +
+    '<div class="qa-feedback"><span class="qa-save-state" data-qa-save-state role="status" aria-live="polite"></span><button type="button" data-qa-retry hidden>Retry save</button></div>' +
+    '</div><nav class="qa-question-nav" aria-label="Review questions"><button type="button" data-qa-notes-open aria-haspopup="dialog" aria-controls="qa-notes-dialog">Notes</button><button type="button" data-qa-previous ' + (questionIndex === 0 ? 'disabled' : '') + '>Back</button>' +
+    (questionIndex < questions.length - 1 ? '<button type="button" data-qa-next>Next</button>' : '<button type="button" data-qa-finish ' + (!allAnswered ? 'disabled' : '') + '>Finish</button>') + '</nav>';
+
 
   void hydrateProjectIcons(panel);
   if (q) {
@@ -99,6 +102,37 @@ export function renderQaPanel(stage, state, questionIndex, handlers) {
       button.addEventListener("click", function () { handlers.answer(q.id, button.dataset.qaAnswer); });
     });
   }
-  const textarea = panel.querySelector("textarea");
-  if (textarea) textarea.addEventListener("input", function () { handlers.notes(textarea.value); });
+  panel.querySelector('[data-qa-previous]')?.addEventListener('click', () => handlers.navigate(-1));
+  panel.querySelector('[data-qa-next]')?.addEventListener('click', () => handlers.navigate(1));
+  panel.querySelector('[data-qa-finish]')?.addEventListener('click', () => handlers.finish());
+  panel.querySelector('[data-qa-retry]')?.addEventListener('click', () => handlers.retry());
+  stage.querySelector('.qa-notes-popout')?.remove();
+  const notes = document.createElement('dialog');
+  notes.id = 'qa-notes-dialog';
+  notes.className = 'qa-notes-popout';
+  notes.setAttribute('aria-labelledby', 'qa-notes-title');
+  notes.innerHTML = '<div class="qa-notes-head"><h2 id="qa-notes-title">Your notes</h2><button type="button" data-qa-notes-close>Done</button></div>' +
+    '<label class="qa-notes"><span class="sr-only">Your notes</span><textarea maxlength="' + Math.max(0,6000 - (state.noteParts?.prefix?.length || 0) - (state.noteParts?.prefix ? 16 : 0)) + '" placeholder="Add a note…">' +
+    qaEscape(state.humanNotes ?? review.notes ?? '') + '</textarea></label>' +
+    '<div class="qa-feedback"><span class="qa-save-state" data-qa-save-state role="status" aria-live="polite"></span><button type="button" data-qa-retry hidden>Retry save</button></div>';
+  stage.append(notes);
+  const notesButton = panel.querySelector('[data-qa-notes-open]');
+  const closeNotes = () => { notes.close(); notesButton.focus(); };
+  notesButton.addEventListener('click', () => { notes.showModal(); notes.querySelector('textarea').focus(); });
+  notes.querySelector('[data-qa-notes-close]').addEventListener('click', closeNotes);
+  notes.querySelector('[data-qa-retry]').addEventListener('click', () => handlers.retry());
+  // Keep keyboard focus inside the popout; Escape closes only notes,
+  // without exiting the surrounding Inspector review.
+  notes.addEventListener('keydown', event => {
+    event.stopPropagation();
+    if (event.key === 'Escape') { event.preventDefault(); closeNotes(); }
+    if (event.key === 'Tab') {
+      const controls = Array.from(notes.querySelectorAll('button,textarea')).filter(node => !node.hidden && !node.disabled);
+      if (event.shiftKey && document.activeElement === controls[0]) { event.preventDefault(); controls.at(-1).focus(); }
+      else if (!event.shiftKey && document.activeElement === controls.at(-1)) { event.preventDefault(); controls[0].focus(); }
+    }
+  });
+  notes.addEventListener('cancel', event => { event.preventDefault(); closeNotes(); });
+  const textarea = notes.querySelector('textarea');
+  textarea.addEventListener('input', () => handlers.notes(textarea.value));
 }
