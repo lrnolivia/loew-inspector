@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-10-02T00:48:40.339Z",
+  "updated_at": "2026-10-02T02:03:30.172Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -537,7 +537,7 @@
     },
     {
       "id": "field-mobile-integration-20261002",
-      "owner": "01a0f989-2e52-701b-a57c-009bedceb014",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
       "branch": "field/mobile-integration-20261002",
       "paths": [
         "src/App.tsx",
@@ -573,7 +573,7 @@
       ],
       "goal": "Integrate the preserved unpublished Mobile Focus and touch camera work onto shipped main, retaining approved design and documented selection/text/hierarchy behavior.",
       "acceptance": "Preserve all 26 original file bytes, staged and unstaged patches and hashes; account for every recovered change.\nPortrait sheet, landscape overlay and desktop return preserve stored workspace preferences; only one mobile panel host is open.\nSingle-touch selection and drag use existing Canvas semantics; empty-space pan, hold marquee/context menu, second-finger cancellation, anchored pinch and camera pan preserve source and undo behavior.\nTouch resize/rotate/scale targets and header touch routes preserve desktop pointer/keyboard handling.\nText editing and software-keyboard viewport positioning are tested; actual iPhone keyboard/rotation evidence is required for iOS-specific claims, with missing device access recorded as unverified.\nFocused meaningful tests and browser interactions/renders are bound to exact head; full current-main versus candidate failure fingerprints distinguish baseline failures from regressions.\nAll production builds and lint run on Node22; draft Mobile PR targets current main for review; no merge or deployment without new approval.",
-      "next_action": "Restore preserved Mobile patches in one isolated checkout from live main; review and test behavior against saved Figma reference; publish draft PR only. No merge/deploy authorized.",
+      "next_action": "Lauren explicitly authorized direct Field work without workers after preparing card variants (Sentinel_65cc650962388191a9fa145ab8ff762a). PR115 variants are written and all checks pass, release approval pending. Stopped Field worker remains stopped. Continue same26-file mobile assignment/branch directly with Relay; archive libfile_4e2a1d2ad8388191bea18a0a0408d5f1 version2 verified SHA e32f58b9448e092239f626ca1fc77bfb8fe8fe10d1a5b68f4363f0e92aea6bd8 and all26filehashes verified. Restore only preserved Mobile changes onto current main, retain Figma behavior references and zero-regression gates. No new Mobile merge/deploy approval inferred.",
       "primary_team": "night-shift",
       "supporting_teams": [],
       "primary_staff": "julian",
@@ -581,8 +581,8 @@
       "base_sha": "bad3630cdcb6c52ca787ccbb94fc70978f8f2d05",
       "state": "active",
       "created_at": "2026-10-02T00:48:40.339Z",
-      "updated_at": "2026-10-02T00:48:40.339Z",
-      "lease_until": "2026-10-02T12:48:40.339Z"
+      "updated_at": "2026-10-02T02:03:30.172Z",
+      "lease_until": "2026-10-02T14:03:30.172Z"
     }
   ]
 }
