@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T01:22:30.205Z",
+  "updated_at": "2026-10-02T01:31:46.519Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -11120,17 +11120,17 @@
       ],
       "goal": "Repair production contextual card browser packaging while preserving design and capabilities, directly in Julian chat using Relay with no workers.",
       "acceptance": "Reproduce bundled browser model failure and fix without helper shims or function serialization. Preserve original51 capabilities, card art and diagnostic controls; rotate changed resource URI. Add bundled-program parity and actual-script regression tests; exact-head CI/admission, browser proof where available. No claim native ordinary-chat mount solved without actual user/client evidence. Carry all unresolved predecessor criteria unchanged: Implement approved 16-file storage/explicit-ack iteration: four typed feedback tools, canonical routing/artifact checks, idempotent conditional writes, bounded pagination, no read-triggered ACK, pending feedback in explicit resume, legacy compatibility, all original capabilities/resources retained. No live feedback events/ACK outside fixtures; no claim that queueing wakes native Codex. Native push remains unverified; visual-review/event dual-write repair remains an explicit follow-up. Carry ALL outstanding PR112/PR110 card criteria: original ordinary Mac and Safari display unresolved; iOS original action pending; Work original action timeout preserved historically, new Lauren desktop Work screenshot proves original six-step connection/action PASS at23:21:37.734Z sample83db62cb-ab79-4bf0-96fd-e85f906d8e3e; Lauren explicitly reports normal chat still fails; new action comparison actual Work/iOS/Safari all NOT RUN; same-build/app/tool client identity and host evidence required, local fixtures never native proof. PR112 merged/released and original five screenshots retained. Draft PR, exact-head CI/admission and independent review; serialized release clearance from Julian.",
-      "next_action": "Packaged context-card browser test passes at7db26dce; exact CI has3 stale v9 URI assertions. Add test-only relay-entry.test.js path and update assertions to v10 while preserving original capabilities and diagnostic controls. Run exact-head CI, no native mount or production success claim.",
+      "next_action": "PR114 exact65d54e77 merged74dfdf8f8a398a71fe1ea4954186ac7ed84e37c5 on Lauren explicit approval; 378 premerge tests/build/typecheck/admission PASS. Workers Buildb2fc6383-ecae-4458-99b6-8fd5b0c5136f SUCCESS for exactmerge; deploymentbe8e9061-6b2f-46c5-bf05-27e9dc8f2ebc version eaa73ee0-8d13-4bf1-898c-d8fd25614ad9 at100%; live control health PASS. Bundled context-card v10 regression PASS, art preserved. Postmerge quality job110664057299 fails unchanged action-probe teardown timing assertion (also seen baseline); rerun request denied403 Resource not accessible by integration, no bypass attempted. Hold pending actual refreshed ordinary-chat v10 rendering proof and permitted CI rerun/harness decision. Prior native failures and all full-MCP criteria preserved, not complete. No workers resumed.",
       "category": "implementation",
       "primary_team": "runner",
       "supporting_teams": [],
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "c13aff373e236ebb19380620f80da008f341bdca",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-10-02T01:04:36.340Z",
-      "updated_at": "2026-10-02T01:22:30.205Z",
-      "lease_until": "2026-10-02T13:22:30.205Z"
+      "updated_at": "2026-10-02T01:31:46.519Z",
+      "lease_until": "2026-10-02T13:31:46.519Z"
     }
   ],
   "migrated_from": "loew-inspector"
