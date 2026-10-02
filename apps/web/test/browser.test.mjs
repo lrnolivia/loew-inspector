@@ -1,3 +1,4 @@
+import {reviewFixture} from "./work-review-fixture.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import http from "node:http";
@@ -73,6 +74,7 @@ test("preserved legacy components and Inspector review support mobile, deep link
     ],
     queue: []
   };
+  const reviews=reviewFixture(item=>item.kind==='evidence'?evidence:progress.progress.find(p=>p.assignment===item.id));
   const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, "http://localhost");
     const send = body => { res.setHeader("Content-Type", "application/json"); res.end(JSON.stringify(body)); };
@@ -86,6 +88,7 @@ test("preserved legacy components and Inspector review support mobile, deep link
     if (asset) { res.setHeader("Content-Type", asset.type); return res.end(asset.text); }
     if (url.pathname === "/host") { res.setHeader("Content-Type", "text/html"); return res.end('<iframe id="app" style="width:100%;height:900px;border:0"></iframe>'); }
     if (url.pathname === heldPath) await loadingGate;
+    if (url.pathname === "/api/work-review") return send(await reviews.handle(req));
     if (url.pathname === "/api/projects") return send({ projects: [project] });
     if (url.pathname === "/api/projects/relay/icon") return send({ status: "found", icon: { data_url: "data:image/png;base64," + pixel.toString("base64"), repository: "lrnolivia/relay", path: "apps/web/public/brand/relay-loop.png", blob_sha: "b".repeat(40) } });
     if (url.pathname === "/api/projects/relay") return send({ project, coordination: { claims: [{ id: "work", state: "active", goal: "Legacy claim context" }] } });
@@ -257,46 +260,29 @@ test("preserved legacy components and Inspector review support mobile, deep link
       }
       if (mode === "mcp") await view.getByRole("button", { name: "all", exact: true }).click();
       await view.locator("[data-review-id]").waitFor();
-      assert.equal(await view.locator(".inspector-signal-deck .signal-card").count(), 3);
+      assert.equal(await view.locator(".inspector-signal-deck .signal-card").count(), 2);
       assert.notEqual(await view.locator("#inspector-signal-visible").textContent(), "—");
       assert.match(await view.getByRole("heading", { name: "inspector", level: 1 }).evaluate(node => getComputedStyle(node).fontFamily), /Momo Trust Display/);
-      if (mode === "web") {
-        assert.ok(Math.abs((await view.locator(".review-row").first().boundingBox()).width - skeletonWidth) < 1, "Review skeleton and loaded card have matching widths");
-        await page.screenshot({ path: "/tmp/relay-greige-review-cards.png" });
-      }
-      assert.equal(await view.getByRole("button", { name: "completed", exact: true }).count(), 1);
-      assert.equal(await view.getByRole("button", { name: "stale", exact: true }).count(), 1);
-      assert.equal(await view.getByRole("button", { name: "archived", exact: true }).count(), 1);
-      assert.equal(await view.getByRole("button", { name: "clear stale", exact: true }).count(), 1);
-      await view.getByRole("button", { name: "all", exact: true }).click();
-      await view.getByRole("button", { name: "mark completed", exact: true }).click();
-      await view.locator('.review-row[data-review-disposition="completed"]').waitFor();
-      assert.equal(review.disposition, "completed");
-      await view.getByRole("button", { name: "completed", exact: true }).click();
-      await view.getByRole("button", { name: "reopen", exact: true }).click();
-      await view.getByRole("button", { name: "needs review", exact: true }).click();
-      await view.locator('.review-row[data-review-disposition="pending"]').waitFor();
-      assert.equal(review.disposition, "pending");
-      await view.getByRole("button", { name: "mark stale", exact: true }).click();
-      await view.getByRole("button", { name: "stale", exact: true }).click();
-      await view.locator('.review-row[data-review-disposition="stale"]').waitFor();
-      assert.equal(review.disposition, "stale");
-      await view.getByRole("button", { name: "clear stale", exact: true }).click();
-      await view.getByRole("button", { name: "archived", exact: true }).click();
-      await view.locator('.review-row[data-review-disposition="archived"]').waitFor();
-      assert.equal(review.disposition, "archived");
-      await view.getByRole("button", { name: "restore", exact: true }).click();
-      await view.getByRole("button", { name: "stale", exact: true }).click();
-      await view.locator('.review-row[data-review-disposition="stale"]').waitFor();
-      assert.equal(review.disposition, "stale");
-      await view.getByRole("button", { name: "reopen", exact: true }).click();
-      await view.getByRole("button", { name: "needs review", exact: true }).click();
-      await view.locator('.review-row[data-review-disposition="pending"]').waitFor();
-      assert.equal(review.disposition, "pending");
-      await view.locator("[data-review-id]").waitFor();
+      await view.locator('#review-list[data-summary-state=ready]').waitFor();
+      await view.getByRole('button',{name:'All',exact:true}).click();
+      await view.locator('[data-select-visible]').check();
+      const apply=async label=>{await view.getByRole('button',{name:label,exact:true}).click();await view.locator('[data-confirm]').click();await view.locator('.work-message').filter({hasText:'1 review item(s) updated.'}).waitFor();};
+      await apply('Mark complete');
+      assert.match(await view.locator('.review-row').innerText(),/Review: Completed/);
+      assert.equal(review,null,'handling a review never overwrites the evidence QA answers');
+      await apply('Mark stale');
+      await view.getByRole('button',{name:'Stale',exact:true}).click();
+      await apply('Clear stale');
+      await view.getByRole('button',{name:'Archived',exact:true}).click();
+      assert.match(await view.locator('.review-row').innerText(),/Archived/);
+      await apply('Restore');
+      await view.getByRole('button',{name:'Stale',exact:true}).click();
+      await apply('Reopen');
+      await view.getByRole('button',{name:'Need review',exact:true}).click();
+      await view.locator('[data-review-id]').waitFor();
+      assert.equal(await view.locator('.work-results').evaluate(node=>getComputedStyle(node).display),'grid');
+      assert.equal(await view.locator('.review-row').first().evaluate(node=>getComputedStyle(node).display),'grid');
       if (mode === "web") hold("/api/visual/vis_12345678-abcd/qa");
-      assert.equal(await view.locator(".review-list").evaluate(node => getComputedStyle(node).gridTemplateColumns.split(" ").length), 3);
-      assert.equal(await view.locator(".review-row").first().evaluate(node => getComputedStyle(node).flexDirection), "column");
       await view.locator("[data-review-id]").click();
       if (mode === "web") {
         await view.locator(".qa-review-loading").waitFor();
@@ -341,7 +327,7 @@ test("preserved legacy components and Inspector review support mobile, deep link
       await view.getByRole("button", { name: "Done", exact: true }).click();
       await page.keyboard.press("Escape");
       await view.locator(".qa-stage").waitFor({ state: "detached" });
-      assert.equal(await view.locator(".review-list").evaluate(node => getComputedStyle(node).gap), "28px");
+      assert.equal(await view.locator(".work-results").evaluate(node => getComputedStyle(node).gap), "12px");
       assert.equal(await view.locator(".operator-brand strong").evaluate(node => getComputedStyle(node).color), "rgb(251, 250, 247)");
       await view.locator(".presentation-menu > summary").click();
       await view.getByRole("button", { name: "Switch to light mode", exact: true }).click();
@@ -389,3 +375,4 @@ test("preserved legacy components and Inspector review support mobile, deep link
     }
   } finally { releaseLoading?.(); await browser.close(); await new Promise(resolve => server.close(resolve)); }
 });
+

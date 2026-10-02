@@ -15,7 +15,7 @@ test('mobile Runner stays within the document and the accent scrolls away', {tim
         await route.fulfill({json:body});
       });
       await page.goto(fixture.origin+'/#/runner');
-      await page.locator('.work-card').first().waitFor();
+      await page.locator('.work-item').first().waitFor();
       assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'page has no horizontal overflow at '+width);
       await page.evaluate(()=>window.scrollTo(0,300));
       await page.waitForFunction(()=>scrollY>100);
@@ -67,3 +67,4 @@ test('mobile Inspector exposes all answers and supports real touch pan pinch and
     }
   } finally {await browser.close();await fixture.close();}
 });
+

@@ -188,7 +188,7 @@ test('Reopening during a save cannot replace confirmed responses with an older i
  }finally{releasePost();releaseGet();await browser.close();await fixture.close();}
 });
 
-test('Authorized iframe HTTP, framing and network failures fall back without relying on error events', {timeout:25000},async()=>{
+test('Known iframe failures fall back; cross-origin absence of a handshake is explicitly unconfirmed', {timeout:25000},async()=>{
  const fixture=await contextFixture(),other=await contextFixture(),browser=await chromium.launch();
  try{
   for(const failure of ['http','framing','network','unverified']){
@@ -200,7 +200,7 @@ test('Authorized iframe HTTP, framing and network failures fall back without rel
    await page.route('**/broken-preview',route=>failure==='network'?route.abort('connectionrefused'):route.fulfill({status:failure==='http'?404:200,contentType:'text/html',headers:failure==='framing'?{'Content-Security-Policy':"frame-ancestors 'none'"}:{},body:'<main>Unavailable preview</main>'}));
    await page.goto(fixture.origin+'/inspector#review?evidence='+evidence.evidence_id);await page.locator('.qa-question').waitFor();
    await page.clock.fastForward(9000);
-   assert.equal(await page.locator('.qa-preview-picker select').inputValue(),'captured',failure+' must fall back');
+   assert.equal(await page.locator('.qa-preview-picker select').inputValue(),failure==='unverified'?'live':'captured',failure+' keeps an honest preview state');
    assert.match(await page.locator('.qa-preview-state').innerText(),/unconfirmed/);
    const caption=await page.locator('.qa-preview-state').boundingBox(),panel=await page.locator('.qa-companion').boundingBox(),toggle=await page.locator('.qa-panel-toggle').boundingBox();assert.ok(caption.y>=panel.y+panel.height,'fallback caption stays below the panel');assert.ok(caption.x+caption.width<=toggle.x,'fallback caption stays beside Hide questions');
    assert.equal(await page.evaluate(()=>window.__iframeErrors),0,'browser failure does not provide iframe error proof');
@@ -224,3 +224,4 @@ test('A failed navigation invalidates previously confirmed iframe readiness', {t
   assert.equal(await page.locator('.qa-preview-picker select').inputValue(),'captured');assert.match(await page.locator('.qa-preview-state').innerText(),/unconfirmed/);
  }finally{await browser.close();await fixture.close();}
 });
+
