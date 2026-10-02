@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T05:39:46.814Z",
+  "updated_at": "2026-10-02T05:40:34.638Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -11392,10 +11392,23 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "c5cd616af7a0b177c5f7f077c327010db1ccad32",
-      "state": "active",
+      "state": "superseded",
       "created_at": "2026-10-02T00:38:21.522Z",
-      "updated_at": "2026-10-02T04:35:44.168Z",
-      "lease_until": "2026-10-02T16:35:44.168Z"
+      "updated_at": "2026-10-02T05:40:34.638Z",
+      "lease_until": "2026-10-02T16:35:44.168Z",
+      "retirement": {
+        "at": "2026-10-02T05:40:34.638Z",
+        "intent": {
+          "operation_id": "relay-combined-website-transition-20261002-0540",
+          "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "disposition": "superseded",
+          "reason": "Lauren explicitly combines remaining Mac polish and work-viewer first, then frozen previews, cards last. PR117 released mobile repair only; preserve unfinished criteria.",
+          "evidence": "PR117 merged991cb82f with finalhead88f0a67b, verified deployed source/screenshots. Fresh complete inventory05:36 shows old branch absent, adapter must confirm authenticated404. Direct parent source writer idle; no uncommitted parent code. Mac task01a0f904-803c-7267-b591-ad034bae3022 latestturn failed usage limit, Mac now offline, not resumed. Unpublished Mac bytes remain on that computer, never discarded or claimed recovered. Requirements and partial test reports recovered through task read and carried in amended successor; source will be reconciled against main. Active queued successor acceptance readback at143861f8 carries all outstanding polish and original viewer requirements, approved review semantics, project bar and ordered phases. No branch/PR deletion or false completion.",
+          "superseded_by": "relay-website-work-queue-views-20261001",
+          "branch": "relay/website-post-release-polish-20261002",
+          "head_sha": null
+        }
+      }
     }
   ],
   "migrated_from": "loew-inspector"
