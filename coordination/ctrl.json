@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "ctrl",
-  "updated_at": "2026-10-02T17:34:33.270Z",
+  "updated_at": "2026-10-02T17:50:04.989Z",
   "legacy_branches": [
     "main"
   ],
@@ -106,6 +106,29 @@
       "evidence": "Approved icon family installed; Now final hour markers/coral hand/neutral hub, rebalanced Relay circles. All source quality and admission gates passed; Figma master exports visually reviewed, old masters archived. ctrl PR3 merged d22701e10241639135c80fcb596a1311af7589c3 with protected live build.json verified b6ee44343b76b4dc1b4d4758c06a42b9e85adae4fe74e7bcc6fff02d9d19e419 and successful WorkersBuild8b0a0e27. Relay PR135 merged70644c797746d5a61a1b666efa3ceaf3f0a9608a successful WorkersBuilddd492971. PNG lossless compression preserves pixels. ctrl icon unchanged. User received final Now image libfile_57efde193d2c819183fe56aa9e5dcf47. No native ChatGPT mount claim.",
       "work_accounted": true,
       "completed_at": "2026-10-02T17:34:33.270Z"
+    },
+    {
+      "id": "ctrl-now-ticks-20261002",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "branch": "ctrl/now-ticks-20261002",
+      "paths": [
+        "apps/web/public/brand-assets.json"
+      ],
+      "resources": [
+        "ctrl-now-icon"
+      ],
+      "goal": "Add twelve hour ticks to Now icon as requested.",
+      "acceptance": "Twelve hour markers with stronger quarter marks, unchanged clock face/hands, normal CI and verified deployment.",
+      "next_action": "Publish Figma master PNG and verify release.",
+      "primary_team": "night-shift",
+      "supporting_teams": [],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "base_sha": "d22701e10241639135c80fcb596a1311af7589c3",
+      "state": "active",
+      "created_at": "2026-10-02T17:50:04.989Z",
+      "updated_at": "2026-10-02T17:50:04.989Z",
+      "lease_until": "2026-10-03T05:50:04.989Z"
     }
   ]
 }
