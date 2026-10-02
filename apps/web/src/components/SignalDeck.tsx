@@ -7,6 +7,8 @@ export type SignalCardData = {
   value: string;
   detail: string;
   tone?: string;
+  total?: number;
+  totalLabel?: string;
 };
 
 export function SignalDeck({ cards, feature = "relay" }: { cards: SignalCardData[]; feature?: string }) {
@@ -17,12 +19,13 @@ export function SignalDeck({ cards, feature = "relay" }: { cards: SignalCardData
           <article className="signal-card" data-tone={card.tone || "quiet"} data-signal-id={card.id} key={card.id}>
             <span className="signal-mark" dangerouslySetInnerHTML={{ __html: glyph(telemetryGlyph(card.id)) }} />
             <span className="signal-label">{card.label}</span>
-            <strong data-value-kind={/^[\d.,%]+$/.test(card.value) ? "number" : "text"}>{card.value}</strong>
+            <strong key={"value-"+card.value} data-value-kind={/^[\d.,%]+$/.test(card.value) ? "number" : "text"}>{card.value}</strong>
             <p>{card.detail}</p>
-            <span className="signal-visual-slot" key={card.value} dangerouslySetInnerHTML={{ __html: countVisual(card.value) }} />
+            <span className="signal-visual-slot" key={"visual-"+card.value} dangerouslySetInnerHTML={{ __html: countVisual(card.value, card.total, card.totalLabel) }} />
           </article>
         ))}
       </div>
     </section>
   );
 }
+

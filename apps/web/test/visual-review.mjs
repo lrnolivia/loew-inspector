@@ -39,32 +39,17 @@ async function capture(page, {surface, route, state='settled success', viewport,
       summary.parentElement.open = false;
       getComputedStyle(panel).animationName;
       await new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-      if (phase === 'mid') {
-        await new Promise((resolve,reject) => {
-          const timer = setTimeout(() => {document.removeEventListener('animationstart',started);reject(Error('Entrance animation did not start'));},1500);
-          function started(event) {
-            if(event.target!==panel || event.animationName!=='relay-panel-enter') return;
-            clearTimeout(timer);document.removeEventListener('animationstart',started);
-            // bindMotion sees the event first and creates the bounded blur effect.
-            const effects=panel.getAnimations({subtree:true});
-            for(const animation of effects) {animation.pause();animation.currentTime=60;}
-            resolve();
-          }
-          document.addEventListener('animationstart',started);
-          summary.click();getComputedStyle(panel).transform;
-        });
-      } else {
-        summary.click();getComputedStyle(panel).transform;
-        // The blur starts on animationstart, one frame after the CSS entrance.
-        await new Promise(resolve => requestAnimationFrame(resolve));
-        for (let pass=0; pass<3; pass++) {
-          await Promise.all(panel.getAnimations({subtree:true}).map(animation=>animation.finished.catch(()=>{})));
-          await new Promise(resolve => requestAnimationFrame(resolve));
-        }
+      summary.click();
+      await new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+      if(phase==='rest') {
+        const deadline=performance.now()+2000;
+        while(panel.style.translate && performance.now()<deadline)await new Promise(resolve=>requestAnimationFrame(resolve));
+        if(panel.style.translate)throw Error('Field spring did not settle');
       }
     }, motionFrame);
-    motion = await page.locator('.presentation-panel').evaluate((panel,phase)=>({phase,time_ms:phase==='mid'?60:null,effects:panel.getAnimations({subtree:true}).map(animation=>({id:animation.id,name:animation.animationName||null,duration:animation.effect.getTiming().duration,easing:animation.effect.getTiming().easing,frames:animation.effect.getKeyframes()})),header_filter:getComputedStyle(panel.querySelector('strong')).filter,panel_filter:getComputedStyle(panel).filter}),motionFrame);
-    if(motionFrame==='mid' && !motion.effects.some(effect=>effect.id==='relay-motion-blur')) throw Error('Movement blur was not sampled');
+    motion = await page.locator('.presentation-panel').evaluate((panel,phase)=>({phase,time_ms:null,translate:panel.style.translate,scale:panel.style.scale,effects:panel.getAnimations({subtree:true}).map(animation=>({id:animation.id,name:animation.animationName||null,duration:animation.effect.getTiming().duration,easing:animation.effect.getTiming().easing,frames:animation.effect.getKeyframes()})),header_filter:getComputedStyle(panel.querySelector('strong')).filter,panel_filter:getComputedStyle(panel).filter}),motionFrame);
+    if(motionFrame==='mid' && !motion.translate) throw Error('Field spring movement was not sampled');
+    if(motion.effects.some(effect=>effect.name==='relay-panel-enter'||effect.id==='relay-motion-blur')) throw Error('Legacy motion stacked on the canonical Field spring');
     if(motionFrame==='rest' && (motion.header_filter!=='none'||motion.panel_filter!=='none')) throw Error('Motion failed to settle sharply');
   }
   const geometry = await page.locator('.signal-card').evaluateAll(nodes=>nodes.map(node=>({id:node.dataset.signalId,text:node.innerText,rect:node.getBoundingClientRect().toJSON()})));
@@ -74,7 +59,7 @@ async function capture(page, {surface, route, state='settled success', viewport,
   await page.mouse.move(viewport.width-2,viewport.height-2);
   const screenshot = await page.screenshot({animations:motionFrame==='mid'?'allow':'disabled'});
   await writeFile(directory+'/'+surface+'.png',screenshot);
-  const helper = { title:'Current website visual review', purpose:'Review exact-head preview composition and interaction direction; fixture data is not production.', artifact:{repository:'lrnolivia/relay',head_sha:commit,pr,branch:'relay/website-project-context-polish-20261001',environment:'preview',route}, questions, checklist:['Compare Simple and Rich using the paintbrush preset menu.','Try top and bottom mobile navigation, then reset to Approved.'],overall_verdict:null,known_issues:[], deterministic_evidence:{build:webBuildId,state,viewport,project,geometry},visuals:{evidence_ids:[]} };
+  const helper = { title:'Combined website work views and Field motion checkpoint', purpose:'Review exact-head preview composition and interaction direction; fixture data is not production.', artifact:{repository:'lrnolivia/relay',head_sha:commit,pr,branch:process.env.PREVIEW_BRANCH||'relay/website-work-queue-views-20261001',environment:'preview',route}, questions, checklist:['Compare Simple and Rich using the Settings preset menu.','Try top and bottom mobile navigation, then reset to Approved.'],overall_verdict:null,known_issues:[], deterministic_evidence:{build:webBuildId,state,viewport,project,geometry},visuals:{evidence_ids:[]} };
   const canonical = new URL(route, 'https://relay.loew.fi'); canonical.hash = '';
   const metadata = { request_id:'relay-pr-'+pr+'-'+commit.slice(0,12)+'-'+surface,target_url:canonical.toString(),kind:'pr_preview',context:{project:'relay',project_id:'relay',environment:'preview',surface,route_kind:'other',commit_sha:commit,pr_number:pr},viewport:{width:viewport.width,height:viewport.height,deviceScaleFactor:1},engine:'github-chromium',engine_reason:'pull_request_visual_review',step_label:surface+' — '+state+' fixture',title:'Relay PR #'+pr+' — '+surface,dom:{qa_helper:helper,build:webBuildId,fixture:true,state,geometry,motion,coverage:{layout_test:'apps/web/test/presentation-layout.test.mjs',test:'apps/web/test/motion.test.mjs',mobile_scripted_layers:2,mobile_duration_cap_ms:240,mobile_blur_cap_px:.6,calm_scope:'whole website'}},assertions:[{id:'complete-summary',status:'pass',detail:'All summary cards rendered in ordered responsive grid.'},{id:'page-overflow',status:'pass',detail:'No horizontal document overflow.'},{id:'data-settled',status:'pass',detail:state+' fixture after initial request cycle.'}],trace:[{action:'render_exact_head_fixture',route,preset,project,state,motion_frame:motionFrame}],captured_at:new Date().toISOString() };
   normalizeExternalEvidenceMetadata(metadata); // Enforce the deployed ingest contract before transfer.
@@ -112,7 +97,7 @@ try {
     const viewport={width,height:844},page=await browser.newPage({viewport,colorScheme:'dark'});
     await capture(page,{surface:feature+'-rich-bottom-'+width,route:feature==='inspector'?'/inspector#review':'/#/'+feature,viewport,preset:'rich'});await page.close();
   }
-  for(const preset of ['desktop-header','desktop-bottom']) for(const feature of ['today','inspector']) for(const width of [1024,1440]) {
+  for(const preset of ['approved','desktop-bottom']) for(const feature of ['today','inspector']) for(const width of [1024,1440]) {
     const viewport={width,height:1000},page=await browser.newPage({viewport,colorScheme:'dark'});
     await capture(page,{surface:feature+'-'+preset+'-'+width,route:feature==='inspector'?'/inspector#review':'/#/'+feature,viewport,preset});await page.close();
   }

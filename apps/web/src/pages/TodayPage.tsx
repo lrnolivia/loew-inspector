@@ -1,3 +1,5 @@
+import { WorkViewer } from "../components/WorkViewer";
+import { useWorkItems } from "../components/useWorkItems";
 import { statusLabel, summaryText } from "../../../../packages/shared-ui/presentation-copy.js";
 import { projectHref } from "../../../../packages/shared-ui/project-context.js";
 import { Link } from "react-router-dom";
@@ -20,7 +22,8 @@ function tone(state?: string) {
 }
 
 export function TodayPage() {
-  const { snapshot, state, project: contextProject } = useLiveRelay();
+  const { snapshot, allSnapshot, state, project: contextProject } = useLiveRelay();
+  const workItems = useWorkItems(allSnapshot);
   const all: Array<{ project: string; item: ObservedProgress }> = [];
   for (const [project, payload] of Object.entries(snapshot?.progress || {})) {
     for (const item of payload.progress || []) all.push({ project, item });
@@ -34,9 +37,9 @@ export function TodayPage() {
   const count = (value: number) => incomplete ? value ? `${value}+` : "pending" : String(value);
 
   const cards = [
-    { id: "needs", label: "needs you", value: count(needs.length), detail: incomplete ? "Some projects are still loading or could not refresh." : needs.length ? "A decision, review, or recovery step is waiting." : "Nothing is asking for your attention.", tone: needs.length ? "act" : "quiet" },
-    { id: "moving", label: "moving", value: count(moving.length), detail: incomplete ? "Some projects are still loading or could not refresh." : moving.length ? "Work has reported recent progress." : "No work is reporting progress right now.", tone: moving.length ? "good" : "quiet" },
-    { id: "automatic", label: "automatic checks", value: snapshot ? String(enabled.length) : "pending", detail: !snapshot ? "Checking your automatic schedules." : enabled.length ? "Projects Relay checks for you." : "No automatic checks are enabled.", tone: enabled.length ? "wait" : "quiet" },
+    { id: "needs", total: incomplete ? undefined : current.length, totalLabel: "current work items", label: "needs you", value: count(needs.length), detail: incomplete ? "Some projects are still loading or could not refresh." : needs.length ? "A decision, review, or recovery step is waiting." : "Nothing is asking for your attention.", tone: needs.length ? "act" : "quiet" },
+    { id: "moving", total: incomplete ? undefined : current.length, totalLabel: "current work items", label: "moving", value: count(moving.length), detail: incomplete ? "Some projects are still loading or could not refresh." : moving.length ? "Work has reported recent progress." : "No work is reporting progress right now.", tone: moving.length ? "good" : "quiet" },
+    { id: "automatic", total: incomplete ? undefined : workers.length, totalLabel: "automatic checks", label: "automatic checks", value: snapshot ? String(enabled.length) : "pending", detail: !snapshot ? "Checking your automatic schedules." : enabled.length ? "Projects Relay checks for you." : "No automatic checks are enabled.", tone: enabled.length ? "wait" : "quiet" },
     { id: "freshness", label: "information", value: statusLabel(state), detail: snapshot ? `last refreshed ${new Date(snapshot.fetchedAt).toLocaleTimeString()}` : "waiting for Relay", tone: state === "live" ? "good" : state === "stale" ? "warn" : "quiet" }
   ];
 
@@ -65,15 +68,7 @@ export function TodayPage() {
 
       <section className="operator-section">
         <div className="section-heading"><h2>current work</h2><span>across your projects</span></div>
-        <div className="react-stack">
-          {current.length ? current.slice(0, 10).map(({ project, item }) => (
-            <Link className="today-task" data-tone={tone(item.state)} to={projectHref(`/runner/${encodeURIComponent(project)}/${encodeURIComponent(item.assignment)}`, contextProject)} key={`${project}:${item.assignment}`}>
-              <span className="today-task-project">{projectLabel(project)}</span>
-              <strong className="today-task-title">{item.goal || item.assignment.replace(/[-_]+/g, " ")}</strong>
-              <span className="today-task-state"><StatusLight tone={tone(item.state)} label={statusLabel(item.state)} /></span>
-            </Link>
-          )) : incomplete ? null : <div className="clear-card"><strong>Quiet right now.</strong><span>No current work is moving.</span></div>}
-        </div>
+        <WorkViewer id="today" items={workItems} project={contextProject} incomplete={!allSnapshot || Boolean(allSnapshot.loadingProgress?.length || allSnapshot.failedProgress?.length)} />
       </section>
 
       <section className="operator-section">
@@ -95,3 +90,4 @@ export function TodayPage() {
     </div>
   );
 }
+

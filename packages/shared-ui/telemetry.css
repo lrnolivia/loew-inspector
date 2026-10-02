@@ -42,3 +42,15 @@
   .signal-card, .signal-card:nth-child(n) { grid-column: 1; }
 }
 @media (prefers-reduced-motion: reduce) { .signal-card { animation: none; transform: none; } }
+
+
+.signal-ratio { align-items:center; gap:8px; font-size:11px; color:var(--color-text-secondary); }
+.signal-ratio svg { width:42px; height:42px; flex:0 0 42px; transform:rotate(-90deg); }
+.signal-ratio circle { fill:none; stroke-width:4; }
+.ratio-track { stroke:var(--color-raised); }
+.ratio-value { stroke:var(--status-color,var(--status-info)); stroke-linecap:round; transition:stroke-dasharray .2s ease-out; }
+:root[data-presentation-richness=rich] .signal-card > strong[data-value-kind=number] { animation:signal-count-change .2s ease-out; }
+@keyframes signal-count-change { from { transform:translateY(3px); filter:blur(1px); } to { transform:none; filter:none; } }
+@media(prefers-reduced-motion:reduce) { .ratio-value { transition:none; } :root[data-presentation-richness=rich] .signal-card > strong { animation:none; } }
+:root[data-presentation-motion=calm] .ratio-value { transition:none; }
+:root[data-presentation-motion=calm][data-presentation-richness=rich] .signal-card > strong { animation:none; }

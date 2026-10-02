@@ -57,15 +57,15 @@ test('built website scopes every summary and preserves explicit project context 
       await select(page,'field'); assert.equal(await summary(page,'moving'),'0'); assert.equal(await summary(page,'automatic checks'),'1');
       assert.equal(await page.locator('.attention-card').count(),0); assert.equal(await page.locator('.automation-row').count(),1);
       await page.getByRole('link',{name:/^runner/}).click(); await page.getByRole('heading',{name:'runner',exact:true,level:1}).waitFor(); await settle(page);
-      assert.equal(await page.locator('.work-card').count(),1); assert.equal(await summary(page,'waiting for a response'),'1');
-      await verifySurface(page,'runner',4); await page.getByRole('link',{name:'view live progress'}).click(); await page.locator('.work-detail').waitFor({timeout:5000}).catch(async e=>{throw new Error(JSON.stringify({width,url:page.url(),errors,text:await page.locator('body').innerText()}),{cause:e})});
+      assert.equal(await page.locator('.work-item').count(),1); assert.equal(await summary(page,'waiting for a response'),'1');
+      await verifySurface(page,'runner',4); await page.locator('.work-item .work-open').first().click(); await page.locator('.work-detail').waitFor({timeout:5000}).catch(async e=>{throw new Error(JSON.stringify({width,url:page.url(),errors,text:await page.locator('body').innerText()}),{cause:e})});
       await page.getByRole('link',{name:'← runner'}).click(); await page.getByRole('heading',{name:'runner',exact:true,level:1}).waitFor(); await settle(page);
       assert.ok(page.url().endsWith('#/runner?project=field'));
       await page.getByRole('link',{name:/^night shift/}).click(); await page.getByRole('heading',{name:'night shift',exact:true,level:1}).waitFor(); await settle(page);
-      assert.equal(await summary(page,'included projects'),'1'); assert.equal(await summary(page,'needs attention'),'1'); assert.equal(await page.locator('.night-card').count(),1);
+      assert.equal(await summary(page,'included projects'),'1'); assert.equal(await summary(page,'needs attention'),'1'); assert.equal(await page.locator('.work-item').count(),1);
       await verifySurface(page,'night-shift',4); await page.getByRole('link',{name:/^inspector/}).click(); await settle(page,true); assert.ok(page.url().endsWith('/inspector#review?project=field'));
       assert.equal(await page.locator('#inspector-signal-needs').textContent(),'1'); assert.equal(await page.locator('.review-row').count(),1);
-      await verifySurface(page,'inspector',3);
+      await verifySurface(page,'inspector',2);
       await select(page,'',true); assert.equal(await page.locator('#inspector-signal-needs').textContent(),'2');
       await page.reload(); await settle(page,true); assert.equal(await page.locator('#project-tabs [data-project-id=""]').getAttribute('aria-selected'),'true');
       await select(page,'relay',true); await page.reload(); await settle(page,true); assert.equal(await page.locator('.review-row').count(),1);
@@ -129,9 +129,9 @@ test('compact navigation, full-height rail and local presentation presets remain
       const menu = page.locator('.presentation-menu'); await menu.locator('> summary').click();
       await page.locator('[name=preset]').selectOption('rich');
       assert.equal(await page.locator('html').getAttribute('data-presentation-richness'),'rich');
-      assert.equal(await page.locator('[data-signal-id=moving] .signal-data-visual i').count(),1);
-      assert.equal(await page.locator('[data-signal-id=automatic] .signal-data-visual i').count(),2);
-      assert.equal(await page.locator('.signal-data-visual i').first().evaluate(n=>getComputedStyle(n).animationName),'none');
+      assert.match(await page.locator('[data-signal-id=moving] .signal-ratio').innerText(),/1 of 3 current work items/);
+      assert.match(await page.locator('[data-signal-id=automatic] .signal-ratio').innerText(),/2 of 2 automatic checks/);
+      assert.equal(await page.locator('.signal-ratio .ratio-value').first().evaluate(n=>getComputedStyle(n).transitionDuration),'0s');
       await page.locator('.presentation-customize > summary').click();
       await page.locator('[name=motion]').selectOption('calm');
       assert.equal(await page.locator('[data-presentation-state]').textContent(),'Custom');
@@ -176,3 +176,4 @@ test('spring motion is finite and ends with sharp readable telemetry', async () 
     assert.equal(await page.locator('.signal-card').first().evaluate(node=>getComputedStyle(node).animationName),'none');
   } finally {await browser.close();await fixture.close();}
 });
+

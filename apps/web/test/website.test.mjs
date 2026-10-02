@@ -1,3 +1,4 @@
+import {reviewFixture,workerSource} from "./work-review-fixture.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import http from "node:http";
@@ -24,11 +25,13 @@ test("website entrypoints serve React and expose a deterministic build identity"
 test("actual built website navigation leaves Inspector for React on desktop and mobile", async () => {
   const progress = { project: "relay", progress: [{ assignment: "website-repair", goal: "Restore the Relay website", state: "working", observed: true, stage: "implementation", primary_staff: "nico", next_action: "verify the deployed pages", last_meaningful_progress_at: new Date().toISOString(), events: [] }], queue: [] };
   const workers = [{ id: "relay", name: "relay", enabled: true, runtime: { status: "idle", last_summary: "Website navigation and release verified.", last_run_at: new Date().toISOString() } }];
+  const reviews=reviewFixture(item=>item.kind==='check'?workerSource(workers.find(w=>w.id===item.id)):progress.progress.find(p=>p.assignment===item.id));
   const server = http.createServer(async (req, res) => {
     const url = new URL(req.url, "http://localhost");
     const asset = webAssets[url.pathname];
     if (asset) { res.setHeader("Content-Type", asset.type); return res.end(asset.text); }
     res.setHeader("Content-Type", "application/json");
+    if (url.pathname === "/api/work-review") return res.end(JSON.stringify(await reviews.handle(req)));
     if (url.pathname === "/api/projects") return res.end(JSON.stringify({ projects: [{ id: "relay", name: "relay" }] }));
     if (url.pathname === "/api/workers") return res.end(JSON.stringify(workers));
     if (url.pathname === "/api/progress/relay") return res.end(JSON.stringify(progress));
@@ -54,7 +57,7 @@ test("actual built website navigation leaves Inspector for React on desktop and 
         assert.equal(new URL(page.url()).pathname, "/");
         assert.equal(new URL(page.url()).hash, "#/" + route);
         assert.equal(await page.locator("#root .react-page").count(), 1);
-        assert.equal(await page.getByRole("group", { name: "Project context" }).count(), 1);
+        assert.equal(await page.getByRole("group", { name: "All projects in alphabetical order" }).count(), 1);
         await page.locator('.operator-connection[data-tone="good"]').waitFor();
         await page.locator("[data-progress-notice]").waitFor({ state: "detached" });
         const font = await page.locator(".react-operator-nav .nav-copy strong").first().evaluate(node => getComputedStyle(node).fontFamily);
@@ -70,13 +73,15 @@ test("actual built website navigation leaves Inspector for React on desktop and 
       }
       await page.getByRole("link", { name: /^inspector/ }).click();
       await page.getByRole("heading", { name: "inspector", exact: true, level: 1 }).waitFor();
+      assert.equal(await page.locator(".inspector-card-studio").getAttribute("open"),null);
+      await page.locator(".inspector-card-studio > summary").click();
       await page.locator(".chat-card-preview").waitFor();
       await page.screenshot({ path: `qa-evidence/website/inspector-${viewport.width}.png`, fullPage: true });
       assert.equal(new URL(page.url()).pathname, "/inspector");
       for (const [hash, target] of [["today", "today"], ["projects?project=relay", "runner?project=relay"], ["night-shift", "night-shift"]]) {
         await page.goto(origin + "/inspector#" + hash);
         await page.waitForURL(origin + "/#/" + target);
-        assert.equal(await page.getByRole("group", { name: "Project context" }).count(), 1);
+        assert.equal(await page.getByRole("group", { name: "All projects in alphabetical order" }).count(), 1);
       }
       assert.deepEqual(errors, []);
       await page.close();
@@ -87,3 +92,4 @@ test("actual built website navigation leaves Inspector for React on desktop and 
     await new Promise(resolve => server.close(resolve));
   }
 });
+

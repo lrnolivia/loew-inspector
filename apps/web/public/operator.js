@@ -1,3 +1,6 @@
+import {loadDashboard} from '../src/api.ts';
+import {projectActivity,partitionProjects} from '../../../packages/shared-ui/work-activity.js';
+import {groupedProjects,groupedActivity,projectGroup} from '../../../packages/shared-ui/project-groups.js';
 import { bindMotion } from "../../../packages/shared-ui/motion.js";
 import { bindPresentation, countVisual } from "../../../packages/shared-ui/presentation.js";
 import { bindTheme } from "./theme.js";
@@ -28,7 +31,9 @@ const projectDetail = document.querySelector("#project-detail");
 const appSettings = document.querySelector("#app-settings");
 const sidebar = document.querySelector(".operator-topbar");
 
-let projectIds = [];
+let projectIds = [],recentActivity={},projectSeen={},activityStarted=false;
+try{projectSeen=JSON.parse(localStorage.getItem('relay.project-seen.v1')||'{}')||{};}catch{}
+
 let selectedProject = projectFromHash(location.hash) || null;
 const projectCache = new Map();
 
@@ -107,6 +112,7 @@ function notify(message, tone = "good") {
 async function ensureProjects() {
   if (!projectIds.length) projectIds = await loadProjectIndex();
   renderProjectTabs();
+  if(!activityStarted&&location.pathname==='/inspector'){activityStarted=true;void loadDashboard(snapshot=>{recentActivity={...recentActivity,...groupedActivity(projectActivity(snapshot))};renderProjectTabs();}).catch(()=>{});}
   return projectIds;
 }
 
@@ -116,12 +122,13 @@ function contextProject() {
 
 function renderProjectTabs() {
   if (!projectTabs) return;
-  const items = [{ id: "", label: "all projects" }, ...projectIds.map(id => ({ id, label: projectName(id) }))];
-  projectTabs.innerHTML = items.map(item => {
-    const active = (selectedProject || "") === item.id;
-    const identity = item.id ? iconSlot(item.id) : '<span class="project-tab-all">' + glyph("projects") + '</span>';
-    return '<button class="project-tab' + (active ? " active" : "") + '" type="button" role="tab" aria-selected="' + (active ? "true" : "false") + '" data-project-id="' + esc(item.id) + '">' + identity + '<span>' + esc(item.label) + '</span></button>';
-  }).join("");
+  const groups=groupedProjects(projectIds.map(id=>({id}))),parts=partitionProjects(groups,recentActivity,projectSeen,Date.now(),projectName);
+  const button=(item,fresh=false)=>{
+    const active=projectGroup(selectedProject||'')===item.id,identity=item.id?iconSlot(item.id):'<span class="project-tab-all">'+glyph('projects')+'</span>';
+    return '<button class="project-tab'+(active?' active':'')+'" type="button" role="tab" aria-selected="'+active+'" aria-label="'+esc(item.id?projectName(item.id):'all projects')+'" data-project-id="'+esc(item.id)+'">'+identity+'<span>'+esc(item.id?projectName(item.id):'all projects')+'</span>'+(fresh?'<span class="project-update-label">updated</span>':'')+'</button>';
+  };
+  const group=groups.find(item=>item.id===projectGroup(selectedProject||''));
+  projectTabs.innerHTML=(parts.recent.length?'<div class="project-updates-row" aria-label="Recently updated projects">'+parts.recent.map(item=>button(item,true)).join('')+'</div>':'')+button({id:''})+parts.rest.map(item=>button(item)).join('')+(group?.children.length?'<div class="project-child-tabs">'+group.children.map(item=>'<button type="button" data-project-id="'+esc(item.id)+'" aria-pressed="'+(selectedProject===item.id)+'">'+esc(projectName(item.id))+'</button>').join('')+'</div>':'');
   projectTabs.querySelectorAll("[data-project-id]").forEach(button => {
     button.addEventListener("click", () => chooseProject(button.dataset.projectId));
   });
@@ -131,6 +138,7 @@ function renderProjectTabs() {
 }
 
 async function chooseProject(id) {
+  if(id&&recentActivity[id]){projectSeen={...projectSeen,[id]:recentActivity[id]};try{localStorage.setItem('relay.project-seen.v1',JSON.stringify(projectSeen));}catch{}}
   selectedProject = id || null;
   const next = projectHref("#" + route(), selectedProject);
   if (location.hash !== next) { location.hash = next; return; }
@@ -209,7 +217,7 @@ function updateInspectorSignals() {
   };
   set("inspector-signal-needs", loading || state === "loading" ? "pending" : state === "error" ? "unavailable" : list.dataset.summaryNeeds);
   set("inspector-signal-visible", loading || state === "loading" ? "pending" : state === "error" ? "unavailable" : list.dataset.summaryVisible);
-  set("inspector-signal-previews", previews);
+
   document.querySelectorAll('.inspector-signal-deck .signal-card').forEach(card => {
     const value = card.querySelector('strong').textContent;
     if (card.dataset.visualValue === value) return;
@@ -279,3 +287,4 @@ appSettings?.addEventListener("click", openSettings);
 window.addEventListener("hashchange", () => showPage(route()));
 bindReviewFilters();
 showPage(route()).catch(error => { setConnection("couldn’t connect", "bad"); notify(error.message, "bad"); });
+

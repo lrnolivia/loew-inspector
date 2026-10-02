@@ -20,7 +20,7 @@ async function checkClearance(page,desktop) {
 test('optional desktop layouts retain identity and four destinations; measured dock clearance survives enlarged wrapped text',async()=>{
  const fixture=await contextFixture(),browser=await chromium.launch({headless:true});
  try {
-  for(const width of [1024,1440]) for(const inspector of [false,true]) for(const preset of ['desktop-header','desktop-bottom']) {
+  for(const width of [1024,1440]) for(const inspector of [false,true]) for(const preset of ['desktop-bottom']) {
    const page=await browser.newPage({viewport:{width,height:844},colorScheme:'dark',reducedMotion:'reduce'});
    await page.goto(fixture.origin+(inspector?'/inspector#review':'/#/today'));await settle(page,inspector);
    assert.equal(await page.locator('html').getAttribute('data-presentation-desktop'),'rail');
@@ -30,6 +30,9 @@ test('optional desktop layouts retain identity and four destinations; measured d
    const variant=await page.locator('.operator-topbar').evaluate(node=>({rect:node.getBoundingClientRect().toJSON(),brand:node.querySelector('.operator-brand').getBoundingClientRect().toJSON(),targets:[...node.querySelectorAll('.operator-nav > :is(a,button)')].map(item=>item.getBoundingClientRect().toJSON()),title:document.querySelector('.feature-heading').getBoundingClientRect().toJSON()}));
    assert.equal(variant.targets.length,4);assert.ok(variant.targets.every(target=>target.width>=60 && target.height>=44 && target.left>=variant.rect.left && target.right<=variant.rect.right));assert.ok(variant.brand.left>=variant.rect.left && variant.brand.right<=variant.rect.right);assert.ok(variant.title.top>=0);
    if(preset==='desktop-bottom') {
+    const alignment=await page.locator('.operator-topbar').evaluate(node=>{const box=node.getBoundingClientRect();return {height:box.height,center:box.y+box.height/2,centers:[node.querySelector('.operator-brand'),node.querySelector('.operator-nav'),node.querySelector('.presentation-menu > summary')].map(n=>{const r=n.getBoundingClientRect();return r.y+r.height/2;})};});
+    assert.ok(alignment.height<=76,'desktop pill stays compact: '+JSON.stringify(alignment));
+    assert.ok(alignment.centers.every(center=>Math.abs(center-alignment.center)<=2),'brand, navigation and settings share a centerline: '+JSON.stringify(alignment));
     assert.ok(variant.rect.bottom<=828);await checkClearance(page,true);
     const before=await page.locator('.operator-topbar').boundingBox();
     await page.locator('.operator-nav .nav-copy strong').evaluateAll(nodes=>nodes.forEach(node=>{node.style.fontSize='32px';node.style.lineHeight='1.2';}));

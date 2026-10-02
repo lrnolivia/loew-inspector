@@ -1,3 +1,4 @@
+import {reviewFixture,workerSource} from "./work-review-fixture.mjs";
 import test from "node:test";
 import assert from "node:assert/strict";
 import { fileURLToPath } from "node:url";
@@ -72,6 +73,8 @@ test("Relay 2.0 React shell renders human-first live surfaces responsively", asy
     await page.route("**/api/projects/relay", route => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ coordination: { claims: progress.progress.map(item => ({ id: item.assignment, state: "active" })) } }) }));
     await page.route("**/api/progress/relay*", route => route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify(progress) }));
 
+    const reviews=reviewFixture(item=>item.kind==='check'?workerSource(workers.find(w=>w.id===item.id)):progress.progress.find(p=>p.assignment===item.id));
+    await page.route('**/api/work-review',async route=>route.fulfill({json:await reviews.body(route.request().postDataJSON())}));
     await page.goto(origin + "/#/today");
     await page.locator('.operator-connection[data-tone="good"]').filter({ hasText: "live" }).waitFor();
     await page.locator("[data-progress-notice]").waitFor({ state: "detached" });
@@ -103,10 +106,10 @@ test("Relay 2.0 React shell renders human-first live surfaces responsively", asy
     await page.getByRole("link", { name: /^runner/ }).click();
     await page.getByRole("heading", { name: "runner", level: 1 }).waitFor();
     assert.equal(await page.locator(".signal-card").count(), 4);
-    assert.equal(await page.locator(".work-card").count(), 2);
-    assert.equal(await page.locator(".work-card details").first().getByText("technical details").count(), 1);
-    assert.equal(await page.locator(".work-card").first().locator(".progress-ring").count(), 1);
-    await page.getByRole("link", { name: "view live progress" }).first().click();
+    assert.equal(await page.locator(".work-item").count(), 2);
+    assert.equal(await page.locator(".work-item details").first().getByText("Details").count(), 1);
+    assert.match(await page.locator(".work-item").first().innerText(), /Source:/);
+    await page.locator(".work-item .work-open").first().click();
     await page.locator(".work-detail").waitFor();
     assert.equal(await page.locator(".work-detail .signal-card").count(), 3);
     await page.getByRole("link", { name: "← runner" }).click();
@@ -115,7 +118,7 @@ test("Relay 2.0 React shell renders human-first live surfaces responsively", asy
     await page.getByRole("heading", { name: "night shift", level: 1 }).waitFor();
     assert.equal(await page.locator(".signal-card").count(), 4);
     assert.equal(await page.locator('.signal-card:has-text("will anything happen?")').count(), 1);
-    assert.match(await page.locator(".night-card").first().textContent(), /Night shift verified/);
+    assert.match(await page.locator(".work-item").first().textContent(), /Night shift verified/);
 
     await page.setViewportSize({ width: 390, height: 844 });
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
@@ -143,3 +146,4 @@ test("generated cutover publishes the React control center through the authentic
   assert.match(mcpHtml, /relay_ui_request/);
   assert.match(mcpHtml, /\/inspector#review/);
 });
+
