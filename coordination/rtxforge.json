@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "rtxforge",
-  "updated_at": "2026-10-01T23:05:06.660Z",
+  "updated_at": "2026-10-02T00:05:39.690Z",
   "legacy_branches": [
     "backup/github-main-before-0.5.8",
     "backup/main-0.5.8-ada",
@@ -80,17 +80,27 @@
         "README.md",
         "docs/INSTALLATION.md",
         ".github/workflows/linux-build.yml",
-        ".github/workflows/runner-coordination.yml"
+        ".github/workflows/runner-coordination.yml",
+        "providers/lock.json",
+        "provider.json",
+        "engine/",
+        "scripts/engine_bridge.py",
+        "scripts/library_media.py",
+        "scripts/desktop_service.py",
+        "scripts/ui.py",
+        "scripts/profiles.py",
+        "tests/"
       ],
       "resources": [
         "bazzite-installation-package",
         "provider-preparation",
         "appimage-installation",
-        "runner-work-admission"
+        "runner-work-admission",
+        "native-ada-mfg-configuration"
       ],
       "goal": "Deliver a reproducible Bazzite GNOME x86_64 RTX 4070 installation package using the existing rtxForge UI and pinned DLSS-Unlocked runtime options, local file writes and guarded GitHub sync.",
       "acceptance": "Verified AppImage and installer; read-only host checks; explicit selectable MFG/NR modes; preserve existing settings/backups; verified downloads and repeatable recovery tests. Actual NVIDIA/game/HDR behavior remains unverified until exercised on the user's PC.",
-      "next_action": "User requests Desktop Mode launch/log diagnosis of all four failed runtime tests. Preserve existing logs and deployments; add temporary scoped Proton logging, launch games serially, investigate NVAPI ReflexSync errors and NR input dispatch failure; no global driver changes.",
+      "next_action": "Integrate verified complete DLSS-Unlocked NR-v0.9.33 payload and user-confirmed OW2 native Ada MFG settings; build/install full rtxForge package, reversible game deployment, preserve baseline recovery; continue read-only system-wide scaling/HDR diagnosis preserving desktop sizing.",
       "category": "implementation",
       "primary_role": "implementation",
       "primary_team": "release",
@@ -100,8 +110,8 @@
       "base_sha": "4156ec19515f10af519564699aaebe6adf75c850",
       "state": "active",
       "created_at": "2026-10-01T21:59:59.674Z",
-      "updated_at": "2026-10-01T23:05:06.660Z",
-      "lease_until": "2026-10-02T11:05:06.660Z"
+      "updated_at": "2026-10-02T00:05:39.690Z",
+      "lease_until": "2026-10-02T12:05:39.690Z"
     }
   ]
 }
