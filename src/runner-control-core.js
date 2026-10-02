@@ -220,10 +220,11 @@ async function mutate(api, control, controlRepository, context, args) {
       if (claim.owner !== request.owner) throw new ControlError('ownership', 'Retirement requires the current assignment owner');
       let head;
       try {
-        head = (await api(`${base}/git/ref/heads/${encodeURIComponent(claim.branch)}`))?.object?.sha;
+        head = (await api(`${base}/git/ref/heads/${encodeURIComponent(claim.branch)}`, { requireAuthenticated: true }))?.object?.sha;
         if (!/^[a-f0-9]{40}$/.test(head || '')) throw new ControlError('provider', 'Branch head response is incomplete');
       } catch (error) {
-        if (error.status !== 404) throw error;
+        if (error.status !== 404 || (error.github &&
+          (error.github.phase !== 'resource_request' || error.github.auth_mode === 'public_read' || error.github.auth_mode === 'none'))) throw error;
         head = null;
       }
       // A replay returns its retained receipt even if later external activity changed the branch.

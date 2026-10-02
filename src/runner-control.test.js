@@ -32,7 +32,7 @@ function fixture(options = {}) {
     }
     if (path.includes('/branches?')) return options.branches || [];
     if (path.includes('/git/ref/heads/relay%2Ftask')) {
-      if (options.headError) throw Object.assign(new Error('Head unavailable'), { status: options.headError });
+      if (options.headError) throw Object.assign(new Error('Head unavailable'), { status: options.headError, ...(options.headGithub ? { github: options.headGithub } : {}) });
       return { object: { sha: options.head || sha } };
     }
     if (path.includes('/git/ref/heads/main')) return { object: { sha } };
@@ -70,7 +70,7 @@ test('generated policy is byte-exact Runner source with correct Git blob provena
   assert.deepEqual(source, await readFile(new URL('./coordination.mjs', import.meta.url)));
 });
 test('definitions describe reads and bounded writes with strict server validation', async () => {
-  assert.equal(runnerControlTools.length, 11);
+  assert.equal(runnerControlTools.length, 15);
   assert.ok(runnerControlTools.some(tool => tool.name === 'relay_runner_resume'));
   assert.ok(runnerControlTools.some(tool => tool.name === 'relay_runner_updates'));
   const coordinateTool = runnerControlTools.find(tool => tool.name === 'relay_runner_coordinate');
@@ -180,6 +180,21 @@ test('provider failure classification never echoes provider secrets', () => {
   assert.equal(JSON.stringify(result).includes('secret'), false);
 });
 
+test('Runner exposes allowlisted upstream provenance and distinguishes evidenced GitHub rate limits', () => {
+  const input = Object.assign(new Error('token secret'), { status: 403, code: 'rate_limit', github: {
+    provider: 'github', status: 403, method: 'GET', endpoint: '/repos/lrnolivia/fixture/git/ref/heads/task',
+    phase: 'resource_request', auth_mode: 'github_app_installation', rate_limit_remaining: 0, retry_after_seconds: 60,
+    Authorization: 'secret', body: 'secret', unknown: 'secret'
+  } });
+  const result = runnerControlError(input);
+  assert.equal(result.error.class, 'rate_limit'); assert.equal(result.error.retryable, false);
+  assert.equal(result.error.upstream.status, 403);
+  assert.equal(result.error.upstream.phase, 'resource_request');
+  assert.equal(result.error.upstream.retry_after_seconds, 60);
+  assert.equal(JSON.stringify(result).includes('secret'), false);
+  assert.equal(runnerControlError(Object.assign(new Error('hidden'), { github: { ...input.github, endpoint: '/path?secret=query' } })).error.upstream.endpoint, undefined);
+});
+
 
 test('Runner control authority is configurable for Relay migration and validates owner scope', async () => {
   const f = fixture();
@@ -274,6 +289,26 @@ test('retire treats only confirmed 404 as absent and never accepts caller-verifi
   await assert.rejects(coordinate(f, 'retire', retirement({ owner: 'someone-else' })), /owner/);
   await assert.rejects(coordinate(f, 'retire', retirement(), newSha), /Record changed/);
   assert.equal(f.writes.length, 0);
+});
+
+test('retirement requests authenticated lookup and rejects acquisition/public404 with zero writes', async () => {
+  for (const github of [
+    { phase: 'installation_discovery', auth_mode: 'github_app_jwt' },
+    { phase: 'token_mint', auth_mode: 'github_app_jwt' },
+    { phase: 'resource_request', auth_mode: 'public_read' }
+  ]) {
+    const f = fixture({ claims: [claim()], headError: 404, headGithub: github });
+    await assert.rejects(coordinate(f, 'retire', retirement({ expected_head_sha: null })));
+    assert.equal(f.writes.length, 0);
+  }
+  const f = fixture({ claims: [claim()], headError: 404, headGithub: { phase: 'resource_request', auth_mode: 'github_app_installation' } });
+  const api = async (path, options) => {
+    if (path.includes('/git/ref/heads/relay%2Ftask')) assert.equal(options.requireAuthenticated, true);
+    return f.api(path, options);
+  };
+  const result = await callRunnerControl('relay_runner_coordinate', { project: 'relay', action: 'retire', expected_record_sha: sha,
+    request: retirement({ expected_head_sha: null }) }, {}, api);
+  assert.equal(result.assignment.state, 'cancelled'); assert.equal(f.writes.length, 1);
 });
 test('retire preserves drift and conflict guards and reports uncertain readback without retry', async () => {
   for (const [options, code, writes] of [[{ engineSha: newSha }, 'policy_drift', 0], [{ conflict: true }, 'conflict', 1], [{ readbackUnavailable: true, timeout: true }, 'uncertain_write', 1]]) {

@@ -8,6 +8,7 @@ import {
 } from './runner-control-core.js';
 import { callProgress } from './progress-api.js';
 import { callResume } from './resume-checkpoints.js';
+import { feedbackToolDefinitions, callFeedbackControl } from './feedback-control.js';
 import { callAssignmentUpdates } from './amendment-sync.js';
 import { projectCloudStatus, deployProjectCloudVersion } from './project-cloud.js';
 
@@ -73,6 +74,7 @@ const schema = (properties, required = []) => ({
 });
 
 const DEFINITIONS = [
+  ...feedbackToolDefinitions,
   {
     name: 'relay_runner_projects',
     description: 'DISCOVERY QUERY — list canonical Runner project registrations. Safe to retry. Use this when the project id is unknown; do not infer projects from chat history or fabricate runtime state.',
@@ -96,7 +98,7 @@ const DEFINITIONS = [
   {
     name: 'relay_runner_resume',
     description: 'QUERY — read compact deterministic resume checkpoints from canonical Runner/GitHub/Cloud evidence. Safe to retry. Call this first when resuming interrupted work; unchanged evidence reuses the checkpoint id so chat-history reconstruction is unnecessary.',
-    inputSchema: schema({ project: projectSchema, assignment: identity }, ['project'])
+    inputSchema: schema({ project: projectSchema, assignment: identity, feedback_cursor: text(8192) }, ['project'])
   },
   {
     name: 'relay_runner_updates',
@@ -105,6 +107,7 @@ const DEFINITIONS = [
       project: projectSchema,
       assignment: identity,
       cursor: { type: 'integer', minimum: 0, maximum: 1000000 },
+      feedback_cursor: text(8192),
       checkpoint_id: checkpointSchema,
       recovery_attempts: { type: 'integer', minimum: 0, maximum: 2 }
     }, ['project', 'assignment', 'cursor'])
@@ -151,12 +154,12 @@ export {
   runnerControlRepository
 };
 
-export const runnerControlTools = DEFINITIONS.map(({ mutation, ...definition }) => ({
+export const runnerControlTools = DEFINITIONS.map(({ mutation, idempotent, ...definition }) => ({
   ...definition,
   annotations: {
     readOnlyHint: !mutation,
     destructiveHint: Boolean(mutation),
-    idempotentHint: !mutation,
+    idempotentHint: Boolean(idempotent) || !mutation,
     openWorldHint: true
   }
 }));
@@ -174,7 +177,7 @@ export function validateControlArguments(value, spec, path = 'arguments') {
       if (!(key in value)) throw new ControlError('validation', `${path}.${key} is required`);
     }
     for (const [key, item] of Object.entries(value)) {
-      if (!spec.properties[key]) {
+      if (!Object.hasOwn(spec.properties, key)) {
         if (key === 'base_sha' && path.endsWith('.request')) {
           throw new ControlError('validation', 'base_sha is resolved automatically from live main during claim; omit request.base_sha');
         }
@@ -226,6 +229,7 @@ export async function callRunnerControl(name, args, env, apiOverride) {
       return { ...item, primary_team: assignment?.primary_team || null, supporting_teams: assignment?.supporting_teams || [], primary_staff: assignment?.primary_staff || null, supporting_staff: assignment?.supporting_staff || [], goal: assignment?.goal || null };
     }) };
   }
+  if (feedbackToolDefinitions.some(item => item.name === name)) return callFeedbackControl(name, args, env, apiOverride);
   if (name === 'relay_runner_resume') return callResume(args, env, apiOverride);
   if (name === 'relay_runner_updates') return callAssignmentUpdates(args, env, apiOverride);
   if (name === 'relay_cloud_project') return projectCloudStatus(env, args.project, apiOverride);
@@ -251,12 +255,15 @@ export function runnerControlError(error) {
     error: {
       class: code,
       message: error instanceof ControlError ? error.message : 'Runner provider request failed',
+      ...(safeGithubFailure(error?.github) ? { upstream: safeGithubFailure(error.github) } : {}),
       ...(error?.record_sha ? { record_sha: error.record_sha } : {}),
       retryable: code === 'capacity',
       requires_auth: code === 'auth',
       requires_user: false,
       recovery: code === 'uncertain_write'
         ? 'Inspect the current record and claim; never replay blindly.'
+        : code === 'rate_limit'
+          ? 'Wait for the recorded GitHub rate-limit window, then refresh canonical state and reconcile any uncertain write before another operation. Do not switch identity.'
         : code === 'capacity'
           ? 'Retry after provider capacity clears; refresh canonical state first if a mutation may have started.'
           : code === 'auth'
@@ -267,4 +274,19 @@ export function runnerControlError(error) {
     },
     checked_at: new Date().toISOString()
   };
+}
+
+function safeGithubFailure(value) {
+  if (value?.provider !== 'github') return null;
+  const result = { provider: 'github' };
+  if (Number.isInteger(value.status) && value.status >= 100 && value.status <= 599) result.status = value.status;
+  if (['GET', 'HEAD', 'POST', 'PUT', 'PATCH', 'DELETE'].includes(value.method)) result.method = value.method;
+  if (typeof value.endpoint === 'string' && value.endpoint.length <= 500 &&
+      /^\/[A-Za-z0-9._%\/-]+$/.test(value.endpoint)) result.endpoint = value.endpoint;
+  if (['resource_request', 'installation_discovery', 'token_mint', 'auth_selection'].includes(value.phase)) result.phase = value.phase;
+  if (['github_app_installation', 'github_app_jwt', 'legacy_token', 'authenticated', 'public_read', 'none'].includes(value.auth_mode)) result.auth_mode = value.auth_mode;
+  for (const key of ['rate_limit_remaining', 'rate_limit_reset', 'retry_after_seconds']) {
+    if (Number.isSafeInteger(value[key]) && value[key] >= 0 && value[key] <= 9999999999) result[key] = value[key];
+  }
+  return result;
 }

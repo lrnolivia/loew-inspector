@@ -107,6 +107,15 @@ test("checkpoint contract is compact canonical resume state", () => {
   assert.equal(got.cadence.target_ms, 5 * 60 * 1000);
 });
 
+test('pending feedback and acknowledgement change checkpoint identity without becoming completion', () => {
+  const input = { project: 'relay', assignment, progress: progress(), changedPaths: [], recentCommits: [] };
+  const pending = deriveResumeCheckpoint({ ...input, pendingFeedback: { available: true, events: [{ report_id: 'fixture', revision: 1 }], conflicts: [] } });
+  const acknowledged = deriveResumeCheckpoint({ ...input, pendingFeedback: { available: true, events: [], conflicts: [] } });
+  assert.notEqual(pending.checkpoint_id, acknowledged.checkpoint_id);
+  assert.equal(acknowledged.state, pending.state);
+  assert.equal(acknowledged.pending_feedback.events.length, 0);
+});
+
 test("unchanged evidence dedupes across later read times and worker age ticks", () => {
   const first = checkpoint(progress({ worker: {
     heartbeat_at: "2026-10-01T00:00:00.000Z",

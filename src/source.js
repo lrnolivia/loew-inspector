@@ -51,7 +51,7 @@ function createAppJwt(env) {
   return input + "." + signature;
 }
 
-async function requestGitHub(path, token, options = {}) {
+async function requestGitHub(path, token, options = {}, context = {}) {
   if (typeof path !== "string" || !path.startsWith("/") || path.includes("://")) throw new Error("Invalid GitHub API path");
   const headers = {
     Accept: "application/vnd.github+json",
@@ -61,13 +61,21 @@ async function requestGitHub(path, token, options = {}) {
   if (token) headers.Authorization = "Bearer " + token;
   if (options.body !== undefined) headers["Content-Type"] = "application/json";
 
-  const response = await fetch(GITHUB_API + path, {
-    method: options.method || "GET",
-    headers,
-    body: options.body === undefined ? undefined : JSON.stringify(options.body),
-    signal: AbortSignal.timeout(10000)
-  });
-  const text = await response.text();
+  const github = { provider: 'github', method: options.method || 'GET', endpoint: path.split('?')[0].slice(0, 500),
+    phase: context.phase || 'resource_request', auth_mode: context.auth_mode || (token ? 'authenticated' : 'public_read') };
+  let response, text;
+  try {
+    response = await fetch(GITHUB_API + path, {
+      method: options.method || "GET",
+      headers,
+      body: options.body === undefined ? undefined : JSON.stringify(options.body),
+      signal: AbortSignal.timeout(10000)
+    });
+    text = await response.text();
+  } catch (error) {
+    error.github = github;
+    throw error;
+  }
   let body = null;
   if (text) {
     try { body = JSON.parse(text); }
@@ -76,6 +84,12 @@ async function requestGitHub(path, token, options = {}) {
   if (!response.ok) {
     const error = new Error(body?.message || ("GitHub request failed with " + response.status));
     error.status = response.status;
+    error.github = { ...github, status: response.status };
+    for (const [header, field] of [['x-ratelimit-remaining', 'rate_limit_remaining'], ['x-ratelimit-reset', 'rate_limit_reset'], ['retry-after', 'retry_after_seconds']]) {
+      const value = response.headers.get(header);
+      if (/^\d{1,10}$/.test(value || '')) error.github[field] = Number(value);
+    }
+    if (response.status === 429 || (response.status === 403 && error.github.rate_limit_remaining === 0)) error.code = 'rate_limit';
     throw error;
   }
   return body;
@@ -95,13 +109,13 @@ async function installationToken(env, owner, repo) {
   const jwt = createAppJwt(env);
   const installation = await requestGitHub(
     "/repos/" + encodeURIComponent(owner) + "/" + encodeURIComponent(repo) + "/installation",
-    jwt
+    jwt, {}, { phase: 'installation_discovery', auth_mode: 'github_app_jwt' }
   );
   if (!installation?.id) throw new Error("Relay GitHub App is not installed on " + owner + "/" + repo);
   const created = await requestGitHub(
     "/app/installations/" + installation.id + "/access_tokens",
     jwt,
-    { method: "POST", body: {} }
+    { method: "POST", body: {} }, { phase: 'token_mint', auth_mode: 'github_app_jwt' }
   );
   if (!created?.token) throw new Error("GitHub App installation token was not returned");
   const expiresAt = created.expires_at ? Date.parse(created.expires_at) : Date.now() + 50 * 60 * 1000;
@@ -115,15 +129,23 @@ export async function githubApiRequest(env, path, options = {}) {
   const repo = repositoryFromPath(path);
 
   if (appConfigured(env) && repo) {
+    let token;
     try {
-      const token = await installationToken(env, repo.owner, repo.repo);
-      return await requestGitHub(path, token, options);
+      token = await installationToken(env, repo.owner, repo.repo);
     } catch (error) {
-      if (write || error?.status !== 404) throw error;
+      // Public discovery remains available for an uninstalled repository.
+      // Acquisition failure can never establish absence for a guarded lookup.
+      if (write || options.requireAuthenticated || error?.status !== 404 || error.github?.phase !== 'installation_discovery') throw error;
     }
+    // Once selected, preserve this authenticated identity and its response.
+    // A missing resource is not an invitation to ask another identity.
+    if (token) return requestGitHub(path, token, options, { auth_mode: 'github_app_installation' });
   }
 
-  if (legacyTokenConfigured(env)) return requestGitHub(path, env.RELAY_GITHUB_TOKEN, options);
+  if (legacyTokenConfigured(env)) return requestGitHub(path, env.RELAY_GITHUB_TOKEN, options, { auth_mode: 'legacy_token' });
+  if (options.requireAuthenticated) throw Object.assign(new Error('Authenticated GitHub transport is required for this lookup'), {
+    code: 'auth', github: { provider: 'github', method, endpoint: path.split('?')[0].slice(0, 500), phase: 'auth_selection', auth_mode: 'none' }
+  });
   if (write) throw new Error("relay.SOURCE writes require a Relay GitHub App installation");
   return requestGitHub(path, null, options);
 }

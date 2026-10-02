@@ -1,6 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import { sourceAuthStatus } from "./source.js";
+import { generateKeyPairSync } from 'node:crypto';
+import { sourceAuthStatus, githubApiRequest } from "./source.js";
 
 test("relay.SOURCE status prefers GitHub App auth", () => {
   assert.equal(sourceAuthStatus({}).auth_mode, "public_read");
@@ -9,4 +10,91 @@ test("relay.SOURCE status prefers GitHub App auth", () => {
   assert.equal(app.auth_mode, "github_app");
   assert.equal(app.write_enabled, true);
   assert.equal(app.legacy_token_configured, false);
+});
+
+const { privateKey } = generateKeyPairSync('rsa', { modulusLength: 2048 });
+const appEnv = { RELAY_GITHUB_APP_ID: 'synthetic', RELAY_GITHUB_APP_PRIVATE_KEY: privateKey.export({ type: 'pkcs8', format: 'pem' }) };
+let fixtureNumber = 0;
+function githubFixture(t, config = {}) {
+  const repo = 'synthetic-transport-' + (++fixtureNumber);
+  const path = `/repos/lrnolivia/${repo}/git/ref/heads/fixture%2Fabsent`;
+  const calls = [];
+  t.mock.method(globalThis, 'fetch', async (url, options) => {
+    const endpoint = String(url).replace('https://api.github.com', '');
+    const authenticated = Boolean(options.headers.Authorization);
+    calls.push({ endpoint, method: options.method, authenticated });
+    if (endpoint.endsWith('/installation')) return Response.json({ id: 123 }, { status: config.discoveryStatus || 200 });
+    if (endpoint === '/app/installations/123/access_tokens') return Response.json({ token: 'synthetic-token', expires_at: '2099-01-01T00:00:00Z' }, { status: config.mintStatus || 200 });
+    if (endpoint.split('?')[0] === path) {
+      if (config.timeout) throw Object.assign(new Error('Synthetic timeout with private text'), { name: 'TimeoutError' });
+      return Response.json({ message: 'Synthetic provider-private-text', object: { sha: 'a'.repeat(40) } },
+        { status: authenticated ? config.status || 404 : config.publicStatus || 200, headers: config.headers });
+    }
+    throw new Error('Unexpected mocked path');
+  });
+  return { path, calls };
+}
+
+test('authenticated resource404 remains authoritative without identity fallback, including cached tokens', async t => {
+  const f = githubFixture(t, { status: 404, publicStatus: 403 });
+  for (let i = 0; i < 2; i++) await assert.rejects(githubApiRequest({ ...appEnv, RELAY_GITHUB_TOKEN: 'synthetic-unused-legacy' }, f.path), error =>
+    error.status === 404 && error.github.phase === 'resource_request' && error.github.auth_mode === 'github_app_installation');
+  assert.equal(f.calls.filter(x => x.endpoint === f.path).length, 2);
+  assert.equal(f.calls.filter(x => x.endpoint.endsWith('/installation')).length, 1);
+  assert.equal(f.calls.some(x => !x.authenticated), false);
+});
+
+test('authenticated denial, rate limit, outage and timeout never switch identity', async t => {
+  for (const status of [401, 403, 429, 500]) {
+    const f = githubFixture(t, { status });
+    await assert.rejects(githubApiRequest(appEnv, f.path), error => error.status === status);
+    assert.equal(f.calls.filter(x => x.endpoint === f.path).length, 1);
+    assert.equal(f.calls.some(x => !x.authenticated), false);
+  }
+  const f = githubFixture(t, { timeout: true });
+  await assert.rejects(githubApiRequest(appEnv, f.path), error => error.name === 'TimeoutError' && error.github.phase === 'resource_request');
+  assert.equal(f.calls.some(x => !x.authenticated), false);
+});
+
+test('ordinary uninstalled-repository discovery retains public reads while guarded lookups fail closed', async t => {
+  const publicRead = githubFixture(t, { discoveryStatus: 404 });
+  assert.equal((await githubApiRequest(appEnv, publicRead.path)).object.sha, 'a'.repeat(40));
+  assert.equal(publicRead.calls.at(-1).authenticated, false);
+  const guarded = githubFixture(t, { discoveryStatus: 404 });
+  await assert.rejects(githubApiRequest(appEnv, guarded.path, { requireAuthenticated: true }), error =>
+    error.status === 404 && error.github.phase === 'installation_discovery');
+  assert.equal(guarded.calls.length, 1);
+  const write = githubFixture(t, { discoveryStatus: 404 });
+  await assert.rejects(githubApiRequest(appEnv, write.path, { method: 'POST', body: {} }));
+  assert.equal(write.calls.length, 1);
+});
+
+test('token-mint failures cannot fall back or establish branch absence', async t => {
+  for (const mintStatus of [404, 403]) {
+    const f = githubFixture(t, { mintStatus });
+    await assert.rejects(githubApiRequest(appEnv, f.path), error => error.status === mintStatus && error.github.phase === 'token_mint');
+    assert.equal(f.calls.some(x => x.endpoint === f.path), false);
+    assert.equal(f.calls.some(x => !x.authenticated), false);
+  }
+});
+
+test('legacy authenticated404 is preserved and no-credential guarded lookup makes zero requests', async t => {
+  const legacy = githubFixture(t, { status: 404 });
+  await assert.rejects(githubApiRequest({ RELAY_GITHUB_TOKEN: 'synthetic-legacy-token' }, legacy.path, { requireAuthenticated: true }), error =>
+    error.status === 404 && error.github.auth_mode === 'legacy_token');
+  assert.equal(legacy.calls.length, 1); assert.equal(legacy.calls[0].authenticated, true);
+  const empty = githubFixture(t);
+  await assert.rejects(githubApiRequest({}, empty.path, { requireAuthenticated: true }), error => error.code === 'auth');
+  assert.equal(empty.calls.length, 0);
+});
+
+test('upstream rate-limit provenance is explicit while provider payloads stay out of diagnostics', async t => {
+  const f = githubFixture(t, { status: 403, headers: { 'x-ratelimit-remaining': '0', 'x-ratelimit-reset': '1790900000', 'retry-after': '60' } });
+  await assert.rejects(githubApiRequest(appEnv, f.path + '?sensitive-query=hidden'), error => {
+    assert.equal(error.code, 'rate_limit'); assert.equal(error.github.status, 403);
+    assert.equal(error.github.rate_limit_remaining, 0); assert.equal(error.github.retry_after_seconds, 60);
+    assert.equal(error.github.endpoint.includes('?'), false);
+    assert.equal(JSON.stringify(error.github).includes('hidden'), false);
+    return true;
+  });
 });
