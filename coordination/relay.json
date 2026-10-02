@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T08:10:17.371Z",
+  "updated_at": "2026-10-02T08:11:45.782Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -11694,12 +11694,20 @@
         "packages/runner/src/human-qa.mjs",
         "packages/runner/src/cloudflare-worker.mjs",
         ".github/workflows/ci.yml",
-        "docs/relay/RETAINED_PREVIEWS_20261002.md"
+        "docs/relay/RETAINED_PREVIEWS_20261002.md",
+        "apps/web/retained-bundle.mjs",
+        "apps/web/retained-fixture.js",
+        "apps/web/public/qa-panel.js",
+        "apps/web/verify-production.mjs"
       ],
-      "resources": [],
+      "resources": [
+        "retained-preview-storage",
+        "inspector-retained-review",
+        "relay-preview-pipeline"
+      ],
       "goal": "Preserve exact isolated interactive review builds after the first combined website release, directly in this chat without coding workers.",
       "acceptance": "Immutable exact-commit bundled UI assets and explicit synthetic fixture data; no mutable live URL treated as retained evidence. Interactive sandbox cannot access production data, credentials, storage or mutation APIs; no browser security-policy bypass. Pending approval retained indefinitely; approval starts 30-day availability, reopening restores pending retention. Expiry is reversible metadata, never automatic irreversible bucket purge. Inspector opens retained build linked to exact evidence/build with readiness and truthful labels. Tests cover immutable upload identity, sandbox boundaries, malicious paths/HTML, retention/approval changes, interrupted navigation, mobile/desktop interactions, and exact stored/readback hashes. No new credentials or persistent grants. Existing screenshots and live-preview paths preserved.",
-      "next_action": "First website batch verified in production. Implement immutable self-contained Relay review builds using synthetic in-memory data, opaque nested sandbox and existing protected R2/API paths; link exact Inspector evidence, explicit human build approval retention and reversible expiry. No new credentials, workers or production source mutations in preview.",
+      "next_action": "Create exact bundled React/Inspector assets with in-memory fixture API and embedded fonts. Serve only through existing authenticated API as trusted wrapper with opaque nested iframe. Premerge tests use candidate server/emulated R2; production upload/readback runs after deployment, never requires unavailable new endpoint before merge. Add explicit retained option and human build approval/reopen. Preserve original live/captured modes and existing production screenshot checks.",
       "category": "implementation",
       "primary_team": "inspector",
       "supporting_teams": [],
@@ -11708,8 +11716,8 @@
       "base_sha": "394dda502d96d8c3d96687e4912803ed66fc48a8",
       "state": "active",
       "created_at": "2026-10-02T08:10:17.371Z",
-      "updated_at": "2026-10-02T08:10:17.371Z",
-      "lease_until": "2026-10-02T20:10:17.371Z"
+      "updated_at": "2026-10-02T08:11:45.782Z",
+      "lease_until": "2026-10-02T20:11:45.782Z"
     }
   ],
   "migrated_from": "loew-inspector"
