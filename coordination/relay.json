@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T07:31:29.731Z",
+  "updated_at": "2026-10-02T07:33:02.142Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6760,7 +6760,7 @@
       "supporting_teams": [],
       "primary_staff": "julian",
       "supporting_staff": [],
-      "state": "claimed",
+      "state": "superseded",
       "created_at": "2026-10-01T19:26:50.861Z",
       "amendment_count": 2,
       "amendments": [
@@ -6799,7 +6799,20 @@
           }
         }
       ],
-      "updated_at": "2026-10-02T05:39:46.814Z"
+      "updated_at": "2026-10-02T07:33:02.142Z",
+      "retirement": {
+        "at": "2026-10-02T07:33:02.142Z",
+        "intent": {
+          "operation_id": "relay-website-evidence-index-serial-20261002",
+          "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "disposition": "superseded",
+          "reason": "Production Inspector lookup truncates the first1000 R2 objects, so new successfully stored captures become404. A serial backend recovery must ship before final website readback can pass. Replace the website publication branch while preserving all code, requirements and QA.",
+          "evidence": "Writer is this parent only and source writes are stopped. PR118 https://github.com/lrnolivia/relay/pull/118 retained at0b843e3289f2db3946d56706e968fab099d747d1; all staged product/harness changes committed there, exact quality and admission pass. Earlier ba0558 run36977101759 retained36 captures; latest run36978489055 fails production image lookup vis_fb3a86b0-7c1e-4026-a75e-36983623d3c8 after successful ingest, code-confirmed listAllObjects cap1000. No branch/PR deletion, no false completion or deployment. New queued successor copies the entire acceptance/scope and preserves PR117/Mac-polish/motion/workviewer/ctrl-plan requirements. Next bounded backend index recovery, then NEW main-based successor branch transplants this exact product diff and repeats required checks. No coding workers launched.",
+          "superseded_by": "relay-website-catchup-release-20261002",
+          "branch": "relay/website-work-queue-views-20261001",
+          "head_sha": "0b843e3289f2db3946d56706e968fab099d747d1"
+        }
+      }
     },
     {
       "id": "relay-website-notification-center-20261001",
@@ -11535,10 +11548,23 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "08dd73c373c11f9ee5424af7b8b1de6b639b2fe4",
-      "state": "active",
+      "state": "superseded",
       "created_at": "2026-10-02T05:41:04.299Z",
-      "updated_at": "2026-10-02T07:22:19.654Z",
-      "lease_until": "2026-10-02T19:22:19.654Z"
+      "updated_at": "2026-10-02T07:33:02.142Z",
+      "lease_until": "2026-10-02T19:22:19.654Z",
+      "retirement": {
+        "at": "2026-10-02T07:33:02.142Z",
+        "intent": {
+          "operation_id": "relay-website-evidence-index-serial-20261002",
+          "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "disposition": "superseded",
+          "reason": "Production Inspector lookup truncates the first1000 R2 objects, so new successfully stored captures become404. A serial backend recovery must ship before final website readback can pass. Replace the website publication branch while preserving all code, requirements and QA.",
+          "evidence": "Writer is this parent only and source writes are stopped. PR118 https://github.com/lrnolivia/relay/pull/118 retained at0b843e3289f2db3946d56706e968fab099d747d1; all staged product/harness changes committed there, exact quality and admission pass. Earlier ba0558 run36977101759 retained36 captures; latest run36978489055 fails production image lookup vis_fb3a86b0-7c1e-4026-a75e-36983623d3c8 after successful ingest, code-confirmed listAllObjects cap1000. No branch/PR deletion, no false completion or deployment. New queued successor copies the entire acceptance/scope and preserves PR117/Mac-polish/motion/workviewer/ctrl-plan requirements. Next bounded backend index recovery, then NEW main-based successor branch transplants this exact product diff and repeats required checks. No coding workers launched.",
+          "superseded_by": "relay-website-catchup-release-20261002",
+          "branch": "relay/website-work-queue-views-20261001",
+          "head_sha": "0b843e3289f2db3946d56706e968fab099d747d1"
+        }
+      }
     }
   ],
   "migrated_from": "loew-inspector"
