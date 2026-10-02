@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T11:49:56.206Z",
+  "updated_at": "2026-10-02T11:50:06.369Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -11766,6 +11766,31 @@
       "evidence": "PR122 merged b9702eeb5f87c07d6931d7ea267e41b9e3c1c5c7; full candidate CI37001640605 and all8 stored card captures hash-readback pass. Workers production e8fc6779-6582-4bbe-ae68-646ff132bc19 at100%, exact source/build check passed in37002316842 before later GET ECONNRESET interrupted screenshot readback. That remaining pipeline verification is tracked next as relay-production-readback-recovery-20261002; no claim of complete postdeploy receipt or native Linux host proof. Original legacy bytes preserved and all source work accounted.",
       "work_accounted": true,
       "completed_at": "2026-10-02T11:49:56.206Z"
+    },
+    {
+      "id": "relay-production-readback-recovery-20261002",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "branch": "relay/production-readback-recovery-20261002",
+      "paths": [
+        "apps/web/verify-production.mjs",
+        "apps/web/readback.mjs",
+        "apps/web/test/readback.test.mjs"
+      ],
+      "resources": [
+        "relay-production-readback-recovery"
+      ],
+      "goal": "Finish postdeployment Relay verification after a transient read connection reset without replaying writes.",
+      "acceptance": "Add bounded transient retries only for safe idempotent evidence GET/readback operations; never retry uploads/mutations or auth/permission failures. Preserve exact-source/build checks and all evidence hash assertions. Full tests pass, then normal GitHub Workers release verifies complete production captures and retained interactive build. No denied rerun API workaround, manual deploy, or dummy commit.",
+      "next_action": "Fix the evidenced GET ECONNRESET at verifyEvidenceReadback with bounded read-only retry and test failure classification; publish a small normal source PR and verify the new full postdeploy receipt.",
+      "primary_team": "release",
+      "supporting_teams": [],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "base_sha": "98e9a110b9b9bf3884d58e9ae92964ee9318644e",
+      "state": "active",
+      "created_at": "2026-10-02T11:50:06.369Z",
+      "updated_at": "2026-10-02T11:50:06.369Z",
+      "lease_until": "2026-10-02T23:50:06.369Z"
     }
   ],
   "migrated_from": "loew-inspector"
