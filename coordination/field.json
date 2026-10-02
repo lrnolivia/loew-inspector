@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-10-02T05:05:29.413Z",
+  "updated_at": "2026-10-02T05:05:59.180Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -618,16 +618,16 @@
       ],
       "goal": "Integrate the preserved unpublished Mobile Focus and touch camera work onto shipped main, retaining approved design and documented selection/text/hierarchy behavior.",
       "acceptance": "Preserve all 26 original file bytes, staged and unstaged patches and hashes; account for every recovered change.\nPortrait sheet, landscape overlay and desktop return preserve stored workspace preferences; only one mobile panel host is open.\nSingle-touch selection and drag use existing Canvas semantics; empty-space pan, hold marquee/context menu, second-finger cancellation, anchored pinch and camera pan preserve source and undo behavior.\nTouch resize/rotate/scale targets and header touch routes preserve desktop pointer/keyboard handling.\nText editing and software-keyboard viewport positioning are tested; actual iPhone keyboard/rotation evidence is required for iOS-specific claims, with missing device access recorded as unverified.\nFocused meaningful tests and browser interactions/renders are bound to exact head; full current-main versus candidate failure fingerprints distinguish baseline failures from regressions.\nAll production builds and lint run on Node22; draft Mobile PR targets current main for review; no merge or deployment without new approval.",
-      "next_action": "Exact preserved checkpoint now tested: new mobile toolbar assertions and real browser launcher fail because BottomToolbar implementation was absent from saved26files. Add missing bounded responsive launcher implementation in BottomToolbar, preserving desktop structure and tools. Desktop auto-hide regression reproduced false!=true, repair existing admitted store. Two-finger browser pan also failed; diagnose actual event/geometry before changing assertions. No merge/deploy and no workers.",
+      "next_action": "RELEASE HOLD: Lauren rejected resized desktop panels as portrait sheets and requested FAB plus purpose-built portrait interaction paradigm at 05:04:39 UTC (Sentinel_fdb55c209dfc8191886df276eb020fa3). Preserve PR138 head9ce5bb839050ef94e434e13079cab319a3e64711 and all recovered26file provenance; focused/browser/build and baseline comparison passed, 58 shared failures, physical iPhone NOT RUN. Prepare portrait design before further implementation; no merge/deploy or workers. Unified chrome and gallery/button audit remain tracked in field-unified-chrome-neutrachrome-20261002.",
       "primary_team": "night-shift",
       "supporting_teams": [],
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "bad3630cdcb6c52ca787ccbb94fc70978f8f2d05",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-10-02T00:48:40.339Z",
-      "updated_at": "2026-10-02T04:08:03.544Z",
-      "lease_until": "2026-10-02T16:08:03.544Z"
+      "updated_at": "2026-10-02T05:05:59.180Z",
+      "lease_until": "2026-10-02T17:05:59.180Z"
     }
   ]
 }
