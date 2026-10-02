@@ -36,9 +36,9 @@ test('mobile Inspector exposes all answers and supports real touch pan pinch and
       await page.waitForFunction(()=>document.querySelector('.qa-camera')?.style.transform.includes('scale('));
       assert.equal(await page.locator('.qa-question-content').evaluate(n=>n.scrollHeight<=n.clientHeight+1),true,'normal question needs no internal scroll');
       const panel=await page.locator('.qa-companion').boundingBox();
-      for(const selector of ['[data-qa-answer=yes]','[data-qa-answer=no]','[data-qa-answer=unsure]','[data-qa-finish]']) {
+      for(const selector of ['[data-qa-answer=yes]','[data-qa-answer=no]','[data-qa-answer=not_sure]','[data-qa-finish]']) {
         const button=page.locator(selector);
-        if(!await button.count()) continue;
+        assert.equal(await button.count(),1,selector+' exists');
         const box=await button.boundingBox();
         assert.ok(box.y>=panel.y && box.y+box.height<=panel.y+panel.height+1,selector+' visible in panel');
       }

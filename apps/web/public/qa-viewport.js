@@ -61,6 +61,10 @@ export function createQaViewport(stage, { mode = "captured" } = {}) {
 
   let transform = { x: 0, y: 0, scale: 1 };
   let pan = null;
+  const touches = new Map();
+  const oldTouchAction = viewport.style.touchAction;
+  const oldGesturePointerEvents = gestureLayer.style.pointerEvents;
+  if (mode === "captured") { viewport.style.touchAction = "none"; gestureLayer.style.pointerEvents = "auto"; }
   let spaceDown = false;
   let initialized = false;
   let resizeFrame = 0;
@@ -109,10 +113,33 @@ export function createQaViewport(stage, { mode = "captured" } = {}) {
     stage.classList.add("qa-camera-panning");
   };
   const onPointerDown = event => {
+    if (event.pointerType === "touch" && mode === "captured") {
+      event.preventDefault();
+      touches.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      try { viewport.setPointerCapture(event.pointerId); } catch {}
+      stage.classList.add("qa-camera-panning");
+      return;
+    }
     if (event.button === 1) { event.preventDefault(); beginPan(event, "middle"); return; }
     if (spaceDown && event.button === 0) { event.preventDefault(); beginPan(event, "space"); }
   };
   const onPointerMove = event => {
+    if (touches.has(event.pointerId)) {
+      event.preventDefault();
+      const before = [...touches.values()].slice(0, 2);
+      touches.set(event.pointerId, { x: event.clientX, y: event.clientY });
+      const after = [...touches.values()].slice(0, 2);
+      if (after.length === 1) panBy(after[0].x - before[0].x, after[0].y - before[0].y);
+      else {
+        const oldMid = { x: (before[0].x + before[1].x) / 2, y: (before[0].y + before[1].y) / 2 };
+        const mid = { x: (after[0].x + after[1].x) / 2, y: (after[0].y + after[1].y) / 2 };
+        const oldDistance = Math.hypot(before[0].x - before[1].x, before[0].y - before[1].y);
+        const distance = Math.hypot(after[0].x - after[1].x, after[0].y - after[1].y);
+        panBy(mid.x - oldMid.x, mid.y - oldMid.y);
+        if (oldDistance > 0 && distance > 0) zoomAt(mid.x, mid.y, distance / oldDistance);
+      }
+      return;
+    }
     if (!pan || pan.pointerId !== event.pointerId) return;
     const dx = event.clientX - pan.x;
     const dy = event.clientY - pan.y;
@@ -121,6 +148,11 @@ export function createQaViewport(stage, { mode = "captured" } = {}) {
     panBy(dx, dy);
   };
   const endPan = event => {
+    if (touches.delete(event.pointerId)) {
+      try { viewport.releasePointerCapture(event.pointerId); } catch {}
+      if (!touches.size) stage.classList.remove("qa-camera-panning");
+      return;
+    }
     if (!pan || (event.pointerId != null && pan.pointerId !== event.pointerId)) return;
     try { viewport.releasePointerCapture(pan.pointerId); } catch {}
     pan = null;
@@ -149,6 +181,13 @@ export function createQaViewport(stage, { mode = "captured" } = {}) {
       panBy(Number(data.dx) || 0, Number(data.dy) || 0);
     }
   };
+  const resetTouch = () => {
+    for (const id of touches.keys()) { try { viewport.releasePointerCapture(id); } catch {} }
+    touches.clear();
+    if (pan) endPan({ pointerId: pan.pointerId });
+    stage.classList.remove("qa-camera-panning", "qa-space-pan");
+    spaceDown = false;
+  };
   const onResize = () => {
     cancelAnimationFrame(resizeFrame);
     resizeFrame = requestAnimationFrame(() => { if (!initialized) fit(); else apply(); });
@@ -162,6 +201,7 @@ export function createQaViewport(stage, { mode = "captured" } = {}) {
   window.addEventListener("keydown", onKeyDown, true);
   window.addEventListener("keyup", onKeyUp, true);
   window.addEventListener("message", onMessage);
+  window.addEventListener("blur", resetTouch);
   const resizeObserver = typeof ResizeObserver === "function" ? new ResizeObserver(onResize) : null;
   resizeObserver?.observe(viewport);
   requestAnimationFrame(fit);
@@ -170,6 +210,10 @@ export function createQaViewport(stage, { mode = "captured" } = {}) {
     fit,
     getTransform: () => ({ ...transform }),
     destroy() {
+      resetTouch();
+      viewport.style.touchAction = oldTouchAction;
+      gestureLayer.style.pointerEvents = oldGesturePointerEvents;
+      window.removeEventListener("blur", resetTouch);
       cancelAnimationFrame(resizeFrame);
       resizeObserver?.disconnect();
       viewport.removeEventListener("wheel", onWheel);

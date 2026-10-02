@@ -179,3 +179,6 @@ body { padding-top: 4px; }
  .qa-companion { max-height: calc(100dvh - 32px); }
  .qa-panel-body { overflow-y: auto; min-height: 0; }
 }
+
+@media(max-width:900px) { .terra-accent {position:absolute;} }
+body.qa-open .terra-accent {visibility:hidden;}
