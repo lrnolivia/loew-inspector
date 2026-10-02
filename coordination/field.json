@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-10-02T04:08:03.544Z",
+  "updated_at": "2026-10-02T04:51:56.008Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -231,6 +231,27 @@
       "supporting_staff": [],
       "state": "claimed",
       "created_at": "2026-10-02T00:08:33.200Z"
+    },
+    {
+      "id": "field-unified-chrome-neutrachrome-20261002",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "goal": "Finish Field's shared panel chrome and tool menu presentation, add verified Terra Prime green/pink and neutrachrome accents.",
+      "acceptance": "Lauren04:48-04:50QA: floating Inspector top belongs to unified chrome, not separate square bar; Media belongs in far-left panel and its bottom-toolbar affordance is a real menu with chevron. Keep approved tile appearance but two wide/narrow horizontal tiles per row. Primary2or4 choices as icon tiles, remaining choices as list rows; include Move/Hand/Scale and Pen, preserve all actions/shortcuts and keyboard/touch operation. Use theme-aware accent color in small menus, lighter variants in dark, darker in light while meeting contrast. Slightly lighten card/section surfaces in Inspector and port same styling to left panels via shared tokens/components. Add canonical Terra Prime green and pink options from real design tokens, do not guess hues. Add warm-neutral accent neutrachrome (corrected spelling Sentinel_e38ed4c9ae808191804cc8926a0492de), dark/light variants tuned to gray surfaces. Preserve Field identity and Figma behavior, not visual-clone redesign. Reference screenshots libfile_9865c9cf61108191aefe9168e8ac077f and libfile_a68fd60431988191b2b5643478115898 inspected: square detached upper-right bar and dark blending section cards visible, no runtime hash embedded. Keep recovered Mobile PR138 regression fixes intact. Direct Relay only, no workers.",
+      "next_action": "Read existing LOEW_THEME and builder theme/chrome components, resolve canonical Terra Prime palette, prepare scoped refinement after current Mobile integration without letting new notes displace it. Need actual runtime/theme contrast and menu interaction verification; no source edits under queued task and no merge/deploy implied.",
+      "paths": [
+        "src/editor/",
+        "src/shared/builder-themes.ts",
+        "src/shared/editor-neutral-theme.ts",
+        "src/styles/"
+      ],
+      "resources": [],
+      "category": "implementation",
+      "primary_team": "inspector",
+      "supporting_teams": [],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "state": "queued",
+      "created_at": "2026-10-02T04:51:56.008Z"
     }
   ],
   "claims": [
