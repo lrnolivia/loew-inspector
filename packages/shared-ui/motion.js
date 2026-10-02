@@ -7,7 +7,7 @@ export function bindMotion() {
   const enabled = () => !reduced.matches && document.documentElement.dataset.presentationMotion !== 'calm' && !document.hidden;
   const cancel = () => { for (const animation of active) animation.cancel(); active.clear(); };
   const blur = (element, duration) => {
-    if (!enabled() || !(element instanceof Element) || !element.animate) return;
+    if (!enabled() || !(element instanceof Element) || !element.animate || element.closest('[data-loew-spring="true"]')) return;
     const mobile = innerWidth <= 900, rect = element.getBoundingClientRect();
     if (!rect.width || !rect.height || rect.bottom < 0 || rect.top > innerHeight) return;
     if (element.matches(".operator-topbar,.qa-companion,.presentation-panel") || rect.width * rect.height > (mobile ? 80000 : 160000)) {
@@ -49,4 +49,3 @@ export function bindMotion() {
   document.addEventListener('visibilitychange', preference); reduced.addEventListener('change', preference);
   return () => {fieldCleanup();cancel();observer.disconnect();document.removeEventListener('transitionrun',transition);document.removeEventListener('animationstart',animation);document.removeEventListener('visibilitychange',preference);reduced.removeEventListener('change',preference);};
 }
-

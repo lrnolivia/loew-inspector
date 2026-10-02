@@ -32,6 +32,6 @@
 
 /* Field owns semantic glyph feedback; avoid stacking older hover transitions. */
 [data-loew-glyph] { transform-box:fill-box; transform-origin:center; transition:none !important; }
-[data-loew-spring=true].presentation-panel { animation:none; }
+:root .presentation-menu[open] .presentation-panel[data-loew-spring=true] { animation:none !important; }
 @media(prefers-reduced-motion:reduce){[data-loew-glyph]{transform:none !important;}}
 :root[data-presentation-motion=calm] [data-loew-glyph]{transform:none !important;}

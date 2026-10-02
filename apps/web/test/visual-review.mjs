@@ -49,6 +49,7 @@ async function capture(page, {surface, route, state='settled success', viewport,
     }, motionFrame);
     motion = await page.locator('.presentation-panel').evaluate((panel,phase)=>({phase,time_ms:null,translate:panel.style.translate,scale:panel.style.scale,effects:panel.getAnimations({subtree:true}).map(animation=>({id:animation.id,name:animation.animationName||null,duration:animation.effect.getTiming().duration,easing:animation.effect.getTiming().easing,frames:animation.effect.getKeyframes()})),header_filter:getComputedStyle(panel.querySelector('strong')).filter,panel_filter:getComputedStyle(panel).filter}),motionFrame);
     if(motionFrame==='mid' && !motion.translate) throw Error('Field spring movement was not sampled');
+    if(motion.effects.some(effect=>effect.name==='relay-panel-enter'||effect.id==='relay-motion-blur')) throw Error('Legacy motion stacked on the canonical Field spring');
     if(motionFrame==='rest' && (motion.header_filter!=='none'||motion.panel_filter!=='none')) throw Error('Motion failed to settle sharply');
   }
   const geometry = await page.locator('.signal-card').evaluateAll(nodes=>nodes.map(node=>({id:node.dataset.signalId,text:node.innerText,rect:node.getBoundingClientRect().toJSON()})));
