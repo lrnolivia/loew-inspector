@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T07:33:02.142Z",
+  "updated_at": "2026-10-02T07:34:34.882Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7168,6 +7168,31 @@
       "supporting_staff": [],
       "state": "queued",
       "created_at": "2026-10-02T07:31:29.731Z"
+    },
+    {
+      "id": "relay-evidence-index-recovery-20261002",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "goal": "Repair production Inspector evidence lookup and recent listing beyond1000 stored objects, preserving all captures and QA.",
+      "acceptance": "Exact evidence IDs resolve regardless of position in paginated legacy storage; new captures receive additive direct/recent indexes. Newest evidence list remains truthful and bounded, exposes partial legacy results rather than silently treating a truncated prefix as complete. No deletes or auth changes. Regression tests exceed1000 objects, exercise date boundaries, missing/corrupt records, pagination and immutable original objects. Full CI and exact production lookup of previously404 capture pass. Then return to preserved PR118 website successor; no workers.",
+      "next_action": "Implement bounded additive indexes and legacy pagination; draft narrow backend PR, test, ship and verify prior404 evidence before resuming full website successor.",
+      "paths": [
+        "src/evidence.js",
+        "src/evidence-index.js",
+        "src/evidence-index.test.js",
+        "packages/runner/src/visual-evidence.mjs",
+        "packages/runner/test/visual-evidence.test.mjs",
+        "docs/relay/EVIDENCE_INDEX_RECOVERY_20261002.md"
+      ],
+      "resources": [
+        "visual-evidence-storage"
+      ],
+      "category": "maintenance",
+      "primary_team": "inspector",
+      "supporting_teams": [],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "state": "queued",
+      "created_at": "2026-10-02T07:34:34.882Z"
     }
   ],
   "claims": [
