@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T01:53:53.229Z",
+  "updated_at": "2026-10-02T01:54:29.589Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6931,8 +6931,22 @@
       "supporting_teams": [],
       "primary_staff": "julian",
       "supporting_staff": [],
-      "state": "claimed",
-      "created_at": "2026-10-02T01:03:23.262Z"
+      "state": "superseded",
+      "created_at": "2026-10-02T01:03:23.262Z",
+      "updated_at": "2026-10-02T01:54:29.589Z",
+      "retirement": {
+        "at": "2026-10-02T01:54:29.589Z",
+        "intent": {
+          "operation_id": "julian-card-variants-transition-20261002-0154",
+          "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "disposition": "superseded",
+          "reason": "Lauren explicitly requests multiple isolated card candidates then Field/Relay work, directly without workers; preserve unresolved host criteria and do not reuse merged branch.",
+          "evidence": "PR114 reviewed65d54e77 merged74dfdf8f8a398a71fe1ea4954186ac7ed84e37c5 and deployed exactbuildb2fc6383/deploybe8e9061/versioneaa73ee0100%; controlhealthPASS. No local source writer exists: all parent writes through guarded Relay, sourcecommits inPR114 and no further writes, workerthreads stopped. Previous claim next_action preserves postmerge test failure and403rerun denial, actual user refreshedMac no-card result, unknown invocation URI and all earliernativecriteria. New successor acceptance preserves these and tests separate metadata-only/static/bootstrap explanations. No branch/PR deletion or completed claim. Retirement must independently confirm absent merged branch by authenticated404. Website stopped at usage with unpublishedMacwork preserved; no old CLI process resumed.",
+          "superseded_by": "relay-card-mount-variants-20261002",
+          "branch": "relay/context-card-packaging-20261002",
+          "head_sha": null
+        }
+      }
     },
     {
       "id": "relay-card-mount-variants-20261002",
@@ -11153,10 +11167,23 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "c13aff373e236ebb19380620f80da008f341bdca",
-      "state": "held",
+      "state": "superseded",
       "created_at": "2026-10-02T01:04:36.340Z",
-      "updated_at": "2026-10-02T01:50:02.476Z",
-      "lease_until": "2026-10-02T13:50:02.476Z"
+      "updated_at": "2026-10-02T01:54:29.589Z",
+      "lease_until": "2026-10-02T13:50:02.476Z",
+      "retirement": {
+        "at": "2026-10-02T01:54:29.589Z",
+        "intent": {
+          "operation_id": "julian-card-variants-transition-20261002-0154",
+          "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "disposition": "superseded",
+          "reason": "Lauren explicitly requests multiple isolated card candidates then Field/Relay work, directly without workers; preserve unresolved host criteria and do not reuse merged branch.",
+          "evidence": "PR114 reviewed65d54e77 merged74dfdf8f8a398a71fe1ea4954186ac7ed84e37c5 and deployed exactbuildb2fc6383/deploybe8e9061/versioneaa73ee0100%; controlhealthPASS. No local source writer exists: all parent writes through guarded Relay, sourcecommits inPR114 and no further writes, workerthreads stopped. Previous claim next_action preserves postmerge test failure and403rerun denial, actual user refreshedMac no-card result, unknown invocation URI and all earliernativecriteria. New successor acceptance preserves these and tests separate metadata-only/static/bootstrap explanations. No branch/PR deletion or completed claim. Retirement must independently confirm absent merged branch by authenticated404. Website stopped at usage with unpublishedMacwork preserved; no old CLI process resumed.",
+          "superseded_by": "relay-card-mount-variants-20261002",
+          "branch": "relay/context-card-packaging-20261002",
+          "head_sha": null
+        }
+      }
     }
   ],
   "migrated_from": "loew-inspector"
