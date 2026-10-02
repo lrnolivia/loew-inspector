@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T12:22:52.007Z",
+  "updated_at": "2026-10-02T12:34:44.947Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -11791,10 +11791,16 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "98e9a110b9b9bf3884d58e9ae92964ee9318644e",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-02T11:50:06.369Z",
-      "updated_at": "2026-10-02T12:22:52.007Z",
-      "lease_until": "2026-10-03T00:22:52.007Z"
+      "updated_at": "2026-10-02T12:34:44.947Z",
+      "lease_until": "2026-10-03T00:34:44.947Z",
+      "pr": 126,
+      "merged_head_sha": "15f99e3f46f8418da6e3f895649fe2266684006a",
+      "merge_commit_sha": "6930685bd862a9d4c6db3ccfae50936c259a64e8",
+      "evidence": "PRs 123–126 merged. Exact production main 6930685bd862a9d4c6db3ccfae50936c259a64e8 passed full quality and production job 110837292000, run 37006777413. Workers version 19de294a-f049-40f8-92db-cef2df715754; exact web build d88b3d998c2caaea27d4471b24887a80b58b1d90c3c3c9002d7ce87050343e41. Eight live desktop/mobile captures and SHA256 evidence readbacks passed; retained preview rp_391a70da55af27b23f9b912d24adc379c8d24abceb24206791d53e91d8eeba52 and four isolated captures passed. Artifacts 11225674895/11225814223. Safe GET retry, deploy-path classification, and bounded async browser harness repair shipped; no gate bypass or native ChatGPT mount claim.",
+      "work_accounted": true,
+      "completed_at": "2026-10-02T12:34:44.947Z"
     }
   ],
   "migrated_from": "loew-inspector"
