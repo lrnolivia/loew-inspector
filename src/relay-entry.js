@@ -1,4 +1,5 @@
 import { uiApiTool, callUiApi } from "../apps/web/api.js";
+import { readMcpBody, mcpBodyErrorResponse } from "./mcp-request-body.js";
 import legacy from "./index.js";
 import { callSourceLifecycleTool } from "./source-lifecycle.js";
 import { sourceTextMutationTools, isSourceTextMutationTool, validateSourceTextMutationArguments, callSourceTextMutationTool } from "./source-text-mutation.js";
@@ -208,8 +209,7 @@ async function authProbe(request, message, env) {
 async function readMcp(request) {
   const url = new URL(request.url);
   if (url.pathname !== "/mcp" || request.method !== "POST" || !request.headers.get("content-type")?.startsWith("application/json")) return null;
-  const raw = await request.clone().text();
-  if (raw.length > 16384) return null;
+  const raw = await readMcpBody(request);
   try { return JSON.parse(raw); } catch { return null; }
 }
 function toolResult(id, result, name) {
@@ -284,7 +284,9 @@ function toolError(id, error, toolName = "") {
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    const message = await readMcp(request);
+    let message;
+    try { message = await readMcp(request); }
+    catch (error) { return mcpBodyErrorResponse(error); }
 
     if (message?.method === "tools/call" && isExtensionTool(message.params?.name)) {
       const auth = await authProbe(request, message, env);
