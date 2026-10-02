@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "rtxforge",
-  "updated_at": "2026-10-02T17:32:51.823Z",
+  "updated_at": "2026-10-02T20:42:31.468Z",
   "legacy_branches": [
     "backup/github-main-before-0.5.8",
     "backup/main-0.5.8-ada",
@@ -204,7 +204,7 @@
       ],
       "goal": "Preserve canonical Library while adding shared recommended/custom package flows in Classic and redesign, persisted UI/start-page selection and native Linux portability foundation.",
       "acceptance": "Classic retained and default Library preserved. Both UIs share package parsing, editable safe plans, explicit trust and reversible deployment; never execute package instructions. Review screenshots of both surfaces before Classic visual polish ships. GNOME native first; Qt/Kirigami shared-engine port plan without distro forks. Preserve existing MFG success and report NR unverified.",
-      "next_action": "Inspect current native source and safe smoke harness, capture unchanged baseline and build shared package model before UI integration.",
+      "next_action": "PR6 remains draft pending Classic visual approval. Latest exact head03ca0bb1be19aa715f2a6336cc6d3f5db9dedb6b is validating packaged GTK and Qt workflows. Both frontends share service/parser, one review AppImage, GTK remains default. Previous213 engine and53selectedtests passed. Actual SteamOS/Gamescope/Hyprland hardware and game runtime remain unverified.",
       "primary_team": "night-shift",
       "supporting_teams": [],
       "primary_staff": "julian",
@@ -212,8 +212,8 @@
       "base_sha": "acd71e9a3da59a86c04794247ac8ead60fdbb95a",
       "state": "active",
       "created_at": "2026-10-02T17:32:51.823Z",
-      "updated_at": "2026-10-02T17:32:51.823Z",
-      "lease_until": "2026-10-03T05:32:51.823Z"
+      "updated_at": "2026-10-02T20:42:31.468Z",
+      "lease_until": "2026-10-03T08:42:31.468Z"
     }
   ]
 }
