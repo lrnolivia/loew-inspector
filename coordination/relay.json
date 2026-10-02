@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T03:20:11.920Z",
+  "updated_at": "2026-10-02T03:20:54.886Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6971,8 +6971,22 @@
       "supporting_teams": [],
       "primary_staff": "julian",
       "supporting_staff": [],
-      "state": "claimed",
-      "created_at": "2026-10-02T01:53:53.229Z"
+      "state": "superseded",
+      "created_at": "2026-10-02T01:53:53.229Z",
+      "updated_at": "2026-10-02T03:20:54.886Z",
+      "retirement": {
+        "at": "2026-10-02T03:20:54.886Z",
+        "intent": {
+          "operation_id": "julian-upload-limit-transition-20261002-0320",
+          "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "disposition": "superseded",
+          "reason": "User explicitly requested fixing the upload bottleneck after deployed isolated variants; preserve all native proof pending rather than declare full MCP complete.",
+          "evidence": "PR115 final3b49f01befd76b01bb31704542e5207eef9d4454 merged a6792d3d3727fcc655c992ce27fffde0fa79e09e; exact Workers build42c1d855-9eb5-472e-b767-c4ff461ef8e6 success, deployment5c9cd6c6-2be9-4b78-8717-9d6aeb6556cd/version441fd212-a338-47d8-8ef3-b7e51dee52f7 at100%, postmerge quality110677319582 pass. All parent writes were guarded Relay calls; no remaining source writer. Fresh inventory03:19UTC confirms merged branch absent; retirement must verify authenticated404. User has received A/B/C instructions; actual native results remain pending, all prior failure evidence retained in successor. Stopped workers remain stopped, no website mutation.",
+          "superseded_by": "relay-source-request-limit-20261002",
+          "branch": "relay/card-mount-variants-20261002",
+          "head_sha": null
+        }
+      }
     },
     {
       "id": "relay-source-request-limit-20261002",
@@ -11234,10 +11248,23 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "9c0fe90e02b68666efdea6c6baa437d04a53d5c6",
-      "state": "active",
+      "state": "superseded",
       "created_at": "2026-10-02T01:54:41.703Z",
-      "updated_at": "2026-10-02T01:54:41.703Z",
-      "lease_until": "2026-10-02T13:54:41.703Z"
+      "updated_at": "2026-10-02T03:20:54.886Z",
+      "lease_until": "2026-10-02T13:54:41.703Z",
+      "retirement": {
+        "at": "2026-10-02T03:20:54.886Z",
+        "intent": {
+          "operation_id": "julian-upload-limit-transition-20261002-0320",
+          "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "disposition": "superseded",
+          "reason": "User explicitly requested fixing the upload bottleneck after deployed isolated variants; preserve all native proof pending rather than declare full MCP complete.",
+          "evidence": "PR115 final3b49f01befd76b01bb31704542e5207eef9d4454 merged a6792d3d3727fcc655c992ce27fffde0fa79e09e; exact Workers build42c1d855-9eb5-472e-b767-c4ff461ef8e6 success, deployment5c9cd6c6-2be9-4b78-8717-9d6aeb6556cd/version441fd212-a338-47d8-8ef3-b7e51dee52f7 at100%, postmerge quality110677319582 pass. All parent writes were guarded Relay calls; no remaining source writer. Fresh inventory03:19UTC confirms merged branch absent; retirement must verify authenticated404. User has received A/B/C instructions; actual native results remain pending, all prior failure evidence retained in successor. Stopped workers remain stopped, no website mutation.",
+          "superseded_by": "relay-source-request-limit-20261002",
+          "branch": "relay/card-mount-variants-20261002",
+          "head_sha": null
+        }
+      }
     }
   ],
   "migrated_from": "loew-inspector"
