@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "rtxforge",
-  "updated_at": "2026-10-02T00:07:25.868Z",
+  "updated_at": "2026-10-02T00:09:24.187Z",
   "legacy_branches": [
     "backup/github-main-before-0.5.8",
     "backup/main-0.5.8-ada",
@@ -37,6 +37,27 @@
       "supporting_staff": [],
       "state": "queued",
       "created_at": "2026-10-01T22:47:12.113Z"
+    },
+    {
+      "id": "rtxforge-native-kde-hyprland-corner-choice-later-20261001",
+      "owner": "01a0f997-7f61-7e62-9b39-ae49f311792d",
+      "goal": "Later: port rtxForge presentation to native KDE Plasma and Hyprland desktop integration, and let every user choose square or rounded window edges.",
+      "acceptance": "Native desktop integration considered for KDE Plasma and Hyprland; square/rounded edge preference available to all desktop users. User explicitly deferred implementation until later.",
+      "next_action": "Deferred by user on 2026-10-01. Revisit after full runtime package and scaling/HDR work; inspect native desktop toolkit/decorations before choosing implementation.",
+      "paths": [
+        "gui/"
+      ],
+      "resources": [
+        "desktop-presentation-portability",
+        "window-corner-preference"
+      ],
+      "category": "design",
+      "primary_team": "inspector",
+      "supporting_teams": [],
+      "primary_staff": "valentina",
+      "supporting_staff": [],
+      "state": "queued",
+      "created_at": "2026-10-02T00:09:24.187Z"
     }
   ],
   "claims": [
