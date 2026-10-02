@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import { chromium } from 'playwright';
+import { mkdir } from 'node:fs/promises';
 import { contextFixture } from './project-context-fixture.mjs';
 
 test('mobile Runner stays within the document and the accent scrolls away', {timeout:30000}, async()=>{
@@ -19,6 +20,8 @@ test('mobile Runner stays within the document and the accent scrolls away', {tim
       await page.evaluate(()=>window.scrollTo(0,300));
       await page.waitForFunction(()=>scrollY>100);
       assert.ok((await page.locator('.terra-accent').boundingBox()).y<0,'accent scrolls with page');
+      await mkdir('qa-evidence/website',{recursive:true});
+      await page.screenshot({path:'qa-evidence/website/mobile-'+width+'-'+(await page.locator('.qa-stage').count()?'inspector':'runner')+'.png'});
       await page.close();
     }
   } finally { await browser.close(); await fixture.close(); }
@@ -58,6 +61,8 @@ test('mobile Inspector exposes all answers and supports real touch pan pinch and
       assert.ok(Math.abs((await camera()).scale-before.scale)<0.001);
       await page.getByRole('button',{name:'Show questions',exact:true}).click();
       assert.equal(await page.locator('.qa-companion').isVisible(),true);
+      await mkdir('qa-evidence/website',{recursive:true});
+      await page.screenshot({path:'qa-evidence/website/mobile-'+width+'-'+(await page.locator('.qa-stage').count()?'inspector':'runner')+'.png'});
       await page.close();
     }
   } finally {await browser.close();await fixture.close();}
