@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T04:18:39.311Z",
+  "updated_at": "2026-10-02T04:21:01.084Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -11170,103 +11170,6 @@
       }
     },
     {
-      "id": "relay-website-post-release-polish-20261002",
-      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
-      "branch": "relay/website-post-release-polish-20261002",
-      "paths": [
-        "packages/shared-ui/presentation.js",
-        "packages/shared-ui/presentation.d.ts",
-        "packages/shared-ui/responsive-shell.css",
-        "packages/shared-ui/telemetry.css",
-        "packages/shared-ui/notifications.js",
-        "packages/shared-ui/notifications.d.ts",
-        "packages/shared-ui/notifications.css",
-        "packages/shared-ui/motion.js",
-        "packages/shared-ui/motion.css",
-        "packages/shared-ui/work-arrivals.js",
-        "packages/shared-ui/work-arrivals.d.ts",
-        "apps/web/src/live.tsx",
-        "apps/web/src/api.ts",
-        "apps/web/src/types.ts",
-        "apps/web/src/components/SignalDeck.tsx",
-        "apps/web/src/components/WorkCard.tsx",
-        "apps/web/src/components/NotificationCenter.tsx",
-        "apps/web/src/pages/TodayPage.tsx",
-        "apps/web/src/pages/RunnerPage.tsx",
-        "apps/web/src/pages/NightShiftPage.tsx",
-        "apps/web/src/pages/RunnerWorkPage.tsx",
-        "apps/web/src/styles.css",
-        "apps/web/public/index.html",
-        "apps/web/public/operator.js",
-        "apps/web/public/operator-review.js",
-        "apps/web/public/qa.js",
-        "apps/web/test/presentation-layout.test.mjs",
-        "apps/web/test/presentation-copy.test.mjs",
-        "apps/web/test/motion.test.mjs",
-        "apps/web/test/project-context.test.mjs",
-        "apps/web/test/notifications-review.test.mjs",
-        "apps/web/test/notifications-visual-review.mjs",
-        "apps/web/test/project-context-fixture.mjs",
-        "apps/web/test/post-release.test.mjs",
-        "docs/relay/WEBSITE_POST_RELEASE_POLISH_20261002.md",
-        "apps/web/test/website.test.mjs",
-        "apps/web/test/visual-review.mjs"
-      ],
-      "resources": [
-        "relay-website-notifications",
-        "relay-website-project-context",
-        "relay-website-work-items",
-        "relay-project-identity",
-        "relay-inspector-review-overlay",
-        "relay-website-preview-ci"
-      ],
-      "goal": "Implement Lauren's confirmed post-release website QA: filled red badge pulse, improved retained bottom navigation, understandable real-data Rich telemetry, simplified Settings, truthful new-work arrivals and exact-item notification navigation.",
-      "acceptance": "Preserve the perfect default sidebar, approved neutral palette/Momo/header identity and all useful functions. Fill circular notification count bright red and pulse the whole badge with readable truthful count and Calm/reduced-motion suppression. Widen mobile bottom navigation and make all four individual buttons pill-shaped with accessible touch targets and safe-area/content clearance. Keep desktop branded bottom pill as permanent optional layout, shorten and align it. Remove Roomy Mobile Overview and Desktop Compact Header options and safely migrate obsolete saved preferences while retaining other valid options. Replace paintbrush with existing shared settings gear and accessible Settings labeling. Explain Rich real-data telemetry via meaningful labeled animated circular charts and changing numbers where appropriate, without fabricated percentage/trend/progress; preserve Simple/default and honest partial/error states. Reuse existing notification/presentation systems for distinct NEW WORK arrival toasts and new-card entry animation; successful feed baselines, stable identities and bounded existing polling, no initial-load/refresh/route-change/recovery duplicate alerts or false freshness. BOTH existing item-specific menu/toasts and new-work toasts resolve actual project+assignment/evidence identity and reveal exact destination despite current project/filter; focus/scroll visibly, preserve unsaved human work and explain unavailable/removed targets; no unrelated generic fallback. Connection-wide notices retain honest context rather than inventing an item. Validate all four routes desktop/narrow, preference migration, data/motion/arrival/navigation/save journeys and registered exact-head screenshots after settled data; scoped and full repository checks, coordination preflight and exact-head CI. Draft PR only; no merge/deploy in this new batch without further explicit authorization. No MCP/backend-feedback resources, work-viewer redesign or hosting infrastructure changes. Additional confirmed QA: Inspector chat-card previews are temporary, collapsed by default with accessible expand/collapse and unchanged art; remove their dedicated top telemetry box/counter. Preserve horizontal composition for chat previews and relevant work cards including mobile, readable content and usable controls; no tall portrait cards, no change to approved telemetry mosaic/default sidebar.",
-      "next_action": "Lauren authorized direct Relay website work without workers. Stopped website task01a0f904 latestturnfailed usage and has no source writer resumed; read-only checkpoint reports unpublished Mac polish/arrival logic with narrow Runner fix unfinished. Preserve those local files untouched; remote claimed branch does not yet exist. Parent will implement current explicitly requested mobile scrolling/Inspector touch fixes from fresh shipped main on this claimed branch, retaining all broader queued polish goals and acknowledging old local polish reconciliation remains pending. Do not falsely claim unpublished changes recovered. No new worker. Carry existing QA notes and evidence screenshots unchanged.",
-      "task_class": "design",
-      "category": "design",
-      "primary_team": "source",
-      "supporting_teams": [],
-      "primary_staff": "julian",
-      "supporting_staff": [],
-      "base_sha": "c5cd616af7a0b177c5f7f077c327010db1ccad32",
-      "state": "active",
-      "created_at": "2026-10-02T00:38:21.522Z",
-      "updated_at": "2026-10-02T04:18:39.311Z",
-      "lease_until": "2026-10-02T16:18:39.311Z",
-      "amendment_count": 2,
-      "amendments": [
-        {
-          "at": "2026-10-02T03:34:40.056Z",
-          "by": "Julian-PM",
-          "reason": "Append Lauren's explicit iPhone QA without resuming the stopped writer or overriding existing unpublished work.",
-          "fields": [
-            "next_action"
-          ],
-          "before": {
-            "next_action": "Continue the explicitly authorized website UI fixes first. Update existing browser/evidence checks for collapsed chat previews and removal of retired presentation options. No live-preview availability/retention scope added; no MCP or Field Mobile work."
-          },
-          "after": {
-            "next_action": "Continue the explicitly authorized website UI fixes first. Update existing browser/evidence checks for collapsed chat previews and removal of retired presentation options. No live-preview availability/retention scope added; no MCP or Field Mobile work. Additional user QA 2026-10-02 03:32 UTC, Sentinel_a2544b4f5fd48191b622719be9bf1e6d: the multicolor accent bar must scroll with document content, not remain pinned while scrolling; Runner must not permit whole-page horizontal scrolling on mobile. Actual screenshot pixels inspected: IMG_0102 shows accent strip fixed across scrolled Today; IMG_0..."
-          }
-        },
-        {
-          "at": "2026-10-02T03:39:58.029Z",
-          "by": "Julian-PM",
-          "reason": "Append current Inspector mobile QA and screenshot; no stopped worker restart.",
-          "fields": [
-            "next_action"
-          ],
-          "before": {
-            "next_action": "Continue the explicitly authorized website UI fixes first. Update existing browser/evidence checks for collapsed chat previews and removal of retired presentation options. No live-preview availability/retention scope added; no MCP or Field Mobile work. Additional user QA 2026-10-02 03:32 UTC, Sentinel_a2544b4f5fd48191b622719be9bf1e6d: the multicolor accent bar must scroll with document content, not remain pinned while scrolling; Runner must not permit whole-page horizontal scrolling on mobile. Actual screenshot pixels inspected: IMG_0102 shows accent strip fixed across scrolled Today; IMG_0..."
-          },
-          "after": {
-            "next_action": "Continue the explicitly authorized website UI fixes first. Update existing browser/evidence checks for collapsed chat previews and removal of retired presentation options. No live-preview availability/retention scope added; no MCP or Field Mobile work. Additional user QA 2026-10-02 03:32 UTC, Sentinel_a2544b4f5fd48191b622719be9bf1e6d: the multicolor accent bar must scroll with document content, not remain pinned while scrolling; Runner must not permit whole-page horizontal scrolling on mobile. Actual screenshot pixels inspected: IMG_0102 shows accent strip fixed across scrolled Today; IMG_0..."
-          }
-        }
-      ]
-    },
-    {
       "id": "relay-context-card-packaging-20261002",
       "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
       "branch": "relay/context-card-packaging-20261002",
@@ -11401,6 +11304,77 @@
       "evidence": "PR116 head946245cc94d1bde8ad56048eef6719eb9900373d quality110693203423+admission110693192819 pass; merged23443a71e8907e94c43ea8c92179b5a115e41080. Buildfaf7f014-e02c-4085-ae44-f55bc4e338c5 SUCCESS, deploymented8dc8a9-cc01-4b89-9a6b-7dd611136590/version428c3ebf-b505-4369-9468-86022303e0e0 at100%, postmerge quality110694641351 pass. Live formerly413 Field complete file now committed96597239f87d5ca2bca123017c0c1b7a044b5ade and exactbytesverified; all26savedGitblobs match. Upload scope delivered only; full MCP/card parity unresolved, PR115 A/B/C pending. New actual original connection test Linux browser all6stepsPASS03:47, desktop no-card failure03:49, screenshots retained separately. No native success inferred from CI.",
       "work_accounted": true,
       "completed_at": "2026-10-02T03:50:05.479Z"
+    },
+    {
+      "id": "relay-website-post-release-polish-20261002",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "branch": "relay/website-post-release-polish-20261002",
+      "paths": [
+        "packages/shared-ui/presentation.js",
+        "packages/shared-ui/presentation.d.ts",
+        "packages/shared-ui/responsive-shell.css",
+        "packages/shared-ui/telemetry.css",
+        "packages/shared-ui/notifications.js",
+        "packages/shared-ui/notifications.d.ts",
+        "packages/shared-ui/notifications.css",
+        "packages/shared-ui/motion.js",
+        "packages/shared-ui/motion.css",
+        "packages/shared-ui/work-arrivals.js",
+        "packages/shared-ui/work-arrivals.d.ts",
+        "apps/web/src/live.tsx",
+        "apps/web/src/api.ts",
+        "apps/web/src/types.ts",
+        "apps/web/src/components/SignalDeck.tsx",
+        "apps/web/src/components/WorkCard.tsx",
+        "apps/web/src/components/NotificationCenter.tsx",
+        "apps/web/src/pages/TodayPage.tsx",
+        "apps/web/src/pages/RunnerPage.tsx",
+        "apps/web/src/pages/NightShiftPage.tsx",
+        "apps/web/src/pages/RunnerWorkPage.tsx",
+        "apps/web/src/styles.css",
+        "apps/web/public/index.html",
+        "apps/web/public/operator.js",
+        "apps/web/public/operator-review.js",
+        "apps/web/public/qa.js",
+        "apps/web/test/presentation-layout.test.mjs",
+        "apps/web/test/presentation-copy.test.mjs",
+        "apps/web/test/motion.test.mjs",
+        "apps/web/test/project-context.test.mjs",
+        "apps/web/test/notifications-review.test.mjs",
+        "apps/web/test/notifications-visual-review.mjs",
+        "apps/web/test/project-context-fixture.mjs",
+        "apps/web/test/post-release.test.mjs",
+        "docs/relay/WEBSITE_POST_RELEASE_POLISH_20261002.md",
+        "apps/web/test/website.test.mjs",
+        "apps/web/test/visual-review.mjs",
+        "packages/shared-ui/components.css",
+        "apps/web/public/qa.css",
+        "apps/web/public/qa-float.js",
+        "apps/web/public/qa-viewport.js",
+        "apps/web/test/mobile-inspector.test.mjs"
+      ],
+      "resources": [
+        "relay-website-notifications",
+        "relay-website-project-context",
+        "relay-website-work-items",
+        "relay-project-identity",
+        "relay-inspector-review-overlay",
+        "relay-website-preview-ci"
+      ],
+      "goal": "Implement Lauren's confirmed post-release website QA: filled red badge pulse, improved retained bottom navigation, understandable real-data Rich telemetry, simplified Settings, truthful new-work arrivals and exact-item notification navigation.",
+      "acceptance": "Preserve the perfect default sidebar, approved neutral palette/Momo/header identity and all useful functions. Fill circular notification count bright red and pulse the whole badge with readable truthful count and Calm/reduced-motion suppression. Widen mobile bottom navigation and make all four individual buttons pill-shaped with accessible touch targets and safe-area/content clearance. Keep desktop branded bottom pill as permanent optional layout, shorten and align it. Remove Roomy Mobile Overview and Desktop Compact Header options and safely migrate obsolete saved preferences while retaining other valid options. Replace paintbrush with existing shared settings gear and accessible Settings labeling. Explain Rich real-data telemetry via meaningful labeled animated circular charts and changing numbers where appropriate, without fabricated percentage/trend/progress; preserve Simple/default and honest partial/error states. Reuse existing notification/presentation systems for distinct NEW WORK arrival toasts and new-card entry animation; successful feed baselines, stable identities and bounded existing polling, no initial-load/refresh/route-change/recovery duplicate alerts or false freshness. BOTH existing item-specific menu/toasts and new-work toasts resolve actual project+assignment/evidence identity and reveal exact destination despite current project/filter; focus/scroll visibly, preserve unsaved human work and explain unavailable/removed targets; no unrelated generic fallback. Connection-wide notices retain honest context rather than inventing an item. Validate all four routes desktop/narrow, preference migration, data/motion/arrival/navigation/save journeys and registered exact-head screenshots after settled data; scoped and full repository checks, coordination preflight and exact-head CI. Draft PR only; no merge/deploy in this new batch without further explicit authorization. No MCP/backend-feedback resources, work-viewer redesign or hosting infrastructure changes. Additional confirmed QA: Inspector chat-card previews are temporary, collapsed by default with accessible expand/collapse and unchanged art; remove their dedicated top telemetry box/counter. Preserve horizontal composition for chat previews and relevant work cards including mobile, readable content and usable controls; no tall portrait cards, no change to approved telemetry mosaic/default sidebar.",
+      "next_action": "Implement Lauren's current mobile QA directly: accent strip scrolls away, Runner document cannot overflow horizontally while project tabs retain local scroll; wider compact Inspector question panel exposes common answer/navigation controls without internal scroll; questions toggle is compact; captured preview touch pan and anchored pinch/fit, leaving live/video embedded interactions native. Screenshots2701bf,1ace023,86f5f03b inspected; no exact testedbuild inferred. Preserve all previous polish acceptance and untouched unpublished Mac edits; reconciliation remains pending, no stopped worker resumed. Add bounded browser regression tests, including real touch and controls, before release.",
+      "task_class": "design",
+      "category": "design",
+      "primary_team": "source",
+      "supporting_teams": [],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "base_sha": "c5cd616af7a0b177c5f7f077c327010db1ccad32",
+      "state": "active",
+      "created_at": "2026-10-02T00:38:21.522Z",
+      "updated_at": "2026-10-02T04:21:01.084Z",
+      "lease_until": "2026-10-02T16:21:01.084Z"
     }
   ],
   "migrated_from": "loew-inspector"
