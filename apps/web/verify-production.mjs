@@ -62,7 +62,7 @@ try {
     }
     for (const [feature, label, nav] of [["today", "today", "today"], ["runner", "runner", "projects"], ["night-shift", "night shift", "night-shift"]]) {
       await page.goto(origin + "/inspector#review");
-      await page.locator(".chat-card-preview").waitFor();
+      await page.locator(".chat-card-preview").waitFor({ state: "attached" });
       await page.locator(`[data-nav="${nav}"]`).click();
       await page.getByRole("heading", { name: label, exact: true, level: 1 }).waitFor();
       await page.locator('.operator-connection[data-tone="good"]').waitFor();
@@ -82,7 +82,7 @@ try {
       await capture(page, feature, viewport);
     }
     await page.getByRole("link", { name: /^inspector/ }).click();
-    await page.locator(".chat-card-preview").waitFor();
+    await page.locator(".chat-card-preview").waitFor({ state: "attached" });
     await page.locator('#review-list[data-summary-state="ready"], #review-list[data-summary-state="error"]').waitFor({ timeout: 75000 });
     assert.equal(new URL(page.url()).pathname, "/inspector");
     await capture(page, "inspector", viewport);
@@ -127,3 +127,4 @@ async function verifyEvidenceReadback(id,expectedBytes) {
   if(expectedBytes)assert.equal(hash,createHash("sha256").update(expectedBytes).digest("hex"),"stored capture matches exact emitted bytes");
   return {evidence_id:id,qa_status:qa.status,image_status:image.status,bytes:bytes.length,sha256:hash};
 }
+

@@ -1,3 +1,4 @@
+import {LOEW_INTERFACE_SKILL_URI,loewInterfaceSkillCatalogEntry,loewInterfaceSkillResourceDescriptor,loewInterfaceSkillResource} from "./loew-interface-skill.js";
 import { uiApiTool, callUiApi } from "../apps/web/api.js";
 import { readMcpBody, mcpBodyErrorResponse } from "./mcp-request-body.js";
 import legacy from "./index.js";
@@ -112,6 +113,7 @@ export function augmentResourceList(resources) {
   const list = Array.isArray(resources) ? [...resources] : [];
   if (!list.some(resource => resource?.uri === RELAY_V2_PROBE_URI)) list.push(relayV2ProbeDescriptor());
   if (!list.some(resource => resource?.uri === QA_SKILL_URI)) list.push(qaSkillResourceDescriptor());
+  if (!list.some(resource => resource?.uri === LOEW_INTERFACE_SKILL_URI)) list.push(loewInterfaceSkillResourceDescriptor());
   if (!list.some(resource => resource?.uri === LOEW_NAMING_SKILL_URI)) list.push(loewNamingSkillResourceDescriptor());
   if (!list.some(resource => resource?.uri === EXECUTIVE_COMMUNICATION_SKILL_URI)) list.push(executiveCommunicationSkillResourceDescriptor());
   return list;
@@ -120,6 +122,7 @@ export function augmentResourceList(resources) {
 export function augmentSkillList(skills) {
   const list = Array.isArray(skills) ? [...skills] : [];
   if (!list.some(skill => skill?.uri === QA_SKILL_URI)) list.push(qaSkillCatalogEntry());
+  if (!list.some(skill => skill?.uri === LOEW_INTERFACE_SKILL_URI)) list.push(loewInterfaceSkillCatalogEntry());
   if (!list.some(skill => skill?.uri === LOEW_NAMING_SKILL_URI)) list.push(loewNamingSkillCatalogEntry());
   if (!list.some(skill => skill?.uri === EXECUTIVE_COMMUNICATION_SKILL_URI)) list.push(executiveCommunicationSkillCatalogEntry());
   return list;
@@ -336,6 +339,7 @@ export default {
     if (message.method === "resources/read" && response.status === 200) {
       if (message.params?.uri === RELAY_V2_PROBE_URI) return rpcResult(message.id ?? null, { contents: [relayV2ProbeResource()] }, response.headers);
       if (message.params?.uri === QA_SKILL_URI) return rpcResult(message.id ?? null, { contents: [qaSkillResource()] }, response.headers);
+      if (message.params?.uri === LOEW_INTERFACE_SKILL_URI) return rpcResult(message.id ?? null, { contents: [loewInterfaceSkillResource()] }, response.headers);
       if (message.params?.uri === LOEW_NAMING_SKILL_URI) return rpcResult(message.id ?? null, { contents: [loewNamingSkillResource()] }, response.headers);
       if (message.params?.uri === EXECUTIVE_COMMUNICATION_SKILL_URI) return rpcResult(message.id ?? null, { contents: [executiveCommunicationSkillResource()] }, response.headers);
     }
@@ -347,6 +351,7 @@ export default {
     }
     if (message.method === "skills/get" && response.status === 200) {
       if (message.params?.uri === QA_SKILL_URI) return rpcResult(message.id ?? null, { skill: qaSkillCatalogEntry() }, response.headers);
+      if (message.params?.uri === LOEW_INTERFACE_SKILL_URI) return rpcResult(message.id ?? null, { skill: loewInterfaceSkillCatalogEntry() }, response.headers);
       if (message.params?.uri === LOEW_NAMING_SKILL_URI) return rpcResult(message.id ?? null, { skill: loewNamingSkillCatalogEntry() }, response.headers);
       if (message.params?.uri === EXECUTIVE_COMMUNICATION_SKILL_URI) return rpcResult(message.id ?? null, { skill: executiveCommunicationSkillCatalogEntry() }, response.headers);
     }
@@ -368,3 +373,4 @@ export default {
     return response;
   }
 };
+
