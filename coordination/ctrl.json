@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "ctrl",
-  "updated_at": "2026-10-02T15:04:43.741Z",
+  "updated_at": "2026-10-02T15:15:01.870Z",
   "legacy_branches": [
     "main"
   ],
@@ -32,16 +32,16 @@
       ],
       "goal": "Build ctrl from the finished Relay website with Now, cohesive raised Relay utility, truthful telemetry and event-ready protected adapter.",
       "acceptance": "Preserve exact existing visual family and approved work views; coral ctrl identity and Now aliases; Relay utility consistent in sidebar and bottom pill with anchored desktop panel and mobile sheet, accessible dismissal and reduced motion; same-origin narrow fail-closed backend proxy, tested event cursor/reconnect semantics and no duplicate data owner. Full build/type/unit/browser checks with desktop/mobile screenshots. Keep production cutover blocked until protected domain/build setup is approved, and keep Relay fallback untouched.",
-      "next_action": "Waiting for the exact owner security approval requested2026-10-02T14:03Z; no reply/affirmative reaction as of15:00Z. Do not infer approval from silence. Candidate95d9893844f42a7f2e872f275b9a5b39e704cfb1 fullCIgreen. Once approved, refresh current Cloudflare Access/build state, preserve policies/audience, provision empty ctrl Worker without manual code upload, connect approved existing GitHub build integration, activate Relay event binding and ctrl service adapter through admitted source changes, then verify exact live source, authorization, WebSocket replay/reconnect and rollback. Keep Relay fallback. TerraIconFigma master unresolved; icon provisional. Morning screenshots and Field preview sent15:02Z.",
+      "next_action": "Owner approved the specifically requested protected ctrl integration at2026-10-02T15:13Z: yes to ctrl protection, responding to Access/build/Worker/live-event approval question. Also supplied exact TerraIconFigma file1HWvmmJIxAfU6rmnuRaePt and said everything looks great. Resume protected cutover and final matched icon, preserve same allowed users and Relay rollback. Candidate95d989 fullCIgreen. Refresh Access/build state before setup mutations; no new credentials or broader audience.",
       "primary_team": "inspector",
       "supporting_teams": [],
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "7da1e073d8044a1ddaf53dd922f230c06cb4c019",
-      "state": "held",
+      "state": "active",
       "created_at": "2026-10-02T12:40:42.547Z",
-      "updated_at": "2026-10-02T15:04:43.741Z",
-      "lease_until": "2026-10-03T03:04:43.741Z"
+      "updated_at": "2026-10-02T15:15:01.870Z",
+      "lease_until": "2026-10-03T03:15:01.870Z"
     }
   ]
 }
