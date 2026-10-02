@@ -49,7 +49,7 @@ let inspectorHtml = (await source("index.html"))
   .replace("__RELAY_PRESENTATION_MENU__", () => presentationMenu())
   .replaceAll("__RELAY_ICON__", relayIcon)
   .replace("__RELAY_THEME_BOOTSTRAP__", () => "<script>(" + themeBootstrap.toString() + ")()</script>")
-  .replace(/<link rel="stylesheet" href="\/(?:operator|operator-1\\.8|qa).css">/g, "")
+  .replace(/<link rel="stylesheet" href="\/(?:operator|operator-1\.8|qa).css">/g, "")
   .replace("<title>relay</title>", "<title>relay inspector</title>")
   .replace("</head>", () => "<style>" + legacyCss + "\n" + legacyShellOverrides + "</style><script data-relay-inspector-navigation>(" + inspectorWebsiteNavigation.toString() + ")()</script></head>");
 
@@ -154,3 +154,4 @@ await Promise.all([
   fs.writeFile(path.join(here, "generated.js"), generated)
 ]);
 console.log("Built split Relay React/MCP + preserved Inspector payloads");
+

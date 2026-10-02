@@ -1,3 +1,4 @@
+import { handleRetainedPreview, getRetainedBundle, retainedMetadata } from "../../../src/retained-preview.js";
 import { githubApiRequest, sourceAuthStatus } from "../../../src/source.js";
 import { callProgress } from "../../../src/progress-api.js";
 import { projectIcon } from "./project-icons.mjs";
@@ -247,6 +248,10 @@ export async function handleApi(request, env, { authenticatedMcp = false } = {})
 
   const accessError = accessGuard(request, env, authenticatedMcp);
   if (accessError) return accessError;
+  if(url.pathname.startsWith('/api/retained-preview')) {
+    const guard=humanQaGuard(request,authenticatedMcp);if(guard)return guard;
+    return await handleRetainedPreview(request,env.EVIDENCE)||json({error:'Retained build route not found'},404);
+  }
 
   if (request.method === "POST" && !authenticatedMcp) {
     const origin = request.headers.get("Origin");
@@ -356,6 +361,11 @@ export async function handleApi(request, env, { authenticatedMcp = false } = {})
     if (qaAccessError) return qaAccessError;
     const evidence = await getVisualEvidence(env.EVIDENCE, liveMatch[1]);
     if (!evidence) return json({ error: "Evidence not found." }, 404);
+    const retainedId=evidence.dom?.retained_preview?.id;
+    if(typeof retainedId==='string'&&/^rp_[a-f0-9]{64}$/.test(retainedId)) {
+      const retained=await getRetainedBundle(env.EVIDENCE,retainedId);
+      if(retained&&retained.bundle.source_sha===evidence.context?.commit_sha)return json({ok:true,evidence_id:liveMatch[1],live:{active:false,embeddable:false,reason:'An exact retained build replaces the mutable live target for this capture.',retained:retainedMetadata(retained)}});
+    }
     const live = await inspectLivePreview(evidence, url.origin);
     return json({ ok: true, evidence_id: liveMatch[1], live });
   }

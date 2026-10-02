@@ -111,6 +111,7 @@ function handlers() {
     notes(notes){state.humanNotes=notes;state.review.notes=joinReviewNotes(state.noteParts.prefix,notes);edited();queueSave(650);},
     navigate(direction){questionIndex=Math.max(0,Math.min((state.questions||[]).length-1,questionIndex+direction));repaintPanel('.qa-question');},
     retry(){void saveReview(state);},
+    retained(){void reviewRetained();},
     async finish(){const active=state;const success=await saveReview(active);if(success && state===active){publishNotification({id:'qa:saved:'+active.evidence.evidence_id,feature:'inspector',project:active.evidence.context?.project||'',title:'Review saved',message:'Your answers and notes were saved.',severity:'info',href:'/inspector#review?evidence='+encodeURIComponent(active.evidence.evidence_id),action:'Open review'});closeQa();}}
   };
 }
@@ -124,24 +125,25 @@ function setView(mode) {
   if(!stage||!state)return;
   previewCheck?.abort();previewCheck=null;
   viewportController?.destroy();previewMode=renderQaPreview(stage,state,mode);
-  viewportController=createQaViewport(stage,{mode:previewMode});
+  viewportController=createQaViewport(stage,{mode:previewMode==='retained'?'live':previewMode});
   const select=stage.querySelector('.qa-preview-picker select'),canLive=Boolean(state.live?.active&&state.live?.embeddable&&state.live?.url);
-  select.innerHTML='<option value="captured">Captured</option>'+(state.evidence.video_url?'<option value="video">Recording</option>':'')+'<option value="live" '+(!canLive?'disabled':'')+'>'+(canLive?'Live':state.live.renderUnconfirmed?'Live unconfirmed':'Live unavailable')+'</option>';
+  select.innerHTML='<option value="captured">Captured</option>'+(state.live.retained?'<option value="retained" '+(!state.live.retained.available?'disabled':'')+'>'+ (state.live.retained.available?'Retained build':'Retained · expired')+'</option>':'')+(state.evidence.video_url?'<option value="video">Recording</option>':'')+'<option value="live" '+(!canLive?'disabled':'')+'>'+(canLive?'Live':state.live.renderUnconfirmed?'Live unconfirmed':'Live unavailable')+'</option>';
   select.value=previewMode;select.disabled=false;
-  stage.querySelector('.qa-preview-state').textContent=previewMode==='live'?'Checking live preview…':previewMode==='video'?'Recorded evidence':'Captured evidence'+(state.live.renderUnconfirmed?' · live preview unconfirmed':!canLive?' · live preview unavailable':'');
+  stage.querySelector('.qa-preview-state').textContent=previewMode==='retained'?'Checking retained build · sample data…':previewMode==='live'?'Checking live preview…':previewMode==='video'?'Recorded evidence':'Captured evidence'+(state.live.renderUnconfirmed?' · live preview unconfirmed':!canLive?' · live preview unavailable':'');
   let direct=stage.querySelector('.qa-open-live');
   if(!direct){direct=document.createElement('a');direct.className='qa-open-live';direct.textContent='Open interactive preview';direct.target='_blank';direct.rel='noopener noreferrer';stage.append(direct);}
-  let target;try{target=new URL(state.live?.url);}catch{}
-  const allowed=Boolean(state.live?.active&&target?.protocol==='https:'&&(target.hostname==='loew.fi'||target.hostname.endsWith('.loew.fi')));
-  direct.hidden=!allowed;if(allowed)direct.href=target.href;else direct.removeAttribute('href');
+  let target;try{target=new URL(state.live?.retained?.available?state.live.retained.url:state.live?.url,location.origin);}catch{}
+  const allowed=Boolean((state.live?.active||state.live?.retained?.available)&&target?.protocol==='https:'&&(target.hostname==='loew.fi'||target.hostname.endsWith('.loew.fi')));
+  direct.hidden=!allowed||Boolean(state.live.retained);if(allowed)direct.href=target.href;else direct.removeAttribute('href');
   const frame=stage.querySelector('[data-qa-live-preview]');
   if(frame) checkLiveFrame(frame);
 }
 function checkLiveFrame(frame) {
-  const currentStage=stage,currentState=state,check=new AbortController();previewCheck=check;
+  const currentStage=stage,currentState=state,check=new AbortController(),retained=frame.hasAttribute('data-qa-retained-preview');previewCheck=check;
   const current=()=>stage===currentStage && state===currentState && frame.isConnected && !check.signal.aborted;
   const fallback=(hard=false)=>{
     if(!current())return;
+    if(retained){currentStage.querySelector('.qa-preview-state').textContent='Retained preview unconfirmed · Captured is still available.';return;}
     currentState.live={...currentState.live,renderUnconfirmed:true};
     if(hard||expectedOrigin===location.origin){setView('captured');currentStage.querySelector('.qa-preview-state').textContent='Live preview unconfirmed · captured evidence';}
     else currentStage.querySelector('.qa-preview-state').textContent='Live unconfirmed · open directly or choose Captured.';
@@ -150,21 +152,27 @@ function checkLiveFrame(frame) {
   // Cross-origin frames without a readiness protocol remain explicitly unverified.
   // Keep the user's selected frame; never replace an available preview just because DOM access is blocked.
   let timer,navigation=0,nonce='';
-  const expectedOrigin=new URL(currentState.live.url,location.origin).origin;
+  const expectedOrigin=retained?'null':new URL(currentState.live.url,location.origin).origin;
   window.addEventListener('message',event=>{
-    if(!current()||event.source!==frame.contentWindow||event.origin!==expectedOrigin||!nonce||event.data?.type!=='relay-preview-ready'||event.data?.nonce!==nonce)return;
-    clearTimeout(timer);currentState.live={...currentState.live,renderUnconfirmed:false};currentStage.querySelector('.qa-preview-state').textContent='Interactive preview ready';
+    if(!current()||event.source!==frame.contentWindow||event.origin!==expectedOrigin||!nonce||event.data?.nonce!==nonce)return;
+    if(retained&&event.data?.type==='relay-retained-route') {
+      const {entry,hash}=event.data;
+      if(!['app','inspector'].includes(entry)||typeof hash!=='string'||hash.length>1000||!(entry==='inspector'?/^#review(?:\?.*)?$/:/^#\/(today|runner|night-shift)(?:[/?].*)?$/).test(hash))return;
+      currentState.retainedNav={entry,hash};const url=new URL(currentState.live.retained.url,location.origin);url.searchParams.set('entry',entry);url.hash=hash;frame.src=url.href;return;
+    }
+    if(event.data?.type!=='relay-preview-ready')return;
+    clearTimeout(timer);currentState.live={...currentState.live,renderUnconfirmed:false};currentStage.querySelector('.qa-preview-state').textContent=retained?'Retained '+currentState.live.retained.source_sha.slice(0,7)+' · sample data · ready':'Interactive preview ready';
   },{signal:check.signal});
   const waitForFrame=()=>{
     if(!current())return;
-    navigation++;nonce=crypto.randomUUID();clearTimeout(timer);currentStage.querySelector('.qa-preview-state').textContent='Checking live preview…';
-    frame.contentWindow?.postMessage({type:'relay-preview-check',nonce},expectedOrigin);
+    navigation++;nonce=crypto.randomUUID();clearTimeout(timer);currentStage.querySelector('.qa-preview-state').textContent=retained?'Checking retained build · sample data…':'Checking live preview…';
+    frame.contentWindow?.postMessage({type:'relay-preview-check',nonce},retained?'*':expectedOrigin);
     timer=setTimeout(fallback,8000);
   };
   waitForFrame();
   check.signal.addEventListener('abort',()=>clearTimeout(timer),{once:true});
   const confirm=async()=>{
-    if(!current())return;
+    if(!current()||retained)return;
     const confirmingNavigation=navigation;
     let documentInFrame,target;
     try {
@@ -205,7 +213,7 @@ export async function openQa(evidenceId) {
     state.noteParts=splitReviewNotes(state.review.notes||'');state.humanNotes=state.noteParts.notes;
     sessions.set(evidenceId,state);
     const unanswered=state.questions.findIndex(question=>!state.review.answers?.[question.id]);questionIndex=unanswered>=0?unanswered:Math.max(0,state.questions.length-1);
-    previewMode=state.live.active&&state.live.embeddable&&state.live.url?'live':state.evidence.video_url?'video':'captured';
+    previewMode=state.live.retained?.available?'retained':state.live.active&&state.live.embeddable&&state.live.url?'live':state.evidence.video_url?'video':'captured';
     setView(previewMode);repaintPanel();
     contrastController=createQaContrast(stage);floatController=createQaFloat(stage,{onDockChange(edge){void contrastController?.update(edge);}});
     requestAnimationFrame(()=>floatController?.refresh());
@@ -267,3 +275,17 @@ window.addEventListener('keydown',event=>{
 });
 window.addEventListener('pagehide',()=>{if(state?.dirty)persistDraft(state);});
 
+
+async function reviewRetained(){
+ const active=state,retained=active?.live?.retained;if(!retained||active.retainedBusy)return;
+ active.retainedBusy=true;repaintPanel();
+ try{
+  if(active.dirty&&!await saveReview(active))throw Error('Save your notes before reviewing the build.');
+  const result=await api('/api/retained-preview/'+retained.id+'/review',{method:'POST',body:JSON.stringify({action:retained.state==='pending'?'approve':'reopen',expected_etag:retained.etag,operation_id:crypto.randomUUID()})});
+  active.live.retained=result;
+  if(state===active){setView(result.available?'retained':'captured');stage.querySelector('.qa-preview-state').textContent=result.state==='pending'?'Build review reopened · retained pending approval':'Build approved · retained for 30 days';}
+ }catch(error){
+  try{active.live.retained=await api('/api/retained-preview/'+retained.id);}catch{}
+  if(state===active)stage.querySelector('.qa-preview-state').textContent=error.message+' Review status refreshed where available; no automatic retry.';
+ }finally{active.retainedBusy=false;if(state===active)repaintPanel('[data-retained-review]');}
+}
