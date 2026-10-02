@@ -96,7 +96,7 @@ try {
     const viewport={width,height:844},page=await browser.newPage({viewport,colorScheme:'dark'});
     await capture(page,{surface:feature+'-rich-bottom-'+width,route:feature==='inspector'?'/inspector#review':'/#/'+feature,viewport,preset:'rich'});await page.close();
   }
-  for(const preset of ['desktop-header','desktop-bottom']) for(const feature of ['today','inspector']) for(const width of [1024,1440]) {
+  for(const preset of ['approved','desktop-bottom']) for(const feature of ['today','inspector']) for(const width of [1024,1440]) {
     const viewport={width,height:1000},page=await browser.newPage({viewport,colorScheme:'dark'});
     await capture(page,{surface:feature+'-'+preset+'-'+width,route:feature==='inspector'?'/inspector#review':'/#/'+feature,viewport,preset});await page.close();
   }
@@ -110,4 +110,3 @@ try {
   fixture.controls.failVisual=true;await capture(page,{surface:'inspector-error-390',route:'/inspector#review',viewport,state:'error'});await page.close();
   console.log('RELAY_VISUAL_REVIEW_RESULT='+JSON.stringify({ok:true,local,pr,commit,build:webBuildId,captures}));
 } finally {await browser.close();await fixture.close();}
-
