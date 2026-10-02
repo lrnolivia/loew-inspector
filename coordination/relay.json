@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T04:21:01.084Z",
+  "updated_at": "2026-10-02T04:35:44.168Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -11351,7 +11351,8 @@
         "apps/web/public/qa.css",
         "apps/web/public/qa-float.js",
         "apps/web/public/qa-viewport.js",
-        "apps/web/test/mobile-inspector.test.mjs"
+        "apps/web/test/mobile-inspector.test.mjs",
+        ".github/workflows/ci.yml"
       ],
       "resources": [
         "relay-website-notifications",
@@ -11363,7 +11364,7 @@
       ],
       "goal": "Implement Lauren's confirmed post-release website QA: filled red badge pulse, improved retained bottom navigation, understandable real-data Rich telemetry, simplified Settings, truthful new-work arrivals and exact-item notification navigation.",
       "acceptance": "Preserve the perfect default sidebar, approved neutral palette/Momo/header identity and all useful functions. Fill circular notification count bright red and pulse the whole badge with readable truthful count and Calm/reduced-motion suppression. Widen mobile bottom navigation and make all four individual buttons pill-shaped with accessible touch targets and safe-area/content clearance. Keep desktop branded bottom pill as permanent optional layout, shorten and align it. Remove Roomy Mobile Overview and Desktop Compact Header options and safely migrate obsolete saved preferences while retaining other valid options. Replace paintbrush with existing shared settings gear and accessible Settings labeling. Explain Rich real-data telemetry via meaningful labeled animated circular charts and changing numbers where appropriate, without fabricated percentage/trend/progress; preserve Simple/default and honest partial/error states. Reuse existing notification/presentation systems for distinct NEW WORK arrival toasts and new-card entry animation; successful feed baselines, stable identities and bounded existing polling, no initial-load/refresh/route-change/recovery duplicate alerts or false freshness. BOTH existing item-specific menu/toasts and new-work toasts resolve actual project+assignment/evidence identity and reveal exact destination despite current project/filter; focus/scroll visibly, preserve unsaved human work and explain unavailable/removed targets; no unrelated generic fallback. Connection-wide notices retain honest context rather than inventing an item. Validate all four routes desktop/narrow, preference migration, data/motion/arrival/navigation/save journeys and registered exact-head screenshots after settled data; scoped and full repository checks, coordination preflight and exact-head CI. Draft PR only; no merge/deploy in this new batch without further explicit authorization. No MCP/backend-feedback resources, work-viewer redesign or hosting infrastructure changes. Additional confirmed QA: Inspector chat-card previews are temporary, collapsed by default with accessible expand/collapse and unchanged art; remove their dedicated top telemetry box/counter. Preserve horizontal composition for chat previews and relevant work cards including mobile, readable content and usable controls; no tall portrait cards, no change to approved telemetry mosaic/default sidebar.",
-      "next_action": "Implement Lauren's current mobile QA directly: accent strip scrolls away, Runner document cannot overflow horizontally while project tabs retain local scroll; wider compact Inspector question panel exposes common answer/navigation controls without internal scroll; questions toggle is compact; captured preview touch pan and anchored pinch/fit, leaving live/video embedded interactions native. Screenshots2701bf,1ace023,86f5f03b inspected; no exact testedbuild inferred. Preserve all previous polish acceptance and untouched unpublished Mac edits; reconciliation remains pending, no stopped worker resumed. Add bounded browser regression tests, including real touch and controls, before release.",
+      "next_action": "Mobile scroll/Inspector fixes and full automated checks pass atad0d161. Add existing quality artifact capture eligibility for this website branch prefix only, so exact-head mobile screenshots can be inspected before release. No new CI privileges, credentials or production actions. Preserve all original polish/unpublished Mac reconciliation and user QA scope.",
       "task_class": "design",
       "category": "design",
       "primary_team": "source",
@@ -11373,8 +11374,8 @@
       "base_sha": "c5cd616af7a0b177c5f7f077c327010db1ccad32",
       "state": "active",
       "created_at": "2026-10-02T00:38:21.522Z",
-      "updated_at": "2026-10-02T04:21:01.084Z",
-      "lease_until": "2026-10-02T16:21:01.084Z"
+      "updated_at": "2026-10-02T04:35:44.168Z",
+      "lease_until": "2026-10-02T16:35:44.168Z"
     }
   ],
   "migrated_from": "loew-inspector"
