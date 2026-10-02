@@ -11,3 +11,5 @@ export function groupedActivity(activity) {
   for(const [id,time] of Object.entries(activity)) result[projectGroup(id)]=Math.max(result[projectGroup(id)]||0,time);
   return result;
 }
+
+export const projectMembers = id => id ? [id,...Object.keys(parents).filter(child=>parents[child]===id)] : [];
