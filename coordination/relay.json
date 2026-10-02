@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T01:03:23.262Z",
+  "updated_at": "2026-10-02T01:04:10.424Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6893,8 +6893,22 @@
       "supporting_teams": [],
       "primary_staff": "ellis",
       "supporting_staff": [],
-      "state": "claimed",
-      "created_at": "2026-10-01T23:22:05.616Z"
+      "state": "superseded",
+      "created_at": "2026-10-01T23:22:05.616Z",
+      "updated_at": "2026-10-02T01:04:10.424Z",
+      "retirement": {
+        "at": "2026-10-02T01:04:10.424Z",
+        "intent": {
+          "operation_id": "julian-direct-card-transition-20261002-0103",
+          "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "disposition": "superseded",
+          "reason": "Lauren stopped the worker and explicitly moved card repair into this chat without workers. Prior merged branch must not be reused; transfer unfinished criteria to queued bounded successor.",
+          "evidence": "PR113 delivered exact reviewed7ba84ae merged6cac8fa8525a1d7d474708b500bbe1baf1ae0afc; build7b4dd287-1e1f-4a83-9f8b-015d37a2c13c, deployment375558ab-961b-43ae-9754-493d033c62a8, versionabcd871f-ef81-4136-9fa2-1e7dc0baea58 at100%, safe livehealthPASS. User manually stopped worker; task latestturn01a0fa16-ec81-7419-adf7-2c29cd259381 recorded interrupted, no new source edits after merged release, prior clean checkout reported. Full remote inventory at00938e328214eec966c6258ebbd58a3973334814 has no old branch; retirement must verify authenticated404. All original evidence and remaining criteria copied unchanged to queued successor; no native host success or feedbackACK invented. Website writer uses current engine and separate admitted paths; no old CLI writer resumed. Direct supported MCP transaction only.",
+          "superseded_by": "relay-context-card-packaging-20261002",
+          "branch": "relay/mcp-feedback-routing-20261001",
+          "head_sha": null
+        }
+      }
     },
     {
       "id": "relay-context-card-packaging-20261002",
@@ -11005,10 +11019,23 @@
       "primary_staff": "ellis",
       "supporting_staff": [],
       "base_sha": "29410ee5d8b17d1d0916618b65c6687ddb3ca444",
-      "state": "held",
+      "state": "superseded",
       "created_at": "2026-10-01T23:24:32.666Z",
-      "updated_at": "2026-10-02T01:02:14.110Z",
-      "lease_until": "2026-10-02T13:02:14.110Z"
+      "updated_at": "2026-10-02T01:04:10.424Z",
+      "lease_until": "2026-10-02T13:02:14.110Z",
+      "retirement": {
+        "at": "2026-10-02T01:04:10.424Z",
+        "intent": {
+          "operation_id": "julian-direct-card-transition-20261002-0103",
+          "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "disposition": "superseded",
+          "reason": "Lauren stopped the worker and explicitly moved card repair into this chat without workers. Prior merged branch must not be reused; transfer unfinished criteria to queued bounded successor.",
+          "evidence": "PR113 delivered exact reviewed7ba84ae merged6cac8fa8525a1d7d474708b500bbe1baf1ae0afc; build7b4dd287-1e1f-4a83-9f8b-015d37a2c13c, deployment375558ab-961b-43ae-9754-493d033c62a8, versionabcd871f-ef81-4136-9fa2-1e7dc0baea58 at100%, safe livehealthPASS. User manually stopped worker; task latestturn01a0fa16-ec81-7419-adf7-2c29cd259381 recorded interrupted, no new source edits after merged release, prior clean checkout reported. Full remote inventory at00938e328214eec966c6258ebbd58a3973334814 has no old branch; retirement must verify authenticated404. All original evidence and remaining criteria copied unchanged to queued successor; no native host success or feedbackACK invented. Website writer uses current engine and separate admitted paths; no old CLI writer resumed. Direct supported MCP transaction only.",
+          "superseded_by": "relay-context-card-packaging-20261002",
+          "branch": "relay/mcp-feedback-routing-20261001",
+          "head_sha": null
+        }
+      }
     },
     {
       "id": "relay-website-post-release-polish-20261002",
