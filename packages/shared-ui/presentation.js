@@ -1,21 +1,23 @@
 import { glyph } from './glyphs.js';
 // Presets are complete presentation settings; future themes can extend this registry.
-const presets = { approved: { label: 'Approved · default', settings: { desktop: 'rail', nav: 'top', overview: 'compact', brand: 'compact', richness: 'simple', motion: 'full' } }, bottom: { label: 'Mobile bottom navigation', settings: { desktop: 'rail', nav: 'bottom', overview: 'compact', brand: 'compact', richness: 'simple', motion: 'full' } }, roomy: { label: 'Roomy mobile overview', settings: { desktop: 'rail', nav: 'top', overview: 'roomy', brand: 'roomy', richness: 'simple', motion: 'full' } } };
+const presets = { approved: { label: 'Approved · default', settings: { desktop: 'rail', nav: 'top', overview: 'compact', brand: 'compact', richness: 'simple', motion: 'full' } }, bottom: { label: 'Mobile bottom navigation', settings: { desktop: 'rail', nav: 'bottom', overview: 'compact', brand: 'compact', richness: 'simple', motion: 'full' } } };
 presets.rich = { label: 'Rich telemetry', settings: { ...presets.approved.settings, richness: 'rich' } };
 const defaults = presets.approved.settings;
-presets['desktop-header'] = { label: 'Desktop compact header', settings: { ...defaults, desktop: 'header' } };
 presets['desktop-bottom'] = { label: 'Desktop branded bottom pill', settings: { ...defaults, desktop: 'bottom' } };
-const choices = { desktop: ['rail', 'header', 'bottom'], nav: ['top', 'bottom'], overview: ['compact', 'roomy'], brand: ['compact', 'roomy'], richness: ['simple', 'rich'], motion: ['full', 'calm'] };
-const brush = '<svg class="relay-glyph" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m13 12 7-8a2 2 0 0 0-3-3l-8 7Z"/><path d="M11 13c2 5-3 8-8 7 2-1 0-5 3-7 2-1 3-1 5 0Z"/></svg>';
+const choices = { desktop: ['rail', 'bottom'], nav: ['top', 'bottom'], overview: ['compact'], brand: ['compact', 'roomy'], richness: ['simple', 'rich'], motion: ['full', 'calm'] };
 export function presentationMenu() {
-  return `<details class="presentation-menu"><summary aria-label="Presentation and tools" title="Presentation and tools">${brush}</summary><div class="presentation-panel"><strong>presentation</strong><p>Only this browser · <span data-presentation-state>Approved</span></p><label>Presentation preset<select name="preset">${Object.entries(presets).map(([id,preset]) => `<option value="${id}">${preset.label}</option>`).join('')}<option value="custom" disabled>Custom</option></select></label><details class="presentation-customize"><summary>Customize</summary><fieldset><legend>Mobile</legend><label>Navigation<select name="nav"><option value="top">Top · default</option><option value="bottom">Bottom · try it</option></select></label><label>Mobile overview<select name="overview"><option value="compact">Compact · default</option><option value="roomy">Roomy</option></select></label></fieldset><fieldset><legend>Desktop / tablet</legend><label>Desktop layout<select name="desktop"><option value="rail">Sidebar · default</option><option value="header">Compact header · try it</option><option value="bottom">Branded bottom pill · try it</option></select></label><label>Sidebar brand<select name="brand"><option value="compact">Small tile · default</option><option value="roomy">Roomier tile</option></select></label></fieldset><fieldset><legend>Telemetry / motion</legend><label>Data visuals<select name="richness"><option value="simple">Simple · default</option><option value="rich">Rich · count markers</option></select></label><label>Motion<select name="motion"><option value="full">Spring · default</option><option value="calm">Calm</option></select></label></fieldset></details><button type="button" data-presentation-reset>Reset presentation</button><div class="presentation-tools"><button id="theme-toggle" class="utility-button" type="button"><span class="utility-icon" aria-hidden="true">${glyph('sun')}</span><span class="utility-label">Light mode</span></button><a id="app-settings" class="utility-button" href="https://chatgpt.com/settings/plugins-settings/plugin_asdk_app_6abe234861d881919e30db65d656492f" target="_blank" rel="noreferrer"><span class="utility-icon" aria-hidden="true">${glyph('refresh')}</span><span class="utility-label">Refresh tools</span><span class="utility-arrow" aria-hidden="true">↗</span></a></div></div></details>`;
+  return `<details class="presentation-menu"><summary aria-label="Settings" title="Settings">${glyph('settings')}</summary><div class="presentation-panel"><strong>settings</strong><p>Only this browser · <span data-presentation-state>Approved</span></p><label>Presentation preset<select name="preset">${Object.entries(presets).map(([id,preset]) => `<option value="${id}">${preset.label}</option>`).join('')}<option value="custom" disabled>Custom</option></select></label><details class="presentation-customize"><summary>Customize</summary><fieldset><legend>Mobile</legend><label>Navigation<select name="nav"><option value="top">Top · default</option><option value="bottom">Bottom</option></select></label></fieldset><fieldset><legend>Desktop / tablet</legend><label>Desktop layout<select name="desktop"><option value="rail">Sidebar · default</option><option value="bottom">Branded bottom pill</option></select></label><label>Sidebar brand<select name="brand"><option value="compact">Small tile · default</option><option value="roomy">Roomier tile</option></select></label></fieldset><fieldset><legend>Telemetry / motion</legend><label>Data visuals<select name="richness"><option value="simple">Simple · default</option><option value="rich">Rich · labeled counts</option></select></label><label>Motion<select name="motion"><option value="full">Spring · default</option><option value="calm">Calm</option></select></label></fieldset></details><button type="button" data-presentation-reset>Reset presentation</button><div class="presentation-tools"><button id="theme-toggle" class="utility-button" type="button"><span class="utility-icon" aria-hidden="true">${glyph('sun')}</span><span class="utility-label">Light mode</span></button><a id="app-settings" class="utility-button" href="https://chatgpt.com/settings/plugins-settings/plugin_asdk_app_6abe234861d881919e30db65d656492f" target="_blank" rel="noreferrer"><span class="utility-icon" aria-hidden="true">${glyph('refresh')}</span><span class="utility-label">Refresh tools</span><span class="utility-arrow" aria-hidden="true">↗</span></a></div></div></details>`;
+}
+export function normalizePresentation(saved = {}) {
+  return Object.fromEntries(Object.entries(defaults).map(([key, value]) => [key, choices[key].includes(saved?.[key]) ? saved[key] : value]));
 }
 export function bindPresentation() {
   const menu = document.querySelector('.presentation-menu');
   if (!menu) return () => {};
   let saved = {};
   try { saved = JSON.parse(localStorage.getItem('relay-presentation') || '{}'); } catch {}
-  let prefs = Object.fromEntries(Object.entries(defaults).map(([key, value]) => [key, choices[key].includes(saved?.[key]) ? saved[key] : value]));
+  let prefs = normalizePresentation(saved);
+  try { localStorage.setItem('relay-presentation', JSON.stringify(prefs)); } catch {}
   const header = document.querySelector('.operator-topbar');
   const nav = document.querySelector('.operator-nav');
   const clearance = () => {
@@ -34,7 +36,8 @@ export function bindPresentation() {
     menu.querySelector('[data-presentation-state]').textContent = preset?.[1].label || 'Custom';
     for (const [key, value] of Object.entries(prefs)) {
       document.documentElement.dataset['presentation' + key[0].toUpperCase() + key.slice(1)] = value;
-      menu.querySelector(`[name="${key}"]`).value = value;
+      const control = menu.querySelector(`[name="${key}"]`);
+      if (control) control.value = value;
     }
     clearance();
   };
@@ -55,8 +58,14 @@ export function bindPresentation() {
 }
 
 // Discrete units, never a fabricated timeline, percentage or trend.
-export function countVisual(value) {
+export function countVisual(value, total = null, totalLabel = 'items') {
+  if (/^\d+$/.test(String(value)) && Number.isFinite(total) && total > 0 && Number(value) <= total) {
+    const count=Number(value), fraction=count/total;
+    const label=String(totalLabel).replace(/[&<>"']/g, '');
+    return `<span class="signal-data-visual signal-ratio"><svg viewBox="0 0 40 40" aria-hidden="true"><circle class="ratio-track" cx="20" cy="20" r="16"/><circle class="ratio-value" cx="20" cy="20" r="16" pathLength="100" stroke-dasharray="${fraction*100} 100"/></svg><span>${count} of ${total} ${label}</span></span>`;
+  }
   if (!/^\d+\+?$/.test(String(value))) return '';
   const count = Number.parseInt(value, 10);
   return '<span class="signal-data-visual" aria-hidden="true" title="One marker per item; up to twelve shown">' + Array.from({length: Math.min(count, 12)}, (_, i) => '<i style="--unit:' + i + '"></i>').join('') + '</span>';
 }
+

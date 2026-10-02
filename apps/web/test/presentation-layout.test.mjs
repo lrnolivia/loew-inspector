@@ -20,7 +20,7 @@ async function checkClearance(page,desktop) {
 test('optional desktop layouts retain identity and four destinations; measured dock clearance survives enlarged wrapped text',async()=>{
  const fixture=await contextFixture(),browser=await chromium.launch({headless:true});
  try {
-  for(const width of [1024,1440]) for(const inspector of [false,true]) for(const preset of ['desktop-header','desktop-bottom']) {
+  for(const width of [1024,1440]) for(const inspector of [false,true]) for(const preset of ['desktop-bottom']) {
    const page=await browser.newPage({viewport:{width,height:844},colorScheme:'dark',reducedMotion:'reduce'});
    await page.goto(fixture.origin+(inspector?'/inspector#review':'/#/today'));await settle(page,inspector);
    assert.equal(await page.locator('html').getAttribute('data-presentation-desktop'),'rail');
@@ -49,3 +49,4 @@ test('optional desktop layouts retain identity and four destinations; measured d
   }
  } finally {await browser.close();await fixture.close();}
 });
+
