@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T04:35:44.168Z",
+  "updated_at": "2026-10-02T05:39:46.814Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6725,9 +6725,9 @@
     {
       "id": "relay-website-work-queue-views-20261001",
       "owner": "Julian-PM",
-      "goal": "NEW FEATURES, DEFERRED: make Relay work items easy to identify, review, sort and manage consistently in optional list and Inspector-style visual-card views, preserving both presentations.",
-      "acceptance": "Implement only AFTER relay-website-project-context-polish-20261001 is fully completed and verified. Offer a view switcher between existing compact/list work items and Inspector-style visual work cards on every relevant website page; do not force a new default view or invent persistence policy. Keep Inspector screenshots and use fitting semantic imagery/glyphs elsewhere; show project and what is happening at a glance. Use one reusable project identity badge everywhere: Inspector pill container, project icon, prominent NightShift/list-style name; refine type/icon scale and spacing. Reuse Need Review, Completed, Stale, Archived and All filters. Retain Clear Stale; add Clear Complete, Mark All Stale and Mark All Complete. Add per-card/list checkboxes and separate time/importance sorting; preserve filters, sort and selection across view changes. Make selected-items, current-filter and all-project bulk scope unmistakable, including counts; support undo for clearing/status changes. Each work item shows next action or blocker. Define timestamp, importance source, clear/completion/stale semantics explicitly before implementing them; proposed defaults are not user-approved. Do not infer destructive deletion or execute bulk changes to existing records from this feature request. Preserve accessibility, loading/error/empty states, consistent item identity and exact-build evidence. This concerns WORK-ITEM cards, not top telemetry cards or conversational MCP cards. Extensibility requirement confirmed by Lauren at 19:33 UTC: design this as one modular reusable work viewer so future item types and filtering dimensions can be added without rebuilding every page. Share query/filter/sort/selection/action state across List and Visual presentations, use explicit item/filter/action extension contracts, and preserve existing behavior when a module is added. Prove a new filter dimension can be added once and behave consistently in both views. Avoid a second task system, arbitrary plugin runtime, or unrequested features; implementation remains behind the full WEBSITE FIXES gate.",
-      "next_action": "DEFERRED behind full acceptance of current WEBSITE FIXES. Research/specification may continue, but no feature implementation before that gate. Review the prepared Relay-Work-Queue-Feature-Spec with Lauren for unresolved semantics, then obtain scoped admission without replacing prior goals. No new credentials, billing, merge/deploy, or live bulk record changes authorized by this queue entry.",
+      "goal": "Finish earlier Mac polish and modular website work views together before retained previews and cards.",
+      "acceptance": "User order 2026-10-02 Sentinel_023b7a5341e88191b2e80a5dfcf2aad5: finish FIRST earlier Mac polish+work viewer together; SECOND frozen interactive previews; LAST MCP cards. This supersedes older separation gates. Preserve every earlier requirement in original queued amendments and predecessor relay-website-post-release-polish-20261002; reconstruct unavailable Mac source against current main, never claim byte recovery. Preserve PR117 mobile fixes.\nWORK VIEWER: shared modular query/filter/sort/selection/action model for List and Visual across relevant work sections, retaining page defaults and existing actions. Inspector keeps screenshots; other items semantic glyphs. Unified project pill/icon/prominent name. Need Review/Completed/Stale/Archived/All; Clear Stale/Complete, Mark Stale/Complete, restore and undo. Per-item checkboxes; explicit selected/current-filter/all-project scopes and exact counts, partial feeds never imply full scope. Retain filter/sort/selection/item anchor across views. Show next action/blocker, source state separately. Time uses meaningful source activity with labeled fallbacks; priority only explicit mapped source value, unranked unknowns. Prove adding one filter works both views. User Sentinel_74f7881674ac8191830da3e4bd12505d approved Clear=reversible archive and Complete=review handled without closing underlying task/PR; no existing records mutated by tests. Persist review state using existing bounded architecture, handle new revisions/conflicts/undo safely.\nPOLISH: preserve default sidebar, approved neutrals/Momo/header/mosaic. Red whole notification badge pulse with readable count and reduced-motion/Calm. Wider mobile four-button pill nav, safe clearance; permanent optional shorter aligned desktop branded bottom pill. Remove Roomy Mobile Overview/Desktop Compact Header with safe preference migration. Gear Settings. Real meaningful labeled Rich circular telemetry and changing numbers, Simple default, honest partial/error. New-work arrivals only genuine new identities after successful baselines; no reload/recovery/route repeats. All notifications/toasts reveal exact project/item with focus/scroll, save-safe navigation, explicit missing target. Chat previews collapsed by default, art unchanged, no dedicated telemetry counter; horizontal cards/mobile readability.\nPROJECT BAR Sentinel_445eebe19d7c819192da876f1727eac0: alphabetical; recent meaningful updates promoted into front raised highlighted row with changed color. Routine polling must not reshuffle.\nVerify all four pages desktop/narrow, interrupted/repeated/Back flows, migration, new work, exact navigation and saves. Full exact-head CI/preflight plus settled screenshots. Address available-preview false fallback using strict origin/source/nonce or honest open-preview action; frozen hosting remains second batch. No auth/protection/paid-service expansion. Direct parent work, no stopped workers resumed. Draft PR then required release authorization and exact deployed verification.",
+      "next_action": "Preserve prior merged mobile work; retire released predecessor with unresolved scope carried here, then admit combined website batch.",
       "paths": [
         "apps/web/",
         "packages/shared-ui/",
@@ -6762,7 +6762,7 @@
       "supporting_staff": [],
       "state": "queued",
       "created_at": "2026-10-01T19:26:50.861Z",
-      "amendment_count": 1,
+      "amendment_count": 2,
       "amendments": [
         {
           "at": "2026-10-01T19:34:22.441Z",
@@ -6777,9 +6777,29 @@
           "after": {
             "acceptance": "Implement only AFTER relay-website-project-context-polish-20261001 is fully completed and verified. Offer a view switcher between existing compact/list work items and Inspector-style visual work cards on every relevant website page; do not force a new default view or invent persistence policy. Keep Inspector screenshots and use fitting semantic imagery/glyphs elsewhere; show project and what is happening at a glance. Use one reusable project identity badge everywhere: Inspector pill container, project icon, prominent NightShift/list-style name; refine type/icon scale and spacing. Reuse Need..."
           }
+        },
+        {
+          "at": "2026-10-02T05:39:46.814Z",
+          "by": "Julian-PM",
+          "reason": "Latest user combined first batch and ordered previews/cards; bulk meanings explicitly approved and project bar requirement added.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "goal": "NEW FEATURES, DEFERRED: make Relay work items easy to identify, review, sort and manage consistently in optional list and Inspector-style visual-card views, preserving both presentations.",
+            "acceptance": "Implement only AFTER relay-website-project-context-polish-20261001 is fully completed and verified. Offer a view switcher between existing compact/list work items and Inspector-style visual work cards on every relevant website page; do not force a new default view or invent persistence policy. Keep Inspector screenshots and use fitting semantic imagery/glyphs elsewhere; show project and what is happening at a glance. Use one reusable project identity badge everywhere: Inspector pill container, project icon, prominent NightShift/list-style name; refine type/icon scale and spacing. Reuse Need...",
+            "next_action": "DEFERRED behind full acceptance of current WEBSITE FIXES. Research/specification may continue, but no feature implementation before that gate. Review the prepared Relay-Work-Queue-Feature-Spec with Lauren for unresolved semantics, then obtain scoped admission without replacing prior goals. No new credentials, billing, merge/deploy, or live bulk record changes authorized by this queue entry."
+          },
+          "after": {
+            "goal": "Finish earlier Mac polish and modular website work views together before retained previews and cards.",
+            "acceptance": "User order 2026-10-02 Sentinel_023b7a5341e88191b2e80a5dfcf2aad5: finish FIRST earlier Mac polish+work viewer together; SECOND frozen interactive previews; LAST MCP cards. This supersedes older separation gates. Preserve every earlier requirement in original queued amendments and predecessor relay-website-post-release-polish-20261002; reconstruct unavailable Mac source against current main, never claim byte recovery. Preserve PR117 mobile fixes.\nWORK VIEWER: shared modular query/filter/sort/selection/action model for List and Visual across relevant work sections, retaining page defaults and ...",
+            "next_action": "Preserve prior merged mobile work; retire released predecessor with unresolved scope carried here, then admit combined website batch."
+          }
         }
       ],
-      "updated_at": "2026-10-01T19:34:22.441Z"
+      "updated_at": "2026-10-02T05:39:46.814Z"
     },
     {
       "id": "relay-website-notification-center-20261001",
