@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T14:14:53.326Z",
+  "updated_at": "2026-10-02T15:25:44.186Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -11928,6 +11928,34 @@
       "evidence": "PR131 merged8cb79af3b47860dab85e3e6463e9ddf5324d4f7d. Full candidate and postmerge quality, Workers Builds and production+retained verification passed run37017937911/job110874018106. Correct actual worker actions covered; reads remain non-events. Event class is still deliberately unbound; protected ctrl integration/security approval is pending and no access/binding/domain/credential mutation occurred.",
       "work_accounted": true,
       "completed_at": "2026-10-02T14:14:53.326Z"
+    },
+    {
+      "id": "ctrl-protected-cutover-20261002",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "branch": "relay/ctrl-protected-cutover-20261002",
+      "paths": [
+        "wrangler.jsonc",
+        "projects/ctrl.json",
+        "docs/ctrl/",
+        "scripts/verify-ctrl.mjs",
+        ".github/workflows/verify-ctrl.yml"
+      ],
+      "resources": [
+        "ctrl-protected-deployment",
+        "relay-ctrl-event-activation"
+      ],
+      "goal": "Complete the owner-approved protected ctrl cutover with instant Relay events while retaining the working Relay fallback.",
+      "acceptance": "Owner approved the specific Access/build/Worker/live-event integration at2026-10-02T15:13Z. Same existing Access audience and policy rules; no new credentials or public project data. Enable the prepared Relay event class, existing Cloudflare build integration and separate ctrl Worker/service adapter through normal GitHub release. Verify exact live source, protected anonymous rejection, authenticated APIs, browser layout and WebSocket invalidation/reconnect. Keep Relay production as rollback. No force push, manual website upload or audience expansion.",
+      "next_action": "Access expansion to ctrl.loew.fi already verified with unchanged policyIDs/rules/audience. Enable registered ctrl cloud target and Relay event binding, provision empty Worker/build configuration, finalize matched Figma icon and ctrl release source, then run exact protected runtime verification.",
+      "primary_team": "release",
+      "supporting_teams": [],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "base_sha": "e810a68785788dd74e673e99198fce12075ee390",
+      "state": "active",
+      "created_at": "2026-10-02T15:25:44.186Z",
+      "updated_at": "2026-10-02T15:25:44.186Z",
+      "lease_until": "2026-10-03T03:25:44.186Z"
     }
   ],
   "migrated_from": "loew-inspector"
