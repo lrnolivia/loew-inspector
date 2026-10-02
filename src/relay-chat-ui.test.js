@@ -389,3 +389,30 @@ test('v9 card reports its height with ui/notifications/size-changed and shows ha
     await frame.locator('#diag').filter({hasText:/handshake ok/}).waitFor();
   } finally {await browser.close()}
 });
+
+test('production context card model remains executable after Worker keepNames bundling', async () => {
+  const { build } = await import('esbuild');
+  const { runInNewContext } = await import('node:vm');
+  const built = await build({
+    entryPoints: [new URL('./relay-chat-ui.js', import.meta.url).pathname],
+    bundle: true, write: false, format: 'esm', platform: 'neutral', keepNames: true
+  });
+  const bundled = await import('data:text/javascript;base64,' + Buffer.from(built.outputFiles[0].text).toString('base64'));
+  const html = bundled.relayContextCardResource().text;
+  const script = html.match(/<script>([\s\S]*?)<\/script>/)?.[1];
+  assert.ok(script, 'actual shipped resource includes its browser program');
+  const prefix = script.slice(0, script.indexOf('const FEATURES='));
+  assert.ok(prefix.includes('const model='), 'test executes the actual embedded model');
+  const cases = [
+    {project:'relay',claim:{primary_staff:'julian',state:'active',goal:'Bundled card is alive'}},
+    {ok:false,error:{message:'Readable failure'}},
+    {checks:{check_runs:[]}},
+    {claim:{primary_staff:'nico',state:'completed',goal:'Finished',next_action:'Old action'}},
+    {project:'relay',claim:{primary_team:'runner',state:'working',progress_percent:50}}
+  ];
+  for (const input of cases) {
+    const actual = runInNewContext(prefix + ';model(input,DIRECTORY)', {input});
+    assert.deepEqual(JSON.parse(JSON.stringify(actual)), JSON.parse(JSON.stringify(bundled.contextCardModel(input))));
+  }
+  assert.doesNotMatch(prefix, /\b__name\b/, 'browser code must not depend on a Worker-only helper');
+});
