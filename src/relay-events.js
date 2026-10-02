@@ -1,6 +1,6 @@
 // Invalidation transport only. Runner, evidence and Git remain canonical state.
 const WINDOW=250,TTL=24*60*60*1000;
-const mutations=new Set(['relay_runner_coordinate','relay_runner_action','relay_runner_feedback_submit','relay_runner_feedback_ack','relay_source_create_branch','relay_source_commit_files','relay_source_update_file','relay_source_edit_text','relay_source_append_text','relay_source_open_pull_request','relay_source_pull_request_action','relay_visual_capture','relay_visual_qa_update','relay_cloud_upload','relay_cloud_deploy_version']);
+const mutations=new Set(['relay_runner_coordinate','relay_runner_action','relay_runner_feedback_submit','relay_runner_feedback_ack','relay_source_create_branch','relay_source_commit_files','relay_source_update_file','relay_source_edit_text','relay_source_append_text','relay_source_open_pull_request','relay_source_pull_request_action','relay_verify_browser_capture','relay_verify_browser_recipe','relay_cloud_upload_version','relay_cloud_deploy_version','relay_cloud_deploy_project_version']);
 export function mutationTopics(name){return mutations.has(name)?['work','projects','evidence']:null;}
 export function operatorTopics(path,body){
  if(path==='/api/work-review')return body?.action==='set'?['reviews']:null;
@@ -40,7 +40,7 @@ export async function eventStream(request,env){
 }
 export async function publishInvalidation(env,topics,operationId=crypto.randomUUID()){
  if(!env.RELAY_EVENTS||!topics)return false;
- try{const response=await env.RELAY_EVENTS.get(env.RELAY_EVENTS.idFromName('control-center')).fetch('https://relay-events/publish',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({topics,operation_id:operationId})});return response.ok;}catch{return false;}
+ try{const response=await env.RELAY_EVENTS.get(env.RELAY_EVENTS.idFromName('control-center')).fetch('https://relay-events/publish',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({topics,operation_id:operationId}),signal:AbortSignal.timeout(2000)});return response.ok;}catch{return false;}
 }
 // Legacy-style Durable Object class is intentionally independent of application
 // state. Runtime activation requires a separate reviewed binding/migration.
