@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T07:41:59.141Z",
+  "updated_at": "2026-10-02T07:52:58.494Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -11616,10 +11616,16 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "9c5b42a80b82fee437c4f31a714484c70f4a4b12",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-02T07:34:44.907Z",
-      "updated_at": "2026-10-02T07:41:59.141Z",
-      "lease_until": "2026-10-02T19:41:59.141Z"
+      "updated_at": "2026-10-02T07:52:58.494Z",
+      "lease_until": "2026-10-02T19:52:58.494Z",
+      "pr": 119,
+      "merged_head_sha": "40f834e014313a00b4abbe724b0c112529182e1c",
+      "merge_commit_sha": "310fe7d0a20fc92eee1a8a42e0d707b0bda82792",
+      "evidence": "PR119 merged exact40f834e014313a00b4abbe724b0c112529182e1c as310fe7d0a20fc92eee1a8a42e0d707b0bda82792. Full candidate and main quality/admission passed. Workersbuild9215745b-05e9-4cf7-8d0a-fc53dd4df582 success, deploymentf4e6903c-6382-4e71-9983-8851bd8e68a9/versione3f18d2f-8504-4d90-ba88-30e291a4d163 at100%. Actual deployed website verification run36980397830/job110753812127 PASSED exactsource/build2569471b0e0bcbdd591719b379ee0b8b7842a68afd28e53fd1984dea58c7874a. Previously404 vis_fb3a86b0-7c1e-4026-a75e-36983623d3c8 nowQA200/image200/hashaca20f0691548c44093d986cb92d5fd61cbb42fde2181502b5e9ba77802c9030 exactoriginal103678bytes. Eight new desktop/mobile productioncaptures persisted and hash-readbackpassed, including vis_04fa43a9-505b-4474-9231-91f0a824988e and vis_29486c68-386d-4854-94b2-e7dec971d57d. Originalobjectsunchanged. rtxforge-mfg existingunmanagedfeedpartial remains visible, addressed by preservedwebsite successor. This completes only evidence recovery;62-file websitecatchup remainsqueued relay-website-catchup-release-20261002, noUIreleaseclaim.",
+      "work_accounted": true,
+      "completed_at": "2026-10-02T07:52:58.494Z"
     }
   ],
   "migrated_from": "loew-inspector"
