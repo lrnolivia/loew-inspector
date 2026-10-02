@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T11:48:20.168Z",
+  "updated_at": "2026-10-02T11:49:56.206Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -11756,10 +11756,16 @@
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "ecedc50d751c8b5220f930115d41ba60b6b87e1e",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-02T11:01:37.756Z",
-      "updated_at": "2026-10-02T11:48:20.168Z",
-      "lease_until": "2026-10-02T23:48:20.168Z"
+      "updated_at": "2026-10-02T11:49:56.206Z",
+      "lease_until": "2026-10-02T23:49:56.206Z",
+      "pr": 122,
+      "merged_head_sha": "13320678df411a3dbecb2bfb6f6b033339cf25fe",
+      "merge_commit_sha": "b9702eeb5f87c07d6931d7ea267e41b9e3c1c5c7",
+      "evidence": "PR122 merged b9702eeb5f87c07d6931d7ea267e41b9e3c1c5c7; full candidate CI37001640605 and all8 stored card captures hash-readback pass. Workers production e8fc6779-6582-4bbe-ae68-646ff132bc19 at100%, exact source/build check passed in37002316842 before later GET ECONNRESET interrupted screenshot readback. That remaining pipeline verification is tracked next as relay-production-readback-recovery-20261002; no claim of complete postdeploy receipt or native Linux host proof. Original legacy bytes preserved and all source work accounted.",
+      "work_accounted": true,
+      "completed_at": "2026-10-02T11:49:56.206Z"
     }
   ],
   "migrated_from": "loew-inspector"
