@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T12:34:44.947Z",
+  "updated_at": "2026-10-02T12:36:28.138Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -11801,6 +11801,31 @@
       "evidence": "PRs 123–126 merged. Exact production main 6930685bd862a9d4c6db3ccfae50936c259a64e8 passed full quality and production job 110837292000, run 37006777413. Workers version 19de294a-f049-40f8-92db-cef2df715754; exact web build d88b3d998c2caaea27d4471b24887a80b58b1d90c3c3c9002d7ce87050343e41. Eight live desktop/mobile captures and SHA256 evidence readbacks passed; retained preview rp_391a70da55af27b23f9b912d24adc379c8d24abceb24206791d53e91d8eeba52 and four isolated captures passed. Artifacts 11225674895/11225814223. Safe GET retry, deploy-path classification, and bounded async browser harness repair shipped; no gate bypass or native ChatGPT mount claim.",
       "work_accounted": true,
       "completed_at": "2026-10-02T12:34:44.947Z"
+    },
+    {
+      "id": "ctrl-project-bootstrap-20261002",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "branch": "relay/ctrl-project-bootstrap-20261002",
+      "paths": [
+        "projects/ctrl.json",
+        "coordination/ctrl.json",
+        "docs/ctrl/"
+      ],
+      "resources": [
+        "ctrl-project-registration"
+      ],
+      "goal": "Register the separate ctrl control-center repository while preserving Relay as the MCP engine and verified website fallback.",
+      "acceptance": "Register lrnolivia/ctrl with guarded Runner ownership, private source and cloud writes disabled until the exact protected deployment integration is approved. Preserve Relay source/runtime and all existing access controls. Product implementation remains in ctrl; operational migration evidence stays in Relay docs/ctrl.",
+      "next_action": "Create project and empty coordination records, record exact approved product split and protected release prerequisites, validate registry/admission, merge this bounded registration PR.",
+      "primary_team": "source",
+      "supporting_teams": [],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "base_sha": "20a4c703b6d3d6de69a0b800eb96e899901bd0ce",
+      "state": "active",
+      "created_at": "2026-10-02T12:36:28.138Z",
+      "updated_at": "2026-10-02T12:36:28.138Z",
+      "lease_until": "2026-10-03T00:36:28.138Z"
     }
   ],
   "migrated_from": "loew-inspector"
