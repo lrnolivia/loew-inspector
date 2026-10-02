@@ -128,7 +128,7 @@
   :root[data-presentation-desktop="bottom"] .nav-copy { opacity: 1; width: auto; max-width: none; pointer-events: auto; overflow: visible; white-space: normal; text-align: center; animation: none; }
   :root[data-presentation-desktop="bottom"] .nav-copy strong { font-size: 13px; white-space: normal; }
   :root[data-presentation-desktop="bottom"] :is(.nav-copy small,.nav-chevron) { display: none !important; }
-  :root[data-presentation-desktop="bottom"] .operator-topbar .operator-utility { margin: 0; padding: 0; }
+  :root[data-presentation-desktop="bottom"] .operator-topbar .operator-utility { margin: 0 !important; padding: 0 !important; align-self: center; }
   :root[data-presentation-desktop="bottom"] .presentation-panel { position: absolute; right: 0; top: 56px; margin: 0; }
   :root[data-presentation-desktop="bottom"] .operator-topbar + .operator-shell { width: 100% !important; margin-left: 0 !important; }
   :root[data-presentation-desktop="bottom"] .workspace-context { min-height: 36px; margin-bottom: 16px; font-size: 13px; }
@@ -149,6 +149,8 @@
  :root[data-presentation-nav="bottom"] .operator-nav .nav-copy strong { font-size: 12px !important; line-height: 15px; }
 }
 @media (min-width: 901px) {
+ :root[data-presentation-desktop="bottom"] .operator-topbar { min-height: 0 !important; grid-template-rows: auto; align-items: center !important; }
+ :root[data-presentation-desktop="bottom"] .operator-topbar .operator-brand { padding: 0 !important; align-items: center; }
  :root[data-presentation-desktop="bottom"] .operator-nav :is(a,button) { min-height: 48px !important; padding: 3px 5px !important; gap: 2px !important; }
  :root[data-presentation-desktop="bottom"] .operator-nav :is(.glyph-chip,.tool-mark) { width: 23px !important; height: 23px !important; flex-basis: 23px !important; }
  :root[data-presentation-desktop="bottom"] .operator-topbar .operator-brand img { width: 30px !important; height: 30px !important; flex-basis: 30px !important; }
