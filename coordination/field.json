@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-10-02T10:09:03.928Z",
+  "updated_at": "2026-10-02T10:58:51.993Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -652,7 +652,7 @@
       ],
       "goal": "Integrate the preserved unpublished Mobile Focus and touch camera work onto shipped main, retaining approved design and documented selection/text/hierarchy behavior.",
       "acceptance": "Preserve all 26 original file bytes, staged and unstaged patches and hashes; account for every recovered change.\nPortrait sheet, landscape overlay and desktop return preserve stored workspace preferences; only one mobile panel host is open.\nSingle-touch selection and drag use existing Canvas semantics; empty-space pan, hold marquee/context menu, second-finger cancellation, anchored pinch and camera pan preserve source and undo behavior.\nTouch resize/rotate/scale targets and header touch routes preserve desktop pointer/keyboard handling.\nText editing and software-keyboard viewport positioning are tested; actual iPhone keyboard/rotation evidence is required for iOS-specific claims, with missing device access recorded as unverified.\nFocused meaningful tests and browser interactions/renders are bound to exact head; full current-main versus candidate failure fingerprints distinguish baseline failures from regressions.\nAll production builds and lint run on Node22; draft Mobile PR targets current main for review; no merge or deployment without new approval.",
-      "next_action": "PR138 head54cec80785d192dcfb442449b114c4cc71d5c728 contains portrait/chrome/palette/Gallery and explicit placement batch. Fast Media tests/editor build, Workers preview build, and coordination admission pass. Full baseline comparison and expanded real browser tests pending run36993246394. Preserve old recovery; no partial next-preview or production claim. Inspect exact desktop/mobile evidence, fix evidenced regressions, and publish only cohesive verified work. Physical iPhone remains not run; no workers.",
+      "next_action": "PR138 now3c796a71bd5c3b6e8e2bec83d62d5e11f41efa50: previous8c22f4 full baseline58/candidate58 failures, zero added tests/lint, builds/focused pass;6/8 browser flows pass including Gallery reorder/remove/undo, native middle tap/pan, floating Inspector repair. Fixed evidenced rotation race (desktop pane snapshot overwrote restored portrait Tools) and clipboard test accessible name including shortcut; rerunning exact-head full CI. Exact8c22 Workers preview236b36b5 verified UI; Inspector before vis_022873e2-0a19-4824-80ea-985723c9de9c and after vis_b05dceeb-4032-481e-8ff4-729fe426edaa stored. Continue final cohesive preview QA, no partial completion. Physical iPhone not run. Parent-only execution; no coding workers.",
       "primary_team": "night-shift",
       "supporting_teams": [],
       "primary_staff": "julian",
@@ -660,8 +660,8 @@
       "base_sha": "bad3630cdcb6c52ca787ccbb94fc70978f8f2d05",
       "state": "active",
       "created_at": "2026-10-02T00:48:40.339Z",
-      "updated_at": "2026-10-02T10:09:03.928Z",
-      "lease_until": "2026-10-02T22:09:03.928Z"
+      "updated_at": "2026-10-02T10:58:51.993Z",
+      "lease_until": "2026-10-02T22:58:51.993Z"
     }
   ]
 }
