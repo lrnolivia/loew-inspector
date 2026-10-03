@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T04:48:10.740Z",
+  "updated_at": "2026-10-03T05:02:21.917Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7198,8 +7198,8 @@
       "id": "relay-mcp-rebuild-continuation-20261003",
       "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
       "goal": "Continue the existing unfinished full Relay MCP rebuild, restoring original1.9 promised capabilities and integrating approved Relay live-panel/site/card work. Archival assignment closure is not proof of functional delivery.",
-      "acceptance": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, checks and deployment evidence, with deduplicated continuation recommendations and honest unavailable-evidence states. Complete skill catalog, search, read, resolve, install/vendor, update and audit; pinned licensed portable bundles; integrity and dependency enforcement; all originally promised creative, platform and supporting packs. Prove durable jobs, a real coding executor, capability-based local/remote routing, worker communication and full capability parity. Fold the Relay website, live panel, approved telemetry, Refresh Tools fallback chain, Add MCP to AI actions and compact MCP cards into this same rebuild. Verify actual client rendering/actions. Integrate review-first cards, evidence and device-specific frames, saved answers/replies, project icons and useful workspace overview. Use flat surfaces with shadows/glows. Night Shift records actual autonomous away-time work, with an unused staff lead for oversight, preserved executor provenance, evidence-supported backfill and an idempotent Shift handoff. No new credentials or spending inferred. Documentation-only PRs, fixtures and transferred defects do not establish full delivery.",
-      "next_action": "Use five dependency batches: (1) lifecycle, objective continuity, ownership and sync safeguard; (2) end-to-end review, preview and reply flow; (3) Night Shift lead, attribution and Shift handoff; (4) approved shared telemetry and design; (5) remaining full MCP integrations, including Relay site/controls/cards and recovered skills/executor scope. Land already-ready scoped fixes independently. Field and ctrl remain first; rtxForge is held. Reconcile older stage records and admit bounded implementation steps without duplicate projects or restarting stopped coding workers. Parent implements through Relay.",
+      "acceptance": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, checks and deployment evidence, with deduplicated continuation recommendations and honest unavailable-evidence states. Complete skill catalog, search, read, resolve, install/vendor, update and audit; pinned licensed portable bundles; integrity and dependency enforcement; all originally promised creative, platform and supporting packs. Prove durable jobs, a real coding executor, capability-based local/remote routing, worker communication and full capability parity. Fold the Relay website, live panel, approved telemetry, Refresh Tools fallback chain, Add MCP to AI actions and compact MCP cards into this same rebuild. Verify actual client rendering/actions. Integrate review-first cards, evidence and device-specific frames, saved answers/replies, project icons and useful workspace overview. Use flat surfaces with shadows/glows. Night Shift records actual autonomous away-time work, with an unused staff lead for oversight, preserved executor provenance, evidence-supported backfill and an idempotent Shift handoff. No new credentials or spending inferred. Documentation-only PRs, fixtures and transferred defects do not establish full delivery.\nFull execution handoff, source recovery and original contract evidence: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RELAY-MCP.md . All latest site/live-panel/telemetry/refresh/add-to-AI, review delivery, NightShift/Shift, canonical asset discovery, lifecycle and original skills/executor goals preserved. Original1.9 verbatim and41 stale queue pairs in sibling documents. Current engine cannot normalize completed queue pairs or handoff queued-only owner; do not bypass. Actual user-started Mac Codex identity pending; parent stops MCP implementation. ctrlfrontend remains separate heldPR7, recovery8WIPfiles preserved. New Relay site concept is not implementation; current plugin ID protected.",
+      "next_action": "READY DOCUMENTED FOR USER MAC CODEX PICKUP, implementation paused here. Read linked full handoff and original acceptance. Establish actual receiving identity and supported claim/admission; do not invent successor. Start lifecycle cleanup and ctrl-critical artifact-bound feedback contract, preserving all existing source. No new worker launched.",
       "paths": [
         "src/",
         "skills/",
@@ -7232,7 +7232,7 @@
       "supporting_staff": [],
       "state": "queued",
       "created_at": "2026-10-03T03:17:42.108Z",
-      "amendment_count": 1,
+      "amendment_count": 2,
       "amendments": [
         {
           "at": "2026-10-03T03:18:47.742Z",
@@ -7250,9 +7250,26 @@
             "acceptance": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, check...",
             "next_action": "Use five dependency batches: (1) lifecycle, objective continuity, ownership and sync safeguard; (2) end-to-end review, preview and reply flow; (3) Night Shift lead, attribution and Shift handoff; (4) approved shared telemetry and design; (5) remaining full MCP integrations, including Relay site/controls/cards and recovered skills/executor scope. Land already-ready scoped fixes independently. Field and ctrl remain first; rtxForge is held. Reconcile older stage records and admit bounded implementation steps without duplicate projects or restarting stopped coding workers. Parent implements thr..."
           }
+        },
+        {
+          "at": "2026-10-03T05:02:21.917Z",
+          "by": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "reason": "User transfers MCP implementation to Mac Codex; attach full original scope and latest canonical execution handoff without starting a new executor.",
+          "fields": [
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "acceptance": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, check...",
+            "next_action": "Use five dependency batches: (1) lifecycle, objective continuity, ownership and sync safeguard; (2) end-to-end review, preview and reply flow; (3) Night Shift lead, attribution and Shift handoff; (4) approved shared telemetry and design; (5) remaining full MCP integrations, including Relay site/controls/cards and recovered skills/executor scope. Land already-ready scoped fixes independently. Field and ctrl remain first; rtxForge is held. Reconcile older stage records and admit bounded implementation steps without duplicate projects or restarting stopped coding workers. Parent implements thr..."
+          },
+          "after": {
+            "acceptance": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, check...",
+            "next_action": "READY DOCUMENTED FOR USER MAC CODEX PICKUP, implementation paused here. Read linked full handoff and original acceptance. Establish actual receiving identity and supported claim/admission; do not invent successor. Start lifecycle cleanup and ctrl-critical artifact-bound feedback contract, preserving all existing source. No new worker launched."
+          }
         }
       ],
-      "updated_at": "2026-10-03T03:18:47.742Z"
+      "updated_at": "2026-10-03T05:02:21.917Z"
     }
   ],
   "claims": [
