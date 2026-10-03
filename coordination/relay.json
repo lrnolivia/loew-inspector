@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T18:29:52.815Z",
+  "updated_at": "2026-10-03T22:23:47.801Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7718,6 +7718,42 @@
         }
       ],
       "completed_at": "2026-10-03T18:07:12.773Z"
+    },
+    {
+      "id": "relay-coordination-cleanup-audit-20261003",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "goal": "Audit and repair repeated Field coordination cleanup failures without weakening source admission or losing retained work.",
+      "acceptance": "Trace actual scheduled Field workflow and canonical Relay cleanup engine, exact failing receipts and current lifecycle records. Separate operational cleanup errors from retained coordination findings; preserve strict PR/preflight gates, merge/head/ownership deletion guards, original acceptance and unknown verification. Reconcile stale records only with verified authority and accounted work; never mark unverified work complete. Add meaningful regression tests for held/expired/missing/legacy branches, scope drift, post-merge commits, owner races and operation failure reporting. Produce clear receipts and ensure genuine operational failures remain failures. No new credentials or permissions. Source changes stay in reviewed draft until publication is authorized.",
+      "next_action": "The Field app deployment passed. Investigate repeated cleanup exit2 from retained expired assignments, missing merged branch and old scope drift; preserve all work and safety gates.",
+      "paths": [
+        "scripts/coordinate.mjs",
+        "scripts/coordination-report.mjs",
+        "test/coordination-report.test.mjs",
+        "docs/relay/COORDINATION_CLEANUP_AUDIT_20261003.md"
+      ],
+      "resources": [],
+      "category": "maintenance",
+      "primary_team": "runner",
+      "supporting_teams": [],
+      "primary_staff": "adrian",
+      "supporting_staff": [],
+      "state": "queued",
+      "created_at": "2026-10-03T22:23:47.801Z",
+      "objective_history": {
+        "baseline": {
+          "goal": "Audit and repair repeated Field coordination cleanup failures without weakening source admission or losing retained work.",
+          "acceptance": "Trace actual scheduled Field workflow and canonical Relay cleanup engine, exact failing receipts and current lifecycle records. Separate operational cleanup errors from retained coordination findings; preserve strict PR/preflight gates, merge/head/ownership deletion guards, original acceptance and unknown verification. Reconcile stale records only with verified authority and accounted work; never mark unverified work complete. Add meaningful regression tests for held/expired/missing/legacy branches, scope drift, post-merge commits, owner races and operation failure reporting. Produce clear receipts and ensure genuine operational failures remain failures. No new credentials or permissions. Source changes stay in reviewed draft until publication is authorized.",
+          "at": "2026-10-03T22:23:47.801Z",
+          "source": "assignment-created"
+        },
+        "acceptance_versions": [
+          {
+            "id": "relay-coordination-cleanup-audit-20261003:acceptance:0",
+            "text": "Trace actual scheduled Field workflow and canonical Relay cleanup engine, exact failing receipts and current lifecycle records. Separate operational cleanup errors from retained coordination findings; preserve strict PR/preflight gates, merge/head/ownership deletion guards, original acceptance and unknown verification. Reconcile stale records only with verified authority and accounted work; never mark unverified work complete. Add meaningful regression tests for held/expired/missing/legacy branches, scope drift, post-merge commits, owner races and operation failure reporting. Produce clear receipts and ensure genuine operational failures remain failures. No new credentials or permissions. Source changes stay in reviewed draft until publication is authorized.",
+            "at": "2026-10-03T22:23:47.801Z"
+          }
+        ]
+      }
     }
   ],
   "claims": [
