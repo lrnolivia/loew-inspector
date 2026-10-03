@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T06:17:03.494Z",
+  "updated_at": "2026-10-03T06:17:09.938Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -2896,7 +2896,7 @@
         "RFS-022",
         "RFS-027"
       ],
-      "state": "claimed",
+      "state": "completed",
       "created_at": "2026-10-01T00:35:47.873Z",
       "amendment_count": 1,
       "amendments": [
@@ -2946,7 +2946,8 @@
           }
         }
       ],
-      "updated_at": "2026-10-01T01:28:48.216Z"
+      "updated_at": "2026-10-03T06:17:09.938Z",
+      "completed_at": "2026-10-01T01:44:37.104Z"
     },
     {
       "id": "relay-feature-shell-accent-assets-20261001",
