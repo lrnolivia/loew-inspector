@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T07:28:33.430Z",
+  "updated_at": "2026-10-03T07:36:11.929Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -3538,7 +3538,7 @@
         "integrator",
         "verifier"
       ],
-      "state": "claimed",
+      "state": "completed",
       "created_at": "2026-10-01T02:39:22.086Z",
       "amendment_count": 2,
       "amendments": [
@@ -3688,7 +3688,18 @@
           }
         }
       ],
-      "updated_at": "2026-10-01T03:35:21.286Z"
+      "updated_at": "2026-10-03T07:36:11.929Z",
+      "completed_at": "2026-10-01T04:12:42.992Z",
+      "completion_reconciliation": {
+        "at": "2026-10-03T07:36:11.929Z",
+        "queue_owner": "relay-1.9.6.2-staff-routing-20261001",
+        "completion_owner": "relay-1.9-wrapup-20261001",
+        "reason": "Reconcile historical completed-claim queue mirror using original verified merged PR identity. Preserve original queue and completed-claim owner identities; no ownership transfer or execution restart.",
+        "pr": 76,
+        "merged_head_sha": "f13a510e5070edaf1682b994eb0ce6d18b99505b",
+        "merge_commit_sha": "3eef536d217c588e8d3669830b23b02827cd71d3",
+        "ownership_transferred": false
+      }
     },
     {
       "id": "relay-1.9.8-inline-card-design-system-20261001",
