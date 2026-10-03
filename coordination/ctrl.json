@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "ctrl",
-  "updated_at": "2026-10-03T06:57:24.509Z",
+  "updated_at": "2026-10-03T07:04:17.877Z",
   "legacy_branches": [
     "main"
   ],
@@ -206,7 +206,7 @@
       ],
       "goal": "Repair ctrl navigation and whole-page Inspector regressions while preserving the accepted project strip and completing review delivery.",
       "acceptance": "Authorized polish checkpoint: mobile full-width floating dock with 16px outer gutters, 64px height, permanent labels and large bare canonical glyphs including full night shift; neutral color-raised glow on both docks, color-surface matching ctrl banner, lighter selected highlight. Small backgroundless top-right banner gear with invisible 44px tap target; sidebar gear centered compact/right expanded; desktop dock content width. Preserve accepted atomic project strip, skeleton/loading/refresh behavior, canonical logo badges, Settings persistence/reset, restored Inspector Visual cards and List thumbnails, explicit filter/organize dismissal, lazy evidence hydration, honest unresolved states and stale CAS guards. Verify exact-head CI and actual unobscured desktop/light pixels before approved polish merge/publication. Broader unfinished acceptance remains: Now/Runner/Night Shift/Inspector one major real review/decision card first with plain-language focus, real screenshot/live preview and durable artifact-bound Relay responses then full list; useful truthful telemetry overview/rings/counts/time series, reference libfile_4487fb5741e081918cee4f3fc768cd60 sample-only; actual live previews, correct routing and saved reply plus worker acknowledgment proof; canonical backend logos and MCP catalogue/feedback/Night Shift contracts coordinated with MCP owner; branded preference/case and responsive accessibility checks. Show combined broader design before rollout. Never imply polish finishes whole ctrl or fabricate live data.",
-      "next_action": "Materialize and inspect exact telemetry reference; inspect unblurred desktop bottom and light mode on exact437b64716 head, then publish authorized polish if clean. Continue broader acceptance separately accountable.",
+      "next_action": "Mac clone/source/reference inspection completed. Reference exact1368405bytes materialized/inspected; local24tests/typecheck/build pass; unblurred desktop bottom dark/light pixel captures pass. Local full browser failed harness interception missing ?assignment; corrected test via Relay source33fc1e7ac51f5d4dbfa385b749ccfa202c4f3cea and added exact-head CI unobscured desktop captures. Await new quality/admission checks and inspect CI pixels before authorized PR7 merge. Exec-server intermittent disconnect and Codex app parent messaging unavailable; local artifacts preserved at task-2/polish-evidence. Broader core acceptance not delivered.",
       "category": "implementation",
       "primary_team": "inspector",
       "supporting_teams": [],
@@ -215,8 +215,8 @@
       "base_sha": "5c662ae19dae2fc4dd088ba7beb98aae0bdd23e4",
       "state": "active",
       "created_at": "2026-10-03T03:28:29.214Z",
-      "updated_at": "2026-10-03T06:57:24.509Z",
-      "lease_until": "2026-10-03T18:57:24.509Z",
+      "updated_at": "2026-10-03T07:04:17.877Z",
+      "lease_until": "2026-10-03T19:04:17.877Z",
       "handoffs": [
         {
           "at": "2026-10-03T06:55:06.831Z",
