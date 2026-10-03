@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "ctrl",
-  "updated_at": "2026-10-03T07:15:32.839Z",
+  "updated_at": "2026-10-03T07:42:11.971Z",
   "legacy_branches": [
     "main"
   ],
@@ -318,7 +318,7 @@
       ],
       "goal": "Finish ctrl review-first control center and truthful telemetry on the established implementation.",
       "acceptance": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.",
-      "next_action": "Build independent review-first/real telemetry preview. MCP owner thread01a10033 contacted: confirm committed/deployed same-origin /api/feedback/submit POST and /api/feedback/status GET schema, exact capture feedback_binding project/assignment/owner/branch/repository/commit/pr + historical behavior, persistence/conflict/idempotency/retry semantics, report status evidence separating saved/queued/delivered/seen/actual owner acknowledgment; browser Access origin acceptance for ctrl binding. Confirm canonical project icon registry routes/status semantics, actual Night Shift Shift/lead/away-work attribution. Current MCP worktree feedback-browser.js untracked: proposed only, not live proof. Exact reference libfile4487 inspected1368405bytes, sample-only. No Relay/Field/rtxForge product modifications.",
+      "next_action": "PR8 c62ac069 exact-head quality/admission PASS. Native Library initial combined synthetic screenshots delivered, version0 IDs libfile67431f4e6718819199fcf3fb63f3ffe7,libfiled053c5ff9bc48191a32037d38a2afdb0,libfilec50c14787a0081918d5b22211f2e544b,libfileeb4f6659837c81919ed10b3bcfb75557. Continuing compact Relay same-snapshot telemetry and four-card composition, remove featured duplicate, concise empty states with provenance disclosure, badge/sr-only fixes, realistic explicitly synthetic populated fixture and viewport captures. Latest Lauren nav feedback supersedes desktop content-width bar: preview shorter centered bar with more glyph/selection breathing room; preserve mobile labels/header gear/surface/glow. Exact committed MCP PR140 contract read at4a36965d5d78af8ef287eb545edb8cf8f39305ea docs blobc9e9c1028ff9d7b400187b4151b003de853faaa4; deployment/schema/Origin/worker-ack proof pending. Icon and actualShift/staff contracts still explicit. Keep broad visual rollout draft pending combined actual review.",
       "primary_team": "inspector",
       "supporting_teams": [],
       "primary_staff": "valentina",
@@ -326,8 +326,8 @@
       "base_sha": "c04e402c6982d02b865310b4963f330a69788e66",
       "state": "active",
       "created_at": "2026-10-03T07:10:52.888Z",
-      "updated_at": "2026-10-03T07:15:32.839Z",
-      "lease_until": "2026-10-03T19:15:32.839Z",
+      "updated_at": "2026-10-03T07:42:11.971Z",
+      "lease_until": "2026-10-03T19:42:11.971Z",
       "amendment_count": 1,
       "amendments": [
         {
