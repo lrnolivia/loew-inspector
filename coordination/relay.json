@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T06:16:56.903Z",
+  "updated_at": "2026-10-03T06:17:03.494Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -2859,8 +2859,10 @@
         "relay-ambient-liveness",
         "relay-responsive-layout"
       ],
-      "state": "claimed",
-      "created_at": "2026-10-01T00:07:46.591Z"
+      "state": "completed",
+      "created_at": "2026-10-01T00:07:46.591Z",
+      "completed_at": "2026-10-01T00:21:08.588Z",
+      "updated_at": "2026-10-03T06:17:03.494Z"
     },
     {
       "id": "relay-1.9.5-skills-runtime-core-20261001",
