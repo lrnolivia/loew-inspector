@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T16:25:09.931Z",
+  "updated_at": "2026-10-03T16:25:15.694Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7630,7 +7630,7 @@
       "supporting_teams": [],
       "primary_staff": "naomi",
       "supporting_staff": [],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-10-03T16:25:09.931Z",
       "objective_history": {
         "baseline": {
@@ -12714,6 +12714,49 @@
           }
         }
       ]
+    },
+    {
+      "id": "relay-skills-completion-20261003",
+      "owner": "01a1028b-03c4-718c-b205-24c35c97b0d7",
+      "branch": "relay/skills-completion-20261003",
+      "paths": [
+        "skills/",
+        "scripts/build-skills.mjs",
+        "scripts/build-skills.test.mjs",
+        "src/skills-bundles.js",
+        "src/skills-service.test.js",
+        "docs/relay/RELAY_SKILLS_COMPLETION_20261003.md"
+      ],
+      "resources": [
+        "relay-skills-runtime"
+      ],
+      "goal": "Complete substantive portable Relay skill workflows and missing original 1.9 creative/performance coverage.",
+      "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes.",
+      "next_action": "Expand canonical skill workflows, add missing design-system and visual-reference coverage, improve intentional discovery metadata, validate representative composition and immutable installation.",
+      "primary_team": "skills",
+      "supporting_teams": [],
+      "primary_staff": "naomi",
+      "supporting_staff": [],
+      "base_sha": "0664f2b8461d6cfbc682c07460b97b3e71ddc6c3",
+      "state": "active",
+      "created_at": "2026-10-03T16:25:15.694Z",
+      "objective_history": {
+        "baseline": {
+          "goal": "Complete substantive portable Relay skill workflows and missing original 1.9 creative/performance coverage.",
+          "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes.",
+          "at": "2026-10-03T16:25:09.931Z",
+          "source": "assignment-created"
+        },
+        "acceptance_versions": [
+          {
+            "id": "relay-skills-completion-20261003:acceptance:0",
+            "text": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes.",
+            "at": "2026-10-03T16:25:09.931Z"
+          }
+        ]
+      },
+      "updated_at": "2026-10-03T16:25:15.694Z",
+      "lease_until": "2026-10-04T04:25:15.694Z"
     }
   ],
   "migrated_from": "loew-inspector"
