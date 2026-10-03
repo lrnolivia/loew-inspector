@@ -1,5 +1,11 @@
 import test from 'node:test';import assert from 'node:assert/strict';
 import {appendEvent,replayFor,streamExpiry,mutationTopics,successfulRpc,operatorTopics,eventStream,publishInvalidation} from './relay-events.js';
+test('execution and context queries never invalidate live snapshots',()=>{
+ for(const [name,read,writes] of [['relay_execution','status',['submit','cancel','lease','start','checkpoint','finish','recover']],['relay_context','read',['record','ack','retract']]]){
+  for(const args of [undefined,null,{}, {action:read},{action:'unknown'}])assert.equal(mutationTopics(name,args),null);
+  for(const action of writes)assert.deepEqual(mutationTopics(name,{action}),['work','projects','evidence']);
+ }
+});
 test('durable invalidation identity, dedupe, bounded retention and gap resync',()=>{let state;for(let i=0;i<260;i++)state=appendEvent(state,{operation_id:'operation-'+i,topics:['work']},1000+i).state;assert.equal(state.events.length,250);assert.equal(state.seq,'260');assert.deepEqual(replayFor(state,'1',1300),[{type:'resync',cursor:'260'}]);assert.equal(replayFor(state,'259',1300)[0].id,'260');assert.equal(replayFor(state,'260',1300).length,0);assert.equal(appendEvent(state,{operation_id:'operation-259',topics:['work']},1400).duplicate,true);assert.deepEqual(replayFor(state,'999',1400),[{type:'resync',cursor:'260'}]);assert.deepEqual(replayFor(state,'259',1000+25*3600000),[{type:'resync',cursor:'260'}]);});
 test('event payload cannot contain arbitrary private topics or bodies',()=>{assert.throws(()=>appendEvent(null,{operation_id:'operation-1',topics:['secret']}));const {event}=appendEvent(null,{operation_id:'operation-1',topics:['work'],body:'private'},1);assert.equal(event.body,undefined);});
 test('reads and failed RPCs never become mutation invalidations',()=>{assert.equal(mutationTopics('relay_runner_project'),null);assert.equal(mutationTopics('relay_source_file'),null);assert.ok(mutationTopics('relay_runner_coordinate'));assert.equal(successfulRpc({error:{code:1}}),false);assert.equal(successfulRpc({result:{isError:true}}),false);assert.equal(successfulRpc({result:{structuredContent:{ok:false}}}),false);assert.equal(successfulRpc({result:{structuredContent:{ok:true}}}),true);});

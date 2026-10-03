@@ -39,7 +39,7 @@ export default {
     });
     const identityRequest = url.pathname === "/mcp" && request.method === "POST" ? request.clone() : null;
     let eventTopics=null;
-    if(identityRequest&&env.RELAY_EVENTS){try{const body=await identityRequest.clone().json();if(body.method==='tools/call')eventTopics=mutationTopics(body.params?.name);}catch{}}
+    if(identityRequest&&env.RELAY_EVENTS){try{const body=await identityRequest.clone().json();if(body.method==='tools/call')eventTopics=mutationTopics(body.params?.name,body.params?.arguments);}catch{}}
     const response = await gateway.fetch(request, env);
     if(eventTopics&&response.ok&&response.headers.get('Content-Type')?.includes('application/json')){try{if(successfulRpc(await response.clone().json()))await publishInvalidation(env,eventTopics);}catch{}}
     if(response.ok&&request.method==='POST'&&['/evidence/ingest','/evidence/run'].includes(url.pathname))await publishInvalidation(env,['evidence']);

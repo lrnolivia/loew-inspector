@@ -46,7 +46,7 @@ No oversight staff member is hired or assigned by this code. A staff name in a d
 
 Browser schema-2 feedback uses authenticated `/api/feedback/submit` and `/api/feedback/status`. Preserve the exact operation ID across uncertain outcomes. Capture identity must name project, assignment, owner, branch and tested commit. Historical review mode verifies the original merged PR/head/merge and never reopens completed work. Saved notes, queued delivery, explicit agent acknowledgement, fixed, and independently verified remain separate facts.
 
-The Relay backend and browser adapter are implemented here. The separate `lrnolivia/ctrl` frontend must consume the same schema-2 binding/transport to prove a ctrl preview → submit → agent acknowledgement cycle. Its held PR and recovery files are outside this assignment; do not overwrite them. Project/work/review links route to `https://ctrl.loew.fi`, retaining project, assignment and evidence parameters. Public historical Relay workspace routes redirect there. The MCP bridge opens these links through its host.
+The Relay backend and browser adapter are implemented here. The separate `lrnolivia/ctrl` frontend must consume the same schema-2 binding/transport to prove a ctrl preview → submit → agent acknowledgement cycle. ctrl PR 7 is merged at `c04e402c6982d02b865310b4963f330a69788e66`; that merge does not prove this new feedback integration. Its frontend and recovery files remain outside this assignment. Project/work/review links route to `https://ctrl.loew.fi`, retaining project, assignment and evidence parameters. Public historical Relay workspace routes redirect there. The MCP bridge opens these links through its host.
 
 ## Dashboard and refresh
 
