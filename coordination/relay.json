@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T06:17:36.519Z",
+  "updated_at": "2026-10-03T06:17:42.517Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -4236,7 +4236,7 @@
         "motion-director",
         "product-lead"
       ],
-      "state": "claimed",
+      "state": "completed",
       "created_at": "2026-10-01T02:57:33.950Z",
       "amendment_count": 17,
       "amendments": [
@@ -5073,7 +5073,7 @@
           }
         }
       ],
-      "updated_at": "2026-10-01T06:25:10.875Z",
+      "updated_at": "2026-10-03T06:17:42.517Z",
       "primary_staff": "ellis",
       "supporting_staff": [
         "valentina",
@@ -5085,7 +5085,8 @@
       "primary_team": "runner",
       "supporting_teams": [
         "inspector"
-      ]
+      ],
+      "completed_at": "2026-10-01T06:27:55.060Z"
     },
     {
       "id": "relay-1.9.6.2-operational-staff-routing-20261001",
