@@ -2,7 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
-import { buildSync } from 'esbuild';
+import { build } from 'esbuild';
 import { chromium } from 'playwright';
 
 test('telemetry updates interpolate without remounts or layout-width animation', () => {
@@ -16,7 +16,7 @@ test('telemetry updates interpolate without remounts or layout-width animation',
 });
 
 test('telemetry browser motion handles interruption, reduced motion and first observations', async () => {
-  const source = buildSync({
+  const source = await build({
     stdin: {
       contents: `import React,{useState} from 'react';import{createRoot}from'react-dom/client';
 import{useTelemetryMotion}from'./useTelemetryMotion';
@@ -64,4 +64,79 @@ createRoot(document.getElementById('root')).render(<Probe/>);`,
     await page.waitForFunction(()=>JSON.parse(document.querySelector('output').dataset.values)[0]===50);
     assert.deepEqual(await values(),[50,10]);
   } finally { await browser.close(); }
+});
+
+test('actual LiveTelemetry keeps its DOM and interpolates chart updates at desktop and phone widths', async () => {
+  const snapshot = count => ({
+    fetchedAt: new Date().toISOString(),
+    loadingProgress: [], failedProgress: [],
+    workload: {relay: [
+      {state:'completed',completed_at:new Date().toISOString()},
+      {state:'active'}, {state:'active'}, {state:'active'}
+    ]},
+    progress: {relay: {progress: Array.from({length:count},(_,index)=>({
+      assignment:'fixture-'+index,state:'working',
+      events:[{id:'fixture-event-'+index,type:'source-commit',at:new Date(Date.now()-60000).toISOString()}]
+    }))}}
+  });
+  const first = snapshot(1), second = snapshot(8), third = snapshot(3);
+  const source = await build({
+    stdin: {
+      contents: `import React from 'react';import{createRoot}from'react-dom/client';
+import{LiveTelemetry}from'./LiveTelemetry';
+createRoot(document.getElementById('root')).render(<LiveTelemetry/>);`,
+      resolveDir: fileURLToPath(new URL('../src/components', import.meta.url)), loader:'tsx'
+    },
+    bundle:true,write:false,format:'iife',jsx:'automatic',
+    plugins:[{
+      name:'bounded-telemetry-fixture',
+      setup(build){
+        build.onResolve({filter:/^\.\.\/live$/},()=>({path:'live',namespace:'fixture'}));
+        build.onResolve({filter:/^\.\.\/api$/},()=>({path:'api',namespace:'fixture'}));
+        build.onLoad({filter:/.*/,namespace:'fixture'},args=>({
+          contents:args.path==='api'?
+            'export const projectLabel = value => value;':
+            `import{useState}from'react';export function useLiveRelay(){const[allSnapshot,setSnapshot]=useState(${JSON.stringify(first)});window.setRelaySnapshot=setSnapshot;return{allSnapshot,state:'live',eventConnected:true,refresh:async()=>{}};}`,
+          loader:'js',resolveDir:rootForFixture()
+        }));
+      }
+    }]
+  }).outputFiles[0].text;
+  function rootForFixture(){return fileURLToPath(new URL('..',import.meta.url));}
+  const css=readFileSync(new URL('../src/styles.css',import.meta.url),'utf8');
+  const browser=await chromium.launch({headless:true});
+  try {
+    for(const width of [1440,390]){
+      const page=await browser.newPage({viewport:{width,height:1000},reducedMotion:'no-preference'});
+      const errors=[];page.on('pageerror',error=>errors.push(error.message));
+      await page.setContent('<main class="relay-home"><div id="root"></div></main>');
+      await page.addStyleTag({content:css});
+      await page.addScriptTag({content:source});
+      await page.locator('.live-telemetry[data-complete=true]').waitFor();
+      await page.waitForFunction(()=>document.querySelector('.telemetry-state strong').textContent==='1');
+      const outcome=await page.evaluate(async ({second,third})=>{
+        const strong=document.querySelector('.telemetry-state strong');
+        const line=()=>document.querySelector('.telemetry-chart-line').getAttribute('d');
+        const initial=line();
+        window.setRelaySnapshot(second);
+        await new Promise(resolve=>setTimeout(resolve,180));
+        const middle={count:Number(strong.textContent),line:line()};
+        window.setRelaySnapshot(third);
+        await new Promise(resolve=>setTimeout(resolve,850));
+        return{sameNode:strong===document.querySelector('.telemetry-state strong'),initial,middle,final:{count:Number(strong.textContent),line:line()},width:document.querySelector('.telemetry-meter span').style.width};
+      },{second,third});
+      assert.equal(outcome.sameNode,true,'updates never remount the counter');
+      assert.ok(outcome.middle.count>1&&outcome.middle.count<8,'a real intermediate count is painted');
+      assert.notEqual(outcome.middle.line,outcome.initial,'chart geometry advances between observations');
+      assert.equal(outcome.final.count,3,'interrupted count settles to the latest record');
+      assert.notEqual(outcome.final.line,outcome.middle.line);
+      assert.equal(outcome.width,'','meter animation does not write layout widths');
+      await page.emulateMedia({reducedMotion:'reduce'});
+      await page.evaluate(value=>window.setRelaySnapshot(value),second);
+      await page.waitForFunction(()=>document.querySelector('.telemetry-state strong').textContent==='8');
+      assert.ok(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'telemetry fits viewport');
+      assert.deepEqual(errors,[]);
+      await page.close();
+    }
+  } finally {await browser.close();}
 });
