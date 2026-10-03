@@ -1,7 +1,16 @@
 # Execution docket and handoffs — October 3, 2026
 
-## Current instruction
+## Original cleanup instruction — historical
 Pause implementation and design. Reconcile the last several days of goals, preserve every unfinished change, and prepare accurate execution handoffs. rtxForge implementation is for Lauren's own Codex session; Relay MCP implementation is for her Mac Codex session. No receiving task was launched and no successor identity is invented. Field implementation was also transferred to Lauren's own Codex at05:16 UTC. Julian retains cleanup/documentation and paused ctrl responsibilities; no competing Field, RTX or MCP implementation.
+
+## Latest checkpoint — 08:42 UTC
+This directory preserves the original handoff evidence. The tables and original instruction below are historical, not live assignments. Read current Relay coordination records before acting.
+- All 41 completed-claim queue mirrors were subsequently reconciled by the released engine with preserved historical-owner proof.
+- Receiving Codex identities were established. ctrl PR7 is deployed at c04e402; PR8 is a draft. Relay PR140/141 are deployed at ec496bc with exact-source production verification. rtxForge preview33a910a is published and locally installed per the current owner checkpoint; PR6 remains draft.
+- Lauren now requests **direct Julian implementation, no new or restarted workers tonight**. ctrl and rtxForge have recorded handoffs back to Julian. The Relay activation worker is paused with its local motion patch preserved; the remaining Relay ownership transfer follows closure of this documentation lane.
+- Field's existing user-owned visual batch continues. After it finishes, Julian performs an **audit only**: actual Figma and Field side-by-side, identical tasks, differences and recommended fixes. Prepare an Astra High Codex handoff afterward; implementation remains held.
+- [Current direct-work requirements](OVERNIGHT-DIRECT.md) preserve the later feedback, including desktop/game-mode rtxForge refinements, canonical live Relay design approval and worker/model constraints.
+- Obsolete plugin deletion remains unsupported. No deletion was performed. Four historical reservations still require evidence-based accounting; this document does not release them.
 
 ## Start here
 - [Field](FIELD.md): dedicated user-Codex handoff, with mandatory Inspector-first then left-sidebar visual parity.
@@ -14,7 +23,7 @@ Pause implementation and design. Reconcile the last several days of goals, prese
 - [Unfinished Inspector source](recovery/ctrl-inspector-unfinished-source.json): eight exact local source files, base and known defects. Recovery artifact only; do not overwrite newer PR7 wholesale.
 - [Approved rtxForge launcher](recovery/rtxforge-launcher.svg) and [in-app artwork](recovery/rtxforge-artwork.svg): final vectors, not installed.
 
-## Status register
+## Historical status register — 04:41–05:19 UTC
 | Project | Delivered evidence | Remaining / next step | Execution state |
 |---|---|---|---|
 | ctrl | PR6 live; prior PR7 geometry checkpoint passed browser tests | Latest PR7 source629c961e retained; fix ambiguous test selector, verify populated UI; finish loading and review/reply; new mobile preview still needs review | Held for cleanup, retained by Julian |
@@ -32,7 +41,7 @@ Pause implementation and design. Reconcile the last several days of goals, prese
 | Firefox healer | User explicitly declared finished | None | Closed |
 | Account plugin cleanup | Exact current Relay keeper identified | Seven old creation records remain; testing supported deletion controls | Active separate account task |
 
-## Readiness limits, not hidden blockers
+## Original readiness limits — superseded where noted above
 1. Current Runner cannot normalize41 stale queue rows whose claims are already complete. They do not occupy branch capacity. Do not reopen completed features or erase their acceptance. A narrow tested normalization command is required and is included in the MCP handoff.
 2. Four old reservations retain ownership despite expiry: Relay production smoke, Relay minimal probe, Field mobile focus, loewOS bootstrap. Account for writers, branches and delivery before retirement. Never transfer an unknown owner to a fictitious successor.
 3. rtxForge and MCP handoff destinations are user-started sessions; their actual persistent IDs must be supplied by the receiving session when it claims. Documents and code are available independently of that administrative step.
