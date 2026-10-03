@@ -35,3 +35,7 @@ Shared loew design standard: built-in interface chrome and copy use lowercase in
 ## Plugin account cleanup
 The user explicitly wants obsolete personal-created entries removed except current Relay App ID asdk_app_6abe234861d881919e30db65d656492f, Version ID asdk_app_v_6abe234861e481919f6452cfb12d250f.
 Seven obsolete records remain. The authorized loew Inspector workaround was attempted: both old Inspector entries expose Open in desktop app rather than an Install action; installed-plugin search finds neither, so no Delete control was reachable. Creator tools expose no delete action; uninstall is not deletion of a creation record. No entry was removed and the current Relay remains untouched. Do not claim success or repeatedly retry unsupported routes.
+
+## Additional Field requests at 05:10 UTC
+- Main/popup menu items need meaningful glyphs from Field's established animated family, consistent size/alignment and accessible labels. Confirm the actual main popup surface before implementation.
+- Find the canonical Field logo in Figma and create matching variants for the actual new accent palette, preserving existing geometry, materials, highlights and family consistency. Inspect current master/variants before recoloring. Use exact theme tokens, editable component/vector exports, and the shared discoverable asset manifest. This is additional variants, not a logo redesign. Source master is not yet positively identified. Design implementation remains paused until cleanup is complete.
