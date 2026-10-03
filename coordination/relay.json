@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T03:07:29.810Z",
+  "updated_at": "2026-10-03T03:14:21.419Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -12034,7 +12034,7 @@
       ],
       "goal": "Resolve canonical native app icons for project badges without broad unsafe asset guessing.",
       "acceptance": "Discover bounded hicolor app icons, prefer suitable256px assets under256KiB, exclude action glyphs, preserve declared favicons/auth-scopedcache/SVG safety. Tests prove nativeicons and oversizedfallback, no externalURLs. Verify real rtxForge/GameBridge badges after tested deployment.",
-      "next_action": "Admit before creating fresh branch; old unclaimed native-project-icons branch has no edits and is not reused. Read resolver tests, implement native candidate ranking, test and open draft PR.",
+      "next_action": "DraftPR137 heada62721ceb58c144de00a5e936151035885b38481 adds bounded nativehicolor app-icon discovery. Six focused tests and exact-head fullquality/admission passed. Pending release authorization/promotion and actual rtxForge/GameBridge icon API readback. No changes to auth/permissions/cap/SVG safety. loewOS asset choice separate.",
       "category": "implementation",
       "primary_team": "runner",
       "supporting_teams": [],
@@ -12043,8 +12043,8 @@
       "base_sha": "41a35141f4cfddaafb103cdc19fe27ef848ed3e0",
       "state": "active",
       "created_at": "2026-10-03T03:07:29.810Z",
-      "updated_at": "2026-10-03T03:07:29.810Z",
-      "lease_until": "2026-10-03T15:07:29.810Z"
+      "updated_at": "2026-10-03T03:14:21.419Z",
+      "lease_until": "2026-10-03T15:14:21.419Z"
     }
   ],
   "migrated_from": "loew-inspector"
