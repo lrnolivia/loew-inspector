@@ -1,3 +1,8 @@
+---
+name: relay-creative-art-direction
+description: Set or refine a product visual thesis from approved identity, audience and references, then verify hierarchy and coherence.
+---
+
 # Art direction and anti-slop judgment
 
 Own the visual point of view before polishing components.
@@ -40,3 +45,9 @@ Before shipping a direction, ask:
 - Is any visual effect present only because it is fashionable?
 - Could this be mistaken for a template from an unrelated SaaS product?
 - Does every loud element earn its volume?
+
+## Workflow inputs and deliverable
+
+Read the user task, established identity/tokens, audience, real content and approved references. Inspect representative existing screens before selecting a direction. State the thesis and the few decisions that distinguish it: hierarchy, type, density, material and emphasis. Turn each decision into a component/layout rule the implementer can apply; use design-system guidance when the rules span multiple screens.
+
+Deliver an implementable direction and representative state, with intentional departures from references explained. Verify rendered hierarchy with realistic content and at least a narrow/wide composition when relevant. If the result feels generic or conflicts with approved identity, locate the concrete spacing/type/surface decision causing it and revise that decision. An attractive mockup does not authorize replacing the established product language.

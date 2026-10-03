@@ -1,3 +1,8 @@
+---
+name: relay-creative-visual-qa
+description: Compare a rendered artifact with approved visual intent across hierarchy, states, responsive behavior and interaction evidence.
+---
+
 # Visual QA and design editing
 
 Verification compares the rendered result to the design intent, not merely to "no crash."
@@ -22,3 +27,9 @@ When the user gives qualitative feedback such as "too SaaS," "too busy," or "thi
 ## Editing posture
 
 Do not protect earlier design work from critique. Preserve intentional identity, but remove elements that do not earn their space, emphasis, or interaction cost.
+
+## Workflow inputs and output
+
+Gather approved reference/thesis, exact source/deployment, target viewport/device/appearance and real task content. Capture comparable rendered states with the same meaningful data, then review in the order above. Identify specific component/layout divergences; distinguish deliberate adaptation from accidental mismatch.
+
+Deliver annotated findings with artifact, state, evidence, expected behavior and concrete correction. Re-check the changed state and relevant responsive/interaction boundary after a fix. If no render is available, report source observations separately and keep visual claims unverified. If a reference is ambiguous, preserve the approved system and frame the precise design decision; do not invent pixel fidelity or rewrite runtime truth to make a screenshot look better.

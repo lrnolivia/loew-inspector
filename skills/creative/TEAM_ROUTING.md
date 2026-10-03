@@ -1,3 +1,8 @@
+---
+name: relay-creative-team-routing
+description: Compose only the creative, platform and performance guidance needed for a task using real assignment and capability context.
+---
+
 # Creative skill routing
 
 Relay resolves creative expertise through the canonical organization layer:
@@ -39,3 +44,9 @@ Do not load every pack by default. Prefer the smallest combination that can make
 ## Capability-aware dependencies
 
 Figma guidance is loaded only when the real Figma capability is available or the task explicitly needs a Figma handoff. When unavailable, preserve the design intent in implementation-neutral structure rather than pretending Figma work occurred.
+
+## Resolution workflow
+
+Start with task intent tags, platform, available capabilities and a context ceiling. Use relay_skills resolve, inspect selected/rejected reasons, then read only the selected IDs with the same capability/context limits. Exact tag matching is intentional: include the task's relevant domains rather than expecting natural-language inference. Read/audit verifies pinned bytes; neither operation claims source ownership.
+
+Return the selected expertise and the decision each pack supports. Verify the combination covers the actual acceptance without loading unrelated domains. If a needed pack is rejected for capability or budget, preserve the rejection, narrow optional guidance or use a supported neutral handoff. Do not add an unavailable capability to the request just to force selection, and do not treat staff routing as authorization to spawn or message another worker.
