@@ -17,9 +17,10 @@ test('populated Relay connection page works at desktop and mobile sizes without 
   await page.route('**/api/projects/field',route=>route.fulfill({status:503,json:{error:'Fixture provider unavailable'}}));
   await page.route('**/api/workers',route=>route.fulfill({json:[]}));await page.route('**/api/projects/relay',route=>route.fulfill({json:{coordination:{claims:[{id:'fixture-review',state:'active'}]}}}));
   await page.route('**/api/projects/relay/icon',route=>route.fulfill({json:{status:'found',icon:{data_url:contextCardBrandAssets.relay}}}));await page.route('**/api/progress/relay*',route=>route.fulfill({json:progress}));
-  await page.route('**/api/relay/*',route=>route.fulfill({json:{ok:true,checked_at:'2026-10-03T00:00:00Z',elapsed_ms:17,server:{version:'fixture'},tools:{count:65,schema_sha256:'b'.repeat(64)},refresh:{message:'Server tool schema checked. Client refresh is not verified.'}}}));
-  await page.goto(origin+'/');await page.getByRole('heading',{name:'relay',exact:true}).waitFor();await page.getByText(progress.progress[0].goal,{exact:true}).waitFor();
-  for(const width of [320,768,1024,1440]){await page.setViewportSize({width,height:1000});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'no overflow at '+width);}
+  let connectionRequests=0,releaseInitialCheck;const initialCheckGate=new Promise(resolve=>{releaseInitialCheck=resolve;});
+  await page.route('**/api/relay/*',async route=>{if(route.request().url().endsWith('/check')){connectionRequests++;if(connectionRequests===1)await initialCheckGate;}return route.fulfill({json:{ok:true,checked_at:'2026-10-03T00:00:00Z',elapsed_ms:17,server:{version:'fixture'},tools:{count:65,schema_sha256:'b'.repeat(64)},refresh:{message:'Server tool schema checked. Client refresh is not verified.'}}});});
+  await page.goto(origin+'/');await page.getByRole('heading',{name:'relay',exact:true}).waitFor();await page.locator('.relay-connection-panel[aria-busy=true]').waitFor();releaseInitialCheck();await page.getByText('MCP connected',{exact:true}).waitFor();assert.equal(connectionRequests,1,'automatically checks once on initial load');await page.getByText(progress.progress[0].goal,{exact:true}).waitFor();
+  for(const width of [320,768,1024,1440]){await page.setViewportSize({width,height:1000});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'no overflow at '+width);assert.equal(await page.locator('.telemetry-ring>div,.telemetry-orbits>div').evaluateAll(nodes=>nodes.every(node=>{const bounds=node.getBoundingClientRect();return [...node.children].every(child=>{const box=child.getBoundingClientRect();return box.left>=bounds.left-1&&box.right<=bounds.right+1&&box.top>=bounds.top-1&&box.bottom<=bounds.bottom+1;});})),true,'ring text stays inside its clear center at '+width);}
   assert.equal(await page.locator('.telemetry-card').count(),4);
   await page.waitForFunction(()=>[...document.querySelectorAll('.telemetry-feature-badge img')].every(image=>image.complete&&image.naturalWidth>0));
   assert.equal(await page.locator('.telemetry-feature-badge img').count(),2,'contextual brands are real loaded assets');
@@ -37,7 +38,7 @@ test('populated Relay connection page works at desktop and mobile sizes without 
   await page.getByRole('button',{name:'move activity earlier',exact:true}).click();
   await page.getByRole('button',{name:'done',exact:true}).click();
   assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('relay.telemetry.order.v1'))),['progress','needs','activity','motion']);
-  await page.reload();await page.locator('.live-telemetry[data-complete=true]').waitFor();
+  await page.reload();await page.getByText('MCP connected',{exact:true}).waitFor();assert.equal(connectionRequests,3,'reload checks again after one manual recheck');await page.locator('.live-telemetry[data-complete=true]').waitFor();
   assert.equal(await page.locator('[data-card=activity]').evaluate(el=>getComputedStyle(el).order),'2','saved layout restored');
   await page.emulateMedia({reducedMotion:'no-preference'});
   await page.setViewportSize({width:1440,height:1000});

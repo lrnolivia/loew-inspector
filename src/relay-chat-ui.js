@@ -1,7 +1,7 @@
 import { STAFF } from './staff-registry.js';
 import { contextCardBrandAssets } from '../apps/web/generated.js';
 import { styleContextCard } from './relay-context-card-style.js';
-export const RELAY_CONTEXT_CARD_URI = 'ui://relay/context-card/v12.html';
+export const RELAY_CONTEXT_CARD_URI = 'ui://relay/context-card/v13.html';
 export const RELAY_CONTEXT_CARD_TOOL = 'relay_render_context_card';
 export const RELAY_STATUS_CARD_URI = 'ui://relay/status-card/v3-legacy-bridge.html';
 export const RELAY_STATUS_CARD_TOOL = 'relay_show_legacy_bridge_card';
@@ -72,6 +72,15 @@ export function contextCardModel(data = {}, directory = DIRECTORY) {
   const checkpoint = data.latest || checkpoints[0] || {};
   const technicalNote = text => /[a-f0-9]{24,40}|relay_[a-z_]+|version_id|commit_sha|Worker version|PR #\d+/.test(String(text || ''));
   const human = data.human || {};
+  const compactText = (value, limit=140) => { const text=String(value || '').replace(/\s+/g,' ').trim(); return text.length<=limit?text:text.slice(0,limit-1).replace(/\s+\S*$/,'')+'…'; };
+  const jobTitle = item => {
+    const explicit=item.title || item.display_name;
+    const goal=String(item.goal || '').trim();
+    if(explicit)return compactText(explicit,72);
+    if(goal && goal.length<=90 && !technicalNote(goal))return goal;
+    const id=String(item.id || item.assignment || '').replace(/-20\d{6}(?:-.*)?$/,'').replace(/[-_]+/g,' ').trim();
+    return compactText(id || goal || 'untitled job',72);
+  };
   const name = id => directory[id] || 'Unassigned staff';
   const primary = human.responsible_staff?.display_name || (first.primary_staff ? name(first.primary_staff) : data.primary_staff ? name(data.primary_staff) : 'Relay');
   const supporting = human.supporting_staff?.map(x=>x.display_name) || (first.supporting_staff || data.supporting_staff || []).map(name);
@@ -80,12 +89,17 @@ export function contextCardModel(data = {}, directory = DIRECTORY) {
   const error = typeof data.error === 'string' ? data.error : data.error?.message;
   const checks = Array.isArray(data.checks?.check_runs) ? data.checks.check_runs : Array.isArray(data.check_runs) ? data.check_runs : null;
   const pr = data.pull_request || (data.number && data.head ? data : null);
-  let title = human.outcome || first.goal || data.project || data.script || 'Relay update';
+  const fullTitle = human.outcome || first.goal || data.project || data.script || 'Relay update';
+  let title = String(fullTitle).length > 90 ? jobTitle(first) : fullTitle;
   let summary = human.what_changed || error || first.waiting_reason || data.message || first.next_action || checkpoint.next_action || 'Exact Relay result recorded.';
   if (technicalNote(summary) && !error && !first.waiting_reason) summary = checkpoint.identities?.merge_commit_sha ? 'The source change is merged. The next verification gate is ready.' : 'Canonical work state is available. Exact source and runtime details are recorded below.';
+  const fullSummary = summary;
+  summary = compactText(summary,150);
   let label = states[status] || status;
   let tone = ['blocked','failed','officially-stale'].includes(status) ? 'bad' : status.includes('wait') || status === 'held' ? 'wait' : ['active','working'].includes(status) ? 'info' : ['completed','complete'].includes(status) ? 'good' : 'quiet';
-  let rows = (data.progress || data.claims || data.queue || []).slice(0,3).map(x=>({label:x.primary_staff ? name(x.primary_staff) : 'Relay', text:states[x.state] || x.state || 'Recorded'}));
+  const jobs = (data.progress || data.claims || data.queue || []).filter(x=>!['completed','complete','cancelled','retired','superseded'].includes(x.state));
+  const activeJobs = jobs.filter(x=>['active','working'].includes(x.state));
+  let rows = (activeJobs.length ? activeJobs : jobs).slice(0,3).map(x=>({label:jobTitle(x), text:states[x.state] || x.state || 'Recorded'}));
   if (checks) {
     const failed = checks.find(x=>x.status==='completed' && !['success','neutral','skipped'].includes(x.conclusion));
     const running = checks.find(x=>x.status!=='completed');
@@ -98,12 +112,12 @@ export function contextCardModel(data = {}, directory = DIRECTORY) {
   const qa = human.qa || checkpoint.qa_context || data.qa || null;
   const handoff = data.action === 'handoff' ? 'Ownership handed to '+(data.claim?.owner || 'the recorded successor')+'.' : data.handoff?.summary || null;
   const identities = first.identities || checkpoint.identities || data.identities || {};
-  const evidence = { assignment:first.id || first.assignment || (typeof data.assignment==='string'?data.assignment:null), owner:first.owner, branch:first.branch || identities.branch, head_sha:identities.head_sha || identities.pr_head_sha || pr?.head?.sha, pr:pr?.number || identities.pr, merge_commit_sha:pr?.merge_commit_sha || identities.merge_commit_sha, version_id:data.version_id, deployment_id:data.deployment?.id, evidence_id:data.evidence_id || data.evidence?.evidence_id, record_sha:data.record_sha, next_action:first.next_action || checkpoint.next_action || null };
+  const evidence = { assignment:first.id || first.assignment || (typeof data.assignment==='string'?data.assignment:null), owner:first.owner, branch:first.branch || identities.branch, head_sha:identities.head_sha || identities.pr_head_sha || pr?.head?.sha, pr:pr?.number || identities.pr, merge_commit_sha:pr?.merge_commit_sha || identities.merge_commit_sha, version_id:data.version_id, deployment_id:data.deployment?.id, evidence_id:data.evidence_id || data.evidence?.evidence_id, record_sha:data.record_sha, goal:first.goal || fullTitle, summary:fullSummary, next_action:first.next_action || checkpoint.next_action || null };
   const normalize = value => String(value || '').trim().replace(/\s+/g,' ').toLowerCase();
   const rawNext = human.next_step || first.next_action || checkpoint.next_action || null;
   const terminal = ['completed','complete','finished'].includes(String(status).toLowerCase()) || Boolean(pr?.merged);
-  let nextStep = terminal ? null : technicalNote(rawNext) ? 'Verify the refreshed chat connection before continuing.' : rawNext;
-  if (nextStep && (normalize(nextStep) === normalize(summary) || normalize(summary).includes(normalize(nextStep)))) nextStep = null;
+  let nextStep = terminal ? null : technicalNote(rawNext) ? 'Verify the refreshed chat connection before continuing.' : compactText(rawNext,120);
+  if (nextStep && (normalize(rawNext) === normalize(fullSummary) || normalize(nextStep) === normalize(summary) || normalize(summary).includes(normalize(nextStep)))) nextStep = null;
   if (rows.length === 1 && rows[0].label === primary && normalize(rows[0].text) === normalize(label)) rows = [];
   const primaryTeam = first.primary_team || data.primary_team || (checks ? 'inspector' : pr ? 'source' : 'relay');
   const feature = ['relay','runner','inspector','night-shift','source','cloud','release','skills'].includes(primaryTeam) ? primaryTeam : 'relay';
@@ -113,6 +127,7 @@ export function contextCardModel(data = {}, directory = DIRECTORY) {
   const percent = hasPercent && Number.isFinite(Number(rawPercent)) && Number(rawPercent) >= 0 && Number(rawPercent) <= 100 ? Math.round(Number(rawPercent)) : null;
   let metric = percent != null ? percent+'%' : label;
   let metric_label = percent != null ? 'completion' : 'current state';
+  if (!checks && !pr && jobs.length && percent == null) { metric=String(data.coverage?.active ?? activeJobs.length); metric_label='active jobs'; }
   if (checks) { const done=checks.filter(x=>x.status==='completed').length; metric=checks.length ? done+'/'+checks.length : label; metric_label=checks.length ? 'checks reported' : 'verification'; }
   if (pr?.number) { metric='#'+pr.number; metric_label=pr.merged?'merged pull request':pr.draft?'draft pull request':'pull request'; }
   return { title, feature, primary_staff:primary, team, label, tone, signal, summary, rows, blocker, qa, handoff, next_step:nextStep, metric, metric_label, percent, evidence:Object.fromEntries(Object.entries(evidence).filter(([,v])=>v!=null)), refresh:Boolean(data.project) };
@@ -135,7 +150,7 @@ export function compactContextCardResult(result = {}) {
   const rank = item => ['waiting-for-human','active','working','held','queued','completed'].indexOf(item.state);
   const current = claims.filter(item => !['completed','cancelled','superseded','retired'].includes(item.state));
   const selected = (current.length ? current : claims.slice(-3)).slice().sort((a,b) => Number(Boolean(a.lease_expired))-Number(Boolean(b.lease_expired)) || rank(a)-rank(b)).slice(0, 3);
-  const out = {ok:result.ok !== false, schema:'relay-context-card/v1', project:text(result.project,80), checked_at:text(result.checked_at,80), record_sha:text(result.record_sha,80), claims:selected.map(projectItem), queue:queue.filter(item=>item.state==='queued').slice(0,3).map(projectItem), coverage:{claims:claims.length,queued:queue.filter(item=>item.state==='queued').length,shown:selected.length}};
+  const out = {ok:result.ok !== false, schema:'relay-context-card/v1', project:text(result.project,80), checked_at:text(result.checked_at,80), record_sha:text(result.record_sha,80), claims:selected.map(projectItem), queue:queue.filter(item=>item.state==='queued').slice(0,3).map(projectItem), coverage:{claims:claims.length,active:current.filter(item=>['active','working'].includes(item.state)).length,queued:queue.filter(item=>item.state==='queued').length,shown:selected.length}};
   if (result.error) out.error = {message:text(typeof result.error==='string'?result.error:result.error.message)};
   return out;
 }
@@ -153,6 +168,15 @@ const CONTEXT_CARD_BROWSER_MODEL = String.raw`function contextCardModel(data = {
   const checkpoint = data.latest || checkpoints[0] || {};
   const technicalNote = text => /[a-f0-9]{24,40}|relay_[a-z_]+|version_id|commit_sha|Worker version|PR #\d+/.test(String(text || ''));
   const human = data.human || {};
+  const compactText = (value, limit=140) => { const text=String(value || '').replace(/\s+/g,' ').trim(); return text.length<=limit?text:text.slice(0,limit-1).replace(/\s+\S*$/,'')+'…'; };
+  const jobTitle = item => {
+    const explicit=item.title || item.display_name;
+    const goal=String(item.goal || '').trim();
+    if(explicit)return compactText(explicit,72);
+    if(goal && goal.length<=90 && !technicalNote(goal))return goal;
+    const id=String(item.id || item.assignment || '').replace(/-20\d{6}(?:-.*)?$/,'').replace(/[-_]+/g,' ').trim();
+    return compactText(id || goal || 'untitled job',72);
+  };
   const name = id => directory[id] || 'Unassigned staff';
   const primary = human.responsible_staff?.display_name || (first.primary_staff ? name(first.primary_staff) : data.primary_staff ? name(data.primary_staff) : 'Relay');
   const supporting = human.supporting_staff?.map(x=>x.display_name) || (first.supporting_staff || data.supporting_staff || []).map(name);
@@ -161,12 +185,17 @@ const CONTEXT_CARD_BROWSER_MODEL = String.raw`function contextCardModel(data = {
   const error = typeof data.error === 'string' ? data.error : data.error?.message;
   const checks = Array.isArray(data.checks?.check_runs) ? data.checks.check_runs : Array.isArray(data.check_runs) ? data.check_runs : null;
   const pr = data.pull_request || (data.number && data.head ? data : null);
-  let title = human.outcome || first.goal || data.project || data.script || 'Relay update';
+  const fullTitle = human.outcome || first.goal || data.project || data.script || 'Relay update';
+  let title = String(fullTitle).length > 90 ? jobTitle(first) : fullTitle;
   let summary = human.what_changed || error || first.waiting_reason || data.message || first.next_action || checkpoint.next_action || 'Exact Relay result recorded.';
   if (technicalNote(summary) && !error && !first.waiting_reason) summary = checkpoint.identities?.merge_commit_sha ? 'The source change is merged. The next verification gate is ready.' : 'Canonical work state is available. Exact source and runtime details are recorded below.';
+  const fullSummary = summary;
+  summary = compactText(summary,150);
   let label = states[status] || status;
   let tone = ['blocked','failed','officially-stale'].includes(status) ? 'bad' : status.includes('wait') || status === 'held' ? 'wait' : ['active','working'].includes(status) ? 'info' : ['completed','complete'].includes(status) ? 'good' : 'quiet';
-  let rows = (data.progress || data.claims || data.queue || []).slice(0,3).map(x=>({label:x.primary_staff ? name(x.primary_staff) : 'Relay', text:states[x.state] || x.state || 'Recorded'}));
+  const jobs = (data.progress || data.claims || data.queue || []).filter(x=>!['completed','complete','cancelled','retired','superseded'].includes(x.state));
+  const activeJobs = jobs.filter(x=>['active','working'].includes(x.state));
+  let rows = (activeJobs.length ? activeJobs : jobs).slice(0,3).map(x=>({label:jobTitle(x), text:states[x.state] || x.state || 'Recorded'}));
   if (checks) {
     const failed = checks.find(x=>x.status==='completed' && !['success','neutral','skipped'].includes(x.conclusion));
     const running = checks.find(x=>x.status!=='completed');
@@ -179,12 +208,12 @@ const CONTEXT_CARD_BROWSER_MODEL = String.raw`function contextCardModel(data = {
   const qa = human.qa || checkpoint.qa_context || data.qa || null;
   const handoff = data.action === 'handoff' ? 'Ownership handed to '+(data.claim?.owner || 'the recorded successor')+'.' : data.handoff?.summary || null;
   const identities = first.identities || checkpoint.identities || data.identities || {};
-  const evidence = { assignment:first.id || first.assignment || (typeof data.assignment==='string'?data.assignment:null), owner:first.owner, branch:first.branch || identities.branch, head_sha:identities.head_sha || identities.pr_head_sha || pr?.head?.sha, pr:pr?.number || identities.pr, merge_commit_sha:pr?.merge_commit_sha || identities.merge_commit_sha, version_id:data.version_id, deployment_id:data.deployment?.id, evidence_id:data.evidence_id || data.evidence?.evidence_id, record_sha:data.record_sha, next_action:first.next_action || checkpoint.next_action || null };
+  const evidence = { assignment:first.id || first.assignment || (typeof data.assignment==='string'?data.assignment:null), owner:first.owner, branch:first.branch || identities.branch, head_sha:identities.head_sha || identities.pr_head_sha || pr?.head?.sha, pr:pr?.number || identities.pr, merge_commit_sha:pr?.merge_commit_sha || identities.merge_commit_sha, version_id:data.version_id, deployment_id:data.deployment?.id, evidence_id:data.evidence_id || data.evidence?.evidence_id, record_sha:data.record_sha, goal:first.goal || fullTitle, summary:fullSummary, next_action:first.next_action || checkpoint.next_action || null };
   const normalize = value => String(value || '').trim().replace(/\s+/g,' ').toLowerCase();
   const rawNext = human.next_step || first.next_action || checkpoint.next_action || null;
   const terminal = ['completed','complete','finished'].includes(String(status).toLowerCase()) || Boolean(pr?.merged);
-  let nextStep = terminal ? null : technicalNote(rawNext) ? 'Verify the refreshed chat connection before continuing.' : rawNext;
-  if (nextStep && (normalize(nextStep) === normalize(summary) || normalize(summary).includes(normalize(nextStep)))) nextStep = null;
+  let nextStep = terminal ? null : technicalNote(rawNext) ? 'Verify the refreshed chat connection before continuing.' : compactText(rawNext,120);
+  if (nextStep && (normalize(rawNext) === normalize(fullSummary) || normalize(nextStep) === normalize(summary) || normalize(summary).includes(normalize(nextStep)))) nextStep = null;
   if (rows.length === 1 && rows[0].label === primary && normalize(rows[0].text) === normalize(label)) rows = [];
   const primaryTeam = first.primary_team || data.primary_team || (checks ? 'inspector' : pr ? 'source' : 'relay');
   const feature = ['relay','runner','inspector','night-shift','source','cloud','release','skills'].includes(primaryTeam) ? primaryTeam : 'relay';
@@ -194,6 +223,7 @@ const CONTEXT_CARD_BROWSER_MODEL = String.raw`function contextCardModel(data = {
   const percent = hasPercent && Number.isFinite(Number(rawPercent)) && Number(rawPercent) >= 0 && Number(rawPercent) <= 100 ? Math.round(Number(rawPercent)) : null;
   let metric = percent != null ? percent+'%' : label;
   let metric_label = percent != null ? 'completion' : 'current state';
+  if (!checks && !pr && jobs.length && percent == null) { metric=String(data.coverage?.active ?? activeJobs.length); metric_label='active jobs'; }
   if (checks) { const done=checks.filter(x=>x.status==='completed').length; metric=checks.length ? done+'/'+checks.length : label; metric_label=checks.length ? 'checks reported' : 'verification'; }
   if (pr?.number) { metric='#'+pr.number; metric_label=pr.merged?'merged pull request':pr.draft?'draft pull request':'pull request'; }
   return { title, feature, primary_staff:primary, team, label, tone, signal, summary, rows, blocker, qa, handoff, next_step:nextStep, metric, metric_label, percent, evidence:Object.fromEntries(Object.entries(evidence).filter(([,v])=>v!=null)), refresh:Boolean(data.project) };
