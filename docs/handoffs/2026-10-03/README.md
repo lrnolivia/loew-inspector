@@ -1,9 +1,11 @@
 # Execution docket and handoffs — October 3, 2026
 
 ## Current instruction
-Pause implementation and design. Reconcile the last several days of goals, preserve every unfinished change, and prepare accurate execution handoffs. rtxForge implementation is for Lauren's own Codex session; Relay MCP implementation is for her Mac Codex session. No receiving task was launched and no successor identity is invented. Julian retains cleanup/documentation and the paused ctrl/Field responsibilities.
+Pause implementation and design. Reconcile the last several days of goals, preserve every unfinished change, and prepare accurate execution handoffs. rtxForge implementation is for Lauren's own Codex session; Relay MCP implementation is for her Mac Codex session. No receiving task was launched and no successor identity is invented. Field implementation was also transferred to Lauren's own Codex at05:16 UTC. Julian retains cleanup/documentation and paused ctrl responsibilities; no competing Field, RTX or MCP implementation.
 
 ## Start here
+- [Field](FIELD.md): dedicated user-Codex handoff, with mandatory Inspector-first then left-sidebar visual parity.
+- [Latest decisions](LATEST-DECISIONS.md): authoritative updates from the current review, including names, casing, popups and panel scope.
 - [rtxForge](RTXFORGE.md): full Classic, package/runtime, native UI, portability, beta QA, and approved icon handoff.
 - [Relay MCP](RELAY-MCP.md): original capability promises, what shipped, remaining architecture and tonight's requirements.
 - [ctrl, Field and other projects](CTRL-FIELD-OTHER.md): complete latest corrections and smaller-project acceptance.
@@ -16,7 +18,7 @@ Pause implementation and design. Reconcile the last several days of goals, prese
 | Project | Delivered evidence | Remaining / next step | Execution state |
 |---|---|---|---|
 | ctrl | PR6 live; prior PR7 geometry checkpoint passed browser tests | Latest PR7 source629c961e retained; fix ambiguous test selector, verify populated UI; finish loading and review/reply; new mobile preview still needs review | Held for cleanup, retained by Julian |
-| Field | PR138 live, Dashboard/Mobile integration delivered | Complete Gallery and Figma parity audit; reconcile expired historical reservation before admission | Paused |
+| Field | PR138 live, Dashboard/Mobile integration delivered | Complete Gallery and Figma parity audit; reconcile expired historical reservation before admission | User-started Codex pickup; old reservation must be reconciled |
 | Relay MCP | Identity/source/progress/staff and partial skill/card/feedback foundations; native icon resolver delivered | Full original skills/durable executor/client/review/NightShift/sync/site requirements in MCP handoff | User-started Mac Codex pickup, actual owner pending |
 | rtxForge | Published preview695d292e; PR6 draftabd243e7 recorded green native CI; icon vectors approved | Classic/theme/presets/NR and all retained package/portability/QA scope; integrate approved assets | User-started Codex pickup, actual owner pending |
 | Arc / Terra Prime | Figma repair, footer, equal bar, glow and native keyframes; canonical bar geometry | Export/playback proof blocked; framework/source and TV port unverified; HDMI blur deferred | Design checkpoint preserved, runtime paused |
@@ -38,7 +40,7 @@ Pause implementation and design. Reconcile the last several days of goals, prese
 5. Plugin creation-record deletion is distinct from uninstall. Preserve current Relay App ID asdk_app_6abe234861d881919e30db65d656492f and Version ID asdk_app_v_6abe234861e481919f6452cfb12d250f.
 
 ## Suggested execution after cleanup
-First unblock the ctrl review backend contract and ready UI fixes, then Field parity/Gallery. The user-owned rtxForge and MCP sessions can work independently with explicit paths and shared contract coordination. Small native package or icon deliveries can follow when not overlapping another writer. Never launch all old claimed queue rows as new jobs.
+First unblock the ctrl review backend contract and ready UI fixes. The user-owned Field, rtxForge and MCP sessions can work independently with explicit paths and shared contract coordination. Small native package or icon deliveries can follow when not overlapping another writer. Never launch all old claimed queue rows as new jobs.
 
 ## Verification receipts
 - ctrl production:5c662ae19dae2fc4dd088ba7beb98aae0bdd23e4.
@@ -49,3 +51,5 @@ First unblock the ctrl review backend contract and ready UI fixes, then Field pa
 - Relay native icon delivery:PR137 /96ec83a5b3ea30bee6439f199a29d316c58e6f6f. Broader production overflow failure remains separate.
 
 Inventory gathered04:41–04:45 UTC. Later canonical changes: ctrl successfully held04:45; documentation-only Relay claim admitted04:48. Re-read current records before every mutation.
+
+Latest live supplement: the user reports a Codex frame stuck blank/loading with visible text “Opening Relay.” Saved in MCP continuation at record025b2868; identify tool/resource from receiving session trace. No missing-resource cause is established.
