@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T10:27:51.860Z",
+  "updated_at": "2026-10-03T10:37:55.842Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -12577,7 +12577,7 @@
       ],
       "goal": "Continue the existing unfinished full Relay MCP rebuild, restoring original1.9 promised capabilities and integrating approved Relay live-panel/site/card work. Archival assignment closure is not proof of functional delivery.",
       "acceptance": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, checks and deployment evidence, with deduplicated continuation recommendations and honest unavailable-evidence states. Complete skill catalog, search, read, resolve, install/vendor, update and audit; pinned licensed portable bundles; integrity and dependency enforcement; all originally promised creative, platform and supporting packs. Prove durable jobs, a real coding executor, capability-based local/remote routing, worker communication and full capability parity. Fold the Relay website, live panel, approved telemetry, Refresh Tools fallback chain, Add MCP to AI actions and compact MCP cards into this same rebuild. Verify actual client rendering/actions. Integrate review-first cards, evidence and device-specific frames, saved answers/replies, project icons and useful workspace overview. Use flat surfaces with shadows/glows. Night Shift records actual autonomous away-time work, with an unused staff lead for oversight, preserved executor provenance, evidence-supported backfill and an idempotent Shift handoff. No new credentials or spending inferred. Documentation-only PRs, fixtures and transferred defects do not establish full delivery.\nFull execution handoff, source recovery and original contract evidence: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RELAY-MCP.md . All latest site/live-panel/telemetry/refresh/add-to-AI, review delivery, NightShift/Shift, canonical asset discovery, lifecycle and original skills/executor goals preserved. Original1.9 verbatim and41 stale queue pairs in sibling documents. Current engine cannot normalize completed queue pairs or handoff queued-only owner; do not bypass. Actual user-started Mac Codex identity pending; parent stops MCP implementation. ctrlfrontend remains separate heldPR7, recovery8WIPfiles preserved. New Relay site concept is not implementation; current plugin ID protected.",
-      "next_action": "Direct root verification only: extend existing motion browser test to the actual LiveTelemetry component, preserving approved source design and current draft publication gate. No worker resumed, no publication or access change. Existing hook playback already passed; full component interrupted-update playback is the next bounded check.",
+      "next_action": "Direct verification complete for motion candidate PR142 head0dfd40df52adb6bd9b5ff4e7e5c5343b63ed61d9. Exact quality/admission37116804398/37116804426 pass, including actual LiveTelemetry Chromium playback at1440/390, interrupted updates, stable nodes, chart geometry, reduced motion and viewport fit. Prior test harness await errors fixed. No new product edits aftere60bf7c6. Draft publication remains approval-blocked; no merge/deploy/hosted preview claim. Real executor token/host access and native client/live recipient proof remain open. Field exact production build.json200 f581e4f3 confirmed09:30; literal Figma/Field audit still blocked by cloud Figma unavailable and Field sign-in. No workers started or resumed.",
       "ledger_refs": [
         "relay-mcp-rebuild-20261001",
         "relay-mcp-host-proof-20261001",
@@ -12595,10 +12595,10 @@
       "primary_staff": "ellis",
       "supporting_staff": [],
       "base_sha": "3df50be94ae4089c5e090923123b09afa4dd80ad",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-10-03T05:37:48.707Z",
-      "updated_at": "2026-10-03T10:27:51.860Z",
-      "lease_until": "2026-10-03T22:27:51.860Z",
+      "updated_at": "2026-10-03T10:37:55.842Z",
+      "lease_until": "2026-10-03T22:37:55.842Z",
       "handoffs": [
         {
           "at": "2026-10-03T08:00:10.297Z",
