@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T06:18:43.697Z",
+  "updated_at": "2026-10-03T06:18:50.351Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6695,8 +6695,10 @@
       "supporting_teams": [],
       "primary_staff": "luca",
       "supporting_staff": [],
-      "state": "claimed",
-      "created_at": "2026-10-01T18:14:00.745Z"
+      "state": "completed",
+      "created_at": "2026-10-01T18:14:00.745Z",
+      "completed_at": "2026-10-01T18:32:18.414Z",
+      "updated_at": "2026-10-03T06:18:50.351Z"
     },
     {
       "id": "relay-website-project-context-polish-20261001",
