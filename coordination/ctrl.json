@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "ctrl",
-  "updated_at": "2026-10-03T15:20:20.879Z",
+  "updated_at": "2026-10-03T15:41:54.423Z",
   "legacy_branches": [
     "main"
   ],
@@ -10,8 +10,8 @@
       "id": "ctrl-review-first-telemetry-20261003",
       "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
       "goal": "Finish ctrl review-first control center and truthful telemetry on the established implementation.",
-      "acceptance": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.",
-      "next_action": "Lauren explicitly requests Julian direct takeover tonight, no more workers. Preserve completed worker checkpoints and current source; no worker restart. Root will finish authorized remaining fixes and verification with Relay, preserve review and access gates, and report exact ready/blocked status. Field current user-owned batch remains separate.",
+      "acceptance": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.\n2026-10-03 15:31 followup: compact, well-grouped expanded Inspector filter/organize controls; preserve stable screenshot nodes while review metadata refreshes and show first-load image skeletons; notification center must render above content/nav in sidebar, bottom and mobile modes with accessible dismissal/focus. Live telemetry uses first-load skeletons and retained last-good data during updates; no count/image reset flicker.",
+      "next_action": "PR8 shipped ed4d80a7 with approved telemetry and visible-four desktop nav centering. Root handles new controls/image/notification/live-data followups in next PR. Synchronize admitted branch with shipped main before edits; no source work duplication or new workers.",
       "paths": [
         "apps/web/public/",
         "apps/web/src/",
@@ -29,8 +29,8 @@
       "supporting_staff": [],
       "state": "claimed",
       "created_at": "2026-10-03T07:09:07.409Z",
-      "updated_at": "2026-10-03T08:10:24.430Z",
-      "amendment_count": 1,
+      "updated_at": "2026-10-03T15:41:54.423Z",
+      "amendment_count": 2,
       "amendments": [
         {
           "at": "2026-10-03T07:15:32.839Z",
@@ -51,6 +51,23 @@
             "primary_staff": "valentina",
             "primary_team": "inspector"
           }
+        },
+        {
+          "at": "2026-10-03T15:41:54.423Z",
+          "by": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "reason": "Preserve followup fixes Lauren requested during publication review.",
+          "fields": [
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "acceptance": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.",
+            "next_action": "Lauren explicitly approves merging ctrl after centering the main four desktop nav items independently of unequal logo/settings endcaps. Keep new telemetry in PR8; implement bounded centering, exact-head checks/visual confirmation, then merge and verify protected production. User approval message Sentinel_60243e3d599881918ef06cddc4304675."
+          },
+          "after": {
+            "acceptance": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.\n2026-10-03 15:31 followup: compact, well-grouped expanded Inspector filter/organize controls; preserve stable screenshot nodes while review metadata refreshes and show first-load image skeletons; notification center must render above content/nav in sidebar, bottom and mobile modes with accessible dismissal/focus. Live telemetry uses first-load skeletons and retained last-good data during updates; no count/image reset flicker.",
+            "next_action": "PR8 shipped ed4d80a7 with approved telemetry and visible-four desktop nav centering. Root handles new controls/image/notification/live-data followups in next PR. Synchronize admitted branch with shipped main before edits; no source work duplication or new workers."
+          }
         }
       ],
       "handoffs": [
@@ -60,7 +77,28 @@
           "to": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
           "next_action": "Lauren explicitly requests Julian direct takeover tonight, no more workers. Preserve completed worker checkpoints and current source; no worker restart. Root will finish authorized remaining fixes and verification with Relay, preserve review and access gates, and report exact ready/blocked status. Field current user-owned batch remains separate."
         }
-      ]
+      ],
+      "objective_history": {
+        "baseline": {
+          "goal": "Finish ctrl review-first control center and truthful telemetry on the established implementation.",
+          "acceptance": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.",
+          "at": "2026-10-03T15:41:54.423Z",
+          "source": "first-observed-current-record"
+        },
+        "acceptance_versions": [
+          {
+            "id": "ctrl-review-first-telemetry-20261003:acceptance:0",
+            "text": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.",
+            "at": "2026-10-03T15:41:54.423Z"
+          },
+          {
+            "id": "ctrl-review-first-telemetry-20261003:acceptance:2",
+            "text": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.\n2026-10-03 15:31 followup: compact, well-grouped expanded Inspector filter/organize controls; preserve stable screenshot nodes while review metadata refreshes and show first-load image skeletons; notification center must render above content/nav in sidebar, bottom and mobile modes with accessible dismissal/focus. Live telemetry uses first-load skeletons and retained last-good data during updates; no count/image reset flicker.",
+            "at": "2026-10-03T15:41:54.423Z",
+            "reason": "Preserve followup fixes Lauren requested during publication review."
+          }
+        ]
+      }
     }
   ],
   "claims": [
@@ -325,8 +363,8 @@
         "ctrl-review-delivery"
       ],
       "goal": "Finish ctrl review-first control center and truthful telemetry on the established implementation.",
-      "acceptance": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.",
-      "next_action": "Lauren explicitly approves merging ctrl after centering the main four desktop nav items independently of unequal logo/settings endcaps. Keep new telemetry in PR8; implement bounded centering, exact-head checks/visual confirmation, then merge and verify protected production. User approval message Sentinel_60243e3d599881918ef06cddc4304675.",
+      "acceptance": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.\n2026-10-03 15:31 followup: compact, well-grouped expanded Inspector filter/organize controls; preserve stable screenshot nodes while review metadata refreshes and show first-load image skeletons; notification center must render above content/nav in sidebar, bottom and mobile modes with accessible dismissal/focus. Live telemetry uses first-load skeletons and retained last-good data during updates; no count/image reset flicker.",
+      "next_action": "PR8 shipped ed4d80a7 with approved telemetry and visible-four desktop nav centering. Root handles new controls/image/notification/live-data followups in next PR. Synchronize admitted branch with shipped main before edits; no source work duplication or new workers.",
       "primary_team": "inspector",
       "supporting_teams": [],
       "primary_staff": "valentina",
@@ -334,9 +372,9 @@
       "base_sha": "c04e402c6982d02b865310b4963f330a69788e66",
       "state": "active",
       "created_at": "2026-10-03T07:10:52.888Z",
-      "updated_at": "2026-10-03T15:20:20.879Z",
-      "lease_until": "2026-10-04T03:20:20.879Z",
-      "amendment_count": 1,
+      "updated_at": "2026-10-03T15:41:54.423Z",
+      "lease_until": "2026-10-04T03:41:54.423Z",
+      "amendment_count": 2,
       "amendments": [
         {
           "at": "2026-10-03T07:15:32.839Z",
@@ -357,6 +395,23 @@
             "primary_staff": "valentina",
             "primary_team": "inspector"
           }
+        },
+        {
+          "at": "2026-10-03T15:41:54.423Z",
+          "by": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "reason": "Preserve followup fixes Lauren requested during publication review.",
+          "fields": [
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "acceptance": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.",
+            "next_action": "Lauren explicitly approves merging ctrl after centering the main four desktop nav items independently of unequal logo/settings endcaps. Keep new telemetry in PR8; implement bounded centering, exact-head checks/visual confirmation, then merge and verify protected production. User approval message Sentinel_60243e3d599881918ef06cddc4304675."
+          },
+          "after": {
+            "acceptance": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.\n2026-10-03 15:31 followup: compact, well-grouped expanded Inspector filter/organize controls; preserve stable screenshot nodes while review metadata refreshes and show first-load image skeletons; notification center must render above content/nav in sidebar, bottom and mobile modes with accessible dismissal/focus. Live telemetry uses first-load skeletons and retained last-good data during updates; no count/image reset flicker.",
+            "next_action": "PR8 shipped ed4d80a7 with approved telemetry and visible-four desktop nav centering. Root handles new controls/image/notification/live-data followups in next PR. Synchronize admitted branch with shipped main before edits; no source work duplication or new workers."
+          }
         }
       ],
       "handoffs": [
@@ -366,7 +421,28 @@
           "to": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
           "next_action": "Lauren explicitly requests Julian direct takeover tonight, no more workers. Preserve completed worker checkpoints and current source; no worker restart. Root will finish authorized remaining fixes and verification with Relay, preserve review and access gates, and report exact ready/blocked status. Field current user-owned batch remains separate."
         }
-      ]
+      ],
+      "objective_history": {
+        "baseline": {
+          "goal": "Finish ctrl review-first control center and truthful telemetry on the established implementation.",
+          "acceptance": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.",
+          "at": "2026-10-03T15:41:54.423Z",
+          "source": "first-observed-current-record"
+        },
+        "acceptance_versions": [
+          {
+            "id": "ctrl-review-first-telemetry-20261003:acceptance:0",
+            "text": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.",
+            "at": "2026-10-03T15:41:54.423Z"
+          },
+          {
+            "id": "ctrl-review-first-telemetry-20261003:acceptance:2",
+            "text": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.\n2026-10-03 15:31 followup: compact, well-grouped expanded Inspector filter/organize controls; preserve stable screenshot nodes while review metadata refreshes and show first-load image skeletons; notification center must render above content/nav in sidebar, bottom and mobile modes with accessible dismissal/focus. Live telemetry uses first-load skeletons and retained last-good data during updates; no count/image reset flicker.",
+            "at": "2026-10-03T15:41:54.423Z",
+            "reason": "Preserve followup fixes Lauren requested during publication review."
+          }
+        ]
+      }
     }
   ]
 }
