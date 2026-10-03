@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T16:45:41.527Z",
+  "updated_at": "2026-10-03T16:46:17.704Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7613,7 +7613,7 @@
       "id": "relay-skills-completion-20261003",
       "owner": "01a1028b-03c4-718c-b205-24c35c97b0d7",
       "goal": "Complete substantive portable Relay skill workflows and missing original 1.9 creative/performance coverage.",
-      "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian.",
+      "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian. Preserve approved visual/behavior/default baselines and proportions. Meaningful design changes outside the explicit assignment require a reviewable easy live-reversible option restoring the approved version. Never silently replace approved design as polish. Record comparable visual baseline evidence and actionable restoration checks; specifically requested UI changes remain authorized.",
       "next_action": "Complete scoped regression-protection guidance and representative composition coverage, then exact-head checks and draft PR; return runtime integration to Julian.",
       "paths": [
         "skills/",
@@ -7650,11 +7650,17 @@
             "text": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian.",
             "at": "2026-10-03T16:45:41.527Z",
             "reason": "Lauren explicitly added practical Relay/MCP regression protection to this existing skill scope via Julian on 2026-10-03."
+          },
+          {
+            "id": "relay-skills-completion-20261003:acceptance:2",
+            "text": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian. Preserve approved visual/behavior/default baselines and proportions. Meaningful design changes outside the explicit assignment require a reviewable easy live-reversible option restoring the approved version. Never silently replace approved design as polish. Record comparable visual baseline evidence and actionable restoration checks; specifically requested UI changes remain authorized.",
+            "at": "2026-10-03T16:46:17.704Z",
+            "reason": "Lauren explicitly added approved design baseline and live-reversibility protection via Julian on 2026-10-03."
           }
         ]
       },
-      "updated_at": "2026-10-03T16:45:41.527Z",
-      "amendment_count": 1,
+      "updated_at": "2026-10-03T16:46:17.704Z",
+      "amendment_count": 2,
       "amendments": [
         {
           "at": "2026-10-03T16:45:41.527Z",
@@ -7671,6 +7677,20 @@
           "after": {
             "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian.",
             "next_action": "Complete scoped regression-protection guidance and representative composition coverage, then exact-head checks and draft PR; return runtime integration to Julian."
+          }
+        },
+        {
+          "at": "2026-10-03T16:46:17.704Z",
+          "by": "01a1028b-03c4-718c-b205-24c35c97b0d7",
+          "reason": "Lauren explicitly added approved design baseline and live-reversibility protection via Julian on 2026-10-03.",
+          "fields": [
+            "acceptance"
+          ],
+          "before": {
+            "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian."
+          },
+          "after": {
+            "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian. Preserve approved visual/behavior/default baselines and proportions. Meaningful design changes outside the explicit assignment require a reviewable easy live-reversible option restoring the approved version. Never silently replace approved design as polish. Record comparable visual baseline evidence and actionable restoration checks; specifically requested UI changes remain authorized."
           }
         }
       ]
@@ -12758,7 +12778,7 @@
         "relay-skills-runtime"
       ],
       "goal": "Complete substantive portable Relay skill workflows and missing original 1.9 creative/performance coverage.",
-      "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian.",
+      "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian. Preserve approved visual/behavior/default baselines and proportions. Meaningful design changes outside the explicit assignment require a reviewable easy live-reversible option restoring the approved version. Never silently replace approved design as polish. Record comparable visual baseline evidence and actionable restoration checks; specifically requested UI changes remain authorized.",
       "next_action": "Complete scoped regression-protection guidance and representative composition coverage, then exact-head checks and draft PR; return runtime integration to Julian.",
       "primary_team": "skills",
       "supporting_teams": [],
@@ -12785,12 +12805,18 @@
             "text": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian.",
             "at": "2026-10-03T16:45:41.527Z",
             "reason": "Lauren explicitly added practical Relay/MCP regression protection to this existing skill scope via Julian on 2026-10-03."
+          },
+          {
+            "id": "relay-skills-completion-20261003:acceptance:2",
+            "text": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian. Preserve approved visual/behavior/default baselines and proportions. Meaningful design changes outside the explicit assignment require a reviewable easy live-reversible option restoring the approved version. Never silently replace approved design as polish. Record comparable visual baseline evidence and actionable restoration checks; specifically requested UI changes remain authorized.",
+            "at": "2026-10-03T16:46:17.704Z",
+            "reason": "Lauren explicitly added approved design baseline and live-reversibility protection via Julian on 2026-10-03."
           }
         ]
       },
-      "updated_at": "2026-10-03T16:45:41.527Z",
-      "lease_until": "2026-10-04T04:45:41.527Z",
-      "amendment_count": 1,
+      "updated_at": "2026-10-03T16:46:17.704Z",
+      "lease_until": "2026-10-04T04:46:17.704Z",
+      "amendment_count": 2,
       "amendments": [
         {
           "at": "2026-10-03T16:45:41.527Z",
@@ -12807,6 +12833,20 @@
           "after": {
             "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian.",
             "next_action": "Complete scoped regression-protection guidance and representative composition coverage, then exact-head checks and draft PR; return runtime integration to Julian."
+          }
+        },
+        {
+          "at": "2026-10-03T16:46:17.704Z",
+          "by": "01a1028b-03c4-718c-b205-24c35c97b0d7",
+          "reason": "Lauren explicitly added approved design baseline and live-reversibility protection via Julian on 2026-10-03.",
+          "fields": [
+            "acceptance"
+          ],
+          "before": {
+            "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian."
+          },
+          "after": {
+            "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian. Preserve approved visual/behavior/default baselines and proportions. Meaningful design changes outside the explicit assignment require a reviewable easy live-reversible option restoring the approved version. Never silently replace approved design as polish. Record comparable visual baseline evidence and actionable restoration checks; specifically requested UI changes remain authorized."
           }
         }
       ]
