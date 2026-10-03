@@ -2,6 +2,10 @@
 
 Lauren transferred Field implementation to her own Codex worker on October3 at05:16 UTC. Julian stops competing Field coding and live audit mutations. This document does not launch a worker or invent its identity. ctrl ownership is separate and has not been transferred by this instruction.
 
+## Required first outcome: left sidebar visual parity with Inspector
+
+Correct the right-side Field Inspector first. Then redesign the LEFT SIDEBAR and LEFT PANELS to match that corrected Inspector visually: surfaces, spacing, density, cards, dividers, typography, glyph alignment and removal of decorative outer strokes. Preserve working layers/pages/navigation behavior. This is mandatory acceptance, not optional shared-panel polish. Toolbar popups separately follow the exact Media panel template.
+
 ## Read in order
 1. This handoff.
 2. [Latest decisions](LATEST-DECISIONS.md), including every appearance/panel update from the current call.
