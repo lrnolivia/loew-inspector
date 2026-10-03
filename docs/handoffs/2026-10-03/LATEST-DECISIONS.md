@@ -42,3 +42,11 @@ Seven obsolete records remain. The authorized loew Inspector workaround was atte
 
 ## Field toolbar canon at 05:12 UTC
 The existing Media panel is the exact reference for every toolbar popup: same width, card treatment, list items, dividers, window sizing and spacing. Measure and reuse that actual component; do not create merely similar wider panels. Other toolbars preserve their functional contents and omit the Browse Media section. Maintain responsive viewport bounds and mobile behavior. This requirement remains queued during the cleanup pause.
+
+## Field inspector refinements at 05:14 UTC
+- Carry the newer accented-icon treatment into every toolbar panel, including Media. Media supplies the exact layout/card/width canon; the other panels supply the accented-icon treatment. Only Media retains Browse Media.
+- Remove decorative outer panel strokes from Inspector and other panels; preserve the intentional internal dividers and necessary control/focus boundaries. Earlier retrieved notes requested restrained borders/surface hierarchy, but did not explicitly establish this blanket removal. The latest user direction is authoritative.
+- Remove/hide the nonfunctional Prototype panel/affordance. Inspect actual supported features; a coherent useful existing function may occupy that area, otherwise remove it. Do not invent prototyping support or arbitrary filler, and do not delete legitimate backend functionality unnecessarily. Older retrieved assignment retained Design/Prototype tabs, so this is an explicit superseding update.
+
+## Field implementation order
+Correct the Field right-side Inspector first, including panel separation, supported functions and removal of the empty Prototype surface. Then redesign the left panels to match that corrected Inspector. Do not propagate the current defects as a template. This is separate from the Media panel, which is the exact canonical template for toolbar popups, and separate from ctrl's Inspector review page.
