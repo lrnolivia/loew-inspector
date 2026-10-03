@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T06:16:11.052Z",
+  "updated_at": "2026-10-03T06:16:17.764Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -1082,8 +1082,10 @@
         "relay-publishing-findings",
         "relay-work-classification"
       ],
-      "state": "claimed",
-      "created_at": "2026-09-30T22:20:03.641Z"
+      "state": "completed",
+      "created_at": "2026-09-30T22:20:03.641Z",
+      "completed_at": "2026-09-30T22:22:34.180Z",
+      "updated_at": "2026-10-03T06:16:17.764Z"
     },
     {
       "id": "relay-1.8.1-icon-hotfix-20260930",
