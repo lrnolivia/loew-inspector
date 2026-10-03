@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "ctrl",
-  "updated_at": "2026-10-03T06:05:50.151Z",
+  "updated_at": "2026-10-03T06:55:06.831Z",
   "legacy_branches": [
     "main"
   ],
@@ -192,7 +192,7 @@
     },
     {
       "id": "ctrl-review-delivery-20261003",
-      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "owner": "01a1008b-0712-747e-8798-60ba7f0090d9",
       "branch": "ctrl/review-delivery-20261003",
       "paths": [
         "apps/web/public/",
@@ -206,7 +206,7 @@
       ],
       "goal": "Repair ctrl navigation and whole-page Inspector regressions while preserving the accepted project strip and completing review delivery.",
       "acceptance": "First checkpoint: new icon-only mobile bottom dock, selected glow retained, above-icon press label with Field spring motion, drag/cancel and reduced-motion handling, small backgroundless Settings right. Larger feature-header marks and tighter title/subtitle spacing. Review screenshots before publication. Project strip retains committed global membership during refresh, uses initial skeletons, small header loading indicator, atomic real updates and no separate loading-only bar; failures remain visible. Desktop and mobile regression coverage. Preserve original Inspector scope: direct evidence links independent of slow catalogue, render images promptly, unresolved state not pending/completed, preserve legacy/modern review semantics, cancellation and drafts, nonempty fixtures. Full artifact-bound feedback bridge and approved mosaic remain separately accountable.\nLatest superseding design decision: PR7 mobile dock REJECTED; research and clarify requested Apple floating tab-bar proportions in solid ctrl surfaces, no Liquid Glass, preview before publish. New project-strip design APPROVED. Correct compact gear horizontal center and expanded gear right alignment, breadcrumb full content width, trailing badge padding. Inspector current compact Visual rows belong List; recover approved prior Visual cards. Fix filter disclosure opening AND closing and polish controls. Verify populated content, slow/failure responses and actual screenshots across desktop/mobile; no HTTP200-only acceptance. Coordinate reply repair release when verified; do not abandon any original scope.",
-      "next_action": "Finish ctrl UI checkpoint; add explicit copying and image-decode tests for canonical bare navigation SVG assets in custom build. Continue Inspector loading/guard QA, then actual screenshots and review-focused layout. No publish before reviewed preview; other repos remain separate.",
+      "next_action": "User requested Sol6.1 Medium worker. Continue PR7 head437b64716e08d107dbccc25f37b356340da34399; verify/publish authorized nav and Inspector polish, then review-first telemetry/preview/feedback scope from receiving prompt. Parent stops coding. Exact supplied telemetry reference Library libfile_4487fb5741e081918cee4f3fc768cd60. Preserve other Codex ownership.",
       "category": "implementation",
       "primary_team": "inspector",
       "supporting_teams": [],
@@ -215,8 +215,16 @@
       "base_sha": "5c662ae19dae2fc4dd088ba7beb98aae0bdd23e4",
       "state": "active",
       "created_at": "2026-10-03T03:28:29.214Z",
-      "updated_at": "2026-10-03T06:05:50.151Z",
-      "lease_until": "2026-10-03T18:05:50.151Z"
+      "updated_at": "2026-10-03T06:55:06.831Z",
+      "lease_until": "2026-10-03T18:55:06.831Z",
+      "handoffs": [
+        {
+          "at": "2026-10-03T06:55:06.831Z",
+          "from": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "to": "01a1008b-0712-747e-8798-60ba7f0090d9",
+          "next_action": "User requested Sol6.1 Medium worker. Continue PR7 head437b64716e08d107dbccc25f37b356340da34399; verify/publish authorized nav and Inspector polish, then review-first telemetry/preview/feedback scope from receiving prompt. Parent stops coding. Exact supplied telemetry reference Library libfile_4487fb5741e081918cee4f3fc768cd60. Preserve other Codex ownership."
+        }
+      ]
     }
   ]
 }
