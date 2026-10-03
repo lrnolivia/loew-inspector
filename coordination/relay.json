@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T03:17:42.108Z",
+  "updated_at": "2026-10-03T03:18:47.742Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7198,8 +7198,8 @@
       "id": "relay-mcp-rebuild-continuation-20261003",
       "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
       "goal": "Continue the existing unfinished full Relay MCP rebuild, restoring original1.9 promised capabilities and integrating approved Relay live-panel/site/card work. Archival assignment closure is not proof of functional delivery.",
-      "acceptance": "Preserve all working tools/provenance. Restore original1.9 acceptance at434541358d6bfd25e67af5d8e689ba49a5378b91 and original7-stage ReflowPlan. Track source implementation, published exposure, host installation and runtime verification separately. Finish original-objective/stable-acceptance preservation, additive amendments, full resume, truthful closure/stale-ownership reconciliation and optional/deferred verification. Retain hourly workflow as deterministic sync guard for known tasks/PRs/checks/deploy receipts and unfinished-work recommendations; no modelcredit dependency, duplicate ownership, fake completion or revival of paused/cancelled work. Prove skill catalog/search/read/resolve/install-or-vendor/update/audit, pinned licensed upstream portable bundles, integrity/dependency enforcement and all promised creative/platform/supporting packs. Prove durable jobs/operations, actual codingexecutor/local-remote routing, workercommunication and full capability parity. Relay singleReactsite merges existing livepanel with approvedctrltelemetry; RefreshTools3fallbacks, AddMCPtoAI, compact pretty notification-like cards with realclient mount/actions. Reviewfirstintegration: important review/decision card thenfull list, real evidence/device-specific previewframes, durableanswers/replies, alwaysprojecticons, useful active-product/latest/most-worked/current-focus overview, flatfills/shadows/glows. NightShift records actualawaywork; chooseunhiredlead foroversight, retainexecutorprovenance, evidence-supported backfill, idempotentShift handoff. No new credentials/spend assumed. Do not close entireprogram from docs-onlyPRs, fixtures or transferreddefects.",
-      "next_action": "Organize5 dependencybatches:1 lifecycle/scope/ownership/syncguard;2 verifiedreview/preview/replyflow;3 NightShiftlead/attribution/Shift;4 approvedsharedtelemetry/design;5 existingMCPprogramintegrations including Relaywebsite/controls/cards and recoveredskill/executor scope. Finishready scopedfixes independently. Fieldandctrl first,rtxForgeheld. Reconcile oldstage records and split admitted boundedexecution steps without duplicateprojects or wakingstoppedworkers. ParentcodesviaRelay.",
+      "acceptance": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, checks and deployment evidence, with deduplicated continuation recommendations and honest unavailable-evidence states. Complete skill catalog, search, read, resolve, install/vendor, update and audit; pinned licensed portable bundles; integrity and dependency enforcement; all originally promised creative, platform and supporting packs. Prove durable jobs, a real coding executor, capability-based local/remote routing, worker communication and full capability parity. Fold the Relay website, live panel, approved telemetry, Refresh Tools fallback chain, Add MCP to AI actions and compact MCP cards into this same rebuild. Verify actual client rendering/actions. Integrate review-first cards, evidence and device-specific frames, saved answers/replies, project icons and useful workspace overview. Use flat surfaces with shadows/glows. Night Shift records actual autonomous away-time work, with an unused staff lead for oversight, preserved executor provenance, evidence-supported backfill and an idempotent Shift handoff. No new credentials or spending inferred. Documentation-only PRs, fixtures and transferred defects do not establish full delivery.",
+      "next_action": "Use five dependency batches: (1) lifecycle, objective continuity, ownership and sync safeguard; (2) end-to-end review, preview and reply flow; (3) Night Shift lead, attribution and Shift handoff; (4) approved shared telemetry and design; (5) remaining full MCP integrations, including Relay site/controls/cards and recovered skills/executor scope. Land already-ready scoped fixes independently. Field and ctrl remain first; rtxForge is held. Reconcile older stage records and admit bounded implementation steps without duplicate projects or restarting stopped coding workers. Parent implements through Relay.",
       "paths": [
         "src/",
         "skills/",
@@ -7231,7 +7231,28 @@
       "primary_staff": "ellis",
       "supporting_staff": [],
       "state": "queued",
-      "created_at": "2026-10-03T03:17:42.108Z"
+      "created_at": "2026-10-03T03:17:42.108Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-03T03:18:47.742Z",
+          "by": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "reason": "Keep the restored program acceptance and implementation batches readable without changing scope.",
+          "fields": [
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "acceptance": "Preserve all working tools/provenance. Restore original1.9 acceptance at434541358d6bfd25e67af5d8e689ba49a5378b91 and original7-stage ReflowPlan. Track source implementation, published exposure, host installation and runtime verification separately. Finish original-objective/stable-acceptance preservation, additive amendments, full resume, truthful closure/stale-ownership reconciliation and optional/deferred verification. Retain hourly workflow as deterministic sync guard for known tasks/PRs/checks/deploy receipts and unfinished-work recommendations; no modelcredit dependency, duplicate owne...",
+            "next_action": "Organize5 dependencybatches:1 lifecycle/scope/ownership/syncguard;2 verifiedreview/preview/replyflow;3 NightShiftlead/attribution/Shift;4 approvedsharedtelemetry/design;5 existingMCPprogramintegrations including Relaywebsite/controls/cards and recoveredskill/executor scope. Finishready scopedfixes independently. Fieldandctrl first,rtxForgeheld. Reconcile oldstage records and split admitted boundedexecution steps without duplicateprojects or wakingstoppedworkers. ParentcodesviaRelay."
+          },
+          "after": {
+            "acceptance": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, check...",
+            "next_action": "Use five dependency batches: (1) lifecycle, objective continuity, ownership and sync safeguard; (2) end-to-end review, preview and reply flow; (3) Night Shift lead, attribution and Shift handoff; (4) approved shared telemetry and design; (5) remaining full MCP integrations, including Relay site/controls/cards and recovered skills/executor scope. Land already-ready scoped fixes independently. Field and ctrl remain first; rtxForge is held. Reconcile older stage records and admit bounded implementation steps without duplicate projects or restarting stopped coding workers. Parent implements thr..."
+          }
+        }
+      ],
+      "updated_at": "2026-10-03T03:18:47.742Z"
     }
   ],
   "claims": [
