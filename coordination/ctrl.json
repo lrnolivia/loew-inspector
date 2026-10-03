@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "ctrl",
-  "updated_at": "2026-10-03T09:17:13.667Z",
+  "updated_at": "2026-10-03T15:20:20.879Z",
   "legacy_branches": [
     "main"
   ],
@@ -326,16 +326,16 @@
       ],
       "goal": "Finish ctrl review-first control center and truthful telemetry on the established implementation.",
       "acceptance": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.",
-      "next_action": "Direct continuation now draft PR8 ad9918cfaa24d50f2dfe796fea22d0489a1e0e00.31 tests/typecheck/build/full browser and admission pass37112171000/37112170999. Latest dark/light/320px actual synthetic captures inspected; approved Relay glyph/meter treatment added without layout redesign. Schema2 retry/ack-label integration remains tested but unpublished; actual recipient acknowledgment and hosted preview proof remain open. Broader visual publication gate retained; production remainsc04e402. Parent holds for morning combined preview review.",
+      "next_action": "Lauren explicitly approves merging ctrl after centering the main four desktop nav items independently of unequal logo/settings endcaps. Keep new telemetry in PR8; implement bounded centering, exact-head checks/visual confirmation, then merge and verify protected production. User approval message Sentinel_60243e3d599881918ef06cddc4304675.",
       "primary_team": "inspector",
       "supporting_teams": [],
       "primary_staff": "valentina",
       "supporting_staff": [],
       "base_sha": "c04e402c6982d02b865310b4963f330a69788e66",
-      "state": "held",
+      "state": "active",
       "created_at": "2026-10-03T07:10:52.888Z",
-      "updated_at": "2026-10-03T09:17:13.667Z",
-      "lease_until": "2026-10-03T21:17:13.667Z",
+      "updated_at": "2026-10-03T15:20:20.879Z",
+      "lease_until": "2026-10-04T03:20:20.879Z",
       "amendment_count": 1,
       "amendments": [
         {
