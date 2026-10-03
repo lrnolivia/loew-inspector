@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T06:17:54.507Z",
+  "updated_at": "2026-10-03T06:18:00.649Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5624,9 +5624,9 @@
         "ellis",
         "nico"
       ],
-      "state": "claimed",
+      "state": "completed",
       "created_at": "2026-10-01T06:25:37.158Z",
-      "updated_at": "2026-10-01T06:46:26.026Z",
+      "updated_at": "2026-10-03T06:18:00.649Z",
       "amendment_count": 2,
       "amendments": [
         {
@@ -5657,7 +5657,8 @@
             "next_action": "Fresh v73 native-registration smoke still produced no visible inline card in ChatGPT. Independent visual evidence from the user now sharply narrows the bug: the same card designs render correctly in Inspector and were judged visually excellent; only left-side spacing/alignment needs a later polish pass. Treat the Inspector rendering as proof that the card composition/CSS/resource itself is healthy. The remaining defect is ChatGPT host surfacing through the current connector/orchestration path. Do not alter card visuals to chase this. Next technical step is to prove whether direct MCP App in..."
           }
         }
-      ]
+      ],
+      "completed_at": "2026-10-01T06:56:19.836Z"
     },
     {
       "id": "relay-2.0-today-runner-react-slice-20261001",
