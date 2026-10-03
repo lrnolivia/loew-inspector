@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T05:32:03.282Z",
+  "updated_at": "2026-10-03T05:32:32.163Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -12336,7 +12336,7 @@
       ],
       "goal": "Implement the first bounded lifecycle prerequisite of relay-mcp-rebuild-continuation-20261003: supported queued handoff and completed-claim queue reconciliation.",
       "acceptance": "Preserve the full umbrella goal/acceptance at handoff353cd0ed83776a259cb02ffb00630350297a2c86. Add narrow CAS-guarded idempotent reconciliation for verified completed-claim/stale-queue pairs; reject nonterminal and owner mismatches and preserve original acceptance/provenance. Synchronize future complete and handoff queue state. Support explicit owner-authorized queued-only handoff without creating execution. Test engine/adapter/schema/CLI, admission and full required checks; publish a draft PR. Do not normalize live pairs, promote production, retire reservations, change ctrl frontend or claim full MCP completion in this slice.",
-      "next_action": "DraftPR139 heade86f3f4696d82078212e34eb14d9a656efd3b884; local install/build/typecheck/full459 plus finalCLI9 tests passed; GitHub admission passed, Node22 quality running. Fresh05:31UTC audit confirms39Relay+2Field stale pairs;36 match owners,5 must fail closed pending ownership-history reconciliation: relay-1.9.6.2-staff-routing-20261001(PR76), relay-2.0-control-center-resource-bust-20261001(PR100), relay-2.0-approved-visual-port-20261001(PR94), relay-retire-manual-upload-20261001(PR103), field-mobile-integration-20261002(PR138). No live normalization. Preserve draft pending reviewed release and canonical/runtime pin verification; then refresh each eligible pair and PR proof. Queued umbrella still retains predecessor owner with this receiving chat recorded. Fullscope/receipt:docs/relay/MCP_LIFECYCLE_RECONCILIATION_20261003.md. Next product batch: ctrl-critical artifact-bound browser feedback contract.",
+      "next_action": "REVIEW READY, held at draftPR139 https://github.com/lrnolivia/relay/pull/139 exacthead e86f3f4696d82078212e34eb14d9a656efd3b884. GitHub Node22 quality37100033529 and admission37100033511 PASS. Local install/build/typecheck/full459 and finalCLI9 pass; clean managedworktree /Users/lrnolivia/.codex/worktrees/relay-mcp-lifecycle/relay retained. No merge/deploy/live reconciliation. Promotion requires explicit release authority per supplied handoff; after authorized release verify canonical/runtime engine+schema and writer cutover, then individual refreshed PR-proven CAS reconciliation. Audit05:31UTC:39Relay+2Field stalepairs;5 ownerconflicts require history reconciliation (RelayPR76,100,94,103;FieldPR138),36 matchingowner pairs still need provider proof. Umbrella transfer pending supported release; this receiving chat is recorded without falsifying its queued owner. Fullscope/receipt docs/relay/MCP_LIFECYCLE_RECONCILIATION_20261003.md. Next productbatch ctrl-critical artifactbound feedback backend. No background coding executor or monitor was started.",
       "ledger_refs": [
         "relay-mcp-rebuild-continuation-20261003"
       ],
@@ -12347,10 +12347,10 @@
       "primary_staff": "nico",
       "supporting_staff": [],
       "base_sha": "488b67ac2808766e6fb2350e55492bc68ef6bf5c",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-10-03T05:21:13.786Z",
-      "updated_at": "2026-10-03T05:32:03.282Z",
-      "lease_until": "2026-10-03T17:32:03.282Z"
+      "updated_at": "2026-10-03T05:32:32.163Z",
+      "lease_until": "2026-10-03T17:32:32.163Z"
     }
   ],
   "migrated_from": "loew-inspector"
