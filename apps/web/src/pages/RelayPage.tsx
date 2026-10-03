@@ -1,5 +1,5 @@
 import { LiveTelemetry } from '../components/LiveTelemetry';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLiveRelay } from '../live';
 import { projectLabel } from '../api';
 import { StatusLight } from '../components/Telemetry';
@@ -9,7 +9,7 @@ type Check = { ok: boolean; checked_at: string; elapsed_ms: number; server?: { v
 const endpoint = 'https://relay.loew.fi/mcp';
 export function RelayPage() {
   const { allSnapshot: snapshot, refresh } = useLiveRelay();
-  const [check,setCheck]=useState<Check|null>(null),[busy,setBusy]=useState(''),[message,setMessage]=useState(''),[showConnect,setShowConnect]=useState(false),[showRefresh,setShowRefresh]=useState(false);
+  const [check,setCheck]=useState<Check|null>(null),[busy,setBusy]=useState('check'),[message,setMessage]=useState(''),[showConnect,setShowConnect]=useState(false),[showRefresh,setShowRefresh]=useState(false);
   const items=Object.entries(snapshot?.progress||{}).flatMap(([project,payload])=>(payload.progress||[]).map(item=>({...item,project})));
   const ready=Boolean(snapshot)&&!snapshot?.loadingProgress?.length&&!snapshot?.failedProgress?.length;
   const reviews=items.filter(item=>item.state==='waiting-for-human'&&/review|qa|preview/i.test(item.waiting_reason||item.next_action||''));
@@ -17,12 +17,14 @@ export function RelayPage() {
   const moving=items.filter(item=>item.state==='working');
   const recent=[...items].sort((a,b)=>Date.parse(b.last_meaningful_progress_at||'0')-Date.parse(a.last_meaningful_progress_at||'0'));
   const focus=reviews[0]||decisions[0]||moving[0]||recent[0];
-  async function checkConnection(action='check') {
-    if(busy)return;setBusy(action);setMessage('');if(action==='refresh')setShowRefresh(true);
+  const checkInFlight=useRef(false);
+  useEffect(()=>{void checkConnection('check',false);},[]);
+  async function checkConnection(action='check',refreshWorkspace=true) {
+    if(checkInFlight.current)return;checkInFlight.current=true;setBusy(action);setMessage('');if(action==='refresh')setShowRefresh(true);
     const start=performance.now();
-    try{const response=await fetch('/api/relay/'+action,{method:'POST',headers:{'Content-Type':'application/json'},body:'{}',signal:AbortSignal.timeout(20000)});const data=await response.json();if(!response.ok)throw Error(data.error||'Connection check failed');setCheck(data);if(action==='refresh')setMessage(data.refresh.message);else void refresh();}
+    try{const response=await fetch('/api/relay/'+action,{method:'POST',headers:{'Content-Type':'application/json'},body:'{}',signal:AbortSignal.timeout(20000)});const data=await response.json();if(!response.ok)throw Error(data.error||'Connection check failed');setCheck(data);if(action==='refresh')setMessage(data.refresh.message);else if(refreshWorkspace)void refresh();}
     catch(error){setCheck({ok:false,checked_at:new Date().toISOString(),elapsed_ms:Math.round(performance.now()-start),error:error instanceof Error?error.message:'Connection unavailable'});}
-    finally{setBusy('');}
+    finally{checkInFlight.current=false;setBusy('');}
   }
   async function copy(value:string){try{await navigator.clipboard.writeText(value);setMessage('Copied. Complete the connection in your AI client.');}catch{setMessage('Copy the displayed address manually; clipboard access is unavailable.');}}
   return <main className="relay-home" data-feature="relay">
