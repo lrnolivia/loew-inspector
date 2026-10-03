@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T06:18:12.758Z",
+  "updated_at": "2026-10-03T06:18:18.559Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5997,7 +5997,7 @@
         "roman",
         "ellis"
       ],
-      "state": "claimed",
+      "state": "completed",
       "created_at": "2026-10-01T07:55:22.704Z",
       "amendment_count": 10,
       "amendments": [
@@ -6145,7 +6145,8 @@
           }
         }
       ],
-      "updated_at": "2026-10-01T09:28:02.070Z"
+      "updated_at": "2026-10-03T06:18:18.559Z",
+      "completed_at": "2026-10-01T09:43:20.464Z"
     },
     {
       "id": "relay-mcp-icon-parity-hotfix-20261001",
