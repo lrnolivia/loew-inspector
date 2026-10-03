@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-10-03T07:56:08.267Z",
+  "updated_at": "2026-10-03T08:14:39.772Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -906,7 +906,7 @@
       ],
       "goal": "USER CODEX HANDOFF: correct Field Inspector, then match left sidebar visually; finish original Gallery/Figma parity and latest appearance/tool-panel requirements.",
       "acceptance": "Preserve full original queue acceptance and amendments. Latest controlling scope/order: https://github.com/lrnolivia/relay/blob/bdbada26ce12d8da814a164b45ba4ee8ae30927b/docs/handoffs/2026-10-03/FIELD.md and sibling LATEST-DECISIONS.md. Correct right Inspector/remove nonfunctional Prototype, then match left sidebar/panels. Toolbar popups use exact Media geometry/card/list template and accented glyphs. Appearance preview, labeled mode switch, preview-on-hover/focus and persistent swatches; selected lowercase display names preserve IDs and casing opt-out/user content. Preserve shipped PR138 touch, portrait and Gallery functionality; finish Gallery visual design. Keep portrait navigation/FAB/direct tap-edit and full documented Figma parity audit, canonical Figma logo variants and asset manifest visible as required outcomes. One coherent exact-head verified preview, baseline comparison and real-project evidence; no unsupported physical-iPhone/persistence claims.",
-      "next_action": "Match Gallery creation/content/image-picker chrome to the existing Media header, tabs, search, thumbnails and control treatment while preserving source-backed ordering/removal/undo. Update PR139 and refresh exact-head checks and Preview; then merge and stop before Figma audit per user direction.",
+      "next_action": "Final Gallery parity is published in PR139 at 0389823c572c4b5fe404bd95553cda2ef5c8f32e. Builds, 138 Gallery/Media tests and desktop creation/portrait source undo browser checks passed. Exact-head Registry run37108888024 is running. Immutable Preview9185dda0 loads the real read-only QA project in native app Chromium; Canvas HTTP200 isolation headers and first paint confirmed. Finish native Preview interaction evidence, merge after checks, then stop before Figma audit.",
       "category": "implementation",
       "primary_team": "inspector",
       "supporting_teams": [],
@@ -915,8 +915,8 @@
       "base_sha": "b1fe860f224414b3ba928fb20761485f9cffb455",
       "state": "active",
       "created_at": "2026-10-03T05:22:42.919Z",
-      "updated_at": "2026-10-03T07:56:08.267Z",
-      "lease_until": "2026-10-03T19:56:08.267Z",
+      "updated_at": "2026-10-03T08:14:39.772Z",
+      "lease_until": "2026-10-03T20:14:39.772Z",
       "amendment_count": 7,
       "amendments": [
         {
