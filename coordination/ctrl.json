@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "ctrl",
-  "updated_at": "2026-10-03T02:45:26.361Z",
+  "updated_at": "2026-10-03T03:03:28.719Z",
   "legacy_branches": [
     "main"
   ],
@@ -153,7 +153,7 @@
       ],
       "goal": "Repair Inspector routing and polish ctrl navigation, Settings and review attention.",
       "acceptance": "Protected Inspector opens; content and floating-nav widths align; Relay only beside notifications, not main nav; Settings small/backgroundless, centered compact sidebar, right expanded/mobile; panel visible and persistent; bottom hover stable; softer shadows; connection checking/result feedback; blocked/failed/stale not Needs You. Native project-icon backend discovery and full review-first mosaic tracked separately. Exact-head tests and browser QA before promotion.",
-      "next_action": "PR6 head9d9bbd8 adds explicit review/decision-only attention semantics; local13 tests/typecheck passed, exact-head CI pending. Earlier af741 nav/settings/connection-feedback QA passed and screenshots inspected. Next verify Settings panel all layouts, then publish ready polish independently. Approved new review-first mosaic, device-specific artifact frames, reply/preview verification and shared Relay telemetry remain separate pending implementation batches. Night Shift and deterministic sync guard scope updated by user; preserve actual execution provenance and paused work.",
+      "next_action": "RELEASE VERIFIED PR6 merge5c662ae19dae2fc4dd088ba7beb98aae0bdd23e4. Candidate493261 CI and Settings/layout/browser1440/390/320 passed; pixels reviewed. Mainquality and WorkersBuilds passed; authenticated /build.json200 exact mergeSHA/buildc4a0de1271a859a0fa05c6b198e7022cb3b69f22d77f0f1a6c1360b8a574bbaa; root/Inspector200. Complete scoped polish only. Review-first mosaic, end-to-end live-preview/replies, native icons, MCP refresh, NightShift/sync guard/full MCP program remain pending.",
       "primary_team": "inspector",
       "supporting_teams": [],
       "primary_staff": "valentina",
@@ -161,8 +161,8 @@
       "base_sha": "611b6f6415389bc9dbaa163b16e8ff919072ae72",
       "state": "active",
       "created_at": "2026-10-03T01:37:23.326Z",
-      "updated_at": "2026-10-03T02:45:26.361Z",
-      "lease_until": "2026-10-03T14:45:26.361Z",
+      "updated_at": "2026-10-03T03:03:28.719Z",
+      "lease_until": "2026-10-03T15:03:28.719Z",
       "amendment_count": 1,
       "amendments": [
         {
