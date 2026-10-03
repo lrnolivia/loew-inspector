@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T05:21:13.786Z",
+  "updated_at": "2026-10-03T05:23:51.055Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7333,7 +7333,7 @@
       "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
       "goal": "Continue the existing unfinished full Relay MCP rebuild, restoring original1.9 promised capabilities and integrating approved Relay live-panel/site/card work. Archival assignment closure is not proof of functional delivery.",
       "acceptance": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, checks and deployment evidence, with deduplicated continuation recommendations and honest unavailable-evidence states. Complete skill catalog, search, read, resolve, install/vendor, update and audit; pinned licensed portable bundles; integrity and dependency enforcement; all originally promised creative, platform and supporting packs. Prove durable jobs, a real coding executor, capability-based local/remote routing, worker communication and full capability parity. Fold the Relay website, live panel, approved telemetry, Refresh Tools fallback chain, Add MCP to AI actions and compact MCP cards into this same rebuild. Verify actual client rendering/actions. Integrate review-first cards, evidence and device-specific frames, saved answers/replies, project icons and useful workspace overview. Use flat surfaces with shadows/glows. Night Shift records actual autonomous away-time work, with an unused staff lead for oversight, preserved executor provenance, evidence-supported backfill and an idempotent Shift handoff. No new credentials or spending inferred. Documentation-only PRs, fixtures and transferred defects do not establish full delivery.\nFull execution handoff, source recovery and original contract evidence: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RELAY-MCP.md . All latest site/live-panel/telemetry/refresh/add-to-AI, review delivery, NightShift/Shift, canonical asset discovery, lifecycle and original skills/executor goals preserved. Original1.9 verbatim and41 stale queue pairs in sibling documents. Current engine cannot normalize completed queue pairs or handoff queued-only owner; do not bypass. Actual user-started Mac Codex identity pending; parent stops MCP implementation. ctrlfrontend remains separate heldPR7, recovery8WIPfiles preserved. New Relay site concept is not implementation; current plugin ID protected.",
-      "next_action": "Receiving executor is existing Mac Codex chat 01a10033-4d88-7872-990c-e45b7bd4c1c2, directly authorized by Lauren: take the relay mcp work. Original full program acceptance and source handoff at353cd0ed83776a259cb02ffb00630350297a2c86 remain authoritative context. Admit linked bounded lifecycle repair relay-mcp-lifecycle-reconciliation-20261003 for queued handoff and completed-claim queue synchronization. Queue owner remains unchanged until supported handoff is reviewed/released; do not impersonate it. Preserve ctrl PR7 and reserved smoke/probe paths. No production promotion implied.",
+      "next_action": "Receiving executor is existing Mac Codex chat 01a10033-4d88-7872-990c-e45b7bd4c1c2, directly authorized by Lauren: take the relay mcp work. Original full program acceptance and source handoff at353cd0ed83776a259cb02ffb00630350297a2c86 remain authoritative context. Admit linked bounded lifecycle repair relay-mcp-lifecycle-reconciliation-20261003 for queued handoff and completed-claim queue synchronization. Queue owner remains unchanged until supported handoff is reviewed/released; do not impersonate it. Preserve ctrl PR7 and reserved smoke/probe paths. No production promotion implied.\nFresh human report 2026-10-03 05:22 UTC: in Codex Relay chat a frame appears and remains blank/loading with visible text 'Opening Relay'. User does not know which tool/action fired. Receiver should inspect actual session tool/resource trace or reproduce plugin-open flow; don't ask user to identify internals. Frame creation is partial progress only, not proof resource exists/missing, initialization, rendering or actions. Existing cross-client MCP acceptance covers this; no new competing task.",
       "paths": [
         "src/",
         "skills/",
@@ -7366,7 +7366,7 @@
       "supporting_staff": [],
       "state": "queued",
       "created_at": "2026-10-03T03:17:42.108Z",
-      "amendment_count": 3,
+      "amendment_count": 4,
       "amendments": [
         {
           "at": "2026-10-03T03:18:47.742Z",
@@ -7415,9 +7415,23 @@
           "after": {
             "next_action": "Receiving executor is existing Mac Codex chat 01a10033-4d88-7872-990c-e45b7bd4c1c2, directly authorized by Lauren: take the relay mcp work. Original full program acceptance and source handoff at353cd0ed83776a259cb02ffb00630350297a2c86 remain authoritative context. Admit linked bounded lifecycle repair relay-mcp-lifecycle-reconciliation-20261003 for queued handoff and completed-claim queue synchronization. Queue owner remains unchanged until supported handoff is reviewed/released; do not impersonate it. Preserve ctrl PR7 and reserved smoke/probe paths. No production promotion implied."
           }
+        },
+        {
+          "at": "2026-10-03T05:23:51.055Z",
+          "by": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "reason": "Capture fresh user-observed Codex host frame loading without content; diagnostic evidence belongs to existing rebuild.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Receiving executor is existing Mac Codex chat 01a10033-4d88-7872-990c-e45b7bd4c1c2, directly authorized by Lauren: take the relay mcp work. Original full program acceptance and source handoff at353cd0ed83776a259cb02ffb00630350297a2c86 remain authoritative context. Admit linked bounded lifecycle repair relay-mcp-lifecycle-reconciliation-20261003 for queued handoff and completed-claim queue synchronization. Queue owner remains unchanged until supported handoff is reviewed/released; do not impersonate it. Preserve ctrl PR7 and reserved smoke/probe paths. No production promotion implied."
+          },
+          "after": {
+            "next_action": "Receiving executor is existing Mac Codex chat 01a10033-4d88-7872-990c-e45b7bd4c1c2, directly authorized by Lauren: take the relay mcp work. Original full program acceptance and source handoff at353cd0ed83776a259cb02ffb00630350297a2c86 remain authoritative context. Admit linked bounded lifecycle repair relay-mcp-lifecycle-reconciliation-20261003 for queued handoff and completed-claim queue synchronization. Queue owner remains unchanged until supported handoff is reviewed/released; do not impersonate it. Preserve ctrl PR7 and reserved smoke/probe paths. No production promotion implied.\nFresh ..."
+          }
         }
       ],
-      "updated_at": "2026-10-03T05:20:45.228Z"
+      "updated_at": "2026-10-03T05:23:51.055Z"
     }
   ],
   "claims": [
