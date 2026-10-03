@@ -12,7 +12,9 @@ test('populated Relay connection page works at desktop and mobile sizes without 
  try {
   await page.route('https://fonts.googleapis.com/**',route=>route.fulfill({body:'',contentType:'text/css'}));await page.route('https://fonts.gstatic.com/**',route=>route.abort());
   const progress={project:'relay',progress:[{assignment:'fixture-review',goal:'Review the exact Relay connection panel and its responsive behavior',state:'waiting-for-human',waiting_reason:'Visual review of completed implementation',next_action:'Inspect the populated status panel and confirm the connection actions.',last_meaningful_progress_at:'2026-10-03T00:00:00Z',identities:{head_sha:'a'.repeat(40)},events:[{type:'source-commit',at:'2026-10-03T00:00:00Z'}]}]};
-  await page.route('**/api/projects',route=>route.fulfill({json:{projects:[{id:'relay',name:'relay',managed:true}]}}));
+  let partial=false;
+  await page.route('**/api/projects',route=>route.fulfill({json:{projects:[{id:'relay',name:'relay',managed:true},...(partial?[{id:'field',managed:true}]:[])]}}));
+  await page.route('**/api/projects/field',route=>route.fulfill({status:503,json:{error:'Fixture provider unavailable'}}));
   await page.route('**/api/workers',route=>route.fulfill({json:[]}));await page.route('**/api/projects/relay',route=>route.fulfill({json:{coordination:{claims:[{id:'fixture-review',state:'active'}]}}}));
   await page.route('**/api/projects/relay/icon',route=>route.fulfill({json:{status:'found',icon:{data_url:contextCardBrandAssets.relay}}}));await page.route('**/api/progress/relay*',route=>route.fulfill({json:progress}));
   await page.route('**/api/relay/*',route=>route.fulfill({json:{ok:true,checked_at:'2026-10-03T00:00:00Z',elapsed_ms:17,server:{version:'fixture'},tools:{count:65,schema_sha256:'b'.repeat(64)},refresh:{message:'Server tool schema checked. Client refresh is not verified.'}}}));
@@ -30,5 +32,11 @@ test('populated Relay connection page works at desktop and mobile sizes without 
   await page.emulateMedia({reducedMotion:'reduce'});assert.equal(await page.locator('.relay-main-panel').evaluate(node=>getComputedStyle(node).backgroundImage),'none');
   if(process.env.RELAY_QA_OUTPUT){await fs.mkdir(process.env.RELAY_QA_OUTPUT,{recursive:true});for(const width of [1440,320]){await page.setViewportSize({width,height:1100});await page.screenshot({path:process.env.RELAY_QA_OUTPUT+'/relay-status-'+width+'.png',fullPage:true});}}
   assert.deepEqual(errors,[]);
+  partial=true;await page.getByRole('button',{name:'Refresh workspace telemetry'}).click();
+  await page.locator('.live-telemetry[data-loading=false][data-complete=false]').waitFor();
+  assert.equal(await page.locator('.telemetry-needs .telemetry-number').textContent(),'1+');
+  assert.match(await page.locator('.telemetry-note').first().textContent(),/Counts with \+ are minimums/);
+  assert.equal(await page.locator('.telemetry-ring strong').textContent(),'—','incomplete project coverage cannot claim a global completion percentage');
+  assert.equal(await page.locator('.telemetry-attention-list a').count(),1,'available real work stays visible when another provider fails');
  } finally {await browser.close();await new Promise(resolve=>server.close(resolve));}
 });

@@ -15,6 +15,23 @@ test('retained exact builds remain interactive, isolated, navigable and human-re
  let currentPage;const pageErrors=[];
  const fixture=await contextFixture({retained:{bucket,id:stored.id,source_sha:sourceSha}}),browser=await chromium.launch();
  try{
+  // Serve the retained document at the real hostname without contacting production.
+  // Its opaque sandbox must stay in the saved build, not take the public ctrl redirect.
+  const archived=await browser.newPage();
+  await archived.route('https://relay.loew.fi/**',async route=>{
+   const url=new URL(route.request().url());
+   const response=await fetch(fixture.origin+url.pathname+url.search);
+   await route.fulfill({status:response.status,headers:Object.fromEntries(response.headers),body:Buffer.from(await response.arrayBuffer())});
+  });
+  await archived.route('https://ctrl.loew.fi/**',route=>route.abort());
+  await archived.goto('https://relay.loew.fi/api/retained-preview/'+stored.id+'/view?entry=app#/today');
+  await archived.locator('.work-viewer[data-summary-state=ready]').waitFor();
+  assert.match(archived.url(),/\/api\/retained-preview\//);
+  assert.equal(await archived.evaluate(()=>window.origin),'null');
+  await archived.getByRole('link',{name:/^runner/}).click();
+  await archived.getByRole('heading',{name:'runner',exact:true,level:1}).waitFor();
+  assert.match(archived.url(),/\/api\/retained-preview\//);
+  await archived.close();
   for(const width of [1440,390]){
    const page=await browser.newPage({viewport:{width,height:900},colorScheme:'dark',reducedMotion:'reduce'});currentPage=page;page.on('pageerror',error=>pageErrors.push(error.message));
    await page.goto(fixture.origin+'/inspector#review');assert.equal(await page.evaluate(()=>Boolean(window.__retainedFixture)),false);await page.evaluate(()=>localStorage.setItem('host-secret','host-only'));await page.locator('#review-list[data-summary-state=ready]').waitFor();

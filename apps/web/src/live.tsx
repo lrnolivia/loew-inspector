@@ -90,7 +90,8 @@ export function LiveRelayProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     void refresh();
-    const unbindEvents=bindLiveEvents({invalidate:()=>void refresh(),connection:setEventConnected,disabled:Boolean((window as Window & {__RELAY_MCP__?:boolean}).__RELAY_MCP__)});
+    const host=window as Window & {__RELAY_MCP__?:boolean;__retainedFixture?:unknown};
+    const unbindEvents=bindLiveEvents({invalidate:()=>void refresh(),connection:setEventConnected,disabled:Boolean(host.__RELAY_MCP__||host.__retainedFixture)});
     const timer = window.setInterval(() => void refresh(), 60_000);
     const staleTimer = window.setInterval(() => {
       if (lastSuccess.current && Date.now() - lastSuccess.current > 90_000) {
@@ -125,4 +126,3 @@ export function useLiveRelay() {
   if (!value) throw new Error("useLiveRelay must be inside LiveRelayProvider");
   return value;
 }
-
