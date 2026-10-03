@@ -31,6 +31,16 @@ test('populated Relay connection page works at desktop and mobile sizes without 
   await page.getByLabel('Add Relay to AI').getByRole('button',{name:'Close',exact:true}).click();await page.getByLabel('Refresh tools result').getByRole('button',{name:'Close',exact:true}).click();
   await page.emulateMedia({reducedMotion:'reduce'});assert.equal(await page.locator('.relay-main-panel').evaluate(node=>getComputedStyle(node).backgroundImage),'none');
   if(process.env.RELAY_QA_OUTPUT){await fs.mkdir(process.env.RELAY_QA_OUTPUT,{recursive:true});for(const width of [1440,320]){await page.setViewportSize({width,height:1100});await page.screenshot({path:process.env.RELAY_QA_OUTPUT+'/relay-status-'+width+'.png',fullPage:true});}}
+  await page.getByRole('button',{name:'arrange',exact:true}).click();
+  await page.getByRole('button',{name:'move activity earlier',exact:true}).click();
+  await page.getByRole('button',{name:'done',exact:true}).click();
+  assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('relay.telemetry.order.v1'))),['progress','needs','activity','motion']);
+  await page.reload();await page.locator('.live-telemetry[data-complete=true]').waitFor();
+  assert.equal(await page.locator('[data-card=activity]').evaluate(el=>getComputedStyle(el).order),'2','saved layout restored');
+  await page.getByRole('button',{name:'arrange',exact:true}).click();
+  assert.equal(await page.locator('.telemetry-mosaic').getAttribute('data-arranging'),'true');
+  await page.getByRole('button',{name:'done',exact:true}).click();
+  assert.equal(await page.locator('.telemetry-mosaic').getAttribute('data-arranging'),'false');
   assert.deepEqual(errors,[]);
   partial=true;await page.getByRole('button',{name:'Refresh workspace telemetry'}).click();
   await page.locator('.live-telemetry[data-loading=false][data-complete=false]').waitFor();

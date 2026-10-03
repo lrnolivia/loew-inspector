@@ -87,7 +87,7 @@ import{LiveTelemetry}from'./LiveTelemetry';
 createRoot(document.getElementById('root')).render(<LiveTelemetry/>);`,
       resolveDir: fileURLToPath(new URL('../src/components', import.meta.url)), loader:'tsx'
     },
-    bundle:true,write:false,format:'iife',jsx:'automatic',
+    bundle:true,write:false,format:'iife',jsx:'automatic',loader:{'.png':'dataurl'},
     plugins:[{
       name:'bounded-telemetry-fixture',
       setup(build){
