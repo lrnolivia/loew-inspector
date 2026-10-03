@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T05:36:15.305Z",
+  "updated_at": "2026-10-03T05:37:10.984Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -12355,10 +12355,16 @@
       "primary_staff": "nico",
       "supporting_staff": [],
       "base_sha": "488b67ac2808766e6fb2350e55492bc68ef6bf5c",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-03T05:21:13.786Z",
-      "updated_at": "2026-10-03T05:34:25.451Z",
-      "lease_until": "2026-10-03T17:34:25.451Z"
+      "updated_at": "2026-10-03T05:37:10.984Z",
+      "lease_until": "2026-10-03T17:37:10.984Z",
+      "pr": 139,
+      "merged_head_sha": "e86f3f4696d82078212e34eb14d9a656efd3b884",
+      "merge_commit_sha": "256cf79d446e4e6f84cde3f54a0e576aa11b4eb9",
+      "evidence": "PR139 exact head e86f3f4696d82078212e34eb14d9a656efd3b884 passed Node22 quality37100033529 and admission37100033511, merged256cf79d446e4e6f84cde3f54a0e576aa11b4eb9 after Lauren requested finish entire rebuild. Workers production versiondb7a8c5a-fee2-48c5-aee0-d182dfb97236 deployed100%; live runner_project engine0dfefbbd022d6efd058db696bd00bdb4785a6235 matches canonical Git blob. Supported queued-only umbrella handoff successfully applied/readback to actual Mac Codex01a10033-4d88-7872-990c-e45b7bd4c1c2 while preserving queued state, scope and provenance. Local build/typecheck/full459 plus finalCLI9 passed. Historical41 queue normalization and5 ownerconflicts remain in original umbrella; no false full rebuild delivery. Generic self-fetch build.json returned522; broader website release verification remains separate/unverified. Source/durable receipt docs/relay/MCP_LIFECYCLE_RECONCILIATION_20261003.md, clean retained managedworktree. No original acceptance discarded.",
+      "work_accounted": true,
+      "completed_at": "2026-10-03T05:37:10.984Z"
     }
   ],
   "migrated_from": "loew-inspector"
