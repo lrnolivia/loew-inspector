@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "ctrl",
-  "updated_at": "2026-10-03T07:09:07.409Z",
+  "updated_at": "2026-10-03T07:10:31.339Z",
   "legacy_branches": [
     "main"
   ],
@@ -238,10 +238,10 @@
       "primary_staff": "valentina",
       "supporting_staff": [],
       "base_sha": "5c662ae19dae2fc4dd088ba7beb98aae0bdd23e4",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-03T03:28:29.214Z",
-      "updated_at": "2026-10-03T07:04:17.877Z",
-      "lease_until": "2026-10-03T19:04:17.877Z",
+      "updated_at": "2026-10-03T07:10:31.339Z",
+      "lease_until": "2026-10-03T19:10:31.339Z",
       "handoffs": [
         {
           "at": "2026-10-03T06:55:06.831Z",
@@ -269,7 +269,13 @@
             "next_action": "Materialize and inspect exact telemetry reference; inspect unblurred desktop bottom and light mode on exact437b64716 head, then publish authorized polish if clean. Continue broader acceptance separately accountable."
           }
         }
-      ]
+      ],
+      "pr": 7,
+      "merged_head_sha": "33fc1e7ac51f5d4dbfa385b749ccfa202c4f3cea",
+      "merge_commit_sha": "c04e402c6982d02b865310b4963f330a69788e66",
+      "evidence": "Approved polish checkpoint delivered https://github.com/lrnolivia/ctrl/pull/7 exact head33fc1e7ac51f5d4dbfa385b749ccfa202c4f3cea mergec04e402c6982d02b865310b4963f330a69788e66.24unit tests/typecheck/build and exact-head Chromium/admission CI37105106373 PASS; artifact11267093036 includes25captures, source_sha verified. Actual unobscured desktop-bottom dark/light pixels inspected; prior320/390/sidebar/settings/Inspector captures retained. Desktop screenshot saved Library libfile_669650e4c4248191bd52e2f1a29e461d file_000000001fb881f5996725b1676df11299814bytes; version not returned, no invented version. Source only change by receiving worker fixes test gate query-string match and adds unblurred theme captures. WorkersBuild0a6bc720-5926-4e6f-82b9-1b56a3292cf7success; mainquality PASS. Authenticated ctrl.loew.fi/build.json200 exact sourcec04e402 build26ccdd20f3fb3882810707ad33a5ffe227b99c6ee80cfc602f1ba90a6faca1aa. Actual product reference libfile4487materialized1368405bytes identity retained and pixels inspected. Broader acceptance not delivered: preserved queued successor ctrl-review-first-telemetry-20261003 with same actual owner covers review-first/mosaic/compactRelay/feedback acknowledgment/logoregistry/NightShift/backend dependencies/fullmatrix. Do not call ctrl finished. Local Mac isolated workspace preserves reference,CIartifacts,polish-evidence; no other product checkouts modified. Repeated native Codex parent-message transport closed; Relay records available.",
+      "work_accounted": true,
+      "completed_at": "2026-10-03T07:10:31.339Z"
     }
   ]
 }
