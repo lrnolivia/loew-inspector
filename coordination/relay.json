@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T06:19:02.130Z",
+  "updated_at": "2026-10-03T06:19:08.316Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7222,9 +7222,9 @@
       "supporting_teams": [],
       "primary_staff": "julian",
       "supporting_staff": [],
-      "state": "claimed",
+      "state": "completed",
       "created_at": "2026-10-02T03:20:11.920Z",
-      "updated_at": "2026-10-02T03:23:02.894Z",
+      "updated_at": "2026-10-03T06:19:08.316Z",
       "amendment_count": 1,
       "amendments": [
         {
@@ -7241,7 +7241,8 @@
             "acceptance": "Use a shared streaming UTF-8 byte-bounded MCP reader capped at 8 MiB to accommodate up to 1,000,000 source characters including worst-case JSON escaping and envelope in legacy and extension entry paths. Preserve authentication, tool schemas, file/path/head guards and all existing tools/cards. Test over-16KB complete source payloads reaching original validators, byte boundaries, misleading/missing Content-Length, multibyte text, malformed JSON and oversized early cancellation; exact-head full CI and guarded release. Preserve deployed PR115 A/B/C resources and all unresolved actual-client car..."
           }
         }
-      ]
+      ],
+      "completed_at": "2026-10-02T03:50:05.479Z"
     },
     {
       "id": "relay-desktop-card-parity-20261002",
