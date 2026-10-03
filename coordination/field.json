@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-10-03T05:31:44.383Z",
+  "updated_at": "2026-10-03T07:36:07.373Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -183,9 +183,11 @@
         "toolbar-media-card-parity",
         "inspector-shell-header"
       ],
-      "state": "claimed",
+      "state": "completed",
       "created_at": "2026-09-30T11:39:55.123Z",
-      "ownership_reconciliation": "User explicitly transferred all consolidation/hotfix ownership to this chat; repair stale claimed-queue owner left unchanged by handoff protocol."
+      "ownership_reconciliation": "User explicitly transferred all consolidation/hotfix ownership to this chat; repair stale claimed-queue owner left unchanged by handoff protocol.",
+      "completed_at": "2026-09-30T20:52:12.782Z",
+      "updated_at": "2026-10-03T06:15:45.340Z"
     },
     {
       "id": "field-mobile-integration-20261002",
@@ -229,15 +231,27 @@
       "supporting_teams": [],
       "primary_staff": "julian",
       "supporting_staff": [],
-      "state": "claimed",
-      "created_at": "2026-10-02T00:08:33.200Z"
+      "state": "completed",
+      "created_at": "2026-10-02T00:08:33.200Z",
+      "completed_at": "2026-10-02T15:53:26.389Z",
+      "updated_at": "2026-10-03T07:36:07.373Z",
+      "completion_reconciliation": {
+        "at": "2026-10-03T07:36:07.373Z",
+        "queue_owner": "01a0f989-2e52-701b-a57c-009bedceb014",
+        "completion_owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+        "reason": "Reconcile historical completed-claim queue mirror using original verified merged PR identity. Preserve original queue and completed-claim owner identities; no ownership transfer or execution restart.",
+        "pr": 138,
+        "merged_head_sha": "1ec9fa0a289eff50d1b70e86456a1859fd2ed0c3",
+        "merge_commit_sha": "b1fe860f224414b3ba928fb20761485f9cffb455",
+        "ownership_transferred": false
+      }
     },
     {
       "id": "field-unified-chrome-neutrachrome-20261002",
       "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
       "goal": "USER CODEX HANDOFF: correct Field Inspector, then match left sidebar visually; finish original Gallery/Figma parity and latest appearance/tool-panel requirements.",
       "acceptance": "Lauren04:48-04:50QA: floating Inspector top belongs to unified chrome, not separate square bar; Media belongs in far-left panel and its bottom-toolbar affordance is a real menu with chevron. Keep approved tile appearance but two wide/narrow horizontal tiles per row. Primary2or4 choices as icon tiles, remaining choices as list rows; include Move/Hand/Scale and Pen, preserve all actions/shortcuts and keyboard/touch operation. Use theme-aware accent color in small menus, lighter variants in dark, darker in light while meeting contrast. Slightly lighten card/section surfaces in Inspector and port same styling to left panels via shared tokens/components. Add canonical Terra Prime green and pink options from real design tokens, do not guess hues. Add warm-neutral accent neutrachrome (corrected spelling Sentinel_e38ed4c9ae808191804cc8926a0492de), dark/light variants tuned to gray surfaces. Preserve Field identity and Figma behavior, not visual-clone redesign. Reference screenshots libfile_9865c9cf61108191aefe9168e8ac077f and libfile_a68fd60431988191b2b5643478115898 inspected: square detached upper-right bar and dark blending section cards visible, no runtime hash embedded. Keep recovered Mobile PR138 regression fixes intact. Direct Relay only, no workers.\nAudit Gallery Inspector functionality and panel consistency while preserving the praised Gallery modal. Lighten and distinguish button surfaces across modals and settings (Sentinel_fb8bb23700cc8191abc13afc3f795efb; Sentinel_551e0125660c8191be28fb3867f50dd7).\nSUPERSEDING PORTRAIT DIRECTION Sentinel_fdb55c209dfc8191886df276eb020fa3: mobile portrait toolbar needs a FAB blending Material Design and current iOS27 principles. Existing portrait sheets are rejected as merely resized left/right desktop panels; design a purpose-built portrait interaction paradigm, preserving touch/camera fixes but not releasing the rejected portrait shell. Show proposed flow before implementation. No workers; no merge/deployment authorization.\n05:08UTC user Sentinel_75cc2397ccbc81919abd542547af3249 likes portrait direction but rejects extra Edit tap. Object pointer-down prepares drag; movement drags, tap without drag opens context editor with minimal delay. Parent proposes opening on release to prevent panel stealing drag. Test jitter, slow drags, pointer cancel and second-finger takeover. Desktop tool palette requested; user suggests two-finger tap or middle-click, final binding undecided. Parent recommends middle-click palette, middle-drag pan, retain trackpad right-click context menu and supply a conflict-free shortcut. Do not claim that recommendation already exists or is tested.\n05:09UTC user Sentinel_0fbfd59305908191af6f2a0914a7372e: the whole left panel needs its own paradigm as well as Inspector. Parent proposes persistent Browse beside Tools; purpose-built Pages cards/search, Layers hierarchy with breadcrumbs/multiselect/reorder, Media/Library visual selection followed by explicit canvas placement, CMS/deeper dedicated task screens. Preserve navigation location, canvas position and selection. Exact Browse arrangement still proposal. Include visible touch flows for nested-object selection, multi-select and undo/redo.\nLatest appearance request: keep current palette; compact chrome preview above Light/Dark labeled switch, clickable accent swatches below. Hover/focus previews chrome/color name without commit; click/tap persists, keyboard/touch usable. Monochrome and Lunar Chrome adjacent. Rename Neutrachrome to Lunar Chrome (confirmed), preserve stable IDs/preferences. Other elemental names pending user decision; Terra Coral retained. Full handoff: docs/handoffs/2026-10-03/CTRL-FIELD-OTHER.md on relay/execution-handoffs-20261003.",
-      "next_action": "Julian implementation stopped. User-started Codex reads https://github.com/lrnolivia/relay/blob/bdbada26ce12d8da814a164b45ba4ee8ae30927b/docs/handoffs/2026-10-03/FIELD.md and LATEST-DECISIONS.md. REQUIRED FIRST OUTCOME: correct right Inspector, then redesign left sidebar/panels to match its surfaces, spacing, cards, dividers, typography, glyphs and borderless treatment. Media is separate exact toolbar-popup canon, with newer accented icons shared everywhere. All latest names/casing, preview/switch/swatches, menu glyphs, logo variants, Prototype removal and audit goals preserved in full handoff. Receiving Codex must establish real owner and reconcile expired field-mobile-focus before admission; no invented successor or launched worker. PR138 already shipped b1fe860f; Gallery/full parity remain open. Original queued acceptance is preserved; newest handoff overrides obsolete release holds.",
+      "next_action": "Finish latest Media preview and neutral icon-pack polish; complete one visual review and exact-head baseline/Preview checks; merge non-audit work to main under user authorization. After merge, report ready for Figma audit and STOP before beginning or handing off that audit, awaiting Lauren's direction. Preserve original audit acceptance for the later authorized stage.",
       "paths": [
         "src/editor/",
         "src/shared/builder-themes.ts",
@@ -252,7 +266,7 @@
       "supporting_staff": [],
       "state": "claimed",
       "created_at": "2026-10-02T04:51:56.008Z",
-      "amendment_count": 9,
+      "amendment_count": 14,
       "amendments": [
         {
           "at": "2026-10-02T05:05:29.413Z",
@@ -388,9 +402,79 @@
             "goal": "USER CODEX HANDOFF: correct Field Inspector, then match left sidebar visually; finish original Gallery/Figma parity and latest appearance/tool-panel requirements.",
             "next_action": "Julian implementation stopped. User-started Codex reads https://github.com/lrnolivia/relay/blob/bdbada26ce12d8da814a164b45ba4ee8ae30927b/docs/handoffs/2026-10-03/FIELD.md and LATEST-DECISIONS.md. REQUIRED FIRST OUTCOME: correct right Inspector, then redesign left sidebar/panels to match its surfaces, spacing, cards, dividers, typography, glyphs and borderless treatment. Media is separate exact toolbar-popup canon, with newer accented icons shared everywhere. All latest names/casing, preview/switch/swatches, menu glyphs, logo variants, Prototype removal and audit goals preserved in full hand..."
           }
+        },
+        {
+          "at": "2026-10-03T05:48:40.361Z",
+          "by": "01a10035-3b9e-7752-8f03-21cae5f12d6b",
+          "reason": "User reports non-color fill and effects do not apply, directs live Figma/Field comparison during fixes, and explicitly authorizes pushing all non-audit work to main before the full Figma audit.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Complete menu/Gallery/sidebar parity and export canonical vector logo variants from the user-supplied Figma branding file AbaQ4B6N7XxYcMo4PCAUea; preserve exact geometry. Run baseline-relative verification and produce one exact-head preview."
+          },
+          "after": {
+            "next_action": "Reproduce and repair non-color fills/effects on actual objects; remove duplicated sidebar padding and align appearance/control surfaces through live Figma/Field comparison. Verify final non-audit diff, publish and merge to main under direct user authorization, then run the documented Figma audit."
+          }
+        },
+        {
+          "at": "2026-10-03T06:09:08.592Z",
+          "by": "01a10035-3b9e-7752-8f03-21cae5f12d6b",
+          "reason": "User directs consistent blending across every left/right panel and Insert detail panel, removes internal dividers with top-header exception, and requires compact right rail to expose every full Inspector category for current selection.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Reproduce and repair non-color fills/effects on actual objects; remove duplicated sidebar padding and align appearance/control surfaces through live Figma/Field comparison. Verify final non-audit diff, publish and merge to main under direct user authorization, then run the documented Figma audit."
+          },
+          "after": {
+            "next_action": "Complete shared panel treatment and selection-aware compact Inspector categories; verify actual non-color fill/effect application and preserved workflows. Produce one review of final visual changes, verify and merge all non-audit work to main under explicit user authorization, then run documented Figma audit."
+          }
+        },
+        {
+          "at": "2026-10-03T06:32:03.096Z",
+          "by": "01a10035-3b9e-7752-8f03-21cae5f12d6b",
+          "reason": "User specifies ordinary cascading Appearance item-list submenu, standard Media section header with full labels, darker Monochrome and readable Gold controls, faint shared panel edges and Inspector field/button highlights, while excluding rail and toolbar item buttons from highlights.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Complete shared panel treatment and selection-aware compact Inspector categories; verify actual non-color fill/effect application and preserved workflows. Produce one review of final visual changes, verify and merge all non-audit work to main under explicit user authorization, then run documented Figma audit."
+          },
+          "after": {
+            "next_action": "Finish exact user-directed shared panel/field edges, Media section and ordinary Appearance submenu, compact floating controls, Insert cards and menu order, brand/contrast corrections and functional fills/effects. Produce one visual review, verify and merge all non-audit work to main under explicit authorization, then perform documented Figma audit."
+          }
+        },
+        {
+          "at": "2026-10-03T07:14:20.799Z",
+          "by": "01a10035-3b9e-7752-8f03-21cae5f12d6b",
+          "reason": "User corrected Appearance scope to retain the rich panel and cascade beside its menu option, requires continuous floating inner left sections with outer edges only, animated pill previews, shared menu headers/Insert expand routing, brighter accent glyphs, and live Settings preferences with Save confirming and closing.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Finish exact user-directed shared panel/field edges, Media section and ordinary Appearance submenu, compact floating controls, Insert cards and menu order, brand/contrast corrections and functional fills/effects. Produce one visual review, verify and merge all non-audit work to main under explicit authorization, then perform documented Figma audit."
+          },
+          "after": {
+            "next_action": "Verify rich cascading Appearance, continuous floating panels and outer depth, shared toolbar/Insert headers/cards and animated fitted previews, all requested text/field strokes and readable bright accent variants, Settings live persistence plus Save-and-close, and functional non-color fills/effects. Produce one concrete visual review, verify and merge all non-audit work to main under explicit authorization, then perform documented Figma audit."
+          }
+        },
+        {
+          "at": "2026-10-03T07:31:59.841Z",
+          "by": "01a10035-3b9e-7752-8f03-21cae5f12d6b",
+          "reason": "User explicitly confirms final visual review/checks/merge, moves Browse media to bottom with latest-three previews and faint 15% white border/25% empty glyphs, and directs a stop after merge before audit; possible audit handoff to Julian is not yet authorized.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Verify rich cascading Appearance, continuous floating panels and outer depth, shared toolbar/Insert headers/cards and animated fitted previews, all requested text/field strokes and readable bright accent variants, Settings live persistence plus Save-and-close, and functional non-color fills/effects. Produce one concrete visual review, verify and merge all non-audit work to main under explicit authorization, then perform documented Figma audit."
+          },
+          "after": {
+            "next_action": "Finish latest Media preview and neutral icon-pack polish; complete one visual review and exact-head baseline/Preview checks; merge non-audit work to main under user authorization. After merge, report ready for Figma audit and STOP before beginning or handing off that audit, awaiting Lauren's direction. Preserve original audit acceptance for the later authorized stage."
+          }
         }
       ],
-      "updated_at": "2026-10-03T05:19:14.729Z"
+      "updated_at": "2026-10-03T07:31:59.841Z"
     }
   ],
   "claims": [
@@ -779,7 +863,7 @@
       ],
       "goal": "USER CODEX HANDOFF: correct Field Inspector, then match left sidebar visually; finish original Gallery/Figma parity and latest appearance/tool-panel requirements.",
       "acceptance": "Preserve full original queue acceptance and amendments. Latest controlling scope/order: https://github.com/lrnolivia/relay/blob/bdbada26ce12d8da814a164b45ba4ee8ae30927b/docs/handoffs/2026-10-03/FIELD.md and sibling LATEST-DECISIONS.md. Correct right Inspector/remove nonfunctional Prototype, then match left sidebar/panels. Toolbar popups use exact Media geometry/card/list template and accented glyphs. Appearance preview, labeled mode switch, preview-on-hover/focus and persistent swatches; selected lowercase display names preserve IDs and casing opt-out/user content. Preserve shipped PR138 touch, portrait and Gallery functionality; finish Gallery visual design. Keep portrait navigation/FAB/direct tap-edit and full documented Figma parity audit, canonical Figma logo variants and asset manifest visible as required outcomes. One coherent exact-head verified preview, baseline comparison and real-project evidence; no unsupported physical-iPhone/persistence claims.",
-      "next_action": "Complete menu/Gallery/sidebar parity and export canonical vector logo variants from the user-supplied Figma branding file AbaQ4B6N7XxYcMo4PCAUea; preserve exact geometry. Run baseline-relative verification and produce one exact-head preview.",
+      "next_action": "Finish latest Media preview and neutral icon-pack polish; complete one visual review and exact-head baseline/Preview checks; merge non-audit work to main under user authorization. After merge, report ready for Figma audit and STOP before beginning or handing off that audit, awaiting Lauren's direction. Preserve original audit acceptance for the later authorized stage.",
       "category": "implementation",
       "primary_team": "inspector",
       "supporting_teams": [],
@@ -788,8 +872,81 @@
       "base_sha": "b1fe860f224414b3ba928fb20761485f9cffb455",
       "state": "active",
       "created_at": "2026-10-03T05:22:42.919Z",
-      "updated_at": "2026-10-03T05:31:44.383Z",
-      "lease_until": "2026-10-03T17:31:44.383Z"
+      "updated_at": "2026-10-03T07:31:59.841Z",
+      "lease_until": "2026-10-03T19:31:59.841Z",
+      "amendment_count": 5,
+      "amendments": [
+        {
+          "at": "2026-10-03T05:48:40.361Z",
+          "by": "01a10035-3b9e-7752-8f03-21cae5f12d6b",
+          "reason": "User reports non-color fill and effects do not apply, directs live Figma/Field comparison during fixes, and explicitly authorizes pushing all non-audit work to main before the full Figma audit.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Complete menu/Gallery/sidebar parity and export canonical vector logo variants from the user-supplied Figma branding file AbaQ4B6N7XxYcMo4PCAUea; preserve exact geometry. Run baseline-relative verification and produce one exact-head preview."
+          },
+          "after": {
+            "next_action": "Reproduce and repair non-color fills/effects on actual objects; remove duplicated sidebar padding and align appearance/control surfaces through live Figma/Field comparison. Verify final non-audit diff, publish and merge to main under direct user authorization, then run the documented Figma audit."
+          }
+        },
+        {
+          "at": "2026-10-03T06:09:08.592Z",
+          "by": "01a10035-3b9e-7752-8f03-21cae5f12d6b",
+          "reason": "User directs consistent blending across every left/right panel and Insert detail panel, removes internal dividers with top-header exception, and requires compact right rail to expose every full Inspector category for current selection.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Reproduce and repair non-color fills/effects on actual objects; remove duplicated sidebar padding and align appearance/control surfaces through live Figma/Field comparison. Verify final non-audit diff, publish and merge to main under direct user authorization, then run the documented Figma audit."
+          },
+          "after": {
+            "next_action": "Complete shared panel treatment and selection-aware compact Inspector categories; verify actual non-color fill/effect application and preserved workflows. Produce one review of final visual changes, verify and merge all non-audit work to main under explicit user authorization, then run documented Figma audit."
+          }
+        },
+        {
+          "at": "2026-10-03T06:32:03.096Z",
+          "by": "01a10035-3b9e-7752-8f03-21cae5f12d6b",
+          "reason": "User specifies ordinary cascading Appearance item-list submenu, standard Media section header with full labels, darker Monochrome and readable Gold controls, faint shared panel edges and Inspector field/button highlights, while excluding rail and toolbar item buttons from highlights.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Complete shared panel treatment and selection-aware compact Inspector categories; verify actual non-color fill/effect application and preserved workflows. Produce one review of final visual changes, verify and merge all non-audit work to main under explicit user authorization, then run documented Figma audit."
+          },
+          "after": {
+            "next_action": "Finish exact user-directed shared panel/field edges, Media section and ordinary Appearance submenu, compact floating controls, Insert cards and menu order, brand/contrast corrections and functional fills/effects. Produce one visual review, verify and merge all non-audit work to main under explicit authorization, then perform documented Figma audit."
+          }
+        },
+        {
+          "at": "2026-10-03T07:14:20.799Z",
+          "by": "01a10035-3b9e-7752-8f03-21cae5f12d6b",
+          "reason": "User corrected Appearance scope to retain the rich panel and cascade beside its menu option, requires continuous floating inner left sections with outer edges only, animated pill previews, shared menu headers/Insert expand routing, brighter accent glyphs, and live Settings preferences with Save confirming and closing.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Finish exact user-directed shared panel/field edges, Media section and ordinary Appearance submenu, compact floating controls, Insert cards and menu order, brand/contrast corrections and functional fills/effects. Produce one visual review, verify and merge all non-audit work to main under explicit authorization, then perform documented Figma audit."
+          },
+          "after": {
+            "next_action": "Verify rich cascading Appearance, continuous floating panels and outer depth, shared toolbar/Insert headers/cards and animated fitted previews, all requested text/field strokes and readable bright accent variants, Settings live persistence plus Save-and-close, and functional non-color fills/effects. Produce one concrete visual review, verify and merge all non-audit work to main under explicit authorization, then perform documented Figma audit."
+          }
+        },
+        {
+          "at": "2026-10-03T07:31:59.841Z",
+          "by": "01a10035-3b9e-7752-8f03-21cae5f12d6b",
+          "reason": "User explicitly confirms final visual review/checks/merge, moves Browse media to bottom with latest-three previews and faint 15% white border/25% empty glyphs, and directs a stop after merge before audit; possible audit handoff to Julian is not yet authorized.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Verify rich cascading Appearance, continuous floating panels and outer depth, shared toolbar/Insert headers/cards and animated fitted previews, all requested text/field strokes and readable bright accent variants, Settings live persistence plus Save-and-close, and functional non-color fills/effects. Produce one concrete visual review, verify and merge all non-audit work to main under explicit authorization, then perform documented Figma audit."
+          },
+          "after": {
+            "next_action": "Finish latest Media preview and neutral icon-pack polish; complete one visual review and exact-head baseline/Preview checks; merge non-audit work to main under user authorization. After merge, report ready for Figma audit and STOP before beginning or handing off that audit, awaiting Lauren's direction. Preserve original audit acceptance for the later authorized stage."
+          }
+        }
+      ]
     }
   ]
 }

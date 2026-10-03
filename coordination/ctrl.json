@@ -1,11 +1,60 @@
 {
   "schema": 1,
   "project": "ctrl",
-  "updated_at": "2026-10-03T04:46:04.496Z",
+  "updated_at": "2026-10-03T07:15:32.839Z",
   "legacy_branches": [
     "main"
   ],
-  "queue": [],
+  "queue": [
+    {
+      "id": "ctrl-review-first-telemetry-20261003",
+      "owner": "01a1008b-0712-747e-8798-60ba7f0090d9",
+      "goal": "Finish ctrl review-first control center and truthful telemetry on the established implementation.",
+      "acceptance": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.",
+      "next_action": "Build independent review-first/real telemetry preview. MCP owner thread01a10033 contacted: confirm committed/deployed same-origin /api/feedback/submit POST and /api/feedback/status GET schema, exact capture feedback_binding project/assignment/owner/branch/repository/commit/pr + historical behavior, persistence/conflict/idempotency/retry semantics, report status evidence separating saved/queued/delivered/seen/actual owner acknowledgment; browser Access origin acceptance for ctrl binding. Confirm canonical project icon registry routes/status semantics, actual Night Shift Shift/lead/away-work attribution. Current MCP worktree feedback-browser.js untracked: proposed only, not live proof. Exact reference libfile4487 inspected1368405bytes, sample-only. No Relay/Field/rtxForge product modifications.",
+      "paths": [
+        "apps/web/public/",
+        "apps/web/src/",
+        "packages/shared-ui/",
+        "test/",
+        "apps/web/build.mjs",
+        "worker/"
+      ],
+      "resources": [
+        "ctrl-review-delivery"
+      ],
+      "primary_team": "inspector",
+      "supporting_teams": [],
+      "primary_staff": "valentina",
+      "supporting_staff": [],
+      "state": "claimed",
+      "created_at": "2026-10-03T07:09:07.409Z",
+      "updated_at": "2026-10-03T07:15:32.839Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-03T07:15:32.839Z",
+          "by": "01a1008b-0712-747e-8798-60ba7f0090d9",
+          "reason": "Receiving ctrl worker is implementing user review/decision interface, with concrete external dependencies preserved.",
+          "fields": [
+            "next_action",
+            "primary_staff",
+            "primary_team"
+          ],
+          "before": {
+            "next_action": "Continue after verified PR7 polish release; resolve Relay browser feedback/assignment attribution, logo registry and real Night Shift contracts with MCP owner before claiming end-to-end delivery. Build independent truthful mosaic and review selection on existing source; show actual captures before rollout.",
+            "primary_staff": "julian",
+            "primary_team": "night-shift"
+          },
+          "after": {
+            "next_action": "Build independent review-first/real telemetry preview. MCP owner thread01a10033 contacted: confirm committed/deployed same-origin /api/feedback/submit POST and /api/feedback/status GET schema, exact capture feedback_binding project/assignment/owner/branch/repository/commit/pr + historical behavior, persistence/conflict/idempotency/retry semantics, report status evidence separating saved/queued/delivered/seen/actual owner acknowledgment; browser Access origin acceptance for ctrl binding. Confirm canonical project icon registry routes/status semantics, actual Night Shift Shift/lead/away-work ...",
+            "primary_staff": "valentina",
+            "primary_team": "inspector"
+          }
+        }
+      ]
+    }
+  ],
   "claims": [
     {
       "id": "ctrl-control-center-20261002",
@@ -192,70 +241,113 @@
     },
     {
       "id": "ctrl-review-delivery-20261003",
-      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "owner": "01a1008b-0712-747e-8798-60ba7f0090d9",
       "branch": "ctrl/review-delivery-20261003",
       "paths": [
         "apps/web/public/",
         "apps/web/src/",
         "packages/shared-ui/",
-        "test/"
+        "test/",
+        "apps/web/build.mjs"
       ],
       "resources": [
         "ctrl-review-delivery"
       ],
       "goal": "Repair ctrl navigation and whole-page Inspector regressions while preserving the accepted project strip and completing review delivery.",
-      "acceptance": "First checkpoint: new icon-only mobile bottom dock, selected glow retained, above-icon press label with Field spring motion, drag/cancel and reduced-motion handling, small backgroundless Settings right. Larger feature-header marks and tighter title/subtitle spacing. Review screenshots before publication. Project strip retains committed global membership during refresh, uses initial skeletons, small header loading indicator, atomic real updates and no separate loading-only bar; failures remain visible. Desktop and mobile regression coverage. Preserve original Inspector scope: direct evidence links independent of slow catalogue, render images promptly, unresolved state not pending/completed, preserve legacy/modern review semantics, cancellation and drafts, nonempty fixtures. Full artifact-bound feedback bridge and approved mosaic remain separately accountable.\nLatest superseding design decision: PR7 mobile dock REJECTED; research and clarify requested Apple floating tab-bar proportions in solid ctrl surfaces, no Liquid Glass, preview before publish. New project-strip design APPROVED. Correct compact gear horizontal center and expanded gear right alignment, breadcrumb full content width, trailing badge padding. Inspector current compact Visual rows belong List; recover approved prior Visual cards. Fix filter disclosure opening AND closing and polish controls. Verify populated content, slow/failure responses and actual screenshots across desktop/mobile; no HTTP200-only acceptance. Coordinate reply repair release when verified; do not abandon any original scope.",
-      "next_action": "PAUSED by Lauren while all assignments are reconciled ready to execute. Retain PR7 draft629c961e and separate Inspector loading WIP; no publish. First resume step: fix test/browser.mjs ambiguous feature-heading scroll selector, rerun browser CI and inspect screenshots. Previous geometry7f17d003 passed. Current17unit/typecheck pass, populated browser reached4cards/control tests with zeroJSerrors but fullrun failed. Latest mobile direction iOS27shape/spacing, labels, largerbareglyphs, detachedSettingscircle, opaquectrlsurfaces. Globalapprovedprojectbadge applies everywhere. Finish original Inspector loading/artifact-bound feedback acceptance before complete.",
+      "acceptance": "Authorized polish checkpoint: mobile full-width floating dock with 16px outer gutters, 64px height, permanent labels and large bare canonical glyphs including full night shift; neutral color-raised glow on both docks, color-surface matching ctrl banner, lighter selected highlight. Small backgroundless top-right banner gear with invisible 44px tap target; sidebar gear centered compact/right expanded; desktop dock content width. Preserve accepted atomic project strip, skeleton/loading/refresh behavior, canonical logo badges, Settings persistence/reset, restored Inspector Visual cards and List thumbnails, explicit filter/organize dismissal, lazy evidence hydration, honest unresolved states and stale CAS guards. Verify exact-head CI and actual unobscured desktop/light pixels before approved polish merge/publication. Broader unfinished acceptance remains: Now/Runner/Night Shift/Inspector one major real review/decision card first with plain-language focus, real screenshot/live preview and durable artifact-bound Relay responses then full list; useful truthful telemetry overview/rings/counts/time series, reference libfile_4487fb5741e081918cee4f3fc768cd60 sample-only; actual live previews, correct routing and saved reply plus worker acknowledgment proof; canonical backend logos and MCP catalogue/feedback/Night Shift contracts coordinated with MCP owner; branded preference/case and responsive accessibility checks. Show combined broader design before rollout. Never imply polish finishes whole ctrl or fabricate live data.",
+      "next_action": "Mac clone/source/reference inspection completed. Reference exact1368405bytes materialized/inspected; local24tests/typecheck/build pass; unblurred desktop bottom dark/light pixel captures pass. Local full browser failed harness interception missing ?assignment; corrected test via Relay source33fc1e7ac51f5d4dbfa385b749ccfa202c4f3cea and added exact-head CI unobscured desktop captures. Await new quality/admission checks and inspect CI pixels before authorized PR7 merge. Exec-server intermittent disconnect and Codex app parent messaging unavailable; local artifacts preserved at task-2/polish-evidence. Broader core acceptance not delivered.",
       "category": "implementation",
       "primary_team": "inspector",
       "supporting_teams": [],
       "primary_staff": "valentina",
       "supporting_staff": [],
       "base_sha": "5c662ae19dae2fc4dd088ba7beb98aae0bdd23e4",
-      "state": "held",
+      "state": "completed",
       "created_at": "2026-10-03T03:28:29.214Z",
-      "updated_at": "2026-10-03T04:46:04.496Z",
-      "lease_until": "2026-10-03T16:46:04.496Z",
-      "amendment_count": 2,
+      "updated_at": "2026-10-03T07:10:31.339Z",
+      "lease_until": "2026-10-03T19:10:31.339Z",
+      "handoffs": [
+        {
+          "at": "2026-10-03T06:55:06.831Z",
+          "from": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "to": "01a1008b-0712-747e-8798-60ba7f0090d9",
+          "next_action": "User requested Sol6.1 Medium worker. Continue PR7 head437b64716e08d107dbccc25f37b356340da34399; verify/publish authorized nav and Inspector polish, then review-first telemetry/preview/feedback scope from receiving prompt. Parent stops coding. Exact supplied telemetry reference Library libfile_4487fb5741e081918cee4f3fc768cd60. Preserve other Codex ownership."
+        }
+      ],
+      "amendment_count": 1,
       "amendments": [
         {
-          "at": "2026-10-03T04:04:12.045Z",
-          "by": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
-          "reason": "User rejects released mobile nav and adds project-strip stability/header corrections; prioritize a reviewable polish checkpoint while preserving unfinished Inspector repair.",
+          "at": "2026-10-03T06:57:24.509Z",
+          "by": "01a1008b-0712-747e-8798-60ba7f0090d9",
+          "reason": "Canonical handoff and latest explicit user approval supersede obsolete rejected/icon-only dock wording.",
           "fields": [
-            "goal",
             "acceptance",
             "next_action"
           ],
           "before": {
-            "goal": "Make Inspector review entry responsive and preserve truthful review state while preparing the approved review-first flow.",
-            "acceptance": "Direct evidence links open independently of the slow capture catalogue. Render capture identity/image promptly; unresolved review state is explicitly unknown, never inferred pending/completed. Preserve legacy completed/stale/archive semantics and source revisions. Disable organizing only items whose review state is unresolved. Bound and cancel requests across navigation; no late results overwrite current context or drafts. Add non-empty fixture tests. Full durable feedback bridge, approved hero telemetry and actual agent receipt remain explicit later checks rather than implied delivered.",
-            "next_action": "Implement the bounded front-end loading/deep-link slice against exact deployed source, then test late/failed hydration, navigation, legacy reviews and direct review entry. Coordinate backend feedback bridge separately under existing MCP continuation."
+            "acceptance": "First checkpoint: new icon-only mobile bottom dock, selected glow retained, above-icon press label with Field spring motion, drag/cancel and reduced-motion handling, small backgroundless Settings right. Larger feature-header marks and tighter title/subtitle spacing. Review screenshots before publication. Project strip retains committed global membership during refresh, uses initial skeletons, small header loading indicator, atomic real updates and no separate loading-only bar; failures remain visible. Desktop and mobile regression coverage. Preserve original Inspector scope: direct evidence...",
+            "next_action": "User requested Sol6.1 Medium worker. Continue PR7 head437b64716e08d107dbccc25f37b356340da34399; verify/publish authorized nav and Inspector polish, then review-first telemetry/preview/feedback scope from receiving prompt. Parent stops coding. Exact supplied telemetry reference Library libfile_4487fb5741e081918cee4f3fc768cd60. Preserve other Codex ownership."
           },
           "after": {
-            "goal": "Repair ctrl mobile navigation and project loading, then finish responsive Inspector review entry and truthful delivery states.",
-            "acceptance": "First checkpoint: new icon-only mobile bottom dock, selected glow retained, above-icon press label with Field spring motion, drag/cancel and reduced-motion handling, small backgroundless Settings right. Larger feature-header marks and tighter title/subtitle spacing. Review screenshots before publication. Project strip retains committed global membership during refresh, uses initial skeletons, small header loading indicator, atomic real updates and no separate loading-only bar; failures remain visible. Desktop and mobile regression coverage. Preserve original Inspector scope: direct evidence...",
-            "next_action": "Publish a draft of urgent mobile/header/project-strip changes from separate ctrl-polish2-work; keep uncommitted Inspector WIP and its identified races isolated in ctrl-work until fixed and tested. Show real mobile screenshots. Then resume Inspector delivery slice; no premature full completion."
+            "acceptance": "Authorized polish checkpoint: mobile full-width floating dock with 16px outer gutters, 64px height, permanent labels and large bare canonical glyphs including full night shift; neutral color-raised glow on both docks, color-surface matching ctrl banner, lighter selected highlight. Small backgroundless top-right banner gear with invisible 44px tap target; sidebar gear centered compact/right expanded; desktop dock content width. Preserve accepted atomic project strip, skeleton/loading/refresh behavior, canonical logo badges, Settings persistence/reset, restored Inspector Visual cards and List...",
+            "next_action": "Materialize and inspect exact telemetry reference; inspect unblurred desktop bottom and light mode on exact437b64716 head, then publish authorized polish if clean. Continue broader acceptance separately accountable."
           }
-        },
+        }
+      ],
+      "pr": 7,
+      "merged_head_sha": "33fc1e7ac51f5d4dbfa385b749ccfa202c4f3cea",
+      "merge_commit_sha": "c04e402c6982d02b865310b4963f330a69788e66",
+      "evidence": "Approved polish checkpoint delivered https://github.com/lrnolivia/ctrl/pull/7 exact head33fc1e7ac51f5d4dbfa385b749ccfa202c4f3cea mergec04e402c6982d02b865310b4963f330a69788e66.24unit tests/typecheck/build and exact-head Chromium/admission CI37105106373 PASS; artifact11267093036 includes25captures, source_sha verified. Actual unobscured desktop-bottom dark/light pixels inspected; prior320/390/sidebar/settings/Inspector captures retained. Desktop screenshot saved Library libfile_669650e4c4248191bd52e2f1a29e461d file_000000001fb881f5996725b1676df11299814bytes; version not returned, no invented version. Source only change by receiving worker fixes test gate query-string match and adds unblurred theme captures. WorkersBuild0a6bc720-5926-4e6f-82b9-1b56a3292cf7success; mainquality PASS. Authenticated ctrl.loew.fi/build.json200 exact sourcec04e402 build26ccdd20f3fb3882810707ad33a5ffe227b99c6ee80cfc602f1ba90a6faca1aa. Actual product reference libfile4487materialized1368405bytes identity retained and pixels inspected. Broader acceptance not delivered: preserved queued successor ctrl-review-first-telemetry-20261003 with same actual owner covers review-first/mosaic/compactRelay/feedback acknowledgment/logoregistry/NightShift/backend dependencies/fullmatrix. Do not call ctrl finished. Local Mac isolated workspace preserves reference,CIartifacts,polish-evidence; no other product checkouts modified. Repeated native Codex parent-message transport closed; Relay records available.",
+      "work_accounted": true,
+      "completed_at": "2026-10-03T07:10:31.339Z"
+    },
+    {
+      "id": "ctrl-review-first-telemetry-20261003",
+      "owner": "01a1008b-0712-747e-8798-60ba7f0090d9",
+      "branch": "ctrl/review-first-telemetry-20261003",
+      "paths": [
+        "apps/web/public/",
+        "apps/web/src/",
+        "packages/shared-ui/",
+        "test/",
+        "apps/web/build.mjs",
+        "worker/"
+      ],
+      "resources": [
+        "ctrl-review-delivery"
+      ],
+      "goal": "Finish ctrl review-first control center and truthful telemetry on the established implementation.",
+      "acceptance": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.",
+      "next_action": "Build independent review-first/real telemetry preview. MCP owner thread01a10033 contacted: confirm committed/deployed same-origin /api/feedback/submit POST and /api/feedback/status GET schema, exact capture feedback_binding project/assignment/owner/branch/repository/commit/pr + historical behavior, persistence/conflict/idempotency/retry semantics, report status evidence separating saved/queued/delivered/seen/actual owner acknowledgment; browser Access origin acceptance for ctrl binding. Confirm canonical project icon registry routes/status semantics, actual Night Shift Shift/lead/away-work attribution. Current MCP worktree feedback-browser.js untracked: proposed only, not live proof. Exact reference libfile4487 inspected1368405bytes, sample-only. No Relay/Field/rtxForge product modifications.",
+      "primary_team": "inspector",
+      "supporting_teams": [],
+      "primary_staff": "valentina",
+      "supporting_staff": [],
+      "base_sha": "c04e402c6982d02b865310b4963f330a69788e66",
+      "state": "active",
+      "created_at": "2026-10-03T07:10:52.888Z",
+      "updated_at": "2026-10-03T07:15:32.839Z",
+      "lease_until": "2026-10-03T19:15:32.839Z",
+      "amendment_count": 1,
+      "amendments": [
         {
-          "at": "2026-10-03T04:30:23.784Z",
-          "by": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
-          "reason": "Fresh Mac review rejects mobile dock and identifies Inspector/sidebar regressions. Preserve accepted project strip and coordinate complete correction before publication.",
+          "at": "2026-10-03T07:15:32.839Z",
+          "by": "01a1008b-0712-747e-8798-60ba7f0090d9",
+          "reason": "Receiving ctrl worker is implementing user review/decision interface, with concrete external dependencies preserved.",
           "fields": [
-            "goal",
-            "acceptance",
-            "next_action"
+            "next_action",
+            "primary_staff",
+            "primary_team"
           ],
           "before": {
-            "goal": "Repair ctrl mobile navigation and project loading, then finish responsive Inspector review entry and truthful delivery states.",
-            "acceptance": "First checkpoint: new icon-only mobile bottom dock, selected glow retained, above-icon press label with Field spring motion, drag/cancel and reduced-motion handling, small backgroundless Settings right. Larger feature-header marks and tighter title/subtitle spacing. Review screenshots before publication. Project strip retains committed global membership during refresh, uses initial skeletons, small header loading indicator, atomic real updates and no separate loading-only bar; failures remain visible. Desktop and mobile regression coverage. Preserve original Inspector scope: direct evidence...",
-            "next_action": "Publish a draft of urgent mobile/header/project-strip changes from separate ctrl-polish2-work; keep uncommitted Inspector WIP and its identified races isolated in ctrl-work until fixed and tested. Show real mobile screenshots. Then resume Inspector delivery slice; no premature full completion."
+            "next_action": "Continue after verified PR7 polish release; resolve Relay browser feedback/assignment attribution, logo registry and real Night Shift contracts with MCP owner before claiming end-to-end delivery. Build independent truthful mosaic and review selection on existing source; show actual captures before rollout.",
+            "primary_staff": "julian",
+            "primary_team": "night-shift"
           },
           "after": {
-            "goal": "Repair ctrl navigation and whole-page Inspector regressions while preserving the accepted project strip and completing review delivery.",
-            "acceptance": "First checkpoint: new icon-only mobile bottom dock, selected glow retained, above-icon press label with Field spring motion, drag/cancel and reduced-motion handling, small backgroundless Settings right. Larger feature-header marks and tighter title/subtitle spacing. Review screenshots before publication. Project strip retains committed global membership during refresh, uses initial skeletons, small header loading indicator, atomic real updates and no separate loading-only bar; failures remain visible. Desktop and mobile regression coverage. Preserve original Inspector scope: direct evidence...",
-            "next_action": "Fix confirmed sidebar flex-axis/header-width issues and add geometric assertions; audit and restore Inspector cards/controls/project strip; await Apple tab-bar reference clarification. Draft only until reviewed."
+            "next_action": "Build independent review-first/real telemetry preview. MCP owner thread01a10033 contacted: confirm committed/deployed same-origin /api/feedback/submit POST and /api/feedback/status GET schema, exact capture feedback_binding project/assignment/owner/branch/repository/commit/pr + historical behavior, persistence/conflict/idempotency/retry semantics, report status evidence separating saved/queued/delivered/seen/actual owner acknowledgment; browser Access origin acceptance for ctrl binding. Confirm canonical project icon registry routes/status semantics, actual Night Shift Shift/lead/away-work ...",
+            "primary_staff": "valentina",
+            "primary_team": "inspector"
           }
         }
       ]
