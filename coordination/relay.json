@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T07:36:16.866Z",
+  "updated_at": "2026-10-03T07:36:22.621Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -6457,8 +6457,20 @@
         "julian",
         "ellis"
       ],
-      "state": "claimed",
-      "created_at": "2026-10-01T09:55:15.263Z"
+      "state": "completed",
+      "created_at": "2026-10-01T09:55:15.263Z",
+      "completed_at": "2026-10-01T16:37:38.464Z",
+      "updated_at": "2026-10-03T07:36:22.621Z",
+      "completion_reconciliation": {
+        "at": "2026-10-03T07:36:22.621Z",
+        "queue_owner": "relay-2.0-approved-visual-port-20261001",
+        "completion_owner": "relay-2.0-generated-split-20261001",
+        "reason": "Reconcile historical completed-claim queue mirror using original verified merged PR identity. Preserve original queue and completed-claim owner identities; no ownership transfer or execution restart.",
+        "pr": 94,
+        "merged_head_sha": "2edfcb22caacdb59fdbb1237aa88c03f62a55a62",
+        "merge_commit_sha": "75b805fca8fbf089449e8aebbbc64f5f36e6fb1d",
+        "ownership_transferred": false
+      }
     },
     {
       "id": "relay-card-v9-nonblocking-bootstrap-20261001",
