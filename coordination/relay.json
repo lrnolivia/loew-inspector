@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T16:41:56.366Z",
+  "updated_at": "2026-10-03T16:45:41.527Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7613,8 +7613,8 @@
       "id": "relay-skills-completion-20261003",
       "owner": "01a1028b-03c4-718c-b205-24c35c97b0d7",
       "goal": "Complete substantive portable Relay skill workflows and missing original 1.9 creative/performance coverage.",
-      "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes.",
-      "next_action": "Expand canonical skill workflows, add missing design-system and visual-reference coverage, improve intentional discovery metadata, validate representative composition and immutable installation.",
+      "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian.",
+      "next_action": "Complete scoped regression-protection guidance and representative composition coverage, then exact-head checks and draft PR; return runtime integration to Julian.",
       "paths": [
         "skills/",
         "scripts/build-skills.mjs",
@@ -7644,9 +7644,36 @@
             "id": "relay-skills-completion-20261003:acceptance:0",
             "text": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes.",
             "at": "2026-10-03T16:25:09.931Z"
+          },
+          {
+            "id": "relay-skills-completion-20261003:acceptance:1",
+            "text": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian.",
+            "at": "2026-10-03T16:45:41.527Z",
+            "reason": "Lauren explicitly added practical Relay/MCP regression protection to this existing skill scope via Julian on 2026-10-03."
           }
         ]
-      }
+      },
+      "updated_at": "2026-10-03T16:45:41.527Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-03T16:45:41.527Z",
+          "by": "01a1028b-03c4-718c-b205-24c35c97b0d7",
+          "reason": "Lauren explicitly added practical Relay/MCP regression protection to this existing skill scope via Julian on 2026-10-03.",
+          "fields": [
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes.",
+            "next_action": "Expand canonical skill workflows, add missing design-system and visual-reference coverage, improve intentional discovery metadata, validate representative composition and immutable installation."
+          },
+          "after": {
+            "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian.",
+            "next_action": "Complete scoped regression-protection guidance and representative composition coverage, then exact-head checks and draft PR; return runtime integration to Julian."
+          }
+        }
+      ]
     }
   ],
   "claims": [
@@ -12731,8 +12758,8 @@
         "relay-skills-runtime"
       ],
       "goal": "Complete substantive portable Relay skill workflows and missing original 1.9 creative/performance coverage.",
-      "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes.",
-      "next_action": "Expand canonical skill workflows, add missing design-system and visual-reference coverage, improve intentional discovery metadata, validate representative composition and immutable installation.",
+      "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian.",
+      "next_action": "Complete scoped regression-protection guidance and representative composition coverage, then exact-head checks and draft PR; return runtime integration to Julian.",
       "primary_team": "skills",
       "supporting_teams": [],
       "primary_staff": "naomi",
@@ -12752,11 +12779,37 @@
             "id": "relay-skills-completion-20261003:acceptance:0",
             "text": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes.",
             "at": "2026-10-03T16:25:09.931Z"
+          },
+          {
+            "id": "relay-skills-completion-20261003:acceptance:1",
+            "text": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian.",
+            "at": "2026-10-03T16:45:41.527Z",
+            "reason": "Lauren explicitly added practical Relay/MCP regression protection to this existing skill scope via Julian on 2026-10-03."
           }
         ]
       },
-      "updated_at": "2026-10-03T16:41:56.366Z",
-      "lease_until": "2026-10-04T04:41:56.366Z"
+      "updated_at": "2026-10-03T16:45:41.527Z",
+      "lease_until": "2026-10-04T04:45:41.527Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-03T16:45:41.527Z",
+          "by": "01a1028b-03c4-718c-b205-24c35c97b0d7",
+          "reason": "Lauren explicitly added practical Relay/MCP regression protection to this existing skill scope via Julian on 2026-10-03.",
+          "fields": [
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes.",
+            "next_action": "Expand canonical skill workflows, add missing design-system and visual-reference coverage, improve intentional discovery metadata, validate representative composition and immutable installation."
+          },
+          "after": {
+            "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian.",
+            "next_action": "Complete scoped regression-protection guidance and representative composition coverage, then exact-head checks and draft PR; return runtime integration to Julian."
+          }
+        }
+      ]
     }
   ],
   "migrated_from": "loew-inspector"
