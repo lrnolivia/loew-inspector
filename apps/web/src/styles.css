@@ -647,3 +647,66 @@ a { color: inherit; }
 @media(max-width:700px) { .telemetry-mosaic { grid-template-columns:1fr; }.telemetry-heading {align-items:flex-start;flex-direction:column;gap:8px;}.telemetry-heading h2 {font-size:25px;}.telemetry-card {padding:22px 18px;border-radius:22px;}.telemetry-card header {gap:12px;}.telemetry-icon {width:48px;height:48px;border-radius:15px;}.telemetry-card h3 {font-size:24px;}.telemetry-card p {font-size:12px;}.telemetry-number {min-width:44px;font-size:30px;padding:8px;border-radius:14px;}.telemetry-progress-body {grid-template-columns:minmax(120px,1fr) minmax(105px,1fr);gap:12px;}.telemetry-states {grid-template-columns:1fr;gap:16px;}.telemetry-state {gap:8px;}.telemetry-state .telemetry-icon {width:32px;height:42px;}.telemetry-state .telemetry-icon svg {width:23px;}.telemetry-ring strong {font-size:39px;}.telemetry-ring span {font-size:10px;}.telemetry-motion-body {grid-template-columns:minmax(120px,1fr) minmax(110px,1fr);gap:12px;}.telemetry-orbits strong {font-size:34px;}.telemetry-orbits span {font-size:11px;}.telemetry-chart text {font-size:13px;}.relay-main-panel {padding:24px 16px;} }
 @media(max-width:380px) { .telemetry-progress-body,.telemetry-motion-body {grid-template-columns:1fr;}.telemetry-ring {max-width:200px;}.telemetry-states {grid-template-columns:1fr 1fr;}.telemetry-orbits {max-width:190px;}.telemetry-projects {gap:12px;}.telemetry-ring strong {font-size:48px;}.telemetry-ring span {font-size:12px;} }
 @media(prefers-reduced-motion:reduce) { .live-telemetry *, .live-telemetry *::after { animation:none!important;transition:none!important; } }
+
+/* A first-load placeholder, never a replacement for an already loaded revision. */
+.telemetry-loading-status { font-size:13px;color:var(--text-secondary);margin:8px 0; }
+.live-telemetry[data-loading=true]:not([data-complete=true]) .telemetry-card { position:relative; }
+.live-telemetry[data-loading=true] .telemetry-progress-body,
+.live-telemetry[data-loading=true] .telemetry-motion-body,
+.live-telemetry[data-loading=true] .telemetry-chart,
+.live-telemetry[data-loading=true] .telemetry-attention-list,
+.live-telemetry[data-loading=true] .telemetry-number { visibility:hidden; }
+.live-telemetry[data-loading=true] .telemetry-card::after { content:"";position:absolute;inset:112px 24px 48px;border-radius:18px;background:currentColor;opacity:.06;animation:telemetry-loading-pulse 1.6s ease-in-out infinite;pointer-events:none; }
+@keyframes telemetry-loading-pulse { 50% { opacity:.13; } }
+@media(prefers-reduced-motion:reduce) { .live-telemetry[data-loading=true] .telemetry-card::after {animation:none;} }
+.telemetry-arrange {display:flex;align-items:center;gap:12px;margin:12px 0;color:var(--text-secondary);font-size:12px;}
+.telemetry-arrange button,.telemetry-reorder button {border:0;border-radius:12px;padding:10px 14px;background:var(--surface-2,#302e2b);color:inherit;cursor:pointer;min-height:40px;}
+.telemetry-card {position:relative;}
+.telemetry-mosaic[data-arranging=true] {touch-action:none;}
+.telemetry-mosaic[data-arranging=true] .telemetry-card {animation:telemetry-wiggle .32s ease-in-out infinite alternate;outline:1px solid #f58f7655;cursor:grab;padding-top:64px;}
+.telemetry-reorder {position:absolute;top:12px;right:16px;display:flex;gap:6px;}
+.telemetry-reorder button {min-width:42px;}
+.telemetry-reorder button:disabled {opacity:.3;cursor:default;}
+@keyframes telemetry-wiggle {from{transform:rotate(-.18deg)}to{transform:rotate(.18deg)}}
+@media(prefers-reduced-motion:reduce){.telemetry-mosaic[data-arranging=true] .telemetry-card{animation:none;}}
+.telemetry-feature-badge {display:inline-flex;align-items:center;gap:6px;font-size:11px;color:#b6ada1;margin-bottom:10px;}
+.telemetry-feature-badge img {width:22px;height:22px;object-fit:contain;}
+.telemetry-project-identity {display:inline-flex;max-width:100%;}
+.telemetry-project-identity .work-project-badge {display:inline-flex;align-items:center;gap:8px;padding:6px 12px 6px 6px;background:#ffffff09;border-radius:10px;max-width:100%;}
+.telemetry-project-identity .project-icon {display:inline-flex;flex:none;width:24px;height:24px;align-items:center;justify-content:center;}
+.telemetry-project-identity .project-icon img,.telemetry-project-identity .project-icon svg {width:24px;height:24px;object-fit:contain;}
+.telemetry-worker-badge {display:inline-flex!important;align-items:center;gap:5px;padding:4px 8px;border-radius:8px;background:#ffffff09;font-size:11px!important;margin:5px 0;}
+.telemetry-worker-badge svg {width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:1.5;}
+.telemetry-motion-body {gap:12px;margin-top:16px;}
+.telemetry-projects a {padding:9px 0;}
+/* Compact desktop geometry preserves content; short/mobile viewports may scroll. */
+@media(min-width:1200px) and (min-height:850px){
+ .relay-home{padding:16px 24px 20px;}
+ .relay-home-top{margin-bottom:12px;}
+ .relay-main-panel{padding:24px 32px;border-radius:32px;}
+ .relay-identity{margin-bottom:12px;}
+ .relay-wordmark img{width:100px;height:100px;}
+ .relay-wordmark h1{font-size:64px;}
+ .relay-connection-panel{padding:14px 0;}
+ .relay-eyebrow{margin-bottom:4px;}
+ .relay-connection-copy strong{font-size:20px;}
+ .live-telemetry{margin-top:16px;}
+ .telemetry-heading{margin-bottom:6px;}
+ .telemetry-heading h2{font-size:23px;}
+ .telemetry-arrange{margin:4px 0 8px;}
+ .telemetry-mosaic{gap:12px;}
+ .telemetry-card{padding:16px 18px;border-radius:22px;}
+ .telemetry-card h3{font-size:22px;margin-bottom:3px;}
+ .telemetry-card p{font-size:12px;}
+ .telemetry-icon{width:42px;height:42px;border-radius:13px;}
+ .telemetry-icon svg{width:24px;height:24px;}
+ .telemetry-progress-body,.telemetry-motion-body{margin-top:10px;gap:14px;}
+ .telemetry-ring,.telemetry-orbits{max-width:150px;}
+ .telemetry-ring strong{font-size:34px;}
+ .telemetry-ring span{font-size:10px;}
+ .telemetry-orbits strong{font-size:32px;}
+ .telemetry-chart{max-height:170px;}
+ .telemetry-chart svg{width:100%;height:170px;}
+ .relay-panel-footer{margin-top:12px;}
+ .relay-current-work{padding-top:10px;}
+}

@@ -8,7 +8,7 @@ import { evidenceEngines, planEvidenceRequest, normalizeBrowserCapacityError } f
 import { ingestExternalEvidence, upsertEvidenceRun } from "./external-evidence.js";
 import { getRecipe, listRecipes, saveRecipeFromSession } from "./recipe-store.js";
 import { RELAY_CONTROL_CENTER_URI, relayControlCenterResource } from "./relay-ui.js";
-import { RELAY_STATUS_CARD_URI, RELAY_STATUS_CARD_TOOL, relayStatusCardDescriptor, relayStatusCardResource, relayStatusCardTool, RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, relayContextCardDescriptor, relayContextCardResource, relayContextCardTool, validateRelayContextCardArguments } from "./relay-chat-ui.js";
+import { RELAY_STATUS_CARD_URI, RELAY_STATUS_CARD_TOOL, relayStatusCardDescriptor, relayStatusCardResource, relayStatusCardTool, RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, relayContextCardDescriptor, relayContextCardResource, relayContextCardTool, validateRelayContextCardArguments, compactContextCardResult } from "./relay-chat-ui.js";
 import { RELAY_SKILL_EXTENSION, relaySkillCatalog, relaySkillByUri, relaySkillResourceDescriptors, relaySkillResource } from "./skills.js";
 import { sourceAuthStatus, githubApiRequest as sourceGithubApiRequest, commitSourceFiles } from "./source.js";
 import { runnerControlTools, callRunnerControl, runnerControlError } from "./runner-control.js";
@@ -403,8 +403,8 @@ async function mcp(request, access, env) {
     if (uri === RELAY_CONTROL_CENTER_URI) {
       return rpc(id, { contents: [relayControlCenterResource()] });
     }
-    if (uri === RELAY_CONTEXT_CARD_URI) {
-      return rpc(id, { contents: [relayContextCardResource()] });
+    if (uri === RELAY_CONTEXT_CARD_URI || uri === 'ui://relay/context-card/v11.html') {
+      return rpc(id, { contents: [{...relayContextCardResource(), uri}] });
     }
     if (uri === RELAY_STATUS_CARD_URI) {
       return rpc(id, { contents: [relayStatusCardResource()] });
@@ -967,7 +967,7 @@ async function mcp(request, access, env) {
         const { evidence_id, show_qa, ...runnerArgs } = cardArgs;
         const result = await callRunnerControl("relay_runner_assignments", runnerArgs, env);
         return relayResult(id, {
-          ...result,
+          ...compactContextCardResult(result),
           ...(evidence_id ? { evidence_id } : {}),
           ...(show_qa === true ? { show_qa: true } : {})
         });

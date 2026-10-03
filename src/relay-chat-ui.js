@@ -1,7 +1,7 @@
 import { STAFF } from './staff-registry.js';
 import { contextCardBrandAssets } from '../apps/web/generated.js';
 import { styleContextCard } from './relay-context-card-style.js';
-export const RELAY_CONTEXT_CARD_URI = 'ui://relay/context-card/v11.html';
+export const RELAY_CONTEXT_CARD_URI = 'ui://relay/context-card/v12.html';
 export const RELAY_CONTEXT_CARD_TOOL = 'relay_render_context_card';
 export const RELAY_STATUS_CARD_URI = 'ui://relay/status-card/v3-legacy-bridge.html';
 export const RELAY_STATUS_CARD_TOOL = 'relay_show_legacy_bridge_card';
@@ -117,6 +117,29 @@ export function contextCardModel(data = {}, directory = DIRECTORY) {
   if (pr?.number) { metric='#'+pr.number; metric_label=pr.merged?'merged pull request':pr.draft?'draft pull request':'pull request'; }
   return { title, feature, primary_staff:primary, team, label, tone, signal, summary, rows, blocker, qa, handoff, next_step:nextStep, metric, metric_label, percent, evidence:Object.fromEntries(Object.entries(evidence).filter(([,v])=>v!=null)), refresh:Boolean(data.project) };
 }
+// UI responses must not repeat the full historical coordination ledger.
+export function compactContextCardResult(result = {}) {
+  const text = (value, limit = 420) => typeof value === 'string' ? value.slice(0, limit) : undefined;
+  const fields = ['id','assignment','owner','state','primary_staff','primary_team','branch','updated_at','created_at','completed_at','last_meaningful_progress_at'];
+  const projectItem = item => {
+    const out = {};
+    for (const key of fields) if (typeof item?.[key] === 'string') out[key] = text(item[key], 180);
+    for (const key of ['goal','next_action','waiting_reason','recovery_action']) if (item?.[key]) out[key] = text(item[key]);
+    if (Array.isArray(item?.supporting_staff)) out.supporting_staff = item.supporting_staff.slice(0, 4).map(x => text(x, 80)).filter(Boolean);
+    if (typeof item?.progress_percent === 'number' && Number.isFinite(item.progress_percent)) out.progress_percent = item.progress_percent;
+    if (item?.lease_expired === true) out.lease_expired = true;
+    return out;
+  };
+  const claims = Array.isArray(result.claims) ? result.claims : [];
+  const queue = Array.isArray(result.queue) ? result.queue : [];
+  const rank = item => ['waiting-for-human','active','working','held','queued','completed'].indexOf(item.state);
+  const current = claims.filter(item => !['completed','cancelled','superseded','retired'].includes(item.state));
+  const selected = (current.length ? current : claims.slice(-3)).slice().sort((a,b) => Number(Boolean(a.lease_expired))-Number(Boolean(b.lease_expired)) || rank(a)-rank(b)).slice(0, 3);
+  const out = {ok:result.ok !== false, schema:'relay-context-card/v1', project:text(result.project,80), checked_at:text(result.checked_at,80), record_sha:text(result.record_sha,80), claims:selected.map(projectItem), queue:queue.filter(item=>item.state==='queued').slice(0,3).map(projectItem), coverage:{claims:claims.length,queued:queue.filter(item=>item.state==='queued').length,shown:selected.length}};
+  if (result.error) out.error = {message:text(typeof result.error==='string'?result.error:result.error.message)};
+  return out;
+}
+
 export function contextualPresentation(data) {
   const m=contextCardModel(data);
   return { ...data, human: data.human || { outcome:m.title, health:m.blocker?'blocked':m.tone==='wait'||m.label==='recorded'?'waiting':'healthy', staff:m.team, what_changed:m.summary, next_step:m.next_step, blocker:m.blocker, qa:m.qa } };
@@ -236,6 +259,9 @@ function replaceOnce(html, from, to) {
 }
 function resilientCardHtml() {
   let html = cardHtml(CONTEXT_CARD_BROWSER_MODEL);
+  html = replaceOnce(html, "function acceptToolInput(value){if(value&&typeof value==='object')toolInput=value.arguments||value}", "function acceptToolInput(value){if(value&&typeof value==='object'){toolInput=value.arguments||value;if(!lastData)queueMicrotask(()=>{void recoverCanonicalState()})}}");
+  html = replaceOnce(html, "function acceptToolResult(value){if(value==null)return false;render(value);return true}", "function acceptToolResult(value){if(value==null)return false;const data=unwrap(value);if(!data||typeof data!=='object'||!Object.keys(data).length)return false;render(data);return true}");
+  html = replaceOnce(html, "if(lastData||recoveryStarted)return;hydrateOpenAiGlobals();if(lastData)return;", "if(lastData||recoveryStarted)return;if(window.openai?.toolOutput!=null&&acceptToolResult(window.openai.toolOutput))return;");
   html = replaceOnce(html, "function rpc(method,params){", "function rpc(method,params,ms=15000){");
   html = replaceOnce(html, "reject(new Error('Relay host timed out'))},15000);", "reject(new Error('Relay host timed out'))},ms);");
   html = replaceOnce(html, "async function callTool(name,args){await ready;return rpc('tools/call',{name,arguments:args})}", "async function callTool(name,args){if(window.openai?.callTool)return window.openai.callTool(name,args);await ready;return rpc('tools/call',{name,arguments:args})}");

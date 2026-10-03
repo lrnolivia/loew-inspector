@@ -5,7 +5,7 @@ import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, RELAY_STATUS_CARD_URI,
 test("Relay publishes one versioned compact MCP card resource", () => {
   const descriptor = relayContextCardDescriptor();
   const resource = relayContextCardResource();
-  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v11.html");
+  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v12.html");
   assert.equal(descriptor.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.mimeType, "text/html;profile=mcp-app");
@@ -431,4 +431,39 @@ test('production context card model remains executable after Worker keepNames bu
     await page.locator('#title').filter({hasText:'Bundled card is alive'}).waitFor();
     assert.deepEqual(errors, []);
   } finally { await browser.close(); }
+});
+
+test('real card response is a bounded projection, not the historical assignment ledger', async()=>{
+ const {compactContextCardResult}=await import('./relay-chat-ui.js');
+ const history=Array.from({length:100},(_,i)=>({id:'task-'+i,state:i===99?'active':'completed',goal:'Current task '+i,owner:'verified-owner',primary_staff:'ellis',acceptance:'x'.repeat(20000),objective_history:{large:'x'.repeat(20000)}}));
+ const raw={ok:true,project:'relay',record_sha:'a'.repeat(40),claims:history,queue:history};
+ const card=compactContextCardResult(raw);
+ assert.ok(JSON.stringify(card).length<8000);
+ assert.equal(card.claims[0].id,'task-99');assert.equal(card.claims[0].owner,'verified-owner');
+ assert.equal(card.coverage.claims,100);assert.equal(card.record_sha,raw.record_sha);
+ assert.equal(card.claims[0].acceptance,undefined);assert.equal(history[0].acceptance.length,20000);
+ assert.equal(compactContextCardResult({ok:false,error:{message:'Authentication unavailable'}}).error.message,'Authentication unavailable');
+});
+
+test('late input after initial recovery window still fetches once and empty globals do not block it', async()=>{
+ const {chromium}=await import('playwright');const browser=await chromium.launch({headless:true});
+ try{
+  const page=await browser.newPage();await page.addInitScript(()=>{window.openai={toolOutput:{}};});
+  const widgetUrl='data:text/html,'+encodeURIComponent(relayContextCardResource().text);
+  await page.setContent(`<!doctype html><script>
+   window.calls=[];
+   addEventListener('message',event=>{const frame=document.getElementById('widget'),m=event.data;
+    if(event.source!==frame?.contentWindow||m?.jsonrpc!=='2.0')return;
+    if(m.method==='ui/initialize'){
+     frame.contentWindow.postMessage({jsonrpc:'2.0',id:m.id,result:{protocolVersion:'2026-01-26'}},'*');
+     setTimeout(()=>frame.contentWindow.postMessage({jsonrpc:'2.0',method:'ui/notifications/tool-input',params:{arguments:{project:'relay'}}},'*'),800);
+    }else if(m.method==='tools/call'){
+     window.calls.push(m.params);
+     frame.contentWindow.postMessage({jsonrpc:'2.0',id:m.id,result:{structuredContent:{project:'relay',claims:[{state:'active',goal:'Late input recovered'}]}}},'*');
+    }
+   });
+  <\/script><iframe id="widget" src="${widgetUrl}"></iframe>`);
+  await page.frameLocator('#widget').locator('#title').filter({hasText:'Late input recovered'}).waitFor();
+  assert.equal((await page.evaluate(()=>window.calls)).length,1);
+ }finally{await browser.close();}
 });
