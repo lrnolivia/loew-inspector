@@ -1,11 +1,36 @@
 {
   "schema": 1,
   "project": "ctrl",
-  "updated_at": "2026-10-03T07:04:17.877Z",
+  "updated_at": "2026-10-03T07:09:07.409Z",
   "legacy_branches": [
     "main"
   ],
-  "queue": [],
+  "queue": [
+    {
+      "id": "ctrl-review-first-telemetry-20261003",
+      "owner": "01a1008b-0712-747e-8798-60ba7f0090d9",
+      "goal": "Finish ctrl review-first control center and truthful telemetry on the established implementation.",
+      "acceptance": "Now, Runner, Night Shift and Inspector lead with one major explicit human review/decision card, plain-language headline, actual artifact screenshot/live preview, response buttons and text input durably routed to Relay then full list; preserved needsHumanReview semantics, routine status/failures/stale verification excluded. End-to-end saved reply must reach Relay AND actual owner acknowledgment; storage alone not delivery. Truthful overview of active/newest/most-worked products/current focus and telemetry mosaic referencing inspected Library libfile_4487fb5741e081918cee4f3fc768cd60, no sample facts/fake percentages/graph amplitudes/liveness. Compact Relay panel matching same treatment. Canonical notification designs shorter/tighter/larger icons, sample gallery clearly separate. Exact logo badge canon in all consumers via shared registry dependency. Branded lowercase chrome honors preference/user text. Real Night Shift away work with identified staff lead; read-only checks labeled honestly. MCP worker owns feedback/catalogue/shift/logo backend contracts; do not touch Field/rtxForge/Relay implementations.320/390, desktop rail expanded/collapsed/bottom, dark/light,keyboard/reduced-motion, interrupted/repeated/stale/cold-load coverage. Show combined new visual result before broad rollout.",
+      "next_action": "Continue after verified PR7 polish release; resolve Relay browser feedback/assignment attribution, logo registry and real Night Shift contracts with MCP owner before claiming end-to-end delivery. Build independent truthful mosaic and review selection on existing source; show actual captures before rollout.",
+      "paths": [
+        "apps/web/public/",
+        "apps/web/src/",
+        "packages/shared-ui/",
+        "test/",
+        "apps/web/build.mjs",
+        "worker/"
+      ],
+      "resources": [
+        "ctrl-review-delivery"
+      ],
+      "primary_team": "night-shift",
+      "supporting_teams": [],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "state": "queued",
+      "created_at": "2026-10-03T07:09:07.409Z"
+    }
+  ],
   "claims": [
     {
       "id": "ctrl-control-center-20261002",
