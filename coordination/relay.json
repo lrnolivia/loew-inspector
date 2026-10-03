@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T17:01:32.424Z",
+  "updated_at": "2026-10-03T18:07:12.773Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7630,7 +7630,7 @@
       "supporting_teams": [],
       "primary_staff": "naomi",
       "supporting_staff": [],
-      "state": "claimed",
+      "state": "completed",
       "created_at": "2026-10-03T16:25:09.931Z",
       "objective_history": {
         "baseline": {
@@ -7659,7 +7659,7 @@
           }
         ]
       },
-      "updated_at": "2026-10-03T16:46:17.704Z",
+      "updated_at": "2026-10-03T18:07:12.773Z",
       "amendment_count": 2,
       "amendments": [
         {
@@ -7693,7 +7693,8 @@
             "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian. Preserve approved visual/behavior/default baselines and proportions. Meaningful design changes outside the explicit assignment require a reviewable easy live-reversible option restoring the approved version. Never silently replace approved design as polish. Record comparable visual baseline evidence and actionable restoration checks; specifically requested UI changes remain authorized."
           }
         }
-      ]
+      ],
+      "completed_at": "2026-10-03T18:07:12.773Z"
     }
   ],
   "claims": [
@@ -12649,7 +12650,7 @@
       "primary_staff": "naomi",
       "supporting_staff": [],
       "base_sha": "0664f2b8461d6cfbc682c07460b97b3e71ddc6c3",
-      "state": "held",
+      "state": "completed",
       "created_at": "2026-10-03T16:25:15.694Z",
       "objective_history": {
         "baseline": {
@@ -12678,8 +12679,8 @@
           }
         ]
       },
-      "updated_at": "2026-10-03T16:53:40.226Z",
-      "lease_until": "2026-10-04T04:53:40.226Z",
+      "updated_at": "2026-10-03T18:07:12.773Z",
+      "lease_until": "2026-10-04T06:07:12.773Z",
       "amendment_count": 2,
       "amendments": [
         {
@@ -12713,7 +12714,13 @@
             "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian. Preserve approved visual/behavior/default baselines and proportions. Meaningful design changes outside the explicit assignment require a reviewable easy live-reversible option restoring the approved version. Never silently replace approved design as polish. Record comparable visual baseline evidence and actionable restoration checks; specifically requested UI changes remain authorized."
           }
         }
-      ]
+      ],
+      "pr": 144,
+      "merged_head_sha": "0fb9c483337fddbef4811ddf5a005a97000f4b81",
+      "merge_commit_sha": "e2548db707f474a40b1f9d5810e56e913ec450ac",
+      "evidence": "https://github.com/lrnolivia/relay/blob/e2548db707f474a40b1f9d5810e56e913ec450ac/docs/relay/RELAY_SKILLS_COMPLETION_20261003.md ; PR144 merged e2548db707f474a40b1f9d5810e56e913ec450ac, source head 0fb9c483337fddbef4811ddf5a005a97000f4b81. 497 Node22 tests, build/typecheck, 31 skill validations and exact-head quality/admission passed. Parent independently reports live relay_skills catalog31. This completes only scoped skill source, packaging and validation; parent full MCP/runtime/client/device/live-restoration acceptance remains open and deployed-site verification is not inferred.",
+      "work_accounted": true,
+      "completed_at": "2026-10-03T18:07:12.773Z"
     },
     {
       "id": "relay-mcp-rebuild-continuation-20261003",
