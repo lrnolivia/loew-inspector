@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-10-03T07:52:29.784Z",
+  "updated_at": "2026-10-03T07:56:08.267Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -251,7 +251,7 @@
       "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
       "goal": "USER CODEX HANDOFF: correct Field Inspector, then match left sidebar visually; finish original Gallery/Figma parity and latest appearance/tool-panel requirements.",
       "acceptance": "Lauren04:48-04:50QA: floating Inspector top belongs to unified chrome, not separate square bar; Media belongs in far-left panel and its bottom-toolbar affordance is a real menu with chevron. Keep approved tile appearance but two wide/narrow horizontal tiles per row. Primary2or4 choices as icon tiles, remaining choices as list rows; include Move/Hand/Scale and Pen, preserve all actions/shortcuts and keyboard/touch operation. Use theme-aware accent color in small menus, lighter variants in dark, darker in light while meeting contrast. Slightly lighten card/section surfaces in Inspector and port same styling to left panels via shared tokens/components. Add canonical Terra Prime green and pink options from real design tokens, do not guess hues. Add warm-neutral accent neutrachrome (corrected spelling Sentinel_e38ed4c9ae808191804cc8926a0492de), dark/light variants tuned to gray surfaces. Preserve Field identity and Figma behavior, not visual-clone redesign. Reference screenshots libfile_9865c9cf61108191aefe9168e8ac077f and libfile_a68fd60431988191b2b5643478115898 inspected: square detached upper-right bar and dark blending section cards visible, no runtime hash embedded. Keep recovered Mobile PR138 regression fixes intact. Direct Relay only, no workers.\nAudit Gallery Inspector functionality and panel consistency while preserving the praised Gallery modal. Lighten and distinguish button surfaces across modals and settings (Sentinel_fb8bb23700cc8191abc13afc3f795efb; Sentinel_551e0125660c8191be28fb3867f50dd7).\nSUPERSEDING PORTRAIT DIRECTION Sentinel_fdb55c209dfc8191886df276eb020fa3: mobile portrait toolbar needs a FAB blending Material Design and current iOS27 principles. Existing portrait sheets are rejected as merely resized left/right desktop panels; design a purpose-built portrait interaction paradigm, preserving touch/camera fixes but not releasing the rejected portrait shell. Show proposed flow before implementation. No workers; no merge/deployment authorization.\n05:08UTC user Sentinel_75cc2397ccbc81919abd542547af3249 likes portrait direction but rejects extra Edit tap. Object pointer-down prepares drag; movement drags, tap without drag opens context editor with minimal delay. Parent proposes opening on release to prevent panel stealing drag. Test jitter, slow drags, pointer cancel and second-finger takeover. Desktop tool palette requested; user suggests two-finger tap or middle-click, final binding undecided. Parent recommends middle-click palette, middle-drag pan, retain trackpad right-click context menu and supply a conflict-free shortcut. Do not claim that recommendation already exists or is tested.\n05:09UTC user Sentinel_0fbfd59305908191af6f2a0914a7372e: the whole left panel needs its own paradigm as well as Inspector. Parent proposes persistent Browse beside Tools; purpose-built Pages cards/search, Layers hierarchy with breadcrumbs/multiselect/reorder, Media/Library visual selection followed by explicit canvas placement, CMS/deeper dedicated task screens. Preserve navigation location, canvas position and selection. Exact Browse arrangement still proposal. Include visible touch flows for nested-object selection, multi-select and undo/redo.\nLatest appearance request: keep current palette; compact chrome preview above Light/Dark labeled switch, clickable accent swatches below. Hover/focus previews chrome/color name without commit; click/tap persists, keyboard/touch usable. Monochrome and Lunar Chrome adjacent. Rename Neutrachrome to Lunar Chrome (confirmed), preserve stable IDs/preferences. Other elemental names pending user decision; Terra Coral retained. Full handoff: docs/handoffs/2026-10-03/CTRL-FIELD-OTHER.md on relay/execution-handoffs-20261003.",
-      "next_action": "Finish exact-head Registry run37107723346 and immutable real-project Preview verification for https://github.com/lrnolivia/field/pull/139, then squash merge under user authorization. After verified merge report ready for Figma audit and STOP; no audit/handoff until new user direction.",
+      "next_action": "Match Gallery creation/content/image-picker chrome to the existing Media header, tabs, search, thumbnails and control treatment while preserving source-backed ordering/removal/undo. Update PR139 and refresh exact-head checks and Preview; then merge and stop before Figma audit per user direction.",
       "paths": [
         "src/editor/",
         "src/shared/builder-themes.ts",
@@ -266,7 +266,7 @@
       "supporting_staff": [],
       "state": "claimed",
       "created_at": "2026-10-02T04:51:56.008Z",
-      "amendment_count": 15,
+      "amendment_count": 16,
       "amendments": [
         {
           "at": "2026-10-02T05:05:29.413Z",
@@ -486,9 +486,23 @@
           "after": {
             "next_action": "Finish exact-head Registry run37107723346 and immutable real-project Preview verification for https://github.com/lrnolivia/field/pull/139, then squash merge under user authorization. After verified merge report ready for Figma audit and STOP; no audit/handoff until new user direction."
           }
+        },
+        {
+          "at": "2026-10-03T07:56:08.267Z",
+          "by": "01a10035-3b9e-7752-8f03-21cae5f12d6b",
+          "reason": "Lauren explicitly adds Gallery UI parity with Media before merge, using UI UX Designer plugin.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Finish exact-head Registry run37107723346 and immutable real-project Preview verification for https://github.com/lrnolivia/field/pull/139, then squash merge under user authorization. After verified merge report ready for Figma audit and STOP; no audit/handoff until new user direction."
+          },
+          "after": {
+            "next_action": "Match Gallery creation/content/image-picker chrome to the existing Media header, tabs, search, thumbnails and control treatment while preserving source-backed ordering/removal/undo. Update PR139 and refresh exact-head checks and Preview; then merge and stop before Figma audit per user direction."
+          }
         }
       ],
-      "updated_at": "2026-10-03T07:52:29.784Z",
+      "updated_at": "2026-10-03T07:56:08.267Z",
       "objective_history": {
         "baseline": {
           "goal": "USER CODEX HANDOFF: correct Field Inspector, then match left sidebar visually; finish original Gallery/Figma parity and latest appearance/tool-panel requirements.",
@@ -892,7 +906,7 @@
       ],
       "goal": "USER CODEX HANDOFF: correct Field Inspector, then match left sidebar visually; finish original Gallery/Figma parity and latest appearance/tool-panel requirements.",
       "acceptance": "Preserve full original queue acceptance and amendments. Latest controlling scope/order: https://github.com/lrnolivia/relay/blob/bdbada26ce12d8da814a164b45ba4ee8ae30927b/docs/handoffs/2026-10-03/FIELD.md and sibling LATEST-DECISIONS.md. Correct right Inspector/remove nonfunctional Prototype, then match left sidebar/panels. Toolbar popups use exact Media geometry/card/list template and accented glyphs. Appearance preview, labeled mode switch, preview-on-hover/focus and persistent swatches; selected lowercase display names preserve IDs and casing opt-out/user content. Preserve shipped PR138 touch, portrait and Gallery functionality; finish Gallery visual design. Keep portrait navigation/FAB/direct tap-edit and full documented Figma parity audit, canonical Figma logo variants and asset manifest visible as required outcomes. One coherent exact-head verified preview, baseline comparison and real-project evidence; no unsupported physical-iPhone/persistence claims.",
-      "next_action": "Finish exact-head Registry run37107723346 and immutable real-project Preview verification for https://github.com/lrnolivia/field/pull/139, then squash merge under user authorization. After verified merge report ready for Figma audit and STOP; no audit/handoff until new user direction.",
+      "next_action": "Match Gallery creation/content/image-picker chrome to the existing Media header, tabs, search, thumbnails and control treatment while preserving source-backed ordering/removal/undo. Update PR139 and refresh exact-head checks and Preview; then merge and stop before Figma audit per user direction.",
       "category": "implementation",
       "primary_team": "inspector",
       "supporting_teams": [],
@@ -901,9 +915,9 @@
       "base_sha": "b1fe860f224414b3ba928fb20761485f9cffb455",
       "state": "active",
       "created_at": "2026-10-03T05:22:42.919Z",
-      "updated_at": "2026-10-03T07:52:29.784Z",
-      "lease_until": "2026-10-03T19:52:29.784Z",
-      "amendment_count": 6,
+      "updated_at": "2026-10-03T07:56:08.267Z",
+      "lease_until": "2026-10-03T19:56:08.267Z",
+      "amendment_count": 7,
       "amendments": [
         {
           "at": "2026-10-03T05:48:40.361Z",
@@ -987,6 +1001,20 @@
           },
           "after": {
             "next_action": "Finish exact-head Registry run37107723346 and immutable real-project Preview verification for https://github.com/lrnolivia/field/pull/139, then squash merge under user authorization. After verified merge report ready for Figma audit and STOP; no audit/handoff until new user direction."
+          }
+        },
+        {
+          "at": "2026-10-03T07:56:08.267Z",
+          "by": "01a10035-3b9e-7752-8f03-21cae5f12d6b",
+          "reason": "Lauren explicitly adds Gallery UI parity with Media before merge, using UI UX Designer plugin.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Finish exact-head Registry run37107723346 and immutable real-project Preview verification for https://github.com/lrnolivia/field/pull/139, then squash merge under user authorization. After verified merge report ready for Figma audit and STOP; no audit/handoff until new user direction."
+          },
+          "after": {
+            "next_action": "Match Gallery creation/content/image-picker chrome to the existing Media header, tabs, search, thumbnails and control treatment while preserving source-backed ordering/removal/undo. Update PR139 and refresh exact-head checks and Preview; then merge and stop before Figma audit per user direction."
           }
         }
       ],
