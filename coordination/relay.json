@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T03:14:21.419Z",
+  "updated_at": "2026-10-03T03:17:42.108Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7193,6 +7193,45 @@
       "supporting_staff": [],
       "state": "claimed",
       "created_at": "2026-10-02T07:34:34.882Z"
+    },
+    {
+      "id": "relay-mcp-rebuild-continuation-20261003",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "goal": "Continue the existing unfinished full Relay MCP rebuild, restoring original1.9 promised capabilities and integrating approved Relay live-panel/site/card work. Archival assignment closure is not proof of functional delivery.",
+      "acceptance": "Preserve all working tools/provenance. Restore original1.9 acceptance at434541358d6bfd25e67af5d8e689ba49a5378b91 and original7-stage ReflowPlan. Track source implementation, published exposure, host installation and runtime verification separately. Finish original-objective/stable-acceptance preservation, additive amendments, full resume, truthful closure/stale-ownership reconciliation and optional/deferred verification. Retain hourly workflow as deterministic sync guard for known tasks/PRs/checks/deploy receipts and unfinished-work recommendations; no modelcredit dependency, duplicate ownership, fake completion or revival of paused/cancelled work. Prove skill catalog/search/read/resolve/install-or-vendor/update/audit, pinned licensed upstream portable bundles, integrity/dependency enforcement and all promised creative/platform/supporting packs. Prove durable jobs/operations, actual codingexecutor/local-remote routing, workercommunication and full capability parity. Relay singleReactsite merges existing livepanel with approvedctrltelemetry; RefreshTools3fallbacks, AddMCPtoAI, compact pretty notification-like cards with realclient mount/actions. Reviewfirstintegration: important review/decision card thenfull list, real evidence/device-specific previewframes, durableanswers/replies, alwaysprojecticons, useful active-product/latest/most-worked/current-focus overview, flatfills/shadows/glows. NightShift records actualawaywork; chooseunhiredlead foroversight, retainexecutorprovenance, evidence-supported backfill, idempotentShift handoff. No new credentials/spend assumed. Do not close entireprogram from docs-onlyPRs, fixtures or transferreddefects.",
+      "next_action": "Organize5 dependencybatches:1 lifecycle/scope/ownership/syncguard;2 verifiedreview/preview/replyflow;3 NightShiftlead/attribution/Shift;4 approvedsharedtelemetry/design;5 existingMCPprogramintegrations including Relaywebsite/controls/cards and recoveredskill/executor scope. Finishready scopedfixes independently. Fieldandctrl first,rtxForgeheld. Reconcile oldstage records and split admitted boundedexecution steps without duplicateprojects or wakingstoppedworkers. ParentcodesviaRelay.",
+      "paths": [
+        "src/",
+        "skills/",
+        "contracts/",
+        "packages/skills/",
+        "packages/runner/",
+        "packages/inspector/",
+        "apps/mcp/",
+        "docs/relay/",
+        ".github/workflows/runner.yml"
+      ],
+      "resources": [
+        "relay-mcp-rebuild-program"
+      ],
+      "ledger_refs": [
+        "relay-mcp-rebuild-20261001",
+        "relay-mcp-host-proof-20261001",
+        "relay-mcp-feedback-routing-20261001",
+        "relay-1.9-skills-runtime-creative-20260930"
+      ],
+      "category": "architecture",
+      "tags": [
+        "mcp-rebuild",
+        "original-scope-recovery",
+        "review-first"
+      ],
+      "primary_team": "skills",
+      "supporting_teams": [],
+      "primary_staff": "ellis",
+      "supporting_staff": [],
+      "state": "queued",
+      "created_at": "2026-10-03T03:17:42.108Z"
     }
   ],
   "claims": [
