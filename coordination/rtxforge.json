@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "rtxforge",
-  "updated_at": "2026-10-03T07:20:45.871Z",
+  "updated_at": "2026-10-03T07:35:30.721Z",
   "legacy_branches": [
     "backup/github-main-before-0.5.8",
     "backup/main-0.5.8-ada",
@@ -204,7 +204,7 @@
       ],
       "goal": "User Codex handoff: finish rtxForge Classic, package/runtime correctness, native themes and remaining portability/QA goals. Julian implementation stopped.",
       "acceptance": "Classic retained and default Library preserved. Both UIs share package parsing, editable safe plans, explicit trust and reversible deployment; never execute package instructions. Review screenshots of both surfaces before Classic visual polish ships. GNOME native first; Qt/Kirigami shared-engine port plan without distro forks. Preserve existing MFG success and report NR unverified.\nLatest overrides and complete execution scope: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RTXFORGE.md . Classic is chosen; redesign rejected. Preserve all original requirements, shared safe package engine and runtime MFG evidence. Verify per-game presets and NR failure; native Dark/Light stock greys, custom Night. Native KDE/Hyprland/controller/Gamescope/metadata/extras/beta portal and consent-aware QA retained. Approved final Papirus launcher and unplated in-app SVGs are in handoff recovery/, not installed. PR6 draftabd243e7 remains held/unmerged; published preview695d292e. Separate paused Figma fidelity task not resumed. User-started receiver identity not yet known; no invented owner or automatic launch.\n2026-10-03 current user scope: finish all GTK app work and perform NR diagnosis. Defer Qt/Kirigami and SteamOS/CachyOS-specific work; table the beta website. Continue desktop/Game Mode/controller support, metadata/tools, safe package handling, Classic visual polish and app-side support as applicable. Installed game access remains read-only unless a scoped test write is explicitly authorized. Preserve known-good MFG. No new production merge/release approval is inferred.\nExplicit user authorization supersedes read-only test restriction: controlled reversible tests on any game with NR installed, plus Cyberpunk, Avowed, Forza, Witcher 3 and Avatar. Preserve backups and known-good MFG.\nUser refined controller UX: a game-like tool menu with large directional choices; traditional Classic controls only during keyboard/mouse use. Dedicated couch surface shares the safe engine. User reports F10 may not have worked in controlled Avatar run; investigate exact installed hotkey handler.",
-      "next_action": "PR6 draft head6fed86ee8b47a916a1adce86721c4ea46442e71a pushed; GTK tools and approved controller Dashboard/Library/Presets complete. 92 tests+10 subtests,213 engine tests,native UI and exact-head packaged smoke pass; review SHIP. Await CI and physical Game Mode verification. Avatar INI restored; NR execution proven,F10/visual quality unresolved. Evidence staged under .codex/visualizations/2026/10/03/01a10034-0e3d-7162-886f-0038c226a8c9/rtxforge-evidence; Relay docs queue rtxforge-app-evidence-20261003. Qt/Kirigami,SteamOS/CachyOS,beta website deferred. No merge/release.",
+      "next_action": "Draft PR6 final head33a910a00e3e0b8e5e6df3f2eedab7e44c96a308 pushed. GTK tools/controller Dashboard/Library/Presets/DLSS Files complete; Settings gear, update-all/selected-Library DLSS and Install-to-all review added. 92 tests+10 subtests,213 engine,12 updater rerun,19 native captures,exact-head packaged smoke pass. Finish SHIP; native/KDE/Wayland/admission CI GREEN. AppImage in worktree/dist; installed release unchanged. Evidence .codex/visualizations/2026/10/03/01a10034-0e3d-7162-886f-0038c226a8c9/rtxforge-evidence; docs queue rtxforge-app-evidence-20261003. Physical Game Mode/GPU renderer and F10/visible NR remain unverified; Avatar INI restored. Qt/Kirigami,SteamOS/CachyOS,beta website deferred. No merge/release.",
       "primary_team": "night-shift",
       "supporting_teams": [],
       "primary_staff": "julian",
@@ -212,8 +212,8 @@
       "base_sha": "acd71e9a3da59a86c04794247ac8ead60fdbb95a",
       "state": "active",
       "created_at": "2026-10-02T17:32:51.823Z",
-      "updated_at": "2026-10-03T07:20:45.871Z",
-      "lease_until": "2026-10-03T19:20:45.871Z",
+      "updated_at": "2026-10-03T07:35:30.721Z",
+      "lease_until": "2026-10-03T19:35:30.721Z",
       "amendment_count": 7,
       "amendments": [
         {
