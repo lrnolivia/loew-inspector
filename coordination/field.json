@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-10-03T09:06:57.007Z",
+  "updated_at": "2026-10-03T23:19:55.276Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -543,6 +543,50 @@
             "id": "field-unified-chrome-neutrachrome-20261002:acceptance:0",
             "text": "Lauren04:48-04:50QA: floating Inspector top belongs to unified chrome, not separate square bar; Media belongs in far-left panel and its bottom-toolbar affordance is a real menu with chevron. Keep approved tile appearance but two wide/narrow horizontal tiles per row. Primary2or4 choices as icon tiles, remaining choices as list rows; include Move/Hand/Scale and Pen, preserve all actions/shortcuts and keyboard/touch operation. Use theme-aware accent color in small menus, lighter variants in dark, darker in light while meeting contrast. Slightly lighten card/section surfaces in Inspector and port same styling to left panels via shared tokens/components. Add canonical Terra Prime green and pink options from real design tokens, do not guess hues. Add warm-neutral accent neutrachrome (corrected spelling Sentinel_e38ed4c9ae808191804cc8926a0492de), dark/light variants tuned to gray surfaces. Preserve Field identity and Figma behavior, not visual-clone redesign. Reference screenshots libfile_9865c9cf61108191aefe9168e8ac077f and libfile_a68fd60431988191b2b5643478115898 inspected: square detached upper-right bar and dark blending section cards visible, no runtime hash embedded. Keep recovered Mobile PR138 regression fixes intact. Direct Relay only, no workers.\nAudit Gallery Inspector functionality and panel consistency while preserving the praised Gallery modal. Lighten and distinguish button surfaces across modals and settings (Sentinel_fb8bb23700cc8191abc13afc3f795efb; Sentinel_551e0125660c8191be28fb3867f50dd7).\nSUPERSEDING PORTRAIT DIRECTION Sentinel_fdb55c209dfc8191886df276eb020fa3: mobile portrait toolbar needs a FAB blending Material Design and current iOS27 principles. Existing portrait sheets are rejected as merely resized left/right desktop panels; design a purpose-built portrait interaction paradigm, preserving touch/camera fixes but not releasing the rejected portrait shell. Show proposed flow before implementation. No workers; no merge/deployment authorization.\n05:08UTC user Sentinel_75cc2397ccbc81919abd542547af3249 likes portrait direction but rejects extra Edit tap. Object pointer-down prepares drag; movement drags, tap without drag opens context editor with minimal delay. Parent proposes opening on release to prevent panel stealing drag. Test jitter, slow drags, pointer cancel and second-finger takeover. Desktop tool palette requested; user suggests two-finger tap or middle-click, final binding undecided. Parent recommends middle-click palette, middle-drag pan, retain trackpad right-click context menu and supply a conflict-free shortcut. Do not claim that recommendation already exists or is tested.\n05:09UTC user Sentinel_0fbfd59305908191af6f2a0914a7372e: the whole left panel needs its own paradigm as well as Inspector. Parent proposes persistent Browse beside Tools; purpose-built Pages cards/search, Layers hierarchy with breadcrumbs/multiselect/reorder, Media/Library visual selection followed by explicit canvas placement, CMS/deeper dedicated task screens. Preserve navigation location, canvas position and selection. Exact Browse arrangement still proposal. Include visible touch flows for nested-object selection, multi-select and undo/redo.\nLatest appearance request: keep current palette; compact chrome preview above Light/Dark labeled switch, clickable accent swatches below. Hover/focus previews chrome/color name without commit; click/tap persists, keyboard/touch usable. Monochrome and Lunar Chrome adjacent. Rename Neutrachrome to Lunar Chrome (confirmed), preserve stable IDs/preferences. Other elemental names pending user decision; Terra Coral retained. Full handoff: docs/handoffs/2026-10-03/CTRL-FIELD-OTHER.md on relay/execution-handoffs-20261003.",
             "at": "2026-10-03T07:52:29.784Z"
+          }
+        ]
+      }
+    },
+    {
+      "id": "field-radius-panel-corrections-20261003",
+      "owner": "01a10405-82ff-72d5-aef4-535569d400de",
+      "goal": "Finish Field's shared bevel, padding and connected Media/Gallery corrections.",
+      "acceptance": "Preserve full original objectives and acceptance of field-unified-chrome-neutrachrome-20261002, retained at coordination record e2c7cc5a45cc19453dc8f30d03795d7fda0c61e1. PR139 visual work is shipped; original Figma audit remains pending, separately operated read-only. New Mac Sol6.1medium successor fixes radius-following bevel on outer rounded/pill shapes, consistent panel/Media bottom padding, duplicate Add Media, Gallery collection glyph and Gallery entry inside Media. Preserve approved design and existing data. Inspect supplied screenshots, test desktop/mobile/light/dark, draft PR with evidence. No merge/deploy yet. This is a successor, not a competing source writer; claim only after prior held implementation is safely superseded with pending objectives carried forward.",
+      "next_action": "Await supported supersession of old held claim, then admit successor. Preserve pending original audit and all historical acceptance.",
+      "paths": [
+        "src/styles/",
+        "src/editor/",
+        "src/shared/",
+        "src/design-system/",
+        "public/field-brand/",
+        "src/code/stores/workspace-panels-store.ts",
+        "src/code/stores/workspace-panels-store.test.ts"
+      ],
+      "resources": [
+        "field-workspace-chrome"
+      ],
+      "ledger_refs": [
+        "field-unified-chrome-neutrachrome-20261002"
+      ],
+      "category": "design",
+      "primary_team": "inspector",
+      "supporting_teams": [],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "state": "queued",
+      "created_at": "2026-10-03T23:19:55.276Z",
+      "objective_history": {
+        "baseline": {
+          "goal": "Finish Field's shared bevel, padding and connected Media/Gallery corrections.",
+          "acceptance": "Preserve full original objectives and acceptance of field-unified-chrome-neutrachrome-20261002, retained at coordination record e2c7cc5a45cc19453dc8f30d03795d7fda0c61e1. PR139 visual work is shipped; original Figma audit remains pending, separately operated read-only. New Mac Sol6.1medium successor fixes radius-following bevel on outer rounded/pill shapes, consistent panel/Media bottom padding, duplicate Add Media, Gallery collection glyph and Gallery entry inside Media. Preserve approved design and existing data. Inspect supplied screenshots, test desktop/mobile/light/dark, draft PR with evidence. No merge/deploy yet. This is a successor, not a competing source writer; claim only after prior held implementation is safely superseded with pending objectives carried forward.",
+          "at": "2026-10-03T23:19:55.276Z",
+          "source": "assignment-created"
+        },
+        "acceptance_versions": [
+          {
+            "id": "field-radius-panel-corrections-20261003:acceptance:0",
+            "text": "Preserve full original objectives and acceptance of field-unified-chrome-neutrachrome-20261002, retained at coordination record e2c7cc5a45cc19453dc8f30d03795d7fda0c61e1. PR139 visual work is shipped; original Figma audit remains pending, separately operated read-only. New Mac Sol6.1medium successor fixes radius-following bevel on outer rounded/pill shapes, consistent panel/Media bottom padding, duplicate Add Media, Gallery collection glyph and Gallery entry inside Media. Preserve approved design and existing data. Inspect supplied screenshots, test desktop/mobile/light/dark, draft PR with evidence. No merge/deploy yet. This is a successor, not a competing source writer; claim only after prior held implementation is safely superseded with pending objectives carried forward.",
+            "at": "2026-10-03T23:19:55.276Z"
           }
         ]
       }
