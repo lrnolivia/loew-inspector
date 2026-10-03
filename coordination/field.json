@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-10-03T23:23:48.326Z",
+  "updated_at": "2026-10-03T23:24:50.543Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -586,7 +586,7 @@
       "supporting_teams": [],
       "primary_staff": "julian",
       "supporting_staff": [],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-10-03T23:19:55.276Z",
       "objective_history": {
         "baseline": {
@@ -1161,6 +1161,54 @@
           "head_sha": null
         }
       }
+    },
+    {
+      "id": "field-radius-panel-corrections-20261003",
+      "owner": "01a10405-82ff-72d5-aef4-535569d400de",
+      "branch": "field/radius-panel-corrections-20261003",
+      "paths": [
+        "src/styles/",
+        "src/editor/",
+        "src/shared/",
+        "src/design-system/",
+        "public/field-brand/",
+        "src/code/stores/workspace-panels-store.ts",
+        "src/code/stores/workspace-panels-store.test.ts"
+      ],
+      "resources": [
+        "field-workspace-chrome"
+      ],
+      "goal": "Finish Field's shared bevel, padding and connected Media/Gallery corrections.",
+      "acceptance": "Preserve full original objectives and acceptance of field-unified-chrome-neutrachrome-20261002, retained at coordination record e2c7cc5a45cc19453dc8f30d03795d7fda0c61e1. PR139 visual work is shipped; original Figma audit remains pending, separately operated read-only. New Mac Sol6.1medium successor fixes radius-following bevel on outer rounded/pill shapes, consistent panel/Media bottom padding, duplicate Add Media, Gallery collection glyph and Gallery entry inside Media. Preserve approved design and existing data. Inspect supplied screenshots, test desktop/mobile/light/dark, draft PR with evidence. No merge/deploy yet. This is a successor, not a competing source writer; claim only after prior held implementation is safely superseded with pending objectives carried forward.",
+      "next_action": "Implement shared radius-following bevel, outer numeric pill edges, panel content insets, single upload action and linked separate Gallery flow; preserve historical audit acceptance. Draft PR only.",
+      "ledger_refs": [
+        "field-unified-chrome-neutrachrome-20261002"
+      ],
+      "category": "design",
+      "primary_team": "inspector",
+      "supporting_teams": [],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "base_sha": "f581e4f3e750afd2a959032e4e1815b554b23e4b",
+      "state": "active",
+      "created_at": "2026-10-03T23:24:50.543Z",
+      "objective_history": {
+        "baseline": {
+          "goal": "Finish Field's shared bevel, padding and connected Media/Gallery corrections.",
+          "acceptance": "Preserve full original objectives and acceptance of field-unified-chrome-neutrachrome-20261002, retained at coordination record e2c7cc5a45cc19453dc8f30d03795d7fda0c61e1. PR139 visual work is shipped; original Figma audit remains pending, separately operated read-only. New Mac Sol6.1medium successor fixes radius-following bevel on outer rounded/pill shapes, consistent panel/Media bottom padding, duplicate Add Media, Gallery collection glyph and Gallery entry inside Media. Preserve approved design and existing data. Inspect supplied screenshots, test desktop/mobile/light/dark, draft PR with evidence. No merge/deploy yet. This is a successor, not a competing source writer; claim only after prior held implementation is safely superseded with pending objectives carried forward.",
+          "at": "2026-10-03T23:19:55.276Z",
+          "source": "assignment-created"
+        },
+        "acceptance_versions": [
+          {
+            "id": "field-radius-panel-corrections-20261003:acceptance:0",
+            "text": "Preserve full original objectives and acceptance of field-unified-chrome-neutrachrome-20261002, retained at coordination record e2c7cc5a45cc19453dc8f30d03795d7fda0c61e1. PR139 visual work is shipped; original Figma audit remains pending, separately operated read-only. New Mac Sol6.1medium successor fixes radius-following bevel on outer rounded/pill shapes, consistent panel/Media bottom padding, duplicate Add Media, Gallery collection glyph and Gallery entry inside Media. Preserve approved design and existing data. Inspect supplied screenshots, test desktop/mobile/light/dark, draft PR with evidence. No merge/deploy yet. This is a successor, not a competing source writer; claim only after prior held implementation is safely superseded with pending objectives carried forward.",
+            "at": "2026-10-03T23:19:55.276Z"
+          }
+        ]
+      },
+      "updated_at": "2026-10-03T23:24:50.543Z",
+      "lease_until": "2026-10-04T11:24:50.543Z"
     }
   ]
 }
