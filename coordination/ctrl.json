@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "ctrl",
-  "updated_at": "2026-10-03T01:37:23.326Z",
+  "updated_at": "2026-10-03T02:43:20.945Z",
   "legacy_branches": [
     "main"
   ],
@@ -153,7 +153,7 @@
       ],
       "goal": "Repair Inspector redirect loop and simplify ctrl layout, neutral project badges, reliable project icons, separated Relay utility after Night Shift, plain-language presentation.",
       "acceptance": "Inspector protected route opens without redirect loop; workspace/header/content edges align; project badges neutral and known logos load; Relay after Night Shift with gap; advanced work actions tucked away; technical diagnostics optional. Exact-head tests and browser QA before promotion.",
-      "next_action": "Fix Inspector route first with regression test; then bounded layout/copy/icon changes and browser QA.",
+      "next_action": "PR6 head9d9bbd8 adds explicit review/decision-only attention semantics; local13 tests/typecheck passed, exact-head CI pending. Earlier af741 nav/settings/connection-feedback QA passed and screenshots inspected. Next verify Settings panel all layouts, then publish ready polish independently. Approved new review-first mosaic, device-specific artifact frames, reply/preview verification and shared Relay telemetry remain separate pending implementation batches. Night Shift and deterministic sync guard scope updated by user; preserve actual execution provenance and paused work.",
       "primary_team": "inspector",
       "supporting_teams": [],
       "primary_staff": "valentina",
@@ -161,8 +161,8 @@
       "base_sha": "611b6f6415389bc9dbaa163b16e8ff919072ae72",
       "state": "active",
       "created_at": "2026-10-03T01:37:23.326Z",
-      "updated_at": "2026-10-03T01:37:23.326Z",
-      "lease_until": "2026-10-03T13:37:23.326Z"
+      "updated_at": "2026-10-03T02:43:20.945Z",
+      "lease_until": "2026-10-03T14:43:20.945Z"
     }
   ]
 }
