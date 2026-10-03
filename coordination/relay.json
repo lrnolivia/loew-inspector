@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T08:41:27.489Z",
+  "updated_at": "2026-10-03T08:45:33.163Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -12442,10 +12442,16 @@
       "primary_staff": null,
       "supporting_staff": [],
       "base_sha": "80dda66a8bda305e43517c883a9f84608ecfb33d",
-      "state": "active",
+      "state": "completed",
       "created_at": "2026-10-03T04:48:10.740Z",
-      "updated_at": "2026-10-03T08:41:27.489Z",
-      "lease_until": "2026-10-03T20:41:27.489Z"
+      "updated_at": "2026-10-03T08:45:33.163Z",
+      "lease_until": "2026-10-03T20:45:33.163Z",
+      "pr": 138,
+      "merged_head_sha": "f51a3f1c2f0d406d3ac8629fb6a81a49d5eb8dd5",
+      "merge_commit_sha": "19f3a39855e71d35ae9d55344ba14c1b54f43d81",
+      "evidence": "PR138 merged19f3a39855e71d35ae9d55344ba14c1b54f43d81 from admitted exactheadf51a3f1. All27 changes are docs/handoffs; original records/recovery source/assets preserved. Dated README and OVERNIGHT-DIRECT distinguish historical status, later released41queue reconciliation, actual receiver/root ownership, and all unfinished product/QA scope in current assignments. Documentation readiness complete, not product acceptance. No plugin deletion or release of unresolved historical reservations.",
+      "work_accounted": true,
+      "completed_at": "2026-10-03T08:45:33.163Z"
     },
     {
       "id": "relay-mcp-lifecycle-reconciliation-20261003",
