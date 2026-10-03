@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "rtxforge",
-  "updated_at": "2026-10-03T05:22:11.579Z",
+  "updated_at": "2026-10-03T05:22:45.890Z",
   "legacy_branches": [
     "backup/github-main-before-0.5.8",
     "backup/main-0.5.8-ada",
@@ -204,16 +204,16 @@
       ],
       "goal": "User Codex handoff: finish rtxForge Classic, package/runtime correctness, native themes and remaining portability/QA goals. Julian implementation stopped.",
       "acceptance": "Classic retained and default Library preserved. Both UIs share package parsing, editable safe plans, explicit trust and reversible deployment; never execute package instructions. Review screenshots of both surfaces before Classic visual polish ships. GNOME native first; Qt/Kirigami shared-engine port plan without distro forks. Preserve existing MFG success and report NR unverified.\nLatest overrides and complete execution scope: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RTXFORGE.md . Classic is chosen; redesign rejected. Preserve all original requirements, shared safe package engine and runtime MFG evidence. Verify per-game presets and NR failure; native Dark/Light stock greys, custom Night. Native KDE/Hyprland/controller/Gamescope/metadata/extras/beta portal and consent-aware QA retained. Approved final Papirus launcher and unplated in-app SVGs are in handoff recovery/, not installed. PR6 draftabd243e7 remains held/unmerged; published preview695d292e. Separate paused Figma fidelity task not resumed. User-started receiver identity not yet known; no invented owner or automatic launch.",
-      "next_action": "Lauren explicitly resumed in her local Codex session 01a10034-0e3d-7162-886f-0038c226a8c9. Previous executor stopped per handoff. Preserve PR6 abd243e7 and all acceptance. Integrate exact approved icon assets, then continue Classic/preset correctness. No production merge or real game writes.",
+      "next_action": "User-authorized local pickup active. Inspect and integrate approved SVG assets in retained PR6 branch, validate packaging and write-disabled native rendering; preserve Classic direction and all remaining handoff scope.",
       "primary_team": "night-shift",
       "supporting_teams": [],
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "acd71e9a3da59a86c04794247ac8ead60fdbb95a",
-      "state": "held",
+      "state": "active",
       "created_at": "2026-10-02T17:32:51.823Z",
-      "updated_at": "2026-10-03T05:22:11.579Z",
-      "lease_until": "2026-10-03T17:22:11.579Z",
+      "updated_at": "2026-10-03T05:22:45.890Z",
+      "lease_until": "2026-10-03T17:22:45.890Z",
       "amendment_count": 1,
       "amendments": [
         {
