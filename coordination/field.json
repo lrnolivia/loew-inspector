@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-10-03T05:19:14.729Z",
+  "updated_at": "2026-10-03T05:22:42.919Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -250,7 +250,7 @@
       "supporting_teams": [],
       "primary_staff": "julian",
       "supporting_staff": [],
-      "state": "queued",
+      "state": "claimed",
       "created_at": "2026-10-02T04:51:56.008Z",
       "amendment_count": 9,
       "amendments": [
@@ -758,6 +758,33 @@
       "evidence": "User explicitly requested merging ready work on October 2 at 15:37 UTC. PR138 exact head1ec9fa0a passed baseline comparison, focused tests, both production builds and eight browser flows. Squash merged b1fe860f224414b3ba928fb20761485f9cffb455; Workers Build fe7c99c8 succeeded; live field.loew.fi/build.json confirms exact merged SHA; production Worker version42e86316-0cf0-4497-8428-f57102af6503 at100%. Original artifacts and prior production bad3630 preserved for rollback. Gallery design remains an explicit unfinished follow-up, not covered by functional ordering/removal/undo work. Physical iPhone keyboard/rotation and real-project persistence remain unverified; no claim otherwise.",
       "work_accounted": true,
       "completed_at": "2026-10-02T15:53:26.389Z"
+    },
+    {
+      "id": "field-unified-chrome-neutrachrome-20261002",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "branch": "field/unified-chrome-neutrachrome-20261002",
+      "paths": [
+        "src/editor/",
+        "src/shared/builder-themes.ts",
+        "src/shared/editor-neutral-theme.ts",
+        "src/styles/"
+      ],
+      "resources": [
+        "field-workspace-chrome"
+      ],
+      "goal": "USER CODEX HANDOFF: correct Field Inspector, then match left sidebar visually; finish original Gallery/Figma parity and latest appearance/tool-panel requirements.",
+      "acceptance": "Preserve full original queue acceptance and amendments. Latest controlling scope/order: https://github.com/lrnolivia/relay/blob/bdbada26ce12d8da814a164b45ba4ee8ae30927b/docs/handoffs/2026-10-03/FIELD.md and sibling LATEST-DECISIONS.md. Correct right Inspector/remove nonfunctional Prototype, then match left sidebar/panels. Toolbar popups use exact Media geometry/card/list template and accented glyphs. Appearance preview, labeled mode switch, preview-on-hover/focus and persistent swatches; selected lowercase display names preserve IDs and casing opt-out/user content. Preserve shipped PR138 touch, portrait and Gallery functionality; finish Gallery visual design. Keep portrait navigation/FAB/direct tap-edit and full documented Figma parity audit, canonical Figma logo variants and asset manifest visible as required outcomes. One coherent exact-head verified preview, baseline comparison and real-project evidence; no unsupported physical-iPhone/persistence claims.",
+      "next_action": "Administrative admission solely for user-authorized handoff to receiving Codex 01a10035-3b9e-7752-8f03-21cae5f12d6b; no Julian execution started. Use supported claim then handoff before branch creation/edits because queue-only handoff is unsupported. Preserve historical Mobile reservation and clean original 0a4c2cef worktree; PR138 is merged b1fe860f. Do not retire provenance claim or modify its workflow. After transfer preflight Inspector/left-panel/Media work.",
+      "category": "implementation",
+      "primary_team": "inspector",
+      "supporting_teams": [],
+      "primary_staff": "julian",
+      "supporting_staff": [],
+      "base_sha": "b1fe860f224414b3ba928fb20761485f9cffb455",
+      "state": "active",
+      "created_at": "2026-10-03T05:22:42.919Z",
+      "updated_at": "2026-10-03T05:22:42.919Z",
+      "lease_until": "2026-10-03T17:22:42.919Z"
     }
   ]
 }
