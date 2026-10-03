@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T06:18:06.767Z",
+  "updated_at": "2026-10-03T06:18:12.758Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -5937,8 +5937,10 @@
         "roman",
         "ellis"
       ],
-      "state": "claimed",
-      "created_at": "2026-10-01T06:57:20.167Z"
+      "state": "completed",
+      "created_at": "2026-10-01T06:57:20.167Z",
+      "completed_at": "2026-10-01T07:26:55.075Z",
+      "updated_at": "2026-10-03T06:18:12.758Z"
     },
     {
       "id": "relay-inline-card-browser-remount-hotfix-20261001",
