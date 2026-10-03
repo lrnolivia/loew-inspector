@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-02T19:46:44.355Z",
+  "updated_at": "2026-10-03T03:07:29.810Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -12020,6 +12020,31 @@
       "evidence": "Requested twelve hour ticks implemented in Figma master77:1044; reviewed final PNG. ctrlPR4 merged611b6f6415389bc9dbaa163b16e8ff919072ae72, RelayPR136 merged1b4f4f7f186cb17c5783d929389e03e2004d7e44, exact heads passed quality/admission. Both WorkersBuilds succeeded; ctrl live build.json exactsource match a0c1482a4ff67f2d86abc48b2f1a657b2803770fa7521d2577ec755185e34da2. Same Now Library item libfile_57efde193d2c819183fe56aa9e5dcf47 replacedversion1. Prior sourceartifacts retained.",
       "work_accounted": true,
       "completed_at": "2026-10-02T19:46:44.355Z"
+    },
+    {
+      "id": "relay-native-project-icons-20261003",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "branch": "relay/native-icons-admitted-20261003",
+      "paths": [
+        "packages/runner/src/project-icons.mjs",
+        "packages/runner/test/project-icons.test.mjs"
+      ],
+      "resources": [
+        "project-icon-discovery"
+      ],
+      "goal": "Resolve canonical native app icons for project badges without broad unsafe asset guessing.",
+      "acceptance": "Discover bounded hicolor app icons, prefer suitable256px assets under256KiB, exclude action glyphs, preserve declared favicons/auth-scopedcache/SVG safety. Tests prove nativeicons and oversizedfallback, no externalURLs. Verify real rtxForge/GameBridge badges after tested deployment.",
+      "next_action": "Admit before creating fresh branch; old unclaimed native-project-icons branch has no edits and is not reused. Read resolver tests, implement native candidate ranking, test and open draft PR.",
+      "category": "implementation",
+      "primary_team": "runner",
+      "supporting_teams": [],
+      "primary_staff": "nico",
+      "supporting_staff": [],
+      "base_sha": "41a35141f4cfddaafb103cdc19fe27ef848ed3e0",
+      "state": "active",
+      "created_at": "2026-10-03T03:07:29.810Z",
+      "updated_at": "2026-10-03T03:07:29.810Z",
+      "lease_until": "2026-10-03T15:07:29.810Z"
     }
   ],
   "migrated_from": "loew-inspector"
