@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T05:02:21.917Z",
+  "updated_at": "2026-10-03T05:04:15.471Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -50,7 +50,7 @@
         "arcade-agentic-tool-patterns",
         "relay-tool-conformance-evals"
       ],
-      "state": "queued",
+      "state": "superseded",
       "created_at": "2026-09-30T13:25:45.579Z",
       "ledger_refs": [
         "RFS-034"
@@ -94,7 +94,20 @@
           }
         }
       ],
-      "updated_at": "2026-10-01T03:16:27.124Z"
+      "updated_at": "2026-10-03T05:04:15.471Z",
+      "retirement": {
+        "at": "2026-10-03T05:04:15.471Z",
+        "intent": {
+          "operation_id": "cleanup-20261003-relay-operation-framework-20260930",
+          "owner": "relay-operation-framework-20260930",
+          "disposition": "superseded",
+          "reason": "User requested one reconciled execution-ready MCP handoff for her Mac Codex; old queued-only scope is consolidated, not dropped or declared complete.",
+          "evidence": "Queued-only assignment, no occupying claim or branch writer. Original goal/acceptance preserved at relay commit6fdbecb6 docs/handoffs/2026-10-03/original-records/relay.json. Full remaining acceptance retained by relay-mcp-rebuild-continuation-20261003 and RELAY-MCP.md. No source/branch deleted, no completion inference.",
+          "superseded_by": "relay-mcp-rebuild-continuation-20261003",
+          "branch": null,
+          "head_sha": null
+        }
+      }
     },
     {
       "id": "relay-mcp-app-ui-20260930",
