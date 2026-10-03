@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "rtxforge",
-  "updated_at": "2026-10-03T01:43:44.806Z",
+  "updated_at": "2026-10-03T05:02:14.481Z",
   "legacy_branches": [
     "backup/github-main-before-0.5.8",
     "backup/main-0.5.8-ada",
@@ -202,9 +202,9 @@
         "rtxforge-shared-package-engine",
         "rtxforge-classic-redesign-selector"
       ],
-      "goal": "Preserve canonical Library while adding shared recommended/custom package flows in Classic and redesign, persisted UI/start-page selection and native Linux portability foundation.",
-      "acceptance": "Classic retained and default Library preserved. Both UIs share package parsing, editable safe plans, explicit trust and reversible deployment; never execute package instructions. Review screenshots of both surfaces before Classic visual polish ships. GNOME native first; Qt/Kirigami shared-engine port plan without distro forks. Preserve existing MFG success and report NR unverified.",
-      "next_action": "PAUSED by Lauren at2026-10-03 01:42 UTC: Field and ctrl take priority, rtxForge least important. Retain PR6 draft atabd243e7b6d03b7e49bc67b1447be2521831d8db; all CI green, newer Classic/preset/panel/corner work NOT published (continuous695d292e remains). Resume after Field/ctrl are in good place: inspect latest screenshots, finish native Dark/Light token mapping preserving customNight, metadatafallback, nativeQtClassicparity/controllercouch, NRruntimeverification/packagecatalog/structuredbetaReactportalrtxforge.loew.fi + RelayQA. Preserve allapprovedrequests andtests; no gamewrites.",
+      "goal": "User Codex handoff: finish rtxForge Classic, package/runtime correctness, native themes and remaining portability/QA goals. Julian implementation stopped.",
+      "acceptance": "Classic retained and default Library preserved. Both UIs share package parsing, editable safe plans, explicit trust and reversible deployment; never execute package instructions. Review screenshots of both surfaces before Classic visual polish ships. GNOME native first; Qt/Kirigami shared-engine port plan without distro forks. Preserve existing MFG success and report NR unverified.\nLatest overrides and complete execution scope: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RTXFORGE.md . Classic is chosen; redesign rejected. Preserve all original requirements, shared safe package engine and runtime MFG evidence. Verify per-game presets and NR failure; native Dark/Light stock greys, custom Night. Native KDE/Hyprland/controller/Gamescope/metadata/extras/beta portal and consent-aware QA retained. Approved final Papirus launcher and unplated in-app SVGs are in handoff recovery/, not installed. PR6 draftabd243e7 remains held/unmerged; published preview695d292e. Separate paused Figma fidelity task not resumed. User-started receiver identity not yet known; no invented owner or automatic launch.",
+      "next_action": "HELD FOR USER CODEX. Read full RTXFORGE.md handoff and exact PR6 code/assets. Receiving session must establish actual persistent owner and supported handoff before edits. Julian stops all RTX implementation, including icon integration. Preserve rollback, human/runtime vs automated evidence, and all unverified scope.",
       "primary_team": "night-shift",
       "supporting_teams": [],
       "primary_staff": "julian",
@@ -212,8 +212,31 @@
       "base_sha": "acd71e9a3da59a86c04794247ac8ead60fdbb95a",
       "state": "held",
       "created_at": "2026-10-02T17:32:51.823Z",
-      "updated_at": "2026-10-03T01:43:44.806Z",
-      "lease_until": "2026-10-03T13:43:44.806Z"
+      "updated_at": "2026-10-03T05:02:14.481Z",
+      "lease_until": "2026-10-03T17:02:14.481Z",
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-03T05:02:14.481Z",
+          "by": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "reason": "User transfers all rtxForge implementation to her own Codex; preserve complete discussed scope and approved code/assets in execution handoff.",
+          "fields": [
+            "goal",
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "goal": "Preserve canonical Library while adding shared recommended/custom package flows in Classic and redesign, persisted UI/start-page selection and native Linux portability foundation.",
+            "acceptance": "Classic retained and default Library preserved. Both UIs share package parsing, editable safe plans, explicit trust and reversible deployment; never execute package instructions. Review screenshots of both surfaces before Classic visual polish ships. GNOME native first; Qt/Kirigami shared-engine port plan without distro forks. Preserve existing MFG success and report NR unverified.",
+            "next_action": "PAUSED by Lauren at2026-10-03 01:42 UTC: Field and ctrl take priority, rtxForge least important. Retain PR6 draft atabd243e7b6d03b7e49bc67b1447be2521831d8db; all CI green, newer Classic/preset/panel/corner work NOT published (continuous695d292e remains). Resume after Field/ctrl are in good place: inspect latest screenshots, finish native Dark/Light token mapping preserving customNight, metadatafallback, nativeQtClassicparity/controllercouch, NRruntimeverification/packagecatalog/structuredbetaReactportalrtxforge.loew.fi + RelayQA. Preserve allapprovedrequests andtests; no gamewrites."
+          },
+          "after": {
+            "goal": "User Codex handoff: finish rtxForge Classic, package/runtime correctness, native themes and remaining portability/QA goals. Julian implementation stopped.",
+            "acceptance": "Classic retained and default Library preserved. Both UIs share package parsing, editable safe plans, explicit trust and reversible deployment; never execute package instructions. Review screenshots of both surfaces before Classic visual polish ships. GNOME native first; Qt/Kirigami shared-engine port plan without distro forks. Preserve existing MFG success and report NR unverified.\nLatest overrides and complete execution scope: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RTXFORGE.md . Classic is chosen; redesign rejected. Preserv...",
+            "next_action": "HELD FOR USER CODEX. Read full RTXFORGE.md handoff and exact PR6 code/assets. Receiving session must establish actual persistent owner and supported handoff before edits. Julian stops all RTX implementation, including icon integration. Preserve rollback, human/runtime vs automated evidence, and all unverified scope."
+          }
+        }
+      ]
     }
   ]
 }
