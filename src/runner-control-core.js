@@ -1,7 +1,7 @@
 import { githubApiRequest } from './source.js';
 import { transition, evaluate, occupying, normalizeScope } from './coordination-engine.js';
 
-export const RUNNER_ENGINE_SHA = '00d3aa78fac5bbe38b101ca87e8f3c0b72dcef59';
+export const RUNNER_ENGINE_SHA = '0dfefbbd022d6efd058db696bd00bdb4785a6235';
 export const DEFAULT_RUNNER_CONTROL_REPOSITORY = 'lrnolivia/relay';
 
 export class ControlError extends Error {
@@ -161,6 +161,7 @@ async function mutate(api, control, controlRepository, context, args) {
     hold: ['id', 'owner', 'next_action'],
     handoff: ['id', 'owner', 'successor', 'next_action'],
     complete: ['id', 'owner', 'pr', 'work_accounted', 'evidence'],
+    reconcile: ['id', 'owner', 'pr'],
     retire: ['id', 'owner', 'disposition', 'reason', 'evidence', 'operation_id', 'expected_head_sha', 'superseded_by']
   }[args.action];
   for (const key of Object.keys(args.request)) {
@@ -176,6 +177,7 @@ async function mutate(api, control, controlRepository, context, args) {
     hold: ['next_action'],
     handoff: ['successor', 'next_action'],
     complete: ['pr', 'work_accounted', 'evidence'],
+    reconcile: ['pr'],
     retire: ['disposition', 'reason', 'evidence', 'operation_id']
   }[args.action];
   for (const key of required) {
@@ -197,12 +199,14 @@ async function mutate(api, control, controlRepository, context, args) {
     request.base_sha = head.object.sha;
   }
 
-  if (args.action === 'complete') {
+  if (args.action === 'complete' || args.action === 'reconcile') {
     const claim = context.record.value.claims.find(item => item.id === request.id);
     if (!claim) throw new ControlError('ownership', 'Assignment is missing');
+    if (args.action === 'reconcile' && (claim.state !== 'completed' || claim.owner !== request.owner || claim.pr !== request.pr)) throw new ControlError('ownership', 'Reconciliation requires the completed claim owner and original PR');
     const pr = await api(`${base}/pulls/${request.pr}`);
     if (
       !pr.merged ||
+      !/^[a-f0-9]{40}$/.test(pr.head?.sha || '') || !/^[a-f0-9]{40}$/.test(pr.merge_commit_sha || '') ||
       pr.base.ref !== context.registration.default_branch ||
       pr.base.repo.full_name !== context.registration.repository ||
       pr.head.repo?.full_name !== context.registration.repository ||
@@ -247,11 +251,11 @@ async function mutate(api, control, controlRepository, context, args) {
   await engineGuard(api, control);
 
   const content = `${JSON.stringify(next, null, 2)}\n`;
-  if (args.action === 'retire' && JSON.stringify(next) === JSON.stringify(context.record.value)) {
+  if (['retire', 'reconcile'].includes(args.action) && JSON.stringify(next) === JSON.stringify(context.record.value)) {
     const assignment = next.claims.find(item => item.id === request.id) || next.queue.find(item => item.id === request.id);
     return result(context, { action: args.action, claim: assignment, assignment,
       receipt: { repository: controlRepository, path: `coordination/${args.project}.json`, record_sha: context.record.sha,
-        replayed: true, retirement: assignment.retirement } });
+        replayed: true, ...(args.action === 'retire' ? { retirement: assignment.retirement } : {}) } });
   }
   let saved;
   let writeError;
@@ -293,7 +297,7 @@ async function mutate(api, control, controlRepository, context, args) {
   const queuedItem = verified.value.queue.find(item => item.id === request.id);
   const assignment = args.action === 'queue'
     ? queuedItem
-    : args.action === 'amend' || args.action === 'retire'
+    : ['amend', 'retire', 'handoff', 'reconcile'].includes(args.action)
       ? (verified.value.claims.find(item => item.id === request.id) || activeClaim || queuedItem)
       : verified.value.claims.find(item => item.id === request.id);
   return result({ ...context, record: verified }, {

@@ -4,7 +4,7 @@ import { execFileSync } from 'node:child_process';
 import { transition, evaluate, occupying, retired } from '../src/coordination.mjs';
 
 const [action, project, inputFile] = process.argv.slice(2);
-if (!['queue', 'claim', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete', 'retire', 'audit', 'cleanup', 'preflight', 'pr-gate'].includes(action) || !/^[a-z0-9-]+$/.test(project ?? '')) throw new Error('Usage: node scripts/coordinate.mjs <action> <project> [request.json]');
+if (!['queue', 'claim', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete', 'retire', 'reconcile', 'audit', 'cleanup', 'preflight', 'pr-gate'].includes(action) || !/^[a-z0-9-]+$/.test(project ?? '')) throw new Error('Usage: node scripts/coordinate.mjs <action> <project> [request.json]');
 // gh handles macOS keychain auth locally and GH_TOKEN in Actions; no credential output.
 function api(endpoint, method = 'GET', body) {
   const args = ['api', endpoint, '--method', method];
@@ -44,10 +44,10 @@ function mergedProof(claim, number) {
   return pr;
 }
 
-if (action === 'retire') {
-  if (!inputFile) throw new Error('A JSON retirement request file is required.');
+if (['retire', 'reconcile', 'handoff', 'complete'].includes(action)) {
+  if (!inputFile) throw new Error('A JSON lifecycle request file is required.');
   const { expected_record_sha, ...request } = JSON.parse(await fs.readFile(inputFile, 'utf8'));
-  if (!/^[a-f0-9]{40}$/.test(expected_record_sha || '')) throw new Error('Retirement requires expected_record_sha.');
+  if (!/^[a-f0-9]{40}$/.test(expected_record_sha || '')) throw new Error('Lifecycle mutation requires expected_record_sha.');
   const receipt = await callRunnerControl('relay_runner_coordinate', {
     project, action, expected_record_sha, request
   }, process.env, async (path, options) => {
@@ -59,7 +59,7 @@ if (action === 'retire') {
     }
   });
   console.log(JSON.stringify(receipt, null, 2));
-} else if (['queue', 'claim', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete'].includes(action)) {
+} else if (['queue', 'claim', 'rescope', 'heartbeat', 'hold'].includes(action)) {
   if (!inputFile) throw new Error('A JSON request file is required.');
   const request = JSON.parse(await fs.readFile(inputFile, 'utf8'));
   request.action = action;
@@ -72,13 +72,6 @@ if (action === 'retire') {
   // SHA compare-and-swap: two simultaneous acquisitions cannot both win.
   for (let attempt = 0; attempt < 2; attempt++) {
     const snapshot = read(recordPath);
-    if (action === 'complete') {
-      const claim = snapshot.value.claims.find((c) => c.id === request.id);
-      if (!claim) throw new Error('Missing assignment.');
-      const pr = mergedProof(claim, request.pr);
-      request.merged_head_sha = pr.head.sha;
-      request.merge_commit_sha = pr.merge_commit_sha;
-    }
     const next = transition(snapshot.value, request, policy);
     try {
       save(snapshot, next);

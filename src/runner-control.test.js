@@ -325,3 +325,59 @@ test('queued retirement makes no branch request and returns its terminal assignm
   assert.equal(result.assignment.state, 'cancelled');
   assert.equal(f.calls.some(path => path.includes('/git/ref/')), false);
 });
+
+const completedClaim = () => claim({ state: 'completed', pr: 9, merged_head_sha: sha, merge_commit_sha: newSha, work_accounted: true, evidence: 'Merged slice, physical QA deferred', completed_at: '2026-10-01T00:00:00Z' });
+const mergedLifecyclePr = () => ({ merged: true, base: { ref: 'main', repo: { full_name: 'lrnolivia/relay' } }, head: { ref: defaultRequest.branch, sha, repo: { full_name: 'lrnolivia/relay' } }, merge_commit_sha: newSha });
+const reconcileRequest = { id: 'task', owner: 'worker', pr: 9 };
+const reconciliationFixture = (overrides = {}) => fixture({ claims: [completedClaim()], queue: [{ ...defaultRequest, state: 'claimed', acceptance: 'Original full acceptance', amendments: [{ reason: 'Retained' }] }], pr: mergedLifecyclePr(), ...overrides });
+test('reconcile verifies original provider identity and preserves both records with no-write replay', async () => {
+  const f = reconciliationFixture({ timeout: true });
+  const before = structuredClone(f.record);
+  const result = await coordinate(f, 'reconcile', reconcileRequest);
+  assert.equal(result.receipt.reconciled_after_transport_error, true);
+  assert.equal(result.assignment.state, 'completed');
+  assert.equal(f.record.queue[0].state, 'completed');
+  assert.deepEqual(f.record.claims, before.claims);
+  assert.equal(f.record.queue[0].acceptance, before.queue[0].acceptance);
+  assert.deepEqual(f.record.queue[0].amendments, before.queue[0].amendments);
+  const replay = await coordinate(f, 'reconcile', reconcileRequest, newSha);
+  assert.equal(replay.receipt.replayed, true);
+  assert.equal(f.writes.length, 1);
+});
+test('reconcile rejects unmerged or changed provenance, ownership and stale CAS with zero writes', async () => {
+  const pr = mergedLifecyclePr();
+  for (const overrides of [
+    { pr: { ...pr, merged: false } }, { pr: { ...pr, merge_commit_sha: sha } },
+    { pr: { ...pr, head: { ...pr.head, sha: newSha } } },
+    { pr: { ...pr, head: { ...pr.head, ref: 'relay/other' } } },
+    { pr: { ...pr, head: { ...pr.head, repo: { full_name: 'another/repo' } } } },
+    { claims: [claim()] }, { queue: [{ ...defaultRequest, owner: 'old-owner', state: 'claimed' }] },
+    { engineSha: newSha }
+  ]) {
+    const f = reconciliationFixture(overrides);
+    await assert.rejects(coordinate(f, 'reconcile', reconcileRequest));
+    assert.equal(f.writes.length, 0);
+  }
+  const f = reconciliationFixture();
+  await assert.rejects(coordinate(f, 'reconcile', reconcileRequest, newSha), /Record changed/);
+  await assert.rejects(coordinate(f, 'reconcile', { ...reconcileRequest, owner: 'other' }));
+  await assert.rejects(coordinate(f, 'reconcile', { ...reconcileRequest, merged_head_sha: sha }), /unsupported/);
+  assert.equal(f.writes.length, 0);
+});
+test('reconcile CAS conflicts and uncertain readback never retry writes', async () => {
+  for (const [overrides, code] of [[{ conflict: true }, 'conflict'], [{ readbackUnavailable: true }, 'uncertain_write']]) {
+    const f = reconciliationFixture(overrides);
+    await assert.rejects(coordinate(f, 'reconcile', reconcileRequest), error => error.code === code);
+    assert.equal(f.writes.length, 1);
+  }
+});
+test('queued handoff returns actual assignment without branches, PRs or an execution claim', async () => {
+  const f = fixture({ queue: [{ ...defaultRequest, state: 'queued', acceptance: 'Full scope' }] });
+  const result = await coordinate(f, 'handoff', { id: 'task', owner: 'worker', successor: 'actual-chat', next_action: 'Read full scope and claim when admitted' });
+  assert.equal(result.assignment.owner, 'actual-chat');
+  assert.equal(result.assignment.state, 'queued');
+  assert.equal(result.assignment.acceptance, 'Full scope');
+  assert.equal(f.record.claims.length, 0);
+  assert.equal(f.calls.some(path => /\/branches|\/pulls|\/git\/ref/.test(path)), false);
+  await assert.rejects(coordinate(f, 'handoff', { id: 'task', owner: 'worker', successor: 'other', next_action: 'Steal' }, newSha), /another owner/);
+});

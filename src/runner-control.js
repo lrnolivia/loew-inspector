@@ -12,7 +12,7 @@ import { feedbackToolDefinitions, callFeedbackControl } from './feedback-control
 import { callAssignmentUpdates } from './amendment-sync.js';
 import { projectCloudStatus, deployProjectCloudVersion } from './project-cloud.js';
 
-const MUTATIONS = ['queue', 'claim', 'amend', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete', 'retire'];
+const MUTATIONS = ['queue', 'claim', 'amend', 'rescope', 'heartbeat', 'hold', 'handoff', 'complete', 'retire', 'reconcile'];
 const text = (max = 500) => ({ type: 'string', minLength: 1, maxLength: max });
 const identity = { ...text(100), pattern: '^[a-zA-Z0-9][a-zA-Z0-9_.:-]*$' };
 const projectSchema = { ...text(80), pattern: '^[a-z0-9-]+$' };
@@ -135,7 +135,7 @@ const DEFINITIONS = [
   },
   {
     name: 'relay_runner_coordinate',
-    description: 'COMMAND / TRANSACTION — perform one CAS-protected Runner queue, claim, amend, rescope, heartbeat, hold, handoff, complete, or retire mutation. Read relay_runner_assignments/project first to obtain the current expected_record_sha and ownership. Claim resolves base_sha server-side; callers must omit it. Completion requires a verified merged PR. Retirement records cancelled/superseded work without delivery or deletion: require current owner, disposition, reason, evidence, operation_id and expected_head_sha for claims (null only for an absent branch); superseded also requires superseded_by. Stop writers and account for retained work before retiring. On conflict/uncertain outcome, refresh canonical state before retrying; never replay blindly or take over ownership implicitly.',
+    description: 'COMMAND / TRANSACTION — perform one CAS-protected Runner queue, claim, amend, rescope, heartbeat, hold, handoff, complete, retire, or reconcile mutation. Read relay_runner_assignments/project first to obtain the current expected_record_sha and ownership. Claim resolves base_sha server-side; callers must omit it. Completion requires a verified merged PR and synchronizes its queue row. Handoff supports queued-only assignments without starting execution. Reconcile repairs only the claimed queue row of a completed claim with matching owner and original pr; it re-verifies the merged identity, preserves acceptance, and is idempotent. Retirement records cancelled/superseded work without delivery or deletion: require current owner, disposition, reason, evidence, operation_id and expected_head_sha for claims (null only for an absent branch); superseded also requires superseded_by. Stop writers and account for retained work before retiring. On conflict/uncertain outcome, refresh canonical state before retrying; never replay blindly or take over ownership implicitly.',
     inputSchema: schema({
       project: projectSchema,
       action: { type: 'string', enum: MUTATIONS },
