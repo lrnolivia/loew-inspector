@@ -117,7 +117,16 @@ jobs:
       - name: Typecheck Relay 2.0
         run: npm run typecheck:2.0 --workspace @relay/web
       - name: Run workspace, contract, API, browser and React tests
+        env:
+          RELAY_QA_OUTPUT: ${{ github.workspace }}/qa-evidence/relay-motion
         run: npm test
+      - name: Preserve Relay motion and layout evidence
+        if: always() && github.head_ref == 'relay/mcp-rebuild-20261003'
+        uses: actions/upload-artifact@v4
+        with:
+          name: relay-motion-${{ github.event.pull_request.head.sha || github.sha }}
+          path: qa-evidence/relay-motion/
+          if-no-files-found: error
       - name: Verify contextual card visuals and preserve Inspector evidence
         if: startsWith(github.head_ref, 'relay/context-card-visual-parity-') || (github.event_name == 'push' && contains(github.event.head_commit.message, 'contextual card visual parity'))
         env:

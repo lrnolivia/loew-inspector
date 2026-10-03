@@ -37,8 +37,14 @@ test('populated Relay connection page works at desktop and mobile sizes without 
   assert.deepEqual(await page.evaluate(()=>JSON.parse(localStorage.getItem('relay.telemetry.order.v1'))),['progress','needs','activity','motion']);
   await page.reload();await page.locator('.live-telemetry[data-complete=true]').waitFor();
   assert.equal(await page.locator('[data-card=activity]').evaluate(el=>getComputedStyle(el).order),'2','saved layout restored');
-  await page.getByRole('button',{name:'arrange',exact:true}).click();
-  assert.equal(await page.locator('.telemetry-mosaic').getAttribute('data-arranging'),'true');
+  await page.emulateMedia({reducedMotion:'no-preference'});
+  await page.setViewportSize({width:1440,height:1000});
+  const start=await page.locator('.telemetry-progress h3').boundingBox();
+  await page.mouse.move(start.x+10,start.y+10);await page.mouse.down();await page.waitForTimeout(550);
+  assert.equal(await page.locator('.telemetry-mosaic').getAttribute('data-arranging'),'true','long press enters arranging');
+  await page.mouse.up();
+  if(process.env.RELAY_QA_OUTPUT)await page.screenshot({path:process.env.RELAY_QA_OUTPUT+'/relay-arranging-1440.png',fullPage:true});
+
   await page.getByRole('button',{name:'done',exact:true}).click();
   assert.equal(await page.locator('.telemetry-mosaic').getAttribute('data-arranging'),'false');
   assert.deepEqual(errors,[]);
