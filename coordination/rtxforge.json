@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "rtxforge",
-  "updated_at": "2026-10-03T08:10:36.808Z",
+  "updated_at": "2026-10-03T08:39:14.228Z",
   "legacy_branches": [
     "backup/github-main-before-0.5.8",
     "backup/main-0.5.8-ada",
@@ -204,7 +204,7 @@
       ],
       "goal": "User Codex handoff: finish rtxForge Classic, package/runtime correctness, native themes and remaining portability/QA goals. Julian implementation stopped.",
       "acceptance": "Classic retained and default Library preserved. Both UIs share package parsing, editable safe plans, explicit trust and reversible deployment; never execute package instructions. Review screenshots of both surfaces before Classic visual polish ships. GNOME native first; Qt/Kirigami shared-engine port plan without distro forks. Preserve existing MFG success and report NR unverified.\nLatest overrides and complete execution scope: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RTXFORGE.md . Classic is chosen; redesign rejected. Preserve all original requirements, shared safe package engine and runtime MFG evidence. Verify per-game presets and NR failure; native Dark/Light stock greys, custom Night. Native KDE/Hyprland/controller/Gamescope/metadata/extras/beta portal and consent-aware QA retained. Approved final Papirus launcher and unplated in-app SVGs are in handoff recovery/, not installed. PR6 draftabd243e7 remains held/unmerged; published preview695d292e. Separate paused Figma fidelity task not resumed. User-started receiver identity not yet known; no invented owner or automatic launch.\n2026-10-03 current user scope: finish all GTK app work and perform NR diagnosis. Defer Qt/Kirigami and SteamOS/CachyOS-specific work; table the beta website. Continue desktop/Game Mode/controller support, metadata/tools, safe package handling, Classic visual polish and app-side support as applicable. Installed game access remains read-only unless a scoped test write is explicitly authorized. Preserve known-good MFG. No new production merge/release approval is inferred.\nExplicit user authorization supersedes read-only test restriction: controlled reversible tests on any game with NR installed, plus Cyberpunk, Avowed, Forza, Witcher 3 and Avatar. Preserve backups and known-good MFG.\nUser refined controller UX: a game-like tool menu with large directional choices; traditional Classic controls only during keyboard/mouse use. Dedicated couch surface shares the safe engine. User reports F10 may not have worked in controlled Avatar run; investigate exact installed hotkey handler.",
-      "next_action": "Lauren explicitly requests Julian direct takeover tonight, no more workers. Preserve completed worker checkpoints and current source; no worker restart. Root will finish authorized remaining fixes and verification with Relay, preserve review and access gates, and report exact ready/blocked status. Field current user-owned batch remains separate.",
+      "next_action": "Direct root batch from33a910a: adaptive Gamescope fullscreen; real controller Menu/View/Back targets and clickable prompts; discoverable smooth shelf + Library link; layout choices in Settings; prominent install-all; global Presets explicit all/selected eligible games vs inline game_presets; menu glyphs/exit; neutral top navigation, shared typography and useful source/profile/test metadata; launcher artwork padding. Desktop compact controls stop stretching, menu configuration moves to reorganized Settings. Preserve approved visuals and safe transaction review; reconcile prior install-flow notes, capture desktop and game-mode install screenshots. Local syntax + SDL virtual controller +3 real-method scope tests pass; native CI/visual confirmation pending. No installed game writes. Source changes remain draft until checks/review.",
       "primary_team": "night-shift",
       "supporting_teams": [],
       "primary_staff": "julian",
@@ -212,9 +212,9 @@
       "base_sha": "acd71e9a3da59a86c04794247ac8ead60fdbb95a",
       "state": "active",
       "created_at": "2026-10-02T17:32:51.823Z",
-      "updated_at": "2026-10-03T08:10:36.808Z",
-      "lease_until": "2026-10-03T20:10:36.808Z",
-      "amendment_count": 8,
+      "updated_at": "2026-10-03T08:39:14.228Z",
+      "lease_until": "2026-10-03T20:39:14.228Z",
+      "amendment_count": 9,
       "amendments": [
         {
           "at": "2026-10-03T05:02:14.481Z",
@@ -341,6 +341,20 @@
           },
           "after": {
             "next_action": "Publish exact reviewed head33a910a00e3e0b8e5e6df3f2eedab7e44c96a308 via existing linux-build.yml publish_preview workflow; preserve release rollback. Verify published manifest/artifact, then use built-in updater to atomically replace local app and verify installed identity/rollback. No game writes or unrelated branch merge."
+          }
+        },
+        {
+          "at": "2026-10-03T08:39:14.228Z",
+          "by": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "reason": "Lauren assigned direct Julian game-mode/runtime and desktop polish follow-up after released33a910a; no workers tonight.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "Lauren explicitly requests Julian direct takeover tonight, no more workers. Preserve completed worker checkpoints and current source; no worker restart. Root will finish authorized remaining fixes and verification with Relay, preserve review and access gates, and report exact ready/blocked status. Field current user-owned batch remains separate."
+          },
+          "after": {
+            "next_action": "Direct root batch from33a910a: adaptive Gamescope fullscreen; real controller Menu/View/Back targets and clickable prompts; discoverable smooth shelf + Library link; layout choices in Settings; prominent install-all; global Presets explicit all/selected eligible games vs inline game_presets; menu glyphs/exit; neutral top navigation, shared typography and useful source/profile/test metadata; launcher artwork padding. Desktop compact controls stop stretching, menu configuration moves to reorganized Settings. Preserve approved visuals and safe transaction review; reconcile prior install-flow notes, capture desktop and game-mode install screenshots. Local syntax + SDL virtual controller +3 real-method scope tests pass; native CI/visual confirmation pending. No installed game writes. Source changes remain draft until checks/review."
           }
         }
       ],
