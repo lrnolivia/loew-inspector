@@ -31,6 +31,7 @@ const fail = status => { process.stderr.write('HTTP ' + status); process.exit(1)
 const blob = (value, sha) => ({ type: 'file', encoding: 'base64', sha, content: Buffer.from(typeof value === 'string' ? value : JSON.stringify(value)).toString('base64') });
 if (path.includes('projects/relay.json')) output(blob(s.registration, '${sha}'));
 else if (path.includes('src/coordination.mjs')) output(blob('', s.engine));
+else if (path.endsWith('/pulls/9')) output(s.pr);
 else if (path.includes('git/ref/heads/relay%2Fold')) { if (s.headError) fail(s.headError); output({ object: { sha: s.head } }); }
 else if (path.includes('coordination/relay.json')) {
   if (method === 'PUT') {
@@ -50,9 +51,9 @@ else if (path.includes('coordination/relay.json')) {
   const request = { expected_record_sha: sha, id: 'old', owner: 'owner', disposition: 'cancelled', operation_id: 'retire-old', reason: 'Abandoned', evidence: 'Writer stopped and work preserved', expected_head_sha: sha };
   return {
     read: async () => JSON.parse(await readFile(statePath, 'utf8')),
-    run: async (patch = {}) => {
+    run: async (patch = {}, action = 'retire') => {
       await writeFile(requestPath, JSON.stringify({ ...request, ...patch }));
-      return spawnSync(process.execPath, ['scripts/coordinate.mjs', 'retire', 'relay', requestPath], { cwd: root, encoding: 'utf8', env: { ...process.env, PATH: `${dir}:${process.env.PATH}`, RELAY_TEST_STATE: statePath, RELAY_RUNNER_CONTROL_REPOSITORY: 'lrnolivia/relay' } });
+      return spawnSync(process.execPath, ['scripts/coordinate.mjs', action, 'relay', requestPath], { cwd: root, encoding: 'utf8', env: { ...process.env, PATH: `${dir}:${process.env.PATH}`, RELAY_TEST_STATE: statePath, RELAY_RUNNER_CONTROL_REPOSITORY: 'lrnolivia/relay' } });
     }
   };
 }
@@ -142,4 +143,48 @@ fs.writeFileSync(file,JSON.stringify(s));process.stdout.write(JSON.stringify(res
       else { assert.notEqual(run.status, 0); assert.match(run.stderr, /Ownership changed/); }
     }
   }
+});
+
+test('CLI reconciles through the guarded adapter and preserves original acceptance on replay', async t => {
+  const claim = { id: 'old', owner: 'owner', state: 'completed', branch: 'relay/old', pr: 9, work_accounted: true, evidence: 'Verified merge', completed_at: '2026-10-01T00:00:00Z', merged_head_sha: sha, merge_commit_sha: revision };
+  const record = { project: 'relay', claims: [claim], queue: [{ id: 'old', owner: 'owner', state: 'claimed', acceptance: 'Full original scope' }], legacy_branches: ['main'] };
+  const pr = { merged: true, base: { ref: 'main', repo: { full_name: 'lrnolivia/relay' } }, head: { ref: 'relay/old', sha, repo: { full_name: 'lrnolivia/relay' } }, merge_commit_sha: revision };
+  const request = { disposition: undefined, operation_id: undefined, reason: undefined, evidence: undefined, expected_head_sha: undefined, pr: 9 };
+  const f = await fixture(t, { record, pr, timeout: true });
+  const first = await f.run(request, 'reconcile');
+  assert.equal(first.status, 0, first.stderr);
+  assert.equal(JSON.parse(first.stdout).assignment.state, 'completed');
+  const replay = await f.run({ ...request, expected_record_sha: revision }, 'reconcile');
+  assert.equal(replay.status, 0, replay.stderr);
+  assert.equal(JSON.parse(replay.stdout).receipt.replayed, true);
+  assert.equal((await f.read()).writes, 1);
+  assert.equal((await f.read()).record.queue[0].acceptance, 'Full original scope');
+  for (const options of [{ conflict: true }, { engine: revision }, { pr: { ...pr, merged: false } }]) {
+    const rejected = await fixture(t, { record, pr, ...options });
+    const result = await rejected.run(request, 'reconcile');
+    assert.notEqual(result.status, 0);
+    assert.equal((await rejected.read()).writes, options.conflict ? 1 : 0);
+  }
+});
+test('CLI queued handoff uses exact CAS and returns queued ownership without creating a claim', async t => {
+  const f = await fixture(t, { record: { project: 'relay', claims: [], queue: [{ id: 'old', owner: 'owner', state: 'queued', acceptance: 'Full scope' }], legacy_branches: ['main'] } });
+  const request = { disposition: undefined, operation_id: undefined, reason: undefined, evidence: undefined, expected_head_sha: undefined, successor: 'actual-chat', next_action: 'Read and admit' };
+  const result = await f.run(request, 'handoff');
+  assert.equal(result.status, 0, result.stderr);
+  assert.equal(JSON.parse(result.stdout).assignment.owner, 'actual-chat');
+  assert.equal((await f.read()).record.claims.length, 0);
+  assert.equal((await f.read()).record.queue[0].state, 'queued');
+});
+test('CLI completion now requires explicit revision and synchronizes the queue through verified PR proof', async t => {
+  const record = { project: 'relay', claims: [{ id: 'old', owner: 'owner', state: 'active', branch: 'relay/old' }], queue: [{ id: 'old', owner: 'owner', state: 'claimed', acceptance: 'Full scope' }], legacy_branches: ['main'] };
+  const pr = { merged: true, base: { ref: 'main', repo: { full_name: 'lrnolivia/relay' } }, head: { ref: 'relay/old', sha, repo: { full_name: 'lrnolivia/relay' } }, merge_commit_sha: revision };
+  const f = await fixture(t, { record, pr });
+  const request = { disposition: undefined, operation_id: undefined, reason: undefined, expected_head_sha: undefined, pr: 9, work_accounted: true };
+  const missingRevision = await f.run({ ...request, expected_record_sha: undefined }, 'complete');
+  assert.notEqual(missingRevision.status, 0);
+  assert.equal((await f.read()).writes, 0);
+  const completed = await f.run(request, 'complete');
+  assert.equal(completed.status, 0, completed.stderr);
+  assert.equal((await f.read()).record.queue[0].state, 'completed');
+  assert.equal((await f.read()).record.queue[0].acceptance, 'Full scope');
 });

@@ -109,6 +109,31 @@ export function transition(record, request, policy, now = new Date()) {
   const current = claims.find((c) => c.id === request.id);
   const queued = next.queue.find((q) => q.id === request.id);
   if (!request.id || !request.owner) throw new Error('Stable assignment id and owner id are required.');
+  if (request.action === 'reconcile') {
+    if (!current || current.state !== 'completed' || !queued) throw new Error('Reconciliation requires a completed claim and its queue row.');
+    if (current.owner !== request.owner || queued.owner !== current.owner) throw new Error('Reconciliation requires matching claim and queue ownership.');
+    if (!['claimed', 'completed'].includes(queued.state)) throw new Error('Reconciliation cannot replace a queued or retired disposition.');
+    if (current.work_accounted !== true || !current.evidence?.trim() || !current.completed_at ||
+        !Number.isInteger(current.pr) || current.pr < 1 || request.pr !== current.pr ||
+        !/^[a-f0-9]{40}$/.test(current.merged_head_sha || '') || !/^[a-f0-9]{40}$/.test(current.merge_commit_sha || '') ||
+        request.merged_head_sha !== current.merged_head_sha || request.merge_commit_sha !== current.merge_commit_sha) {
+      throw new Error('Reconciliation requires the original completion and server-verified merged PR identity.');
+    }
+    if (queued.state === 'completed') return next;
+    // Only mirror lifecycle metadata. Neither copy's acceptance or historical evidence is rewritten.
+    Object.assign(queued, { state: 'completed', completed_at: current.completed_at, updated_at: now.toISOString() });
+    next.updated_at = now.toISOString();
+    return next;
+  }
+  if (request.action === 'handoff' && !current) {
+    if (!queued || queued.state !== 'queued') throw new Error('Queued handoff requires a queued-only assignment.');
+    if (queued.owner !== request.owner) throw new Error('Queued assignment belongs to another owner.');
+    if (!request.successor || request.successor === request.owner || !request.next_action) throw new Error('A handoff requires a distinct successor and next action.');
+    queued.handoffs = [...(queued.handoffs || []), { at: now.toISOString(), from: request.owner, to: request.successor, next_action: request.next_action }];
+    Object.assign(queued, { owner: request.successor, next_action: request.next_action, updated_at: now.toISOString() });
+    next.updated_at = now.toISOString();
+    return next;
+  }
   if (request.action === 'retire') {
     const target = current || queued;
     if (!target || target.owner !== request.owner) throw new Error('Retirement requires the current assignment owner.');
@@ -251,6 +276,7 @@ export function transition(record, request, policy, now = new Date()) {
     if (queued) queued.state = 'claimed';
   } else {
     if (!current || !occupying(current)) throw new Error('An active claim is required.');
+    if (['handoff', 'complete'].includes(request.action) && queued && (queued.owner !== current.owner || queued.state !== 'claimed')) throw new Error('Queue lifecycle or owner conflicts with the active claim.');
     if (request.action === 'heartbeat') {
       if (!request.next_action) throw new Error('Persist the next action when renewing.');
       current.next_action = request.next_action;
@@ -262,12 +288,19 @@ export function transition(record, request, policy, now = new Date()) {
     } else if (request.action === 'handoff') {
       if (!request.successor || !request.next_action) throw new Error('A handoff requires a successor and next action.');
       if (claims.some((c) => occupying(c) && c.owner === request.successor)) throw new Error('Successor already owns an active implementation.');
+      if (request.successor === request.owner) throw new Error('A handoff requires a distinct successor.');
+      current.handoffs = [...(current.handoffs || []), { at: now.toISOString(), from: request.owner, to: request.successor, next_action: request.next_action }];
+      if (queued) {
+        queued.handoffs = [...(queued.handoffs || []), structuredClone(current.handoffs.at(-1))];
+        Object.assign(queued, { owner: request.successor, next_action: request.next_action, updated_at: now.toISOString() });
+      }
       current.owner = request.successor;
       current.next_action = request.next_action;
     } else if (request.action === 'complete') {
       if (request.work_accounted !== true || typeof request.evidence !== 'string' || !request.evidence.trim() || !Number.isInteger(request.pr) || request.pr < 1 || !request.merged_head_sha || !request.merge_commit_sha) throw new Error('Completion requires a verified merged PR, durable disposition of all work/intent/QA, and evidence.');
       Object.assign(current, { state: 'completed', pr: request.pr, merged_head_sha: request.merged_head_sha,
         merge_commit_sha: request.merge_commit_sha, evidence: request.evidence, work_accounted: true, completed_at: now.toISOString() });
+      if (queued) Object.assign(queued, { state: 'completed', completed_at: current.completed_at, updated_at: now.toISOString() });
     } else throw new Error('Unknown coordination action.');
   }
   const updated = claims.find((c) => c.id === request.id);

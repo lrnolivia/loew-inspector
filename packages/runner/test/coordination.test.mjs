@@ -139,3 +139,72 @@ test('claimed queue mirrors retire atomically and retain queue history through r
   assert.equal(result.queue[0].state, 'cancelled');
   assert.deepEqual(result.queue[0].retirement, result.claims[0].retirement);
 });
+
+const lifecycleProof = { action: 'complete', id: 'a', owner: 'a', pr: 9, merged_head_sha: 'a'.repeat(40), merge_commit_sha: 'b'.repeat(40), evidence: 'Exact merged implementation; consumer QA remains deferred', work_accounted: true };
+const queuedClaim = () => claim(transition(empty(), { ...request('a'), action: 'queue' }, policy, now), 'a');
+test('completion mirrors terminal state while preserving independent queue acceptance and claim proof', () => {
+  const original = queuedClaim();
+  original.queue[0].acceptance = 'Original complete program acceptance';
+  original.queue[0].amendments = [{ reason: 'Keep original scope' }];
+  const result = transition(original, lifecycleProof, policy, now);
+  assert.equal(result.queue[0].state, 'completed');
+  assert.equal(result.queue[0].completed_at, result.claims[0].completed_at);
+  assert.equal(result.queue[0].acceptance, original.queue[0].acceptance);
+  assert.deepEqual(result.queue[0].amendments, original.queue[0].amendments);
+  assert.equal(result.claims[0].evidence, lifecycleProof.evidence);
+  assert.equal(original.queue[0].state, 'claimed');
+});
+test('completed queue reconciliation is narrowly terminal, proof-bound, immutable and idempotent', () => {
+  const record = transition(queuedClaim(), lifecycleProof, policy, now);
+  record.queue[0].state = 'claimed';
+  const reconcile = { ...lifecycleProof, action: 'reconcile' };
+  const result = transition(record, reconcile, policy, new Date('2026-10-03'));
+  assert.deepEqual(result.claims, record.claims);
+  const { state, updated_at, completed_at, ...after } = result.queue[0];
+  const { state: beforeState, updated_at: beforeUpdated, completed_at: beforeCompleted, ...before } = record.queue[0];
+  assert.deepEqual(after, before);
+  assert.equal(state, 'completed');
+  assert.equal(completed_at, record.claims[0].completed_at);
+  assert.deepEqual(transition(result, reconcile, policy, new Date('2026-10-04')), result);
+  for (const patch of [{ owner: 'other' }, { pr: 10 }, { merged_head_sha: 'c'.repeat(40) }, { merge_commit_sha: undefined }]) {
+    assert.throws(() => transition(record, { ...reconcile, ...patch }, policy, now));
+  }
+  for (const target of ['claims', 'queue']) {
+    for (const state of ['active', 'held', 'queued', 'cancelled', 'superseded']) {
+      const conflict = structuredClone(record); conflict[target][0].state = state;
+      assert.throws(() => transition(conflict, reconcile, policy, now));
+    }
+  }
+  const ownerMismatch = structuredClone(record); ownerMismatch.queue[0].owner = 'previous-owner';
+  assert.throws(() => transition(ownerMismatch, reconcile, policy, now), /ownership/);
+  const missingQueue = { ...record, queue: [] };
+  assert.throws(() => transition(missingQueue, reconcile, policy, now), /queue row/);
+});
+test('queued handoff preserves full task and does not reserve capacity or start execution', () => {
+  const original = transition(claim(empty(), 'busy'), { ...request('a'), action: 'queue' }, policy, now);
+  original.queue[0].acceptance = 'All original acceptance '.repeat(400);
+  const result = transition(original, { action: 'handoff', id: 'a', owner: 'a', successor: 'busy', next_action: 'Receive and await admission' }, policy, now);
+  assert.deepEqual(result.claims, original.claims);
+  assert.equal(result.queue[0].state, 'queued');
+  assert.equal(result.queue[0].owner, 'busy');
+  assert.equal(result.queue[0].acceptance, original.queue[0].acceptance);
+  assert.deepEqual(result.queue[0].handoffs[0], { at: now.toISOString(), from: 'a', to: 'busy', next_action: 'Receive and await admission' });
+  assert.throws(() => transition(result, { ...request('a'), owner: 'busy' }, policy, now), /Owner already/);
+  for (const state of ['claimed', 'completed', 'cancelled', 'superseded']) {
+    const conflict = structuredClone(original); conflict.queue[0].state = state;
+    assert.throws(() => transition(conflict, { action: 'handoff', id: 'a', owner: 'a', successor: 'c', next_action: 'Continue' }, policy, now));
+  }
+  assert.throws(() => transition(original, { action: 'handoff', id: 'a', owner: 'stranger', successor: 'c', next_action: 'Continue' }, policy, now), /owner/);
+});
+test('active handoff synchronizes queue ownership and prevents terminal or mismatched queue overwrites', () => {
+  const record = queuedClaim();
+  const transfer = { action: 'handoff', id: 'a', owner: 'a', successor: 'c', next_action: 'Continue same work' };
+  const result = transition(record, transfer, policy, now);
+  assert.equal(result.queue[0].owner, 'c');
+  assert.equal(result.queue[0].state, 'claimed');
+  assert.deepEqual(result.queue[0].handoffs, result.claims[0].handoffs);
+  for (const patch of [{ owner: 'other' }, { state: 'cancelled' }]) {
+    const conflict = structuredClone(record); Object.assign(conflict.queue[0], patch);
+    for (const mutation of [transfer, lifecycleProof]) assert.throws(() => transition(conflict, mutation, policy, now), /conflicts/);
+  }
+});
