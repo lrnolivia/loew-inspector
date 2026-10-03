@@ -16,7 +16,7 @@ test('telemetry updates interpolate without remounts or layout-width animation',
 });
 
 test('telemetry browser motion handles interruption, reduced motion and first observations', async () => {
-  const source = await build({
+  const source = (await build({
     stdin: {
       contents: `import React,{useState} from 'react';import{createRoot}from'react-dom/client';
 import{useTelemetryMotion}from'./useTelemetryMotion';
@@ -28,7 +28,7 @@ createRoot(document.getElementById('root')).render(<Probe/>);`,
       loader: 'tsx',
     },
     bundle: true, write: false, format: 'iife',
-  }).outputFiles[0].text;
+  })).outputFiles[0].text;
   const browser = await chromium.launch({headless:true});
   try {
     const page = await browser.newPage();
@@ -80,7 +80,7 @@ test('actual LiveTelemetry keeps its DOM and interpolates chart updates at deskt
     }))}}
   });
   const first = snapshot(1), second = snapshot(8), third = snapshot(3);
-  const source = await build({
+  const source = (await build({
     stdin: {
       contents: `import React from 'react';import{createRoot}from'react-dom/client';
 import{LiveTelemetry}from'./LiveTelemetry';
@@ -101,7 +101,7 @@ createRoot(document.getElementById('root')).render(<LiveTelemetry/>);`,
         }));
       }
     }]
-  }).outputFiles[0].text;
+  })).outputFiles[0].text;
   function rootForFixture(){return fileURLToPath(new URL('..',import.meta.url));}
   const css=readFileSync(new URL('../src/styles.css',import.meta.url),'utf8');
   const browser=await chromium.launch({headless:true});
