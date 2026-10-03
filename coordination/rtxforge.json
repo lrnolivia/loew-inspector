@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "rtxforge",
-  "updated_at": "2026-10-02T23:52:40.695Z",
+  "updated_at": "2026-10-03T01:02:54.388Z",
   "legacy_branches": [
     "backup/github-main-before-0.5.8",
     "backup/main-0.5.8-ada",
@@ -204,16 +204,16 @@
       ],
       "goal": "Preserve canonical Library while adding shared recommended/custom package flows in Classic and redesign, persisted UI/start-page selection and native Linux portability foundation.",
       "acceptance": "Classic retained and default Library preserved. Both UIs share package parsing, editable safe plans, explicit trust and reversible deployment; never execute package instructions. Review screenshots of both surfaces before Classic visual polish ships. GNOME native first; Qt/Kirigami shared-engine port plan without distro forks. Preserve existing MFG success and report NR unverified.",
-      "next_action": "Authorized preview published to continuous at695d292e07394e4fe5e789a63ec6b5eb4cb49f02 with all CI green. Previous assets retained at preview-backup-acd71e9a3da5. Lauren notified to update in-app and test; actual installation unverified. PR6 remains draft/unmerged pending final visual/runtime review. Circle-platter icon concept delivered separately for approval, not in build. Preserve remaining Qt/platform/runtime gaps.",
+      "next_action": "Lauren rejects New UI and selects Classic. Extend dark header surface through search/filter/selection toolbar to Library boundary; bottom-align header icon/wordmark. Preserve previous work reversibly, hide New switch from normal UI and force Classic startup. Capture for review.",
       "primary_team": "night-shift",
       "supporting_teams": [],
       "primary_staff": "julian",
       "supporting_staff": [],
       "base_sha": "acd71e9a3da59a86c04794247ac8ead60fdbb95a",
-      "state": "held",
+      "state": "active",
       "created_at": "2026-10-02T17:32:51.823Z",
-      "updated_at": "2026-10-02T23:52:40.695Z",
-      "lease_until": "2026-10-03T11:52:40.695Z"
+      "updated_at": "2026-10-03T01:02:54.388Z",
+      "lease_until": "2026-10-03T13:02:54.388Z"
     }
   ]
 }
