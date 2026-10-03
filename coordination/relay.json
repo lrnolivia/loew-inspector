@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T16:46:17.704Z",
+  "updated_at": "2026-10-03T16:48:03.735Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -12627,142 +12627,6 @@
       "completed_at": "2026-10-03T05:37:10.984Z"
     },
     {
-      "id": "relay-mcp-rebuild-continuation-20261003",
-      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
-      "branch": "relay/mcp-rebuild-20261003",
-      "paths": [
-        "src/evidence-index.js",
-        "src/evidence-index.test.js",
-        "src/feedback-control.js",
-        "src/feedback-control.test.js",
-        "src/feedback-browser.js",
-        "src/feedback-browser.test.js",
-        "src/index.js",
-        "src/index.test.js",
-        "src/operations.js",
-        "src/operation-receipts.js",
-        "src/operation-events.js",
-        "src/operation-recipes.js",
-        "src/relay-entry.js",
-        "src/relay-chat-ui.js",
-        "src/relay-native-card.js",
-        "packages/runner/",
-        "contracts/operations/",
-        "apps/web/",
-        "apps/mcp/extension.js",
-        ".github/workflows/runner.yml",
-        "scripts/runner-sync.mjs",
-        "scripts/runner-sync.test.mjs",
-        "scripts/relay-executor.mjs",
-        "scripts/relay-executor.test.mjs",
-        "src/relay-entry.test.js",
-        "src/relay-card-variants.test.js",
-        "src/relay-host-action-probe.test.js",
-        "src/relay-host-probe.test.js",
-        "src/relay-events.js",
-        "src/coordination.mjs",
-        "src/coordination-engine.js",
-        "src/coordination.test.js",
-        "src/runner-control-core.js",
-        "src/runner-control.test.js",
-        "packages/shared-ui/",
-        "src/resume-checkpoints.js",
-        "src/resume-checkpoints.test.js",
-        "src/coordination-transport.test.js",
-        "apps/mcp/index.js",
-        "src/runner-control.js",
-        "src/runner-amend.test.js",
-        "src/relay-events.test.js",
-        "src/relay-context-card-style.js",
-        "docs/relay/MCP_REBUILD_OPERATIONS_20261003.md"
-      ],
-      "resources": [
-        "relay-mcp-rebuild-program",
-        "relay-feedback-delivery",
-        "relay-durable-executor",
-        "relay-website"
-      ],
-      "goal": "Continue the existing unfinished full Relay MCP rebuild, restoring original1.9 promised capabilities and integrating approved Relay live-panel/site/card work. Archival assignment closure is not proof of functional delivery.",
-      "acceptance": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, checks and deployment evidence, with deduplicated continuation recommendations and honest unavailable-evidence states. Complete skill catalog, search, read, resolve, install/vendor, update and audit; pinned licensed portable bundles; integrity and dependency enforcement; all originally promised creative, platform and supporting packs. Prove durable jobs, a real coding executor, capability-based local/remote routing, worker communication and full capability parity. Fold the Relay website, live panel, approved telemetry, Refresh Tools fallback chain, Add MCP to AI actions and compact MCP cards into this same rebuild. Verify actual client rendering/actions. Integrate review-first cards, evidence and device-specific frames, saved answers/replies, project icons and useful workspace overview. Use flat surfaces with shadows/glows. Night Shift records actual autonomous away-time work, with an unused staff lead for oversight, preserved executor provenance, evidence-supported backfill and an idempotent Shift handoff. No new credentials or spending inferred. Documentation-only PRs, fixtures and transferred defects do not establish full delivery.\nFull execution handoff, source recovery and original contract evidence: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RELAY-MCP.md . All latest site/live-panel/telemetry/refresh/add-to-AI, review delivery, NightShift/Shift, canonical asset discovery, lifecycle and original skills/executor goals preserved. Original1.9 verbatim and41 stale queue pairs in sibling documents. Current engine cannot normalize completed queue pairs or handoff queued-only owner; do not bypass. Actual user-started Mac Codex identity pending; parent stops MCP implementation. ctrlfrontend remains separate heldPR7, recovery8WIPfiles preserved. New Relay site concept is not implementation; current plugin ID protected.\n2026-10-03 15:38 motion acceptance: preserve the approved Relay visual language; tighten in-motion card padding and text grouping; retain last good live data during refresh, skeletons only for initial unavailable content, clear loading indicators and animated updates without flicker. Each mosaic block supports touch long press into wiggle/reorder mode, drag, explicit Done and saved order; keep normal scrolling and taps, keyboard/reduced-motion accessibility. User says all these are part of the motion pass. Desktop normal ChatGPT card mount/read-only check now screenshot-proven; iOS user-reported working; browser regression remains open.",
-      "next_action": "Release isolated skills paths for Sol medium task 01a1028b-03c4-718c-b205-24c35c97b0d7. Root retains UI, executor and feedback work; hard skills issues return to root.",
-      "ledger_refs": [
-        "relay-mcp-rebuild-20261001",
-        "relay-mcp-host-proof-20261001",
-        "relay-mcp-feedback-routing-20261001",
-        "relay-1.9-skills-runtime-creative-20260930"
-      ],
-      "category": "architecture",
-      "tags": [
-        "mcp-rebuild",
-        "original-scope-recovery",
-        "review-first"
-      ],
-      "primary_team": "runner",
-      "supporting_teams": [],
-      "primary_staff": "ellis",
-      "supporting_staff": [],
-      "base_sha": "3df50be94ae4089c5e090923123b09afa4dd80ad",
-      "state": "active",
-      "created_at": "2026-10-03T05:37:48.707Z",
-      "objective_history": {
-        "baseline": {
-          "goal": "Continue the existing unfinished full Relay MCP rebuild, restoring original1.9 promised capabilities and integrating approved Relay live-panel/site/card work. Archival assignment closure is not proof of functional delivery.",
-          "acceptance": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, checks and deployment evidence, with deduplicated continuation recommendations and honest unavailable-evidence states. Complete skill catalog, search, read, resolve, install/vendor, update and audit; pinned licensed portable bundles; integrity and dependency enforcement; all originally promised creative, platform and supporting packs. Prove durable jobs, a real coding executor, capability-based local/remote routing, worker communication and full capability parity. Fold the Relay website, live panel, approved telemetry, Refresh Tools fallback chain, Add MCP to AI actions and compact MCP cards into this same rebuild. Verify actual client rendering/actions. Integrate review-first cards, evidence and device-specific frames, saved answers/replies, project icons and useful workspace overview. Use flat surfaces with shadows/glows. Night Shift records actual autonomous away-time work, with an unused staff lead for oversight, preserved executor provenance, evidence-supported backfill and an idempotent Shift handoff. No new credentials or spending inferred. Documentation-only PRs, fixtures and transferred defects do not establish full delivery.\nFull execution handoff, source recovery and original contract evidence: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RELAY-MCP.md . All latest site/live-panel/telemetry/refresh/add-to-AI, review delivery, NightShift/Shift, canonical asset discovery, lifecycle and original skills/executor goals preserved. Original1.9 verbatim and41 stale queue pairs in sibling documents. Current engine cannot normalize completed queue pairs or handoff queued-only owner; do not bypass. Actual user-started Mac Codex identity pending; parent stops MCP implementation. ctrlfrontend remains separate heldPR7, recovery8WIPfiles preserved. New Relay site concept is not implementation; current plugin ID protected.",
-          "at": "2026-10-03T15:39:48.325Z",
-          "source": "first-observed-current-record"
-        },
-        "acceptance_versions": [
-          {
-            "id": "relay-mcp-rebuild-continuation-20261003:acceptance:0",
-            "text": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, checks and deployment evidence, with deduplicated continuation recommendations and honest unavailable-evidence states. Complete skill catalog, search, read, resolve, install/vendor, update and audit; pinned licensed portable bundles; integrity and dependency enforcement; all originally promised creative, platform and supporting packs. Prove durable jobs, a real coding executor, capability-based local/remote routing, worker communication and full capability parity. Fold the Relay website, live panel, approved telemetry, Refresh Tools fallback chain, Add MCP to AI actions and compact MCP cards into this same rebuild. Verify actual client rendering/actions. Integrate review-first cards, evidence and device-specific frames, saved answers/replies, project icons and useful workspace overview. Use flat surfaces with shadows/glows. Night Shift records actual autonomous away-time work, with an unused staff lead for oversight, preserved executor provenance, evidence-supported backfill and an idempotent Shift handoff. No new credentials or spending inferred. Documentation-only PRs, fixtures and transferred defects do not establish full delivery.\nFull execution handoff, source recovery and original contract evidence: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RELAY-MCP.md . All latest site/live-panel/telemetry/refresh/add-to-AI, review delivery, NightShift/Shift, canonical asset discovery, lifecycle and original skills/executor goals preserved. Original1.9 verbatim and41 stale queue pairs in sibling documents. Current engine cannot normalize completed queue pairs or handoff queued-only owner; do not bypass. Actual user-started Mac Codex identity pending; parent stops MCP implementation. ctrlfrontend remains separate heldPR7, recovery8WIPfiles preserved. New Relay site concept is not implementation; current plugin ID protected.",
-            "at": "2026-10-03T15:39:48.325Z"
-          },
-          {
-            "id": "relay-mcp-rebuild-continuation-20261003:acceptance:1",
-            "text": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, checks and deployment evidence, with deduplicated continuation recommendations and honest unavailable-evidence states. Complete skill catalog, search, read, resolve, install/vendor, update and audit; pinned licensed portable bundles; integrity and dependency enforcement; all originally promised creative, platform and supporting packs. Prove durable jobs, a real coding executor, capability-based local/remote routing, worker communication and full capability parity. Fold the Relay website, live panel, approved telemetry, Refresh Tools fallback chain, Add MCP to AI actions and compact MCP cards into this same rebuild. Verify actual client rendering/actions. Integrate review-first cards, evidence and device-specific frames, saved answers/replies, project icons and useful workspace overview. Use flat surfaces with shadows/glows. Night Shift records actual autonomous away-time work, with an unused staff lead for oversight, preserved executor provenance, evidence-supported backfill and an idempotent Shift handoff. No new credentials or spending inferred. Documentation-only PRs, fixtures and transferred defects do not establish full delivery.\nFull execution handoff, source recovery and original contract evidence: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RELAY-MCP.md . All latest site/live-panel/telemetry/refresh/add-to-AI, review delivery, NightShift/Shift, canonical asset discovery, lifecycle and original skills/executor goals preserved. Original1.9 verbatim and41 stale queue pairs in sibling documents. Current engine cannot normalize completed queue pairs or handoff queued-only owner; do not bypass. Actual user-started Mac Codex identity pending; parent stops MCP implementation. ctrlfrontend remains separate heldPR7, recovery8WIPfiles preserved. New Relay site concept is not implementation; current plugin ID protected.\n2026-10-03 15:38 motion acceptance: preserve the approved Relay visual language; tighten in-motion card padding and text grouping; retain last good live data during refresh, skeletons only for initial unavailable content, clear loading indicators and animated updates without flicker. Each mosaic block supports touch long press into wiggle/reorder mode, drag, explicit Done and saved order; keep normal scrolling and taps, keyboard/reduced-motion accessibility. User says all these are part of the motion pass. Desktop normal ChatGPT card mount/read-only check now screenshot-proven; iOS user-reported working; browser regression remains open.",
-            "at": "2026-10-03T15:39:48.325Z",
-            "reason": "Add Lauren's explicitly requested final motion acceptance without replacing original MCP scope."
-          }
-        ]
-      },
-      "updated_at": "2026-10-03T16:23:24.673Z",
-      "lease_until": "2026-10-04T04:23:24.673Z",
-      "handoffs": [
-        {
-          "at": "2026-10-03T08:00:10.297Z",
-          "from": "01a10033-4d88-7872-990c-e45b7bd4c1c2",
-          "to": "01a100c3-fb45-71a0-b520-9b4a0b6640e1",
-          "next_action": "Lauren authorizes Julian follow-through after current build; prior owner held clean released ec496bc checkpoint, no active source writer. Transfer to Sol activation worker. Preserve approved live Relay visuals; diagnose and fix bounded animation smoothness with browser playback verification. Continue existing authorized skill/executor/client integration proof, no newcredentials/access grants without required approval. Coordinate sole ctrl worker; full original acceptance stays open, all41queues already reconciled."
-        },
-        {
-          "at": "2026-10-03T08:45:42.244Z",
-          "from": "01a100c3-fb45-71a0-b520-9b4a0b6640e1",
-          "to": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
-          "next_action": "Lauren requests direct Julian takeover, no new/restarted workers. Prior activation worker ended at safe held checkpoint with local motion patch preserved; no ongoing source writer. Root finish approved motion refinement and available activation/ctrl integration proof via Relay. New credentials/client-only actions stay approval-gated. Preserve original acceptance, all41reconciliation already complete. Prior blocking root documentation lane now mergedPR138 and completed through supportedengine."
-        }
-      ],
-      "amendment_count": 1,
-      "amendments": [
-        {
-          "at": "2026-10-03T15:39:48.325Z",
-          "by": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
-          "reason": "Add Lauren's explicitly requested final motion acceptance without replacing original MCP scope.",
-          "fields": [
-            "acceptance",
-            "next_action"
-          ],
-          "before": {
-            "acceptance": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, checks and deployment evidence, with deduplicated continuation recommendations and honest unavailable-evidence states. Complete skill catalog, search, read, resolve, install/vendor, update and audit; pinned licensed portable bundles; integrity and dependency enforcement; all originally promised creative, platform and supporting packs. Prove durable jobs, a real coding executor, capability-based local/remote routing, worker communication and full capability parity. Fold the Relay website, live panel, approved telemetry, Refresh Tools fallback chain, Add MCP to AI actions and compact MCP cards into this same rebuild. Verify actual client rendering/actions. Integrate review-first cards, evidence and device-specific frames, saved answers/replies, project icons and useful workspace overview. Use flat surfaces with shadows/glows. Night Shift records actual autonomous away-time work, with an unused staff lead for oversight, preserved executor provenance, evidence-supported backfill and an idempotent Shift handoff. No new credentials or spending inferred. Documentation-only PRs, fixtures and transferred defects do not establish full delivery.\nFull execution handoff, source recovery and original contract evidence: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RELAY-MCP.md . All latest site/live-panel/telemetry/refresh/add-to-AI, review delivery, NightShift/Shift, canonical asset discovery, lifecycle and original skills/executor goals preserved. Original1.9 verbatim and41 stale queue pairs in sibling documents. Current engine cannot normalize completed queue pairs or handoff queued-only owner; do not bypass. Actual user-started Mac Codex identity pending; parent stops MCP implementation. ctrlfrontend remains separate heldPR7, recovery8WIPfiles preserved. New Relay site concept is not implementation; current plugin ID protected.",
-            "next_action": "Lauren explicitly approved Relay, ctrl and rtxForge publication in Sentinel_a3a8e636a2d48191bcb563b6824e10cc at15:22UTC. Finish exact-head readiness, merge approved tested changes and verify publication. Preserve rollback and report implementation separately from remaining real-device/executor/client proof."
-          },
-          "after": {
-            "acceptance": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, checks and deployment evidence, with deduplicated continuation recommendations and honest unavailable-evidence states. Complete skill catalog, search, read, resolve, install/vendor, update and audit; pinned licensed portable bundles; integrity and dependency enforcement; all originally promised creative, platform and supporting packs. Prove durable jobs, a real coding executor, capability-based local/remote routing, worker communication and full capability parity. Fold the Relay website, live panel, approved telemetry, Refresh Tools fallback chain, Add MCP to AI actions and compact MCP cards into this same rebuild. Verify actual client rendering/actions. Integrate review-first cards, evidence and device-specific frames, saved answers/replies, project icons and useful workspace overview. Use flat surfaces with shadows/glows. Night Shift records actual autonomous away-time work, with an unused staff lead for oversight, preserved executor provenance, evidence-supported backfill and an idempotent Shift handoff. No new credentials or spending inferred. Documentation-only PRs, fixtures and transferred defects do not establish full delivery.\nFull execution handoff, source recovery and original contract evidence: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RELAY-MCP.md . All latest site/live-panel/telemetry/refresh/add-to-AI, review delivery, NightShift/Shift, canonical asset discovery, lifecycle and original skills/executor goals preserved. Original1.9 verbatim and41 stale queue pairs in sibling documents. Current engine cannot normalize completed queue pairs or handoff queued-only owner; do not bypass. Actual user-started Mac Codex identity pending; parent stops MCP implementation. ctrlfrontend remains separate heldPR7, recovery8WIPfiles preserved. New Relay site concept is not implementation; current plugin ID protected.\n2026-10-03 15:38 motion acceptance: preserve the approved Relay visual language; tighten in-motion card padding and text grouping; retain last good live data during refresh, skeletons only for initial unavailable content, clear loading indicators and animated updates without flicker. Each mosaic block supports touch long press into wiggle/reorder mode, drag, explicit Done and saved order; keep normal scrolling and taps, keyboard/reduced-motion accessibility. User says all these are part of the motion pass. Desktop normal ChatGPT card mount/read-only check now screenshot-proven; iOS user-reported working; browser regression remains open.",
-            "next_action": "PR142 motion interpolation shipped add28e85. Root extends same motion pass with snapshot loading stability, tighter card grouping and saved wiggle-mode rearranging. Restore admitted branch from current main after automatic deletion. Preserve full MCP/executor/client scope; browser card failure awaits empty-frame/absent-card detail."
-          }
-        }
-      ]
-    },
-    {
       "id": "relay-skills-completion-20261003",
       "owner": "01a1028b-03c4-718c-b205-24c35c97b0d7",
       "branch": "relay/skills-completion-20261003",
@@ -12847,6 +12711,143 @@
           },
           "after": {
             "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian. Preserve approved visual/behavior/default baselines and proportions. Meaningful design changes outside the explicit assignment require a reviewable easy live-reversible option restoring the approved version. Never silently replace approved design as polish. Record comparable visual baseline evidence and actionable restoration checks; specifically requested UI changes remain authorized."
+          }
+        }
+      ]
+    },
+    {
+      "id": "relay-mcp-rebuild-continuation-20261003",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "branch": "relay/mcp-rebuild-20261003",
+      "paths": [
+        "src/evidence-index.js",
+        "src/evidence-index.test.js",
+        "src/feedback-control.js",
+        "src/feedback-control.test.js",
+        "src/feedback-browser.js",
+        "src/feedback-browser.test.js",
+        "src/index.js",
+        "src/index.test.js",
+        "src/operations.js",
+        "src/operation-receipts.js",
+        "src/operation-events.js",
+        "src/operation-recipes.js",
+        "src/relay-entry.js",
+        "src/relay-chat-ui.js",
+        "src/relay-native-card.js",
+        "packages/runner/",
+        "contracts/operations/",
+        "apps/web/",
+        "apps/mcp/extension.js",
+        ".github/workflows/runner.yml",
+        "scripts/runner-sync.mjs",
+        "scripts/runner-sync.test.mjs",
+        "scripts/relay-executor.mjs",
+        "scripts/relay-executor.test.mjs",
+        "src/relay-entry.test.js",
+        "src/relay-card-variants.test.js",
+        "src/relay-host-action-probe.test.js",
+        "src/relay-host-probe.test.js",
+        "src/relay-events.js",
+        "src/coordination.mjs",
+        "src/coordination-engine.js",
+        "src/coordination.test.js",
+        "src/runner-control-core.js",
+        "src/runner-control.test.js",
+        "packages/shared-ui/",
+        "src/resume-checkpoints.js",
+        "src/resume-checkpoints.test.js",
+        "src/coordination-transport.test.js",
+        "apps/mcp/index.js",
+        "src/runner-control.js",
+        "src/runner-amend.test.js",
+        "src/relay-events.test.js",
+        "src/relay-context-card-style.js",
+        "docs/relay/MCP_REBUILD_OPERATIONS_20261003.md",
+        ".github/workflows/ci.yml"
+      ],
+      "resources": [
+        "relay-mcp-rebuild-program",
+        "relay-feedback-delivery",
+        "relay-durable-executor",
+        "relay-website"
+      ],
+      "goal": "Continue the existing unfinished full Relay MCP rebuild, restoring original1.9 promised capabilities and integrating approved Relay live-panel/site/card work. Archival assignment closure is not proof of functional delivery.",
+      "acceptance": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, checks and deployment evidence, with deduplicated continuation recommendations and honest unavailable-evidence states. Complete skill catalog, search, read, resolve, install/vendor, update and audit; pinned licensed portable bundles; integrity and dependency enforcement; all originally promised creative, platform and supporting packs. Prove durable jobs, a real coding executor, capability-based local/remote routing, worker communication and full capability parity. Fold the Relay website, live panel, approved telemetry, Refresh Tools fallback chain, Add MCP to AI actions and compact MCP cards into this same rebuild. Verify actual client rendering/actions. Integrate review-first cards, evidence and device-specific frames, saved answers/replies, project icons and useful workspace overview. Use flat surfaces with shadows/glows. Night Shift records actual autonomous away-time work, with an unused staff lead for oversight, preserved executor provenance, evidence-supported backfill and an idempotent Shift handoff. No new credentials or spending inferred. Documentation-only PRs, fixtures and transferred defects do not establish full delivery.\nFull execution handoff, source recovery and original contract evidence: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RELAY-MCP.md . All latest site/live-panel/telemetry/refresh/add-to-AI, review delivery, NightShift/Shift, canonical asset discovery, lifecycle and original skills/executor goals preserved. Original1.9 verbatim and41 stale queue pairs in sibling documents. Current engine cannot normalize completed queue pairs or handoff queued-only owner; do not bypass. Actual user-started Mac Codex identity pending; parent stops MCP implementation. ctrlfrontend remains separate heldPR7, recovery8WIPfiles preserved. New Relay site concept is not implementation; current plugin ID protected.\n2026-10-03 15:38 motion acceptance: preserve the approved Relay visual language; tighten in-motion card padding and text grouping; retain last good live data during refresh, skeletons only for initial unavailable content, clear loading indicators and animated updates without flicker. Each mosaic block supports touch long press into wiggle/reorder mode, drag, explicit Done and saved order; keep normal scrolling and taps, keyboard/reduced-motion accessibility. User says all these are part of the motion pass. Desktop normal ChatGPT card mount/read-only check now screenshot-proven; iOS user-reported working; browser regression remains open.",
+      "next_action": "PR143 exact-head CI passed. Retain premerge visual captures for the admitted branch before publication. Complete motion/layout/badges and preserve approved-design baselines.",
+      "ledger_refs": [
+        "relay-mcp-rebuild-20261001",
+        "relay-mcp-host-proof-20261001",
+        "relay-mcp-feedback-routing-20261001",
+        "relay-1.9-skills-runtime-creative-20260930"
+      ],
+      "category": "architecture",
+      "tags": [
+        "mcp-rebuild",
+        "original-scope-recovery",
+        "review-first"
+      ],
+      "primary_team": "runner",
+      "supporting_teams": [],
+      "primary_staff": "ellis",
+      "supporting_staff": [],
+      "base_sha": "3df50be94ae4089c5e090923123b09afa4dd80ad",
+      "state": "active",
+      "created_at": "2026-10-03T05:37:48.707Z",
+      "objective_history": {
+        "baseline": {
+          "goal": "Continue the existing unfinished full Relay MCP rebuild, restoring original1.9 promised capabilities and integrating approved Relay live-panel/site/card work. Archival assignment closure is not proof of functional delivery.",
+          "acceptance": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, checks and deployment evidence, with deduplicated continuation recommendations and honest unavailable-evidence states. Complete skill catalog, search, read, resolve, install/vendor, update and audit; pinned licensed portable bundles; integrity and dependency enforcement; all originally promised creative, platform and supporting packs. Prove durable jobs, a real coding executor, capability-based local/remote routing, worker communication and full capability parity. Fold the Relay website, live panel, approved telemetry, Refresh Tools fallback chain, Add MCP to AI actions and compact MCP cards into this same rebuild. Verify actual client rendering/actions. Integrate review-first cards, evidence and device-specific frames, saved answers/replies, project icons and useful workspace overview. Use flat surfaces with shadows/glows. Night Shift records actual autonomous away-time work, with an unused staff lead for oversight, preserved executor provenance, evidence-supported backfill and an idempotent Shift handoff. No new credentials or spending inferred. Documentation-only PRs, fixtures and transferred defects do not establish full delivery.\nFull execution handoff, source recovery and original contract evidence: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RELAY-MCP.md . All latest site/live-panel/telemetry/refresh/add-to-AI, review delivery, NightShift/Shift, canonical asset discovery, lifecycle and original skills/executor goals preserved. Original1.9 verbatim and41 stale queue pairs in sibling documents. Current engine cannot normalize completed queue pairs or handoff queued-only owner; do not bypass. Actual user-started Mac Codex identity pending; parent stops MCP implementation. ctrlfrontend remains separate heldPR7, recovery8WIPfiles preserved. New Relay site concept is not implementation; current plugin ID protected.",
+          "at": "2026-10-03T15:39:48.325Z",
+          "source": "first-observed-current-record"
+        },
+        "acceptance_versions": [
+          {
+            "id": "relay-mcp-rebuild-continuation-20261003:acceptance:0",
+            "text": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, checks and deployment evidence, with deduplicated continuation recommendations and honest unavailable-evidence states. Complete skill catalog, search, read, resolve, install/vendor, update and audit; pinned licensed portable bundles; integrity and dependency enforcement; all originally promised creative, platform and supporting packs. Prove durable jobs, a real coding executor, capability-based local/remote routing, worker communication and full capability parity. Fold the Relay website, live panel, approved telemetry, Refresh Tools fallback chain, Add MCP to AI actions and compact MCP cards into this same rebuild. Verify actual client rendering/actions. Integrate review-first cards, evidence and device-specific frames, saved answers/replies, project icons and useful workspace overview. Use flat surfaces with shadows/glows. Night Shift records actual autonomous away-time work, with an unused staff lead for oversight, preserved executor provenance, evidence-supported backfill and an idempotent Shift handoff. No new credentials or spending inferred. Documentation-only PRs, fixtures and transferred defects do not establish full delivery.\nFull execution handoff, source recovery and original contract evidence: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RELAY-MCP.md . All latest site/live-panel/telemetry/refresh/add-to-AI, review delivery, NightShift/Shift, canonical asset discovery, lifecycle and original skills/executor goals preserved. Original1.9 verbatim and41 stale queue pairs in sibling documents. Current engine cannot normalize completed queue pairs or handoff queued-only owner; do not bypass. Actual user-started Mac Codex identity pending; parent stops MCP implementation. ctrlfrontend remains separate heldPR7, recovery8WIPfiles preserved. New Relay site concept is not implementation; current plugin ID protected.",
+            "at": "2026-10-03T15:39:48.325Z"
+          },
+          {
+            "id": "relay-mcp-rebuild-continuation-20261003:acceptance:1",
+            "text": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, checks and deployment evidence, with deduplicated continuation recommendations and honest unavailable-evidence states. Complete skill catalog, search, read, resolve, install/vendor, update and audit; pinned licensed portable bundles; integrity and dependency enforcement; all originally promised creative, platform and supporting packs. Prove durable jobs, a real coding executor, capability-based local/remote routing, worker communication and full capability parity. Fold the Relay website, live panel, approved telemetry, Refresh Tools fallback chain, Add MCP to AI actions and compact MCP cards into this same rebuild. Verify actual client rendering/actions. Integrate review-first cards, evidence and device-specific frames, saved answers/replies, project icons and useful workspace overview. Use flat surfaces with shadows/glows. Night Shift records actual autonomous away-time work, with an unused staff lead for oversight, preserved executor provenance, evidence-supported backfill and an idempotent Shift handoff. No new credentials or spending inferred. Documentation-only PRs, fixtures and transferred defects do not establish full delivery.\nFull execution handoff, source recovery and original contract evidence: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RELAY-MCP.md . All latest site/live-panel/telemetry/refresh/add-to-AI, review delivery, NightShift/Shift, canonical asset discovery, lifecycle and original skills/executor goals preserved. Original1.9 verbatim and41 stale queue pairs in sibling documents. Current engine cannot normalize completed queue pairs or handoff queued-only owner; do not bypass. Actual user-started Mac Codex identity pending; parent stops MCP implementation. ctrlfrontend remains separate heldPR7, recovery8WIPfiles preserved. New Relay site concept is not implementation; current plugin ID protected.\n2026-10-03 15:38 motion acceptance: preserve the approved Relay visual language; tighten in-motion card padding and text grouping; retain last good live data during refresh, skeletons only for initial unavailable content, clear loading indicators and animated updates without flicker. Each mosaic block supports touch long press into wiggle/reorder mode, drag, explicit Done and saved order; keep normal scrolling and taps, keyboard/reduced-motion accessibility. User says all these are part of the motion pass. Desktop normal ChatGPT card mount/read-only check now screenshot-proven; iOS user-reported working; browser regression remains open.",
+            "at": "2026-10-03T15:39:48.325Z",
+            "reason": "Add Lauren's explicitly requested final motion acceptance without replacing original MCP scope."
+          }
+        ]
+      },
+      "updated_at": "2026-10-03T16:48:03.735Z",
+      "lease_until": "2026-10-04T04:48:03.735Z",
+      "handoffs": [
+        {
+          "at": "2026-10-03T08:00:10.297Z",
+          "from": "01a10033-4d88-7872-990c-e45b7bd4c1c2",
+          "to": "01a100c3-fb45-71a0-b520-9b4a0b6640e1",
+          "next_action": "Lauren authorizes Julian follow-through after current build; prior owner held clean released ec496bc checkpoint, no active source writer. Transfer to Sol activation worker. Preserve approved live Relay visuals; diagnose and fix bounded animation smoothness with browser playback verification. Continue existing authorized skill/executor/client integration proof, no newcredentials/access grants without required approval. Coordinate sole ctrl worker; full original acceptance stays open, all41queues already reconciled."
+        },
+        {
+          "at": "2026-10-03T08:45:42.244Z",
+          "from": "01a100c3-fb45-71a0-b520-9b4a0b6640e1",
+          "to": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "next_action": "Lauren requests direct Julian takeover, no new/restarted workers. Prior activation worker ended at safe held checkpoint with local motion patch preserved; no ongoing source writer. Root finish approved motion refinement and available activation/ctrl integration proof via Relay. New credentials/client-only actions stay approval-gated. Preserve original acceptance, all41reconciliation already complete. Prior blocking root documentation lane now mergedPR138 and completed through supportedengine."
+        }
+      ],
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-03T15:39:48.325Z",
+          "by": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "reason": "Add Lauren's explicitly requested final motion acceptance without replacing original MCP scope.",
+          "fields": [
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "acceptance": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, checks and deployment evidence, with deduplicated continuation recommendations and honest unavailable-evidence states. Complete skill catalog, search, read, resolve, install/vendor, update and audit; pinned licensed portable bundles; integrity and dependency enforcement; all originally promised creative, platform and supporting packs. Prove durable jobs, a real coding executor, capability-based local/remote routing, worker communication and full capability parity. Fold the Relay website, live panel, approved telemetry, Refresh Tools fallback chain, Add MCP to AI actions and compact MCP cards into this same rebuild. Verify actual client rendering/actions. Integrate review-first cards, evidence and device-specific frames, saved answers/replies, project icons and useful workspace overview. Use flat surfaces with shadows/glows. Night Shift records actual autonomous away-time work, with an unused staff lead for oversight, preserved executor provenance, evidence-supported backfill and an idempotent Shift handoff. No new credentials or spending inferred. Documentation-only PRs, fixtures and transferred defects do not establish full delivery.\nFull execution handoff, source recovery and original contract evidence: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RELAY-MCP.md . All latest site/live-panel/telemetry/refresh/add-to-AI, review delivery, NightShift/Shift, canonical asset discovery, lifecycle and original skills/executor goals preserved. Original1.9 verbatim and41 stale queue pairs in sibling documents. Current engine cannot normalize completed queue pairs or handoff queued-only owner; do not bypass. Actual user-started Mac Codex identity pending; parent stops MCP implementation. ctrlfrontend remains separate heldPR7, recovery8WIPfiles preserved. New Relay site concept is not implementation; current plugin ID protected.",
+            "next_action": "Lauren explicitly approved Relay, ctrl and rtxForge publication in Sentinel_a3a8e636a2d48191bcb563b6824e10cc at15:22UTC. Finish exact-head readiness, merge approved tested changes and verify publication. Preserve rollback and report implementation separately from remaining real-device/executor/client proof."
+          },
+          "after": {
+            "acceptance": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, checks and deployment evidence, with deduplicated continuation recommendations and honest unavailable-evidence states. Complete skill catalog, search, read, resolve, install/vendor, update and audit; pinned licensed portable bundles; integrity and dependency enforcement; all originally promised creative, platform and supporting packs. Prove durable jobs, a real coding executor, capability-based local/remote routing, worker communication and full capability parity. Fold the Relay website, live panel, approved telemetry, Refresh Tools fallback chain, Add MCP to AI actions and compact MCP cards into this same rebuild. Verify actual client rendering/actions. Integrate review-first cards, evidence and device-specific frames, saved answers/replies, project icons and useful workspace overview. Use flat surfaces with shadows/glows. Night Shift records actual autonomous away-time work, with an unused staff lead for oversight, preserved executor provenance, evidence-supported backfill and an idempotent Shift handoff. No new credentials or spending inferred. Documentation-only PRs, fixtures and transferred defects do not establish full delivery.\nFull execution handoff, source recovery and original contract evidence: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RELAY-MCP.md . All latest site/live-panel/telemetry/refresh/add-to-AI, review delivery, NightShift/Shift, canonical asset discovery, lifecycle and original skills/executor goals preserved. Original1.9 verbatim and41 stale queue pairs in sibling documents. Current engine cannot normalize completed queue pairs or handoff queued-only owner; do not bypass. Actual user-started Mac Codex identity pending; parent stops MCP implementation. ctrlfrontend remains separate heldPR7, recovery8WIPfiles preserved. New Relay site concept is not implementation; current plugin ID protected.\n2026-10-03 15:38 motion acceptance: preserve the approved Relay visual language; tighten in-motion card padding and text grouping; retain last good live data during refresh, skeletons only for initial unavailable content, clear loading indicators and animated updates without flicker. Each mosaic block supports touch long press into wiggle/reorder mode, drag, explicit Done and saved order; keep normal scrolling and taps, keyboard/reduced-motion accessibility. User says all these are part of the motion pass. Desktop normal ChatGPT card mount/read-only check now screenshot-proven; iOS user-reported working; browser regression remains open.",
+            "next_action": "PR142 motion interpolation shipped add28e85. Root extends same motion pass with snapshot loading stability, tighter card grouping and saved wiggle-mode rearranging. Restore admitted branch from current main after automatic deletion. Preserve full MCP/executor/client scope; browser card failure awaits empty-frame/absent-card detail."
           }
         }
       ]
