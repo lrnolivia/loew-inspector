@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T16:51:59.605Z",
+  "updated_at": "2026-10-03T16:53:40.226Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -12643,7 +12643,7 @@
       ],
       "goal": "Complete substantive portable Relay skill workflows and missing original 1.9 creative/performance coverage.",
       "acceptance": "Clear triggers, inputs, supported actions, outputs, verification and recovery; preserved pinned integrity/license/dependencies; deterministic generated bundles; representative catalog/search/resolve/read/audit/vendor/install workflows and required checks pass. No UI, broker, auth or credentials changes. Add practical Relay/MCP regression protection: preserve known-working tool/client/UI baselines, trace affected contracts and paths, add meaningful fixed-bug reproducers, cross-client desktop/iOS/browser acceptance, exact intended-recipient feedback acknowledgement, retained live preview/refresh behavior, exact-artifact evidence, release gates and rollback. Reuse QA/release packs; no zero-regression promises or implementation-mirroring tests. Runtime CI/host integration stays with Julian. Preserve approved visual/behavior/default baselines and proportions. Meaningful design changes outside the explicit assignment require a reviewable easy live-reversible option restoring the approved version. Never silently replace approved design as polish. Record comparable visual baseline evidence and actionable restoration checks; specifically requested UI changes remain authorized.",
-      "next_action": "Review draft PR144 at 0fb9c48; 497 Node22 tests, build/typecheck and 31 entrypoint validations pass. No merge. Runtime CI/host/device/live-restoration integration remains Julian-owned; operations document inventory awaits owner reconciliation.",
+      "next_action": "Review draft PR144, exact head 0fb9c483337fddbef4811ddf5a005a97000f4b81. Quality CI37138387793 and admission pass; 497 local Node22 tests/build/typecheck and 31 skill validations pass. No merge. Julian owns runtime host/device/live-restoration integration and operations inventory reconciliation.",
       "primary_team": "skills",
       "supporting_teams": [],
       "primary_staff": "naomi",
@@ -12678,8 +12678,8 @@
           }
         ]
       },
-      "updated_at": "2026-10-03T16:51:59.605Z",
-      "lease_until": "2026-10-04T04:51:59.605Z",
+      "updated_at": "2026-10-03T16:53:40.226Z",
+      "lease_until": "2026-10-04T04:53:40.226Z",
       "amendment_count": 2,
       "amendments": [
         {
