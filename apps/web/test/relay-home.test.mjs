@@ -21,6 +21,8 @@ test('populated Relay connection page works at desktop and mobile sizes without 
   await page.goto(origin+'/');await page.getByRole('heading',{name:'relay',exact:true}).waitFor();await page.getByText(progress.progress[0].goal,{exact:true}).waitFor();
   for(const width of [320,768,1024,1440]){await page.setViewportSize({width,height:1000});assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'no overflow at '+width);}
   assert.equal(await page.locator('.telemetry-card').count(),4);
+  await page.waitForFunction(()=>[...document.querySelectorAll('.telemetry-feature-badge img')].every(image=>image.complete&&image.naturalWidth>0));
+  assert.equal(await page.locator('.telemetry-feature-badge img').count(),2,'contextual brands are real loaded assets');
   assert.equal(await page.locator('.relay-home').evaluate(node=>getComputedStyle(node).backgroundColor),'rgb(25, 23, 20)');
   assert.match(await page.locator('.relay-current-work').getAttribute('href'),/^https:\/\/ctrl.loew.fi\//);
   await page.getByRole('button',{name:'Check connection',exact:true}).click();await page.getByText('MCP connected',{exact:true}).waitFor();assert.match(await page.getByRole('status').first().textContent(),/17 ms/);
