@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T05:29:36.938Z",
+  "updated_at": "2026-10-03T05:31:08.453Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -12336,7 +12336,7 @@
       ],
       "goal": "Implement the first bounded lifecycle prerequisite of relay-mcp-rebuild-continuation-20261003: supported queued handoff and completed-claim queue reconciliation.",
       "acceptance": "Preserve the full umbrella goal/acceptance at handoff353cd0ed83776a259cb02ffb00630350297a2c86. Add narrow CAS-guarded idempotent reconciliation for verified completed-claim/stale-queue pairs; reject nonterminal and owner mismatches and preserve original acceptance/provenance. Synchronize future complete and handoff queue state. Support explicit owner-authorized queued-only handoff without creating execution. Test engine/adapter/schema/CLI, admission and full required checks; publish a draft PR. Do not normalize live pairs, promote production, retire reservations, change ctrl frontend or claim full MCP completion in this slice.",
-      "next_action": "Implementation ready for draft PR. Local npm ci/build/typecheck and full459-test suite passed; final CLI9-test suite passed after completion coverage. Review exact10-file diff, preflight, commit/push admitted branch and open draftPR; await Node22 CI. No historical pairs normalized or production promotion authorized.",
+      "next_action": "Draft PR139 https://github.com/lrnolivia/relay/pull/139 head e86f3f4696d82078212e34eb14d9a656efd3b884 implements queued handoff and completed-queue reconciliation. Local install/build/typecheck/full459 tests passed; final CLI9 tests passed after added completion coverage. GitHub Node22 quality/admission running. Preserve exact draft pending review/release authority; do not apply live reconciliation before reviewed canonical/runtime engine cutover. Full handoff and receiving identity in docs/relay/MCP_LIFECYCLE_RECONCILIATION_20261003.md. Next product batch: artifact-bound browser feedback backend with ctrl owner.",
       "ledger_refs": [
         "relay-mcp-rebuild-continuation-20261003"
       ],
@@ -12349,8 +12349,8 @@
       "base_sha": "488b67ac2808766e6fb2350e55492bc68ef6bf5c",
       "state": "active",
       "created_at": "2026-10-03T05:21:13.786Z",
-      "updated_at": "2026-10-03T05:29:36.938Z",
-      "lease_until": "2026-10-03T17:29:36.938Z"
+      "updated_at": "2026-10-03T05:31:08.453Z",
+      "lease_until": "2026-10-03T17:31:08.453Z"
     }
   ],
   "migrated_from": "loew-inspector"
