@@ -58,6 +58,24 @@ export async function discoverProjectIcon(project, request) {
     }
   }
   const repoName = repository.split("/")[1].replace(/^loew-/, "");
+  // Linux desktop application IDs often do not contain "icon" or "logo".
+  // Restrict discovery to the standard application-icon namespace: never use
+  // hicolor/actions glyphs, arbitrary artwork, or oversized binary assets.
+  const nativeSize = file => {
+    const match = file.path.match(/(?:^|\/)icons\/hicolor\/(?:(\d+)x(\d+)|scalable)\/apps\/[^/]+\.(?:svg|png|webp|ico)$/i);
+    if (!match || file.size > limit || (match[1] && match[1] !== match[2])) return null;
+    return match[1] ? Number(match[1]) : 256;
+  };
+  const appName = repoName.toLowerCase().replace(/[^a-z0-9]/g, "");
+  const native = files.filter(file => nativeSize(file) !== null);
+  const nativeScore = file => {
+    const name = file.path.split("/").pop().replace(/\.[^.]+$/, "").toLowerCase().replace(/[^a-z0-9]/g, "");
+    const identity = appName && name.endsWith(appName) ? 0 : 10000;
+    const size = nativeSize(file);
+    return identity + Math.abs(size - 256) + (size < 128 ? 1000 : 0);
+  };
+  native.sort((a, b) => nativeScore(a) - nativeScore(b) || a.path.localeCompare(b.path));
+  native.slice(0, 8).forEach(add);
   const fallback = files.filter(file => /\.(?:svg|png|ico|webp|jpe?g)$/i.test(file.path) && /(?:favicon|apple-touch-icon|(?:^|\/)(?:icon|logo)(?:[.-]|\/)|\/brand\/|\/branding\/)/i.test(file.path));
   fallback.sort((a, b) => {
     const score = file => (/favicon/.test(file.path) ? 0 : file.path.includes(repoName) ? 1 : 3) + file.path.split("/").length / 100;
@@ -87,3 +105,4 @@ export async function projectIcon(project, request, scope) {
   cache.set(key, { expires: Date.now() + 300000, promise });
   return promise;
 }
+
