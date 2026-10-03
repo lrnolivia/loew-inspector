@@ -22,7 +22,7 @@ function Shell() {
   useEffect(() => { const presentation = bindPresentation(); const theme = bindTheme(); const motion = bindMotion(); return () => { presentation(); theme?.(); motion(); }; }, []);
   const { state, project } = useLiveRelay();
   const location = useLocation();
-  useEffect(()=>{if(window.location.hostname==='relay.loew.fi'&&location.pathname!=='/')window.location.replace('https://ctrl.loew.fi/#'+(location.pathname==='/today'?'/now':location.pathname)+location.search);},[location.pathname,location.search]);
+  useEffect(()=>{if(window.location.hostname==='relay.loew.fi'&&['/','/index.html'].includes(window.location.pathname)&&location.pathname!=='/')window.location.replace('https://ctrl.loew.fi/#'+(location.pathname==='/today'?'/now':location.pathname)+location.search);},[location.pathname,location.search]);
   const pageLabel = location.pathname.startsWith("/runner") ? "runner" : location.pathname.startsWith("/night-shift") ? "night shift" : "today";
   const tone = state === "live" ? "good" : state === "offline" ? "bad" : "quiet";
 

@@ -63,7 +63,7 @@ try {
     await page.goto(origin + '/');
     await page.getByRole('heading',{name:'relay',exact:true,level:1}).waitFor();
     await page.locator('.telemetry-card').first().waitFor();
-    await page.waitForFunction(()=>!document.querySelector('.telemetry-heading')?.textContent.includes('Connecting'),null,{timeout:75000});
+    await page.waitForFunction(()=>document.querySelector('.live-telemetry')?.getAttribute('data-loading')==='false',null,{timeout:75000});
     assert.equal(await page.locator('.telemetry-card').count(),4);
     assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
     assert.equal(await page.locator('.relay-home').evaluate(node=>getComputedStyle(node).backgroundColor),'rgb(25, 23, 20)');

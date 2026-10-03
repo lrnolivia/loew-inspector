@@ -10,7 +10,7 @@ export function projectHref(destination, project) {
   if (project) params.set("project", project);
   else params.delete("project");
   const result=path + (params.size ? "?" + params.toString() : "");
-  if(globalThis.location?.hostname==='relay.loew.fi'||globalThis.__RELAY_MCP__) {
+  if(!globalThis.__retainedFixture&&(globalThis.location?.hostname==='relay.loew.fi'||globalThis.__RELAY_MCP__)) {
     const destination=result.startsWith('/runner')||result.startsWith('/today')||result.startsWith('/night-shift')?'/#'+result:result;
     return workspaceLink(destination);
   }
