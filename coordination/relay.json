@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T06:16:24.057Z",
+  "updated_at": "2026-10-03T06:16:30.408Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -1218,8 +1218,10 @@
         "RFS-021",
         "RFS-022"
       ],
-      "state": "claimed",
-      "created_at": "2026-09-30T23:34:11.812Z"
+      "state": "completed",
+      "created_at": "2026-09-30T23:34:11.812Z",
+      "completed_at": "2026-10-01T00:03:58.032Z",
+      "updated_at": "2026-10-03T06:16:30.408Z"
     },
     {
       "id": "relay-1.9.3-resume-checkpoints-20260930",
