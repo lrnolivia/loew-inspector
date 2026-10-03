@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T05:20:45.228Z",
+  "updated_at": "2026-10-03T05:21:13.786Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -12300,6 +12300,48 @@
       "created_at": "2026-10-03T04:48:10.740Z",
       "updated_at": "2026-10-03T05:19:23.188Z",
       "lease_until": "2026-10-03T17:19:23.188Z"
+    },
+    {
+      "id": "relay-mcp-lifecycle-reconciliation-20261003",
+      "owner": "01a10033-4d88-7872-990c-e45b7bd4c1c2",
+      "branch": "relay/mcp-lifecycle-reconciliation-20261003",
+      "paths": [
+        "src/coordination.mjs",
+        "src/coordination-engine.js",
+        "src/runner-control-core.js",
+        "src/runner-control.test.js",
+        "src/coordination-transport.test.js",
+        "src/control-contract-schemas.js",
+        "src/runner-control.js",
+        "src/relay-tool-definitions.js",
+        "packages/runner/test/coordination.test.mjs",
+        "scripts/coordinate.mjs",
+        ".github/workflows/coordination.yml",
+        ".github/workflows/runner-coordination.yml",
+        "packages/runner/workflows/coordination.yml",
+        "packages/runner/workflows/runner-coordination.yml",
+        "docs/relay/MCP_LIFECYCLE_RECONCILIATION_20261003.md"
+      ],
+      "resources": [
+        "relay-coordination-lifecycle"
+      ],
+      "goal": "Implement the first bounded lifecycle prerequisite of relay-mcp-rebuild-continuation-20261003: supported queued handoff and completed-claim queue reconciliation.",
+      "acceptance": "Preserve the full umbrella goal/acceptance at handoff353cd0ed83776a259cb02ffb00630350297a2c86. Add narrow CAS-guarded idempotent reconciliation for verified completed-claim/stale-queue pairs; reject nonterminal and owner mismatches and preserve original acceptance/provenance. Synchronize future complete and handoff queue state. Support explicit owner-authorized queued-only handoff without creating execution. Test engine/adapter/schema/CLI, admission and full required checks; publish a draft PR. Do not normalize live pairs, promote production, retire reservations, change ctrl frontend or claim full MCP completion in this slice.",
+      "next_action": "Implement lifecycle engine/schema/transport changes in an isolated managed worktree after readback and preflight; verify then publish draft PR. Umbrella remains queued under old owner until reviewed supported transfer exists.",
+      "ledger_refs": [
+        "relay-mcp-rebuild-continuation-20261003"
+      ],
+      "category": "maintenance",
+      "primary_role": "builder",
+      "primary_team": "runner",
+      "supporting_teams": [],
+      "primary_staff": "nico",
+      "supporting_staff": [],
+      "base_sha": "488b67ac2808766e6fb2350e55492bc68ef6bf5c",
+      "state": "active",
+      "created_at": "2026-10-03T05:21:13.786Z",
+      "updated_at": "2026-10-03T05:21:13.786Z",
+      "lease_until": "2026-10-03T17:21:13.786Z"
     }
   ],
   "migrated_from": "loew-inspector"
