@@ -87,19 +87,20 @@ function metadataFields(request) {
   validateRoleMetadata(metadata.primary_role, metadata.supporting_roles);
   return metadata;
 }
-function auditValue(value) {
-  if (typeof value === 'string') return value.length > 600 ? value.slice(0, 597) + '...' : value;
-  if (Array.isArray(value)) return value.length > 20 ? [...value.slice(0, 20), `... +${value.length - 20} more`] : [...value];
-  return value ?? null;
+function preserveObjective(target, now, source='first-observed-current-record') {
+  if(target.objective_history)return;
+  target.objective_history={baseline:{goal:target.goal,acceptance:target.acceptance,at:now.toISOString(),source},
+    acceptance_versions:[{id:target.id+':acceptance:0',text:target.acceptance,at:now.toISOString()}]};
 }
 function appendAmendment(target, request, fields, before, now) {
   const entry = {
     at: now.toISOString(), by: request.owner, reason: request.reason, fields,
-    before: Object.fromEntries(fields.map((field) => [field, auditValue(before[field])])),
-    after: Object.fromEntries(fields.map((field) => [field, auditValue(target[field])]))
+    before: Object.fromEntries(fields.map((field) => [field, structuredClone(before[field] ?? null)])),
+    after: Object.fromEntries(fields.map((field) => [field, structuredClone(target[field] ?? null)]))
   };
   target.amendment_count = Number(target.amendment_count || 0) + 1;
-  target.amendments = [...(Array.isArray(target.amendments) ? target.amendments : []), entry].slice(-20);
+  target.amendments = [...(Array.isArray(target.amendments) ? target.amendments : []), entry];
+  if(fields.includes('acceptance'))target.objective_history.acceptance_versions.push({id:target.id+':acceptance:'+target.amendment_count,text:target.acceptance,at:now.toISOString(),reason:request.reason});
 }
 
 export function transition(record, request, policy, now = new Date()) {
@@ -111,7 +112,10 @@ export function transition(record, request, policy, now = new Date()) {
   if (!request.id || !request.owner) throw new Error('Stable assignment id and owner id are required.');
   if (request.action === 'reconcile') {
     if (!current || current.state !== 'completed' || !queued) throw new Error('Reconciliation requires a completed claim and its queue row.');
-    if (current.owner !== request.owner || queued.owner !== current.owner) throw new Error('Reconciliation requires matching claim and queue ownership.');
+    if (current.owner !== request.owner) throw new Error('Reconciliation requires current claim ownership.');
+    const historicalOwner = queued.owner !== current.owner;
+    if(historicalOwner && (request.expected_queue_owner !== queued.owner || typeof request.reason !== 'string' || !request.reason.trim())) throw new Error('Historical queue ownership requires its exact expected owner and an explicit reconciliation reason.');
+    if(request.expected_queue_owner && request.expected_queue_owner !== queued.owner)throw new Error('Queue ownership changed; refresh before reconciliation.');
     if (!['claimed', 'completed'].includes(queued.state)) throw new Error('Reconciliation cannot replace a queued or retired disposition.');
     if (current.work_accounted !== true || !current.evidence?.trim() || !current.completed_at ||
         !Number.isInteger(current.pr) || current.pr < 1 || request.pr !== current.pr ||
@@ -122,6 +126,7 @@ export function transition(record, request, policy, now = new Date()) {
     if (queued.state === 'completed') return next;
     // Only mirror lifecycle metadata. Neither copy's acceptance or historical evidence is rewritten.
     Object.assign(queued, { state: 'completed', completed_at: current.completed_at, updated_at: now.toISOString() });
+    if(historicalOwner)queued.completion_reconciliation={at:now.toISOString(),queue_owner:queued.owner,completion_owner:current.owner,reason:request.reason,pr:current.pr,merged_head_sha:current.merged_head_sha,merge_commit_sha:current.merge_commit_sha,ownership_transferred:false};
     next.updated_at = now.toISOString();
     return next;
   }
@@ -183,6 +188,7 @@ export function transition(record, request, policy, now = new Date()) {
       ...metadataFields(request),
       ...normalizeAssignmentStaff(request),
       state: 'queued', created_at: now.toISOString() });
+    preserveObjective(next.queue.at(-1),now,'assignment-created');
     next.updated_at = now.toISOString();
     return next;
   }
@@ -224,6 +230,8 @@ export function transition(record, request, policy, now = new Date()) {
         }
       }
     }
+    preserveObjective(target,now);
+    if(queued && current)preserveObjective(queued,now);
     Object.assign(target, patch);
     appendAmendment(target, request, changed, before, now);
     target.updated_at = now.toISOString();
@@ -245,7 +253,8 @@ export function transition(record, request, policy, now = new Date()) {
     if ((request.branch && request.branch !== current.branch) || (request.base_sha && request.base_sha !== current.base_sha)) throw new Error('Rescope cannot replace the existing task branch or baseline.');
     const reduced = { ...next, claims: claims.filter((c) => c.id !== current.id), queue: next.queue.filter(q => q.id !== current.id) };
     const admitted = transition(reduced, { ...current, ...request, action: 'claim' }, policy, now);
-    admitted.claims.find((c) => c.id === current.id).created_at = current.created_at;
+    const resized=admitted.claims.find((c) => c.id === current.id);
+    Object.assign(resized,{...current,paths:resized.paths,resources:resized.resources,next_action:resized.next_action,updated_at:resized.updated_at,lease_until:resized.lease_until});
     admitted.queue = next.queue;
     return admitted;
   }
@@ -272,6 +281,8 @@ export function transition(record, request, policy, now = new Date()) {
       ...metadataFields({ ...queued, ...request }),
       ...normalizeAssignmentStaff({ ...queued, ...request }),
       base_sha: request.base_sha, state: 'active', created_at: now.toISOString() });
+    if(queued){for(const field of ['objective_history','amendments','amendment_count','handoffs'])if(queued[field]!==undefined)claims.at(-1)[field]=structuredClone(queued[field]);}
+    preserveObjective(claims.at(-1),now,queued?'queued-assignment':'assignment-created');
     if (queued && queued.owner !== request.owner) throw new Error('Queued assignment belongs to another owner.');
     if (queued) queued.state = 'claimed';
   } else {

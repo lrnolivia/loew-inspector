@@ -1,3 +1,4 @@
+import { workspaceLink } from './workspace-links.js';
 // Project context already has a URL query contract. Carry only that explicit
 // selection between documents; an absent query is the aggregate default.
 export function projectFromHash(hash) {
@@ -8,5 +9,10 @@ export function projectHref(destination, project) {
   const params = new URLSearchParams(query);
   if (project) params.set("project", project);
   else params.delete("project");
-  return path + (params.size ? "?" + params.toString() : "");
+  const result=path + (params.size ? "?" + params.toString() : "");
+  if(globalThis.location?.hostname==='relay.loew.fi'||globalThis.__RELAY_MCP__) {
+    const destination=result.startsWith('/runner')||result.startsWith('/today')||result.startsWith('/night-shift')?'/#'+result:result;
+    return workspaceLink(destination);
+  }
+  return result;
 }

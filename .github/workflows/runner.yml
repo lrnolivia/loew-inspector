@@ -1,4 +1,4 @@
-name: runner tick
+name: runner sync and explicit observer
 
 on:
   schedule:
@@ -26,7 +26,20 @@ jobs:
         with:
           node-version: "22"
 
-      - name: Run due workers or requested worker
+      - name: Synchronize source and deployment evidence without a model
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: node scripts/runner-sync.mjs --out "$RUNNER_TEMP/relay-sync.json"
+
+      - name: Preserve synchronization receipts
+        uses: actions/upload-artifact@v4
+        with:
+          name: relay-provider-sync
+          path: ${{ runner.temp }}/relay-sync.json
+          retention-days: 30
+
+      - name: Run explicitly requested read-only observer
+        if: github.event_name == 'workflow_dispatch' && inputs.worker_id != ''
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAIKEY }}
           RUNNER_GITHUB_TOKEN: ${{ github.token }}
@@ -43,6 +56,7 @@ jobs:
           fi
 
       - name: Persist runner state
+        if: github.event_name == 'workflow_dispatch' && inputs.worker_id != ''
         run: |
           if git diff --quiet -- state reports; then
             echo "No state changes."

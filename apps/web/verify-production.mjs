@@ -60,32 +60,25 @@ try {
       await page.close();
       continue;
     }
-    for (const [feature, label, nav] of [["today", "today", "today"], ["runner", "runner", "projects"], ["night-shift", "night shift", "night-shift"]]) {
-      await page.goto(origin + "/inspector#review");
-      await page.locator(".chat-card-preview").waitFor({ state: "attached" });
-      await page.locator(`[data-nav="${nav}"]`).click();
-      await page.getByRole("heading", { name: label, exact: true, level: 1 }).waitFor();
-      await page.locator('.operator-connection[data-tone="good"]').waitFor();
-      // The connection becomes live after the base snapshot; progress settles later.
-      await page.waitForFunction(() => !Array.from(document.querySelectorAll('[data-progress-notice] strong')).some(node => node.textContent.includes('Loading project activity')), null, { timeout: 75000 });
-      assert.equal(new URL(page.url()).pathname, "/");
-      assert.equal(new URL(page.url()).hash, "#/" + feature);
-      assert.equal(await page.locator("#project-tabs").count(), 0);
-      assert.equal(await page.locator(".signal-mark").count(), 4);
-      assert.ok(await page.locator(".signal-mark").evaluateAll(nodes => nodes.every(node => {
-        const svg = node.querySelector('svg.relay-glyph');
-        return svg && svg.getBoundingClientRect().width > 0 && svg.getBoundingClientRect().height > 0;
-      })), "all semantic SVG glyphs must render");
-      assert.equal(await page.locator('.project-tab[aria-pressed="true"]').innerText(), 'all projects');
-      assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
-      assert.match(await page.locator(".react-brand strong").evaluate(node => getComputedStyle(node).fontFamily), /Momo Trust Display/);
-      await capture(page, feature, viewport);
+    await page.goto(origin + '/');
+    await page.getByRole('heading',{name:'relay',exact:true,level:1}).waitFor();
+    await page.locator('.telemetry-card').first().waitFor();
+    await page.waitForFunction(()=>!document.querySelector('.telemetry-heading')?.textContent.includes('Connecting'),null,{timeout:75000});
+    assert.equal(await page.locator('.telemetry-card').count(),4);
+    assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth>innerWidth),false);
+    assert.equal(await page.locator('.relay-home').evaluate(node=>getComputedStyle(node).backgroundColor),'rgb(25, 23, 20)');
+    await page.getByRole('button',{name:'Check connection',exact:true}).click();
+    await page.getByText('MCP connected',{exact:true}).waitFor();
+    await page.getByRole('button',{name:'Refresh tools',exact:true}).click();
+    await page.getByText(/Your AI client’s loaded schema is not verified/).waitFor();
+    await page.getByLabel('Refresh tools result').getByRole('button',{name:'Close',exact:true}).click();
+    const destinations=await page.locator('.live-telemetry a,.relay-current-work').evaluateAll(nodes=>nodes.map(node=>node.href));
+    assert.ok(destinations.every(href=>new URL(href).origin==='https://ctrl.loew.fi'),'workspace links resolve to ctrl');
+    for(const route of ['/runner','/today','/night-shift','/inspector']) {
+      const response=await fetch(origin+route,{headers,redirect:'manual'});
+      assert.equal(response.status,308);assert.equal(new URL(response.headers.get('Location')).origin,'https://ctrl.loew.fi');
     }
-    await page.getByRole("link", { name: /^inspector/ }).click();
-    await page.locator(".chat-card-preview").waitFor({ state: "attached" });
-    await page.locator('#review-list[data-summary-state="ready"], #review-list[data-summary-state="error"]').waitFor({ timeout: 75000 });
-    assert.equal(new URL(page.url()).pathname, "/inspector");
-    await capture(page, "inspector", viewport);
+    await capture(page,'relay',viewport);
     assert.deepEqual(errors, []);
     await page.close();
   }
@@ -103,7 +96,7 @@ async function capture(page, feature, viewport) {
     kind: "production_website_verification", target_url: canonicalUrl.toString(),
     context: { project: "relay", environment: "production", surface, commit_sha: expected },
     engine: "github-chromium", step_label: `Actual website ${surface}`, viewport,
-    dom: { summary: await page.locator('.signal-card').allTextContents(), connection: await page.locator('.operator-connection').innerText(), notice: await page.locator('[data-progress-notice]').allTextContents(), review_state: await page.evaluate(() => document.querySelector('#review-list')?.dataset.summaryState || null) },
+    dom: { summary: await page.locator('.telemetry-card').allTextContents(), connection: await page.locator('.telemetry-freshness').innerText(), notice: await page.locator('[data-progress-notice]').allTextContents(), review_state: await page.evaluate(() => document.querySelector('#review-list')?.dataset.summaryState || null) },
     trace: [{ action: "verify_actual_website", url: page.url(), initial_data_cycle: "settled success or explicitly labelled partial/error" }]
   };
   const form = new FormData();

@@ -1,3 +1,4 @@
+import { relayPanelResponse } from '../web/panel-api.js';
 import {eventStream,publishInvalidation,mutationTopics,successfulRpc,operatorTopics} from '../../src/relay-events.js';
 export {RelayEvents} from '../../src/relay-events.js';
 import { brandInitializeResponse } from "./branding.js";
@@ -8,10 +9,10 @@ import { webAssets, webBuildId, webSourceSha } from "../web/generated.js";
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
-    const websiteRoutes = { "/today": "/#/today", "/runner": "/#/runner", "/night-shift": "/#/night-shift" };
+    const websiteRoutes = { "/today": "/#/today", "/runner": "/#/runner", "/night-shift": "/#/night-shift", "/inspector": "/inspector" };
     const destination = websiteRoutes[url.pathname.replace(/\/$/, "")];
     if (destination && ["GET", "HEAD"].includes(request.method)) {
-      return Response.redirect(url.origin + destination + url.search, 308);
+      return Response.redirect("https://ctrl.loew.fi" + destination + url.search, 308);
     }
     if (url.pathname.startsWith("/api/")) {
       // Verify the same identity as native MCP before exposing operator API routes.
@@ -21,6 +22,12 @@ export default {
       }), env);
       if (auth.status !== 200) return auth;
       if(url.pathname==='/api/events')return eventStream(request,env);
+      const panel=await relayPanelResponse(request,{sourceSha:webSourceSha,rpc:async method=>{
+        const response=await gateway.fetch(new Request(url.origin+'/mcp',{method:'POST',headers:new Headers({...Object.fromEntries(request.headers),'Content-Type':'application/json'}),body:JSON.stringify({jsonrpc:'2.0',id:0,method})}),env);
+        if(response.status!==200)throw Error('Authenticated MCP unavailable');
+        const body=await response.json();if(body.error)throw Error('MCP discovery failed');return body.result;
+      }});
+      if(panel)return panel;
       let topics=null;if(env.RELAY_EVENTS&&request.method==='POST'){try{topics=operatorTopics(url.pathname,await request.clone().json());}catch{}}
       const response=await runner.fetch(request,env);
       if(response.ok&&topics)await publishInvalidation(env,topics);

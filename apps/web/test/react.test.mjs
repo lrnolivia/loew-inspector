@@ -109,7 +109,7 @@ test("Relay 2.0 React shell renders human-first live surfaces responsively", asy
     assert.equal(await page.locator(".work-item").count(), 2);
     assert.equal(await page.locator(".work-item details").first().getByText("Details").count(), 1);
     assert.match(await page.locator(".work-item").first().innerText(), /Source:/);
-    await page.locator(".work-item .work-open").first().click();
+    const destination=new URL(await page.locator('.work-item .work-open').first().getAttribute('href'));assert.equal(destination.origin,'https://ctrl.loew.fi');await page.goto(origin+destination.pathname+destination.search+destination.hash);
     await page.locator(".work-detail").waitFor();
     assert.equal(await page.locator(".work-detail .signal-card").count(), 3);
     await page.getByRole("link", { name: "← runner" }).click();

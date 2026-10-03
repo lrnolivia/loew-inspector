@@ -39,6 +39,7 @@ const supportingRolesSchema = { type: 'array', maxItems: 8, uniqueItems: true, i
 const requestProperties = {
   id: identity,
   owner: identity,
+  expected_queue_owner: identity,
   branch: text(200),
   paths: pathsSchema,
   resources: resourcesSchema,

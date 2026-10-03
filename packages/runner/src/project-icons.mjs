@@ -1,3 +1,4 @@
+import { createHash } from 'node:crypto';
 // Read-only discovery from the registered repository. Never fetch arbitrary URLs.
 const mime = { png: "image/png", svg: "image/svg+xml", ico: "image/x-icon", webp: "image/webp", jpg: "image/jpeg", jpeg: "image/jpeg" };
 const limit = 256 * 1024;
@@ -35,10 +36,24 @@ export async function discoverProjectIcon(project, request) {
     const bytes = decode(blob.content);
     return bytes.length <= limit ? { bytes, base64: blob.content.replace(/\s/g, "") } : null;
   };
+  // An explicit product asset manifest wins over discovery. Invalid declarations
+  // remain unavailable rather than silently replacing a chosen icon with a guess.
+  const manifestFile=byPath.get('relay.assets.json')||byPath.get('apps/web/public/relay.assets.json');
+  let declaredPrimary=null;
+  if(manifestFile){
+    try{
+      const data=await read(manifestFile);if(!data||data.bytes.length>16384)throw Error('Invalid asset manifest');
+      const manifest=JSON.parse(new TextDecoder().decode(data.bytes)),primary=manifest.variants?.primary;
+      if(manifest.schema!==1||manifest.project!==project.id||!primary||typeof primary.path!=='string'||primary.path.startsWith('/')||primary.path.split('/').some(x=>!x||x==='.'||x==='..')||!/^[a-f0-9]{64}$/.test(primary.sha256))throw Error('Invalid asset declaration');
+      const file=byPath.get(primary.path);const asset=await read(file);
+      if(!asset||createHash('sha256').update(asset.bytes).digest('hex')!==primary.sha256||asset.bytes.length!==primary.bytes)throw Error('Asset integrity mismatch');
+      declaredPrimary=file;add(file);
+    }catch{return {status:'unavailable',icon:null,reason:'declared-asset-invalid'};}
+  }
   // The app's declared favicon wins over filename guesses. Frontend public roots
   // are resolved locally in the same repository, never by following external links.
   const shells = files.filter(file => /(?:^|\/)index\.html$/.test(file.path)).sort((a, b) => a.path.length - b.path.length).slice(0, 4);
-  for (const shell of shells) {
+  for (const shell of declaredPrimary?[]:shells) {
     const data = await read(shell); if (!data) continue;
     const html = new TextDecoder().decode(data.bytes);
     const parent = shell.path.split("/").slice(0, -1).join("/");
@@ -75,13 +90,13 @@ export async function discoverProjectIcon(project, request) {
     return identity + Math.abs(size - 256) + (size < 128 ? 1000 : 0);
   };
   native.sort((a, b) => nativeScore(a) - nativeScore(b) || a.path.localeCompare(b.path));
-  native.slice(0, 8).forEach(add);
+  if(!declaredPrimary)native.slice(0, 8).forEach(add);
   const fallback = files.filter(file => /\.(?:svg|png|ico|webp|jpe?g)$/i.test(file.path) && /(?:favicon|apple-touch-icon|(?:^|\/)(?:icon|logo)(?:[.-]|\/)|\/brand\/|\/branding\/)/i.test(file.path));
   fallback.sort((a, b) => {
     const score = file => (/favicon/.test(file.path) ? 0 : file.path.includes(repoName) ? 1 : 3) + file.path.split("/").length / 100;
     return score(a) - score(b);
   });
-  fallback.slice(0, 12).forEach(add);
+  if(!declaredPrimary)fallback.slice(0, 12).forEach(add);
   for (const file of candidates.slice(0, 12)) {
     const type = mime[file.path.split(".").pop().toLowerCase()]; if (!type) continue;
     const data = await read(file); if (!data) continue;
@@ -89,7 +104,7 @@ export async function discoverProjectIcon(project, request) {
       const svg = new TextDecoder().decode(data.bytes);
       if (!/<svg[\s>]/i.test(svg) || /<script|<foreignObject|\bon\w+\s*=|(?:href|src)\s*=\s*["']\s*(?:https?:|javascript:|\/\/)/i.test(svg)) continue;
     }
-    return { status: "found", icon: { data_url: "data:" + type + ";base64," + data.base64, repository, path: file.path, blob_sha: file.sha, source_url: "https://github.com/" + repository + "/blob/" + encodeURIComponent(branch) + "/" + file.path.split("/").map(encodeURIComponent).join("/") } };
+    return { status: "found", icon: { data_url: "data:" + type + ";base64," + data.base64, repository, path: file.path, blob_sha: file.sha, sha256: createHash('sha256').update(data.bytes).digest('hex'), bytes:data.bytes.length, manifest:manifestFile?.path||null, source_url: "https://github.com/" + repository + "/blob/" + encodeURIComponent(branch) + "/" + file.path.split("/").map(encodeURIComponent).join("/") } };
   }
   return { status: "unavailable", icon: null };
 }

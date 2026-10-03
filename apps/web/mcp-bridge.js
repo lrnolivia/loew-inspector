@@ -1,3 +1,4 @@
+window.__RELAY_MCP__ = true;
 // Same interface and HTTP-shaped responses; the host provides authenticated tool transport.
 const pending = new Map();
 let sequence = 0;
@@ -34,10 +35,14 @@ window.fetch = async (input, options = {}) => {
   return new Response(body, { status: data.status, headers: { "Content-Type": data.content_type } });
 };
 document.addEventListener("click", event => {
-  const anchor = event.target instanceof Element ? event.target.closest('a[href^="/inspector"]') : null;
+  const anchor = event.target instanceof Element ? event.target.closest('a[href]') : null;
   if (!anchor) return;
+  const target = new URL(anchor.getAttribute("href"), "https://relay.loew.fi");
+  if (target.origin === 'https://relay.loew.fi' && target.pathname === '/' && target.hash) return;
+  if (!['https://relay.loew.fi','https://ctrl.loew.fi','https://chatgpt.com'].includes(target.origin)) return;
+  if (target.origin === 'https://relay.loew.fi' && target.pathname === '/inspector') target.host='ctrl.loew.fi';
   event.preventDefault();
-  const href = new URL(anchor.getAttribute("href"), "https://relay.loew.fi").href;
+  const href = target.href;
   void (async () => {
     try {
       if (window.openai?.openExternal) await window.openai.openExternal({ href });

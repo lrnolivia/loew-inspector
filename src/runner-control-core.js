@@ -1,7 +1,7 @@
 import { githubApiRequest } from './source.js';
 import { transition, evaluate, occupying, normalizeScope } from './coordination-engine.js';
 
-export const RUNNER_ENGINE_SHA = '0dfefbbd022d6efd058db696bd00bdb4785a6235';
+export const RUNNER_ENGINE_SHA = '591d0155555a74db4769fda289e5212b07609e65';
 export const DEFAULT_RUNNER_CONTROL_REPOSITORY = 'lrnolivia/relay';
 
 export class ControlError extends Error {
@@ -161,7 +161,7 @@ async function mutate(api, control, controlRepository, context, args) {
     hold: ['id', 'owner', 'next_action'],
     handoff: ['id', 'owner', 'successor', 'next_action'],
     complete: ['id', 'owner', 'pr', 'work_accounted', 'evidence'],
-    reconcile: ['id', 'owner', 'pr'],
+    reconcile: ['id', 'owner', 'pr', 'expected_queue_owner', 'reason'],
     retire: ['id', 'owner', 'disposition', 'reason', 'evidence', 'operation_id', 'expected_head_sha', 'superseded_by']
   }[args.action];
   for (const key of Object.keys(args.request)) {

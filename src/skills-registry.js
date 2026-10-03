@@ -18,7 +18,7 @@ export function validateSkillManifest(manifest){
   if(typeof manifest.license!=="string"||!manifest.license.trim()) throw new Error("license is required");
   if(!manifest.provenance||typeof manifest.provenance.source!=="string"||typeof manifest.provenance.revision!=="string") throw new Error("provenance source/revision required");
   if(!INTEGRITY.test(manifest.integrity||"")) throw new Error("invalid skill integrity");
-  if(typeof manifest.entrypoint!=="string"||!manifest.entrypoint||manifest.entrypoint.startsWith("/")||manifest.entrypoint.split("/").some(p=>!p||p==="."||p==="..")) throw new Error("invalid skill entrypoint");
+  if(typeof manifest.entrypoint!=="string"||!manifest.entrypoint||(manifest.entrypoint.startsWith("/")||manifest.entrypoint.includes("\\")||manifest.entrypoint.includes(":"))||manifest.entrypoint.split("/").some(p=>!p||p==="."||p==="..")) throw new Error("invalid skill entrypoint");
   if(!Number.isInteger(manifest.context_budget)||manifest.context_budget<256||manifest.context_budget>32768) throw new Error("invalid context budget");
   if(!UPDATE_POLICIES.has(manifest.update_policy)) throw new Error("invalid update policy");
   const required=uniqueStrings(manifest.required_capabilities,"required capabilities");
@@ -42,6 +42,16 @@ export function createSkillRegistry(manifests=[]){
     byId.set(manifest.id,manifest);
   }
   for(const manifest of byId.values()) if(manifest.extends&&!byId.has(manifest.extends)) throw new Error(`missing extended skill: ${manifest.extends}`);
+  const visiting=new Set(),visited=new Set();
+  const visit=id=>{
+    if(visiting.has(id)) throw new Error(`cyclic skill dependency: ${id}`);
+    if(visited.has(id)) return;
+    const manifest=byId.get(id);if(!manifest) throw new Error(`missing skill dependency: ${id}`);
+    visiting.add(id);
+    for(const dependency of [...manifest.dependencies,...(manifest.extends?[manifest.extends]:[])]) visit(dependency);
+    visiting.delete(id);visited.add(id);
+  };
+  for(const id of byId.keys()) visit(id);
   return Object.freeze({
     size:byId.size,
     list:()=>[...byId.values()].sort((a,b)=>a.id.localeCompare(b.id)),

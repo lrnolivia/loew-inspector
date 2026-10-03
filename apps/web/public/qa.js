@@ -1,3 +1,4 @@
+import { deliverReview } from './qa-delivery.js';
 import { loadingMarkup } from "./loading.js";
 import { qaEscape, renderQaPanel, renderQaPreview } from "./qa-panel.js";
 import { createQaFloat } from "./qa-float.js";
@@ -18,7 +19,7 @@ async function api(url, options = {}) {
   const response=await fetch(url,{headers:{'Content-Type':'application/json',Accept:'application/json'},signal:AbortSignal.timeout(15000),...options});
   const text=await response.text(); let body;
   try { body=text ? JSON.parse(text) : {}; } catch { body={error:'Unexpected response.'}; }
-  if (!response.ok) throw new Error(body.error || 'Request failed (' + response.status + ').');
+  if (!response.ok) throw new Error(body.error?.message || body.error || 'Request failed (' + response.status + ').');
   return body;
 }
 function selectedEvidenceId() {
@@ -110,9 +111,19 @@ function handlers() {
     answer(id,answer){edited();state.review.answers={...(state.review.answers||{}),[id]:answer};state.review.overall=null;persistDraft(state);repaintPanel('[data-qa-answer="'+answer+'"]');queueSave(100);},
     notes(notes){state.humanNotes=notes;state.review.notes=joinReviewNotes(state.noteParts.prefix,notes);edited();queueSave(650);},
     navigate(direction){questionIndex=Math.max(0,Math.min((state.questions||[]).length-1,questionIndex+direction));repaintPanel('.qa-question');},
-    retry(){void saveReview(state);},
+    retry(){if(state.routingFailed)void handlers().finish();else void saveReview(state);},
     retained(){void reviewRetained();},
-    async finish(){const active=state;const success=await saveReview(active);if(success && state===active){publishNotification({id:'qa:saved:'+active.evidence.evidence_id,feature:'inspector',project:active.evidence.context?.project||'',title:'Review saved',message:'Your answers and notes were saved.',severity:'info',href:'/inspector#review?evidence='+encodeURIComponent(active.evidence.evidence_id),action:'Open review'});closeQa();}}
+    async finish(){
+      const active=state;
+      if(!await saveReview(active)||state!==active)return;
+      try {
+        active.routingFailed=false;
+        const delivery=await deliverReview({evidence:active.evidence,review:active.review,binding:active.feedbackBinding,api,storage:sessionStorage});
+        if(state!==active)return;
+        publishNotification({id:'qa:saved:'+active.evidence.evidence_id,feature:'inspector',project:active.evidence.context?.project||'',title:'Review saved',message:delivery.label,severity:'info',href:'/inspector#review?evidence='+encodeURIComponent(active.evidence.evidence_id),action:'Open review'});
+        closeQa();
+      } catch(error) { if(state===active){active.routingFailed=true;setSaveState(active,'failed','Notes saved. Feedback routing needs retry: '+error.message);} }
+    }
   };
 }
 function repaintPanel(focusSelector) {
@@ -209,7 +220,7 @@ export async function openQa(evidenceId) {
     const changedWhileOpening=pending===openingSession && (openingPending || pending?.revision!==openingRevision || (pending?.confirmation || 0)!==openingConfirmation);
     const newerConfirmed=pending?.review.updated_at && (!payload.review?.updated_at || Date.parse(pending.review.updated_at)>Date.parse(payload.review.updated_at));
     state=pending && (pending.dirty || pending.promise || changedWhileOpening || newerConfirmed) ? pending : {evidence:payload.evidence,questions:payload.questions||[],review:draft?.review||payload.review||{answers:{},notes:'',overall:null},revision:0,confirmation:0,dirty:Boolean(draft),saveStatus:draft?'failed':payload.review?.updated_at?'saved':'unsaved',saveError:draft?'Recovered unsaved responses. Retry to save them.':'',timer:null,promise:null};
-    state.evidence=payload.evidence;state.questions=payload.questions||[];state.live=livePayload.live||{};
+    state.feedbackBinding=payload.feedback_binding;state.evidence=payload.evidence;state.questions=payload.questions||[];state.live=livePayload.live||{};
     state.noteParts=splitReviewNotes(state.review.notes||'');state.humanNotes=state.noteParts.notes;
     sessions.set(evidenceId,state);
     const unanswered=state.questions.findIndex(question=>!state.review.answers?.[question.id]);questionIndex=unanswered>=0?unanswered:Math.max(0,state.questions.length-1);
@@ -236,7 +247,7 @@ async function saveReview(active=state) {
       const review={answers:{...(active.review.answers||{})},notes:active.review.notes||'',overall:active.review.overall||null,disposition:active.review.disposition||null};
       setSaveState(active,'saving');
       try {
-        const payload=await api('/api/visual/'+encodeURIComponent(active.evidence.evidence_id)+'/qa',{method:'POST',body:JSON.stringify(review)});
+        const payload=await api('/api/visual/'+encodeURIComponent(active.evidence.evidence_id)+'/qa',{method:'POST',body:JSON.stringify({...review,feedback_transport:'schema2'})});
         if(!payload.review?.updated_at)throw new Error('The server did not confirm this save.');
         active.confirmation=(active.confirmation || 0)+1;
         if(active.revision===revision){active.review.updated_at=payload.review.updated_at;active.dirty=false;try{sessionStorage.removeItem(draftKey(active.evidence.evidence_id));}catch{}setSaveState(active,'saved');resolveNotification('qa:save:'+active.evidence.evidence_id);}

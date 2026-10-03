@@ -1,3 +1,4 @@
+import { relayPanelResponse } from './panel-api.js';
 import { handleApi } from "../../packages/runner/src/cloudflare-worker.mjs";
 
 export const uiApiTool = {
@@ -7,7 +8,7 @@ export const uiApiTool = {
   inputSchema: {
     type: "object",
     properties: {
-      path: { type: "string", maxLength: 1024 },
+      path: { type: "string", maxLength: 12000 },
       method: { type: "string", enum: ["GET", "POST"], default: "GET" },
       body: { type: "object" }
     }, required: ["path"], additionalProperties: false
@@ -21,27 +22,28 @@ export function validateUiRequest(args) {
   for (const key of Object.keys(args)) if (!["path", "method", "body"].includes(key)) throw new Error("Unsupported UI argument");
   const method = args.method || "GET";
   const path = args.path;
-  if (typeof path !== "string" || path.length > 1024 || !path.startsWith("/api/") || /[\\#%]/.test(path) || path.includes("..")) throw new Error("Invalid UI path");
+  if (typeof path !== "string" || path.length > 12000 || !path.startsWith("/api/") || /[\\#]/.test(path) || /[\\#%]/.test(new URL(path, "https://relay.loew.fi").pathname) || path.includes("..")) throw new Error("Invalid UI path");
   const url = new URL(path, "https://relay.loew.fi");
-  const reads = /^\/api\/(?:health|progress\/[a-zA-Z0-9._-]+|projects(?:\/[a-zA-Z0-9._-]+(?:\/icon)?)?|workers|visual(?:\/runs(?:\/run_[a-zA-Z0-9._-]{8,128}\/review)?|\/compare|\/vis_[a-zA-Z0-9-]{8,128}(?:\/(?:image|qa|live))?)?)$/;
-  const writes = /^\/api\/(?:workers\/[a-zA-Z0-9._-]+\/(?:toggle|settings|run|doctor|repair)|visual\/vis_[a-zA-Z0-9-]{8,128}\/qa)$/;
+  const reads = /^\/api\/(?:execution\/jobs|feedback\/status|health|progress\/[a-zA-Z0-9._-]+|projects(?:\/[a-zA-Z0-9._-]+(?:\/icon)?)?|workers|visual(?:\/runs(?:\/run_[a-zA-Z0-9._-]{8,128}\/review)?|\/compare|\/vis_[a-zA-Z0-9-]{8,128}(?:\/(?:image|qa|live))?)?)$/;
+  const writes = /^\/api\/(?:execution\/request|relay\/(?:check|refresh)|feedback\/submit|workers\/[a-zA-Z0-9._-]+\/(?:toggle|settings|run|doctor|repair)|visual\/vis_[a-zA-Z0-9-]{8,128}\/qa)$/;
   if (method === "GET" ? !reads.test(url.pathname) : method !== "POST" || !writes.test(url.pathname)) throw new Error("UI route or method is not allowed");
   if (method === "GET" && args.body !== undefined) throw new Error("GET cannot contain a body");
   if (args.body !== undefined && (!args.body || typeof args.body !== "object" || Array.isArray(args.body))) throw new Error("Invalid UI body");
   if (JSON.stringify(args.body || {}).length > 16384) throw new Error("UI body exceeds limit");
-  for (const key of url.searchParams.keys()) if (!["project", "environment", "pr", "run", "base", "current", "assignment"].includes(key)) throw new Error("Unsupported UI filter");
+  for (const key of url.searchParams.keys()) if (!["project", "environment", "pr", "run", "base", "current", "assignment", "report_id", "review_mode", "cursor"].includes(key)) throw new Error("Unsupported UI filter");
   return { path, method, body: args.body };
 }
 
 // Called only after the MCP gateway has verified its OAuth/Access identity.
 // Trust is passed in process, never obtained from a caller-supplied header or argument.
-export async function callUiApi(input, env) {
+export async function callUiApi(input, env, { rpc } = {}) {
   const args = validateUiRequest(input);
-  const response = await handleApi(new Request("https://relay.loew.fi" + args.path, {
+  const request = new Request("https://relay.loew.fi" + args.path, {
     method: args.method,
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", Origin: "https://relay.loew.fi" },
     body: args.body === undefined ? undefined : JSON.stringify(args.body)
-  }), env, { authenticatedMcp: true });
+  });
+  const response = await relayPanelResponse(request,{rpc}) || await handleApi(request, env, { authenticatedMcp: true });
   const content_type = response.headers.get("content-type") || "application/json";
   if (content_type.startsWith("image/")) {
     const bytes = new Uint8Array(await response.arrayBuffer());

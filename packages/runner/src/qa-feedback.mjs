@@ -175,7 +175,7 @@ export function feedbackApplicability(identity, target) {
   const conflicts = [];
   for (const field of ['project', 'assignment', 'owner', 'branch', 'repository', 'commit_sha']) {
     if (!identity?.[field] || !target?.[field]) conflicts.push('missing-' + field);
-    else if (identity[field] !== target[field]) conflicts.push(field);
+    else if (identity[field] !== target[field] && !(field === 'commit_sha' && target.historical && identity.review_mode === 'historical' && target.completed_commits?.includes(identity[field]))) conflicts.push(field);
   }
   const unverified = [];
   // A source SHA does not identify a tested native/web runtime. Historical
@@ -191,7 +191,7 @@ export function feedbackApplicability(identity, target) {
   }
   if (identity?.pr && target?.pr && target.pr !== identity.pr) conflicts.push('pr');
   else if (identity?.pr && !target?.pr) unverified.push('pr');
-  if (target?.terminal) conflicts.push('terminal-assignment');
+  if (target?.terminal && !(target.historical && identity?.review_mode === 'historical')) conflicts.push('terminal-assignment');
   return { safe_to_apply: !conflicts.length && !unverified.length, routing_matches: !conflicts.length,
     conflicts, unverified };
 }
@@ -199,7 +199,8 @@ export function feedbackApplicability(identity, target) {
 export function feedbackStatus(report, target) {
   const applicability = feedbackApplicability(report.identity, target);
   const seen = report.receipts?.find(receipt => receipt.kind === 'seen') || null;
-  return { saved: { at: report.created_at }, queued: !seen && applicability.routing_matches,
+  return { saved: { at: report.created_at }, queued: !target.terminal && !seen && applicability.routing_matches,
+    historical_review: Boolean(target.historical),
     delivered: null, seen, incorporated: null, fixed: null, verified: null,
     delivery_limitation: 'No verified native-task push or consumer identity. An explicit acknowledgement is an authenticated caller report, not proof of native delivery.',
     applicability };

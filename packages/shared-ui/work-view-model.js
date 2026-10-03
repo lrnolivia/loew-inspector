@@ -1,3 +1,4 @@
+import { workspaceLink } from './workspace-links.js';
 import {projectInGroup} from "./project-groups.js";
 import { activityTime, workRevision } from './work-activity.js';
 export const reviewStates = ['pending', 'completed', 'stale'];
@@ -46,7 +47,7 @@ export async function assignmentItem(project, source) {
   return {project,kind:'assignment',id:source.assignment,title:source.goal || source.assignment.replace(/[-_]+/g,' '),
     detail:source.waiting_reason || source.recovery_action || '',next:source.next_action || 'Open details to assess',sourceState:source.state || 'not reported',
     time:activityTime(source),priority:source.priority || null,revision:await sourceRevision(source),
-    href:'/#/runner/'+encodeURIComponent(project)+'/'+encodeURIComponent(source.assignment)+'?project='+encodeURIComponent(project),source};
+    href:workspaceLink('/#/runner/'+encodeURIComponent(project)+'/'+encodeURIComponent(source.assignment)+'?project='+encodeURIComponent(project)),source};
 }
 export async function evidenceItem(source) {
   return {project:source.context?.project || 'review',kind:'evidence',id:source.evidence_id,title:source.step_label || source.context?.surface || 'Screen review',
@@ -61,5 +62,5 @@ export function workerSource(worker) {
 }
 export async function checkItem(worker) {
  const item=await assignmentItem(worker.id,workerSource(worker));
- return {...item,kind:'check',next:worker.runtime?.last_error?'Review the reported check problem':'Review the latest automatic result',href:'/#/night-shift?project='+encodeURIComponent(worker.id)+'&item='+encodeURIComponent(worker.id)};
+ return {...item,kind:'check',next:worker.runtime?.last_error?'Review the reported check problem':'Review the latest automatic result',href:workspaceLink('/#/night-shift?project='+encodeURIComponent(worker.id)+'&item='+encodeURIComponent(worker.id))};
 }

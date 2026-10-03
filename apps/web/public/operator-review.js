@@ -168,20 +168,25 @@ function evidenceTitle(item) {
 }
 
 
-let viewer=null,loadGeneration=0;
+let viewer=null,loadGeneration=0,reviewPages=new Map(),loadedEvidence=[];
 export function bindReviewFilters() {
  renderChatCardPreview();
  const root=document.querySelector('#review-list');
  if(root)viewer=bindWorkViewer(root,{id:'inspector',defaultView:'visual',onOpen:item=>item&&openQa(item.id)});
 }
-export async function loadReview(ui,projectId='') {
+export async function loadReview(ui,projectId='',append=false) {
  reviewUi=ui;const gen=++loadGeneration;
  const root=document.querySelector('#review-list'),count=document.querySelector('#review-count');
- root.dataset.summaryState='loading';showLoading(root,'review','Loading captures');
+ if(!append){reviewPages=new Map();loadedEvidence=[];root.dataset.summaryState='loading';showLoading(root,'review','Loading captures');}
+ let more=document.querySelector('#review-load-more');if(more)more.disabled=true;
  try {
   const scope=projectMembers(projectId);
-  const results=await Promise.all((scope.length?scope:['']).map(id=>api('/api/visual'+(id?'?project='+encodeURIComponent(id):''))));
-  const payload={evidence:results.flatMap(result=>result.evidence||[]),partial:results.some(result=>result.partial||result.truncated||result.cursor)};
+  const projects=(scope.length?scope:['']).filter(id=>!append||reviewPages.get(id));
+  const results=await Promise.all(projects.map(async id=>{const query=new URLSearchParams();if(id)query.set('project',id);if(append)query.set('cursor',reviewPages.get(id));return {id,result:await api('/api/visual?'+query)};}));
+  if(gen!==loadGeneration)return;
+  for(const {id,result} of results)reviewPages.set(id,result.next_cursor||null);
+  loadedEvidence.push(...results.flatMap(({result})=>result.evidence||[]));
+  const payload={evidence:loadedEvidence,partial:[...reviewPages.values()].some(Boolean)};
   const raw=Array.isArray(payload.evidence)?payload.evidence:[],seen=new Set(),sources=[];
   for(const item of raw){const key=evidenceKey(item);if(seen.has(key))continue;seen.add(key);sources.push(item);}
   const prepared=[];
@@ -189,9 +194,11 @@ export async function loadReview(ui,projectId='') {
    try{const qa=await api('/api/visual/'+encodeURIComponent(item.evidence_id)+'/qa');return {...item,qaReview:qa.review||null};}catch{return item;}
   })));
   const models=await Promise.all(prepared.map(evidenceItem));if(gen!==loadGeneration)return;
-  reviewItems=prepared;viewer?.update(models,{project:projectId,incomplete:raw.length>=60||Boolean(payload.partial||payload.truncated||payload.cursor)});
+  reviewItems=prepared;viewer?.update(models,{project:projectId,incomplete:Boolean(payload.partial)});
   count.textContent=String(models.filter(item=>!projectId||item.project===projectId).length)+' loaded captures';
+  if(!more){more=document.createElement('button');more.id='review-load-more';more.type='button';more.className='qa-launch';root.after(more);}
+  more.hidden=!payload.partial;more.disabled=false;more.textContent='Load more captures';more.onclick=()=>void loadReview(ui,projectId,true);
   ui.setConnection('connected','good');
 
- }catch(error){if(gen!==loadGeneration)return;root.dataset.summaryState='error';root.innerHTML='<div class="operator-empty">Review items could not load. Refresh to try again.</div>';ui.setConnection(error.status===403?'access needed':'couldn’t connect','bad');}
+ }catch(error){if(gen!==loadGeneration)return;if(more){more.disabled=false;more.textContent='Retry loading captures';}root.dataset.summaryState='error';root.innerHTML='<div class="operator-empty">Review items could not load. Refresh to try again.</div>';ui.setConnection(error.status===403?'access needed':'couldn’t connect','bad');}
 }

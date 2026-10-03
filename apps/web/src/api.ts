@@ -1,4 +1,4 @@
-import type { DashboardSnapshot, ProgressPayload, ProjectRegistration, RunnerWorker } from "./types";
+import type { DashboardSnapshot, ProgressPayload, ProjectRegistration, RunnerWorker, WorkloadItem } from "./types";
 
 async function json<T>(path: string, timeout = 15000): Promise<T> {
   const response = await fetch(path, { headers: { Accept: "application/json" }, signal: AbortSignal.timeout(timeout) });
@@ -12,7 +12,7 @@ export async function loadDashboard(onSnapshot?: (snapshot: DashboardSnapshot) =
     json<RunnerWorker[]>("/api/workers")
   ]);
   let snapshot: DashboardSnapshot = {
-    fetchedAt: new Date().toISOString(), projects, workers,
+    fetchedAt: new Date().toISOString(), projects, workers, workload:previous?.workload||{},
     progress: Object.fromEntries(projects.filter(project => previous?.progress[project.id]).map(project => [project.id, previous!.progress[project.id]])),
     loadingProgress: projects.map(project => project.id), failedProgress: []
   };
@@ -20,8 +20,9 @@ export async function loadDashboard(onSnapshot?: (snapshot: DashboardSnapshot) =
   await Promise.all(projects.map(async project => {
     try {
       if(project.managed===false){snapshot={...snapshot,progress:{...snapshot.progress,[project.id]:{project:project.id,progress:[],queue:[]}},loadingProgress:snapshot.loadingProgress!.filter(id=>id!==project.id)};onSnapshot?.(snapshot);return;}
-      const metadata = await json<{ coordination: { claims: Array<{ id: string; state: string }>; queue?: Array<NonNullable<ProgressPayload["queue"]>[number] & { state: string }> } | null }>(`/api/projects/${encodeURIComponent(project.id)}`);
+      const metadata = await json<{ coordination: { claims: WorkloadItem[]; queue?: Array<NonNullable<ProgressPayload["queue"]>[number] & { state: string }> } | null }>(`/api/projects/${encodeURIComponent(project.id)}`);
       if (!metadata.coordination) throw new Error("Current project coordination is unavailable");
+      snapshot={...snapshot,workload:{...snapshot.workload,[project.id]:metadata.coordination.claims}};
       const active = metadata.coordination.claims.filter(claim => ["active", "held"].includes(claim.state));
       const ids = new Set(active.map(claim => claim.id));
       snapshot = { ...snapshot, progress: { ...snapshot.progress, [project.id]: {

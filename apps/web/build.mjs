@@ -1,3 +1,4 @@
+import '../../scripts/build-skills.mjs';
 import { presentationMenu } from "../../packages/shared-ui/presentation.js";
 import { build as esbuild } from "esbuild";
 import { build as viteBuild } from "vite";

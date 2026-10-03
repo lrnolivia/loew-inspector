@@ -208,3 +208,26 @@ test('active handoff synchronizes queue ownership and prevents terminal or misma
     for (const mutation of [transfer, lifecycleProof]) assert.throws(() => transition(conflict, mutation, policy, now), /conflicts/);
   }
 });
+
+test('full objective and stable acceptance history survive over twenty amendments and rescope',()=>{
+  const original='Original acceptance '+ 'x'.repeat(1800);
+  let record=transition(empty(),{...request('history'),acceptance:original},policy,now);
+  for(let i=0;i<25;i++)record=transition(record,{action:'amend',id:'history',owner:'history',acceptance:'Acceptance amendment '+i+' '+ 'y'.repeat(1900),reason:'Explicit additive requirement '+i},policy,new Date(now.getTime()+i*1000));
+  const before=structuredClone(record.claims[0]);
+  assert.equal(before.amendments.length,25);assert.equal(before.amendments[0].before.acceptance,original);
+  assert.equal(before.objective_history.baseline.acceptance,original);assert.equal(before.objective_history.acceptance_versions.length,26);
+  assert.equal(new Set(before.objective_history.acceptance_versions.map(x=>x.id)).size,26);
+  record=transition(record,{action:'rescope',id:'history',owner:'history',paths:['src/history/','tests/history/'],resources:[],next_action:'Continue'},policy,now);
+  assert.deepEqual(record.claims[0].amendments,before.amendments);
+  assert.deepEqual(record.claims[0].objective_history,before.objective_history);
+});
+
+test('explicit historical queue reconciliation preserves both owners and never invents a handoff',()=>{
+ const record=transition(queuedClaim(),lifecycleProof,policy,now);record.queue[0].state='claimed';record.queue[0].owner='original-owner';
+ const request={...lifecycleProof,action:'reconcile',expected_queue_owner:'original-owner',reason:'Exact same completed artifact; preserve original queue owner and completion owner separately.'};
+ const result=transition(record,request,policy,now);
+ assert.equal(result.queue[0].state,'completed');assert.equal(result.queue[0].owner,'original-owner');
+ assert.equal(result.queue[0].completion_reconciliation.ownership_transferred,false);assert.deepEqual(result.claims,record.claims);
+ assert.deepEqual(transition(result,request,policy,now),result);
+ assert.throws(()=>transition(record,{...request,expected_queue_owner:'unrelated'},policy,now),/ownership/);
+});

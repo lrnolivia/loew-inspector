@@ -58,7 +58,7 @@ test('built website scopes every summary and preserves explicit project context 
       assert.equal(await page.locator('.attention-card').count(),0); assert.equal(await page.locator('.automation-row').count(),1);
       await page.getByRole('link',{name:/^runner/}).click(); await page.getByRole('heading',{name:'runner',exact:true,level:1}).waitFor(); await settle(page);
       assert.equal(await page.locator('.work-item').count(),1); assert.equal(await summary(page,'waiting for a response'),'1');
-      await verifySurface(page,'runner',4); await page.locator('.work-item .work-open').first().click(); await page.locator('.work-detail').waitFor({timeout:5000}).catch(async e=>{throw new Error(JSON.stringify({width,url:page.url(),errors,text:await page.locator('body').innerText()}),{cause:e})});
+      await verifySurface(page,'runner',4); const destination=new URL(await page.locator('.work-item .work-open').first().getAttribute('href'));assert.equal(destination.origin,'https://ctrl.loew.fi');await page.goto(fixture.origin+destination.pathname+destination.search+destination.hash); await page.locator('.work-detail').waitFor({timeout:5000}).catch(async e=>{throw new Error(JSON.stringify({width,url:page.url(),errors,text:await page.locator('body').innerText()}),{cause:e})});
       await page.getByRole('link',{name:'← runner'}).click(); await page.getByRole('heading',{name:'runner',exact:true,level:1}).waitFor(); await settle(page);
       assert.ok(page.url().endsWith('#/runner?project=field'));
       await page.getByRole('link',{name:/^night shift/}).click(); await page.getByRole('heading',{name:'night shift',exact:true,level:1}).waitFor(); await settle(page);
@@ -156,7 +156,7 @@ test('compact navigation, full-height rail and local presentation presets remain
       assert.equal(await page.locator('[name=preset]').inputValue(),'approved');
       assert.equal(await page.evaluate(()=>localStorage.getItem('relay-presentation')),null);
       await page.getByRole('button',{name:'Switch to light mode',exact:true}).click(); assert.equal(await page.locator('html').getAttribute('data-theme'),'light');
-      assert.equal(await page.locator('#app-settings').getAttribute('target'),'_blank');
+      assert.equal(await page.locator('#app-settings').count(),0,'Refresh tools is on the Relay connection panel');
       await page.close();
     }
   } finally {await browser.close();await fixture.close();}

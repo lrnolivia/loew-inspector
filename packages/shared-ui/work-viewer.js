@@ -1,3 +1,4 @@
+import { workspaceLink, CTRL_ORIGIN } from './workspace-links.js';
 import {captureMotionLayout,settleMotionLayout} from "./field-springs.js";
 import {projectInGroup} from "./project-groups.js";
 import {glyph} from './glyphs.js';
@@ -8,7 +9,7 @@ const labels={pending:'Need review',completed:'Completed',stale:'Stale',archived
 const names={relay:'relay',field:'field',loewfi:'loew.fi',rtxforge:'rtxForge','bazzite-custom':'loewOS',gamebridge:'GameBridge'};
 const name=id=>names[id]||id.replace(/[-_]+/g,' ');
 export function projectBadge(project){return '<span class="work-project-badge">'+iconSlot(project)+'<strong>'+escape(name(project))+'</strong></span>';}
-function safeHref(value){try{const url=new URL(value,location.origin);return url.origin===location.origin?url.pathname+url.search+url.hash:'';}catch{return '';}}
+function safeHref(value){try{const url=new URL(value,location.origin);return url.origin===CTRL_ORIGIN?url.href:url.origin===location.origin?url.pathname+url.search+url.hash:'';}catch{return '';}}
 async function request(action,items){
  const response=await fetch('/api/work-review',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({action,items}),signal:AbortSignal.timeout(45000)});
  if(!response.ok)throw new Error('Review storage returned '+response.status+'. Refresh before trying again.');

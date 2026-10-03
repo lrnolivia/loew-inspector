@@ -10,7 +10,7 @@
     "./visual-evidence": "./src/visual-evidence.mjs"
   },
   "scripts": {
-    "test": "node --test test/*.test.mjs",
+    "test": "node --test test/*.test.mjs src/jobs.test.mjs src/context-service.test.mjs src/execution-browser.test.mjs ../skills/*.test.mjs ../../scripts/runner-sync.test.mjs ../../scripts/relay-executor.test.mjs",
     "check": "node --check src/cloudflare-worker.mjs",
     "dashboard": "node src/server.mjs"
   },
