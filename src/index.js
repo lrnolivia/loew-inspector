@@ -403,7 +403,7 @@ async function mcp(request, access, env) {
     if (uri === RELAY_CONTROL_CENTER_URI) {
       return rpc(id, { contents: [relayControlCenterResource()] });
     }
-    if (uri === RELAY_CONTEXT_CARD_URI || uri === 'ui://relay/context-card/v11.html') {
+    if (uri === RELAY_CONTEXT_CARD_URI || uri === 'ui://relay/context-card/v12.html' || uri === 'ui://relay/context-card/v11.html') {
       return rpc(id, { contents: [{...relayContextCardResource(), uri}] });
     }
     if (uri === RELAY_STATUS_CARD_URI) {

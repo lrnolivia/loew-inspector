@@ -20,10 +20,11 @@ const fixtures={
  blocked:{project:'relay',ok:false,claim:{id:'sample-blocked',primary_team:'inspector',primary_staff:'nico',state:'blocked',goal:'A long project name still needs a clear, readable explanation'},error:{message:'The preview could not be verified. Source remains unchanged; inspect the reported failure before retrying.'}},
  empty:{project:'relay',checks:{check_runs:[]}},
  complete:{project:'relay',claim:{id:'sample-complete',primary_team:'runner',primary_staff:'ellis',state:'completed',goal:'Verification finished',next_action:'Obsolete next action must stay hidden.'}},
+ jobs:{project:'relay',claims:[{id:'relay-card-polish-20261003',primary_team:'runner',primary_staff:'ellis',state:'active',goal:'Continue the full project implementation and review every source and runtime detail. '.repeat(8),next_action:'Review the captured layout and current job status.'},{id:'relay-feedback-delivery-20261003',state:'working',primary_staff:'roman'},{id:'old-task',state:'completed',primary_staff:'nico'}]},
  loading:null,
 };
 try {
- const cases=[['runner',768,'dark'],['inspector',768,'light'],['relay',390,'dark'],['night-shift',390,'light'],['blocked',320,'dark'],['empty',320,'light'],['complete',390,'dark'],['loading',390,'light']];
+ const cases=[['runner',768,'dark'],['inspector',768,'light'],['relay',390,'dark'],['night-shift',390,'light'],['blocked',320,'dark'],['empty',320,'light'],['complete',390,'dark'],['loading',390,'light'],['jobs',390,'dark'],['jobs',768,'light']];
  for(const [name,width,theme] of cases){
   const page=await browser.newPage({viewport:{width,height:1000},colorScheme:theme,reducedMotion:'reduce'}),errors=[],unexpected=[];
   page.on('pageerror',error=>errors.push(error.message));
@@ -49,6 +50,7 @@ try {
   await writeFile(directory+'/'+name+'-'+width+'-geometry.json',JSON.stringify(geometry,null,2));
   assert.equal(geometry.overflow,false);assert.ok(geometry.font);assert.match(geometry.headingFont,/Momo/);assert.ok(geometry.buttons.length<=2);assert.ok(geometry.buttons.every(button=>button.height>=44));assert.equal(geometry.glyphMotion,'none');assert.equal(geometry.diagnosticsExpanded,false);if(name!=='loading')assert.ok(geometry.images.every(image=>image.loaded));
   if(['relay','inspector','night-shift','blocked','empty','complete'].includes(name))assert.equal(geometry.percent,null);
+  if(name==='jobs'){assert.equal(await frame.locator('#metric').textContent(),'2');assert.match(await frame.locator('#rows').textContent(),/relay card polish/);assert.doesNotMatch(await frame.locator('#rows').textContent(),/Ellis|Roman/);}
   if(name==='complete')assert.equal(await frame.locator('#next').isVisible(),false);
   assert.deepEqual(errors,[]);assert.deepEqual(unexpected,[]);
   const surface=`context-card-${name}-${width}-${theme}`,screenshot=await frame.locator('#card').screenshot();

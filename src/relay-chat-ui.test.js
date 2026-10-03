@@ -5,7 +5,7 @@ import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, RELAY_STATUS_CARD_URI,
 test("Relay publishes one versioned compact MCP card resource", () => {
   const descriptor = relayContextCardDescriptor();
   const resource = relayContextCardResource();
-  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v12.html");
+  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v13.html");
   assert.equal(descriptor.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.mimeType, "text/html;profile=mcp-app");
@@ -466,4 +466,28 @@ test('late input after initial recovery window still fetches once and empty glob
   await page.frameLocator('#widget').locator('#title').filter({hasText:'Late input recovered'}).waitFor();
   assert.equal((await page.evaluate(()=>window.calls)).length,1);
  }finally{await browser.close();}
+});
+
+
+test("job-focused card rows show work rather than staff and collapse long copy", async () => {
+  const {contextCardModel} = await import('./relay-chat-ui.js');
+  const detail='Review the entire recorded delivery history and every pending check. '.repeat(10);
+  const model=contextCardModel({project:'relay',coverage:{active:7},claims:[
+    {id:'relay-card-polish-20261003',state:'active',primary_staff:'ellis',goal:detail,next_action:detail},
+    {id:'relay-skills-completion-20261003',state:'working',primary_staff:'roman'},
+    {id:'old-job',state:'completed',primary_staff:'nico'}
+  ]});
+  assert.deepEqual(model.rows.map(x=>x.label),['relay card polish','relay skills completion']);
+  assert.equal(model.metric,'7'); assert.equal(model.metric_label,'active jobs');
+  assert.ok(model.title.length<=72); assert.ok(model.summary.length<=150);
+  assert.equal(model.next_step,null); assert.equal(model.evidence.goal,detail);
+  assert.equal(model.primary_staff,'Ellis');
+});
+
+test("job-focused card never turns a missing completion value into zero percent", async () => {
+  const {contextCardModel}=await import('./relay-chat-ui.js');
+  for(const value of [null,undefined,'']) {
+    const model=contextCardModel({claims:[{id:'check-preview',state:'active',progress_percent:value}]});
+    assert.equal(model.percent,null); assert.equal(model.metric,'1');
+  }
 });
