@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "ctrl",
-  "updated_at": "2026-10-03T04:46:04.496Z",
+  "updated_at": "2026-10-03T05:46:09.264Z",
   "legacy_branches": [
     "main"
   ],
@@ -205,17 +205,17 @@
       ],
       "goal": "Repair ctrl navigation and whole-page Inspector regressions while preserving the accepted project strip and completing review delivery.",
       "acceptance": "First checkpoint: new icon-only mobile bottom dock, selected glow retained, above-icon press label with Field spring motion, drag/cancel and reduced-motion handling, small backgroundless Settings right. Larger feature-header marks and tighter title/subtitle spacing. Review screenshots before publication. Project strip retains committed global membership during refresh, uses initial skeletons, small header loading indicator, atomic real updates and no separate loading-only bar; failures remain visible. Desktop and mobile regression coverage. Preserve original Inspector scope: direct evidence links independent of slow catalogue, render images promptly, unresolved state not pending/completed, preserve legacy/modern review semantics, cancellation and drafts, nonempty fixtures. Full artifact-bound feedback bridge and approved mosaic remain separately accountable.\nLatest superseding design decision: PR7 mobile dock REJECTED; research and clarify requested Apple floating tab-bar proportions in solid ctrl surfaces, no Liquid Glass, preview before publish. New project-strip design APPROVED. Correct compact gear horizontal center and expanded gear right alignment, breadcrumb full content width, trailing badge padding. Inspector current compact Visual rows belong List; recover approved prior Visual cards. Fix filter disclosure opening AND closing and polish controls. Verify populated content, slow/failure responses and actual screenshots across desktop/mobile; no HTTP200-only acceptance. Coordinate reply repair release when verified; do not abandon any original scope.",
-      "next_action": "PAUSED by Lauren while all assignments are reconciled ready to execute. Retain PR7 draft629c961e and separate Inspector loading WIP; no publish. First resume step: fix test/browser.mjs ambiguous feature-heading scroll selector, rerun browser CI and inspect screenshots. Previous geometry7f17d003 passed. Current17unit/typecheck pass, populated browser reached4cards/control tests with zeroJSerrors but fullrun failed. Latest mobile direction iOS27shape/spacing, labels, largerbareglyphs, detachedSettingscircle, opaquectrlsurfaces. Globalapprovedprojectbadge applies everywhere. Finish original Inspector loading/artifact-bound feedback acceptance before complete.",
+      "next_action": "Lauren explicitly resumed CTRL ONLY at05:45 UTC. Continue held PR7 draft629c961e; fix test selector, verify populated Inspector and Apple-style dock with actual screenshots before publication. Parent implements without new coding workers; Field/RTX/MCP stay user-Codex-owned. Preserve full original review/telemetry and latest casing/badge acceptance. Coordinate backend dependencies, no overlapping Relay writes.",
       "category": "implementation",
       "primary_team": "inspector",
       "supporting_teams": [],
       "primary_staff": "valentina",
       "supporting_staff": [],
       "base_sha": "5c662ae19dae2fc4dd088ba7beb98aae0bdd23e4",
-      "state": "held",
+      "state": "active",
       "created_at": "2026-10-03T03:28:29.214Z",
-      "updated_at": "2026-10-03T04:46:04.496Z",
-      "lease_until": "2026-10-03T16:46:04.496Z",
+      "updated_at": "2026-10-03T05:46:09.264Z",
+      "lease_until": "2026-10-03T17:46:09.264Z",
       "amendment_count": 2,
       "amendments": [
         {
