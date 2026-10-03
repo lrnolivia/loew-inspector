@@ -1,3 +1,4 @@
+import { bindLiveEvents } from '../public/live-events.js';
 import {projectInGroup} from "../../../packages/shared-ui/project-groups.js";
 import { createContext, useContext, useEffect, useMemo, useRef, useState, type ReactNode } from "react";
 import { useSearchParams } from "react-router-dom";
@@ -10,6 +11,7 @@ type LiveRelay = {
   snapshot: DashboardSnapshot | null;
   allSnapshot: DashboardSnapshot | null;
   state: ConnectionState;
+  eventConnected: boolean;
   error: string | null;
   refresh: () => Promise<void>;
   project: string;
@@ -27,11 +29,13 @@ export function LiveRelayProvider({ children }: { children: ReactNode }) {
     else params.delete("project");
     setSearchParams(params);
   };
+  const [eventConnected,setEventConnected]=useState(false);
   const [snapshot, setSnapshot] = useState<DashboardSnapshot | null>(null);
   const [state, setState] = useState<ConnectionState>("connecting");
   const [error, setError] = useState<string | null>(null);
   const lastSuccess = useRef(0);
   const busy = useRef(false);
+  const refreshPending = useRef(false);
   const latestSnapshot = useRef<DashboardSnapshot | null>(null);
 
   const arrivals = useRef<Record<string,{ids:string[]}> | null>(null);
@@ -39,7 +43,7 @@ export function LiveRelayProvider({ children }: { children: ReactNode }) {
     try { const stored=JSON.parse(sessionStorage.getItem('relay.arrivals.v1') || '{}'); arrivals.current=stored && typeof stored==='object' && !Array.isArray(stored)?stored:{}; } catch { arrivals.current={}; }
   }
   async function refresh() {
-    if (busy.current) return;
+    if (busy.current) {refreshPending.current=true;return;}
     busy.current = true;
     if (lastSuccess.current) setState("reconnecting");
     try {
@@ -80,11 +84,13 @@ export function LiveRelayProvider({ children }: { children: ReactNode }) {
       setState(lastSuccess.current && Date.now() - lastSuccess.current < 30_000 ? "reconnecting" : "offline");
     } finally {
       busy.current = false;
+      if(refreshPending.current){refreshPending.current=false;void refresh();}
     }
   }
 
   useEffect(() => {
     void refresh();
+    const unbindEvents=bindLiveEvents({invalidate:()=>void refresh(),connection:setEventConnected,disabled:Boolean((window as Window & {__RELAY_MCP__?:boolean}).__RELAY_MCP__)});
     const timer = window.setInterval(() => void refresh(), 60_000);
     const staleTimer = window.setInterval(() => {
       if (lastSuccess.current && Date.now() - lastSuccess.current > 90_000) {
@@ -96,6 +102,7 @@ export function LiveRelayProvider({ children }: { children: ReactNode }) {
     };
     document.addEventListener("visibilitychange", onVisible);
     return () => {
+      unbindEvents();
       window.clearInterval(timer);
       window.clearInterval(staleTimer);
       document.removeEventListener("visibilitychange", onVisible);
@@ -109,7 +116,7 @@ export function LiveRelayProvider({ children }: { children: ReactNode }) {
     loadingProgress: snapshot.loadingProgress?.filter(id => projectInGroup(id,project)),
     failedProgress: snapshot.failedProgress?.filter(id => projectInGroup(id,project))
   } : snapshot, [snapshot, project]);
-  const value = { snapshot: scopedSnapshot, allSnapshot: snapshot, state, error, refresh, project, selectProject };
+  const value = { snapshot: scopedSnapshot, allSnapshot: snapshot, state, eventConnected, error, refresh, project, selectProject };
   return <LiveRelayContext.Provider value={value}>{children}</LiveRelayContext.Provider>;
 }
 

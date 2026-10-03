@@ -160,9 +160,7 @@ test("preserved legacy components and Inspector review support mobile, deep link
       assert.match(todayIcon.src, /^data:image\/png;base64,/);
       assert.equal(todayIcon.naturalWidth, 1024);
       assert.equal(todayIcon.naturalHeight, 1024);
-      assert.equal(await view.locator("#app-settings").evaluate(node => getComputedStyle(node).borderBottomWidth), "0px");
-      assert.equal(await view.locator("#app-settings").evaluate(node => getComputedStyle(node).backgroundColor), "rgba(0, 0, 0, 0)");
-      assert.equal(await view.locator("#app-settings .utility-icon .relay-glyph").count(), 1);
+      assert.equal(await view.locator(".presentation-menu #app-settings").count(), 0, "Refresh tools belongs to the Relay connection panel");
 
       const sidebar = view.locator(".operator-topbar");
       const shell = view.locator(".operator-shell");
@@ -341,10 +339,7 @@ test("preserved legacy components and Inspector review support mobile, deep link
       await view.locator(".presentation-menu > summary").click();
       await view.getByRole("button", { name: "Switch to dark mode", exact: true }).click();
       assert.equal(await view.locator("html").getAttribute("data-theme"), "dark");
-      assert.equal(await view.locator("#app-settings").evaluate(node => { window.open = href => { window.__testExternal = href; }; const event = new MouseEvent("click", { bubbles: true, cancelable: true }); node.dispatchEvent(event); return event.defaultPrevented; }), true, "Inspector opens settings once through its existing host-aware handler");
-      assert.equal(await view.locator("body").evaluate(() => window.__testExternal), "https://chatgpt.com/settings/plugins-settings/plugin_asdk_app_6abe234861d881919e30db65d656492f");
-      assert.equal(await view.locator("#app-settings .glyph-refresh").count(), 1);
-      assert.equal(await view.locator("#app-settings .relay-glyph").evaluate(node => getComputedStyle(node).width), "18px");
+      assert.equal(await view.locator("#app-settings").count(), 0);
       if (mode === "web") {
         await page.emulateMedia({ colorScheme: "light" });
         await page.reload();

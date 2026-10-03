@@ -1,3 +1,4 @@
+import { workspaceLink, CTRL_ORIGIN } from './workspace-links.js';
 import { glyph } from './glyphs.js';
 
 const storageKey = 'relay.notifications.v1';
@@ -30,7 +31,7 @@ export function publishNotification(input) {
   const item = { id: String(input.id || feature + ':' + message), feature, project: String(input.project || ''),
     title: String(input.title || labels[feature]).slice(0, 120), message,
     severity: ['info','warning','error'].includes(input.severity) ? input.severity : 'info',
-    href: String(input.href || ''), action: String(input.action || 'Open context'),
+    href: workspaceLink(String(input.href || '')), action: String(input.action || 'Open context'),
     createdAt: Date.now(), resolved: false, toastUntil: Date.now() + (input.severity === 'error' ? 10000 : 7000), dismissed: false };
   entries = [item, ...list.filter(entry => entry.id !== item.id)].sort((a,b) => Number(b.severity !== 'info' && !b.resolved) - Number(a.severity !== 'info' && !a.resolved)).filter((item,index) => index < 50 || (!item.resolved && item.severity !== 'info'));
   emit();
@@ -46,7 +47,7 @@ export function dismissNotification(id) {
   item.dismissed = true; item.toastUntil = 0; emit();
 }
 function safeHref(href) {
-  try { const url = new URL(href, location.origin); return href && url.origin === location.origin ? url.pathname + url.search + url.hash : ''; } catch { return ''; }
+  try { const url = new URL(href, location.origin); return href && url.origin === CTRL_ORIGIN ? url.href : url.origin === location.origin ? url.pathname + url.search + url.hash : ''; } catch { return ''; }
 }
 function messageMarkup(item, toast = false) {
   const href = safeHref(item.href);

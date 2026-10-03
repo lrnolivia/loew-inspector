@@ -28,3 +28,12 @@ test('truncated tree and aliases fail closed',async()=>{
  assert.equal((await discoverProjectIcon(project,async()=>({tree:[],truncated:true}))).status,'unavailable');
  assert.equal((await discoverProjectIcon({...project,alias_of:'other'},()=>{throw Error('should not fetch')})).status,'unavailable');
 });
+
+test('explicit product manifest verifies exact bytes and fails closed on drift',async()=>{
+ const {createHash}=await import('node:crypto');const bytes=Buffer.from('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8"/></svg>');
+ const manifest={schema:1,project:'fixture',variants:{primary:{path:'assets/chosen.svg',sha256:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length}}};
+ const files=[{path:'relay.assets.json',type:'blob',sha:'a'.repeat(40),size:1000},{path:'assets/chosen.svg',type:'blob',sha:'b'.repeat(40),size:bytes.length}];
+ const api=async url=>url.includes('/git/trees/')?{tree:files,truncated:false}:{encoding:'base64',content:(url.endsWith('a'.repeat(40))?Buffer.from(JSON.stringify(manifest)):bytes).toString('base64')};
+ const result=await discoverProjectIcon({id:'fixture',repository:'lrnolivia/fixture'},api);assert.equal(result.icon.path,'assets/chosen.svg');assert.equal(result.icon.manifest,'relay.assets.json');
+ manifest.variants.primary.sha256='c'.repeat(64);assert.equal((await discoverProjectIcon({id:'fixture',repository:'lrnolivia/fixture'},api)).reason,'declared-asset-invalid');
+});

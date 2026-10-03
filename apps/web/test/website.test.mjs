@@ -8,17 +8,18 @@ import { webAssets, webBuildId } from "../generated.js";
 import worker from "../../mcp/index.js";
 
 test("website entrypoints serve React and expose a deterministic build identity", async () => {
-  for (const route of ["/", "/index.html", "/inspector"]) {
+  for (const route of ["/", "/index.html"]) {
     const response = await worker.fetch(new Request("https://relay.loew.fi" + route), {});
     assert.equal(response.status, 200);
     assert.equal(response.headers.get("X-Relay-Web-Build"), webBuildId);
     assert.match(webBuildId, /^[a-f0-9]{64}$/);
     assert.match(await response.text(), route === "/inspector" ? /data-relay-inspector-navigation/ : /id="root"/);
   }
+  const review=await worker.fetch(new Request("https://relay.loew.fi/inspector?project=relay"),{});assert.equal(review.status,308);assert.equal(review.headers.get("Location"),"https://ctrl.loew.fi/inspector?project=relay");
   for (const route of ["today", "runner", "night-shift"]) {
     const response = await worker.fetch(new Request("https://relay.loew.fi/" + route + "?project=relay"), {});
     assert.equal(response.status, 308);
-    assert.equal(response.headers.get("Location"), "https://relay.loew.fi/#/" + route + "?project=relay");
+    assert.equal(response.headers.get("Location"), "https://ctrl.loew.fi/#/" + route + "?project=relay");
   }
 });
 

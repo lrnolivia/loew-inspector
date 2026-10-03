@@ -1,3 +1,5 @@
+import { executionBrowser } from './execution-browser.mjs';
+import { handleFeedbackBrowser, feedbackBindingForEvidence } from '../../../src/feedback-browser.js';
 import { handleRetainedPreview, getRetainedBundle, retainedMetadata } from "../../../src/retained-preview.js";
 import { githubApiRequest, sourceAuthStatus } from "../../../src/source.js";
 import { callProgress } from "../../../src/progress-api.js";
@@ -248,6 +250,14 @@ export async function handleApi(request, env, { authenticatedMcp = false } = {})
 
   const accessError = accessGuard(request, env, authenticatedMcp);
   if (accessError) return accessError;
+  if (url.pathname.startsWith('/api/feedback/')) {
+    const guard = humanQaGuard(request, authenticatedMcp); if (guard) return guard;
+    return await handleFeedbackBrowser(request, env, { authenticated: true }) || json({ error: 'Feedback route not found' }, 404);
+  }
+  if(url.pathname.startsWith('/api/execution/')) {
+    const guard=humanQaGuard(request,authenticatedMcp);if(guard)return guard;
+    return executionBrowser(request,env,{authenticated:true});
+  }
   if(url.pathname.startsWith('/api/retained-preview')) {
     const guard=humanQaGuard(request,authenticatedMcp);if(guard)return guard;
     return await handleRetainedPreview(request,env.EVIDENCE)||json({error:'Retained build route not found'},404);
@@ -326,7 +336,8 @@ export async function handleApi(request, env, { authenticatedMcp = false } = {})
       project: url.searchParams.get("project"),
       environment: url.searchParams.get("environment"),
       pr: url.searchParams.get("pr"),
-      run: url.searchParams.get("run")
+      run: url.searchParams.get("run"),
+      cursor: url.searchParams.get("cursor")
     }));
   }
 
@@ -348,10 +359,12 @@ export async function handleApi(request, env, { authenticatedMcp = false } = {})
     const questions = qaQuestionsForEvidence(evidence);
     if (request.method === "GET") {
       const review = await getQaReview(env.EVIDENCE, qaMatch[1]);
-      return json({ ok: true, evidence, questions, review });
+      const feedback_binding = await feedbackBindingForEvidence(evidence, env);
+      return json({ ok: true, evidence, questions, review, feedback_binding });
     }
-    const review = await saveQaReview(env.EVIDENCE, qaMatch[1], await readBody(request), evidence);
-    const feedback = await recordQaFeedback(env.EVIDENCE, evidence, review);
+    const input = await readBody(request);
+    const review = await saveQaReview(env.EVIDENCE, qaMatch[1], input, evidence);
+    const feedback = input.feedback_transport === 'schema2' ? { routed: false, reason: 'Explicit schema-2 submission follows save' } : await recordQaFeedback(env.EVIDENCE, evidence, review);
     return json({ ok: true, evidence_id: qaMatch[1], questions, review, feedback });
   }
 

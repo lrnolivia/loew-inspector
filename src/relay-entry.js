@@ -1,3 +1,6 @@
+import { contextTool, callContext } from '../packages/runner/src/context-service.mjs';
+import { jobsTool, callJobs } from '../packages/runner/src/job-control.mjs';
+import { skillsTool, callSkills } from './skills-service.js';
 import {LOEW_INTERFACE_SKILL_URI,loewInterfaceSkillCatalogEntry,loewInterfaceSkillResourceDescriptor,loewInterfaceSkillResource} from "./loew-interface-skill.js";
 import { uiApiTool, callUiApi } from "../apps/web/api.js";
 import { readMcpBody, mcpBodyErrorResponse } from "./mcp-request-body.js";
@@ -81,7 +84,7 @@ export function augmentToolList(tools) {
     securitySchemes: schemes,
     _meta: { ...(old?._meta || {}), securitySchemes: schemes }
   };
-  const extensionTools = [...lifecycle, ...sourceTextMutationTools, staffDirectoryTool, runnerCleanupTool, cloudUploadTool, uiApiTool];
+  const extensionTools = [contextTool, jobsTool, skillsTool, ...lifecycle, ...sourceTextMutationTools, staffDirectoryTool, runnerCleanupTool, cloudUploadTool, uiApiTool];
   const names = new Set(extensionTools.map(tool => tool.name));
   const sourceDescriptions = {
     relay_source_file: "QUERY — read one UTF-8 repository file through relay.SOURCE. Safe to retry. Use its blob SHA as the expected identity before exact text mutation when applicable.",
@@ -192,7 +195,7 @@ function patchVersion(payload) {
 }
 
 function isExtensionTool(name) {
-  return name === uiApiTool.name || name === createBranch.name || lifecycle.some(tool => tool.name === name) || isSourceTextMutationTool(name) || name === staffDirectoryTool.name || name === runnerCleanupTool.name || name === cloudUploadTool.name;
+  return name === contextTool.name || name === jobsTool.name || name === skillsTool.name || name === uiApiTool.name || name === createBranch.name || lifecycle.some(tool => tool.name === name) || isSourceTextMutationTool(name) || name === staffDirectoryTool.name || name === runnerCleanupTool.name || name === cloudUploadTool.name;
 }
 async function authProbe(request, message, env) {
   const headers = new Headers(request.headers);
@@ -298,7 +301,21 @@ export default {
         const name = message.params.name;
         let result;
         if (name === uiApiTool.name) {
-          result = await callUiApi(message.params?.arguments || {}, env);
+          result = await callUiApi(message.params?.arguments || {}, env, { rpc: async method => {
+            if(!['initialize','ping','tools/list'].includes(method))throw Error('Unsupported panel discovery method');
+            const response=await legacy.fetch(new Request(request.url,{method:'POST',headers:request.headers,body:JSON.stringify({jsonrpc:'2.0',id:0,method})}),env);
+            if(response.status!==200)throw Error('MCP handshake unavailable');
+            const body=await response.json();if(body.error)throw Error('MCP handshake failed');
+            if(method==='tools/list')body.result.tools=augmentToolList(body.result.tools);
+            if(method==='initialize')patchVersion(body);
+            return body.result;
+          } });
+        } else if (name === contextTool.name) {
+          result = await callContext(message.params?.arguments || {}, env);
+        } else if (name === jobsTool.name) {
+          result = await callJobs(message.params?.arguments || {}, env);
+        } else if (name === skillsTool.name) {
+          result = await callSkills(message.params?.arguments || {}, undefined, env);
         } else if (name === runnerCleanupTool.name) {
           const args = validateRunnerCleanupArguments(message.params?.arguments || {});
           result = await callRunnerCleanup(args, env);

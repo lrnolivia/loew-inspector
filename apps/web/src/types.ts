@@ -73,7 +73,10 @@ export type RunnerWorker = {
   };
 };
 
+export type WorkloadItem = { id:string; state:string; completed_at?:string; updated_at?:string };
+
 export type DashboardSnapshot = {
+  workload?: Record<string, WorkloadItem[]>;
   fetchedAt: string;
   projects: ProjectRegistration[];
   progress: Record<string, ProgressPayload>;

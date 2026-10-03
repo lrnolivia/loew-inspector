@@ -1,4 +1,4 @@
-import { readEvidenceIndex, readRecentEvidenceIndex } from "../../../src/evidence-index.js";
+import { readEvidenceIndex, EVIDENCE_INDEX_PREFIX } from "../../../src/evidence-index.js";
 const EVIDENCE_ID = /^vis_[a-zA-Z0-9-]{8,128}$/;
 const RUN_ID = /^run_[a-zA-Z0-9._-]{8,128}$/;
 const VISUAL_PREFIX = "visual/";
@@ -75,28 +75,62 @@ export function normalizeVisualFilters(input = {}) {
 
 export async function listVisualEvidence(bucket, limit = 60, filters = {}) {
   const selected = normalizeVisualFilters(filters);
-  const indexed=await readRecentEvidenceIndex(bucket);
-  const objects=await listAllObjects(bucket,VISUAL_PREFIX,20000);
-  const indexedIds=new Set(indexed.records.map(record=>record.evidence_id));
-  const keys=metadataKeys(objects).filter(key=>!indexedIds.has(key.split('/').at(-1).slice(0,-5))).sort().reverse();
-  // Old captures predate the index. Keep the response bounded and disclose its
-  // legacy window; exact-ID lookup still paginates the full catalog.
-  const legacyKeys=keys.slice(0,650),legacy=[];
-  for(let offset=0;offset<legacyKeys.length;offset+=20)legacy.push(...await Promise.all(legacyKeys.slice(offset,offset+20).map(key=>readJsonObject(bucket,key))));
-  const partial=indexed.truncated||keys.length>legacyKeys.length;
-  const records = [...indexed.records,...legacy]
-    .filter(record => record && isEvidenceId(record.evidence_id))
-    .filter(record => !selected.project || record.context?.project === selected.project)
-    .filter(record => !selected.environment || record.context?.environment === selected.environment)
-    .filter(record => !selected.pr || Number(record.context?.pr_number) === selected.pr)
-    .filter(record => !selected.run || record.run_id === selected.run)
-    .sort((a, b) => String(b.captured_at || "").localeCompare(String(a.captured_at || "")))
-    .slice(0, Math.max(1, Math.min(100, Number(limit) || 60)))
-    .map(record => ({
-      ...record,
-      screenshot_url: "/api/visual/" + encodeURIComponent(record.evidence_id) + "/image"
-    }));
-  return { ok: true, count: records.length, filters: selected, evidence: records, partial, coverage: partial ? "bounded-index-and-legacy-window" : "complete-catalog" };
+  const bound = Math.max(1, Math.min(100, Number(limit) || 60));
+  const binding = JSON.stringify(selected);
+  let position = { phase: selected.project ? 'project' : 'recent', cursor: undefined, binding };
+  if (filters.cursor) {
+    try {
+      if (typeof filters.cursor !== 'string' || filters.cursor.length > 8192) throw Error();
+      position = JSON.parse(Buffer.from(filters.cursor, 'base64url').toString('utf8'));
+      if (position.binding !== binding || !['project', 'recent', 'legacy'].includes(position.phase) ||
+          (position.phase === 'project' && !selected.project) ||
+          (position.cursor !== undefined && (typeof position.cursor !== 'string' || !position.cursor || position.cursor.length > 4096))) throw Error();
+    } catch { throw Object.assign(Error('Invalid or mismatched evidence cursor'), { status: 400 }); }
+  }
+  const records = [], seen = new Set();
+  let unreadable = 0;
+  // At most one bounded storage page per phase per request. Empty filtered pages
+  // carry a cursor; callers must not interpret them as absence or scan to fill.
+  for (let phases = 0; phases < 3; phases++) {
+    const phase = position.phase;
+    const prefix = phase === 'project' ? EVIDENCE_INDEX_PREFIX + 'project/' + selected.project + '/' :
+      phase === 'recent' ? EVIDENCE_INDEX_PREFIX + 'recent/' : VISUAL_PREFIX;
+    const page = await bucket.list({ prefix, limit: bound, cursor: position.cursor });
+    if (page.truncated && (!page.cursor || page.cursor === position.cursor || !page.objects?.length))
+      throw Object.assign(Error('Invalid evidence catalog cursor'), { status: 503 });
+    const keys = phase === 'legacy' ? metadataKeys(page.objects || []) : (page.objects || []).map(x => x.key);
+    for (let offset = 0; offset < keys.length; offset += 10) {
+      const part = await Promise.all(keys.slice(offset, offset + 10).map(async key => {
+        const record = await readJsonObject(bucket, key);
+        if (!record || !isEvidenceId(record.evidence_id)) { unreadable++; return null; }
+        if (phase === 'recent' && selected.project && (record._catalog_version === 2 || await bucket.get(EVIDENCE_INDEX_PREFIX+'project/'+selected.project+'/'+key.split('/').at(-1)))) return null;
+        if (phase === 'legacy') {
+          const stamp=Date.parse(record.captured_at);
+          const recentKey=Number.isFinite(stamp)?EVIDENCE_INDEX_PREFIX+'recent/'+String(9999999999999-stamp).padStart(13,'0')+'-'+record.evidence_id+'.json':null;
+          if (await readEvidenceIndex(bucket,record.evidence_id) || (recentKey && await bucket.get(recentKey))) return null;
+        }
+        return record;
+      }));
+      for (const value of part) {
+        if (!value || seen.has(value.evidence_id) ||
+            (selected.project && value.context?.project !== selected.project) ||
+            (selected.environment && value.context?.environment !== selected.environment) ||
+            (selected.pr && Number(value.context?.pr_number) !== selected.pr) ||
+            (selected.run && value.run_id !== selected.run)) continue;
+        seen.add(value.evidence_id);
+        const { _catalog_version, ...record } = value;
+        records.push({ ...record, screenshot_url: '/api/visual/' + encodeURIComponent(record.evidence_id) + '/image' });
+      }
+    }
+    position = page.truncated ? { ...position, cursor: page.cursor } :
+      phase === 'project' ? { phase: 'recent', binding } : phase === 'recent' ? { phase: 'legacy', binding } : null;
+    if (records.length || page.truncated || !position || unreadable) break;
+  }
+  records.sort((a, b) => String(b.captured_at || '').localeCompare(String(a.captured_at || '')));
+  return { ok: true, count: records.length, filters: selected, evidence: records,
+    partial: Boolean(position) || unreadable > 0, coverage: 'bounded-cursor-page', unreadable,
+    next_cursor: position ? Buffer.from(JSON.stringify(position)).toString('base64url') : null,
+    ordering: 'indexed captures newest first; historical unindexed pages use storage order' };
 }
 
 export async function getVisualEvidence(bucket, evidenceId) {

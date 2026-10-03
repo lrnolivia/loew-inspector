@@ -1,3 +1,4 @@
+import { ExecutionPanel } from '../components/ExecutionPanel';
 import { WorkViewer } from "../components/WorkViewer";
 import { useWorkItems } from "../components/useWorkItems";
 import { statusLabel, summaryText } from "../../../../packages/shared-ui/presentation-copy.js";
@@ -40,9 +41,10 @@ export function NightShiftPage() {
     <div className="page operator-page react-page">
       <FeatureHeader feature="night-shift" title="night shift" subtitle="monitor" />
       <ProjectSwitcher />
+      <ExecutionPanel />
       <SignalDeck cards={cards} feature="night-shift" />
       <section className="operator-section">
-        <div className="section-heading"><h2>while you were away</h2><span>{results.length} results on record</span></div>
+        <div className="section-heading"><h2>automatic check history</h2><span>{results.length} results on record</span></div>
         <WorkViewer id="night-shift" items={workItems} project={contextProject} incomplete={!allSnapshot} />
       </section>
     </div>

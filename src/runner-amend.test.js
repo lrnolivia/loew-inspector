@@ -116,7 +116,7 @@ test('amend rejects wrong owner, completed work, no-op changes, and missing reas
   }, policy, now), /reason/);
 });
 
-test('amendment audit retains latest 20 entries while preserving total count', () => {
+test('amendment audit retains all entries and total count', () => {
   let next = record([baseClaim()]);
   for (let i = 1; i <= 25; i += 1) {
     next = transition(next, {
@@ -129,7 +129,7 @@ test('amendment audit retains latest 20 entries while preserving total count', (
   }
   const item = next.claims[0];
   assert.equal(item.amendment_count, 25);
-  assert.equal(item.amendments.length, 20);
-  assert.equal(item.amendments[0].reason, 'checkpoint 6');
-  assert.equal(item.amendments[19].reason, 'checkpoint 25');
+  assert.equal(item.amendments.length, 25);
+  assert.equal(item.amendments[0].reason, 'checkpoint 1');
+  assert.equal(item.amendments[24].reason, 'checkpoint 25');
 });

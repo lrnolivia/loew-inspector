@@ -35,9 +35,9 @@ function fixture() {
   const api = async path => {
     if (path.includes('projects/fixture.json')) return file(registration);
     if (path.includes('coordination/fixture.json')) return file({ project: 'fixture', claims: [{ id: 'fixture-task', owner: state.owner,
-      branch: state.branch, state: state.claimState || 'active', base_sha: state.head, lease_until: '2099-01-01T00:00:00Z' }], queue: [], legacy_branches: [] });
+      branch: state.branch, ...(state.completed || {}), state: state.claimState || 'active', base_sha: state.head, lease_until: '2099-01-01T00:00:00Z' }], queue: [], legacy_branches: [] });
     if (path.includes('/git/ref/heads/')) { if (state.headUnavailable) throw new Error('synthetic GitHub outage'); return { object: { sha: state.head } }; }
-    if (path.endsWith('/pulls/5')) return { head: { repo: { full_name: 'lrnolivia/fixture' }, ref: state.branch, sha: state.head } };
+    if (path.endsWith('/pulls/5')) return { ...(state.pr || {}), head: { repo: { full_name: 'lrnolivia/fixture' }, ref: state.branch, sha: state.head } };
     if (path.includes('/contents/workers/')) return file({ workers: [] });
     if (path.includes('/branches?')) return [{ name: state.branch, commit: { sha: state.head } }];
     if (path.includes('/pulls?') || path.includes('/commits?') || path.includes('/actions/runs?') || path.includes('/check-runs')) return [];
@@ -207,4 +207,21 @@ test('unscoped resume does not choose a feedback recipient', async () => {
   const resumed = await callResume({ project: 'fixture' }, f.env, f.api);
   assert.equal(resumed.latest.pending_feedback.reason, 'explicit-assignment-required');
   assert.equal(f.state.puts, before);
+});
+
+
+test('historical review verifies merged identity, preserves completion and never queues execution',async()=>{
+  const f=fixture();f.state.claimState='completed';
+  f.state.completed={work_accounted:true,pr:5,merged_head_sha:f.state.head,merge_commit_sha:'c'.repeat(40)};
+  f.state.pr={merged:true,merge_commit_sha:'c'.repeat(40),base:{ref:'main',repo:{full_name:'lrnolivia/fixture'}}};
+  f.state.headUnavailable=true;
+  const args={...f.args,review_mode:'historical',artifact:{...f.args.artifact,pr:5,kind:'source'}};
+  const created=(await f.call('submit',args)).feedback;
+  assert.equal(created.status.queued,false);assert.equal(created.status.historical_review,true);
+  const seen=(await f.call('ack',{...f.scope,review_mode:'historical',expected_owner:f.state.owner,expected_branch:f.state.branch,expected_head_sha:f.state.head,expected_revision:1,report_id:created.report_id,operation_id:'historical-ack'})).feedback;
+  assert.ok(seen.status.seen);assert.equal(seen.status.queued,false);
+  assert.equal(f.state.claimState,'completed');
+  await assert.rejects(f.call('submit',{...args,artifact:{...args.artifact,commit_sha:'d'.repeat(40)}}),/exact completed artifact/);
+  f.state.pr.merged=false;
+  await assert.rejects(f.call('submit',args),/could not be verified/);
 });

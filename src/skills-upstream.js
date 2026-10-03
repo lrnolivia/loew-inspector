@@ -14,7 +14,8 @@ export function compareUpstream(manifest,{revision,integrity,license}={}){
 export function canIngestUpstream(manifest){
   if(manifest.origin!=="upstream") return {ok:true,reason:"not-upstream"};
   if(!manifest.license||manifest.license.toLowerCase()==="unknown") return {ok:false,reason:"unknown-license"};
-  if(!manifest.provenance?.revision||!manifest.integrity) return {ok:false,reason:"unpinned-source"};
+  if(!/^[a-f0-9]{40}$/.test(manifest.provenance?.revision||"")||!/^sha256:[a-f0-9]{64}$/.test(manifest.integrity||"")) return {ok:false,reason:"unpinned-source"};
+  if(!["MIT","Apache-2.0","BSD-2-Clause","BSD-3-Clause","ISC","CC0-1.0","CC-BY-4.0"].includes(manifest.license)) return {ok:false,reason:"license-review-required"};
   if(manifest.executable===true) return {ok:false,reason:"executable-requires-explicit-review"};
   return {ok:true,reason:"pinned-and-licensed"};
 }
