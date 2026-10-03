@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T16:38:46.430Z",
+  "updated_at": "2026-10-03T16:41:56.366Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -12755,8 +12755,8 @@
           }
         ]
       },
-      "updated_at": "2026-10-03T16:38:46.430Z",
-      "lease_until": "2026-10-04T04:38:46.430Z"
+      "updated_at": "2026-10-03T16:41:56.366Z",
+      "lease_until": "2026-10-04T04:41:56.366Z"
     }
   ],
   "migrated_from": "loew-inspector"
