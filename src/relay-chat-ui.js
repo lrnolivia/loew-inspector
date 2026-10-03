@@ -1,7 +1,7 @@
 import { STAFF } from './staff-registry.js';
 import { contextCardBrandAssets } from '../apps/web/generated.js';
 import { styleContextCard } from './relay-context-card-style.js';
-export const RELAY_CONTEXT_CARD_URI = 'ui://relay/context-card/v11.html';
+export const RELAY_CONTEXT_CARD_URI = 'ui://relay/context-card/v12.html';
 export const RELAY_CONTEXT_CARD_TOOL = 'relay_render_context_card';
 export const RELAY_STATUS_CARD_URI = 'ui://relay/status-card/v3-legacy-bridge.html';
 export const RELAY_STATUS_CARD_TOOL = 'relay_show_legacy_bridge_card';
@@ -117,6 +117,29 @@ export function contextCardModel(data = {}, directory = DIRECTORY) {
   if (pr?.number) { metric='#'+pr.number; metric_label=pr.merged?'merged pull request':pr.draft?'draft pull request':'pull request'; }
   return { title, feature, primary_staff:primary, team, label, tone, signal, summary, rows, blocker, qa, handoff, next_step:nextStep, metric, metric_label, percent, evidence:Object.fromEntries(Object.entries(evidence).filter(([,v])=>v!=null)), refresh:Boolean(data.project) };
 }
+// UI responses must not repeat the full historical coordination ledger.
+export function compactContextCardResult(result = {}) {
+  const text = (value, limit = 420) => typeof value === 'string' ? value.slice(0, limit) : undefined;
+  const fields = ['id','assignment','owner','state','primary_staff','primary_team','branch','updated_at','created_at','completed_at','last_meaningful_progress_at'];
+  const projectItem = item => {
+    const out = {};
+    for (const key of fields) if (typeof item?.[key] === 'string') out[key] = text(item[key], 180);
+    for (const key of ['goal','next_action','waiting_reason','recovery_action']) if (item?.[key]) out[key] = text(item[key]);
+    if (Array.isArray(item?.supporting_staff)) out.supporting_staff = item.supporting_staff.slice(0, 4).map(x => text(x, 80)).filter(Boolean);
+    if (typeof item?.progress_percent === 'number' && Number.isFinite(item.progress_percent)) out.progress_percent = item.progress_percent;
+    if (item?.lease_expired === true) out.lease_expired = true;
+    return out;
+  };
+  const claims = Array.isArray(result.claims) ? result.claims : [];
+  const queue = Array.isArray(result.queue) ? result.queue : [];
+  const rank = item => ['waiting-for-human','active','working','held','queued','completed'].indexOf(item.state);
+  const current = claims.filter(item => !['completed','cancelled','superseded','retired'].includes(item.state));
+  const selected = (current.length ? current : claims.slice(-3)).slice().sort((a,b) => Number(Boolean(a.lease_expired))-Number(Boolean(b.lease_expired)) || rank(a)-rank(b)).slice(0, 3);
+  const out = {ok:result.ok !== false, schema:'relay-context-card/v1', project:text(result.project,80), checked_at:text(result.checked_at,80), record_sha:text(result.record_sha,80), claims:selected.map(projectItem), queue:queue.filter(item=>item.state==='queued').slice(0,3).map(projectItem), coverage:{claims:claims.length,queued:queue.filter(item=>item.state==='queued').length,shown:selected.length}};
+  if (result.error) out.error = {message:text(typeof result.error==='string'?result.error:result.error.message)};
+  return out;
+}
+
 export function contextualPresentation(data) {
   const m=contextCardModel(data);
   return { ...data, human: data.human || { outcome:m.title, health:m.blocker?'blocked':m.tone==='wait'||m.label==='recorded'?'waiting':'healthy', staff:m.team, what_changed:m.summary, next_step:m.next_step, blocker:m.blocker, qa:m.qa } };
@@ -189,8 +212,8 @@ let toolInput={};let lastData=null;let lastMediaId=null;let seq=0;let recoverySt
 function unwrap(result){if(result?.structuredContent)return result.structuredContent;for(const item of result?.content||[]){if(item.type==='text'){try{return JSON.parse(item.text)}catch{}}}return result?.isError?{ok:false,error:result.content?.find(x=>x.type==='text')?.text||'The Relay action failed.'}:result||{}}
 function render(result){const data=unwrap(result);lastData=data;const m=model(data,DIRECTORY);const feature=FEATURES[m.feature]||FEATURES.relay;el.card.dataset.feature=m.feature||'relay';el.card.dataset.signal=m.signal||'quiet';el['feature-mark'].innerHTML=feature.icon;el['feature-kicker'].textContent=(m.feature&&m.feature!=='relay'?m.feature+' reporting':'relay');el['feature-title'].textContent=feature.label;el.title.textContent=m.title;el.team.textContent=m.primary_staff||'Relay';el.staff.hidden=!m.primary_staff||m.primary_staff==='Relay';el.staff.title=m.team||m.primary_staff||'';el['state-label'].textContent=m.label;el.state.dataset.tone=m.tone;el.summary.textContent=m.summary;el.metric.textContent=m.metric||m.label;el['metric-label'].textContent=m.metric_label||'current state';el.meter.hidden=m.percent==null;el['meter-fill'].style.width=(m.percent??0)+'%';el.rows.replaceChildren();for(const r of m.rows){const div=document.createElement('div');div.className='row';const strong=document.createElement('strong');strong.textContent=r.label;const span=document.createElement('span');span.textContent=r.text;div.append(strong,span);el.rows.append(div)}for(const key of ['blocker','handoff']){el[key].hidden=!m[key];el[key].textContent=m[key]||''}el.qa.hidden=!m.qa;el.qa.textContent=m.qa?(m.qa.intended_result||m.qa.reason||'QA evidence is available.')+(m.qa.checks?' Check: '+m.qa.checks.join('; '):''):'';el.next.hidden=!m.next_step;el.next.textContent=m.next_step?'Next: '+m.next_step:'';el.details.hidden=!Object.keys(m.evidence).length;el.evidence.textContent=JSON.stringify(m.evidence,null,2);el.refresh.hidden=!m.refresh;void loadQaMedia(data,m)}
 function rpc(method,params){return new Promise((resolve,reject)=>{const id=++seq;const timer=setTimeout(()=>{pending.delete(id);reject(new Error('Relay host timed out'))},15000);pending.set(id,{resolve,reject,timer});window.parent.postMessage({jsonrpc:'2.0',id,method,params},'*')})}
-function acceptToolInput(value){if(value&&typeof value==='object')toolInput=value.arguments||value}
-function acceptToolResult(value){if(value==null)return false;render(value);return true}
+function acceptToolInput(value){if(value&&typeof value==='object'){toolInput=value.arguments||value;if(!lastData)queueMicrotask(()=>{void recoverCanonicalState()})}}
+function acceptToolResult(value){if(value==null)return false;const data=unwrap(value);if(!data||typeof data!=='object'||!Object.keys(data).length)return false;render(data);return true}
 function hydrateOpenAiGlobals(globals=window.openai){if(!globals)return false;if(globals.toolInput!=null)acceptToolInput(globals.toolInput);return globals.toolOutput!=null?acceptToolResult(globals.toolOutput):false}
 window.addEventListener('message',event=>{if(event.source!==window.parent||event.data?.jsonrpc!=='2.0')return;const msg=event.data;const waiter=pending.get(msg.id);if(waiter){pending.delete(msg.id);clearTimeout(waiter.timer);msg.error?waiter.reject(new Error(msg.error.message)):waiter.resolve(msg.result);return}if(msg.method==='ui/notifications/tool-input')acceptToolInput(msg.params?.arguments||msg.params);if(msg.method==='ui/notifications/tool-result')acceptToolResult(msg.params);if(msg.method==='ui/resource-teardown'&&msg.id)window.parent.postMessage({jsonrpc:'2.0',id:msg.id,result:{}},'*')});
 window.addEventListener('openai:set_globals',event=>{hydrateOpenAiGlobals(event.detail?.globals||window.openai)},{passive:true});
@@ -199,7 +222,7 @@ function hideQaMedia(){el['qa-media'].hidden=true;el['qa-media-image'].removeAtt
 async function loadQaMedia(data,m){let item=null;let id=toolInput?.evidence_id||data?.evidence_id||data?.evidence?.evidence_id||m?.evidence?.evidence_id||null;const project=toolInput?.project||data?.project||null;try{if(!id&&toolInput?.show_qa===true&&typeof project==='string'&&/^[a-z0-9-]{1,80}$/.test(project)){const listing=unwrap(await callTool('relay_ui_request',{path:'/api/visual?project='+project,method:'GET'}));const evidence=listing?.body?.evidence;item=Array.isArray(evidence)?evidence[0]:null;id=item?.evidence_id||null}if(!id||!/^vis_[a-zA-Z0-9-]{8,128}$/.test(id)){hideQaMedia();return}if(lastMediaId===id&&!el['qa-media'].hidden){return}const image=unwrap(await callTool('relay_ui_request',{path:'/api/visual/'+id+'/image',method:'GET'}));if(!image?.base64||!String(image.content_type||'').startsWith('image/')){hideQaMedia();return}el['qa-media-image'].src='data:'+image.content_type+';base64,'+image.base64;el['qa-media-caption'].textContent=item?.step_label||item?.context?.surface||'Inspector QA screenshot';el['qa-media-id'].textContent=id;el['qa-media'].hidden=false;lastMediaId=id}catch{hideQaMedia()}}
 el.refresh.addEventListener('click',async()=>{el.refresh.disabled=true;try{const project=toolInput.project||lastData?.project;if(project)render(await callTool('relay_runner_progress',{project,...(toolInput.assignment?{assignment:toolInput.assignment}:{})}))}catch(error){el.blocker.hidden=false;el.blocker.textContent=error.message}finally{el.refresh.disabled=false}});
 el['open-relay'].addEventListener('click',async()=>{try{if(window.openai?.requestModal){await window.openai.requestModal({template:${JSON.stringify(CONTROL_URI)}});return}if(window.openai?.callTool){await window.openai.callTool('relay_ui_control_center',{});return}await ready;await rpc('ui/open-link',{url:'https://relay.loew.fi/'})}catch(error){el.blocker.hidden=false;el.blocker.textContent=error.message}});
-async function recoverCanonicalState(){if(lastData||recoveryStarted)return;hydrateOpenAiGlobals();if(lastData)return;const project=toolInput?.project;if(typeof project!=='string'||!/^[a-z0-9-]{1,80}$/.test(project))return;recoveryStarted=true;try{const args={project,...(typeof toolInput.assignment==='string'?{assignment:toolInput.assignment}:{})};acceptToolResult(await callTool('relay_runner_progress',args))}catch(error){if(!lastData){el.summary.textContent='Relay is reconnecting to current project state…';el['state-label'].textContent='Reconnecting'}}}
+async function recoverCanonicalState(){if(lastData||recoveryStarted)return;if(window.openai?.toolOutput!=null&&acceptToolResult(window.openai.toolOutput))return;const project=toolInput?.project;if(typeof project!=='string'||!/^[a-z0-9-]{1,80}$/.test(project))return;recoveryStarted=true;try{const args={project,...(typeof toolInput.assignment==='string'?{assignment:toolInput.assignment}:{})};acceptToolResult(await callTool('relay_runner_progress',args))}catch(error){if(!lastData){el.summary.textContent='Relay is reconnecting to current project state…';el['state-label'].textContent='Reconnecting'}}}
 const ready=rpc('ui/initialize',{appInfo:{name:'relay-context-card',version:'1.9.9'},appCapabilities:{},protocolVersion:'2026-01-26'}).then(()=>{window.parent.postMessage({jsonrpc:'2.0',method:'ui/notifications/initialized',params:{}},'*');hydrateOpenAiGlobals();setTimeout(()=>{void recoverCanonicalState()},350)});
 ready.catch(error=>{hydrateOpenAiGlobals();if(!lastData){el.summary.textContent='Relay is waiting for the chat connection.';el['state-label'].textContent='Connection pending'}});
 
