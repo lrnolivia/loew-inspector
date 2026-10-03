@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T05:05:23.749Z",
+  "updated_at": "2026-10-03T05:05:33.078Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -2988,7 +2988,7 @@
         "RFS-032",
         "RFS-033"
       ],
-      "state": "queued",
+      "state": "superseded",
       "created_at": "2026-10-01T01:04:02.031Z",
       "amendment_count": 9,
       "amendments": [
@@ -3314,7 +3314,20 @@
           }
         }
       ],
-      "updated_at": "2026-10-01T03:02:49.067Z"
+      "updated_at": "2026-10-03T05:05:33.078Z",
+      "retirement": {
+        "at": "2026-10-03T05:05:33.078Z",
+        "intent": {
+          "operation_id": "cleanup-20261003-relay-findings-rfs-023-20260930",
+          "owner": "relay-findings-rfs-023-20260930",
+          "disposition": "superseded",
+          "reason": "Consolidate queued-only historical scope into user's existing Mac Codex MCP rebuild handoff; preserve all original requirements.",
+          "evidence": "No matching claim or branch writer. Original full goal/acceptance preserved at6fdbecb6 docs/handoffs/2026-10-03/original-records/relay.json. Remaining capability and client-proof work retained in relay-mcp-rebuild-continuation-20261003 and RELAY-MCP.md. No source or branch deletion; no delivery inferred.",
+          "superseded_by": "relay-mcp-rebuild-continuation-20261003",
+          "branch": null,
+          "head_sha": null
+        }
+      }
     },
     {
       "id": "relay-fast-shell-motion-neutral-cards-20261001",
