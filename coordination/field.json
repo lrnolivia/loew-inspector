@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "field",
-  "updated_at": "2026-10-03T05:12:04.755Z",
+  "updated_at": "2026-10-03T05:13:14.298Z",
   "legacy_inventory": "docs/field/reorganization/2026-09-30-inventory.json",
   "legacy_branches": [
     "codex/field-chrome-batch-1",
@@ -237,7 +237,7 @@
       "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
       "goal": "Finish Field's shared panel chrome and tool menu presentation, add verified Terra Prime green/pink and neutrachrome accents.",
       "acceptance": "Lauren04:48-04:50QA: floating Inspector top belongs to unified chrome, not separate square bar; Media belongs in far-left panel and its bottom-toolbar affordance is a real menu with chevron. Keep approved tile appearance but two wide/narrow horizontal tiles per row. Primary2or4 choices as icon tiles, remaining choices as list rows; include Move/Hand/Scale and Pen, preserve all actions/shortcuts and keyboard/touch operation. Use theme-aware accent color in small menus, lighter variants in dark, darker in light while meeting contrast. Slightly lighten card/section surfaces in Inspector and port same styling to left panels via shared tokens/components. Add canonical Terra Prime green and pink options from real design tokens, do not guess hues. Add warm-neutral accent neutrachrome (corrected spelling Sentinel_e38ed4c9ae808191804cc8926a0492de), dark/light variants tuned to gray surfaces. Preserve Field identity and Figma behavior, not visual-clone redesign. Reference screenshots libfile_9865c9cf61108191aefe9168e8ac077f and libfile_a68fd60431988191b2b5643478115898 inspected: square detached upper-right bar and dark blending section cards visible, no runtime hash embedded. Keep recovered Mobile PR138 regression fixes intact. Direct Relay only, no workers.\nAudit Gallery Inspector functionality and panel consistency while preserving the praised Gallery modal. Lighten and distinguish button surfaces across modals and settings (Sentinel_fb8bb23700cc8191abc13afc3f795efb; Sentinel_551e0125660c8191be28fb3867f50dd7).\nSUPERSEDING PORTRAIT DIRECTION Sentinel_fdb55c209dfc8191886df276eb020fa3: mobile portrait toolbar needs a FAB blending Material Design and current iOS27 principles. Existing portrait sheets are rejected as merely resized left/right desktop panels; design a purpose-built portrait interaction paradigm, preserving touch/camera fixes but not releasing the rejected portrait shell. Show proposed flow before implementation. No workers; no merge/deployment authorization.\n05:08UTC user Sentinel_75cc2397ccbc81919abd542547af3249 likes portrait direction but rejects extra Edit tap. Object pointer-down prepares drag; movement drags, tap without drag opens context editor with minimal delay. Parent proposes opening on release to prevent panel stealing drag. Test jitter, slow drags, pointer cancel and second-finger takeover. Desktop tool palette requested; user suggests two-finger tap or middle-click, final binding undecided. Parent recommends middle-click palette, middle-drag pan, retain trackpad right-click context menu and supply a conflict-free shortcut. Do not claim that recommendation already exists or is tested.\n05:09UTC user Sentinel_0fbfd59305908191af6f2a0914a7372e: the whole left panel needs its own paradigm as well as Inspector. Parent proposes persistent Browse beside Tools; purpose-built Pages cards/search, Layers hierarchy with breadcrumbs/multiselect/reorder, Media/Library visual selection followed by explicit canvas placement, CMS/deeper dedicated task screens. Preserve navigation location, canvas position and selection. Exact Browse arrangement still proposal. Include visible touch flows for nested-object selection, multi-select and undo/redo.\nLatest appearance request: keep current palette; compact chrome preview above Light/Dark labeled switch, clickable accent swatches below. Hover/focus previews chrome/color name without commit; click/tap persists, keyboard/touch usable. Monochrome and Lunar Chrome adjacent. Rename Neutrachrome to Lunar Chrome (confirmed), preserve stable IDs/preferences. Other elemental names pending user decision; Terra Coral retained. Full handoff: docs/handoffs/2026-10-03/CTRL-FIELD-OTHER.md on relay/execution-handoffs-20261003.",
-      "next_action": "PAUSED for cleanup. PR138 already shipped; old release hold obsolete. Appearance acceptance: top chrome/name preview, Light/Dark switch, swatches below; hover/focus previews, click/tap commits. Names: aqua teal, sienna solstice, gold halo, flora green, terra coral, monochrome, lunar chrome; monochrome/lunar chrome adjacent. All built-in chrome/buttons/labels/copy lowercase in branded mode. Preserve user-authored content/page/project names and font-name preview case; retain existing opt-out after checking actual setting. Stable theme IDs/aliases/preferences stay intact. Full canonical handoff docs/handoffs/2026-10-03/LATEST-DECISIONS.md in relay/execution-handoffs-20261003. Reconcile expired reservation before implementation; Gallery/Figma parity remains open.\nAdditional queued scope: add canonical Field animated glyphs to the main/popup menu with consistent alignment/accessibility. Locate existing Field logo Figma master, then produce editable matching variants for actual new accent tokens; preserve geometry/highlights, no redesign, export through shared asset manifest. Master not yet identified. Coding/design remains paused.",
+      "next_action": "PAUSED for cleanup. PR138 already shipped; old release hold obsolete. Appearance acceptance: top chrome/name preview, Light/Dark switch, swatches below; hover/focus previews, click/tap commits. Names: aqua teal, sienna solstice, gold halo, flora green, terra coral, monochrome, lunar chrome; monochrome/lunar chrome adjacent. All built-in chrome/buttons/labels/copy lowercase in branded mode. Preserve user-authored content/page/project names and font-name preview case; retain existing opt-out after checking actual setting. Stable theme IDs/aliases/preferences stay intact. Full canonical handoff docs/handoffs/2026-10-03/LATEST-DECISIONS.md in relay/execution-handoffs-20261003. Reconcile expired reservation before implementation; Gallery/Figma parity remains open.\nAdditional queued scope: add canonical Field animated glyphs to the main/popup menu with consistent alignment/accessibility. Locate existing Field logo Figma master, then produce editable matching variants for actual new accent tokens; preserve geometry/highlights, no redesign, export through shared asset manifest. Master not yet identified. Coding/design remains paused.\nTOOLBAR CANON: every toolbar popup must use the Media panel's exact width, internal cards, list items, dividers, window sizing and spacing. Measure/reuse the canonical component, not a loose approximation; other panels retain their functions and omit Browse Media. Preserve responsive bounds and mobile behavior. Record-only until implementation resumes.",
       "paths": [
         "src/editor/",
         "src/shared/builder-themes.ts",
@@ -252,7 +252,7 @@
       "supporting_staff": [],
       "state": "queued",
       "created_at": "2026-10-02T04:51:56.008Z",
-      "amendment_count": 6,
+      "amendment_count": 7,
       "amendments": [
         {
           "at": "2026-10-02T05:05:29.413Z",
@@ -343,9 +343,23 @@
           "after": {
             "next_action": "PAUSED for cleanup. PR138 already shipped; old release hold obsolete. Appearance acceptance: top chrome/name preview, Light/Dark switch, swatches below; hover/focus previews, click/tap commits. Names: aqua teal, sienna solstice, gold halo, flora green, terra coral, monochrome, lunar chrome; monochrome/lunar chrome adjacent. All built-in chrome/buttons/labels/copy lowercase in branded mode. Preserve user-authored content/page/project names and font-name preview case; retain existing opt-out after checking actual setting. Stable theme IDs/aliases/preferences stay intact. Full canonical handof..."
           }
+        },
+        {
+          "at": "2026-10-03T05:13:14.298Z",
+          "by": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+          "reason": "User establishes the existing Media panel as exact toolbar popup canon.",
+          "fields": [
+            "next_action"
+          ],
+          "before": {
+            "next_action": "PAUSED for cleanup. PR138 already shipped; old release hold obsolete. Appearance acceptance: top chrome/name preview, Light/Dark switch, swatches below; hover/focus previews, click/tap commits. Names: aqua teal, sienna solstice, gold halo, flora green, terra coral, monochrome, lunar chrome; monochrome/lunar chrome adjacent. All built-in chrome/buttons/labels/copy lowercase in branded mode. Preserve user-authored content/page/project names and font-name preview case; retain existing opt-out after checking actual setting. Stable theme IDs/aliases/preferences stay intact. Full canonical handof..."
+          },
+          "after": {
+            "next_action": "PAUSED for cleanup. PR138 already shipped; old release hold obsolete. Appearance acceptance: top chrome/name preview, Light/Dark switch, swatches below; hover/focus previews, click/tap commits. Names: aqua teal, sienna solstice, gold halo, flora green, terra coral, monochrome, lunar chrome; monochrome/lunar chrome adjacent. All built-in chrome/buttons/labels/copy lowercase in branded mode. Preserve user-authored content/page/project names and font-name preview case; retain existing opt-out after checking actual setting. Stable theme IDs/aliases/preferences stay intact. Full canonical handof..."
+          }
         }
       ],
-      "updated_at": "2026-10-03T05:12:04.755Z"
+      "updated_at": "2026-10-03T05:13:14.298Z"
     }
   ],
   "claims": [
