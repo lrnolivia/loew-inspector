@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "ctrl",
-  "updated_at": "2026-10-03T06:55:06.831Z",
+  "updated_at": "2026-10-03T06:57:24.509Z",
   "legacy_branches": [
     "main"
   ],
@@ -205,8 +205,8 @@
         "ctrl-review-delivery"
       ],
       "goal": "Repair ctrl navigation and whole-page Inspector regressions while preserving the accepted project strip and completing review delivery.",
-      "acceptance": "First checkpoint: new icon-only mobile bottom dock, selected glow retained, above-icon press label with Field spring motion, drag/cancel and reduced-motion handling, small backgroundless Settings right. Larger feature-header marks and tighter title/subtitle spacing. Review screenshots before publication. Project strip retains committed global membership during refresh, uses initial skeletons, small header loading indicator, atomic real updates and no separate loading-only bar; failures remain visible. Desktop and mobile regression coverage. Preserve original Inspector scope: direct evidence links independent of slow catalogue, render images promptly, unresolved state not pending/completed, preserve legacy/modern review semantics, cancellation and drafts, nonempty fixtures. Full artifact-bound feedback bridge and approved mosaic remain separately accountable.\nLatest superseding design decision: PR7 mobile dock REJECTED; research and clarify requested Apple floating tab-bar proportions in solid ctrl surfaces, no Liquid Glass, preview before publish. New project-strip design APPROVED. Correct compact gear horizontal center and expanded gear right alignment, breadcrumb full content width, trailing badge padding. Inspector current compact Visual rows belong List; recover approved prior Visual cards. Fix filter disclosure opening AND closing and polish controls. Verify populated content, slow/failure responses and actual screenshots across desktop/mobile; no HTTP200-only acceptance. Coordinate reply repair release when verified; do not abandon any original scope.",
-      "next_action": "User requested Sol6.1 Medium worker. Continue PR7 head437b64716e08d107dbccc25f37b356340da34399; verify/publish authorized nav and Inspector polish, then review-first telemetry/preview/feedback scope from receiving prompt. Parent stops coding. Exact supplied telemetry reference Library libfile_4487fb5741e081918cee4f3fc768cd60. Preserve other Codex ownership.",
+      "acceptance": "Authorized polish checkpoint: mobile full-width floating dock with 16px outer gutters, 64px height, permanent labels and large bare canonical glyphs including full night shift; neutral color-raised glow on both docks, color-surface matching ctrl banner, lighter selected highlight. Small backgroundless top-right banner gear with invisible 44px tap target; sidebar gear centered compact/right expanded; desktop dock content width. Preserve accepted atomic project strip, skeleton/loading/refresh behavior, canonical logo badges, Settings persistence/reset, restored Inspector Visual cards and List thumbnails, explicit filter/organize dismissal, lazy evidence hydration, honest unresolved states and stale CAS guards. Verify exact-head CI and actual unobscured desktop/light pixels before approved polish merge/publication. Broader unfinished acceptance remains: Now/Runner/Night Shift/Inspector one major real review/decision card first with plain-language focus, real screenshot/live preview and durable artifact-bound Relay responses then full list; useful truthful telemetry overview/rings/counts/time series, reference libfile_4487fb5741e081918cee4f3fc768cd60 sample-only; actual live previews, correct routing and saved reply plus worker acknowledgment proof; canonical backend logos and MCP catalogue/feedback/Night Shift contracts coordinated with MCP owner; branded preference/case and responsive accessibility checks. Show combined broader design before rollout. Never imply polish finishes whole ctrl or fabricate live data.",
+      "next_action": "Materialize and inspect exact telemetry reference; inspect unblurred desktop bottom and light mode on exact437b64716 head, then publish authorized polish if clean. Continue broader acceptance separately accountable.",
       "category": "implementation",
       "primary_team": "inspector",
       "supporting_teams": [],
@@ -215,14 +215,34 @@
       "base_sha": "5c662ae19dae2fc4dd088ba7beb98aae0bdd23e4",
       "state": "active",
       "created_at": "2026-10-03T03:28:29.214Z",
-      "updated_at": "2026-10-03T06:55:06.831Z",
-      "lease_until": "2026-10-03T18:55:06.831Z",
+      "updated_at": "2026-10-03T06:57:24.509Z",
+      "lease_until": "2026-10-03T18:57:24.509Z",
       "handoffs": [
         {
           "at": "2026-10-03T06:55:06.831Z",
           "from": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
           "to": "01a1008b-0712-747e-8798-60ba7f0090d9",
           "next_action": "User requested Sol6.1 Medium worker. Continue PR7 head437b64716e08d107dbccc25f37b356340da34399; verify/publish authorized nav and Inspector polish, then review-first telemetry/preview/feedback scope from receiving prompt. Parent stops coding. Exact supplied telemetry reference Library libfile_4487fb5741e081918cee4f3fc768cd60. Preserve other Codex ownership."
+        }
+      ],
+      "amendment_count": 1,
+      "amendments": [
+        {
+          "at": "2026-10-03T06:57:24.509Z",
+          "by": "01a1008b-0712-747e-8798-60ba7f0090d9",
+          "reason": "Canonical handoff and latest explicit user approval supersede obsolete rejected/icon-only dock wording.",
+          "fields": [
+            "acceptance",
+            "next_action"
+          ],
+          "before": {
+            "acceptance": "First checkpoint: new icon-only mobile bottom dock, selected glow retained, above-icon press label with Field spring motion, drag/cancel and reduced-motion handling, small backgroundless Settings right. Larger feature-header marks and tighter title/subtitle spacing. Review screenshots before publication. Project strip retains committed global membership during refresh, uses initial skeletons, small header loading indicator, atomic real updates and no separate loading-only bar; failures remain visible. Desktop and mobile regression coverage. Preserve original Inspector scope: direct evidence...",
+            "next_action": "User requested Sol6.1 Medium worker. Continue PR7 head437b64716e08d107dbccc25f37b356340da34399; verify/publish authorized nav and Inspector polish, then review-first telemetry/preview/feedback scope from receiving prompt. Parent stops coding. Exact supplied telemetry reference Library libfile_4487fb5741e081918cee4f3fc768cd60. Preserve other Codex ownership."
+          },
+          "after": {
+            "acceptance": "Authorized polish checkpoint: mobile full-width floating dock with 16px outer gutters, 64px height, permanent labels and large bare canonical glyphs including full night shift; neutral color-raised glow on both docks, color-surface matching ctrl banner, lighter selected highlight. Small backgroundless top-right banner gear with invisible 44px tap target; sidebar gear centered compact/right expanded; desktop dock content width. Preserve accepted atomic project strip, skeleton/loading/refresh behavior, canonical logo badges, Settings persistence/reset, restored Inspector Visual cards and List...",
+            "next_action": "Materialize and inspect exact telemetry reference; inspect unblurred desktop bottom and light mode on exact437b64716 head, then publish authorized polish if clean. Continue broader acceptance separately accountable."
+          }
         }
       ]
     }
