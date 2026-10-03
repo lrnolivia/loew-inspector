@@ -39,3 +39,6 @@ Seven obsolete records remain. The authorized loew Inspector workaround was atte
 ## Additional Field requests at 05:10 UTC
 - Main/popup menu items need meaningful glyphs from Field's established animated family, consistent size/alignment and accessible labels. Confirm the actual main popup surface before implementation.
 - Find the canonical Field logo in Figma and create matching variants for the actual new accent palette, preserving existing geometry, materials, highlights and family consistency. Inspect current master/variants before recoloring. Use exact theme tokens, editable component/vector exports, and the shared discoverable asset manifest. This is additional variants, not a logo redesign. Source master is not yet positively identified. Design implementation remains paused until cleanup is complete.
+
+## Field toolbar canon at 05:12 UTC
+The existing Media panel is the exact reference for every toolbar popup: same width, card treatment, list items, dividers, window sizing and spacing. Measure and reuse that actual component; do not create merely similar wider panels. Other toolbars preserve their functional contents and omit the Browse Media section. Maintain responsive viewport bounds and mobile behavior. This requirement remains queued during the cleanup pause.
