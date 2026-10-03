@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T08:07:51.542Z",
+  "updated_at": "2026-10-03T08:41:27.489Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -12435,17 +12435,17 @@
       ],
       "goal": "Document and reconcile all current user assignments into execution-ready handoffs, preserving code and original scope while implementation is paused.",
       "acceptance": "Complete cross-project docket with delivered/verified/open/paused/transferred status and evidence. Comprehensive rtxForge and Relay MCP handoffs for user-started Codex, exact branches/heads/assets and local unfinished code made available. Capture latest ctrl/Field/Arc/icon/Accented/Steam requests and dependencies. Preserve original acceptance and rollback. No production code, deployments, branch deletion, implicit ownership takeover or false completion. Record unsupported stale-queue reconciliation and exact41 completed-claim pairs as metadata defect for authorized repair. Verify canonical records/documents read back.",
-      "next_action": "Documentation/source recovery ready and read back at PR138 headbdbada26ce12d8da814a164b45ba4ee8ae30927b, no merge. RTX/MCP/FIELD direct handoffs delivered; actual receiving owners pending. Ten queued-only plans superseded, originals preserved. Waiting for user approval of blocked desktop-card queued supersession;41 completed-claim queue labels require supported engine normalization,4expired reservations require writer accounting. No bypass/branch deletion. Product implementation stays paused/transferred. Latest Field left-sidebar parity is prominent and canonical assignment updated. Plugin cleanup cannot reach Delete after authorized Inspector workaround; no removal.",
+      "next_action": "Close the already-written documentation/recovery handoff PR138 before taking MCP ownership. Update dated README with subsequent receipt outcomes: receiver identities established, all41queuepairsreconciled, currentrootdirecthandoffs. Preserve all originalfiles asdatedevidence, no plugin deletion/accesschanges. Verify docs-only exactscope/CI, merge approved ready work, complete cleanup lane; unresolved productacceptance remains inexistingMCP/ctrl/RTX/Field assignments.",
       "category": "coordination",
       "primary_team": "source",
       "supporting_teams": [],
       "primary_staff": null,
       "supporting_staff": [],
       "base_sha": "80dda66a8bda305e43517c883a9f84608ecfb33d",
-      "state": "held",
+      "state": "active",
       "created_at": "2026-10-03T04:48:10.740Z",
-      "updated_at": "2026-10-03T05:19:23.188Z",
-      "lease_until": "2026-10-03T17:19:23.188Z"
+      "updated_at": "2026-10-03T08:41:27.489Z",
+      "lease_until": "2026-10-03T20:41:27.489Z"
     },
     {
       "id": "relay-mcp-lifecycle-reconciliation-20261003",
