@@ -44,7 +44,7 @@ try {
   });
   await page.goto(origin+'/host');const frame=page.frameLocator('iframe');
   await frame.locator('#feature-title').waitFor();
-  if(fixtures[name])await frame.locator('#title').filter({hasText:name==='empty'?'Verification':fixtures[name].claim?.goal||'Relay update'}).waitFor();
+  if(fixtures[name])await frame.locator('#title').filter({hasText:name==='jobs'?'relay card polish':name==='empty'?'Verification':fixtures[name].claim?.goal||'Relay update'}).waitFor();
   await frame.locator('body').evaluate(async()=>{await document.fonts.load('400 36px "Momo Trust Display"');await document.fonts.ready;await Promise.all([...document.images].map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve})));});
   const geometry=await frame.locator('body').evaluate(()=>({width:innerWidth,overflow:document.documentElement.scrollWidth>innerWidth,font:document.fonts.check('400 36px "Momo Trust Display"'),headingFont:getComputedStyle(document.querySelector('h1')).fontFamily,buttons:[...document.querySelectorAll('.actions button')].filter(el=>!el.hidden).map(el=>({label:el.textContent,height:el.getBoundingClientRect().height})),images:[...document.querySelectorAll('.feature-mark img')].map(img=>({loaded:img.complete&&img.naturalWidth>0,source:img.src.slice(0,22)})),glyphMotion:getComputedStyle(document.querySelector('.feature-mark'),'::after').animationName,percent:document.querySelector('#meter').hidden?null:document.querySelector('#metric').textContent,diagnosticsExpanded:document.querySelector('#details').open}));
   await writeFile(directory+'/'+name+'-'+width+'-geometry.json',JSON.stringify(geometry,null,2));
