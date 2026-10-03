@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "ctrl",
-  "updated_at": "2026-10-03T03:05:35.809Z",
+  "updated_at": "2026-10-03T03:28:29.214Z",
   "legacy_branches": [
     "main"
   ],
@@ -189,6 +189,33 @@
       "evidence": "https://github.com/lrnolivia/ctrl/pull/6 merged5c662ae19dae2fc4dd088ba7beb98aae0bdd23e4; exactcandidate493261 CIquality/admission and Settingsalloptions/persistence/reset/bounds/browser1440/390/320 passed, pixels inspected artifact11261619567. Workersbuild26e65d3c-33bf-47c6-a8cf-371006145fb4 success, mainqualitygreen. Authenticated https://ctrl.loew.fi/build.json source_sha5c662ae19dae2fc4dd088ba7beb98aae0bdd23e4 buildc4a0de1271a859a0fa05c6b198e7022cb3b69f22d77f0f1a6c1360b8a574bbaa;root/Inspector200. Remaining broaderreviewflow/telemetry/nativeiconbackend/MCP/NightShift work separately preserved; no uncommitted scoped product changes.",
       "work_accounted": true,
       "completed_at": "2026-10-03T03:05:35.809Z"
+    },
+    {
+      "id": "ctrl-review-delivery-20261003",
+      "owner": "01a0f8ad-34ae-7715-8b56-96b9a4a3d020",
+      "branch": "ctrl/review-delivery-20261003",
+      "paths": [
+        "apps/web/public/",
+        "apps/web/src/",
+        "packages/shared-ui/",
+        "test/"
+      ],
+      "resources": [
+        "ctrl-review-delivery"
+      ],
+      "goal": "Make Inspector review entry responsive and preserve truthful review state while preparing the approved review-first flow.",
+      "acceptance": "Direct evidence links open independently of the slow capture catalogue. Render capture identity/image promptly; unresolved review state is explicitly unknown, never inferred pending/completed. Preserve legacy completed/stale/archive semantics and source revisions. Disable organizing only items whose review state is unresolved. Bound and cancel requests across navigation; no late results overwrite current context or drafts. Add non-empty fixture tests. Full durable feedback bridge, approved hero telemetry and actual agent receipt remain explicit later checks rather than implied delivered.",
+      "next_action": "Implement the bounded front-end loading/deep-link slice against exact deployed source, then test late/failed hydration, navigation, legacy reviews and direct review entry. Coordinate backend feedback bridge separately under existing MCP continuation.",
+      "category": "implementation",
+      "primary_team": "inspector",
+      "supporting_teams": [],
+      "primary_staff": "valentina",
+      "supporting_staff": [],
+      "base_sha": "5c662ae19dae2fc4dd088ba7beb98aae0bdd23e4",
+      "state": "active",
+      "created_at": "2026-10-03T03:28:29.214Z",
+      "updated_at": "2026-10-03T03:28:29.214Z",
+      "lease_until": "2026-10-03T15:28:29.214Z"
     }
   ]
 }
