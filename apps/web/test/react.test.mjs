@@ -78,12 +78,14 @@ test("Relay 2.0 React shell renders human-first live surfaces responsively", asy
     await page.goto(origin + "/#/today");
     await page.locator('.operator-connection[data-tone="good"]').filter({ hasText: "live" }).waitFor();
     await page.locator("[data-progress-notice]").waitFor({ state: "detached" });
+    // StrictMode can queue a second refresh while the first one settles. Assert
+    // the completed snapshot, not a legitimate intermediate "1+" count.
+    await page.waitForFunction(() => ['needs','moving','automatic'].every(id =>
+      document.querySelector(`[data-signal-id="${id}"] > strong`)?.textContent === '1'
+    ) && !document.querySelector('[data-progress-notice]'));
 
     assert.equal(await page.getByRole("heading", { name: "today", level: 1 }).textContent(), "today");
     assert.equal(await page.locator(".signal-card").count(), 4);
-    assert.equal(await page.locator('.signal-card:has-text("needs you") > strong').textContent(), "1");
-    assert.equal(await page.locator('.signal-card:has-text("moving") > strong').textContent(), "1");
-    assert.equal(await page.locator('.signal-card:has-text("automatic checks") > strong').textContent(), "1");
 
     const mark = await page.locator(".feature-mark").boundingBox();
     assert.ok(mark && Math.abs(mark.width - 96) < 2, "desktop feature mark keeps the approved 1.8/1.9 identity scale");
@@ -146,4 +148,3 @@ test("generated cutover publishes the React control center through the authentic
   assert.match(mcpHtml, /relay_ui_request/);
   assert.match(mcpHtml, /\/inspector#review/);
 });
-

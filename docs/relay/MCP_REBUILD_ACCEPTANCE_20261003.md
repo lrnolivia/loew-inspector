@@ -21,3 +21,5 @@ No completion of the umbrella is implied by a successful slice, a generated cont
 Latest user direction: use the supplied `ctrl / now` telemetry image as the visual reference, animate real updates, use warm neutral brown greiges, and route all project/work/review destinations to ctrl. The reference is retained outside the source checkout at `/Users/lrnolivia/.codex/task-evidence/relay-mcp-rebuild-20261003/references/user-telemetry.png`.
 
 Detailed interface and operational boundaries: `MCP_REBUILD_OPERATIONS_20261003.md`. The original entire rebuild request remains open until its remaining gates are evidenced; source implementation alone does not close it.
+
+Publication direction, 2026-10-03: Lauren explicitly requested pushing the finished build and will perform real-world QA. PR 140 is the release candidate. Automated checks and normal protected publication remain required; real executor, ctrl review acknowledgement and native-client results remain open for that QA rather than being inferred from fixture tests.
