@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T16:25:15.694Z",
+  "updated_at": "2026-10-03T16:38:46.430Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -12722,7 +12722,7 @@
       "paths": [
         "skills/",
         "scripts/build-skills.mjs",
-        "scripts/build-skills.test.mjs",
+        "src/skills-build.test.js",
         "src/skills-bundles.js",
         "src/skills-service.test.js",
         "docs/relay/RELAY_SKILLS_COMPLETION_20261003.md"
@@ -12755,8 +12755,8 @@
           }
         ]
       },
-      "updated_at": "2026-10-03T16:25:15.694Z",
-      "lease_until": "2026-10-04T04:25:15.694Z"
+      "updated_at": "2026-10-03T16:38:46.430Z",
+      "lease_until": "2026-10-04T04:38:46.430Z"
     }
   ],
   "migrated_from": "loew-inspector"
