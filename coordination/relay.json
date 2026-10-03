@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T07:43:06.951Z",
+  "updated_at": "2026-10-03T07:49:51.931Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -12559,7 +12559,7 @@
       ],
       "goal": "Continue the existing unfinished full Relay MCP rebuild, restoring original1.9 promised capabilities and integrating approved Relay live-panel/site/card work. Archival assignment closure is not proof of functional delivery.",
       "acceptance": "Preserve working tools and provenance. Restore the original 1.9 acceptance at commit 434541358d6bfd25e67af5d8e689ba49a5378b91 and all seven stages of the Research and Reflow Plan. Track source implementation, publication, host installation and runtime verification separately. Preserve original objectives and stable acceptance IDs through additive amendments and full-task resume. Separate scope completion from verification; reconcile stale ownership without restarting paused or cancelled work. Repurpose the hourly workflow as a model-free sync safeguard comparing registered tasks, PRs, checks and deployment evidence, with deduplicated continuation recommendations and honest unavailable-evidence states. Complete skill catalog, search, read, resolve, install/vendor, update and audit; pinned licensed portable bundles; integrity and dependency enforcement; all originally promised creative, platform and supporting packs. Prove durable jobs, a real coding executor, capability-based local/remote routing, worker communication and full capability parity. Fold the Relay website, live panel, approved telemetry, Refresh Tools fallback chain, Add MCP to AI actions and compact MCP cards into this same rebuild. Verify actual client rendering/actions. Integrate review-first cards, evidence and device-specific frames, saved answers/replies, project icons and useful workspace overview. Use flat surfaces with shadows/glows. Night Shift records actual autonomous away-time work, with an unused staff lead for oversight, preserved executor provenance, evidence-supported backfill and an idempotent Shift handoff. No new credentials or spending inferred. Documentation-only PRs, fixtures and transferred defects do not establish full delivery.\nFull execution handoff, source recovery and original contract evidence: https://github.com/lrnolivia/relay/blob/dbe7904787503dc04a115e0157638d5c23443012/docs/handoffs/2026-10-03/RELAY-MCP.md . All latest site/live-panel/telemetry/refresh/add-to-AI, review delivery, NightShift/Shift, canonical asset discovery, lifecycle and original skills/executor goals preserved. Original1.9 verbatim and41 stale queue pairs in sibling documents. Current engine cannot normalize completed queue pairs or handoff queued-only owner; do not bypass. Actual user-started Mac Codex identity pending; parent stops MCP implementation. ctrlfrontend remains separate heldPR7, recovery8WIPfiles preserved. New Relay site concept is not implementation; current plugin ID protected.",
-      "next_action": "Lauren explicitly authorized publishing finished build and will perform real-world QA. PR140 merged77bc5c1bd1235dae6ef2a169be873b8098618c22, version28f8a66e-268b-43ee-9df0-9c65f5971550 at100%, engine591d0155555a74db4769fda289e5212b07609e65 live; 490 CI tests green. Live homepage/check connection/refresh/ctrl destinations verified at1440/390; retained sample redirect defect found and fixed in draft PR141 head48b52787adb35294faf4b5a590ada51b78830a64, admission green/quality running. All41 historical queue pairs reconciled with original merged-PR proofs and preserved owners. Model-free sync run37106779041 passed with0modelcalls. ctrl schema2 contract now deployed at PR140; exact browser submit/recipientack cycle and real executor/nativeclient QA remain open. Continue PR141 protected release and exact production verification; do not mark full rebuild complete before QA.",
+      "next_action": "RELEASE CHECKPOINT: Lauren requested publication and will do real-world QA. PR140+141 merged; active source ec496bcca7dfb1d59c147074d8a0abbaa2ddaf24, Cloudflare version76ed837d-2196-4724-8c38-272369da796f at100%, deploymenta47db0c7-63ab-48b5-916d-41e634458250, engine591d0155555a74db4769fda289e5212b07609e65. Exact-source CI37107343629 passed490tests/build/typecheck and actual authenticated website1440/390: measured populated telemetry, connection/refresh controls, ctrl destinations, screenshot storage/readback; four archived-preview captures also passed. Evidence vis_a413ca9e-e804-4d94-957a-a499ef685f8e and vis_488ca019-b75d-4a5d-ae5e-9eb2c83ddfd4. Retained build rp_5b0b95876ee6aaae15046b813484466e4a3580f10ee861f88b0312a38c70060d. Model-free sync37106779041 passed0modelcalls. All41 stale queue mirrors reconciled with exact historical PR proofs; no ownership transfer/restart. Deployed schema2 feedback/execution/28skill/context contract: docs/relay/MCP_REBUILD_OPERATIONS_20261003.md at ec496bc. NEXT: collect Lauren QA; separately finish ctrl preview-submit-actualownerack integration, existing authorized standalone Relay executor configuration/real coding+skills execution, native web/mac/iPhone/Linux card/action proof and oversight attribution. These remain unverified; no new credentials/spending inferred. No active source writer; clean retained managed checkout/commits published. Ownership retained; no inferred transfer. Full original objective/acceptance remains open.",
       "ledger_refs": [
         "relay-mcp-rebuild-20261001",
         "relay-mcp-host-proof-20261001",
@@ -12577,10 +12577,10 @@
       "primary_staff": "ellis",
       "supporting_staff": [],
       "base_sha": "3df50be94ae4089c5e090923123b09afa4dd80ad",
-      "state": "active",
+      "state": "held",
       "created_at": "2026-10-03T05:37:48.707Z",
-      "updated_at": "2026-10-03T07:43:06.951Z",
-      "lease_until": "2026-10-03T19:43:06.951Z"
+      "updated_at": "2026-10-03T07:49:51.931Z",
+      "lease_until": "2026-10-03T19:49:51.931Z"
     }
   ],
   "migrated_from": "loew-inspector"
