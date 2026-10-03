@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "project": "relay",
-  "updated_at": "2026-10-03T06:19:08.316Z",
+  "updated_at": "2026-10-03T06:19:14.201Z",
   "legacy_branches": [
     "fix/browser-ci-capacity",
     "fix/chatgpt-inspector-oauth-20260929",
@@ -7305,8 +7305,10 @@
       "supporting_teams": [],
       "primary_staff": "julian",
       "supporting_staff": [],
-      "state": "claimed",
-      "created_at": "2026-10-02T07:17:32.381Z"
+      "state": "completed",
+      "created_at": "2026-10-02T07:17:32.381Z",
+      "completed_at": "2026-10-02T09:11:43.163Z",
+      "updated_at": "2026-10-03T06:19:14.201Z"
     },
     {
       "id": "relay-website-catchup-release-20261002",
