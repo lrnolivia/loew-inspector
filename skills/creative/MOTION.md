@@ -1,3 +1,8 @@
+---
+name: relay-creative-motion
+description: Specify and verify state-driven motion, transition continuity and microinteractions without inventing progress or harming input access.
+---
+
 # Motion and microinteraction
 
 Motion communicates state, continuity, focus, and causality. It is not confetti.
@@ -28,3 +33,9 @@ Respect reduced motion. Every animation must have a static state that preserves 
 ## Performance
 
 Prefer transforms and opacity for frequent animation. Avoid effects that force expensive layout/paint on large regions. Coordinate with the performance pack for ambitious motion.
+
+## Workflow inputs and output
+
+Read the real state transitions, event/data freshness semantics, approved motion language and target devices. For each motion specify trigger, start/end state, interruption behavior, focus/scroll preservation and reduced-motion equivalent. Keep previous good content during refresh where appropriate; reserve skeletons for unavailable content.
+
+Deliver a motion/state specification or implementation with timing and performance assumptions. Test rapid consecutive updates, interruption, slow data, stale state and reduced motion. Profile representative input/scroll playback on the target environment; a still screenshot cannot establish smoothness. If flicker or jank occurs, identify whether state replacement, layout or paint is responsible, then correct that cause. Do not hide stale data behind a perpetual animation or remove meaningful feedback to satisfy a frame-rate claim.
