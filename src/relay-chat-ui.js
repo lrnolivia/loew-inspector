@@ -332,5 +332,5 @@ export function relayStatusCardTool() {
 }
 export function relayStatusCardResource() {
   const resource = relayContextCardResource();
-  return { ...resource, uri: RELAY_STATUS_CARD_URI, text: legacyBridgeCardHtml(), _meta: { ...resource._meta, 'openai/widgetDescription':'Temporary Relay consumer bisect: current card UI with the known-good v3 ChatGPT host bridge.' } };
+  return { ...resource, uri: RELAY_STATUS_CARD_URI, text: legacyBridgeCardHtml(), _meta: { ...resource._meta, 'openai/ui':{availableDisplayModes:['inline']}, 'openai/widgetDescription':'Temporary Relay consumer bisect: current card UI with the known-good v3 ChatGPT host bridge.' } };
 }
