@@ -720,3 +720,12 @@ a { color: inherit; }
 .telemetry-ring,.telemetry-orbits{container-type:inline-size}
 .telemetry-ring>div>strong{font-size:clamp(22px,18cqi,50px);letter-spacing:-.035em;white-space:nowrap}
 .telemetry-orbits>div>strong{font-size:clamp(24px,20cqi,44px);white-space:nowrap}
+
+/* Keep the number inside the innermost orbit; caption has its own space. */
+.telemetry-orbits{margin-bottom:26px}
+.telemetry-orbits>div{inset:34%;gap:0}
+.telemetry-orbits>div>strong{font-size:clamp(22px,19cqi,40px);line-height:1}
+.telemetry-orbit-caption{position:absolute;top:100%;left:0;width:100%;text-align:center;font-size:12px;color:var(--text-secondary);line-height:1.3}
+.telemetry-focus-bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 14px;margin:10px 0 16px;border-radius:16px;background:var(--surface-2,#302e2b)}
+.telemetry-focus-project{display:flex;align-items:center;gap:12px;min-width:0;font-size:12px;color:var(--text-secondary)}.telemetry-focus-project>a{color:inherit;text-decoration:none}
+.telemetry-edit{display:grid;place-items:center;flex:none;width:40px;height:40px;padding:9px;border:0;border-radius:12px;color:inherit;background:transparent;cursor:pointer}.telemetry-edit:hover{background:var(--surface-3,#393631)}.telemetry-edit svg{width:22px;height:22px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}

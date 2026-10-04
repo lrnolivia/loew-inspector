@@ -5,7 +5,7 @@ import { RELAY_CONTEXT_CARD_URI, RELAY_CONTEXT_CARD_TOOL, RELAY_STATUS_CARD_URI,
 test("Relay publishes one versioned compact MCP card resource", () => {
   const descriptor = relayContextCardDescriptor();
   const resource = relayContextCardResource();
-  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v13.html");
+  assert.equal(RELAY_CONTEXT_CARD_URI, "ui://relay/context-card/v14.html");
   assert.equal(descriptor.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.uri, RELAY_CONTEXT_CARD_URI);
   assert.equal(resource.mimeType, "text/html;profile=mcp-app");
@@ -131,9 +131,11 @@ test("unrelated tools are not forced into contextual UI", () => {
 });
 
 
-test("context card opens the fresh control-center resource identity", () => {
+test("context card opens Relay through supported external navigation", () => {
   const resource = relayContextCardResource();
-  assert.match(resource.text, /ui:\/\/relay\/control-center\/v2\.html/);
+  assert.match(resource.text, /openExternal/);
+  assert.match(resource.text, /ui\/open-link/);
+  assert.deepEqual(resource._meta['openai/ui'].availableDisplayModes,['inline','fullscreen']);
   assert.doesNotMatch(resource.text, /ui:\/\/relay\/control-center\/v1\.html/);
 });
 
@@ -281,6 +283,10 @@ test('card can reuse the latest stored Inspector QA screenshot through standard 
     assert.equal(await frame.locator('#qa-media-id').textContent(),'vis_abcdefgh');
     assert.equal(await frame.locator('#qa-media-caption').textContent(),'Relay card preview');
     assert.match(await frame.locator('#qa-media-image').getAttribute('src'),/^data:image\/png;base64,/);
+    await frame.locator('#qa-media-image').click();
+    await frame.getByRole('dialog',{name:'screenshot preview'}).waitFor();
+    await frame.getByRole('button',{name:'Close screenshot'}).click();
+    assert.equal(await frame.locator('.screenshot-dialog').count(),0);
   } finally { await browser.close(); }
 });
 
